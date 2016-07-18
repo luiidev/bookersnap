@@ -1,0 +1,43 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container">
+
+        	<div class="block-header">
+        		<h2>Listado de turno <small>Descripcion de pantalla turnos</small></h2>
+        	</div>
+
+      		<div class="card" id="tuno-main">
+      			<!--
+      			<div class="card-header">
+                <h2>Praesent vitae justo purus <small>In hendrerit lorem nislac lacinia</small></h2>
+	            </div>
+	            -->
+	            <!--
+	            <tabset justified="true">
+	                <tab heading="Ativos" active="tab.active">
+	                  <div class="p-l-25 p-r-25">CONTENIDOnm</div>
+	                </tab>
+	                <tab heading="Inactivos">
+	                  <div class="p-l-25 p-r-25">CONTENIDO</div>
+	                </tab>
+	            </tabset>
+				-->
+				<div class="pm-body clearfix">
+				<ul class="tab-nav">
+				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="">ACTIVOS</a></li>
+				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="">INACTIVOS</a></li>
+				</ul>
+				<data ui-view></data>
+      			</div>
+      		</div>
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'template/footer.html'"></footer>
