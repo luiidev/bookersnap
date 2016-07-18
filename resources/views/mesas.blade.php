@@ -9,9 +9,9 @@
         <title>Bookersnap</title>
 
         <!-- Vendor CSS -->
-        <link href="css/theme/dist/vendor.min.css" rel="stylesheet">
+        <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
         <!-- CSS -->
-        <link href="css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
+        <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
     
     </head>
     <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
@@ -62,13 +62,13 @@
         <![endif]-->
 
         <!-- Vendor Bookersnap-->
-        <script src="js/theme/dist/library.bower.min.js"></script>
-        <script src="js/theme/dist/app.level.min.js"></script>
-        <script src="js/theme/dist/template.modules.min.js"></script>
+        <script src="/js/theme/dist/library.bower.min.js"></script>
+        <script src="/js/theme/dist/app.level.min.js"></script>
+        <script src="/js/theme/dist/template.modules.min.js"></script>
 
         <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
 
-        <script type="text/javascript" src="js/dist.app/app.bookersnap.min.js"></script>
+        <script type="text/javascript" src="/js/dist.app/app.bookersnap.min.js"></script>
 
     </body>
 </html>
