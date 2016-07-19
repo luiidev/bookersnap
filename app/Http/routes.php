@@ -29,3 +29,8 @@ Route::group(['prefix' => 'v1/{lang}'], function () {
 	Route::put('zone', "Admin\Zone\ZoneController@updateZone");
  	Route::delete('zone/{id}', "Admin\Zone\ZoneController@deleteZone");
 });
+
+
+Route::get('/admin/ms/{id}/reservation', function () {
+    return view('reservation');
+});
