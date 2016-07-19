@@ -29,3 +29,8 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
 	Route::put('zone', "Admin\Tables\Zone\ZoneController@updateZone");
  	Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@deleteZone");
 });
+
+
+Route::get('/admin/ms/{id}/reservation', function () {
+    return view('reservation');
+});
