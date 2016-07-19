@@ -13,4 +13,8 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 			url: '/zone-inactive',
 			templateUrl: '/js/app/tables/zone/view/zone-inactive.html'
 		})
+		.state ('zone-create', {
+			url: '/zone/config/new',
+			templateUrl: '/js/app/tables/zone/view/zone-create.html'
+		})
 });

@@ -15,7 +15,7 @@ Route::get('/admin/ms/{id}/mesas', function () {
     return view('mesas');
 });
 
-Route::group(['prefix' => 'v1/{lang}'], function () {
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
 
 	Route::get('example', "Admin\Example\ExampleController@index");
 	Route::get('example/{id}', "Admin\Example\ExampleController@getExample");
@@ -23,11 +23,11 @@ Route::group(['prefix' => 'v1/{lang}'], function () {
 	Route::put('example/{id}', "Admin\Example\ExampleController@updateExample");
 	Route::delete('example/{id}', "Admin\Example\ExampleController@deleteExample");
 
-	Route::get('zone', "Admin\Zone\ZoneController@index");
-	Route::get('zone/{id}', "Admin\Zone\ZoneController@getZone");
-	Route::post('zone', "Admin\Zone\ZoneController@createZone");
-	Route::put('zone', "Admin\Zone\ZoneController@updateZone");
- 	Route::delete('zone/{id}', "Admin\Zone\ZoneController@deleteZone");
+	Route::get('zone', "Admin\Tables\Zone\ZoneController@index");
+	Route::get('zone/{id}', "Admin\Tables\Zone\ZoneController@getZone");
+	Route::post('zone', "Admin\Tables\Zone\ZoneController@createZone");
+	Route::put('zone', "Admin\Tables\Zone\ZoneController@updateZone");
+ 	Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@deleteZone");
 });
 
 

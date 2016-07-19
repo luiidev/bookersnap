@@ -1,1 +1,1 @@
-angular.module('turn.service', [])
+angular.module('turn.service', []);

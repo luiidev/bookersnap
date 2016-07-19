@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Zone;
+namespace App\Http\Controllers\Admin\Tables\Zone;
 use App\Http\Controllers\Controller as Controller;
 
 class ZoneController extends Controller

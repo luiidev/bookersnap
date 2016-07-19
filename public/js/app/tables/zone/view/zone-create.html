@@ -1,0 +1,97 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container" ng-controller="ZoneCtrl">
+            <div class="block-header" style="padding-bottom: 15px">
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect">Cancel</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect">Save New Zone</button>
+                    </li>
+                  
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-body card-padding box-zone-create">
+                    <div class="row" style="padding-bottom: 8px">
+                        <div class="col-md-12">
+                            <div class="col-sm-2">
+                                <div class="input-group fg-float">
+                                    <span class="input-group-addon"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw"></i></span>
+                                    <div class="fg-line">
+                                        <input type="text" class="form-control">
+                                        <label class="fg-label">Untitled Zone</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="input-group fg-floats">
+                                        <label class="fg-label"><span class="label label-danger">0</span> Tables</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group fg-floats">
+                                        <label class="fg-label"><span class="label label-danger">0</span> Max Covers</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group fg-floats">
+                                        <label class="fg-label"><span class="label label-danger">0</span> Min Covers</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group fg-floats">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn bgm-gray waves-effect">Layout</button>
+                                        <button type="button" class="btn btn-default waves-effect">Combine tables</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="box-lienzo-zone">
+                               
+                            </div>
+                        </div>
+                        <div class="col-md-3 box-tables">
+                            <div class="row item">
+                               <h3>Add tables to your floor</h3>
+                               <p>Easily drag and drop your tables,name them and pick your min and max cover counts.</p>
+                            </div>
+                            <div class="row item title">
+                                Round Tables
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Bar stool
+                                </div>
+                                <div class="col-md-4">
+                                    2-4 top
+                                </div>
+                                <div class="col-md-4">
+                                    4-6+ top
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+
+        
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>

@@ -1,1 +1,1 @@
-angular.module('zone.directive', [])
+angular.module('zone.directive', []);

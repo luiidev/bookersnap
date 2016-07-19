@@ -13,5 +13,5 @@ angular.module('turn.app', ['turn.controller','turn.service','turn.directive'])
                 url: '/turn-inactive',
                 templateUrl: '/js/app/tables/turn/view/turn-inactive.html'
         })
-
+        
 });
