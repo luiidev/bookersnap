@@ -6,8 +6,9 @@ var gulp = require('gulp'),
     //gulpif = require('gulp-if');
     jsmin = require('gulp-jsmin'),
     concat = require('gulp-concat'),
-    minifyCss = require('gulp-minify-css');
-    rename = require('gulp-rename');
+    minifyCss = require('gulp-minify-css'),
+    rename = require('gulp-rename'),
+    watch = require('gulp-watch');
 
 
 /* ------------- Tareas de template -------------*/
@@ -98,26 +99,5 @@ gulp.task('min-css-theme', function() {
         .pipe(gulp.dest('public/css/theme/dist'))
 });
 
-/* ------------- Tareas de aplicacion -------------*/
-/* ------ app-bookersnap-js -------
-Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo
-ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nuestro modulo / componente
-*/
-gulp.task('app-bookersnap-js', function () {
-  gulp.src([
-    'public/js/app/**/*.js'
-    ])
-  .pipe(concat('app.bookersnap.min.js'))
-  .pipe(jsmin())
-  .pipe(gulp.dest('public/js/dist.app'))
-});
-
-
-//Automatizamos esta tarea
-gulp.task('watch', function(){
-    gulp.watch(['public/js/app/**/*.js'], ['app-bookersnap-js']);
- 
-});
-
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch','app-level-js','template-modules-js','library-bower-js','min-css-vendor','min-css-theme','app-bookersnap-js']);
+gulp.task('default', ['app-level-js','template-modules-js','library-bower-js','min-css-vendor','min-css-theme']);

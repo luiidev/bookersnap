@@ -6,22 +6,21 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container">
+        <div class="container" ng-controller="ZoneCtrl">
            <div class="card">
             <div class="card-header">
-                <h2>Listado  de Zonas <small></small></h2>
-                <div class="pull-right"> <button class="btn btn-primary waves-effect">Agregar Zona</button></div>
+                <h2>List zone <small></small></h2>
+                <div class="pull-right"> <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">Create zone</button></div>
             </div>
 
                 <div class="pm-body clearfix">
                 <ul class="tab-nav">
-                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.active">ACTIVOS</a></li>
-                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.inactive">INACTIVOS</a></li>
+                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.active">Active</a></li>
+                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.inactive">Inactive</a></li>
                 </ul>
                 <data ui-view></data>
                 </div>
 
-          
             </div>
 
         </div>

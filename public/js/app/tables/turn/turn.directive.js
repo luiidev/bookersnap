@@ -1,1 +1,1 @@
-angular.module('turn.directive', [])
+angular.module('turn.directive', []);

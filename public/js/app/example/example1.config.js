@@ -7,9 +7,10 @@ var obtenerIdMicrositio = function(){
 	return id;
 }
 var idMicrositio = obtenerIdMicrositio();
-angular.module('tables.app',
+
+angular.module('example.app',
 [
-'turn.app',
-'zone.app',
+'example1.app',
+'example2.app',
 ])
-.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas');
+.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/aquiva-el-modulo-de-tu-app(example)');
