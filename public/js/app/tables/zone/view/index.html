@@ -1,0 +1,31 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container">
+           <div class="card">
+            <div class="card-header">
+                <h2>Listado  de Zonas <small></small></h2>
+                <div class="pull-right"> <button class="btn btn-primary waves-effect">Agregar Zona</button></div>
+            </div>
+
+                <div class="pm-body clearfix">
+                <ul class="tab-nav">
+                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.active">ACTIVOS</a></li>
+                <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.inactive">INACTIVOS</a></li>
+                </ul>
+                <data ui-view></data>
+                </div>
+
+          
+            </div>
+
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>

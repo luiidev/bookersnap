@@ -9,6 +9,5 @@ example.app = nombre componente
 angular.module('bookersnap',
 [
 'example.app',
-'zona.app',
-'turno.app'
+'tables.app',
 ]);
