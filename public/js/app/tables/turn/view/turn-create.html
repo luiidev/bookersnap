@@ -1,0 +1,52 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container" ng-controller="TurnCreateCtrl">
+            <div class="card">
+                <div class="card-header">
+                <h2>New Turn<small></small></h2>
+                </div>
+
+                <div class="card-body card-padding">
+                    <form class="ng-pristine ng-valid" role="form">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group fg-line">
+                                    <input type="email" class="form-control input-sm" id="exampleInputEmail2" placeholder="Turn name">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group fg-line">
+                                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Shift">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group fg-line">
+                                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Hours">
+                                </div>
+                            </div>
+                        </div>
+                  
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <button type="submit" class="btn btn-primary btn-sm m-t-5 waves-effect"><i class="zmdi zmdi-file zmdi-hc-fw"></i> Save</button>
+                            </div>  
+                        </div>
+
+                       
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>

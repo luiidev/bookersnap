@@ -15,22 +15,41 @@ Route::get('/admin/ms/{id}/mesas', function () {
     return view('mesas');
 });
 
-Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
-
-	Route::get('example', "Admin\Example\ExampleController@index");
-	Route::get('example/{id}', "Admin\Example\ExampleController@getExample");
-	Route::post('example/{id}', "Admin\Example\ExampleController@createExample");
-	Route::put('example/{id}', "Admin\Example\ExampleController@updateExample");
-	Route::delete('example/{id}', "Admin\Example\ExampleController@deleteExample");
-
-	Route::get('zone', "Admin\Tables\Zone\ZoneController@index");
-	Route::get('zone/{id}', "Admin\Tables\Zone\ZoneController@getZone");
-	Route::post('zone', "Admin\Tables\Zone\ZoneController@createZone");
-	Route::put('zone', "Admin\Tables\Zone\ZoneController@updateZone");
- 	Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@deleteZone");
-});
-
-
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('reservation');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Routes Example : v1/{lang}/admin/ms/{micro}/example
+|--------------------------------------------------------------------------
+|
+| Seguir este patron cuando agregemos un nuevo modulo.
+|
+*/
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
+
+	Route::get('example', "Admin\Example\ExampleController@index");
+	Route::get('example/{id}', "Admin\Example\ExampleController@get");
+	Route::post('example/{id}', "Admin\Example\ExampleController@create");
+	Route::put('example/{id}', "Admin\Example\ExampleController@update");
+	Route::delete('example/{id}', "Admin\Example\ExampleController@delete");
+
+});
+
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
+
+	Route::get('zone', "Admin\Tables\Zone\ZoneController@index");
+	Route::get('zone/{id}', "Admin\Tables\Zone\ZoneController@get");
+	Route::post('zone', "Admin\Tables\Zone\ZoneController@create");
+	Route::put('zone', "Admin\Tables\Zone\ZoneController@update");
+ 	Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
+
+ 	Route::get('turn', "Admin\Tables\Turn\TurnController@index");
+	Route::get('turn/{id}', "Admin\Tables\Turn\TurnController@get");
+	Route::post('turn', "Admin\Tables\Turn\TurnController@create");
+	Route::put('turn', "Admin\Tables\Turn\TurnController@update");
+ 	Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");
+});
+
+

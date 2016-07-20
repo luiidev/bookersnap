@@ -1,6 +1,33 @@
+.list-table
+	padding 0 25px
+	& .table-responsive
+		padding 15px 0
+
 .float-right
 	float right
 .box-zone-create
+	& .round
+		border-radius 50%
+	& .border
+		border 1px solid #ccc
+	& .round-tables-stool
+		width 30px
+		height 30px
+	& .round-tables-2
+		width 50px 
+		height 50px 
+	& .round-tables-4
+		width 75px
+		height 75px
+	& .rec-tables-1
+		width 45px
+		height 27px
+	& .rec-tables-2
+		width 60px 
+		height 32px 
+	& .rec-tables-4
+		width 75px
+		height 48px
 	& .header-zone-create
 		padding 8px
 		border 1px solid #DEDEDE
@@ -9,7 +36,7 @@
 		padding-left 0
 		& .lienzo 
 			background-color #eee
-			min-height 540px
+			min-height 740px
 	& .box-tables
 		padding-left 7px
 		padding-rigth 12px
@@ -37,26 +64,29 @@
 			& .table-box
 				text-align center
 				display inline-block
-				& .round
-					border-radius 50%
-				& .border
-					border 1px solid #ccc
-				& .round-tables-stool
-					width 30px
-					height 30px
-				& .round-tables-2
-					width 50px 
-					height 50px 
-				& .round-tables-4
-					width 75px
-					height 75px
-				& .rec-tables-1
-					width 45px
-					height 27px
-				& .rec-tables-2
-					width 60px 
-					height 32px 
-				& .rec-tables-4
-					width 75px
-					height 48px
 					
+
+/*Create zone drag and drop*/
+[ng-drag]
+	-moz-user-select -moz-none
+	-khtml-user-select none
+	-webkit-user-select none
+	-ms-user-select none
+	user-select none
+	cursor move
+	&.drag-over
+		border solid 1px rgba(255, 0, 0, 0.5)
+	&.dragging
+		opacity 0.5
+		border solid 1px rgba(255, 0, 0, 0.5)
+		background rgba(255, 0, 0, 0.5)
+[ng-drop]
+	background rgba(0, 255, 0, 0.5)
+	text-align center
+	padding-top 90px
+	display block
+	margin 20px auto
+	position relative
+	& div
+		position relative
+		z-index 2
