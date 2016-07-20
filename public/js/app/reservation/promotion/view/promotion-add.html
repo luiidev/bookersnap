@@ -7,20 +7,20 @@
     <div class="col-xs-12 col-md-4">
         <div class="form-group fg-float m-b-30">
             <div class="fg-line">
-                <input type="text" class="input-sm form-control fg-input" ng-model="promocion.titulo">
+                <input type="text" class="input-sm form-control fg-input" ng-model="promotion.titulo">
                 <label class="fg-label">Titulo</label>
             </div>
         </div>
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>
         <div class="form-group">
             <div class="fg-line">
-                <textarea class="form-control"  placeholder="Start pressing Enter to see growing..." ng-model="promocion.descripcion"></textarea>
+                <textarea class="form-control"  placeholder="Start pressing Enter to see growing..." ng-model="promotion.descripcion"></textarea>
             </div>
         </div>
 
         <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
-        <label class="radio radio-inline m-r-20" ng-repeat="estado in estados">
-            <input type="radio" ng-model="promocion.estado" name="estado" value="{{estado.value}}">
+        <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
+            <input type="radio" ng-model="promotion.estado" name="estado" ng-value="{{estado.value}}">
             <i class="input-helper"></i>
              {{estado.name}}
         </label>
@@ -28,21 +28,21 @@
     <div class="col-xs-12 col-md-4">
 
           
-            <div class="toggle-switch" data-ts-color="blue">
-                <label class="ts-label">Ingresar fecha de caducidad {{promotion.caduca}}</label>
-                    <input id="tw3" type="checkbox" hidden="hidden" data-change-layout="controlVisible" ng-model="promotion.caduca">
-                    <label for="tw3" class="ts-helper"></label>
-             </div>
+            <div class="toggle-switch m-b-15" data-ts-color="blue">
+                <label class="ts-label">Ingresar fecha de caducidad</label>
+                <input id="tw3" type="checkbox" hidden="hidden" ng-model="promotion.caduca">
+                <label for="tw3" class="ts-helper"></label>
+            </div>
        
 
 
             <div ng-show="promotion.caduca">
-            <div class="date-picker input-group m-b-20" ng-class="{ 'is-opened': opened == true }">
-                <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
-                <div class="fg-line" ng-class="{ 'fg-toggled': opened == true }">
-                    <input ng-click="open($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" show-weeks="false" ng-model="dtPopup" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione fecha" />
+                <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
+                    <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
+                    <div class="fg-line" ng-class="{ 'fg-toggled': opened2 == true }">
+                        <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="dtPopup2" is-open="opened2" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione fecha" />
+                    </div>
                 </div>
-            </div>
             </div>    
 
             <div class="toggle-switch" data-ts-color="blue">
@@ -54,12 +54,12 @@
 
             <p class="c-black f-500 m-b-20 m-t-20">Tipo de promocion</p>
             <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="tipo in tipos">
-            <input type="radio" ng-model="promocion.estado" name="estado" ng-value="{{tipo.value}}">
+            <input type="radio" ng-model="promotion.tipo" name="tipo" ng-value="{{tipo.value}}">
             <i class="input-helper"></i>
-             {{tipo.name}}
+                {{tipo.name}}
             </label>
 
-            <div class="m-b-20" ng-show="tipo.value=='1'">
+            <div class="m-b-20" ng-show="promotion.tipo == '1'">
                 <p class="f-500 c-black m-b-15">Zona disponible</p>
                 <select chosen data-placeholder="Select a country..." class="w-100">
                     <option value="United States">United States</option>
@@ -76,6 +76,23 @@
     </div>
     <div class="col-xs-12 col-md-4">
         <p class="f-500 c-black m-b-20">Vista previa de promocion</p>
+
+        <div class="fileinput fileinput-new">
+        <span class="btn btn-info btn-file">
+            <span ng-show="imageCropStep == 1">Seleccionar imagen</span>
+            <span ng-show="imageCropStep == 2">Cambiar</span>
+            <input type="file" name="fileInput" id="fileInput" />
+        </span>
+        <a href="#" class="btn btn-danger" ng-click="clear()" ng-show="imageCropStep == 2">Remove</a>
+        </div>
+
+        <div class="cropArea" ng-show="imageCropStep == 2">
+            <img-crop image="myImage" area-type="rectangle" result-image="myCroppedImage"></img-crop>
+        </div>
+
+        <!--
+        <p class="f-500 c-black m-b-20">Vista previa de promocion</p>
+
         <div class="fileinput fileinput-new" data-provides="fileinput">
             <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
             <div>
@@ -87,6 +104,7 @@
             <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
             </div>
         </div>
+        -->
     </div>
 </div>
 </div>
