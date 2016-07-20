@@ -68,9 +68,11 @@
         <script src="/js/theme/dist/app.level.min.js"></script>
         <script src="/js/theme/dist/template.modules.min.js"></script>
 
-        <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
 
-        <script type="text/javascript" src="/js/dist.app/app.bookersnap.tables.min.js"></script>
+        <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
+        <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
+        <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
+        <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js"></script>
 
     </body>
 </html>
