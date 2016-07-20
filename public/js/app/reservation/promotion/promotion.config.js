@@ -7,19 +7,17 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
 	})
 	.state ('add', {
 		url: '/promotion/add',
-		//templateUrl: '/js/app/reservation/promotion/view/add.html',
-		
 		views: {
 			'': { templateUrl: '/js/app/reservation/promotion/view/add.html' },
     		'promotion@add': {
-        		templateUrl: '/js/app/reservation/promotion/view/promotion-add.html'
+        		templateUrl: '/js/app/reservation/promotion/view/promotion-add.html',
+                controller: 'PromotionAddCtrl',
       		},
       		'flyer@add': {
-        		templateUrl: '/js/app/reservation/promotion/view/flyer-add.html'
+        		templateUrl: '/js/app/reservation/promotion/view/flyer-add.html',
+                controller: 'FlyerAddCtrl',
             }
         }
-        //url: '/promotion/add',
-        //templateUrl: '/js/app/reservation/promotion/view/promotion-add.html'
     })
 
 

@@ -278,7 +278,6 @@
         $scope.open = function($event, opened) {
             $event.preventDefault();
             $event.stopPropagation();
-
             $scope[opened] = true;
         };
 

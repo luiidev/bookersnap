@@ -8,7 +8,8 @@ example.app = nombre componente
 ************/
 angular.module('bookersnap',
 [
+
 //'example.app',
-'tables.app'
-//'reservation.app',
+'reservation.app'
+
 ]);
