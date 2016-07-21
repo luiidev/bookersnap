@@ -29,6 +29,10 @@ gulp.task('app-bookersnap-reservation-js', function () {
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
+    '../../../library/textAngular-1.5.0/dist/textAngular.min.js',
+    '../../../library/textAngular-1.5.0/dist/textAngular-rangy.min.js',
+    '../../../library/textAngular-1.5.0/dist/textAngular-sanitize.min.js',
+    '../../../library/ngEmoticons-master/dist/ng-emoticons.min.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.reservation.min.js'))

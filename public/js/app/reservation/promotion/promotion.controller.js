@@ -1,15 +1,15 @@
-angular.module('promotion.controller', ['ngImgCrop'])
+angular.module('promotion.controller', ['ngImgCrop','textAngular','ngEmoticons'])
 .controller('PromotionCtrl', function($scope) {
 	
 })
-.controller('PromotionAddCtrl', function($scope) {
+.controller('PromotionAddCtrl', function($scope,$rootScope) {
 
 	$scope.titulo="Nueva promoción";
 	$scope.estados = [{name: 'Activo',value:1},{name: 'Inactivo',value:0}];
 	$scope.tipos = [{name: 'Gratis',value:0},{name: 'De pago',value:1}];
 
 	//Estados por defecto
-	$scope.promotion={caduca:false, tipo:0, estado:1};
+	$scope.promotion={caduca:false, tipo:0, estado:1,descripcion:" "};
 
 	//Opciones de calendario
 	$scope.today = function() {
@@ -53,7 +53,17 @@ angular.module('promotion.controller', ['ngImgCrop'])
 		$scope.imageCropStep = 1;
 		delete $scope.myImage;
 		delete $scope.myCroppedImage;
-	};
+
+    //Personalizacion de TextAngular
+    $scope.toolbar = [
+      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+      ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+      ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+      ['html', 'insertImage','insertLink', 'insertVideo', 'wordcount', 'charcount']
+    ];
+
+
+ 	};
 
 })
 .controller('FlyerAddCtrl', function($scope) {

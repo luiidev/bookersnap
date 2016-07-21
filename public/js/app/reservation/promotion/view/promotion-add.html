@@ -14,10 +14,15 @@
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>
         <div class="form-group">
             <div class="fg-line">
-                <textarea class="form-control"  placeholder="Start pressing Enter to see growing..." ng-model="promotion.descripcion"></textarea>
+            <text-angular name="descripcion" placeholder="Redactar descripcion." ng-model="promotion.descripcion" ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','pre','quote'],['bold','italics','underline','strikeThrough','ul','ol','undo','redo','clear'],['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertImage','insertLink','insertVideo','html']]">
+                
+            </text-angular>
             </div>
-        </div>
 
+        </div>
+        
+        <div ng-bind-html="promotion.descripcion | emoticons:{linkTarget:'_blank'}"></div>
+        
         <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
         <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
             <input type="radio" ng-model="promotion.estado" name="estado" ng-value="{{estado.value}}">
@@ -28,13 +33,14 @@
     <div class="col-xs-12 col-md-4">
 
           
-            <div class="toggle-switch m-b-15" data-ts-color="blue">
-                <label class="ts-label">Ingresar fecha de caducidad</label>
+            <div class="toggle-switch row" data-ts-color="blue">
+                <label class="tw3 col-xs-6 col-md-8">Ingresar fecha de caducidad</label>
+                <div class="col-xs-4 col-md-3">
                 <input id="tw3" type="checkbox" hidden="hidden" ng-model="promotion.caduca">
                 <label for="tw3" class="ts-helper"></label>
+                </div>
             </div>
-       
-
+    
 
             <div ng-show="promotion.caduca">
                 <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
@@ -45,10 +51,14 @@
                 </div>
             </div>    
 
-            <div class="toggle-switch" data-ts-color="blue">
-                <label for="ts4" class="ts-label">Desea publicar en fanpage facebook o twitter.</label>
+            <div class="toggle-switch row" data-ts-color="blue">
+            
+                <label for="ts4" class="ts-label col-xs-6 col-md-8">Desea publicar en fanpage facebook o twitter.</label>
+                <div class="col-xs-4 col-md-3">
                 <input id="ts4" type="checkbox" hidden="hidden">
                 <label for="ts4" class="ts-helper"></label>
+                </div>
+           
             </div> 
 
 
@@ -83,28 +93,13 @@
             <span ng-show="imageCropStep == 2">Cambiar</span>
             <input type="file" name="fileInput" id="fileInput" />
         </span>
-        <a href="#" class="btn btn-danger" ng-click="clear()" ng-show="imageCropStep == 2">Remove</a>
+        <a href="#" class="btn btn-danger" ng-click="clear()" ng-show="imageCropStep == 2">Cancelar</a>
         </div>
 
         <div class="cropArea" ng-show="imageCropStep == 2">
             <img-crop image="myImage" area-type="rectangle" result-image="myCroppedImage"></img-crop>
         </div>
 
-        <!--
-        <p class="f-500 c-black m-b-20">Vista previa de promocion</p>
-
-        <div class="fileinput fileinput-new" data-provides="fileinput">
-            <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
-            <div>
-            <span class="btn btn-info btn-file">
-                <span class="fileinput-new">Seleccionar imagen</span>
-                <span class="fileinput-exists">Change</span>
-                <input type="file" name="...">
-            </span>
-            <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
-            </div>
-        </div>
-        -->
     </div>
 </div>
 </div>
