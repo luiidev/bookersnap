@@ -204,7 +204,6 @@ angular.module("ngDraggable", [])
                     }
 
                     moveElement(_tx, _ty);
-
                     $rootScope.$broadcast('draggable:move', { x: _mx, y: _my, tx: _tx, ty: _ty, event: evt, element: element, data: _data, uid: _myid, dragOffset: _dragOffset });
                 };
 
@@ -255,6 +254,7 @@ angular.module("ngDraggable", [])
                         });
                     }else{
                         element.css({'left':x+'px','top':y+'px', 'position':'fixed'});
+
                     }
                 };
                 initialize();

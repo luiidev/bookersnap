@@ -6,6 +6,37 @@
 .float-right
 	float right
 .box-zone-create
+	& .form-group
+		&.text-rotate
+			text-align left
+		&.group-btn-rotate
+			& .btn-rotate
+				& i 
+					font-size 1.2em
+			& .shape 
+				padding 10px 20px
+				&:nth-child(2)
+					border-left 1px solid rgba(0,0,0,.16)
+				&:nth-child(3)
+					border-left 1px solid rgba(0,0,0,.16)
+				& > i 
+					float left
+					background-color #777
+					&.round-btn-shape
+						width 20px
+						height 20px
+					&.square-btn-shape
+						width 20px
+						height 20px
+					&.recta-btn-shape
+						width 35px
+						height 20px
+				
+	& .selected-table
+		& .border
+			border 2px solid #011A52!important
+			background-color #0639AF
+			opacity 0.5
 	& .round
 		border-radius 50%
 	& .border
@@ -50,11 +81,17 @@
 				padding 4px 10px
 				font-size 1.1em
 				background-color #eee
+				font-weight bold
+				&.no-background
+					background-color transparent
 		& .item-table-box
 			padding-top 7px
 			text-align center
 			padding-bottom 8px
 			border-bottom 1px solid #ccc
+			& .box-buttons-item-table
+				margin-top 25px
+				float left
 			&.last
 				border-bottom 0
 			& .col-md-4
@@ -85,7 +122,7 @@
 	text-align center
 	padding-top 90px
 	display block
-	margin 20px auto
+	//margin 20px auto
 	position relative
 	& div
 		position relative
