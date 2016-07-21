@@ -2,7 +2,7 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 .config(function ($stateProvider, $urlRouterProvider){
 	$stateProvider
 		.state ('zone', {
-			url: '/zone',
+			url: '/config/zone',
 			templateUrl: '/js/app/tables/zone/view/index.html'
 		})
 		.state ('zone.active', {
@@ -14,11 +14,11 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 			templateUrl: '/js/app/tables/zone/view/zone-inactive.html'
 		})
 		.state ('zone-create', {
-			url: '/zone/config/new',
+			url: '/config/zone/new',
 			templateUrl: '/js/app/tables/zone/view/zone-create.html'
 		})
 		.state ('zone-edit', {
-			url: '/zone/config/edit',
+			url: '/config/zone/edit',
 			templateUrl: '/js/app/tables/zone/view/zone-edit.html'
 		})
 

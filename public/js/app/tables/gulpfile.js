@@ -30,7 +30,7 @@ gulp.task('app-bookersnap-tables-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-tables-js', function () {
   gulp.src([
-    '../../../library/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
+    '../../../library/ngDraggable/ngDraggable.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.tables.min.js'))

@@ -14,8 +14,8 @@
 
       		<div class="card" id="turno-main">
       			<div class="card-header">
-                	<h2>Listado  de Turnos <small></small></h2>
-                	<div class="pull-right"> <button class="btn btn-primary waves-effect">Agregar Turno</button></div>
+                	<h2>List Turns<small></small></h2>
+                	<div class="pull-right"> <button class="btn btn-primary waves-effect" data-ui-sref="turn-create"><i class="zmdi zmdi-file zmdi-hc-fw"></i> Create New Turn</button></div>
             	</div>
       			<!--
       			<div class="card-header">
@@ -32,14 +32,14 @@
 	                </tab>
 	            </tabset>
 				-->
-				<div class="pm-body clearfix">
-				<ul class="tab-nav">
-				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="turn.active">ACTIVOS</a></li>
-				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="turn.inactive">INACTIVOS</a></li>
-				</ul>
-				<data ui-view></data>
-      			</div>
-      		</div>
+				<div class="pm-body clearfix list-table">
+  				<ul class="tab-nav">
+  				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="turn.active">Active</a></li>
+  				<li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="turn.inactive">Inactive</a></li>
+  				</ul>
+  				<data ui-view></data>
+      	</div>
+      	</div>
         </div>
     </section>
 </section>
