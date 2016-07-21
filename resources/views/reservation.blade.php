@@ -15,6 +15,9 @@
          <!-- App Css -->
         <link href="/css/style-reservation.min.css" rel="stylesheet">
         <link href="/css/ng-img-crop.css" rel="stylesheet">
+        <link href="/css/textAngular.css" rel="stylesheet">
+        <link href="/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/css/ng-emoticons.min.css" rel="stylesheet">
     
     </head>
     <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
