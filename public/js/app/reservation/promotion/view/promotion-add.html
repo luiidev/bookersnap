@@ -14,7 +14,7 @@
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>
         <div class="form-group">
             <div class="fg-line">
-            <text-angular name="descripcion" placeholder="Redactar descripcion." ng-model="promotion.descripcion" ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','pre','quote'],['bold','italics','underline','strikeThrough','ul','ol','undo','redo','clear'],['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertImage','insertLink','insertVideo','html']]">
+            <text-angular name="descripcion" placeholder="Redactar descripcion." ng-model="promotion.descripcion" ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','quote'],['bold','italics','underline','strikeThrough','ul','ol','clear'],['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertLink','html']]">
                 
             </text-angular>
             </div>
@@ -89,16 +89,21 @@
 
         <div class="fileinput fileinput-new">
         <span class="btn btn-info btn-file">
-            <span ng-show="imageCropStep == 1">Seleccionar imagen</span>
-            <span ng-show="imageCropStep == 2">Cambiar</span>
-            <input type="file" name="fileInput" id="fileInput" />
+            <!--<span ng-show="imageCropStep == 1">Seleccionar imagen</span>-->
+            <span ngf-select ng-model="myImage" name="myImage" id="fileInput" ng-show="imageCropStep == 1">Seleccionar imagen</span>
+            <!--<span ng-show="imageCropStep == 2">Cambiar</span> -->
+            <!--<input type="file" name="fileInput" id="fileInput" ng-model="myImage" ngf-select accept="image/*"/>-->
         </span>
-        <a href="#" class="btn btn-danger" ng-click="clear()" ng-show="imageCropStep == 2">Cancelar</a>
+        
+        <span href="#" class="btn btn-danger" ng-click="clear()">Cancelar</span>
         </div>
 
-        <div class="cropArea" ng-show="imageCropStep == 2">
-            <img-crop image="myImage" area-type="rectangle" result-image="myCroppedImage"></img-crop>
+        <div ngf-drop ng-model="myImage" ngf-pattern="image/*" class="cropArea">
+            <img-crop area-type="rectangle" image="myImage  | ngfDataUrl"                 
+            result-image="croppedDataUrl" ng-init="croppedDataUrl=''"></img-crop>
         </div>
+        <br>
+        <span class="btn btn-info" ng-click="upload(croppedDataUrl, myImage.name)">Upload</span>
 
     </div>
 </div>

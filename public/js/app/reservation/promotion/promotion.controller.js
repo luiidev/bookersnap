@@ -1,8 +1,8 @@
-angular.module('promotion.controller', ['ngImgCrop','textAngular','ngEmoticons'])
+angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons'])
 .controller('PromotionCtrl', function($scope) {
 	
 })
-.controller('PromotionAddCtrl', function($scope,$rootScope) {
+.controller('PromotionAddCtrl', function($scope,Upload,$timeout) {
 
 	$scope.titulo="Nueva promoción";
 	$scope.estados = [{name: 'Activo',value:1},{name: 'Inactivo',value:0}];
@@ -30,11 +30,12 @@ angular.module('promotion.controller', ['ngImgCrop','textAngular','ngEmoticons']
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
 
-    //Recortar imagen
+  //Recortar imagen
     $scope.myImage = undefined;
- 	$scope.myCroppedImage='';   
- 	$scope.imageCropStep = 1;
+ 	  $scope.croppedDataUrl='';   
+ 	  $scope.imageCropStep = 1;
     
+    /*
     var handleFileSelect = function(evt) {
     //$scope.handleFileSelect = function(evt) {
       var file = evt.currentTarget.files[0];
@@ -48,22 +49,31 @@ angular.module('promotion.controller', ['ngImgCrop','textAngular','ngEmoticons']
       fileReader.readAsDataURL(file);
     };
     angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
+  */
 
     $scope.clear = function() {
-		$scope.imageCropStep = 1;
-		delete $scope.myImage;
-		delete $scope.myCroppedImage;
+		  $scope.imageCropStep = 1;
+		  delete $scope.myImage;
+		  delete $scope.croppedDataUrl;
+    };
 
-    //Personalizacion de TextAngular
-    $scope.toolbar = [
-      ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-      ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-      ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
-      ['html', 'insertImage','insertLink', 'insertVideo', 'wordcount', 'charcount']
-    ];
-
-
- 	};
+  //
+  $scope.upload = function (dataUrl, name) {
+    Upload.upload({
+      url: 'http://web.aplication.bookersnap/public/file/img/promotions',
+        data: {
+          file: Upload.dataUrltoBlob(dataUrl, name)
+        },
+      }).then(function (response) {
+        $timeout(function () {
+          $scope.result = response.data;
+        });
+      }, function (response) {
+        if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
+        }, function (evt) {
+            $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+    });
+  }
 
 })
 .controller('FlyerAddCtrl', function($scope) {
