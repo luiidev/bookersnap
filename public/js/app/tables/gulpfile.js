@@ -40,19 +40,19 @@ gulp.task('app-library-tables-js', function () {
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
 gulp.task('stylus-app', function() {
-    gulp.src('../../../css/*.styl')
+    gulp.src('../../../css/app/tables/*.styl')
         .pipe(stylus({
             use: nib()
         }))
         .pipe(minifyCss())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('../../../css')) 
+        .pipe(gulp.dest('../../../css/app/tables')) 
 });
 
 //Automatizamos esta tarea
 gulp.task('watch', function(){
     gulp.watch('**/*.js', ['app-bookersnap-tables-js']);
-    gulp.watch('../../../css/*.styl', ['stylus-app']);
+    gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
 });
 
 //ejecutamos el servidor y todos los archivos

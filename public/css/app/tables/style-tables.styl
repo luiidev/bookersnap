@@ -39,26 +39,44 @@
 			opacity 0.5
 	& .round
 		border-radius 50%
+	& .rt45
+		-moz-transform rotate(45deg)
+		-ms-transform rotate(45deg)
+		-webkit-transform rotate(45deg)
+		transform rotate(45deg)
+	& .shape-table
+		background-color #fff
 	& .border
 		border 1px solid #ccc
-	& .round-tables-stool
-		width 30px
-		height 30px
-	& .round-tables-2
-		width 50px 
-		height 50px 
-	& .round-tables-4
-		width 75px
-		height 75px
-	& .rec-tables-1
-		width 45px
-		height 27px
-	& .rec-tables-2
-		width 60px 
-		height 32px 
-	& .rec-tables-4
-		width 75px
-		height 48px
+		z-index 100
+		&.round.small
+			width 30px
+			height 30px
+		&.round.medium
+			width 50px 
+			height 50px
+		&.round.large
+			width 75px
+			height 75px
+		&.square.small
+			width 30px
+			height 30px
+		&.square.medium
+			width 50px 
+			height 50px
+		&.square.large
+			width 75px
+			height 75px
+		&.recta.small
+			width 45px
+			height 27px
+		&.recta.medium
+			width 60px 
+			height 32px 
+		&.recta.large
+			width 75px
+			height 48px
+			
 	& .header-zone-create
 		padding 8px
 		border 1px solid #DEDEDE

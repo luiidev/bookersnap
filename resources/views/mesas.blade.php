@@ -13,7 +13,7 @@
         <!-- CSS -->
         <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
         <!-- App Css -->
-        <link href="/css/style-tables.min.css" rel="stylesheet">
+        <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
     
     </head>
     <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
