@@ -33,6 +33,8 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/textAngular-1.5.0/dist/textAngular-rangy.min.js',
     '../../../library/textAngular-1.5.0/dist/textAngular-sanitize.min.js',
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.js',
+    '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
+    '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.reservation.min.js'))
@@ -42,22 +44,36 @@ gulp.task('app-library-reservation-js', function () {
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
 gulp.task('stylus-app', function() {
-    gulp.src('../../../css/*.styl')
+    gulp.src('../../../css/app/reservation/*.styl')
         .pipe(stylus({
             use: nib()
         }))
         .pipe(minifyCss())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('../../../css'))
+        .pipe(gulp.dest('../../../css/app/reservation'))
    
+});
+
+// Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
+gulp.task('app-library-reservation-css', function () {
+  gulp.src([
+    '../../../library/textAngular-1.5.0/bower_components/font-awesome/css/font-awesome.min.css',
+    '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
+    '../../../library/ngEmoticons-master/dist/ng-emoticons.min.css',
+    '../../../library/textAngular-1.5.0/dist/textAngular.css',
+    '!gulpfile.js'
+    ])
+  .pipe(minifyCss())
+  .pipe(concat('app.bookersnap.library.reservation.min.css'))
+  .pipe(gulp.dest('../../../css/app/reservation'));
 });
 
 //Automatizamos esta tarea
 gulp.task('watch', function(){
     gulp.watch('**/*.js', ['app-bookersnap-reservation-js']);
-    gulp.watch('../../../css/*.styl', ['stylus-app']);
+    gulp.watch('../../../css/app/reservation/*.styl', ['stylus-app']);
 
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch','app-bookersnap-reservation-js','stylus-app','app-library-reservation-js']);
+gulp.task('default', ['watch','app-bookersnap-reservation-js','stylus-app','app-library-reservation-js','app-library-reservation-css']);
