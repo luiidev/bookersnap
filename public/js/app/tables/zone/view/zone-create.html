@@ -64,124 +64,268 @@
                         <div class="col-md-9 box-lienzo-zone">
                             <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
 
-                                <div ng-repeat="obj in squareTables1" ng-drag="false" ng-drag-data="obj" class="border round-tables-stool" ng-dragg>
+                                <div ng-repeat="obj in squareTables1" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,"s1")' class="item-drag-table">
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round-tables-stool"></div>
                                 </div>
 
-                                <div ng-repeat="obj in squareTables2" ng-drag="false" ng-drag-data="obj" class="border round-tables-2" ng-dragg>
+                                <div ng-repeat="obj in squareTables2" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"s2")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round-tables-2"></div>
                                 </div>
 
-                                <div ng-repeat="obj in squareTables3" ng-drag="false" ng-drag-data="obj" class="border round-tables-4" ng-dragg>
-                                </div>
-
-
-                                <div ng-repeat="obj in roundTables1" ng-drag="false" ng-drag-data="obj" class="border round round-tables-stool" ng-dragg>
-                                </div>
-
-                                <div ng-repeat="obj in roundTables2" ng-drag="false" ng-drag-data="obj" class="border round round-tables-2" ng-dragg>
-                                </div>
-
-                                <div ng-repeat="obj in roundTables3" ng-drag="false" ng-drag-data="obj" class="border round round-tables-4" ng-dragg>
+                                <div ng-repeat="obj in squareTables3" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"s3")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round-tables-4"></div>
                                 </div>
 
 
-                                <div ng-repeat="obj in rectTables1" ng-drag="false" ng-drag-data="obj" class="border rec-tables-1" ng-dragg>
+                                <div ng-repeat="obj in roundTables1" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"r1")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round round-tables-stool"></div>
                                 </div>
 
-                                <div ng-repeat="obj in rectTables2" ng-drag="false" ng-drag-data="obj" class="border rec-tables-2" ng-dragg>
+                                <div ng-repeat="obj in roundTables2" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"r2")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round round-tables-2"></div>
                                 </div>
 
-                                <div ng-repeat="obj in rectTables3" ng-drag="false" ng-drag-data="obj" class="border rec-tables-4" ng-dragg>
+                                <div ng-repeat="obj in roundTables3" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"r3")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border round round-tables-4"></div>
                                 </div>
 
+
+                                <div ng-repeat="obj in rectTables1" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"re1")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border rec-tables-1"></div>
+                                </div>
+
+                                <div ng-repeat="obj in rectTables2" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"re2")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border rec-tables-2"></div>
+                                </div>
+
+                                <div ng-repeat="obj in rectTables3" ng-drag="false" ng-drag-data="obj" class="item-drag-table" ng-drag-table on-click-fn='activarTableOptions($index,"r3")'>
+                                    <div>{{obj.name}}</div>
+                                    <div class="border rec-tables-4"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 box-tables">
-                            <div class="row item descripcion">
-                               <h3>Add tables to your floor</h3>
-                               <p>Easily drag and drop your tables,name them and pick your min and max cover counts.</p>
+                            <div class="box-tables-items" ng-show="boxTables.items">
+                                <div class="row item descripcion">
+                                    <h3>Add tables to your floor</h3>
+                                    <p>Easily drag and drop your tables,name them and pick your min and max cover counts.</p>
+                                </div>
+
+                                <div class="row item title">
+                                    Round Tables
+                                </div>
+
+                                <div class="row item-table-box">
+                                    <div class="col-md-4">
+                                        <div class="title-table">Bar stool</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round round-tables-stool" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r1')"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round round-tables-2" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r2')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round round-tables-4" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r3')"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row item title">
+                                    Square Tables
+                                </div>
+
+                                <div class="row item-table-box draggable-objects">
+                                    <div class="col-md-4">
+                                        <div class="title-table">1-2 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round-tables-stool" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s1')" ng-center-anchor="true"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round-tables-2" ng-drag="true" ng-drag-data="{name:'2-4 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s2')" ng-center-anchor="true"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round-tables-4" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s3')" ng-center-anchor="true"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row item title">
+                                    Rectangular Tables
+                                </div>
+
+                                <div class="row item-table-box last">
+                                    <div class="col-md-4">
+                                        <div class="title-table">1-2 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border rec-tables-1" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re1')"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border rec-tables-2" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re2')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border rec-tables-4" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re3')"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="row item title">
-                                Round Tables
-                            </div>
-                            <div class="row item-table-box">
-                                <div class="col-md-4">
-                                    <div class="title-table">Bar stool</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round round-tables-stool" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r1')"></div>
-                                    </div>
-                                    
+
+                            <div class="box-tables-item-option" ng-show="boxTables.item">
+                                <div class="row item title no-background">
+                                    Table Name
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">2-4 top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round round-tables-2" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r2')"></div>
+
+                                <div class="row item-table-box">
+                                    <div class="col-md-6">
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control input-sm" id="name" placeholder="Name">
+                                        </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group text-rotate group-btn-rotate">
+                                            <label>Rotate Name</label>
+                                            <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-left"></i></button> <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-right"></i></button>
+                                        </div>
+                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">4-6+ top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round round-tables-4" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r3')"></div>
+
+                                <div class="row item title no-background">
+                                    Table Shape & Position
+                                </div>
+
+                                <div class="row item-table-box">
+
+                                    <div class="col-md-12">
+                                        <div class="form-group text-rotate group-btn-rotate">
+                                            <label>Shape</label>
+                                            <div>
+                                                <div class="btn-group btn-group-lg">
+                                                    <button type="button" class="btn btn-default waves-effect shape"><i class="round round-btn-shape"></i></button>
+                                                    <button type="button" class="btn btn-default waves-effect shape"><i class="square-btn-shape"></i></button>
+                                                    <button type="button" class="btn btn-default waves-effect shape"><i class="recta-btn-shape"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="row item title">
-                                Square Tables
-                            </div>
-                            <div class="row item-table-box draggable-objects">
-                                <div class="col-md-4">
-                                    <div class="title-table">1-2 top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round-tables-stool" ng-drag="true" ng-drag-data="{name:'1-2 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s1')" ng-center-anchor="true"></div>
+                                        
+                                    <div class="row">
+                                       <div class="col-md-12">
+                                          <div class="col-md-6">
+                                            <div class="form-group text-rotate fg-line">
+                                                <label>Table size</label>
+                                                <div class="fg-line">
+                                                    <div class="select">
+                                                        <select class="form-control">
+                                                            <option value="1">Large</option>
+                                                            <option value="2">Medium</option>
+                                                            <option value="3">Small</option>
+                                                      
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group text-rotate group-btn-rotate">
+                                                <label>Rotate Table</label>
+                                                <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-left"></i></button> <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-right"></i></button>
+                                            </div>
+                                        </div>
+
+                                        </div>
                                     </div>
-                                    
+
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">2-4 top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round-tables-2" ng-drag="true" ng-drag-data="{name:'2-4 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s2')" ng-center-anchor="true"></div>
+
+                                <div class="row item title no-background">
+                                    Table Capacity
+                                </div>
+
+                                <div class="row item-table-box last">
+                                    <div class="col-md-6">
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Min covers</label>
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="form-control">
+                                                        <option value="1">5 covers</option>
+                                                        <option value="2">6 covers</option>
+                                                        <option value="3">7 covers</option> 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">4-6+ top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border round-tables-4" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s3')" ng-center-anchor="true"></div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Max covers</label>
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="form-control">
+                                                        <option value="1">8 covers</option>
+                                                        <option value="2">9 covers</option>
+                                                        <option value="3">10 covers</option> 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="row item title">
-                                Rectangular Tables
-                            </div>
-                            <div class="row item-table-box last">
-                                <div class="col-md-4">
-                                    <div class="title-table">1-2 top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border rec-tables-1" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re1')"></div>
+
+                                    <div class="box-buttons-item-table">
+
+                                       <div class="col-md-6">
+                                            <button class="btn btn-danger waves-effect" ng-click="deleteSelectTableItem()">Delete selected</button>
+                                       </div>
+
+                                       <div class="col-md-6">
+                                            <button class="btn btn-primary waves-effect">Done</button>
+                                       </div>
+                                        
                                     </div>
-                                    
+
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">2-4 top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border rec-tables-2" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re2')"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="title-table">4-6+ top</div>
-                                    <div class="table-box" ng-if="true">
-                                        <div class="border rec-tables-4" ng-drag="true" ng-drag-data="{name:'4-6 top'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re3')"></div>
-                                    </div>
-                                    
-                                </div>
+
                             </div>
                  
                         </div>  
                     </div>
                 </div>
             </div>
-
-        
+                
         </div>
     </section>
 </section>

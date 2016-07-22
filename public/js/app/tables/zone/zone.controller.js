@@ -44,6 +44,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.getZones();
 })
 .controller('ZoneCreateCtrl', function($scope,ZoneFactory) {
+
 	$scope.squareTables1 = [];
 	$scope.squareTables2 = [];
 	$scope.squareTables3 = [];
@@ -56,26 +57,68 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.rectTables2 = [];
 	$scope.rectTables3 = [];
 
+	$scope.boxTables = {
+		items : true,
+		item : false
+	};
+
 	$scope.type = "";
 
 	$scope.centerAnchor = true;
 
 	$scope.toggleCenterAnchor = function () {
 		$scope.centerAnchor = !$scope.centerAnchor
-	}
+	};
+
+	/*Si queremos llamar a una funcion desde directiva*/
+	this.alertaPrueba = function(){
+	};
 
 	$scope.onDragComplete=function(data,evt,type){
-		console.log("drag success tipo :"+ type);
+		//console.log("drag success tipo :"+ type);
 		$scope.type = type;
 		selectTableTypeDrag(data,type);
-	}
+	};
 
 	$scope.onDropComplete=function(data,evt){
-		console.log("drop success, data:" + $scope.type);
+		console.log("drop success, data:" + JSON.stringify(data));
 
 		selectTableTypeDrop(data,$scope.type);
 		$scope.type = "";
-	}
+	};
+
+	$scope.activarTableOptions = function(index,type){
+		//Renderiza de nuestra directiva
+		getDataTableSelected(index,type);
+
+		$scope.$apply(function(){
+
+			/*if ($scope.boxTables.item) {
+				$scope.boxTables.item = false;
+				$scope.boxTables.items = true;
+			}else{*/
+				$scope.boxTables.item = true;
+				$scope.boxTables.items = false;
+			//}
+			
+		});
+	};
+
+
+	var getDataTableSelected = function(index,type){
+		//var d = $scope.squareTables1[index].name;
+		//console.log("index" + d ," type " + type);
+	};
+
+	var activarTablesItems = function(){
+		$scope.boxTables.item = false;
+		$scope.boxTables.items = true;
+	};
+
+	$scope.deleteSelectTableItem = function(){
+		angular.element('.item-drag-table').removeClass('selected-table');
+		activarTablesItems();
+	};
 
 	var selectTableTypeDrag = function(data,type){
 		var index = 0;
@@ -221,8 +264,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			
 		}
-
-	}
+	};
          
 })
 
