@@ -18,7 +18,7 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 			templateUrl: '/js/app/tables/zone/view/zone-create.html'
 		})
 		.state ('zone-edit', {
-			url: '/config/zone/edit',
+			url: '/config/zone/:id',
 			templateUrl: '/js/app/tables/zone/view/zone-edit.html'
 		})
 

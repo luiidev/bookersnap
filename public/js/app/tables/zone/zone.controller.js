@@ -43,7 +43,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.getZones();
 })
-.controller('ZoneCreateCtrl', function($scope,ZoneFactory,$uibModal) {
+.controller('ZoneCreateCtrl', function($scope,$stateParams,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal) {
 
 	$scope.sizeTableList = {
 		data : [
@@ -53,6 +53,19 @@ angular.module('zone.controller', ['ngDraggable'])
 		],
 		selectedOption : {id : "1",label : "small"}
 	} 
+
+	$scope.coversList = {
+		dataMin : [],
+		selectedMin : '',
+		dataMax : [],
+		selectedMax : ''
+	}
+
+	$scope.headerZone = {
+		tables : 0,
+		minCovers : 0,
+		maxCovers : 0
+	}
 
 	$scope.itemTables = [];
 
@@ -64,8 +77,6 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.typeDrag = "";
 
 	$scope.indexTable = 0;
-
-	var modalDeleteTable = null;
 
 	$scope.centerAnchor = true;
 
@@ -91,13 +102,38 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.changeShapeTable = function(shape){
 		$scope.itemTables[$scope.indexTable].shape = shape;
 
+		console.log(shape);
+
 		angular.element(".text-rotate .btn-group .shape").removeClass("active");
 		angular.element(".shape."+shape+"s").addClass("active");
 	};
 
 	$scope.changeSizeTable = function(){
-		console.log("changeSizeTable " + JSON.stringify($scope.sizeTableList.selectedOption));
 		$scope.itemTables[$scope.indexTable].size = $scope.sizeTableList.selectedOption.label;
+	};
+
+	$scope.editNameTable = function(){
+		$scope.itemTables[$scope.indexTable].name = angular.element("#name-table").val();
+	};
+
+	$scope.tableCapacity = function(option){
+		
+		if (option == "min") {
+			$scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMin.id;
+		}else{
+
+			$scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
+		}
+
+		if ($scope.coversList.selectedMax.id < $scope.coversList.selectedMin.id) {
+
+			$scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMax.id;
+			$scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
+
+			getDataTableSelected($scope.indexTable);
+		}
+
+		updateHeaderZone();
 	};
 
 	$scope.rotateShapeTable = function(){
@@ -110,74 +146,80 @@ angular.module('zone.controller', ['ngDraggable'])
 		}	
 	};
 
-	$scope.activarTableOptions = function(index,type){
-		//Renderiza de nuestra directiva
-		getDataTableSelected(index,type);
+	$scope.activarTableOptions = function(index,vthis){
+	
+		getDataTableSelected(index);
 
 		$scope.$apply(function(){
 
-			/*if ($scope.boxTables.item) {
-				$scope.boxTables.item = false;
-				$scope.boxTables.items = true;
-			}else{*/
-				$scope.boxTables.item = true;
-				$scope.boxTables.items = false;
-			//}
-			
+			$scope.boxTables.item = true;
+			$scope.boxTables.items = false;
+
 		});
 	};
 
-	$scope.saveTableSelected = function(){
-	
-		$scope.itemTables[$scope.indexTable].name = angular.element("#name-table").val();
-		$scope.itemTables[$scope.indexTable].rotate = "12";
-
+	$scope.doneTableSelected = function(){
 		$scope.activarTablesItems();
-
-		console.log("saveTableSelected " , JSON.stringify($scope.itemTables[$scope.indexTable]) );
 	};
 
-	var getDataTableSelected = function(index,type){
+	var listCovers = function(option){
+
+		var coverList = "";
+
+		if (option == "min") {
+			coverList = $scope.coversList.dataMin;
+		}else{
+			coverList = $scope.coversList.dataMax;
+		}
+
+		for (var i = 1; i <=30; i++) {
+			var data = {
+				label : i+" covers",
+				id : i
+			}
+
+			coverList.push(data);
+		}
+
+		if (option == "min") {
+			$scope.coversList.selectedMin = coverList[0];
+		}else{
+			$scope.coversList.selectedMax = coverList[0];
+		} 
+	};
+
+	var getDataTableSelected = function(index){
 		$scope.indexTable = index;
 
 		angular.element("#name-table").val($scope.itemTables[index].name);
 		$scope.changeShapeTable($scope.itemTables[index].shape);
 
-		$scope.sizeTableList.selectedOption = {
-			id : getIdSize($scope.itemTables[index].size),
-			label : $scope.itemTables[index].size
+		$scope.itemTables[index].top = angular.element("#tb-item"+index).css("top").replace("px","");
+		$scope.itemTables[index].left = angular.element("#tb-item"+index).css("left").replace("px","");
+
+		$scope.coversList.selectedMin = {
+			id :$scope.itemTables[$scope.indexTable].minCover,
+			label : $scope.itemTables[$scope.indexTable].minCover +" covers"
 		};
 
-		console.log("index" + index ," type " + type , "element ", $scope.itemTables[index].name);
-	};
-
-	var getIdSize = function(label){
-		var id = "";
-
-		switch(label) {
-			case "small":
-				id = "1";
-			break;
-			case "medium":
-				id = "2"
-			break;
-			case "large":
-				id = "3"
-			break;
-		}
-		return id;
+		$scope.coversList.selectedMax = {
+			id :$scope.itemTables[$scope.indexTable].maxCover,
+			label : $scope.itemTables[$scope.indexTable].maxCover +" covers"
+		};
+		
+		$scope.sizeTableList.selectedOption = {
+			id : TableFactory.getIdSize($scope.itemTables[index].size),
+			label : $scope.itemTables[index].size
+		};
 	};
 
 	$scope.activarTablesItems = function(){
-
-		$scope.boxTables.item = false;
-		$scope.boxTables.items = true;
-
+		ZoneLienzoFactory.activarTablesItems($scope.boxTables);
 	};
 
 	$scope.deleteSelectTableItem = function(){
 
-		modalDeleteTable = $uibModal.open({
+		var modalDeleteTable = $uibModal.open({
 			animation: true,
 			templateUrl: 'myModalDeleteTable.html',
 			size: 'lg',
@@ -191,7 +233,11 @@ angular.module('zone.controller', ['ngDraggable'])
 				},
 				boxTables : function(){
 					return $scope.boxTables;
+				},
+				headerZone : function(){
+					return $scope.headerZone;
 				}
+
 			}
 		});
 	};
@@ -207,18 +253,88 @@ angular.module('zone.controller', ['ngDraggable'])
 		var index = $scope.itemTables.indexOf(data);
 		if (index == -1)
 			$scope.itemTables.push(data);
+			updateHeaderZone();
 	};
+
+	var updateHeaderZone = function(){
+		ZoneLienzoFactory.updateHeaderZone($scope.headerZone,$scope.itemTables);
+	};
+
+	$scope.saveNewZone = function(){
+		var dataZone = {
+			name : angular.element("#zone_name").val(),
+			tables :[]
+		}
+
+		angular.forEach($scope.itemTables,function(table){
+
+			var tableItem = {
+				name : table.name,
+				min_cover : table.minCover,
+				max_cover : table.maxCover,
+				config_position : table.left+","+table.top,//x,y
+				config_size : TableFactory.getIdSize(table.size),
+				config_rotation : table.rotate,
+				config_forme : TableFactory.getIdShape(table.shape)
+			}
+
+			dataZone.tables.push(tableItem);
+
+		});
+		console.log("saveNewZone " , JSON.stringify(dataZone));
+	};
+
+	var detectedAction = function(){
+		if ($stateParams.id != undefined) {
+
+			console.log("params edit" ,$stateParams.id);
+
+			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
+
+				loadTablesEdit(zone.tables)
+				
+			});
+		}
+	};
+
+	var loadTablesEdit = function(tables){
+
+		angular.forEach(tables,function(data){
+			var position = data.config_position.split(",");
+			var data = {
+				name : data.name,
+				minCover : data.min_cover,
+				maxCover : data.max_cover,
+				left : position[0],
+				top : position[1],
+				shape : TableFactory.getLabelShape(data.config_forme),
+				size : TableFactory.getLabelSize(data.config_size),
+				rotate : data.config_rotation
+			}
+
+			$scope.itemTables.push(data);
+		});
+
+		updateHeaderZone();
+	};
+	
+	detectedAction();
+
+	listCovers("min");
+	listCovers("max");
          
 })
-.controller('ModalTableDeteleCtrl', function($scope,$uibModalInstance,itemTables,indexTable,boxTables) {
+.controller('ModalTableDeteleCtrl', function($scope,$uibModalInstance,itemTables,indexTable,boxTables,headerZone,ZoneLienzoFactory) {
 
 	$scope.ok = function () {
-	    boxTables.item = false;
-		boxTables.items = true;
+		//show tables items
+		ZoneLienzoFactory.activarTablesItems(boxTables);
 
+		//delete item table selected
 		itemTables.splice(indexTable,1);
-
 		angular.element('.item-drag-table').removeClass('selected-table');
+
+		ZoneLienzoFactory.updateHeaderZone(headerZone,itemTables);
 
 		$uibModalInstance.close();
 	};
