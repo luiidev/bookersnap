@@ -275,8 +275,8 @@ class ZoneController extends Controller
    	return "ok update";
    }
    
-   public function delete($lang,Request $request){
-   	return "data";
+   public function delete($lang,$id){
+   	return "ok delete";
    }
   
 }

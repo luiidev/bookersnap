@@ -8,10 +8,14 @@ angular.module('zone.directive', [])
 
     var x = Math.floor((Math.random() * 500) + 40);
     var y = Math.floor((Math.random() * 360) + 40);
-    
+
+   /* var x = element.attr("left");
+    var y = element.attr("top");*/
+
     if (element.attr("option") == "edit") {
 
       setTimeout(function(){
+
         x =  element.attr("left");
         y =  element.attr("top");
 
@@ -27,8 +31,8 @@ angular.module('zone.directive', [])
       left: x + 'px'
     });
 
-    element.attr("top",y);
-    element.attr("left",x);
+    /*element.attr("top",y);
+    element.attr("left",x);*/
 
     element.on('mousedown', function(event) {
       event.preventDefault();
@@ -71,8 +75,8 @@ angular.module('zone.directive', [])
         left: x + 'px'
       });
 
-      element.attr("top",y);
-      element.attr("left",x);
+      /*element.attr("top",y);
+      element.attr("left",x);*/
     }
 
     function mouseup() {
@@ -82,7 +86,7 @@ angular.module('zone.directive', [])
   }
   return {
     link: makeDraggable,
-    controller: 'ZoneCreateCtrl',
+    //controller: 'ZoneCreateCtrl',
     scope: {
     	onClickFn :  '&'
     }

@@ -60,9 +60,9 @@
                     </div>
                     <div class="row">
                         <div class="col-md-9 box-lienzo-zone">
-                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
+                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
 
-                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" option="create">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" option="create" top="{{obj.top}}" left="{{obj.left}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px">
                                         <div>{{obj.name}}</div>
                                         <div class="border shape-table {{obj.shape}} {{obj.size}}"></div>    
                                 </div>
