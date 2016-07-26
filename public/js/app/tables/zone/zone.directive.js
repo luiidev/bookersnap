@@ -8,6 +8,7 @@ angular.module('zone.directive', [])
 
     var x = Math.floor((Math.random() * 500) + 40);
     var y = Math.floor((Math.random() * 360) + 40);
+   
     element.css({
       position: 'absolute',
       cursor: 'move',
@@ -15,11 +16,16 @@ angular.module('zone.directive', [])
       left: x + 'px'
     });
 
+    /*element.attr("top",y);
+    element.attr("left",x);*/
+
     element.on('mousedown', function(event) {
       event.preventDefault();
       
       startX = event.pageX - x;
       startY = event.pageY - y;
+
+      console.log("mousedown " + event.pageX);
 
       $document.on('mousemove', mousemove);
       $document.on('mouseup', mouseup);
@@ -54,6 +60,9 @@ angular.module('zone.directive', [])
         top: y + 'px',
         left: x + 'px'
       });
+
+      /*element.attr("top",y);
+      element.attr("left",x);*/
     }
 
     function mouseup() {
