@@ -28,6 +28,8 @@ gulp.task('app-bookersnap-reservation-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
+    '../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.jquery.js',
+    '../../../library/angular-chosen-1.4.0/dist/angular-chosen.min.js',
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
     '../../../library/textAngular-1.5.0/dist/textAngular.min.js',
     '../../../library/textAngular-1.5.0/dist/textAngular-rangy.min.js',
@@ -61,6 +63,7 @@ gulp.task('app-library-reservation-css', function () {
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.css',
     '../../../library/textAngular-1.5.0/dist/textAngular.css',
+    '../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.css',
     '!gulpfile.js'
     ])
   .pipe(minifyCss())

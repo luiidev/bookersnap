@@ -53,3 +53,11 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
 });
 
 
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function () {
+
+	Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
+	Route::get('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+
+});
+
+
