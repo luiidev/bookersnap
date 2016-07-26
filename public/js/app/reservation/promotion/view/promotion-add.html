@@ -3,6 +3,7 @@
 </div>
 
 <div class="card-body card-padding">
+<form ng-submit="" method="post" enctype="multipart/form-data">
 <div class="row">
     <div class="col-xs-12 col-md-4">
         <div class="form-group fg-float m-b-30">
@@ -23,16 +24,21 @@
         
         <div ng-bind-html="promotion.descripcion | emoticons:{linkTarget:'_blank'}"></div>
         
-        <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
-        <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
-            <input type="radio" ng-model="promotion.estado" name="estado" ng-value="{{estado.value}}">
-            <i class="input-helper"></i>
-             {{estado.name}}
-        </label>
     </div>
     <div class="col-xs-12 col-md-4">
 
           
+            <p class="f-500 c-black m-b-15">Turno</p>
+            <div class="form-group">
+            <div class="fg-line">
+                <select chosen multiple ng-model="promotion.turno" ng-options="turno.id as turno.name for turno in turnActive"  class="w-100" no-results-text="'No se pudo encontrar coincidencias'" placeholder-text-multiple="'Seleccione una opcion'">
+                    <option value=""></option>
+                </select>                   
+            </div>
+            </div>
+
+        
+
             <div class="toggle-switch row" data-ts-color="blue">
                 <label class="tw3 col-xs-6 col-md-8">Ingresar fecha de caducidad</label>
                 <div class="col-xs-4 col-md-3">
@@ -71,16 +77,21 @@
 
             <div class="m-b-20" ng-show="promotion.tipo == '1'">
                 <p class="f-500 c-black m-b-15">Zona disponible</p>
-                <select chosen data-placeholder="Select a country..." class="w-100">
-                    <option value="United States">United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Afghanistan">Afghanistan</option>
-                    <option value="Aland Islands">Aland Islands</option>
-                    <option value="Albania">Albania</option>
-                    <option value="Algeria">Algeria</option>
-                    <option value="American Samoa">American Samoa</option>
+                <!--<select chosen multiple id="states">
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
                 </select>
-            </div>     
+                -->
+            </div> 
+
+        <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
+        <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
+            <input type="radio" ng-model="promotion.estado" name="estado" ng-value="{{estado.value}}">
+            <i class="input-helper"></i>
+             {{estado.name}}
+        </label>    
 
         
     </div>
@@ -90,12 +101,12 @@
         <div class="fileinput fileinput-new">
         <span class="btn btn-info btn-file">
             <!--<span ng-show="imageCropStep == 1">Seleccionar imagen</span>-->
-            <span ngf-select ng-model="myImage" name="myImage" id="fileInput" ng-show="imageCropStep == 1">Seleccionar imagen</span>
+            <span ngf-select ngf-change='uploadImage(myImage)' ng-model="myImage" name="myImage" id="fileInput" ng-show="imageCropStep == 1" ngf-max-size="20MB" accept="image/*">Seleccionar imagen</span>
             <!--<span ng-show="imageCropStep == 2">Cambiar</span> -->
             <!--<input type="file" name="fileInput" id="fileInput" ng-model="myImage" ngf-select accept="image/*"/>-->
         </span>
         
-        <span href="#" class="btn btn-danger" ng-click="clear()">Cancelar</span>
+        <span href="#" class="btn btn-danger" ng-click="clear()" ng-show="myImage">Cancelar</span>
         </div>
 
         <div ngf-drop ng-model="myImage" ngf-pattern="image/*" class="cropArea">
@@ -103,8 +114,9 @@
             result-image="croppedDataUrl" ng-init="croppedDataUrl=''"></img-crop>
         </div>
         <br>
-        <span class="btn btn-info" ng-click="upload(croppedDataUrl, myImage.name)">Upload</span>
+        <!--<span class="btn btn-info" ng-click="upload(croppedDataUrl, myImage.name)">Upload</span>-->
 
     </div>
 </div>
+</form>
 </div>

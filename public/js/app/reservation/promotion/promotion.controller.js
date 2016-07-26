@@ -1,12 +1,16 @@
-angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons'])
+angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons','localytics.directives'])
 .controller('PromotionCtrl', function($scope) {
 	
 })
-.controller('PromotionAddCtrl', function($scope,Upload,$timeout) {
+.controller('PromotionAddCtrl', function($scope,Upload,$timeout,PromotionFactory) {
 
 	$scope.titulo="Nueva promoción";
 	$scope.estados = [{name: 'Activo',value:1},{name: 'Inactivo',value:0}];
 	$scope.tipos = [{name: 'Gratis',value:0},{name: 'De pago',value:1}];
+
+  PromotionFactory.getTurn().success(function(data){
+    $scope.turnActive = data;
+  });
 
 	//Estados por defecto
 	$scope.promotion={caduca:false, tipo:0, estado:1,descripcion:" "};
@@ -57,10 +61,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 		  delete $scope.croppedDataUrl;
     };
 
-  //
+  /*
   $scope.upload = function (dataUrl, name) {
     Upload.upload({
-      url: 'http://web.aplication.bookersnap/public/file/img/promotions',
+      url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
         data: {
           file: Upload.dataUrltoBlob(dataUrl, name)
         },
@@ -74,6 +78,23 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
             $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
     });
   }
+  */
+
+  $scope.uploadImage = function (file) {
+        Upload.upload({
+            //url: './public/file/img/promotions',
+            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
+            data: {file: file}
+        }).then(function (resp) {
+            console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+        });
+  };
+
 
 })
 .controller('FlyerAddCtrl', function($scope) {
