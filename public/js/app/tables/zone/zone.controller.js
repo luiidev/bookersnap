@@ -43,7 +43,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.getZones();
 })
-.controller('ZoneCreateCtrl', function($scope,$stateParams,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal) {
+.controller('ZoneCreateCtrl', function($scope,$stateParams,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
 	$scope.sizeTableList = {
 		data : [
@@ -101,8 +101,6 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.changeShapeTable = function(shape){
 		$scope.itemTables[$scope.indexTable].shape = shape;
-
-		console.log(shape);
 
 		angular.element(".text-rotate .btn-group .shape").removeClass("active");
 		angular.element(".shape."+shape+"s").addClass("active");
@@ -260,9 +258,10 @@ angular.module('zone.controller', ['ngDraggable'])
 		ZoneLienzoFactory.updateHeaderZone($scope.headerZone,$scope.itemTables);
 	};
 
-	$scope.saveNewZone = function(){
+	$scope.saveZone = function(option){
 		var dataZone = {
 			name : angular.element("#zone_name").val(),
+			ms_microsite_id : IdMicroSitio,
 			tables :[]
 		}
 
@@ -281,18 +280,32 @@ angular.module('zone.controller', ['ngDraggable'])
 			dataZone.tables.push(tableItem);
 
 		});
-		console.log("saveNewZone " , JSON.stringify(dataZone));
+
+		if (option == "create") {
+
+			ZoneFactory.createZone(dataZone).success(function(response){
+				console.log("succes createZone " + JSON.stringify(response));
+			});
+
+		}else{
+
+			ZoneFactory.editZone(dataZone).success(function(response){
+				console.log("succes editZone " + JSON.stringify(response));
+			});
+		}
+
+		console.log("saveZone " + JSON.stringify(dataZone));
+
 	};
 
-	var detectedAction = function(){
+	var detectedForm = function(){
 		if ($stateParams.id != undefined) {
 
 			console.log("params edit" ,$stateParams.id);
 
 			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
-
+				angular.element("#zone_name").val(zone.name);
 				loadTablesEdit(zone.tables)
-				
 			});
 		}
 	};
@@ -301,7 +314,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 		angular.forEach(tables,function(data){
 			var position = data.config_position.split(",");
-			var data = {
+			var dataTable = {
 				name : data.name,
 				minCover : data.min_cover,
 				maxCover : data.max_cover,
@@ -312,13 +325,13 @@ angular.module('zone.controller', ['ngDraggable'])
 				rotate : data.config_rotation
 			}
 
-			$scope.itemTables.push(data);
+			$scope.itemTables.push(dataTable);
 		});
 
 		updateHeaderZone();
 	};
 	
-	detectedAction();
+	detectedForm();
 
 	listCovers("min");
 	listCovers("max");

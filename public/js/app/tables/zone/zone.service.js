@@ -6,6 +6,12 @@ angular.module('zone.service', [])
 		},
 		getZone : function(vId){
 			return $http.get(ApiUrl+"/zone/"+vId); 
+		},
+		createZone : function(vData){
+			return $http.post(ApiUrl + '/zone',vData); 
+		},
+		editZone : function(vData){
+			return $http.put(ApiUrl + '/zone',vData); 
 		}
 	};
 
@@ -75,13 +81,13 @@ angular.module('zone.service', [])
 			var label = "";
 
 			switch(id) {
-				case "1":
+				case 1:
 					label = "round";
 				break;
-				case "2":
+				case 2:
 					label = "square";
 				break;
-				case "3":
+				case 3:
 					label = "recta";
 				break;
 			}
@@ -91,13 +97,13 @@ angular.module('zone.service', [])
 			var label = "";
 
 			switch(id) {
-				case "1":
+				case 1:
 					label = "small";
 				break;
-				case "2":
+				case 2:
 					label = "medium";
 				break;
-				case "3":
+				case 3:
 					label = "large";
 				break;
 			}

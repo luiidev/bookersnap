@@ -8,7 +8,18 @@ angular.module('zone.directive', [])
 
     var x = Math.floor((Math.random() * 500) + 40);
     var y = Math.floor((Math.random() * 360) + 40);
-   
+    
+    if (element.attr("option") == "edit") {
+
+      setTimeout(function(){
+        x =  element.attr("left");
+        y =  element.attr("top");
+
+        console.log("x - y" , x ," - ", y);
+      },1000);
+
+    }
+ 
     element.css({
       position: 'absolute',
       cursor: 'move',
@@ -16,8 +27,8 @@ angular.module('zone.directive', [])
       left: x + 'px'
     });
 
-    /*element.attr("top",y);
-    element.attr("left",x);*/
+    element.attr("top",y);
+    element.attr("left",x);
 
     element.on('mousedown', function(event) {
       event.preventDefault();
@@ -25,12 +36,11 @@ angular.module('zone.directive', [])
       startX = event.pageX - x;
       startY = event.pageY - y;
 
-      console.log("mousedown " + event.pageX);
-
       $document.on('mousemove', mousemove);
       $document.on('mouseup', mouseup);
 
     });
+
 
     element.on('click',function(event){
     	
@@ -61,8 +71,8 @@ angular.module('zone.directive', [])
         left: x + 'px'
       });
 
-      /*element.attr("top",y);
-      element.attr("left",x);*/
+      element.attr("top",y);
+      element.attr("left",x);
     }
 
     function mouseup() {

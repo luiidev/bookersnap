@@ -31,6 +31,7 @@ gulp.task('app-bookersnap-tables-js', function () {
 gulp.task('app-library-tables-js', function () {
   gulp.src([
     '../../../library/ngDraggable/ngDraggable.js',
+    '../../../library/global/functions.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.tables.min.js'))

@@ -14,7 +14,7 @@
                         <button class="btn btn-default waves-effect" data-ui-sref="zone.active">Cancel</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="saveZone()">Save Zone</button>
+                        <button class="btn btn-primary waves-effect" ng-click="saveZone('edit')">Save Zone</button>
                     </li>
                 </ul>
             </div>
@@ -27,8 +27,8 @@
                                 <div class="input-group fg-float">
                                     <span class="input-group-addon"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw"></i></span>
                                     <div class="fg-line">
-                                        <input type="text" class="form-control" id="zone_name">
-                                        <label class="fg-label">Untitled Zone</label>
+                                        <input type="text" class="form-control" id="zone_name" placeholder="Zone name">
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                         <div class="col-md-9 box-lienzo-zone">
                             <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
 
-                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit" >
                                         <div>{{obj.name}}</div>
                                         <div class="border shape-table {{obj.shape}} {{obj.size}}"></div>    
                                 </div>
