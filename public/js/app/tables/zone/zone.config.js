@@ -21,5 +21,9 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 			url: '/config/zone/:id',
 			templateUrl: '/js/app/tables/zone/view/zone-edit.html'
 		})
+		.state ('zone-clone', {
+			url: '/config/zone/:id/clone',
+			templateUrl: '/js/app/tables/zone/view/zone-clone.html'
+		})
 
 });

@@ -1,9 +1,12 @@
 angular.module('zone.controller', ['ngDraggable'])
 
-.controller('ZoneCtrl', function($scope,ZoneFactory) {
+.controller('ZoneCtrl', function($scope,ZoneFactory,$uibModal) {
 
 	$scope.zonesActive = {};
 	$scope.zonesInactive = {};
+
+	$scope.idZoneDelete = 0;
+	$scope.indexRow = 0;
 
 	$scope.getZones = function(){
 
@@ -29,6 +32,32 @@ angular.module('zone.controller', ['ngDraggable'])
 		});
 	};
 
+	$scope.deleteZoneConfirm = function(idZone, indexRow){
+
+		$scope.idZoneDelete = idZone;
+		$scope.indexRow = indexRow;
+
+		console.log("indexRow " + indexRow);
+
+		var modalDeleteZone = $uibModal.open({
+			animation: true,
+			templateUrl: 'myModalDeleteZone.html',
+			size: 'lg',
+			controller : 'ModalZoneDeleteCtrl',
+			resolve: {
+				idZone : function(){
+					return $scope.idZoneDelete;
+				},
+				indexRow : function(){
+					return $scope.indexRow;
+				},
+				zonesInactive : function(){
+					return $scope.zonesInactive;
+				}
+			}
+		});
+	};
+
 	var getTablesCount = function(zones){
 		var vTables = 0;
 
@@ -43,7 +72,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.getZones();
 })
-.controller('ZoneCreateCtrl', function($scope,$stateParams,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('ZoneCreateCtrl', function($scope,$stateParams,$document,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
 	$scope.sizeTableList = {
 		data : [
@@ -76,27 +105,36 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.typeDrag = "";
 
-	$scope.indexTable = 0;
-
-	$scope.centerAnchor = true;
-
-	$scope.toggleCenterAnchor = function () {
-		$scope.centerAnchor = !$scope.centerAnchor
-	};
+	$scope.indexTable = null;
+	$scope.selectedTable = false;//validar al hacer click en el lienzo
 
 	/*Si queremos llamar a una funcion desde directiva*/
 	this.alertaPrueba = function(){
 	};
 
 	$scope.onDragComplete=function(data,evt,type){
-		//console.log("drag success tipo :"+ type);
 		$scope.typeDrag = type;
 		selectTableTypeDrag(data,type);
 	};
 
 	$scope.onDropComplete = function(data,evt){
+		data.top = evt.y;
+		data.left = evt.x;
+		//capturamos la posicion donde se queda
+		console.log("onDropComplete " + evt.x +" - "+ evt.y);
 		selectTableTypeDrop(data);
+
 		$scope.typeDrag = "";
+	};
+
+	$scope.onLienzo = function(){
+
+		if($scope.indexTable !=null && $scope.selectedTable == false){
+			console.log("onLienzo");
+			$scope.activarTablesItems();
+		}
+
+		$scope.selectedTable = false;
 	};
 
 	$scope.changeShapeTable = function(shape){
@@ -145,7 +183,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	};
 
 	$scope.activarTableOptions = function(index,vthis){
-	
+		$scope.selectedTable = true;
 		getDataTableSelected(index);
 
 		$scope.$apply(function(){
@@ -285,17 +323,19 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			ZoneFactory.createZone(dataZone).success(function(response){
 				console.log("succes createZone " + JSON.stringify(response));
+				messageAlert("Success","Zone create complete","success");
 			});
 
 		}else{
 
 			ZoneFactory.editZone(dataZone).success(function(response){
 				console.log("succes editZone " + JSON.stringify(response));
+				messageAlert("Success","Zone edit complete","success");
 			});
 		}
 
-		console.log("saveZone " + JSON.stringify(dataZone));
 
+		console.log("saveZone " + JSON.stringify(dataZone));
 	};
 
 	var detectedForm = function(){
@@ -334,8 +374,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	detectedForm();
 
 	listCovers("min");
-	listCovers("max");
-         
+	listCovers("max");       
 })
 .controller('ModalTableDeteleCtrl', function($scope,$uibModalInstance,itemTables,indexTable,boxTables,headerZone,ZoneLienzoFactory) {
 
@@ -353,6 +392,22 @@ angular.module('zone.controller', ['ngDraggable'])
 	};
 
 	$scope.cancel = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
+})
+.controller('ModalZoneDeleteCtrl', function($scope,ZoneFactory,$uibModalInstance,idZone,indexRow,zonesInactive) {
+
+	$scope.deleteZone = function(){
+		ZoneFactory.deleteZone(idZone).success(function(response){
+			console.log("deleteZone msg " + response);
+
+			zonesInactive.splice(indexRow, 1);
+
+			$uibModalInstance.close();
+		});
+	};
+
+	$scope.cancel = function(){
 		$uibModalInstance.dismiss('cancel');
 	};
 

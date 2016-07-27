@@ -12,6 +12,9 @@ angular.module('zone.service', [])
 		},
 		editZone : function(vData){
 			return $http.put(ApiUrl + '/zone',vData); 
+		},
+		deleteZone : function(vId){
+			return $http.delete(ApiUrl + '/zone/'+vId); 
 		}
 	};
 
@@ -22,6 +25,8 @@ angular.module('zone.service', [])
 		activarTablesItems : function(boxTables){
 			boxTables.item = false;
 			boxTables.items = true;
+
+			angular.element('.item-drag-table').removeClass('selected-table');
 		},
 		updateHeaderZone : function(headerZone,itemTables){
 			headerZone.tables = itemTables.length;
