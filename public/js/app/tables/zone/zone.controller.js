@@ -112,14 +112,16 @@ angular.module('zone.controller', ['ngDraggable'])
 	this.alertaPrueba = function(){
 	};
 
-	$scope.onDragComplete=function(data,evt,type){
+	$scope.onDragComplete = function(data,evt,type){
 		$scope.typeDrag = type;
 		selectTableTypeDrag(data,type);
 	};
 
 	$scope.onDropComplete = function(data,evt){
-		data.top = evt.y;
-		data.left = evt.x;
+
+		data.top = evt.y - 261 + 25 - evt.element.centerY;
+		data.left = evt.x - 61 + 25 - evt.element.centerX;
+
 		//capturamos la posicion donde se queda
 		console.log("onDropComplete " + evt.x +" - "+ evt.y);
 		selectTableTypeDrop(data);
@@ -188,9 +190,13 @@ angular.module('zone.controller', ['ngDraggable'])
 
 		$scope.$apply(function(){
 
-			$scope.boxTables.item = true;
-			$scope.boxTables.items = false;
-
+			if($scope.boxTables.item == false){
+				$scope.boxTables.item = true;
+				$scope.boxTables.items = false;
+			}else{
+				$scope.boxTables.item = false;
+				$scope.boxTables.items = true;
+			}
 		});
 	};
 

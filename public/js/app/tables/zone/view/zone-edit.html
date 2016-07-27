@@ -63,7 +63,7 @@
                         <div class="col-md-9 box-lienzo-zone">
                             <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
 
-                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" shape="{{obj.shape}}" size="{{obj.size}}" rotate="{{obj.rotate}}" >
                                         <div>{{obj.name}}</div>
                                         <div class="border shape-table {{obj.shape}} {{obj.size}}"></div>    
                                 </div>
@@ -86,20 +86,20 @@
                                     <div class="col-md-4">
                                         <div class="title-table">Bar stool</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border round small" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'small',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r1')"></div>
+                                            <div class="border round small" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'small',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r1')" ng-center-anchor="true"></div>
                                         </div>
 
                                     </div>
                                     <div class="col-md-4">
                                         <div class="title-table">2-4 top</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border round medium" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'medium',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r2')"></div>
+                                            <div class="border round medium" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'medium',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r2')" ng-center-anchor="true"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="title-table">4-6+ top</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border round large" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'large',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r3')"></div>
+                                            <div class="border round large" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'large',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'r3')" ng-center-anchor="true"></div>
                                         </div>
 
                                     </div>
@@ -140,7 +140,7 @@
                                     <div class="col-md-4">
                                         <div class="title-table">1-2 top</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border recta small" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'small',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re1')"></div>
+                                            <div class="border recta small" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'small',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re1')" ng-center-anchor="true"></div>
                                         </div>
 
                                     </div>
@@ -148,14 +148,14 @@
                                     <div class="col-md-4">
                                         <div class="title-table">2-4 top</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border recta medium" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'medium',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re2')"></div>
+                                            <div class="border recta medium" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'medium',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re2')" ng-center-anchor="true"></div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="title-table">4-6+ top</div>
                                         <div class="table-box" ng-if="true">
-                                            <div class="border recta large" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'large',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re3')"></div>
+                                            <div class="border recta large" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'large',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'re3')" ng-center-anchor="true"></div>
                                         </div>
 
                                     </div>
