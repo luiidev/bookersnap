@@ -11,9 +11,10 @@
         <!-- Vendor CSS -->
         <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
         <!-- CSS -->
+         <link href="/css/app/reservation/app.bookersnap.library.reservation.min.css" rel="stylesheet">
         <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
          <!-- App Css -->
-        <link href="/css/app/reservation/app.bookersnap.library.reservation.min.css" rel="stylesheet">
+       
         <link href="/css/app/reservation/style-reservation.min.css" rel="stylesheet">
     
     </head>
