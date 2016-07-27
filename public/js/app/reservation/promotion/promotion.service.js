@@ -5,7 +5,6 @@ angular.module('promotion.service', [])
   return {
     getTurn: function(vData){
       return $http.get(ApiUrlReservation+"/turn"); 
-      //return $http.get("http://web.aplication.bookersnap/v1/es/admin/ms/12/mesas/turn");
     }
   };
 

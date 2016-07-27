@@ -3,7 +3,7 @@
 </div>
 
 <div class="card-body card-padding">
-<form ng-submit="" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" name="promotion" novalidate>
 <div class="row">
     <div class="col-xs-12 col-md-4">
         <div class="form-group fg-float m-b-30">
@@ -15,7 +15,7 @@
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>
         <div class="form-group">
             <div class="fg-line">
-            <text-angular name="descripcion" placeholder="Redactar descripcion." ng-model="promotion.descripcion" ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','quote'],['bold','italics','underline','strikeThrough','ul','ol','clear'],['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertLink','html']]">
+            <text-angular placeholder="Redactar descripcion." ng-model="promotion.descripcion" ta-toolbar="[['h1','h2','h3','h4','h5','h6','p','quote'],['bold','italics','underline','strikeThrough','ul','ol','clear'],['justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertLink','html']]">
                 
             </text-angular>
             </div>
@@ -29,15 +29,12 @@
 
           
             <p class="f-500 c-black m-b-15">Turno</p>
+
             <div class="form-group">
             <div class="fg-line">
-                <select chosen multiple ng-model="promotion.turno" ng-options="turno.id as turno.name for turno in turnActive"  class="w-100" no-results-text="'No se pudo encontrar coincidencias'" placeholder-text-multiple="'Seleccione una opcion'">
-                    <option value=""></option>
-                </select>                   
+                <button class="btn btn-primary btn-icon-text" ng-click="openModal()"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
             </div>
             </div>
-
-        
 
             <div class="toggle-switch row" data-ts-color="blue">
                 <label class="tw3 col-xs-6 col-md-8">Ingresar fecha de caducidad</label>
@@ -77,14 +74,9 @@
 
             <div class="m-b-20" ng-show="promotion.tipo == '1'">
                 <p class="f-500 c-black m-b-15">Zona disponible</p>
-                <!--<select chosen multiple id="states">
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
+            <select chosen multiple ng-model="promotion.zonaselected" ng-options="s.id as s.title for s in zoneAvailable" class="w-100">
                 </select>
-                -->
-            </div> 
+            </div>
 
         <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
         <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
@@ -120,3 +112,49 @@
 </div>
 </form>
 </div>
+
+<script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <h4 class="modal-title">Crear turnos</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                    <div class="col-xs-12 col-md-12">
+
+                    <p class="c-black f-500">Actividad del local</p>
+                    <select chosen ng-model="promotion.activityselected" no-results-text="'No se pudo encontrar coincidencias'" placeholder-text="'Seleccione una actividad'" class="w-100">
+                    <option ng-repeat="activity in activityAvailable" >{{activity.title}}</option> 
+                    </optgroup>
+                    </select> 
+                    </select>
+                    
+                    <div class="checkbox m-b-15">
+                    <label ng-repeat="dia in semana" class="m-r-5 m-b-10">
+                    <input type="checkbox" value="{{dia.id}}"><i class="input-helper"></i>{{dia.nameday}}
+                    </label>
+                    </div>
+
+                    </div>
+
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group fg-line">
+                        <label>H.Inicio</label>
+                        <input type="text" class="form-control" placeholder="ej: 23:06:55">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group fg-line">
+                        <label>H.Final</label>
+                        <input type="text" class="form-control" placeholder="ej: 23:06:55">
+                        </div>
+                    </div>
+
+                    </div> 
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="ok()">Crear</button>
+                    <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+                </div>
+                </script>

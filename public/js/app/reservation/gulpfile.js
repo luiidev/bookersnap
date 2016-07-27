@@ -37,10 +37,12 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.js',
     '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
     '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
+    '../../../library/input-mask/input-mask.min.js',
+    '../../../library/global/functions.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.reservation.min.js'))
-  .pipe(jsmin())
+  //.pipe(jsmin())
   .pipe(gulp.dest('../../dist.app/reservation'))
 });
 
@@ -63,7 +65,8 @@ gulp.task('app-library-reservation-css', function () {
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.css',
     '../../../library/textAngular-1.5.0/dist/textAngular.css',
-    '../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.css',
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+    '../../../library/bower_components/chosen/chosen.css',
     '!gulpfile.js'
     ])
   .pipe(minifyCss())
