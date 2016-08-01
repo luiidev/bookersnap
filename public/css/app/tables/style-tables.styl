@@ -10,14 +10,24 @@
 
 .float-right
 	float right
+.padding-left-none
+	padding-left 0
+.zone-container
+	width 940px !important
+	& .container
+		max-width none !important
+	& .card 
+		width 940px !important
 .box-zone-create
 	& .form-group
 		&.text-rotate
 			text-align left
 		&.group-btn-rotate
 			& .btn-rotate
+				padding 4px 12px
 				& i 
 					font-size 1.2em
+					margin-top 4px
 			& .shape 
 				padding 10px 20px
 				&:nth-child(2)
@@ -88,6 +98,7 @@
 		border-radius 5px
 	& .box-lienzo-zone
 		padding-left 0
+		width 675px !important
 		& .lienzo 
 			background-color #eee
 			min-height 740px

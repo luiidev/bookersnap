@@ -65,13 +65,10 @@ gulp.task('library-bower-js', function () {
     'public/library/bower_components/flot-orderBars/js/jquery.flot.orderBars.js',
     'public/library/bower_components/flot/jquery.flot.pie.js',
     'public/library/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js',
-    'public/library/bower_components/angular-nouislider/src/nouislider.min.js',
-    'public/js/theme/dist/library.bower.min.js',
-    'public/js/theme/dist/app.level.min.js',
-    'public/js/theme/dist/template.modules.min.js',
+    'public/library/bower_components/angular-nouislider/src/nouislider.min.js'
     ])
   .pipe(concat('library.bower.min.js'))
-  .pipe(jsmin())
+  //.pipe(jsmin())
   .pipe(gulp.dest('public/js/theme/dist'))
 });
 

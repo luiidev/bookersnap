@@ -72,7 +72,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.getZones();
 })
-.controller('ZoneCreateCtrl', function($scope,$stateParams,$document,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('ZoneCreateCtrl', function($scope,$state,$stateParams,$document,ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
 	$scope.sizeTableList = {
 		data : [
@@ -119,9 +119,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.onDropComplete = function(data,evt){
 
-		data.top = evt.y - 261 + 25 - evt.element.centerY;
-		data.left = evt.x - 61 + 25 - evt.element.centerX;
-
+		data.top = evt.y - 251 + 20 - evt.element.centerY;
+		data.left = evt.x - 401 + 10 - evt.element.centerX;
 		//capturamos la posicion donde se queda
 		console.log("onDropComplete " + evt.x +" - "+ evt.y);
 		selectTableTypeDrop(data);
@@ -185,19 +184,30 @@ angular.module('zone.controller', ['ngDraggable'])
 	};
 
 	$scope.activarTableOptions = function(index,vthis){
+
 		$scope.selectedTable = true;
 		getDataTableSelected(index);
 
-		$scope.$apply(function(){
+		setTimeout(function(){
+			$scope.$apply(function(){
 
-			if($scope.boxTables.item == false){
-				$scope.boxTables.item = true;
-				$scope.boxTables.items = false;
-			}else{
-				$scope.boxTables.item = false;
-				$scope.boxTables.items = true;
-			}
-		});
+				if($scope.boxTables.item == false || ($scope.boxTables.item == true && $scope.selectedTable == true 
+					&& angular.element('.item-drag-table').hasClass('selected-table') == false)){
+
+
+					$scope.boxTables.item = true;
+					$scope.boxTables.items = false;
+				}else{
+				
+					if (angular.element('.item-drag-table').hasClass('selected-table') == false) {
+
+						$scope.boxTables.item = false;
+						$scope.boxTables.items = true;
+					}
+				
+				}
+			});
+		},100);
 	};
 
 	$scope.doneTableSelected = function(){
@@ -330,6 +340,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			ZoneFactory.createZone(dataZone).success(function(response){
 				console.log("succes createZone " + JSON.stringify(response));
 				messageAlert("Success","Zone create complete","success");
+				$state.reload();
 			});
 
 		}else{
@@ -337,9 +348,9 @@ angular.module('zone.controller', ['ngDraggable'])
 			ZoneFactory.editZone(dataZone).success(function(response){
 				console.log("succes editZone " + JSON.stringify(response));
 				messageAlert("Success","Zone edit complete","success");
+				$state.reload();
 			});
 		}
-
 
 		console.log("saveZone " + JSON.stringify(dataZone));
 	};
@@ -416,7 +427,6 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.cancel = function(){
 		$uibModalInstance.dismiss('cancel');
 	};
-
 })
 
 ;

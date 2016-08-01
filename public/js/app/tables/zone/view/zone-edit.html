@@ -7,7 +7,7 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container" ng-controller="ZoneCreateCtrl">
+        <div class="container zone-container" ng-controller="ZoneCreateCtrl">
             <div class="block-header" style="padding-bottom: 15px">
                 <ul class="actions">
                     <li>
@@ -23,7 +23,7 @@
                 <div class="card-body card-padding box-zone-create">
                     <div class="row header-zone-create">
                         <div class="col-md-12">
-                            <div class="col-sm-3">
+                            <div class="col-xs-3 padding-left-none">
                                 <div class="input-group fg-float">
                                     <span class="input-group-addon"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw"></i></span>
                                     <div class="fg-line">
@@ -33,22 +33,22 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-2">
+                            <div class="col-xs-2">
                                 <div class="input-group fg-float">
                                         <label class="fg-label"><span class="label label-danger">{{ headerZone.tables}}</span> Tables</label>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-xs-2">
                                 <div class="input-group fg-float">
                                         <label class="fg-label"><span class="label label-danger">{{ headerZone.maxCovers}}</span> Max Covers</label>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-xs-2">
                                 <div class="input-group fg-float">
                                         <label class="fg-label"><span class="label label-danger">{{ headerZone.minCovers}}</span> Min Covers</label>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-xs-3 padding-left-none">
                                 <div class="input-group fg-float float-right">
                                     <div class="btn-group">
                                         <button type="button" class="btn bgm-gray waves-effect">Layout</button>
@@ -60,7 +60,7 @@
                         </div> 
                     </div>
                     <div class="row">
-                        <div class="col-md-9 box-lienzo-zone">
+                        <div class="col-xs-9 box-lienzo-zone">
                             <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
 
                                 <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" shape="{{obj.shape}}" size="{{obj.size}}" rotate="{{obj.rotate}}" >
@@ -71,7 +71,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 box-tables">
+                        <div class="col-xs-3 box-tables">
                             <div class="box-tables-items" ng-show="boxTables.items">
                                 <div class="row item descripcion">
                                     <h3>Add tables to your floor</h3>
