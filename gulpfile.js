@@ -7,8 +7,7 @@ var gulp = require('gulp'),
     jsmin = require('gulp-jsmin'),
     concat = require('gulp-concat'),
     minifyCss = require('gulp-minify-css'),
-    rename = require('gulp-rename'),
-    watch = require('gulp-watch');
+    rename = require('gulp-rename');
 
 
 /* ------------- Tareas de template -------------*/

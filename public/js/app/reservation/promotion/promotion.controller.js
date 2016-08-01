@@ -1,4 +1,4 @@
-angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons','localytics.directives'])
+angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons','farbtastic','localytics.directives'])
 .controller('PromotionCtrl', function($scope) {
 	
 })
@@ -110,32 +110,77 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 })
 .controller('FlyerAddCtrl', function($scope) {
 
-  
-  var cleanString=function(cadena){
-    var specialChars = "!@#$^&%*()'+=-[]\/{}|:<>?,";
-    for (var i = 0; i < specialChars.length; i++) {
-      cadena= cadena.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
-    }
-    cadena = cadena.toLowerCase();
-    cadena.replace(/\s/g,"");
+ 	$scope.titulo="Diseñar Flyer";
 
-    cadena = cadena.replace(/[áàäâå]/gi,"a");
-    cadena = cadena.replace(/[éèëê]/gi, 'e');
-    cadena = cadena.replace(/[íìïî]/gi, 'i');
-    cadena = cadena.replace(/[óòöô]/gi, 'o');
-    cadena = cadena.replace(/[úùüû]/gi, 'u');
-    cadena = cadena.replace(/[ýÿ]/gi, 'y');
-    cadena = cadena.replace(/ñ/gi, 'n');
-    return cadena;
+  $scope.textFlyer=[];
+  $scope.textActive=false;
+  $scope.textIndex=0;
+
+  $scope.flyer={
+    fonts:[{id: 0, title: 'Arial'},{id: 1, title: 'Verdana'},{id: 2, title: 'Roboto'}],
+    fontSelected:{id: 0, title: 'Arial'},
+    sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'}],
+    sizeSelected:{id: 14, valor: '14px'},
+    colorSelected:{color: '#03A9F4'},
+    label:""
+  }
+
+  $scope.changeFunction = function() {
+    angular.forEach($scope.flyer.fonts, function(fonts){
+       angular.element('.svg').removeClass(fonts.id);
+    })
+   
+    angular.element('.svg').addClass($scope.flyer.fontSelected);
   }
   
+  $scope.addText=function(){
+        var texto={
+          label:$scope.flyer.label,
+          font:$scope.flyer.fontSelected.id,
+          size:$scope.flyer.sizeSelected.id+"px",
+          color:$scope.flyer.colorSelected.color,
+          top:Math.floor((Math.random() * 360) + 40)+"px",
+          left: Math.floor((Math.random() * 500) + 40)+"px"
+
+        };
+         $scope.textFlyer.push(texto);
+         cleanText();
+  }
+
+  $scope.updateText=function(){
+    $scope.textFlyer[$scope.textIndex].label=$scope.flyer.label;
+    $scope.textFlyer[$scope.textIndex].font=$scope.flyer.fontSelected.id;
+    $scope.textFlyer[$scope.textIndex].size=$scope.flyer.sizeSelected.id+"px";
+    $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;   
+    $scope.textActive=false;
+    cleanText();
+  }
+
+  $scope.selectedText=function(index){
+    $scope.textIndex=index;
+    $scope.flyer.label=$scope.textFlyer[index].label;
+    $scope.flyer.fontSelected={id:$scope.textFlyer[index].font,title:$scope.textFlyer[index].font};
+    $scope.flyer.sizeSelected.id= $scope.textFlyer[index].size.replace("px","");
+    $scope.flyer.colorSelected.color=$scope.textFlyer[index].color;
+    $scope.textActive=true;
+  }
+
+  $scope.deleteText=function(){
+    $scope.textFlyer.splice($scope.textIndex,1);
+    $scope.textActive=false;
+    cleanText();
+  }
+
+  var cleanText=function(){
+
+    $scope.flyer.label="";
+    $scope.flyer.fontSelected={id: 0, title: 'Arial'};
+    $scope.flyer.sizeSelected={id: 14, valor: '14px'};
+    $scope.flyer.colorSelected={color: '#03A9F4'};
+
+  }
 
 
- 	$scope.titulo="Diseñar Flyer";
-  
-  var str="Ñú12Éá8()'Fbca{4.jpg";
-  var nuevo=cleanString(str);
-  console.log(nuevo);
 
 })
 .controller('TurnoInstanceCtrl', function($scope,$modalInstance) {
