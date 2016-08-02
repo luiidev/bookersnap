@@ -2,49 +2,80 @@
 
 namespace App\Http\Controllers\Admin\Tables\Turn;
 use App\Http\Controllers\Controller as Controller;
+use Illuminate\Http\Request;
+use Curl;
 
 class TurnController extends Controller
 {
    public function index(){
       return response()->json(
-      array (
-         0 => array (
-         'id' => 1,
-         'name' => 'Turno 01',
-         'hours_ini' => '17:26:02',
-         'hours_end' => '17:26:02',
-         'hours_ini_web' => '17:26:02',
-         'hours_end_web' => '17:26:02',
-         'days'=>array(0 => array ('id' => 1,'name' => 'Lunes'), 1 => array ('id' => 2,'name' => 'Martes')) 
-         ),
-         1 => array (
-         'id' => 2,
-         'name' => 'Turno 02',
-         'hours_ini' => '17:26:02',
-         'hours_end' => '17:26:02',
-         'hours_ini_web' => '17:26:02',
-         'hours_end_web' => '17:26:02',
-         'days'=>array(0 => array ('id' => 1,'name' => 'Lunes'), 1 => array ('id' => 2,'name' => 'Martes')) 
-         ),
-         2 => array (
-         'id' => 3,
-         'name' => 'Turno 03',
-         'hours_ini' => '17:26:02',
-         'hours_end' => '17:26:02',
-         'hours_ini_web' => '2016-07-19 17:26:02',
-         'hours_end_web' => '2016-07-19 17:26:02',
-         'days'=>array(0 => array ('id' => 1,'name' => 'Lunes'), 1 => array ('id' => 2,'name' => 'Martes')) 
-         )
-      )
+         array (
+          0 => 
+          array (
+           'id' => 1,
+           'hours_ini' => '07:00:00',
+           'hours_end' => '11:00:00',
+           'status' => 1,
+           'on_table' => 0,
+           'early' => 0,
+           'days' => '',
+           'type' => 
+           array (
+            'id' => 1,
+            'name' => 'Almuerzo',
+            'status' => 0,
+            ),
+           ),
+          1 => 
+          array (
+           'id' => 1,
+           'hours_ini' => '07:00:00',
+           'hours_end' => '11:00:00',
+           'status' => 1,
+           'on_table' => 0,
+           'early' => 0,
+           'days' => 
+           array (
+            0 => 
+            array (
+             'day' => 1,
+             ),
+            1 => 
+            array (
+             'day' => 2,
+             ),
+            2 => 
+            array (
+             'day' => 3,
+             ),
+            3 => 
+            array (
+             'day' => 4,
+             ),
+            4 => 
+            array (
+             'day' => 5,
+             ),
+            ),
+           'type' => 
+           array (
+            'id' => 1,
+            'name' => 'Desayuno',
+            'status' => 1,
+            ),
+           ),
+          )
       );
    }
 
    public function get($lang,$id){
-   	return $id;
+      $curlService = new \Ixudra\Curl\CurlService();
+      $responses = $curlService->to('http://jsonplaceholder.typicode.com/posts')->asJson()->get();
+   	return $responses;
    }
 
-   public function create($lang){
-   	return "data";
+   public function create($lang,Request $request){
+   	return $request->input();
    }
    public function update($lang,$id){
    	return "data";

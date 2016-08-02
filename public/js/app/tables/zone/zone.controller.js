@@ -194,7 +194,6 @@ angular.module('zone.controller', ['ngDraggable'])
 				if($scope.boxTables.item == false || ($scope.boxTables.item == true && $scope.selectedTable == true 
 					&& angular.element('.item-drag-table').hasClass('selected-table') == false)){
 
-
 					$scope.boxTables.item = true;
 					$scope.boxTables.items = false;
 				}else{
