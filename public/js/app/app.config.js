@@ -8,6 +8,6 @@ angular.module('bookersnap',
 [
 
 //'example.app',
-'tables.app'
+'reservation.app'
 
 ]);

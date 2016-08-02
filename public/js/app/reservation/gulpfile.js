@@ -28,8 +28,10 @@ gulp.task('app-bookersnap-reservation-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
-    '../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.jquery.js',
-    '../../../library/angular-chosen-1.4.0/dist/angular-chosen.min.js',
+    //'../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.jquery.js',
+    //'../../../library/angular-chosen-1.4.0/dist/angular-chosen.min.js',
+    '../../../library/bower_components/chosen/chosen.jquery.js',
+    '../../../library/bower_components/angular-chosen-localytics/chosen.js',
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
     '../../../library/textAngular-1.5.0/dist/textAngular.min.js',
     '../../../library/textAngular-1.5.0/dist/textAngular-rangy.min.js',
@@ -37,12 +39,15 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.js',
     '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
     '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
-    '../../../library/input-mask/input-mask.min.js',
+    '../../../library/bower_components/nouislider/jquery.nouislider.min.js',
+    '../../../library/bower_components/angular-farbtastic/angular-farbtastic.js',
+    '../../../library/bower_components/autosize/dist/autosize.min.js',
+    '../../../library/fileinput/fileinput.min.js',
     '../../../library/global/functions.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.reservation.min.js'))
-  .pipe(jsmin())
+  //.pipe(jsmin())
   .pipe(gulp.dest('../../dist.app/reservation'))
 });
 
@@ -67,6 +72,8 @@ gulp.task('app-library-reservation-css', function () {
     '../../../library/textAngular-1.5.0/dist/textAngular.css',
     '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
     '../../../library/bower_components/chosen/chosen.css',
+    '../../../library/bower_components/nouislider/jquery.nouislider.css',
+    '../../../library/farbtastic/farbtastic.css',
     '!gulpfile.js'
     ])
   .pipe(minifyCss())
