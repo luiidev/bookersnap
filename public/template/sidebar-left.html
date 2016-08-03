@@ -33,10 +33,16 @@
             <a data-ui-sref="home" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-home"></i> Home</a>
         </li>
 
-        <li>
-            <a data-ui-sref="zone.active" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-hotel zmdi-hc-fw"></i> Zonas</a>
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+            <a href="" toggle-submenu><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Mesas</a>
+             <ul>
+                <li><a data-ui-sref="zone.active" data-ng-click="mactrl.sidebarStat($event)"> Zonas</a>
+                </li>
+                 <li> <a data-ui-sref="book" data-ng-click="mactrl.sidebarStat($event)"> Book</a>
+                </li>
+            </ul> 
         </li>
-    
+     
         <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
             <a href="" toggle-submenu><i class="zmdi zmdi-view-compact"></i> Reservaciones</a>
             <ul>
@@ -44,6 +50,5 @@
             </ul>
         </li>
        
-
     </ul>
 </div>

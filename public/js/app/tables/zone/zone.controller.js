@@ -343,7 +343,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			});
 
 		}else{
-
+			dataZone.id = $stateParams.id;
 			ZoneFactory.editZone(dataZone).success(function(response){
 				console.log("succes editZone " + JSON.stringify(response));
 				messageAlert("Success","Zone edit complete","success");
@@ -351,7 +351,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			});
 		}
 
-		console.log("saveZone " + JSON.stringify(dataZone));
+		console.log("saveZone " + angular.toJson(dataZone,true));
 	};
 
 	var detectedForm = function(){

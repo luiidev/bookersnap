@@ -35,7 +35,7 @@
                       <label class="label label-danger f-12" ng-if="item.status == 0">Inactive</label>
                    </td>
                    <td>
-                    <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="turn-edit"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit turn</button> </td>
+                    <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="turn-edit({zone : zoneId,turn : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit turn</button> </td>
                 </tr>
               </tbody>
               </table>
