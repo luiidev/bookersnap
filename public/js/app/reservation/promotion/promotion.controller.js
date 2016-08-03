@@ -108,7 +108,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 
 })
-.controller('FlyerAddCtrl', function($scope) {
+.controller('FlyerAddCtrl', function($scope,$element) {
 
  	$scope.titulo="Diseñar Flyer";
 
@@ -117,34 +117,31 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.textIndex=0;
 
   $scope.flyer={
-    fonts:[{id: 0, title: 'Arial'},{id: 1, title: 'Verdana'},{id: 2, title: 'Roboto'}],
-    fontSelected:{id: 0, title: 'Arial'},
+    fonts:[{id: 'Arial', title: 'Arial'},{id: 'Lobster', title: 'Lobster'},{id: 'Roboto', title: 'Roboto'}],
+    fontSelected:{id: 'Arial', title: 'Arial'},
     sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'}],
     sizeSelected:{id: 14, valor: '14px'},
     colorSelected:{color: '#03A9F4'},
     label:""
   }
 
-  $scope.changeFunction = function() {
-    angular.forEach($scope.flyer.fonts, function(fonts){
-       angular.element('.svg').removeClass(fonts.id);
-    })
-   
-    angular.element('.svg').addClass($scope.flyer.fontSelected);
-  }
-  
   $scope.addText=function(){
+    if ($scope.flyer.label) {
         var texto={
           label:$scope.flyer.label,
           font:$scope.flyer.fontSelected.id,
           size:$scope.flyer.sizeSelected.id+"px",
-          color:$scope.flyer.colorSelected.color,
-          top:Math.floor((Math.random() * 360) + 40)+"px",
-          left: Math.floor((Math.random() * 500) + 40)+"px"
+          color:$scope.flyer.colorSelected.color
+          //top:Math.floor((Math.random() * 100) + 40)+"px",
+          //left: Math.floor((Math.random() * 300) + 40)+"px"
 
         };
-         $scope.textFlyer.push(texto);
-         cleanText();
+        $scope.textFlyer.push(texto);
+        console.log($scope.textFlyer);
+        cleanText();
+    }else{
+      messageAlert("Flyer","Debe ingresar un texto","warning");
+    }
   }
 
   $scope.updateText=function(){
@@ -174,12 +171,30 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   var cleanText=function(){
 
     $scope.flyer.label="";
-    $scope.flyer.fontSelected={id: 0, title: 'Arial'};
+    $scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
     $scope.flyer.sizeSelected={id: 14, valor: '14px'};
     $scope.flyer.colorSelected={color: '#03A9F4'};
 
   }
 
+  $scope.generateFlyer=function(){
+
+    html2canvas(angular.element('.svgArea'), {
+      onrendered: function(canvas) {
+
+        /*var img = canvas.toDataURL("image/png"); 
+        img = img.replace('data:image/png;base64,', '');
+        var finalImageSrc = 'data:image/png;base64,' + img;
+        var e = angular.element('#imagencontent').attr('src', finalImageSrc);                    
+        return false;                    
+*/
+        theCanvas = canvas;
+        Canvas2Image.convertToPNG(canvas);
+        document.body.appendChild(canvas); 
+      }
+    });
+
+  }
 
 
 })

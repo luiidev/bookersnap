@@ -1,7 +1,6 @@
 /*----------
 Aqui ponemos algunas funciones globales que usaremos dentro de la aplicacion
 ------*/
-
 var obtenerIdMicrositio = function(){
 	var url = location.href;
 	var pos = url.indexOf("ms");

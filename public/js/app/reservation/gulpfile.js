@@ -28,8 +28,6 @@ gulp.task('app-bookersnap-reservation-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
-    //'../../../library/angular-chosen-1.4.0/bower_components/chosen/chosen.jquery.js',
-    //'../../../library/angular-chosen-1.4.0/dist/angular-chosen.min.js',
     '../../../library/bower_components/chosen/chosen.jquery.js',
     '../../../library/bower_components/angular-chosen-localytics/chosen.js',
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
@@ -43,6 +41,8 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/bower_components/angular-farbtastic/angular-farbtastic.js',
     '../../../library/bower_components/autosize/dist/autosize.min.js',
     '../../../library/fileinput/fileinput.min.js',
+    '../../../library/html2canvas/html2canvas.js',
+    '../../../library/html2canvas/canvas2image.js',
     '../../../library/global/functions.js',
     '!gulpfile.js'
     ])
@@ -74,6 +74,7 @@ gulp.task('app-library-reservation-css', function () {
     '../../../library/bower_components/chosen/chosen.css',
     '../../../library/bower_components/nouislider/jquery.nouislider.css',
     '../../../library/farbtastic/farbtastic.css',
+    '../../../fonts/lobster/stylesheet.css',
     '!gulpfile.js'
     ])
   .pipe(minifyCss())
