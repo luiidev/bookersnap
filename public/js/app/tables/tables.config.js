@@ -7,4 +7,5 @@ angular.module('tables.app',
 'zone.app'
 ])
 .constant("IdMicroSitio",idMicrositio)
-.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas');
+.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas')
+.constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en');

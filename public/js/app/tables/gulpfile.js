@@ -7,8 +7,7 @@ var gulp = require('gulp'),
     jsmin = require('gulp-jsmin'),
     concat = require('gulp-concat'),
     minifyCss = require('gulp-minify-css'),
-    rename = require('gulp-rename'),
-    watch = require('gulp-watch');
+    rename = require('gulp-rename');
 
 
 /* ------------- Tareas de aplicacion -------------*/
@@ -32,6 +31,8 @@ gulp.task('app-library-tables-js', function () {
   gulp.src([
     '../../../library/ngDraggable/ngDraggable.js',
     '../../../library/global/functions.js',
+    '../../../library/global/form.directive.js',
+    '../../../library/input-mask/input-mask.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.tables.min.js'))
