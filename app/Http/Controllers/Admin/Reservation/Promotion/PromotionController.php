@@ -10,6 +10,37 @@ class PromotionController extends Controller
    public function index(){
     return "ok";
    }
+   
+   public function getLabel(){
+      return response()->json(
+         array (
+          0 => 
+          array (
+           'id' => 1,
+           'name' => 'Jose',
+           'status' => 1,
+           ),
+          1 => 
+          array (
+           'id' => 2,
+           'name' => 'Martinez',
+           'status' => 1,
+           ),
+          2 => 
+          array (
+           'id' => 3,
+           'name' => '10/08/2016',
+           'status' => 1,
+           ),
+          3 => 
+          array (
+           'id' => 4,
+           'name' => '05:20p.m.',
+           'status' => 1,
+           )
+         )
+      );
+   }
 
    public function uploadFile(Request $request){
       //return "ok";
