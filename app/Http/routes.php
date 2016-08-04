@@ -52,6 +52,8 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
 	
 	Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
 
+	Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
+
 	/*
  	Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
 });
