@@ -25,7 +25,7 @@
             </div>
     		
     		<div class="svgArea">
-		    	<div class="thumbnail imgLienzo">
+		    	<div class="thumbnail imgLienzo" ng-click="noEditar()">
                     <img ngf-thumbnail="coleccion.fileimg">
                 </div>   
                 <div ng-repeat="obj in textFlyer" class="text-flyer" ng-draggable>
@@ -71,7 +71,7 @@
                     <div class="fg-line dropdown" uib-dropdown>
                         <input type="text" class="form-control cp-value" ng-model="flyer.colorSelected.color" uib-dropdown-toggle>
                         <div class="dropdown-menu">
-                            <ng-farbtastic ng-model="flyer.colorSelected.color"></ng-farbtastic>
+                            <ng-farbtastic ng-model="flyer.colorSelected.color" ng-value="autoPropiedad()"></ng-farbtastic>
                         </div>
                         <i class="cp-value" style="background-color: {{ flyer.colorSelected.color }}"></i>
                     </div>
@@ -83,7 +83,7 @@
                 <label for="inputEmail3" class="col-sm-2 control-label c-black f-500">Tamaño:</label>
                 <div class="col-sm-10">
                     <div class="fg-line p-l-15">
-                        <div slider class="input-slider" ng-model="flyer.sizeSelected.id" start=10 end=52></div>
+                        <div slider class="input-slider" ng-model="flyer.sizeSelected.id" start=10 end=52 ng-value="autoPropiedad()"></div>
                         <br>
                         <small class="c-gray">Valor actual: {{ flyer.sizeSelected.id }}</small>
                     </div>

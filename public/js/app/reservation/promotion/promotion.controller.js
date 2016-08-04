@@ -139,24 +139,37 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.addText=function(){
     if ($scope.flyer.labelSelected) {
 
-        //if ($scope.flyer.labelSelected.id!=$scope.textFlyer.label.id) {
-          var texto={
+        if($scope.textFlyer.length==0){
+          crearTexto();
+        }else{
+          var exists = false;
+          angular.forEach($scope.textFlyer, function(objetos) {
+            if($scope.flyer.labelSelected.id==objetos.label.id){
+                exists = true;
+                messageAlert("Flyer","Texto ya se encuentra ubicado sobre el flyer","warning");
+            }          
+          });
+          if (exists === false) {
+            crearTexto();
+          }
+        }
+        
+    }else{
+      messageAlert("Flyer","Debe seleccionar un texto","warning");
+    }
+  }
+
+  var crearTexto=function(){
+     var texto={
             label:$scope.flyer.labelSelected,
             tipografy:$scope.flyer.fontSelected.id,
             font_size:$scope.flyer.sizeSelected.id+"px",
             color:$scope.flyer.colorSelected.color
             //top:Math.floor((Math.random() * 100) + 40)+"px",
             //left: Math.floor((Math.random() * 300) + 40)+"px"
-          };
-          $scope.textFlyer.push(texto);
-        //}else{
-          //messageAlert("Texto en el flyer","Texto ya se encuentra seleccionado","warning");
-        //}
-        //console.log("Texto "+angular.toJson($scope.textFlyer));
-        cleanText();
-    }else{
-      messageAlert("Flyer","Debe seleccionar un texto","warning");
-    }
+      };
+      $scope.textFlyer.push(texto);
+      cleanText();
   }
 
   /*Obtener datos de texto seleccionado*/
@@ -189,10 +202,15 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   }
 
   var cleanText=function(){
-    $scope.flyer.label="";
-    $scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
-    $scope.flyer.sizeSelected={id: 14, valor: '14px'};
-    $scope.flyer.colorSelected={color: '#03A9F4'};
+    $scope.flyer.labelSelected={};
+    //$scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
+    //$scope.flyer.sizeSelected={id: 14, valor: '14px'};
+    //$scope.flyer.colorSelected={color: '#03A9F4'};
+  }
+
+  $scope.noEditar=function(){
+    $scope.textActive=false;
+    cleanText();
   }
 
   /*$scope.uploadImageFlyer = function (file) {
@@ -234,8 +252,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   }
 
   $scope.saveFlyer=function(){
-    //var imagen=angular.element('.thumbnail img').attr('src');
-    angular.forEach($scope.textFlyer, function(data,index){
+    if($scope.fileimg){ 
+
+      angular.forEach($scope.textFlyer, function(data,index){
       //data.label_id="1";
       //data.x=angular.element('.text-flyer').eq(index).css("left");
       data.coodinates={
@@ -243,19 +262,34 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         y:angular.element('.text-flyer').eq(index).css("top")
       }
 
-    })
-    //console.log("saveFlyer"+angular.toJson($scope.textFlyer,true));
+      })
 
-    $scope.principal={
+      $scope.principal={
       "microsite_id":1,
       "event_id":1,
       "token":"abc123456",
       "status":$scope.flyer.stateSelected.value,
       "image":$scope.coleccion.fileimg.name,
       "label":$scope.textFlyer
+      };
+    console.log("General  "+angular.toJson($scope.textFlyer,true));
+
+    }else{ 
+        messageAlert("Flyer","Debe seleccionar una imagen para el flyer","warning");
     };
-    console.log("General  "+angular.toJson($scope.principal,true));
+
+    
+    
   }
+
+  $scope.autoPropiedad = function () {
+    if($scope.textFlyer.length!=0){
+      $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
+      $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
+    }
+  };
+
+  
 
 
 })

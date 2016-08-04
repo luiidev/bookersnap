@@ -6,8 +6,6 @@ example.app = nombre de la aplicacion
 ************/
 angular.module('bookersnap',
 [
-
 //'example.app',
-'tables.app'
-
+'reservation.app'
 ]);

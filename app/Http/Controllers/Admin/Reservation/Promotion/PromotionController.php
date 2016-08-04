@@ -17,26 +17,22 @@ class PromotionController extends Controller
           0 => 
           array (
            'id' => 1,
-           'name' => 'Jose',
-           'status' => 1,
+           'name' => 'Jose'
            ),
           1 => 
           array (
            'id' => 2,
-           'name' => 'Martinez',
-           'status' => 1,
+           'name' => 'Martinez'
            ),
           2 => 
           array (
            'id' => 3,
-           'name' => '10/08/2016',
-           'status' => 1,
+           'name' => '10/08/2016'
            ),
           3 => 
           array (
            'id' => 4,
-           'name' => '05:20p.m.',
-           'status' => 1,
+           'name' => '05:20p.m.'
            )
          )
       );
