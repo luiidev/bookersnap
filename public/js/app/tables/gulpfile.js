@@ -33,6 +33,7 @@ gulp.task('app-library-tables-js', function () {
     '../../../library/global/functions.js',
     '../../../library/global/form.directive.js',
     '../../../library/input-mask/input-mask.js',
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.library.tables.min.js'))
@@ -51,12 +52,25 @@ gulp.task('stylus-app', function() {
         .pipe(gulp.dest('../../../css/app/tables')) 
 });
 
+// Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
+gulp.task('app-library-tables-css', function () {
+  gulp.src([
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+    ])
+  .pipe(minifyCss())
+  .pipe(concat('app.bookersnap.library.tables.min.css'))
+  .pipe(gulp.dest('../../../css/app/tables'));
+});
+
 //Automatizamos esta tarea
 gulp.task('watch', function(){
     gulp.watch('**/*.js', ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js','../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
+    gulp.watch([
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+    ], ['app-library-tables-css']);
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch','app-bookersnap-tables-js','stylus-app','app-library-tables-js']);
+gulp.task('default', ['watch','app-bookersnap-tables-js','stylus-app','app-library-tables-js','app-library-tables-css']);

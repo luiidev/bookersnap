@@ -5,20 +5,31 @@
 
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-    <section id="content">
+    <section id="content" ng-controller="BookCtrl">
         <div class="container container-book">
-          <div class="block-header text-center" style="padding-bottom: 15px">
-          <i class="zmdi zmdi-chevron-left"></i>
-              <button class="btn btn-primary btn-lg waves-effect">
-                Wed, August 3
-                </br>
-                <small>All Shifts - 10 Covers</small>
-              </button>
-          <i class="zmdi zmdi-chevron-right"></i>
+          <div class="block-header text-center">
+              <ul class="calendar-box">
+                <li><a href="#"><i class="zmdi zmdi-chevron-left calendar-btn"></i></a></li>
+                <li>
+                  <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" ng-click="openCalendar($event, 'opened')" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="pickerBtn" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                  Wed, August 3
+                  </br>
+                  <small>All Shifts - 10 Covers</small>
+                  </button>
+                </li>
+                <li><a href="#"><i class="zmdi zmdi-chevron-right calendar-btn"></i></a></li>
+              </ul>
+
+              <div class="row m-t-20">
+                 <h4>Search Availability by Party Size</h4>
+                 <uib-pagination direction-links="false" total-items="totalItems" ng-model="currentPage" num-pages="smallnumPages"></uib-pagination>
+              </div>
+
           </div>
 
       		<div class="card">
             <div class="listview lv-bordered lv-lg">
+    
             <div class="lv-header-alt clearfix">
                 <h2 class="lvh-label hidden-xs pull-left f-700">Sort by :</h2>
 
@@ -68,26 +79,81 @@
             </div>
 
             <div class="lv-body">
-                <div class="lv-item media">
-             
+                <div class="lv-item media" ng-repeat="item in timeAvailability" ng-click="newReservation(item.time)">
                     <div class="media-body">
                         <div class="lv-title f-14">Available</div>
-                        <small class="lv-small f-15">9:15 AM</small>
-                    </div>
-                </div>
-
-                <div class="lv-item media">
-                
-                    <div class="media-body">
-                        <div class="lv-title f-14">Available</div>
-                        <small class="lv-small f-15">9:30 AM</small>
+                        <small class="lv-small f-15">{{item.time}}</small>
                     </div>
                 </div>
             </div>
-        </div>
+          </div>
           </div>
         </div>
     </section>
 </section>
+
+<script type="text/ng-template" id="modalNewReservation.html">
+  <div class="modal-header">
+    <h3 class="modal-title">New Reservation</h3>
+    <p>{{ book.date }} @ {{ book.time }}</p>
+  </div>
+  <div class="modal-body">
+      <form class="row ng-pristine ng-valid" role="form">
+
+        <div class="col-sm-6">
+          <div class="form-group fg-line">
+            <input type="text" class="form-control input-sm"  placeholder="First Name">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group fg-line">
+
+            <input type="text" class="form-control input-sm" placeholder="Last Name">
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-group fg-line">
+
+            <input type="text" class="form-control input-sm"  placeholder="Phone Number">
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-group fg-line">
+            <input type="text" class="form-control input-sm" placeholder="Email Address">
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-group fg-line">
+            <div class="select">
+
+              <select class="form-control">
+                <option selected>1 Guest</option>
+              </select>
+            
+            </div>
+         
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-group fg-line">
+            <input type="text" class="form-control input-sm" placeholder="Add reservation notes">
+          </div>
+        </div>
+
+
+
+      </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="moreDetails()">More Details</button>
+    <button class="btn btn-primary" type="button" ng-click="create()">Create Reservation</button>
+   
+  </div>
+</script>
 
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>

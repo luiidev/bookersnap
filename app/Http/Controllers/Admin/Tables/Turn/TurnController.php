@@ -68,10 +68,9 @@ class TurnController extends Controller
       );
    }
 
-   public function get($lang,$id){
+  public function get($lang,$id){
       /*$curlService = new \Ixudra\Curl\CurlService();
       $responses = $curlService->to('http://jsonplaceholder.typicode.com/posts')->asJson()->get();*/
-
    	return response()->json(
       array (
         'name' => 'almuerzo 1',
@@ -102,16 +101,52 @@ class TurnController extends Controller
             'status' => 0,
             ),
         ));
-   }
+  }
 
-   public function create($lang,Request $request){
+  public function create($lang,Request $request){
    	return $request->input();
-   }
-   public function update($lang,Request $request){
+  }
+
+  public function update($lang,Request $request){
    	return $request->input();
-   }
-   public function delete($lang,$id){
+  }
+
+  public function delete($lang,$id){
    	return "data";
-   }
+  }
+
+  public function getAllAvailables($lang,$ms,$date){
+      return response()->json(
+        array (
+          0 => 
+          array (
+            'id' => 1,
+            'hours_ini' => '07:00:00',
+            'hours_end' => '11:30:00',
+            'status' => 1,
+            'on_table' => 0,
+            'early' => 0,
+            ),
+          1 => 
+          array (
+            'id' => 2,
+            'hours_ini' => '13:00:00',
+            'hours_end' => '18:00:00',
+            'status' => 1,
+            'on_table' => 0,
+            'early' => 0,
+            ),
+           2 => 
+          array (
+            'id' => 3,
+            'hours_ini' => '16:00:00',
+            'hours_end' => '22:15:00',
+            'status' => 1,
+            'on_table' => 0,
+            'early' => 0,
+            ),
+          )
+      );
+  }
   
 }
