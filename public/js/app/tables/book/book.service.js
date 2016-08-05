@@ -42,7 +42,41 @@ angular.module('book.service', [])
 			}
 
 			return time;
+		},
+		getDate : function(language,options,date = null){
+		 	var me = this;
 
+		 	if(date != null){
+		 		date = me.changeformatDate(date.toString());
+		 		return new Date(date).toLocaleDateString(language, options);
+		 	}else{
+		 		return new Date().toLocaleDateString(language, options);
+		 	}	
+		},
+		setDate : function (date,option){
+
+			var me = this;
+
+			var date = me.changeformatDate(date);
+
+			var d = new Date(date);
+
+			if(option == "+"){
+				d.setDate(d.getDate() +  1);
+			}else{
+				d.setDate(d.getDate() -  1);
+			}
+
+			var dateFinal = me.getDate("es-ES",{},d);
+
+			return dateFinal;
+		},
+		changeformatDate : function(date){
+
+			var d = date.split("/");
+			var dateFormat = d[2]+"-"+d[1] +"-"+d[0];
+
+			return dateFormat;
 		}
 
 	};

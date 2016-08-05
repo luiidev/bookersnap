@@ -2,25 +2,75 @@ angular.module('book.controller', [])
 
 .controller('BookCtrl', function($scope,BookFactory,BookDateFactory,TurnFactory,$uibModal) {
 
-	$scope.dateOptions = {
-		formatYear: 'yy',
-		startingDay: 1
-	};
+	$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
 
 	$scope.book = { 
 		time : '',
-		date : new Date().toLocaleDateString("es-ES", {weekday: "long", year: "numeric", month: "short",day: "numeric"})
+		date : BookDateFactory.getDate("es-ES", {weekday: "long", year: "numeric", month: "short",day: "numeric"})
 	};
 
-	$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-	$scope.format = $scope.formats[0];
+	$scope.calendarBtn = {
+		dateText : BookDateFactory.getDate("es-ES", {weekday: "long", month: "short",day: "numeric"}),
+		dateNumber : BookDateFactory.getDate("es-ES", {}),
+		dateOptions : {formatYear: 'yy',startingDay: 1},
+		dateFormat :  $scope.formats[0],
+		dateCalendar : new Date(),
+		clickArrow : null
+	};
 
-	//Paginador covers
+	$scope.timeAvailability = [];
 
-	$scope.totalItems = 60;
-	$scope.currentPage = 1;
+	//Paginador Guest
 
-	$scope.maxSize = 3;
+	$scope.searchGuest = {
+		totalItems : 64,
+		selected : 1,
+		moreGuest : [],
+		moreGuestSelected : '+'
+	};
+
+	$scope.$watch("searchGuest.selected", function(newValue, oldValue) {
+		console.log("clicl covers availability " + newValue +" - "+ oldValue);
+
+		angular.element("#btn-more-guest").removeClass("btn-info");
+		angular.element(".guest-list li").removeClass("active");
+		
+		$scope.searchGuest.moreGuestSelected = '+';
+	});
+	$scope.$watch("calendarBtn.dateCalendar", function(newValue, oldValue) {
+
+    	if($scope.calendarBtn.clickArrow == false){
+
+    		var date = BookDateFactory.getDate("es-ES", {},$scope.calendarBtn.dateCalendar);
+
+    		$scope.calendarBtn.dateText = BookDateFactory.getDate("es-ES", {weekday: "long", month: "short",day: "numeric"},date);
+    		$scope.calendarBtn.dateNumber = date;
+
+    		date = BookDateFactory.changeformatDate(date);
+
+    		$scope.book.date = BookDateFactory.getDate("es-ES", {weekday: "long", year: "numeric", month: "short",day: "numeric"},date);
+    		getTimeAvailability(date);
+    	}
+
+    	$scope.calendarBtn.clickArrow  = false;
+	});
+
+	$scope.setDate = function(option){
+	
+		var date = BookDateFactory.setDate($scope.calendarBtn.dateNumber,option);
+
+		$scope.calendarBtn.dateText = BookDateFactory.getDate("es-ES", {weekday: "long", month: "short",day: "numeric"},date);
+		$scope.calendarBtn.dateNumber = date;
+        
+        date = BookDateFactory.changeformatDate(date);
+		$scope.calendarBtn.dateCalendar = date;
+
+		$scope.calendarBtn.clickArrow = true;
+
+		$scope.book.date = BookDateFactory.getDate("es-ES", {weekday: "long", year: "numeric", month: "short",day: "numeric"},date);
+
+		getTimeAvailability(date);
+	};
 
 	$scope.openCalendar = function($event, opened) {
 		$event.preventDefault();
@@ -28,10 +78,38 @@ angular.module('book.controller', [])
 		$scope[opened] = true;
 	};
 
-	$scope.timeAvailability = [];
+	$scope.newReservation = function(time){
+		console.log("newReservation " + time);
+
+		$scope.book.time = time;
+
+		var modalNewReservation = $uibModal.open({
+			animation: true,
+			templateUrl: 'modalNewReservation.html',
+			size: '',
+			controller : 'modalNewReservationCtrl',
+			resolve: {
+				book : function(){
+					return $scope.book;
+				}
+			}
+		});
+	};
+
+	$scope.selectGuest = function(id,index){
+		console.log("selectGuest " + id);
+		$scope.searchGuest.moreGuestSelected = id;
+
+		angular.element(".guest-pagination li").removeClass("active");
+		angular.element("#btn-more-guest").addClass("btn-info");
+
+		angular.element(".guest-list li").removeClass("active");
+		angular.element(".guest-list li").eq(index).addClass("active");
+	};
 
 	var getTimeAvailability = function(vDate){
-		TurnFactory.getTurnsAvailables(vDate).success(function(data){
+
+		TurnFactory.getTurnsAvailables(vDate).success(function(data,status){
 
 			var times = [];
 			var timesFinal = [];
@@ -56,32 +134,25 @@ angular.module('book.controller', [])
 		}).error(function(data,status,headers){
 
 			messageAlert("Error",status,"warning");
-			getTimeAvailability("2016-08-04");
+			getTimeAvailability(BookDateFactory.changeformatDate($scope.calendarBtn.dateNumber));
 		});
 	};
 
-	$scope.newReservation = function(time){
-		console.log("newReservation " + time);
-
-		$scope.book.time = time;
-
-		var modalNewReservation = $uibModal.open({
-			animation: true,
-			templateUrl: 'modalNewReservation.html',
-			size: '',
-			controller : 'modalNewReservationCtrl',
-			resolve: {
-				book : function(){
-					return $scope.book;
-				}
+	var listMoreGuest = function(){
+		for (var i = 8; i <=20; i++) {
+			var data = {
+				label : i+" Guest",
+				id : i
 			}
-		});
+
+			$scope.searchGuest.moreGuest.push(data);
+		}
 	};
 
-	getTimeAvailability("2016-08-04");
+	listMoreGuest();
+	getTimeAvailability(BookDateFactory.changeformatDate($scope.calendarBtn.dateNumber));
 
 })
-
 
 .controller('modalNewReservationCtrl', function($scope,book,$uibModalInstance) {
 
