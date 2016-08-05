@@ -186,12 +186,16 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   /*Actualizar datos en el array textFlyer*/
   $scope.updateText=function(){
+    if($scope.flyer.labelSelected.id==$scope.textFlyer[$scope.textIndex].label.id){
     $scope.textFlyer[$scope.textIndex].label=$scope.flyer.labelSelected;
     $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.id;
     $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
     $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;   
     $scope.textActive=false;
     cleanText();
+    }else{ 
+      messageAlert("Flyer","Modificacion no corresponde a objeto seleccionado","warning");
+    }
   }
   
   /*Eliminar dato del array textFlyer*/
@@ -213,9 +217,13 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     cleanText();
   }
 
-  /*$scope.uploadImageFlyer = function (file) {
-        Upload.upload({
-            //url: './public/file/img/promotions',
+  $scope.existeFlyer=false;
+  $scope.uploadImageFlyer = function (file) {
+        $scope.temporal=file;
+        $scope.existeFlyer=true;
+  };
+  var uploadFile=function(file){
+    Upload.upload({
             url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
             data: {file: file}
         }).then(function (resp) {
@@ -225,34 +233,45 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         }, function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
-  };
-  */
+    });
+  }
+  var uploadFile64=function(file){
+    Upload.upload({
+            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile64',
+            data: {file: file}
+        }).then(function (resp) {
+            console.log(resp);
+            //console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    });
+  }
+
   $scope.clearImageFlyer = function() {
       delete $scope.coleccion.fileimg;
   };
 
-  $scope.generateFlyer=function(){
+  var generateFlyer=function(){
 
     html2canvas(angular.element('.svgArea'), {
       onrendered: function(canvas) {
 
-        /*var img = canvas.toDataURL("image/png"); 
-        img = img.replace('data:image/png;base64,', '');
-        var finalImageSrc = 'data:image/png;base64,' + img;
-        var e = angular.element('#imagencontent').attr('src', finalImageSrc);                    
-        return false;                    
-*/
         theCanvas = canvas;
-        Canvas2Image.convertToPNG(canvas);
-        document.body.appendChild(canvas); 
+        var img = canvas.toDataURL("image/png");
+        //Canvas2Image.convertToPNG(canvas);
+        //document.body.appendChild(canvas);
+        uploadFile64(img);
+        //console.log(img);
       }
     });
 
   }
-
+  //console.log($scope.existeFlyer);
   $scope.saveFlyer=function(){
-    if($scope.fileimg){ 
+    if($scope.existeFlyer){ 
 
       angular.forEach($scope.textFlyer, function(data,index){
       //data.label_id="1";
@@ -264,15 +283,18 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
       })
 
+      uploadFile($scope.coleccion.fileimg);
+      generateFlyer();
       $scope.principal={
       "microsite_id":1,
       "event_id":1,
       "token":"abc123456",
       "status":$scope.flyer.stateSelected.value,
-      "image":$scope.coleccion.fileimg.name,
+      "image":cleanString($scope.coleccion.fileimg.name),
       "label":$scope.textFlyer
       };
-    console.log("General  "+angular.toJson($scope.textFlyer,true));
+      console.log("General  "+angular.toJson($scope.principal,true));
+      messageAlert("Flyer","Se ha adjuntado correctamente el flyer","success");
 
     }else{ 
         messageAlert("Flyer","Debe seleccionar una imagen para el flyer","warning");

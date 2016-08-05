@@ -14,24 +14,15 @@
                     <span href="#" class="btn btn-danger" ng-click="clearImageFlyer()" ng-show="coleccion.fileimg">Cancelar</span>
                 </div>
 
-                <!--
-                <span class="btn btn-info btn-file">
-                    <span class="fileinput-new">Seleccionar imagen</span>
-                    <span class="fileinput-exists">Cambiar</span>
-                    <input type="file" name="file" ng-model="file">
-                </span>
-                <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Eliminar</a>
-                -->
             </div>
     		
     		<div class="svgArea">
 		    	<div class="thumbnail imgLienzo" ng-click="noEditar()">
-                    <img ngf-thumbnail="coleccion.fileimg">
+                    <img ngf-background="coleccion.fileimg" ngf-src="coleccion.fileimg" ngf-no-object-url="true">
                 </div>   
                 <div ng-repeat="obj in textFlyer" class="text-flyer" ng-draggable>
                     <div class="{{obj.tipografy}}" style="font-size: {{obj.font_size}}; color:{{obj.color}};" ng-click="selectedText($index)">{{obj.label.name}}</div>  
                 </div>
-
 		    </div>
 
     	</div>
