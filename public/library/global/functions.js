@@ -20,6 +20,10 @@ var messageAlert = function(title,text,type){
 	});
 };
 
+var historyBack = function(){
+    window.history.back();
+};
+
 //Limpiar cadena de texto
 var cleanString = function(cadena){
     var specialChars = "!@#$^&%*()'+=-[]\/{}|:<>?,";

@@ -15,7 +15,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			var vZonesActive = [];
 			var vZonesInactive = [];
 			
-			angular.forEach(data, function(zones) {
+			angular.forEach(data["data"], function(zones) {
 
 				var zonesTables = getTablesCount(zones);
 
@@ -29,6 +29,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			$scope.zonesActive = vZonesActive;
 			$scope.zonesInactive = vZonesInactive;
+		}).error(function(data,status,headers){
+			$scope.getZones();
 		});
 	};
 
@@ -62,6 +64,7 @@ angular.module('zone.controller', ['ngDraggable'])
 		var vTables = 0;
 
 		angular.forEach(zones.tables, function(tables) {
+
 			vTables + = 1;
 		});
 
@@ -360,8 +363,9 @@ angular.module('zone.controller', ['ngDraggable'])
 			console.log("params edit" ,$stateParams.id);
 
 			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
-				angular.element("#zone_name").val(zone.name);
-				loadTablesEdit(zone.tables)
+				angular.element("#zone_name").val(zone["data"][0].name);
+			
+				loadTablesEdit(zone["data"][0].tables)
 			});
 		}
 	};
@@ -426,6 +430,39 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.cancel = function(){
 		$uibModalInstance.dismiss('cancel');
 	};
+})
+.controller('ZoneAssignTurnCtrl', function($scope,TurnFactory) {
+
+
+	$scope.turns = {};
+
+	var getTurns = function(){
+
+		TurnFactory.getTurns().success(function(data){
+			var vTurns = [];
+
+			angular.forEach(data["data"],function(turns){
+
+				var days = turns.days.length;
+
+				turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
+
+				vTurns.push(turns);
+
+			});
+
+			$scope.turns = vTurns;
+
+		}).error(function(data,status,headers){
+
+			messageAlert("Error",status,"warning");
+			getTurns();
+
+		});
+		
+	};
+
+	getTurns();
 })
 
 ;

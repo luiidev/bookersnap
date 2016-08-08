@@ -9,20 +9,39 @@
         <div class="container container-book">
           <div class="block-header text-center">
               <ul class="calendar-box">
-                <li><a href="#"><i class="zmdi zmdi-chevron-left calendar-btn"></i></a></li>
+                <li><a href="javascript:void(0)" ng-click="setDate('-')"><i class="zmdi zmdi-chevron-left calendar-btn"></i></a></li>
                 <li>
-                  <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" ng-click="openCalendar($event, 'opened')" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="pickerBtn" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
-                  Wed, August 3
+                  <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" ng-click="openCalendar($event, 'opened')" uib-datepicker-popup="{{calendarBtn.format}}" show-weeks="false" ng-model="calendarBtn.dateCalendar" is-open="opened" min-date="minDate" datepicker-options="calendarBtn.dateOptions" ng-required="true" close-text="Close">
+                  {{calendarBtn.dateText}}
                   </br>
                   <small>All Shifts - 10 Covers</small>
                   </button>
                 </li>
-                <li><a href="#"><i class="zmdi zmdi-chevron-right calendar-btn"></i></a></li>
+                <li><a href="javascript:void(0)" ng-click="setDate('+')"><i class="zmdi zmdi-chevron-right calendar-btn"></i></a></li>
               </ul>
 
               <div class="row m-t-20">
                  <h4>Search Availability by Party Size</h4>
-                 <uib-pagination direction-links="false" total-items="totalItems" ng-model="currentPage" num-pages="smallnumPages"></uib-pagination>
+                 <!--
+                 <uib-pagination direction-links="false" total-items="searchGuest.totalItems" ng-model="searchGuest.selected" class="guest-pagination"></uib-pagination>-->
+
+                 <ul class="pagination search-guest">
+                   <li ng-repeat="item in searchGuest.totalItems">
+                      <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" ng-click="selectGuest(item,$index,'')">
+                      {{ item }}
+                      </button>
+                   </li>
+
+                   <li uib-dropdown>
+                   <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" uib-dropdown-toggle id="btn-more-guest">
+                      {{ searchGuest.moreGuestSelected }}
+                   </button>
+                      <ul class="dropdown-menu guest-list">
+                        <li ng-repeat="item in searchGuest.moreGuest"><a href="" ng-click="selectGuest(item.id,$index,'more')">{{ item.label }}</a></li>
+                      </ul>
+                   </li>
+                 </ul>
+                 
               </div>
 
           </div>
@@ -79,12 +98,13 @@
             </div>
 
             <div class="lv-body">
-                <div class="lv-item media" ng-repeat="item in timeAvailability" ng-click="newReservation(item.time)">
+         
+              <div class="lv-item media" ng-repeat="item in timeAvailability" ng-click="newReservation(item.time)">
                     <div class="media-body">
                         <div class="lv-title f-14">Available</div>
                         <small class="lv-small f-15">{{item.time}}</small>
                     </div>
-                </div>
+              </div>
             </div>
           </div>
           </div>

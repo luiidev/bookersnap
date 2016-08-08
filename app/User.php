@@ -6,6 +6,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    protected $table = 'bs_user';
+    protected $appends = ['fullname'];
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,4 +26,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getFullnameAttribute(){
+        return trim("$this->firstname $this->lastname");
+    }
 }
