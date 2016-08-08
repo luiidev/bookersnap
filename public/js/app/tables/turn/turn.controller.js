@@ -3,42 +3,36 @@ angular.module('turn.controller', ['form.directive'])
 .controller('TurnCtrl', function($scope,$stateParams,TurnFactory) {
 
 	$scope.turns = {};
-	$scope.zoneId = $stateParams.zone;
 
 	var getTurns = function(){
 
-		if ($stateParams.zone != undefined) {
+		TurnFactory.getTurns().success(function(data){
+			var vTurns = [];
 
-			TurnFactory.getTurns($stateParams.zone).success(function(data){
-				var vTurns = [];
+			angular.forEach(data["data"],function(turns){
 
-				angular.forEach(data["data"],function(turns){
+				var days = turns.days.length;
 
-					var days = turns.days.length;
+				turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
 
-					turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
-
-					vTurns.push(turns);
-
-				});
-
-				$scope.turns = vTurns;
-	
-		
-			}).error(function(data,status,headers){
-
-				messageAlert("Error",status,"warning");
-				getTurns();
+				vTurns.push(turns);
 
 			});
-		}
+
+			$scope.turns = vTurns;
+
+		}).error(function(data,status,headers){
+
+			messageAlert("Error",status,"warning");
+			getTurns();
+
+		});
+		
 	};
 
 	getTurns();
 })
 .controller('TurnCreateCtrl', function($scope,$stateParams,$state,$filter,TurnFactory,TypeTurnFactory,IdMicroSitio) {
-
-	$scope.zoneId = $stateParams.zone;
 
 	$scope.turnData = {
 		microsite_id : IdMicroSitio,
@@ -92,7 +86,7 @@ angular.module('turn.controller', ['form.directive'])
 
 	$scope.getDaysTypeTurn = function(){
 		
-		TypeTurnFactory.getDaysTypeTurn($scope.zoneId,$scope.turnData.type.id).success(function(data){
+		TypeTurnFactory.getDaysTypeTurn($scope.turnData.type.id).success(function(data){
 			
 			angular.forEach(data, function(day, key){
 				$scope.days[day.day].disabled = false;
@@ -121,7 +115,7 @@ angular.module('turn.controller', ['form.directive'])
 		$scope.turnData.hours_end = $filter('date')($scope.turnForm.hour_end,'HH:mm:ss');
 
 		if (option == "create") {
-			TurnFactory.createTurn($scope.zoneId,$scope.turnData).success(function(data){
+			TurnFactory.createTurn($scope.turnData).success(function(data){
 
 				console.log("saveTurn " + angular.toJson(data,true));
 
@@ -137,7 +131,7 @@ angular.module('turn.controller', ['form.directive'])
 
 			$scope.turnData.id = $stateParams.turn;
 
-			TurnFactory.updateTurn($scope.zoneId,$scope.turnData).success(function(data){
+			TurnFactory.updateTurn($scope.turnData).success(function(data){
 
 				console.log("saveTurn " + angular.toJson(data,true));
 

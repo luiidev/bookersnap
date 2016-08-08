@@ -18,7 +18,8 @@ class TurnController extends Controller
           array (
             0 => 
             array (
-             'id' => 2,
+             'id' => 1,
+             'name' => 'Almuerzo 1',
              'hours_ini' => '07:00:00',
              'hours_end' => '11:00:00',
              'status' => 1,
@@ -34,7 +35,8 @@ class TurnController extends Controller
              ),
             1 => 
             array (
-             'id' => 1,
+             'id' => 2,
+             'name' => 'Almuerzo 2',
              'hours_ini' => '07:00:00',
              'hours_end' => '11:00:00',
              'status' => 1,

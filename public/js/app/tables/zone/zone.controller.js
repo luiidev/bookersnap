@@ -431,5 +431,38 @@ angular.module('zone.controller', ['ngDraggable'])
 		$uibModalInstance.dismiss('cancel');
 	};
 })
+.controller('ZoneAssignTurnCtrl', function($scope,TurnFactory) {
+
+
+	$scope.turns = {};
+
+	var getTurns = function(){
+
+		TurnFactory.getTurns().success(function(data){
+			var vTurns = [];
+
+			angular.forEach(data["data"],function(turns){
+
+				var days = turns.days.length;
+
+				turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
+
+				vTurns.push(turns);
+
+			});
+
+			$scope.turns = vTurns;
+
+		}).error(function(data,status,headers){
+
+			messageAlert("Error",status,"warning");
+			getTurns();
+
+		});
+		
+	};
+
+	getTurns();
+})
 
 ;

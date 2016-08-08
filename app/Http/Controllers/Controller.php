@@ -10,7 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 
 class Controller extends BaseController
 {
+
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+
+    protected $_curlService;
+
+    public function __construct() {
+        $this->_curlService = new \Ixudra\Curl\CurlService();
+    }
 
     protected function CreateJsonResponse($success, $statusCode, $msg = null, $data = null,
                                           $redirect = false, $url = null, $errorUserMsg = null,
@@ -32,4 +39,5 @@ class Controller extends BaseController
 
         return response()->json($response, $statusCode);
     }
+
 }
