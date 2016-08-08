@@ -65,14 +65,18 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
     Route::put('zone', "Admin\Tables\Zone\ZoneController@update");
     Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
 
-    Route::get('zone/{id}/turn', "Admin\Tables\Turn\TurnController@index");
-    Route::get('zone/{id}/turn/{turn}', "Admin\Tables\Turn\TurnController@get");
-    Route::post('zone/{id}/turn', "Admin\Tables\Turn\TurnController@create");
 
-    Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
+ 	Route::get('zone/{id}/turn', "Admin\Tables\Turn\TurnController@index");
+	Route::get('zone/{id}/turn/{turn}', "Admin\Tables\Turn\TurnController@get");
+	Route::post('zone/{id}/turn', "Admin\Tables\Turn\TurnController@create");
+	Route::put('zone/{id}/turn', "Admin\Tables\Turn\TurnController@update");
 
-    /*Route::put('turn', "Admin\Tables\Turn\TurnController@update");
-     Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
+	Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
+
+	Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
+
+	/*
+ 	Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
 });
 
 Route::group(['prefix' => 'v1/{lang}/'], function () {
@@ -81,8 +85,11 @@ Route::group(['prefix' => 'v1/{lang}/'], function () {
 
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function () {
 
-    Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
-    Route::get('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+
+	Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
+	Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
+	Route::post('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+	Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
 
 });
 

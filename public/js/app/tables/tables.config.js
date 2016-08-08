@@ -4,7 +4,8 @@ var idMicrositio = obtenerIdMicrositio();
 angular.module('tables.app',
 [
 'turn.app',
-'zone.app'
+'zone.app',
+'book.app'
 ])
 .constant("IdMicroSitio",idMicrositio)
 .constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas')

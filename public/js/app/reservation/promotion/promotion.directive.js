@@ -6,7 +6,7 @@ angular.module('promotion.directive', [])
 
     // Start with a random pos
     var x = Math.floor((Math.random() * 300) + 40);
-    var y = Math.floor((Math.random() * 300) + 40);
+    var y = Math.floor((Math.random() * 200) + 40);
 
     element.css({
       position: 'absolute',

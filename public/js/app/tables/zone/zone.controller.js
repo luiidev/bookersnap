@@ -15,7 +15,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			var vZonesActive = [];
 			var vZonesInactive = [];
 			
-			angular.forEach(data, function(zones) {
+			angular.forEach(data["data"], function(zones) {
 
 				var zonesTables = getTablesCount(zones);
 
@@ -29,6 +29,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			$scope.zonesActive = vZonesActive;
 			$scope.zonesInactive = vZonesInactive;
+		}).error(function(data,status,headers){
+			$scope.getZones();
 		});
 	};
 
@@ -62,6 +64,7 @@ angular.module('zone.controller', ['ngDraggable'])
 		var vTables = 0;
 
 		angular.forEach(zones.tables, function(tables) {
+
 			vTables + = 1;
 		});
 
@@ -343,7 +346,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			});
 
 		}else{
-
+			dataZone.id = $stateParams.id;
 			ZoneFactory.editZone(dataZone).success(function(response){
 				console.log("succes editZone " + JSON.stringify(response));
 				messageAlert("Success","Zone edit complete","success");
@@ -351,7 +354,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			});
 		}
 
-		console.log("saveZone " + JSON.stringify(dataZone));
+		console.log("saveZone " + angular.toJson(dataZone,true));
 	};
 
 	var detectedForm = function(){
@@ -360,8 +363,9 @@ angular.module('zone.controller', ['ngDraggable'])
 			console.log("params edit" ,$stateParams.id);
 
 			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
-				angular.element("#zone_name").val(zone.name);
-				loadTablesEdit(zone.tables)
+				angular.element("#zone_name").val(zone["data"][0].name);
+			
+				loadTablesEdit(zone["data"][0].tables)
 			});
 		}
 	};
