@@ -1,9 +1,19 @@
 <div class="card-header">
 <h2>{{titulo}} <small></small></h2>
+<div class="block-header" style="padding-bottom: 15px">
+            <ul class="actions">
+                <li>
+                    <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
+                </li>
+                <li>
+                    <button class="btn btn-primary waves-effect" ng-click="savePromotion()">Guardar promocion</button>
+                </li>
+            </ul>
+        </div>
 </div>
 
 <div class="card-body card-padding">
-<form method="post" enctype="multipart/form-data" name="promotion" novalidate>
+
 <div class="row">
     <div class="col-xs-12 col-md-4">
         <div class="form-group fg-float m-b-30">
@@ -22,95 +32,87 @@
 
         </div>
         
-        <div ng-bind-html="promotion.descripcion | emoticons:{linkTarget:'_blank'}"></div>
+        <div ng-bind-html="promotion.descripcion | maxLength:23 | emoticons:{linkTarget:'_blank'}"></div> 
         
     </div>
     <div class="col-xs-12 col-md-4">
 
-          
-            <p class="f-500 c-black m-b-15">Turno</p>
 
-            <div class="form-group">
+        <p class="f-500 c-black m-b-30">Turno</p>
+        <div class="form-group">
             <div class="fg-line">
-                <button class="btn btn-primary btn-icon-text" ng-click="openModal()"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
+            <button class="btn btn-primary btn-icon-text" ng-click="openModal()"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
             </div>
-            </div>
+        </div>
 
-            <div class="toggle-switch row m-t-15" data-ts-color="blue">
-                <label class="tw3 col-xs-6 col-md-8">Ingresar fecha de caducidad</label>
-                <div class="col-xs-4 col-md-3">
-                <input id="tw3" type="checkbox" hidden="hidden" ng-model="promotion.caduca">
-                <label for="tw3" class="ts-helper"></label>
-                </div>
-            </div>
+        <div class="m-b-20">
+        <div class="toggle-switch" data-ts-color="blue">
+            <label for="caduca" class="ts-label">Ingresar fecha de caducidad</label>
+            <input id="caduca" type="checkbox" hidden="hidden" ng-model="promotion.caduca" class="pull-right">
+            <label for="caduca" class="ts-helper"></label>
+        </div>
+        </div>
     
-
-            <div ng-show="promotion.caduca">
-                <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
-                    <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
-                    <div class="fg-line" ng-class="{ 'fg-toggled': opened2 == true }">
-                        <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="dtPopup2" is-open="opened2" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione fecha" />
-                    </div>
+        <div ng-show="promotion.caduca">
+            <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
+                <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
+                <div class="fg-line" ng-class="{ 'fg-toggled': opened2 == true }">
+                    <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="promotion.fecha_caduca" is-open="opened2" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione una fecha" />
                 </div>
-            </div>    
-
-            <div class="toggle-switch row" data-ts-color="blue">
-            
-                <label for="ts4" class="ts-label col-xs-6 col-md-8">Desea publicar en fanpage facebook o twitter.</label>
-                <div class="col-xs-4 col-md-3">
-                <input id="ts4" type="checkbox" hidden="hidden">
-                <label for="ts4" class="ts-helper"></label>
-                </div>
-           
-            </div> 
-
-
-            <p class="c-black f-500 m-b-20 m-t-20">Tipo de promocion</p>
-            <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="tipo in tipos">
-            <input type="radio" ng-model="promotion.tipo" name="tipo" ng-value="{{tipo.value}}">
-            <i class="input-helper"></i>
-                {{tipo.name}}
-            </label>
-
-            <div class="m-b-20" ng-show="promotion.tipo == '1'">
-                <p class="f-500 c-black m-b-15">Zona disponible</p>
-            <select chosen multiple ng-model="promotion.zonaselected" ng-options="s.id as s.title for s in zoneAvailable" class="w-100">
-                </select>
             </div>
+        </div>    
+     
+        <div class="m-b-20">
+        <div class="toggle-switch" data-ts-color="blue">
+            <label for="publica" class="ts-label">Desea publicar en fanpage facebook o twitter.</label>
+            <input id="publica" type="checkbox" hidden="hidden" ng-model="promotion.publica">
+            <label for="publica" class="ts-helper"></label>
+        </div>
+        </div>
+
+        <p class="c-black f-500 m-b-20">Tipo de promocion</p>
+        <label class="radio radio-inline m-b-30" ng-repeat="tipo in promotion.tipos">
+            <input type="radio" ng-model="promotion.tipoSelected.value" name="tipo" ng-value="{{tipo.value}}">
+            <i class="input-helper"></i>
+            {{tipo.name}}
+        </label>
+
+        <div class="m-b-20" ng-show="promotion.tipoSelected.value == '1'">
+            <p class="f-500 c-black m-b-15">Zona disponible</p>
+            <select chosen multiple ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100">
+            </select>
+        </div>
 
         <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
-        <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in estados">
-            <input type="radio" ng-model="promotion.estado" name="estado" ng-value="{{estado.value}}">
+        <label class="radio radio-inline m-r-20 m-b-20" ng-repeat="estado in promotion.estados">
+            <input type="radio" ng-model="promotion.estadoSelected.value" name="estado" ng-value="{{estado.value}}">
             <i class="input-helper"></i>
              {{estado.name}}
         </label>    
 
-        
+   
     </div>
     <div class="col-xs-12 col-md-4">
         <p class="f-500 c-black m-b-20">Vista previa de promocion</p>
-
         <div class="fileinput fileinput-new">
-        <span class="btn btn-info btn-file">
-            <!--<span ng-show="imageCropStep == 1">Seleccionar imagen</span>-->
-            <span ngf-select ngf-change='uploadImage(myImage)' ng-model="myImage" name="myImage" id="fileInput" ng-show="imageCropStep == 1" ngf-max-size="20MB" accept="image/*">Seleccionar imagen</span>
-            <!--<span ng-show="imageCropStep == 2">Cambiar</span> -->
-            <!--<input type="file" name="fileInput" id="fileInput" ng-model="myImage" ngf-select accept="image/*"/>-->
-        </span>
-        
-        <span href="#" class="btn btn-danger" ng-click="clear()" ng-show="myImage">Cancelar</span>
+            <span class="btn btn-info btn-file">
+            <span ngf-select ng-model="promotion.myImage" name="myImage" ngf-pattern="'image/*'" ngf-accept="'image/*'" id="fileInput">Seleccionar imagen</span>
+            </span>
+            <span href="#" class="btn btn-danger" ng-click="clearImagePromotion()" ng-show="promotion.myImage">Cancelar</span>
         </div>
-
-        <div ngf-drop ng-model="myImage" ngf-pattern="image/*" class="cropArea">
-            <img-crop area-type="rectangle" image="myImage  | ngfDataUrl"                 
-            result-image="croppedDataUrl" ng-init="croppedDataUrl=''"></img-crop>
+        
+        <div ngf-drop ng-model="promotion.myImage" ngf-pattern="image/*" class="cropArea">
+            <img-crop area-type="rectangle" image="promotion.myImage  | ngfDataUrl" area-coords="cropped"                 
+             area-init-size="{ w:cropped.cropWidth,h:cropped.cropHeight}" cropject="cropper" result-image="croppedDataUrl" init-max-area="true"></img-crop>
         </div>
         <br>
-        <!--<span class="btn btn-info" ng-click="upload(croppedDataUrl, myImage.name)">Upload</span>-->
+        
+        <!--<div><img ng-src="{{croppedDataUrl}}" ng-model="croppedDataUrl"/></div>-->
 
     </div>
+    
 </div>
-</form>
+
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
@@ -157,4 +159,4 @@
                     <button class="btn btn-primary" ng-click="ok()">Crear</button>
                     <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
                 </div>
-                </script>
+</script>
