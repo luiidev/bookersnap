@@ -12,7 +12,7 @@ angular.module('turn.controller', ['form.directive'])
 			TurnFactory.getTurns($stateParams.zone).success(function(data){
 				var vTurns = [];
 
-				angular.forEach(data,function(turns){
+				angular.forEach(data["data"],function(turns){
 
 					var days = turns.days.length;
 
@@ -28,6 +28,7 @@ angular.module('turn.controller', ['form.directive'])
 			}).error(function(data,status,headers){
 
 				messageAlert("Error",status,"warning");
+				getTurns();
 
 			});
 		}
@@ -154,7 +155,9 @@ angular.module('turn.controller', ['form.directive'])
 		if ($stateParams.turn != undefined) {
 
 			TurnFactory.getTurn($stateParams.turn).success(function(data){
-	
+				
+				data = data["data"];
+				
 				$scope.turnData.name = data.name;
 				$scope.turnData.hours_ini = data.hours_ini;
 				$scope.turnData.hours_end = data.hours_end;

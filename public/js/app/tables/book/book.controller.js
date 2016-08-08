@@ -114,7 +114,7 @@ angular.module('book.controller', [])
 			var times = [];
 			var timesFinal = [];
 
-			angular.forEach(data, function(turn, key){
+			angular.forEach(data["data"], function(turn, key){
 				times.push(BookDateFactory.rangeDateAvailable(15,turn));
 			});
 
