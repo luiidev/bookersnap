@@ -5,7 +5,7 @@
 
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-    <section id="content" ng-controller="TurnCtrl">
+    <section id="content" ng-controller="ZoneAssignTurnCtrl">
         <div class="container">
 
                    <div class="block-header" style="padding-bottom: 15px">
@@ -47,7 +47,7 @@
                         <label class="label label-danger f-12" ng-if="item.status == 0">Inactive</label>
                       </td>
                       <td>
-                        <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="turn-edit({turn : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit turn</button> </td>
+                        <button class="btn btn-default btn-icon-text waves-effect"><i class="zmdi zmdi-folder-star zmdi-hc-fw"></i> Assign Turn</button> </td>
                       </tr>
                     </tbody>
                   </table>

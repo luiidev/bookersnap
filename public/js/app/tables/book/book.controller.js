@@ -23,20 +23,12 @@ angular.module('book.controller', [])
 	//Paginador Guest
 
 	$scope.searchGuest = {
-		totalItems : 64,
-		selected : 1,
+		totalItems : [1,2,3,4,5,6],
+		//selected : 1,
 		moreGuest : [],
 		moreGuestSelected : '+'
 	};
 
-	$scope.$watch("searchGuest.selected", function(newValue, oldValue) {
-		console.log("clicl covers availability " + newValue +" - "+ oldValue);
-
-		angular.element("#btn-more-guest").removeClass("btn-info");
-		angular.element(".guest-list li").removeClass("active");
-		
-		$scope.searchGuest.moreGuestSelected = '+';
-	});
 	$scope.$watch("calendarBtn.dateCalendar", function(newValue, oldValue) {
 
     	if($scope.calendarBtn.clickArrow == false){
@@ -96,15 +88,24 @@ angular.module('book.controller', [])
 		});
 	};
 
-	$scope.selectGuest = function(id,index){
-		console.log("selectGuest " + id);
-		$scope.searchGuest.moreGuestSelected = id;
+	$scope.selectGuest = function(id,index,option){
 
-		angular.element(".guest-pagination li").removeClass("active");
-		angular.element("#btn-more-guest").addClass("btn-info");
+		angular.element(".search-guest li").removeClass("active");
+		
+		if(option == "more"){
+			$scope.searchGuest.moreGuestSelected = id;
 
-		angular.element(".guest-list li").removeClass("active");
-		angular.element(".guest-list li").eq(index).addClass("active");
+			angular.element("#btn-more-guest").addClass("btn-info");
+
+			angular.element(".guest-list li").removeClass("active");
+			angular.element(".guest-list li").eq(index).addClass("active");
+
+		}else{
+			$scope.searchGuest.moreGuestSelected = '+';
+
+			angular.element("#btn-more-guest").removeClass("btn-info");
+			angular.element(".search-guest li").eq(index).addClass("active");
+		}
 	};
 
 	var getTimeAvailability = function(vDate){

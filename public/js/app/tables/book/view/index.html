@@ -22,15 +22,22 @@
 
               <div class="row m-t-20">
                  <h4>Search Availability by Party Size</h4>
-                 <uib-pagination direction-links="false" total-items="searchGuest.totalItems" ng-model="searchGuest.selected" class="guest-pagination"></uib-pagination>
+                 <!--
+                 <uib-pagination direction-links="false" total-items="searchGuest.totalItems" ng-model="searchGuest.selected" class="guest-pagination"></uib-pagination>-->
 
-                 <ul class="pagination">
+                 <ul class="pagination search-guest">
+                   <li ng-repeat="item in searchGuest.totalItems">
+                      <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" ng-click="selectGuest(item,$index,'')">
+                      {{ item }}
+                      </button>
+                   </li>
+
                    <li uib-dropdown>
                    <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" uib-dropdown-toggle id="btn-more-guest">
                       {{ searchGuest.moreGuestSelected }}
                    </button>
                       <ul class="dropdown-menu guest-list">
-                        <li ng-repeat="item in searchGuest.moreGuest"><a href="" ng-click="selectGuest(item.id,$index)">{{ item.label }}</a></li>
+                        <li ng-repeat="item in searchGuest.moreGuest"><a href="" ng-click="selectGuest(item.id,$index,'more')">{{ item.label }}</a></li>
                       </ul>
                    </li>
                  </ul>

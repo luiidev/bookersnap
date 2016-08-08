@@ -10,5 +10,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+   // use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
+	protected $_curlService;
+
+	public function __construct() {
+       $this->_curlService = new \Ixudra\Curl\CurlService();
+    }
 }

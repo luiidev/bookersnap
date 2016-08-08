@@ -45,15 +45,14 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
 	Route::put('zone', "Admin\Tables\Zone\ZoneController@update");
  	Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
 
- 	Route::get('zone/{id}/turn', "Admin\Tables\Turn\TurnController@index");
-	Route::get('zone/{id}/turn/{turn}', "Admin\Tables\Turn\TurnController@get");
-	Route::post('zone/{id}/turn', "Admin\Tables\Turn\TurnController@create");
-	Route::put('zone/{id}/turn', "Admin\Tables\Turn\TurnController@update");
+ 	Route::get('turn', "Admin\Tables\Turn\TurnController@index");
+	Route::get('turn/{turn}', "Admin\Tables\Turn\TurnController@get");
+	Route::post('turn', "Admin\Tables\Turn\TurnController@create");
+	Route::put('turn', "Admin\Tables\Turn\TurnController@update");
 	
-	Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
+	Route::get('type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
 
 	Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
-
 	/*
  	Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
 });
