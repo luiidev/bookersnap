@@ -31,10 +31,10 @@ var cleanString = function(cadena){
       cadena= cadena.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
     }
     cadena = cadena.toLowerCase();
-    //cadena.replace(/\s/g,"_");
-    //cadena.replace(/^\s+|\s+$/g,"_");
+    cadena.replace(/\s/g,"");
+    //cadena.replace(/^\s+|\s+$/g,"");
     //cadena.replace(/\s+$/g,"");
-    cadena.replace(/^\s*|\s*$/g, '');
+    //cadena.replace(/^\s*|\s*$/g, '_');
     //cadena.replace(' ','');
 
     cadena = cadena.replace(/[áàäâå]/gi,"a");

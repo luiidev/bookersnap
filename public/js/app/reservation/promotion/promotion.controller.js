@@ -30,9 +30,16 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   };
   $scope.imgPreview.push(datosPreview);*/
   $scope.addCroppingWatcher=function(){ console.log('hecho');}
+
+  $scope.validarImg=function(file){
+    if(file==null){ 
+      messageAlert("Flyer","Seleccione imagen mayor a 300px x 300px","warning");
+      delete $scope.promotion.myImage;
+    }
+  }
   
   $scope.savePromotion=function(){
-    
+
     uploadImage($scope.promotion.myImage);
     uploadImage64($scope.croppedDataUrl);
 
@@ -51,20 +58,19 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     };
     console.log('Guardando'+angular.toJson($scope.datosPromotion,true));
   }
-
-
-  function modalInstances() {
+  function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
+      animation: animation,
       templateUrl: 'myModalContent.html',
-      controller: 'TurnoInstanceCtrl',            
+      controller: 'TurnoInstanceCtrl',
+      size: size 
     });
-  }
-        
+  } 
   //Custom Sizes
-  $scope.openModal = function () {
-      modalInstances()
+  $scope.openModal = function (size) {
+      modalInstances(true, size, true, true)
   }
-
+ 
 	//Opciones de calendario
 	$scope.today = function() {
         $scope.dt = new Date();
@@ -286,7 +292,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         theCanvas = canvas;
         var img = canvas.toDataURL("image/png");
         //Canvas2Image.convertToPNG(canvas);
-        //document.body.appendChild(canvas);
+        document.body.appendChild(canvas);
         uploadFile64(img);
         //console.log(img);
       }
@@ -338,16 +344,74 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   
 
-
 })
-.controller('TurnoInstanceCtrl', function($scope,$modalInstance) {
 
-  $scope.semana = [{id: 1, nameday: 'Domingo'},{id: 2, nameday: 'Lunes'},{id: 3, nameday: 'Martes'},{id: 4, nameday: 'Miercoles'},{id: 5, nameday: 'Jueves'},{id: 6, nameday: 'Viernes'},{id: 7, nameday: 'Sabado'}];
-  $scope.activityAvailable = [{ida: 1, title: 'Reservacion'},{ida: 2, title: 'Comida'},{ida: 3, title: 'Cena'},{ida: 4, title: 'Bar noche'}];
+.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter) {
+    $scope.createTurnos=[];
 
+    $scope.turnos = {
+      actividades:[
+        {id: 1, name: 'Reservacion'},
+        {id: 2, name: 'Comida'},
+        {id: 3, name: 'Cena'},
+        {id: 4, name: 'Bar noche'},
+      ],
+      semana:[
+        {id : 0, label : 'Domingo',disabled : false,checked : false},
+        {id : 1, label : 'Lunes',disabled : false,checked : false},
+        {id : 2, label : 'Martes',disabled : false,checked : false},
+        {id : 3, label : 'Miercoles',disabled : false,checked : false},
+        {id : 4, label : 'Jueves',disabled : false,checked : false},
+        {id : 5, label : 'Viernes',disabled : false,checked : false},
+        {id : 6, label : 'Sabado',disabled : false,checked : false},
+      ],
+      actividadSelected : {id: 1, name: 'Reservacion'},
+      turnoSelected:[],
+      hours_ini : '',
+      hours_end : '',
+    };
+    
+    $scope.horarios = {
+      hour_ini : '',
+      hour_end : ''
+    };
+
+    var getDaysSelected = function(days){
+      var daysData = [];
+
+      angular.forEach(days, function(data,key){
+        if(data){
+          daysData.push({ day : key});
+        }
+      });
+    return daysData;
+    };
+
+  $scope.validateSaveTurno = function(){
+
+
+      var days = getDaysSelected($scope.turnos.turnoSelected);
+      $scope.turnoSelected = days;
+      $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
+      $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
+      $scope.actividadSelected=$scope.turnos.actividadSelected;
+
+      var opciones={
+        actividad:$scope.actividadSelected,
+        dias:$scope.turnoSelected,
+        hinicio:$scope.turnos.hours_ini,
+        hfinal:$scope.turnos.hours_end,
+      };
+      
+      $scope.createTurnos.push(opciones);
+      //console.log($scope.createTurnos);
+      console.log('Turnos: '+angular.toJson($scope.createTurnos, true));
+ 
+  };
+  /*
   $scope.ok = function () {
     $modalInstance.close();
-  };
+  };*/
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
