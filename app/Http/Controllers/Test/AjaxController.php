@@ -21,12 +21,9 @@ class AjaxController extends Controller
 
     public function GetData()
     {
-
         try {
             $response = $this->_ajaxService->GetTestData();
-            if(!$response['success']){
-
-            }
+            return response()->json($response, $response['statuscode']);
             return $this->CreateJsonResponse(true, $response['statuscode'], $response['msg'], $data);
         } catch (HttpException $e) {
             return $this->CreateJsonResponse(false, $e->getStatusCode(), null, null, false, null, $e->getMessage(), $e->getMessage() . "\n" . "{$e->getFile()}: {$e->getLine()}");

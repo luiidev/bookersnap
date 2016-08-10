@@ -21,6 +21,7 @@ class AjaxService
     public function __construct()
     {
         $this->_token = Session::get('api-token');
+        $this->_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjEsIm5hbWUiOm51bGwsImF1ZCI6IjJjMzRkOTExZjc2ZGNlNmQ3MmMxYzljNmE5NzA5MmExNTQzMWZkNjMiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6MzAwMVwvdjFcL2VzXC9hdXRoXC9zb2NpYWxuZXR3b3JrIiwiaWF0IjoxNDcwNzgzNzc4LCJleHAiOjE0NzA3OTA5NzgsIm5iZiI6MTQ3MDc4Mzc3OCwianRpIjoiNTdhNzJiMDM2Y2NiNjk0ZWE4YTMzMmMzYzM1MzBlZjIifQ.Fzz1cJJCDMY0ey2Pot-OoV7eNDjgpCgBRb4bLZBj_aY';
     }
 
 
@@ -30,34 +31,12 @@ class AjaxService
         $url .= '/es/microsite/sitename';
         $credentials = [
             'Authorization' => 'Bearer ' . $this->_token,
-            'type_admin' => 1
+            'type-admin' => 1
         ];
         $data = [
             'sitename' => 'don-titos',
             'free' => false
         ];
-        $response = ApiRequestsHelper::SendRequest('POST', $url, $credentials, $data);
-
-        switch ($response['statuscode']) {
-            case 200: case 201:
-
-                break;
-            case 406:
-                return [''];
-                break;
-            default:
-                abort($response['statuscode'], trim($response['msg'] . $response['error']['user_msg']));
-                break;
-        }
-
-        if ($response['success']) {
-            return ['msg' => $response['msg'], 'statuscode' => $response['statuscode']];
-        } else {
-            return [
-                'msg' => trim($response['msg'] . $response['error']['user_msg']),
-                'suggestions' => $response['data']['suggestions'],
-                'statuscode' => $response['statuscode']
-            ];
-        }
+        return ApiRequestsHelper::SendRequest('POST', $url, $credentials, $data);
     }
 }
