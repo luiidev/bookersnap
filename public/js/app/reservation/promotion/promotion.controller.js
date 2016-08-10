@@ -1,5 +1,7 @@
 angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons','farbtastic','localytics.directives'])
 .controller('PromotionCtrl', function($scope) {
+
+  $scope.titulo="Promociones";
 	
 })
 .controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal) {
