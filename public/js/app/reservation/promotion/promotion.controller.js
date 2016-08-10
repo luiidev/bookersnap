@@ -1,31 +1,78 @@
 angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons','farbtastic','localytics.directives'])
 .controller('PromotionCtrl', function($scope) {
+
+  $scope.titulo="Promociones";
 	
 })
 .controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal) {
 
-	$scope.titulo="Nueva promoción";
-	$scope.estados = [{name: 'Activo',value:1},{name: 'Inactivo',value:0}];
-	$scope.tipos = [{name: 'Gratis',value:0},{name: 'De pago',value:1}];
+  $scope.titulo="Nueva promoción";
+
+  $scope.promotion={
+    estados:[{name:'Activo',value:1},{name:'Inactivo',value:0}],
+    estadoSelected:{value:1},
+    tipos:[{name:'Gratis',value:0},{name:'De pago',value:1}],
+    tipoSelected:{name:'Gratis',value:0},
+    descripcion:" ",
+    zonas:[{id:1,title:'Zona01'},{id:2,title:'Zona02'},{id:3,title:'Zona03'},{id:4,title:'Zona04'}],
+    zonaSelected:[2, 3],
+    caduca:false,
+    publica:true,
+    myImage: undefined
+  };
+
+  //$scope.cropped = [{w: 200, h: 80}];
+  $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
 
 
-  $scope.zoneAvailable = [{id: 1, title: 'Zona01'},{id: 2, title: 'Zona02'},{id: 3, title: 'Zona03'},{id: 4, title: 'Zona04'}];
-   //Estados por defecto
-  $scope.promotion={caduca:false, tipo:0, estado:1,descripcion:" ",zonaselected: [2, 3]};
+  /*$scope.imgPreview=[];
+  var datosPreview={
+    sizes:{w:$scope.cropped.cropWidth,h:$scope.cropped.cropHeight},
+    coodinates:{x:$scope.cropped.cropLeft,y:$scope.cropped.cropTop}
+  };
+  $scope.imgPreview.push(datosPreview);*/
+  $scope.addCroppingWatcher=function(){ console.log('hecho');}
 
+  $scope.validarImg=function(file){
+    if(file==null){ 
+      messageAlert("Flyer","Seleccione imagen mayor a 300px x 300px","warning");
+      delete $scope.promotion.myImage;
+    }
+  }
+  
+  $scope.savePromotion=function(){
 
-  function modalInstances() {
+    uploadImage($scope.promotion.myImage);
+    uploadImage64($scope.croppedDataUrl);
+
+    $scope.datosPromotion={
+      "microsite_id":1,
+      "event_id":1,
+      "token":"abc123456",
+      "titulo":$scope.promotion.titulo,
+      "description":$scope.promotion.descripcion,
+      "status_expire":$scope.promotion.caduca,
+      "date_expire":$scope.promotion.fecha_caduca,
+      "publica":$scope.promotion.publica,
+      "tipo":$scope.promotion.tipoSelected.value,
+      "status":$scope.promotion.estadoSelected.value,
+      "image":cleanString($scope.promotion.myImage.name)
+    };
+    console.log('Guardando'+angular.toJson($scope.datosPromotion,true));
+  }
+  function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
+      animation: animation,
       templateUrl: 'myModalContent.html',
-      controller: 'TurnoInstanceCtrl',            
+      controller: 'TurnoInstanceCtrl',
+      size: size 
     });
+  } 
+  //Custom Sizes
+  $scope.openModal = function (size) {
+      modalInstances(true, size, true, true)
   }
-        
-        //Custom Sizes
-  $scope.openModal = function () {
-      modalInstances()
-  }
-
+ 
 	//Opciones de calendario
 	$scope.today = function() {
         $scope.dt = new Date();
@@ -50,48 +97,14 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
  	  $scope.croppedDataUrl='';   
  	  $scope.imageCropStep = 1;
     
-    /*
-    var handleFileSelect = function(evt) {
-    //$scope.handleFileSelect = function(evt) {
-      var file = evt.currentTarget.files[0];
-      var fileReader = new FileReader();
-      fileReader.onload = function(evt) {
-        $scope.$apply(function($scope) {
-          $scope.myImage = evt.target.result;
-          $scope.imageCropStep = 2;
-        });
-      };
-      fileReader.readAsDataURL(file);
-    };
-    angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
-  */
 
-    $scope.clear = function() {
-		  $scope.imageCropStep = 1;
-		  delete $scope.myImage;
+  $scope.clearImagePromotion = function() {
+		  delete $scope.promotion.myImage;
 		  delete $scope.croppedDataUrl;
-    };
+   };
 
-  /*
-  $scope.upload = function (dataUrl, name) {
-    Upload.upload({
-      url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
-        data: {
-          file: Upload.dataUrltoBlob(dataUrl, name)
-        },
-      }).then(function (response) {
-        $timeout(function () {
-          $scope.result = response.data;
-        });
-      }, function (response) {
-        if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
-        }, function (evt) {
-            $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-    });
-  }
-  */
 
-  $scope.uploadImage = function (file) {
+  var uploadImage = function (file) {
         Upload.upload({
             //url: './public/file/img/promotions',
             url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
@@ -105,6 +118,21 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
         });
   };
+
+  var uploadImage64=function(file){
+    Upload.upload({
+            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile64',
+            data: {file: file}
+        }).then(function (resp) {
+            console.log(resp);
+            //console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    });
+  }
 
 
 })
@@ -122,17 +150,18 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
           vTexto.push(zones); 
     });
     $scope.flyer.labels = vTexto;
-    //console.log(vTexto);
+    $scope.flyer.labelSelected=$scope.flyer.labels[0];
+    //console.log($scope.flyer.labels);
   });
 
   $scope.flyer={
-    fonts:[{id: 'Arial', title: 'Arial'},{id: 'Lobster', title: 'Lobster'},{id: 'Roboto', title: 'Roboto'}],
+    fonts:[{id:'Arial', title: 'Arial'},{id: 'Lobster', title: 'Lobster'},{id: 'Roboto', title: 'Roboto'}],
     fontSelected:{id: 'Arial', title: 'Arial'},
     sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'}],
     sizeSelected:{id: 14, valor: '14px'},
     colorSelected:{color: '#03A9F4'},
-    states:[{name: 'Activo',value:1},{name: 'Inactivo',value:0}],
-    stateSelected:{value: 1}
+    //states:[{name: 'Activo',value:1},{name: 'Inactivo',value:0}],
+    //stateSelected:{value: 1}
   }
 
   /*Agregar datos a un array textFlyer*/
@@ -160,18 +189,21 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   }
 
   var crearTexto=function(){
-     var texto={
-            label:$scope.flyer.labelSelected,
-            tipografy:$scope.flyer.fontSelected.id,
-            font_size:$scope.flyer.sizeSelected.id+"px",
-            color:$scope.flyer.colorSelected.color
-            //top:Math.floor((Math.random() * 100) + 40)+"px",
-            //left: Math.floor((Math.random() * 300) + 40)+"px"
-      };
-      $scope.textFlyer.push(texto);
-      cleanText();
+    var texto={
+      label:$scope.flyer.labelSelected,
+      tipografy:$scope.flyer.fontSelected.id,
+      font_size:$scope.flyer.sizeSelected.id+"px",
+      color:$scope.flyer.colorSelected.color
+      //top:Math.floor((Math.random() * 100) + 40)+"px",
+      //left: Math.floor((Math.random() * 300) + 40)+"px"
+    };
+    $scope.textFlyer.push(texto);
+    cleanText();
   }
 
+  $scope.changeFunction=function(){
+    $scope.textActive=false;
+  }
   /*Obtener datos de texto seleccionado*/
   $scope.selectedText=function(index){
     $scope.textIndex=index;
@@ -206,7 +238,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   }
 
   var cleanText=function(){
-    $scope.flyer.labelSelected={};
+    $scope.flyer.labelSelected=$scope.flyer.labels[0];
     //$scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
     //$scope.flyer.sizeSelected={id: 14, valor: '14px'};
     //$scope.flyer.colorSelected={color: '#03A9F4'};
@@ -262,7 +294,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         theCanvas = canvas;
         var img = canvas.toDataURL("image/png");
         //Canvas2Image.convertToPNG(canvas);
-        //document.body.appendChild(canvas);
+        document.body.appendChild(canvas);
         uploadFile64(img);
         //console.log(img);
       }
@@ -289,7 +321,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       "microsite_id":1,
       "event_id":1,
       "token":"abc123456",
-      "status":$scope.flyer.stateSelected.value,
+      //"status":$scope.flyer.stateSelected.value,
       "image":cleanString($scope.coleccion.fileimg.name),
       "label":$scope.textFlyer
       };
@@ -308,21 +340,80 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     if($scope.textFlyer.length!=0){
       $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
       $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
+      $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.id;
     }
   };
 
   
 
-
 })
-.controller('TurnoInstanceCtrl', function($scope,$modalInstance) {
 
-  $scope.semana = [{id: 1, nameday: 'Domingo'},{id: 2, nameday: 'Lunes'},{id: 3, nameday: 'Martes'},{id: 4, nameday: 'Miercoles'},{id: 5, nameday: 'Jueves'},{id: 6, nameday: 'Viernes'},{id: 7, nameday: 'Sabado'}];
-  $scope.activityAvailable = [{ida: 1, title: 'Reservacion'},{ida: 2, title: 'Comida'},{ida: 3, title: 'Cena'},{ida: 4, title: 'Bar noche'}];
+.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter) {
+    $scope.createTurnos=[];
 
+    $scope.turnos = {
+      actividades:[
+        {id: 1, name: 'Reservacion'},
+        {id: 2, name: 'Comida'},
+        {id: 3, name: 'Cena'},
+        {id: 4, name: 'Bar noche'},
+      ],
+      semana:[
+        {id : 0, label : 'Domingo',disabled : false,checked : false},
+        {id : 1, label : 'Lunes',disabled : false,checked : false},
+        {id : 2, label : 'Martes',disabled : false,checked : false},
+        {id : 3, label : 'Miercoles',disabled : false,checked : false},
+        {id : 4, label : 'Jueves',disabled : false,checked : false},
+        {id : 5, label : 'Viernes',disabled : false,checked : false},
+        {id : 6, label : 'Sabado',disabled : false,checked : false},
+      ],
+      actividadSelected : {id: 1, name: 'Reservacion'},
+      turnoSelected:[],
+      hours_ini : '',
+      hours_end : '',
+    };
+    
+    $scope.horarios = {
+      hour_ini : '',
+      hour_end : ''
+    };
+
+    var getDaysSelected = function(days){
+      var daysData = [];
+
+      angular.forEach(days, function(data,key){
+        if(data){
+          daysData.push({ day : key});
+        }
+      });
+    return daysData;
+    };
+
+  $scope.validateSaveTurno = function(){
+
+
+      var days = getDaysSelected($scope.turnos.turnoSelected);
+      $scope.turnoSelected = days;
+      $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
+      $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
+      $scope.actividadSelected=$scope.turnos.actividadSelected;
+
+      var opciones={
+        actividad:$scope.actividadSelected,
+        dias:$scope.turnoSelected,
+        hinicio:$scope.turnos.hours_ini,
+        hfinal:$scope.turnos.hours_end,
+      };
+      
+      $scope.createTurnos.push(opciones);
+      //console.log($scope.createTurnos);
+      console.log('Turnos: '+angular.toJson($scope.createTurnos, true));
+ 
+  };
+  /*
   $scope.ok = function () {
     $modalInstance.close();
-  };
+  };*/
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

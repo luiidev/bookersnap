@@ -17,17 +17,17 @@ class PromotionController extends Controller
           array (
            'id' => 1,
            'name' => 'Jose'
-           ),
+          ),
           1 => 
           array (
            'id' => 2,
            'name' => 'Martinez'
-           ),
+          ),
           2 => 
           array (
            'id' => 3,
            'name' => '10/08/2016'
-           ),
+          ),
           3 => 
           array (
            'id' => 4,
@@ -36,6 +36,48 @@ class PromotionController extends Controller
          )
       );
    }
+
+   public function getTypesPromotion(){
+      return response()->json(
+         array (
+            'success' => true,
+            'statuscode' => 201,
+            'msg' => 'messages.turn_restriction_list',
+            'data' => 
+            array (
+               0 => 
+                  array (
+                  'id' => 1,
+                  'name' => 'Evento gratuito'
+                  ),
+               1 => 
+                  array (
+                  'id' => 2,
+                  'name' => 'Evento de paga',
+                  ),
+               2 => 
+                  array (
+                  'id' => 3,
+                  'name' => 'Promoción gratis',
+                  ),
+               3 => 
+                  array (
+                  'id' => 4,
+                  'name' => 'Promoción de paga',
+                  )
+            ),
+            'redirect' => false,
+            'url' => NULL,
+            'error' => 
+            array (
+               'user_msg' => NULL,
+               'internal_msg' => NULL,
+               'errors' => NULL,
+            ),
+         )
+      );
+   }
+
 
    public function uploadFile64(Request $request){
 

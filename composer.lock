@@ -333,6 +333,7 @@
             "time": "2016-06-24 23:00:38"
         },
         {
+<<<<<<< HEAD
             "name": "intervention/image",
             "version": "2.3.7",
             "source": {
@@ -438,6 +439,8 @@
             "time": "2016-06-15 20:08:37"
         },
         {
+=======
+>>>>>>> e416489c6ff177960b98cae5b2913e88538ab878
             "name": "jakub-onderka/php-console-color",
             "version": "0.1",
             "source": {

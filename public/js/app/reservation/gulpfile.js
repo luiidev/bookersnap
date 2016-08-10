@@ -85,6 +85,7 @@ gulp.task('app-library-reservation-css', function () {
 gulp.task('watch', function(){
     gulp.watch('**/*.js', ['app-bookersnap-reservation-js']);
     gulp.watch('../../../css/app/reservation/*.styl', ['stylus-app']);
+    gulp.watch('../../../library/global/functions.js', ['app-library-reservation-js']);
 
 });
 

@@ -160,7 +160,7 @@ return [
         App\Providers\ComposerServiceProvider::class,
 
 
-        Ixudra\Curl\CurlServiceProvider::class,
+        //Ixudra\Curl\CurlServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
 
@@ -168,7 +168,7 @@ return [
     'facades'       => array(
 
         //...
-        'Curl'          => Ixudra\Curl\Facades\Curl::class,
+        //'Curl'          => Ixudra\Curl\Facades\Curl::class,
 
     ),
 
