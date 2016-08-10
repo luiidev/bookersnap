@@ -38,14 +38,14 @@
     <div class="col-xs-12 col-md-4">
 
 
-        <p class="f-500 c-black m-b-30">Turno</p>
+        <p class="f-500 c-black m-b-10">Turno</p>
         <div class="form-group">
             <div class="fg-line">
-            <button class="btn btn-primary btn-icon-text" ng-click="openModal()"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
+            <button class="btn btn-primary btn-icon-text" ng-click="openModal('lg')"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
             </div>
         </div>
 
-        <div class="m-b-20">
+        <div class="m-b-20 m-t-30">
         <div class="toggle-switch" data-ts-color="blue">
             <label for="caduca" class="ts-label">Ingresar fecha de caducidad</label>
             <input id="caduca" type="checkbox" hidden="hidden" ng-model="promotion.caduca" class="pull-right">
@@ -96,7 +96,7 @@
         <p class="f-500 c-black m-b-20">Vista previa de promocion</p>
         <div class="fileinput fileinput-new">
             <span class="btn btn-info btn-file">
-            <span ngf-select ng-model="promotion.myImage" name="myImage" ngf-pattern="'image/*'" ngf-accept="'image/*'" id="fileInput">Seleccionar imagen</span>
+            <span ngf-select ng-model="promotion.myImage" name="myImage" ngf-pattern="'image/*'" ngf-accept="'image/*'" id="fileInput" ngf-min-height="300" ngf-change="validarImg(promotion.myImage)">Seleccionar imagen</span>
             </span>
             <span href="#" class="btn btn-danger" ng-click="clearImagePromotion()" ng-show="promotion.myImage">Cancelar</span>
         </div>
@@ -120,43 +120,44 @@
                     <h4 class="modal-title">Crear turnos</h4>
                 </div>
                 <div class="modal-body">
-
+                <form role="form" class="ng-pristine ng-valid" name="turnoFrm">
                     <div class="row">
-                    <div class="col-xs-12 col-md-12">
+                        <div class="col-xs-12 col-md-12">
+                        
+                            <div class="form-group fg-line">
+                                <label>Actividad del local</label>
+                                <div class="select">
+                                    <select next-on-enter class="form-control" ng-options="item as item.name for item in turnos.actividades track by item.id" ng-model="turnos.actividadSelected"></select>
+                                </div>
+                            </div>
 
-                    <p class="c-black f-500">Actividad del local</p>
-                    <select chosen ng-model="promotion.activityselected" no-results-text="'No se pudo encontrar coincidencias'" placeholder-text="'Seleccione una actividad'" class="w-100">
-                    <option ng-repeat="activity in activityAvailable" >{{activity.title}}</option> 
-                    </optgroup>
-                    </select> 
-                    </select>
-                    
-                    <div class="checkbox m-b-15">
-                    <label ng-repeat="dia in semana" class="m-r-5 m-b-10">
-                    <input type="checkbox" value="{{dia.id}}"><i class="input-helper"></i>{{dia.nameday}}
-                    </label>
-                    </div>
+                            <div class="checkbox m-b-15">
+                                <label class="m-r-5 m-b-10" ng-repeat="dia in turnos.semana">
+                                    <input type="checkbox" value="{{dia.id}}" ng-model="turnos.turnoSelected[$index]" ng-disabled="dia.disabled" ng-checked="dia.checked">
+                                    <i class="input-helper"></i> {{dia.label}}
+                                </label>
+                            </div>
 
                     </div>
 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                         <label>H.Inicio</label>
-                        <input type="text" class="form-control" placeholder="ej: 23:06:55">
+                        <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" min="06:00:00" max="24:00:00" required>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                         <label>H.Final</label>
-                        <input type="text" class="form-control" placeholder="ej: 23:06:55">
+                        <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" min="06:00:00" max="24:00:00" required>
                         </div>
                     </div>
 
                     </div> 
-
+                </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" ng-click="ok()">Crear</button>
+                    <button class="btn btn-primary" ng-click="validateSaveTurno()">Crear</button>
                     <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
                 </div>
 </script>
