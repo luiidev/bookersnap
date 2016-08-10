@@ -11,7 +11,9 @@ angular.module('zone.controller', ['ngDraggable'])
 	$scope.getZones = function(){
 
 		ZoneFactory.getZones().success(function(data){
-			
+
+			console.log("getZones " + angular.toJson(data,true));
+
 			var vZonesActive = [];
 			var vZonesInactive = [];
 			
@@ -30,7 +32,7 @@ angular.module('zone.controller', ['ngDraggable'])
 			$scope.zonesActive = vZonesActive;
 			$scope.zonesInactive = vZonesInactive;
 		}).error(function(data,status,headers){
-			$scope.getZones();
+			messageAlert("Error",data.error.user_msg,"warning");
 		});
 	};
 
@@ -456,7 +458,6 @@ angular.module('zone.controller', ['ngDraggable'])
 		}).error(function(data,status,headers){
 
 			messageAlert("Error",status,"warning");
-			getTurns();
 
 		});
 		

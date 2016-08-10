@@ -13,12 +13,20 @@ class Controller extends BaseController
 
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
 
-    protected $_curlService;
-
     public function __construct() {
-        $this->_curlService = new \Ixudra\Curl\CurlService();
+       
     }
-
+    /**
+        @param bool $success 
+        @param int $statuscode 
+        @param string $msg
+        @param array $data
+        @param bool $redirect
+        @param string $url
+        @param string $errorUserMsg
+        @param string $errorInternalMsg
+        @param array $arrayErrors
+    */
     protected function CreateJsonResponse($success, $statusCode, $msg = null, $data = null,
                                           $redirect = false, $url = null, $errorUserMsg = null,
                                           $errorInternalMsg = null, $arrayErrors = null)

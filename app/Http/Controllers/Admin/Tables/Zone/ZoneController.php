@@ -1,24 +1,32 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Tables\Zone;
+
 use App\Http\Controllers\Controller as Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Services\Tables\ZoneService;
 
 class ZoneController extends Controller
 {
+  protected $_zoneService;
+
+  public function __construct(ZoneService $zoneService){
+    $this->_zoneService = $zoneService;
+  }
   
-  public function index($lang,$micro){
+  public function index($lang,int $micro){
+    
+    $url = API_MESAS_URL ."/v1/".$lang."/microsites/".$micro."/zoness";
+       
+    $responses = $this->_zoneService->getAll($url);
 
-    $url = API_MESAS_URL ."/v1/".$lang."/microsites/".$micro."/zones";
-
-    $responses = $this->_curlService->to($url)->asJson()->get();
-
-    return response()->json($responses);
-
+    return $responses;
+     
   }
 
   public function get($lang,$id){
+
    	return response()->json(
         array (
           'success' => true,

@@ -2,7 +2,7 @@ angular.module('zone.service', [])
 .factory('ZoneFactory',function($http,ApiUrl){
 	return {
 		getZones: function(vData){
-			return $http.get(ApiUrl+"/zone"); 
+			return $http.get(ApiUrl+"/zones"); 
 		},
 		getZone : function(vId){
 			return $http.get(ApiUrl+"/zone/"+vId); 
