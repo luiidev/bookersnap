@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0bb4ecdc97f92e886d34220de7630969",
-    "content-hash": "e681f514f8b51d59b1095adf2f6d1b39",
+    "hash": "e3db071c81bd8d297330c73559990471",
+    "content-hash": "9080988640cb5fc718648d966c7bf9f7",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -331,49 +331,6 @@
                 "uri"
             ],
             "time": "2016-06-24 23:00:38"
-        },
-        {
-            "name": "ixudra/curl",
-            "version": "6.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ixudra/curl.git",
-                "reference": "1a3de28dc07376a5a587ebdb7e092c266db07ae1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ixudra/curl/zipball/1a3de28dc07376a5a587ebdb7e092c266db07ae1",
-                "reference": "1a3de28dc07376a5a587ebdb7e092c266db07ae1",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": ">=4.0",
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Ixudra\\Curl\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jan Oris",
-                    "email": "jan.oris@ixudra.be"
-                }
-            ],
-            "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
-            "homepage": "http://ixudra.be",
-            "keywords": [
-                "Ixudra",
-                "curl",
-                "laravel"
-            ],
-            "time": "2016-06-15 20:08:37"
         },
         {
             "name": "jakub-onderka/php-console-color",

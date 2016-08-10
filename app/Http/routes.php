@@ -47,6 +47,8 @@ Route::group(['prefix' => 'test'], function () {
 | Seguir este patron cuando agregemos un nuevo modulo.
 |
 */
+Route::pattern('micro', '[0-9]+');
+
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
 
     Route::get('example', "Admin\Example\ExampleController@index");
@@ -57,7 +59,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
 
 });
 
-Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas','middleware' => 'route'], function () {
 
     Route::get('zone', "Admin\Tables\Zone\ZoneController@index");
     Route::get('zone/{id}', "Admin\Tables\Zone\ZoneController@get");
@@ -66,10 +68,10 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas'], function () {
     Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
 
 
- 	Route::get('zone/{id}/turn', "Admin\Tables\Turn\TurnController@index");
-	Route::get('zone/{id}/turn/{turn}', "Admin\Tables\Turn\TurnController@get");
-	Route::post('zone/{id}/turn', "Admin\Tables\Turn\TurnController@create");
-	Route::put('zone/{id}/turn', "Admin\Tables\Turn\TurnController@update");
+ 	Route::get('turn', "Admin\Tables\Turn\TurnController@index");
+	Route::get('turn/{turn}', "Admin\Tables\Turn\TurnController@get");
+	Route::post('turn', "Admin\Tables\Turn\TurnController@create");
+	Route::put('turn', "Admin\Tables\Turn\TurnController@update");
 
 	Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
 

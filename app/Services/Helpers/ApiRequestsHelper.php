@@ -36,6 +36,12 @@ class ApiRequestsHelper
             $response = (string)$res->getBody();
         } catch (RequestException $e) {
             $response = (string)$e->getResponse()->getBody();
+            
+            //echo "dd".response;
+           /* switch(){
+                case 400: case 422: case 404
+
+            }*/
         } catch (\Exception $e) {
             abort(500, 'Ocurrió un error interno.');
         }
