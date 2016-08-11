@@ -15,12 +15,15 @@
             vm.getData = function () {
                 $http.post('/test/ajax/get-data', '', {}).then(function (Response) {
                     var data = Response.data;
-
                     console.log(data.data);
                 }, function (Response) {
-                    if(!angular.isUndefined(Response.data) && !angular.isUndefined(Response.data.error)){
+                    if (!angular.isUndefined(Response.data) && !angular.isUndefined(Response.data.error)) {
                         var data = Response.data;
-                        alert(data.error.user_msg);
+                        if (data.status == 406) {
+                            alert(data.msg + data.data.suggestions);
+                        } else {
+                            alert(data.msg || data.error.user_msg);
+                        }
                     }
                 });
             };

@@ -11,7 +11,8 @@ return [
         'api' => [
             'social' => 'http://social.bookersnap.com/api/v1',
             'auth' => 'http://localhost:3001/v1',
-            'admin' => 'http://localhost:3000/v1'
+            //'admin' => 'http://localhost:3000/v1',
+            'admin' => 'http://api.admin.reservantro.com/v1',
         ]
     ]
 ];

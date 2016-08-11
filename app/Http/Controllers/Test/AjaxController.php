@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Test;
 
 use App\Services\AjaxService;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -21,12 +22,9 @@ class AjaxController extends Controller
 
     public function GetData()
     {
-
         try {
             $response = $this->_ajaxService->GetTestData();
-            if(!$response['success']){
-
-            }
+            return response()->json($response, $response['statuscode']);
             return $this->CreateJsonResponse(true, $response['statuscode'], $response['msg'], $data);
         } catch (HttpException $e) {
             return $this->CreateJsonResponse(false, $e->getStatusCode(), null, null, false, null, $e->getMessage(), $e->getMessage() . "\n" . "{$e->getFile()}: {$e->getLine()}");
@@ -34,5 +32,54 @@ class AjaxController extends Controller
             return $this->CreateJsonResponse(false, 500, null, null, false, null, "Ocurrió un error interno", $e->getMessage() . "\n" . "{$e->getFile()}: {$e->getLine()}");
         }
 
+    }
+
+    function SaveCategory(Request $request)
+    {
+        $user_id = 1;
+        $response = $this->_ajaxService->SaveCategory($request->all(), $user_id);
+        return response()->json($response);
+    }
+
+    /**
+     * Recupera la imagen subida y la guarda en la carpeta temporal
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function UploadLogo()
+    {
+        //obtenemos la imagen
+        $request = request();
+        $imagen = $request->file('imagen');
+
+        //instanciamos el servicio de imagen
+        $imgService = new ImageService();
+
+        //construimos el array de validaciones
+        $validations = [
+            'mimes' => ['image/gif', 'image/jpeg', 'image/png'],
+            'max-size' => 20971520
+        ];
+        $response = $imgService->saveImageToTemp($imagen, $validations);
+
+        return response()->json($response);
+    }
+
+    function UploadFavicon()
+    {
+        //obtenemos la imagen
+        $request = request();
+        $imagen = $request->file('imagen');
+
+        //instanciamos el servicio de imagen
+        $imgService = new ImageService();
+
+        //construimos el array de validaciones
+        $validations = [
+            'mimes' => ['image/gif', 'image/jpeg', 'image/png'],
+            'max-size' => 20971520
+        ];
+        $response = $imgService->saveImageToTemp($imagen, $validations);
+
+        return response()->json($response);
     }
 }
