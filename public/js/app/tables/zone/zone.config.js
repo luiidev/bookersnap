@@ -28,7 +28,7 @@ angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
 		})
 		.state ('zone-assign-turn', {
 			url: '/config/zone/:id/assign/turn',
-			templateUrl: '/js/app/tables/zone/view/list-turn.html'
+			templateUrl: '/js/app/tables/zone/view/zone-turn.html'
 		})
 
 });

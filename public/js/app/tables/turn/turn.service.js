@@ -11,7 +11,7 @@ angular.module('turn.service', [])
 			return $http.post(ApiUrl+"/turn",vData);
 		},
 		updateTurn : function(vData){
-			return $http.put(ApiUrl+"/turn",vData);
+			return $http.put(ApiUrl+"/turn/"+vData.id,vData);
 		},
 		getTurnsAvailables: function(vDate){
 			return $http.get(ApiUrl+"/turn/"+vDate+"/availables");

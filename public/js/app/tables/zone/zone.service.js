@@ -14,7 +14,7 @@ angular.module('zone.service', [])
 			return $http.put(ApiUrl + '/zones/'+vData.id,vData); 
 		},
 		deleteZone : function(vId){
-			return $http.delete(ApiUrl + '/zone/'+vId); 
+			return $http.delete(ApiUrl + '/zones/'+vId); 
 		}
 	};
 
