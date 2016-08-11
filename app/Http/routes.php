@@ -87,12 +87,12 @@ Route::group(['prefix' => 'v1/{lang}/'], function () {
 
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function () {
 
-
 	Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
 	Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
 	Route::post('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
 	Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
-
+    Route::post('promotion/gettypes', "Admin\Reservation\Promotion\PromotionController@gettypes");
+    
 });
 
 

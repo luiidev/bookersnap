@@ -3,7 +3,8 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
     $stateProvider
 	.state ('promotion', {
 	    url: '/promotion',
-        templateUrl: '/js/app/reservation/promotion/view/index.html'
+        templateUrl: '/js/app/reservation/promotion/view/index.html',
+        controller: 'PromotionCtrl',
 	})
 	.state ('add', {
 		url: '/promotion/add',
