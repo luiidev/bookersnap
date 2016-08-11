@@ -11,6 +11,7 @@ namespace App\Services;
 
 use App\Services\Helpers\ApiRequestsHelper;
 use Config;
+use Illuminate\Http\UploadedFile;
 use Session;
 
 class AjaxService
@@ -27,8 +28,8 @@ class AjaxService
 
     public function GetTestData()
     {
-        $url = Config::get("constants.url.api.admin");
-        $url .= '/es/microsite/sitename';
+        //$url = Config::get("constants.url.api.admin");
+        $url = API_ADMIN_URL . '/es/microsite/sitename';
         $credentials = [
             'Authorization' => 'Bearer ' . $this->_token,
             'type-admin' => 1
@@ -39,4 +40,32 @@ class AjaxService
         ];
         return ApiRequestsHelper::SendRequest('POST', $url, $credentials, $data);
     }
+
+    public function SaveCategory(array $data)
+    {
+
+        //construir el array de redimensiones
+        $dimensions = [
+            [
+                'size' => 300,
+                'path' => '300x300',
+                'side-to-resize' => 'width'
+            ],
+            [
+                'size' => 500,
+                'path' => '500x500',
+                'side-to-resize' => 'width'
+            ],
+            [
+                'size' => 800,
+                'path' => '800x800',
+                'side-to-resize' => 'width'
+            ],
+        ];
+
+        $imageService = new ImageService();
+        $imageService->ResizeImage($data['fullname'], $data['basename'], 'categories', $dimensions);
+
+    }
+
 }

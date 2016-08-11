@@ -29,11 +29,11 @@ Route::group(['prefix' => 'test'], function () {
     });
 
     Route::get('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
-
     Route::get('/home', ['middleware' => 'auth', 'as' => 'microsite-home', 'uses' => 'Test\AuthController@Home']);
-
     Route::group(['prefix' => 'ajax'], function(){
         Route::post('/get-data', 'Test\AjaxController@GetData');
+        Route::post('/guardar-categoria', 'Test\AjaxController@SaveCategory');
+        Route::post('/subir-imagen', 'Test\AjaxController@UploadImageCategory');
     });
 });
 
