@@ -5,13 +5,13 @@ angular.module('zone.service', [])
 			return $http.get(ApiUrl+"/zones"); 
 		},
 		getZone : function(vId){
-			return $http.get(ApiUrl+"/zone/"+vId); 
+			return $http.get(ApiUrl+"/zones/"+vId); 
 		},
 		createZone : function(vData){
-			return $http.post(ApiUrl + '/zone',vData); 
+			return $http.post(ApiUrl + '/zones',vData); 
 		},
 		editZone : function(vData){
-			return $http.put(ApiUrl + '/zone',vData); 
+			return $http.put(ApiUrl + '/zones/'+vData.id,vData); 
 		},
 		deleteZone : function(vId){
 			return $http.delete(ApiUrl + '/zone/'+vId); 

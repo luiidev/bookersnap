@@ -332,7 +332,8 @@ angular.module('zone.controller', ['ngDraggable'])
 				config_position : table.left+","+table.top,//x,y
 				config_size : TableFactory.getIdSize(table.size),
 				config_rotation : table.rotate,
-				config_forme : TableFactory.getIdShape(table.shape)
+				config_forme : TableFactory.getIdShape(table.shape),
+				id : table.id
 			}
 
 			dataZone.tables.push(tableItem);
@@ -345,6 +346,16 @@ angular.module('zone.controller', ['ngDraggable'])
 				console.log("succes createZone " + JSON.stringify(response));
 				messageAlert("Success","Zone create complete","success");
 				$state.reload();
+			}).error(function(data,status,headers){
+				var errorJson = JSON.stringify(data);
+				console.log("Error " + angular.toJson(data));
+
+				if(errorJson.indexOf("error") >0){
+					messageAlert("Error",data.error.user_msg,"warning");
+				}else{
+					messageAlert("Error",data.name,"warning");
+				}
+				
 			});
 
 		}else{
@@ -364,10 +375,11 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			console.log("params edit" ,$stateParams.id);
 
-			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
-				angular.element("#zone_name").val(zone["data"][0].name);
+			ZoneFactory.getZone($stateParams.id).success(function(zone){
+
+				angular.element("#zone_name").val(zone["data"].name);
 			
-				loadTablesEdit(zone["data"][0].tables)
+				loadTablesEdit(zone["data"].tables)
 			});
 		}
 	};
@@ -375,6 +387,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	var loadTablesEdit = function(tables){
 
 		angular.forEach(tables,function(data){
+			
 			var position = data.config_position.split(",");
 			var dataTable = {
 				name : data.name,
@@ -384,7 +397,8 @@ angular.module('zone.controller', ['ngDraggable'])
 				top : position[1],
 				shape : TableFactory.getLabelShape(data.config_forme),
 				size : TableFactory.getLabelSize(data.config_size),
-				rotate : data.config_rotation
+				rotate : data.config_rotation,
+				id : data.id
 			}
 
 			$scope.itemTables.push(dataTable);

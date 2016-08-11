@@ -1,5 +1,6 @@
 angular.module('zone.app', ['zone.controller','zone.service','zone.directive'])
-.config(function ($stateProvider, $urlRouterProvider){
+.config(function ($stateProvider, $urlRouterProvider,$httpProvider){
+
 	$stateProvider
 		.state ('zone', {
 			url: '/config/zone',

@@ -64,7 +64,7 @@ gulp.task('app-library-tables-css', function () {
 
 //Automatizamos esta tarea
 gulp.task('watch', function(){
-    gulp.watch('**/*.js', ['app-bookersnap-tables-js']);
+    gulp.watch(['**/*.js','../app.config.js'], ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js','../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
