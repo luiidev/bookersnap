@@ -4,15 +4,25 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 	
 })
-.controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal) {
+.controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal,PromotionFactory) {
 
   $scope.titulo="Nueva promoción";
+
+  PromotionFactory.getTypes().success(function(data){
+    var vTypes = [];
+    angular.forEach(data['data'], function(types) {
+          vTypes.push(types); 
+    });
+    $scope.promotion.tipos = vTypes;
+    $scope.promotion.tipoSelected=$scope.promotion.tipos[0];
+    //console.log(vTypes);
+  });
 
   $scope.promotion={
     estados:[{name:'Activo',value:1},{name:'Inactivo',value:0}],
     estadoSelected:{value:1},
-    tipos:[{name:'Gratis',value:0},{name:'De pago',value:1}],
-    tipoSelected:{name:'Gratis',value:0},
+    //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
+    //tipoSelected:{name:'Gratis',type_event_id:3},
     descripcion:" ",
     zonas:[{id:1,title:'Zona01'},{id:2,title:'Zona02'},{id:3,title:'Zona03'},{id:4,title:'Zona04'}],
     zonaSelected:[2, 3],
@@ -146,17 +156,24 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   PromotionFactory.getLabel().success(function(data){
     var vTexto = [];
-    angular.forEach(data, function(zones) {
-          vTexto.push(zones); 
+    angular.forEach(data['data'], function(label) {
+          vTexto.push(label); 
     });
     $scope.flyer.labels = vTexto;
     $scope.flyer.labelSelected=$scope.flyer.labels[0];
-    //console.log($scope.flyer.labels);
   });
 
+  PromotionFactory.getTypographys().success(function(data){
+    var vTipography = [];
+    angular.forEach(data['data'], function(tipography) {
+          vTipography.push(tipography); 
+    });
+    $scope.flyer.fonts = vTipography;
+    $scope.flyer.fontSelected=$scope.flyer.fonts[0];
+  });
+
+
   $scope.flyer={
-    fonts:[{id:'Arial', title: 'Arial'},{id: 'Lobster', title: 'Lobster'},{id: 'Roboto', title: 'Roboto'}],
-    fontSelected:{id: 'Arial', title: 'Arial'},
     sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'}],
     sizeSelected:{id: 14, valor: '14px'},
     colorSelected:{color: '#03A9F4'},
@@ -173,7 +190,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         }else{
           var exists = false;
           angular.forEach($scope.textFlyer, function(objetos) {
-            if($scope.flyer.labelSelected.id==objetos.label.id){
+            if($scope.flyer.labelSelected.label_id==objetos.label.label_id){
                 exists = true;
                 messageAlert("Flyer","Texto ya se encuentra ubicado sobre el flyer","warning");
             }          
@@ -191,7 +208,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   var crearTexto=function(){
     var texto={
       label:$scope.flyer.labelSelected,
-      tipografy:$scope.flyer.fontSelected.id,
+      typography:{typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name},
       font_size:$scope.flyer.sizeSelected.id+"px",
       color:$scope.flyer.colorSelected.color
       //top:Math.floor((Math.random() * 100) + 40)+"px",
@@ -208,19 +225,19 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.selectedText=function(index){
     $scope.textIndex=index;
     $scope.flyer.labelSelected=$scope.textFlyer[index].label;
-    $scope.flyer.fontSelected={id:$scope.textFlyer[index].tipografy,title:$scope.textFlyer[index].tipografy};
+    $scope.flyer.fontSelected={typography_id:$scope.textFlyer[index].typography.typography_id,name:$scope.textFlyer[index].typography.name};
     $scope.flyer.sizeSelected.id= $scope.textFlyer[index].font_size.replace("px","");
     $scope.flyer.colorSelected.color=$scope.textFlyer[index].color;
     $scope.textActive=true;
-
     //console.log("selectedText "+angular.element('.text-flyer').eq(index).css("top"));
   }
 
   /*Actualizar datos en el array textFlyer*/
+  /*
   $scope.updateText=function(){
-    if($scope.flyer.labelSelected.id==$scope.textFlyer[$scope.textIndex].label.id){
+    if($scope.flyer.labelSelected.label_id==$scope.textFlyer[$scope.textIndex].label.label_id){
     $scope.textFlyer[$scope.textIndex].label=$scope.flyer.labelSelected;
-    $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.id;
+    $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.name;
     $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
     $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;   
     $scope.textActive=false;
@@ -229,6 +246,14 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       messageAlert("Flyer","Modificacion no corresponde a objeto seleccionado","warning");
     }
   }
+*/
+  $scope.autoPropiedad = function () {
+    if($scope.textFlyer.length!=0){
+      $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
+      $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
+      $scope.textFlyer[$scope.textIndex].typography={typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name};
+    }
+  };
   
   /*Eliminar dato del array textFlyer*/
   $scope.deleteText=function(){
@@ -295,7 +320,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         var img = canvas.toDataURL("image/png");
         //Canvas2Image.convertToPNG(canvas);
         document.body.appendChild(canvas);
-        uploadFile64(img);
+        //uploadFile64(img);
         //console.log(img);
       }
     });
@@ -336,14 +361,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     
   }
 
-  $scope.autoPropiedad = function () {
-    if($scope.textFlyer.length!=0){
-      $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
-      $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
-      $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.id;
-    }
-  };
-
+  
   
 
 })
@@ -371,6 +389,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       turnoSelected:[],
       hours_ini : '',
       hours_end : '',
+      disposiciones:[{id:1,name:'Aplicar siempre'},{id:2,name:'Añadir turno a la promocion'}],
+      disposicionSelected:{id:1, name:'Aplicar siempre'},
     };
     
     $scope.horarios = {

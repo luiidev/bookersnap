@@ -1,5 +1,6 @@
 angular.module('promotion.app', ['promotion.controller','promotion.service','promotion.directive'])
-.config(function ($stateProvider, $urlRouterProvider){
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider){
+
     $stateProvider
 	.state ('promotion', {
 	    url: '/promotion',
@@ -19,7 +20,9 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
                 controller: 'FlyerAddCtrl',
             }
         }
-    })
+    });
+
+    
 
 
 });
