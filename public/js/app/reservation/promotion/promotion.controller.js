@@ -4,10 +4,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 	
 })
-.controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal,PromotionFactory) {
+.controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory) {
 
   $scope.titulo="Nueva promoción";
-
+  
   PromotionFactory.getTypes().success(function(data){
     var vTypes = [];
     angular.forEach(data['data'], function(types) {
@@ -50,6 +50,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }
   }
   
+  $scope.modalContent=TurnosPromotionFactory.getTurnosItems();
+
   $scope.savePromotion=function(){
 
     uploadImage($scope.promotion.myImage);
@@ -69,19 +71,31 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       "image":cleanString($scope.promotion.myImage.name)
     };
     console.log('Guardando'+angular.toJson($scope.datosPromotion,true));
+    console.log(TurnosPromotionFactory.getTurnosItems());
   }
+
+  
+  
+
   function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
       animation: animation,
       templateUrl: 'myModalContent.html',
       controller: 'TurnoInstanceCtrl',
-      size: size 
+      size: size,
+      resolve: {
+        content: function () {
+          return $scope.modalContent;
+        }
+      }
     });
   } 
   //Custom Sizes
   $scope.openModal = function (size) {
       modalInstances(true, size, true, true)
   }
+
+
  
 	//Opciones de calendario
 	$scope.today = function() {
@@ -142,6 +156,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
     });
+  }
+
+
+  /********************************************/
+  $scope.invocarZonas=function(item){
+    alert(item);
   }
 
 
@@ -366,8 +386,19 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter) {
-    $scope.createTurnos=[];
+.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter,TurnosPromotionFactory,content) {
+    
+    $scope.listTurnos = content;
+    //console.log('Hay '+ angular.toJson(content, true));
+    //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
+    $scope.turnoIndex=0;
+
+    var cantidad=$scope.listTurnos.length;
+    if(cantidad>0){
+      $scope.existeTurno=true;
+    }else{
+      $scope.existeTurno=false;
+    }
 
     $scope.turnos = {
       actividades:[
@@ -409,27 +440,58 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     return daysData;
     };
 
-  $scope.validateSaveTurno = function(){
+  /*$scope.$watch('turnoSelected',function(data){ //Step 1
+      console.log('Haber '+angular.toJson(data, true));      
+  });
+  */
+  $scope.addTurno = function(){
 
+    var cantidadSel=$scope.turnos.turnoSelected.length;
+    if(cantidadSel>0){
+      if($scope.horarios.hour_ini!="" && $scope.horarios.hour_end!=""){
 
-      var days = getDaysSelected($scope.turnos.turnoSelected);
-      $scope.turnoSelected = days;
-      $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
-      $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
-      $scope.actividadSelected=$scope.turnos.actividadSelected;
+        var days = getDaysSelected($scope.turnos.turnoSelected);
+        $scope.turnoSelected = days;
+        $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
+        $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
+        $scope.actividadSelected=$scope.turnos.actividadSelected;
 
-      var opciones={
-        actividad:$scope.actividadSelected,
-        dias:$scope.turnoSelected,
-        hinicio:$scope.turnos.hours_ini,
-        hfinal:$scope.turnos.hours_end,
-      };
-      
-      $scope.createTurnos.push(opciones);
-      //console.log($scope.createTurnos);
-      console.log('Turnos: '+angular.toJson($scope.createTurnos, true));
+        var opciones={
+          actividad:$scope.actividadSelected,
+          dias:$scope.turnoSelected,
+          hinicio:$scope.turnos.hours_ini,
+          hfinal:$scope.turnos.hours_end,
+        };
+        
+        //$scope.listTurnos.push(opciones);
+        TurnosPromotionFactory.setTurnosItems(opciones);
+        $scope.existeTurno=true;
+        //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
+
+        cleanTurno();
+        console.log($scope.listTurnos);
+        //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
+      }else{
+        messageAlert("Turnos","Debe seleccionar campos de hora","warning");
+      }
+    }else{
+      messageAlert("Turnos","Debe seleccionar al menos un dia de la semana","warning");
+    }
  
   };
+  $scope.deleteTurno = function (item) {
+    $scope.turnoIndex=item;
+    //$scope.listTurnos.splice($scope.turnoIndex,1);
+    TurnosPromotionFactory.delTurnosItem($scope.turnoIndex);
+    cleanTurno();
+  };
+
+  var cleanTurno=function(){
+    $scope.horarios.hour_ini='';
+    $scope.horarios.hour_end='';
+    $scope.turnos.turnoSelected=[];
+  }
+ 
   /*
   $scope.ok = function () {
     $modalInstance.close();

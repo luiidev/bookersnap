@@ -34,7 +34,30 @@ class AuthController extends Controller
 
     public function LoginBs()
     {
+        try {
+            $request = request();
+            $userData = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'));
+            $user = $userData['user'];
+            $userlogin = $userData['userlogin'];
+            $extras = [
+                'api-token' => $userData['token'],
+                'user-login' => [
+                    $userlogin['bs_socialnetwork_id'] => $userlogin
+                ]
+            ];
+            if ($this->LoginUser($user['id'], $extras)) {
+                return response()->redirectTo(route('microsite-home'))->with('message', 'Bienvenido Usuario.')->withInput();
+            }
+            $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.');
+        } catch (HttpException $e) {
+            $msg = $e->getMessage();
+            $response = redirect()->route('microsite-login')->with('error-message', $msg);
+        } catch (\Exception $e) {
+            $msg = 'Ocurrió un error interno.';
+            $response = redirect()->route('microsite-login')->with('error-message', $msg);
+        }
 
+        return $response->withInput();
     }
 
     public function RedirectSocialLogin()
@@ -91,7 +114,8 @@ class AuthController extends Controller
         }
     }
 
-    public function Logout(){
+    public function Logout()
+    {
         $this->LogoutUser();
         return response()->redirectToRoute('microsite-home');
     }

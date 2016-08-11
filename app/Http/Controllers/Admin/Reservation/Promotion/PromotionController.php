@@ -98,22 +98,12 @@ class PromotionController extends Controller
             array (
                0 => 
                   array (
-                  'id' => 1,
-                  'name' => 'Evento gratuito'
+                  'type_event_id' => 3,
+                  'name' => 'Promoción gratis',
                   ),
                1 => 
                   array (
-                  'id' => 2,
-                  'name' => 'Evento de paga',
-                  ),
-               2 => 
-                  array (
-                  'id' => 3,
-                  'name' => 'Promoción gratis',
-                  ),
-               3 => 
-                  array (
-                  'id' => 4,
+                  'type_event_id' => 4,
                   'name' => 'Promoción de paga',
                   )
             ),

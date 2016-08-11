@@ -15,33 +15,30 @@ use GuzzleHttp\Exception\RequestException;
 class ApiRequestsHelper
 {
 
-    public static function SendRequest(string $method, string $url, array $credentials = null, $data)
+    public static function SendRequest(string $method, string $url, array $headers = null, $data)
     {
         $response = null;
         $client = new Client();
         $json = json_encode($data);
-        $headers = [
+        $http_headers = [
             'content-type' => 'application/json'
         ];
-        if (!is_null($credentials)) {
-            foreach ($credentials as $key => $value) {
-                $headers[$key] = $value;
+        if (!is_null($headers)) {
+            foreach ($headers as $key => $value) {
+                $http_headers[$key] = $value;
             }
         }
         try {
             $res = $client->request($method, $url, [
-                'headers' => $headers,
+                'headers' => $http_headers,
                 'body' => $json
             ]);
             $response = (string)$res->getBody();
         } catch (RequestException $e) {
+            if ($e->getResponse() == null) {
+                throw new \Exception('Servidor no responde');
+            }
             $response = (string)$e->getResponse()->getBody();
-            
-            //echo "dd".response;
-           /* switch(){
-                case 400: case 422: case 404
-
-            }*/
         } catch (\Exception $e) {
             abort(500, 'Ocurrió un error interno.');
         }
