@@ -72,12 +72,12 @@
 
         <p class="c-black f-500 m-b-20">Tipo de promocion</p>
         <label class="radio radio-inline m-b-30" ng-repeat="tipo in promotion.tipos">
-            <input type="radio" ng-model="promotion.tipoSelected.value" name="tipo" ng-value="{{tipo.value}}">
+            <input type="radio" ng-model="promotion.tipoSelected.type_event_id" name="tipo" ng-value="{{tipo.type_event_id}}">
             <i class="input-helper"></i>
             {{tipo.name}}
         </label>
 
-        <div class="m-b-20" ng-show="promotion.tipoSelected.value == '1'">
+        <div class="m-b-20" ng-show="promotion.tipoSelected.type_event_id == '4'">
             <p class="f-500 c-black m-b-15">Zona disponible</p>
             <select chosen multiple ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100">
             </select>
@@ -123,38 +123,98 @@
                 <form role="form" class="ng-pristine ng-valid" name="turnoFrm">
                     <div class="row">
                         <div class="col-xs-12 col-md-12">
-                        
-                            <div class="form-group fg-line">
-                                <label>Actividad del local</label>
-                                <div class="select">
-                                    <select next-on-enter class="form-control" ng-options="item as item.name for item in turnos.actividades track by item.id" ng-model="turnos.actividadSelected"></select>
-                                </div>
-                            </div>
 
-                            <div class="checkbox m-b-15">
-                                <label class="m-r-5 m-b-10" ng-repeat="dia in turnos.semana">
-                                    <input type="checkbox" value="{{dia.id}}" ng-model="turnos.turnoSelected[$index]" ng-disabled="dia.disabled" ng-checked="dia.checked">
-                                    <i class="input-helper"></i> {{dia.label}}
+                            <div class="radio m-b-15" ng-repeat="disposicion in turnos.disposiciones">
+                                <label>
+                                    <input type="radio" ng-model="turnos.disposicionSelected.id" name="disposicion" ng-value="{{disposicion.id}}">
+                                    <i class="input-helper"></i>
+                                    {{disposicion.name}}
                                 </label>
                             </div>
 
-                    </div>
+                        </div>
 
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group fg-line">
-                        <label>H.Inicio</label>
-                        <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" min="06:00:00" max="24:00:00" required>
+                        <div ng-show="turnos.disposicionSelected.id==2">
+
+                        <div class="col-xs-12 col-md-12">
+                        <div class="checkbox m-b-15">
+                            <label class="m-r-5 m-b-10" ng-repeat="dia in turnos.semana">
+                                <input type="checkbox" value="{{dia.id}}" ng-model="turnos.turnoSelected[$index]" ng-disabled="dia.disabled" ng-checked="dia.checked">
+                                <i class="input-helper"></i> {{dia.label}}
+                            </label>
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group fg-line">
-                        <label>H.Final</label>
-                        <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" min="06:00:00" max="24:00:00" required>
                         </div>
-                    </div>
+
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group fg-line">
+                            <label>H.Inicio</label>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" min="06:00:00" max="24:00:00" required>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group fg-line">
+                            <label>H.Final</label>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" min="06:00:00" max="24:00:00" required>
+                            </div>
+                        </div>
+
+                        </div>
 
                     </div> 
                 </form>
+
+                <div>
+                    <div class="lv-header">
+                        Turnos definidos
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="lv-body">
+                        <div class="media">
+                            <div class="pull-right">
+                                <ul class="actions">
+                                    <li class="dropdown" uib-dropdown>
+                                        <a href="" uib-dropdown-toggle>
+                                            <i class="zmdi zmdi-more-vert"></i>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a href="">Eliminar</a></li>
+                                            <li><a href="">Modificar</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="media-body">
+                                <div class="lv-title">Lunes, Martes, Miercoles</div>
+                                <small class="lv-small">05:00pm - 10:00pm</small>
+                            </div>
+
+                        </div>
+                        <div class="media">
+                            <div class="pull-right">
+                                <ul class="actions">
+                                    <li class="dropdown" uib-dropdown>
+                                        <a href="" uib-dropdown-toggle>
+                                            <i class="zmdi zmdi-more-vert"></i>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a href="">Eliminar</a></li>
+                                            <li><a href="">Modificar</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="media-body">
+                                <div class="lv-title">Sabado, Domingo</div>
+                                <small class="lv-small">08:00pm - 10:00pm</small>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" ng-click="validateSaveTurno()">Crear</button>
