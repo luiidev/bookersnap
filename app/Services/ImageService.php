@@ -14,6 +14,17 @@ use File;
 use Image;
 use Intervention\Image\Image as ImageInstance;
 
+/**
+ * Class ImageService
+ * @package App\Services
+ * CONSIDERASIONES
+ * ===============
+ *  - Al hablar de dir se referira a solo de rutas relativas despues de la carpeta public. Ejm: /files/zonas/, files/zonas/imagen1.jpg
+ *  - Al hablar de path se hablara de rutas completas dentro del servidor. Ejm: D:/xampp/htdocs/web.aplication.bookersnap/public/files...
+ *  - Cuando se hable de basename de archivo sera solo el nombre del archivo con su extension. Ejm: image1.jpg, image2.png, etc...
+ *  - Cuando se hable de fullname de archivo sera la ruta relativa del archivo luego del public path, incluyendo el basename.
+ *    Ejm: files/zonas/iamge1.jpg
+ */
 class ImageService
 {
 
@@ -148,8 +159,9 @@ class ImageService
     {
         $imageInstance = Image::make($this->_public_path . $imageFullname);
         $imageInstance->backup();
-        $this->createDirectoryIfNoExists($this->_image_path.'/'.$baseFolder);
-        $this->createDirectoryIfNoExists($this->_image_path.'/'.$baseFolder.'/image');
+        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder);
+        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder . '/image');
+        $imageInstance->save($this->_image_path . '/' . $baseFolder . '/' . $imageBasename);
         foreach ($dimensions as $dimension) {
             $imageInstance->reset();
             $imageInstance = $this->resizeImageInMemory($imageInstance, $dimension['size'], true, $dimension['side-to-resize']);
@@ -160,9 +172,13 @@ class ImageService
         $imageInstance->destroy();
     }
 
-    public function RemoveImage(string $imagePath)
+    /**
+     * Borra la imagen del servidor de la direccion que se envia(La direccion es despues de la carpeta public).
+     * @param string $imagePath
+     */
+    public function RemoveImage(string $imageFullname)
     {
-
+        File::delete($this->_public_path . $imageFullname);
     }
 
     //---------------------------------------------

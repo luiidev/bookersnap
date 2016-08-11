@@ -33,7 +33,8 @@ Route::group(['prefix' => 'test'], function () {
     Route::group(['prefix' => 'ajax'], function(){
         Route::post('/get-data', 'Test\AjaxController@GetData');
         Route::post('/guardar-categoria', 'Test\AjaxController@SaveCategory');
-        Route::post('/subir-imagen', 'Test\AjaxController@UploadImageCategory');
+        Route::post('/subir-logo', 'Test\AjaxController@UploadLogo');
+        Route::post('/subir-favicon', 'Test\AjaxController@UploadFavicon');
     });
 });
 

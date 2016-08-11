@@ -10,8 +10,10 @@ namespace App\Services;
 
 
 use App\Services\Helpers\ApiRequestsHelper;
+use App\Services\Helpers\ManageFilesHelper;
 use Config;
 use Illuminate\Http\UploadedFile;
+use Intervention\Image\Exception\NotReadableException;
 use Session;
 
 class AjaxService
@@ -41,31 +43,35 @@ class AjaxService
         return ApiRequestsHelper::SendRequest('POST', $url, $credentials, $data);
     }
 
-    public function SaveCategory(array $data)
+    public function SaveCategory(array $data, int $id_user)
     {
-
         //construir el array de redimensiones
-        $dimensions = [
-            [
-                'size' => 300,
-                'path' => '300x300',
-                'side-to-resize' => 'width'
-            ],
-            [
-                'size' => 500,
-                'path' => '500x500',
-                'side-to-resize' => 'width'
-            ],
-            [
-                'size' => 800,
-                'path' => '800x800',
-                'side-to-resize' => 'width'
-            ],
-        ];
+        $dimensionsLogo = ManageFilesHelper::GetDimensionsCategoryLogo();
+        $dimensionsFavicon = ManageFilesHelper::GetDimensionsCategoryFavicon();
 
+        //crear instancia de image service
         $imageService = new ImageService();
-        $imageService->ResizeImage($data['fullname'], $data['basename'], 'categories', $dimensions);
-
+        try {
+            $imageService->ResizeImage(@$data['image_logo_fullname'], @$data['image_logo'], 'categories', $dimensionsLogo);
+            $imageService->ResizeImage(@$data['image_favicon_fullname'], @$data['image_favicon'], 'categories', $dimensionsFavicon);
+            $data['user_id'] = $id_user;
+            $url = API_ADMIN_URL . '/es/category';
+            $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
+            if ($response['success']) {
+                $imageService->RemoveImage($data['image_logo_fullname']);
+                $imageService->RemoveImage($data['image_favicon_fullname']);
+            } else {
+                ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'categories', $dimensionsLogo, $data['image_logo']);
+                ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'categories', $dimensionsFavicon, $data['image_favicon']);
+            }
+            return $response;
+        } catch (NotReadableException $e) {
+            abort(400, trans('messages.image_not_readable'));
+        } catch (\Exception $e) {
+            abort(500, $e->getMessage() . " - " . $e->getFile() . " - " . $e->getLine());
+            abort(500, trans('error.500'));
+        }
     }
+
 
 }

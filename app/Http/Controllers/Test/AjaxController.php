@@ -36,17 +36,35 @@ class AjaxController extends Controller
 
     function SaveCategory(Request $request)
     {
-
-        $this->_ajaxService->SaveCategory($request->all());
-
-        return response()->json([]);
+        $user_id = 1;
+        $response = $this->_ajaxService->SaveCategory($request->all(), $user_id);
+        return response()->json($response);
     }
 
     /**
      * Recupera la imagen subida y la guarda en la carpeta temporal
      * @return \Illuminate\Http\JsonResponse
      */
-    function UploadImageCategory()
+    function UploadLogo()
+    {
+        //obtenemos la imagen
+        $request = request();
+        $imagen = $request->file('imagen');
+
+        //instanciamos el servicio de imagen
+        $imgService = new ImageService();
+
+        //construimos el array de validaciones
+        $validations = [
+            'mimes' => ['image/gif', 'image/jpeg', 'image/png'],
+            'max-size' => 20971520
+        ];
+        $response = $imgService->saveImageToTemp($imagen, $validations);
+
+        return response()->json($response);
+    }
+
+    function UploadFavicon()
     {
         //obtenemos la imagen
         $request = request();

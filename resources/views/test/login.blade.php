@@ -81,6 +81,12 @@
         controller('test-controller', function ($http, Upload, $timeout) {
             var vm = this;
             vm.categoria = {};
+            vm.categoria.subcategories = [
+                {"id": 2, "name": "artarsg"},
+                {"id": 18, "name": "vb3445dsgdg"},
+                {"id": 21, "name": "vb3445dsgdg"},
+                {"id": null, "name": "54545"}
+            ];
             vm.getData = function () {
                 $http.post('/test/ajax/get-data', {}, {}).then(function (Response) {
                     var data = Response.data;
@@ -119,19 +125,43 @@
                 });
             };
 
-            vm.subirImagen = function (file, errFiles) {
+            vm.subirLogo = function (file, errFiles) {
                 vm.categoria.f = file;
                 vm.categoria.errFile = errFiles && errFiles[0];
                 if (file) {
                     file.upload = Upload.upload({
-                        url: '/test/ajax/subir-imagen',
+                        url: '/test/ajax/subir-logo',
                         data: {imagen: file}
                     });
 
                     file.upload.then(function (response) {
                         $timeout(function () {
-                            vm.categoria.basename = response.data.basename;
-                            vm.categoria.fullname = response.data.fullname;
+                            vm.categoria.image_logo = response.data.basename;
+                            vm.categoria.image_logo_fullname = response.data.fullname;
+                        });
+                    }, function (response) {
+                        if (response.status > 0)
+                            vm.categoria.errorMsg = response.status + ': ' + response.data;
+                    }, function (evt) {
+                        file.progress = Math.min(100, parseInt(100.0 *
+                                evt.loaded / evt.total));
+                    });
+                }
+            };
+
+            vm.subirFavicon = function (file, errFiles) {
+                vm.categoria.f = file;
+                vm.categoria.errFile = errFiles && errFiles[0];
+                if (file) {
+                    file.upload = Upload.upload({
+                        url: '/test/ajax/subir-favicon',
+                        data: {imagen: file}
+                    });
+
+                    file.upload.then(function (response) {
+                        $timeout(function () {
+                            vm.categoria.image_favicon = response.data.basename;
+                            vm.categoria.image_favicon_fullname = response.data.fullname;
                         });
                     }, function (response) {
                         if (response.status > 0)
@@ -161,24 +191,47 @@
 
     <div>
 
-        <h3>Subida de imagenes</h3>
+        <h3>TEST CREAR CATEGORIA</h3>
 
         <form ng-submit="vm.guardarCategoria()">
 
             <div>
                 nombre: <input type="text" ng-model="vm.categoria.name">
             </div>
+            <br>
 
             <div>
-                imagen
+                status:
+                Activo <input ng-model="vm.categoria.status" ng-value="1" name="radio-status" type="radio">
+                Inactivo <input ng-model="vm.categoria.status" ng-value="0" name="radio-status" type="radio">
+            </div>
+
+            <div>
+                imagen logo
                 <br>
 
                 <div>
-                    <button ngf-select="vm.subirImagen($file, $invalidFiles)" type="button">selecciona imagen</button>
+                    <button ngf-select="vm.subirLogo($file, $invalidFiles)" type="button">selecciona imagen</button>
                 </div>
 
                 <div>
-                    url subida: @{{vm.categoria.url}}
+                    url subida: @{{vm.categoria.image_logo}}
+                    <br>
+                    progress: @{{vm.categoria.f}}
+                </div>
+
+            </div>
+
+            <div>
+                imagen favicon
+                <br>
+
+                <div>
+                    <button ngf-select="vm.subirFavicon($file, $invalidFiles)" type="button">selecciona imagen</button>
+                </div>
+
+                <div>
+                    url subida: @{{vm.categoria.image_favicon}}
                     <br>
                     progress: @{{vm.categoria.f}}
                 </div>

@@ -6,4 +6,5 @@ return [
     'heavy_file' => 'El archivo excede el tamaño máximo permitido.',
     'image_too_smaller' => 'La imagen no cumple con las dimensiones mínimas permitidas.',
     'image_too_bigger' => 'La imagen excede las dimensiones máximas permitidas.',
+    'image_not_readable' => 'La imagen no se ha podido ser procesada.'
 ];
