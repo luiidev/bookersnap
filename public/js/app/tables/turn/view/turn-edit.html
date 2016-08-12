@@ -35,7 +35,7 @@
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
                                     <label>Hour ini</label>
-                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hour_ini" min="06:00:00" max="24:00:00" step="900" required >
+                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hour_ini" step="900" required >
                                 </div>
 
                             </div>
@@ -43,7 +43,7 @@
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
                                     <label>Hour end</label>
-                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hour_end" min="06:00:00" max="24:00:00" required>
+                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hour_end" step="900" required>
                                 </div>   
                             </div>
 
@@ -51,11 +51,12 @@
                                 <div class="form-group fg-line">
                                     <label>Shift</label>
                                     <div class="select">
-                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type" ng-change="getDaysTypeTurn()"></select>
+                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type"></select>
                                     </div>
                                 </div>   
                             </div>
                         </div>
+                        <!--
                         <div class="row">
                             <div class="col-xs-12">
                                 <p class="c-black f-500 m-b-20">Selected Days</p>
@@ -67,7 +68,7 @@
                                 </label>
 
                             </div>
-                        </div>
+                        </div>-->
                     </form>
                 </div>
             </div>

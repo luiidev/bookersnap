@@ -11,13 +11,7 @@ class ZoneService extends Service {
 
 	    $data = ApiRequestsHelper::SendRequest('GET', $url, [], []);
 
-	    if($data == null){
-	    	$response = $this->CreateJsonResponse(false,404,null,[],null,null,trans('error.404'));
-	    }else{
-	    	$response = $this->CreateJsonResponse(true,200,null,$data);
-	    }
-
-	    return $response;
+	    return $data;
 
     }
       

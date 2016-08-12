@@ -1,0 +1,75 @@
+var gulp = require('gulp'),
+    uglify = require('gulp-uglify'),
+    stylus = require('gulp-stylus'),
+    nib = require('nib'),
+//gulpif = require('gulp-if');
+    jsmin = require('gulp-jsmin'),
+    concat = require('gulp-concat'),
+    minifyCss = require('gulp-minify-css'),
+    rename = require('gulp-rename');
+
+
+/* ------------- Tareas de aplicacion -------------*/
+/* ------ app-bookersnap-js -------
+ Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo
+ ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nuestro modulo / componente
+ */
+gulp.task('app-bookersnap-master-js', function () {
+    gulp.src([
+            '**/*.js',
+            '../app.config.js',
+            '!gulpfile.js'
+        ])
+        .pipe(concat('app.bookersnap.master.min.js'))
+        .pipe(jsmin())
+        .pipe(gulp.dest('../../dist.app/master'))
+});
+
+// Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
+gulp.task('app-library-master-js', function () {
+    gulp.src([
+            '../../../library/ngDraggable/ngDraggable.js',
+            '../../../library/global/functions.js',
+            '../../../library/global/form.directive.js',
+            '../../../library/input-mask/input-mask.js',
+            '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+            '!gulpfile.js'
+        ])
+        .pipe(concat('app.bookersnap.library.tables.min.js'))
+        .pipe(jsmin())
+        .pipe(gulp.dest('../../dist.app/master'))
+});
+
+// Preprocesa archivos Stylus a CSS y recarga los cambios
+gulp.task('stylus-app', function () {
+    gulp.src('../../../css/app/master/*.styl')
+        .pipe(stylus({
+            use: nib()
+        }))
+        .pipe(minifyCss())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('../../../css/app/master'))
+});
+
+// Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
+gulp.task('app-library-tables-css', function () {
+    gulp.src([
+            '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+        ])
+        .pipe(minifyCss())
+        .pipe(concat('app.bookersnap.library.tables.min.css'))
+        .pipe(gulp.dest('../../../css/app/tables'));
+});
+
+//Automatizamos esta tarea
+gulp.task('watch', function () {
+    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-tables-js']);
+    gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
+    gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
+    gulp.watch([
+        '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+    ], ['app-library-tables-css']);
+});
+
+//ejecutamos el servidor y todos los archivos
+gulp.task('default', ['watch', 'app-bookersnap-master-js', 'stylus-app', 'app-library-master-js', 'app-library-master-css']);

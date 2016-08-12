@@ -17,7 +17,7 @@ class ZoneController extends Controller
   
   public function index($lang,int $micro){
     
-    $url = API_MESAS_URL ."/v1/".$lang."/microsites/".$micro."/zoness";
+    $url = API_MESAS_URL ."/v1/".$lang."/microsites/".$micro."/zones";
        
     $responses = $this->_zoneService->getAll($url);
 

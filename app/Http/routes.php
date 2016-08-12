@@ -57,7 +57,6 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
     Route::post('example/{id}', "Admin\Example\ExampleController@create");
     Route::put('example/{id}', "Admin\Example\ExampleController@update");
     Route::delete('example/{id}', "Admin\Example\ExampleController@delete");
-
 });
 
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas','middleware' => 'route'], function () {
@@ -95,6 +94,12 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::get('promotion/gettypes', "Admin\Reservation\Promotion\PromotionController@gettypes");
     Route::get('promotion/gettypographys', "Admin\Reservation\Promotion\PromotionController@gettypographys");
     
+});
+
+Route::group(['prefix' => 'v1/{lang}/master'], function(){
+
+    Route::get('/', 'Master\MainController@index');
+
 });
 
 

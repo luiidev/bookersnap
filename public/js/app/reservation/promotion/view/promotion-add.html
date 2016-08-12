@@ -79,7 +79,7 @@
 
         <div class="m-b-20" ng-show="promotion.tipoSelected.type_event_id == '4'">
             <p class="f-500 c-black m-b-15">Zona disponible</p>
-            <select chosen multiple ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100">
+            <select chosen multiple ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100" ng-change="invocarZonas(z.id)">
             </select>
         </div>
 
@@ -118,6 +118,7 @@
 <script type="text/ng-template" id="myModalContent.html">
                 <div class="modal-header">
                     <h4 class="modal-title">Crear turnos</h4>
+                    <p>Definir horarios en que se aplicara la promocion</p>
                 </div>
                 <div class="modal-body">
                 <form role="form" class="ng-pristine ng-valid" name="turnoFrm">
@@ -147,77 +148,64 @@
 
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group fg-line">
-                            <label>H.Inicio</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" min="06:00:00" max="24:00:00" required>
+                            <label>Hora inicio</label>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" required>
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group fg-line">
-                            <label>H.Final</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" min="06:00:00" max="24:00:00" required>
+                            <label>Hora final</label>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" required>
                             </div>
                         </div>
+
+                        <button class="btn btn-primary btn-icon-text waves-effect pull-right" ng-click="addTurno()"><i class="zmdi zmdi-plus"></i> Añadir</button>
+
+                        <div id="resultados" ng-show="existeTurno">
+                            <div class="lv-header">
+                                Turnos añadidos
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="tl-body">
+                                <div class="media" ng-repeat="turno in listTurnos track by $index">
+                                    <div class="pull-right">
+                                        <ul class="actions">
+                                            <li class="dropdown" uib-dropdown>
+                                                <a href="" uib-dropdown-toggle>
+                                                    <i class="zmdi zmdi-more-vert"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a ng-click="deleteTurno($index)">Eliminar</a></li>
+                                                    <!--<li><a href="">Modificar</a></li>-->
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="lv-title" ng-repeat="dia in turno.dias">
+                                            <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <small class="lv-small">{{turno.hinicio | date:'h:mma'}} - {{turno.hfinal}}</small>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+
 
                         </div>
 
                     </div> 
                 </form>
 
-                <div>
-                    <div class="lv-header">
-                        Turnos definidos
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="lv-body">
-                        <div class="media">
-                            <div class="pull-right">
-                                <ul class="actions">
-                                    <li class="dropdown" uib-dropdown>
-                                        <a href="" uib-dropdown-toggle>
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="">Eliminar</a></li>
-                                            <li><a href="">Modificar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="media-body">
-                                <div class="lv-title">Lunes, Martes, Miercoles</div>
-                                <small class="lv-small">05:00pm - 10:00pm</small>
-                            </div>
-
-                        </div>
-                        <div class="media">
-                            <div class="pull-right">
-                                <ul class="actions">
-                                    <li class="dropdown" uib-dropdown>
-                                        <a href="" uib-dropdown-toggle>
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="">Eliminar</a></li>
-                                            <li><a href="">Modificar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="media-body">
-                                <div class="lv-title">Sabado, Domingo</div>
-                                <small class="lv-small">08:00pm - 10:00pm</small>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
+                
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" ng-click="validateSaveTurno()">Crear</button>
-                    <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+                    <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+                    <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
                 </div>
 </script>

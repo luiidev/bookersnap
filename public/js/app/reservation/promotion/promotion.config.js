@@ -1,4 +1,4 @@
-angular.module('promotion.app', ['promotion.controller','promotion.service','promotion.directive'])
+angular.module('promotion.app', ['promotion.controller','promotion.service','promotion.directive','promotion.filter'])
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider){
 
     $stateProvider
