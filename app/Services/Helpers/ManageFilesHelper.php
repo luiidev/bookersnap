@@ -32,6 +32,7 @@ class ManageFilesHelper
                 'path' => '800x800',
                 'side-to-resize' => 'width'
             ],
+
         ];
     }
 

@@ -56,11 +56,14 @@ class AjaxService
             $imageService->ResizeImage(@$data['image_favicon_fullname'], @$data['image_favicon'], 'categories', $dimensionsFavicon);
             $data['user_id'] = $id_user;
             $url = API_ADMIN_URL . '/es/category';
+            //Se envía la solicitud al api
             $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
             if ($response['success']) {
+                //Se borran las imagenes de las carpetas temporales
                 $imageService->RemoveImage($data['image_logo_fullname']);
                 $imageService->RemoveImage($data['image_favicon_fullname']);
             } else {
+                //Se borran las imagenes de las carpetas de redimension.
                 ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'categories', $dimensionsLogo, $data['image_logo']);
                 ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'categories', $dimensionsFavicon, $data['image_favicon']);
             }
@@ -68,7 +71,6 @@ class AjaxService
         } catch (NotReadableException $e) {
             abort(400, trans('messages.image_not_readable'));
         } catch (\Exception $e) {
-            abort(500, $e->getMessage() . " - " . $e->getFile() . " - " . $e->getLine());
             abort(500, trans('error.500'));
         }
     }

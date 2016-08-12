@@ -67,7 +67,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
 		angular.forEach(zones.tables, function(tables) {
 
-			vTables + = 1;
+			vTables += 1;
 		});
 
 		zones.tables_count = vTables;

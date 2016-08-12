@@ -159,7 +159,7 @@ class ImageService
     {
         $imageInstance = Image::make($this->_public_path . $imageFullname);
         $imageInstance->backup();
-        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder);
+        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder, true);
         $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder . '/image');
         $imageInstance->save($this->_image_path . '/' . $baseFolder . '/' . $imageBasename);
         foreach ($dimensions as $dimension) {
@@ -184,14 +184,16 @@ class ImageService
     //---------------------------------------------
     // PRIVATE FUNCTIONS
     //---------------------------------------------
-    private function createDirectoryIfNoExists($path)
+    private function createDirectoryIfNoExists($path, $createGitIgnore = false)
     {
         if (!File::exists($path)) {
             File::makeDirectory($path);
-            $contents = '*';
-            $contents .= "\n";
-            $contents .= '!.gitignore';
-            File::put($path . "\\.gitignore", $contents);
+            if ($createGitIgnore) {
+                $contents = '*';
+                $contents .= "\n";
+                $contents .= '!.gitignore';
+                File::put($path . "\\.gitignore", $contents);
+            }
         }
 
     }
