@@ -7,7 +7,6 @@
                 <th>Name</th>
                 <th>Tables</th>
                 <th>Created</th>
-                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
@@ -16,11 +15,11 @@
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.tables_count }}</td>
-                <td>{{ item.created_at }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.date_add }}</td>
                 <td>
                     <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})"><i class="zmdi zmdi-collection-item-1 zmdi-hc-fw"></i> Clone zone</button> <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit zone</button> 
                     <button class="btn btn-danger btn-icon-text waves-effect" ng-click="deleteZoneConfirm(item.id,$index)"><i class="zmdi zmdi-close"></i> Delete zone</button>
+                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="turn-create({id : '{{item.id}}'})"><i class="zmdi zmdi-hourglass-outline zmdi-hc-fw"></i> Turn</button>
                 </td>
             </tr>
 

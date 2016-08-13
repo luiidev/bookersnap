@@ -10,6 +10,32 @@ var obtenerIdMicrositio = function(){
 	return id;
 };
 
+var getDaysWeek = function(){
+    var days = [
+        {id : 0, label : 'Domingo'},
+        {id : 1, label : 'Lunes'},
+        {id : 2, label : 'Martes'},
+        {id : 3, label : 'Miercoles'},
+        {id : 4, label : 'Jueves'},
+        {id : 5, label : 'Viernes'},
+        {id : 6, label : 'Sabado'},
+    ];
+
+    return days;
+};
+
+var getDayText = function(index,option){
+    var days = getDaysWeek();
+    var dayText = days[index].label;
+
+    if(option == "short"){
+        dayText = dayText.substr(0, 1);
+    }
+
+    return dayText;
+        
+};
+
 var messageAlert = function(title,text,type){
 	swal({   
 		title: title,   
@@ -18,6 +44,16 @@ var messageAlert = function(title,text,type){
     	timer: 2000,   
     	showConfirmButton: false
 	});
+};
+
+var messageErrorApi = function(data,title,type){
+    var errorJson = JSON.stringify(data);
+ 
+    if(errorJson.indexOf("error") >0){
+        messageAlert(title,data.error.user_msg,type);
+    }else{
+        messageAlert(title,data,type);
+    }
 };
 
 var historyBack = function(){

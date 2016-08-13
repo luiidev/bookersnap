@@ -9,11 +9,13 @@ angular.module('turn.controller', ['form.directive'])
 		TurnFactory.getTurns().success(function(data){
 			var vTurns = [];
 
-			angular.forEach(data["data"],function(turns){
+			console.log("getTurnss " + angular.toJson(data.data,true));
 
-				var days = turns.days.length;
+			angular.forEach(data.data,function(turns){
 
-				turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
+				//var days = turns.days.length;
+
+				//turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
 
 				vTurns.push(turns);
 
@@ -23,7 +25,7 @@ angular.module('turn.controller', ['form.directive'])
 
 		}).error(function(data,status,headers){
 
-			messageAlert("Error",status,"warning");
+			messageErrorApi(data,"Error","warning");
 			getTurns();
 
 		});
@@ -39,8 +41,8 @@ angular.module('turn.controller', ['form.directive'])
 		name : '',
 		hours_ini : '',
 		hours_end : '',
-		type : '',
-		days : [],
+		type_turn : '',
+		days : []
 	};
 
 	$scope.turnForm = {
@@ -52,24 +54,63 @@ angular.module('turn.controller', ['form.directive'])
 		data : ''
 	};
 
+	$scope.zoneId = $stateParams.id;
+
 	$scope.days = [
-		{id : 0, label : 'Domingo',disabled : true},
-		{id : 1, label : 'Lunes',disabled : true},
-		{id : 2, label : 'Martes',disabled : true},
-		{id : 3, label : 'Miercoles',disabled : true},
-		{id : 4, label : 'Jueves',disabled : true},
-		{id : 5, label : 'Viernes',disabled : true},
-		{id : 6, label : 'Sabado',disabled : true},
+		{id : 0, label : 'Domingo',disabled : false},
+		{id : 1, label : 'Lunes',disabled : false},
+		{id : 2, label : 'Martes',disabled : false},
+		{id : 3, label : 'Miercoles',disabled : false},
+		{id : 4, label : 'Jueves',disabled : false},
+		{id : 5, label : 'Viernes',disabled : false},
+		{id : 6, label : 'Sabado',disabled : false},
 	];
+
+	$scope.turnsList = {};
+
+	var getTurns = function(){
+
+		TurnFactory.getTurns($scope.zoneId).success(function(data){
+			var vTurns = [];
+
+			angular.forEach(data.data,function(turns){
+
+				var days = getDayTextTurn(turns.days,"short");
+				turns.days_short = days.join();
+				vTurns.push(turns);
+
+			});
+
+			$scope.turnsList = vTurns;
+
+		}).error(function(data,status,headers){
+
+			messageErrorApi(data,"Error","warning");
+
+		});
+		
+	};
+
+	var getDayTextTurn = function(days,option){
+		var daysText = [];
+
+		angular.forEach(days, function(value, key){
+			var day = getDayText(value.day,option);
+			daysText.push(day);
+
+		});
+
+		return daysText;
+	};
 
 	var getTypeTurns = function(){
 		TypeTurnFactory.getTypeTurns().success(function(data){
 
 			$scope.typeTurns.data = data;
-			$scope.turnData.type = data[0];
+			$scope.turnData.type_turn = data[0];
 
-		}).error(function(msg){
-			getTypeTurns();
+		}).error(function(data,status,headers){
+			messageErrorApi(data,"Error","warning");
 		});
 	};
 
@@ -86,7 +127,7 @@ angular.module('turn.controller', ['form.directive'])
 
 	$scope.getDaysTypeTurn = function(){
 		
-		TypeTurnFactory.getDaysTypeTurn($scope.turnData.type.id).success(function(data){
+		TypeTurnFactory.getDaysTypeTurn($scope.turnData.type_turn.id).success(function(data){
 			
 			angular.forEach(data, function(day, key){
 				$scope.days[day.day].disabled = false;
@@ -108,23 +149,23 @@ angular.module('turn.controller', ['form.directive'])
 	var saveTurn = function(option){
 
 		var days = getDaysSelected($scope.turnData.days);
-
 		$scope.turnData.days = days;
 
 		$scope.turnData.hours_ini = $filter('date')($scope.turnForm.hour_ini,'HH:mm:ss');
 		$scope.turnData.hours_end = $filter('date')($scope.turnForm.hour_end,'HH:mm:ss');
 
 		if (option == "create") {
-			TurnFactory.createTurn($scope.turnData).success(function(data){
 
-				console.log("saveTurn " + angular.toJson(data,true));
+			console.log("saveTurn " + angular.toJson($scope.turnData,true));
+
+			TurnFactory.createTurn($scope.turnData,$scope.zoneId).success(function(data){
 
 				messageAlert("Message system","Saved data","success");
 
 				$state.reload();
 
 			}).error(function(data,status,headers){
-				messageAlert("Error",status,"warning");
+				messageErrorApi(data,"Error","warning");
 			});
 
 		}else{
@@ -140,7 +181,7 @@ angular.module('turn.controller', ['form.directive'])
 				$state.reload();
 
 			}).error(function(data,status,headers){
-				messageAlert("Error",status,"warning");
+				messageErrorApi(data,"Error","warning");
 			});
 		}
 	};
@@ -150,8 +191,10 @@ angular.module('turn.controller', ['form.directive'])
 
 			TurnFactory.getTurn($stateParams.turn).success(function(data){
 				
-				data = data["data"];
-				
+				data = data.data;
+
+				console.log("loadDataTurnoEdit " + angular.toJson(data,true));
+
 				$scope.turnData.name = data.name;
 				$scope.turnData.hours_ini = data.hours_ini;
 				$scope.turnData.hours_end = data.hours_end;
@@ -162,21 +205,23 @@ angular.module('turn.controller', ['form.directive'])
 				$scope.turnForm.hour_ini = new Date(1970, 0, 1,hour_ini[0],hour_ini[1],hour_ini[2]);
 				$scope.turnForm.hour_end = new Date(1970, 0, 1,hour_end[0],hour_end[1],hour_end[2]);
 
-				$scope.turnData.type = { id : data.type.id , label : ''};
+				$scope.turnData.type_turn = { id : data.type.id , label : ''};
 
-				angular.forEach(data.days, function(day, key){
+				/*angular.forEach(data.days, function(day, key){
 					$scope.turnData.days[day.day] = true;
-				});
+				});*/
 
 			}).error(function(data,status,headers){
-				messageAlert("Error",status,"warning");
+				messageErrorApi(data,"Error","warning");
 			});
 		}
 	};
 
 	getTypeTurns();
 
-	$scope.getDaysTypeTurn();
+	//$scope.getDaysTypeTurn();
+
+	getTurns();
 
 	loadDataTurnoEdit();
 

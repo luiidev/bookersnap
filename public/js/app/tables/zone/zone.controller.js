@@ -12,16 +12,17 @@ angular.module('zone.controller', ['ngDraggable'])
 
 		ZoneFactory.getZones().success(function(data){
 
-			console.log("getZones " + angular.toJson(data,true));
-
 			var vZonesActive = [];
 			var vZonesInactive = [];
-			
+
 			angular.forEach(data["data"], function(zones) {
 
 				var zonesTables = getTablesCount(zones);
+				var zonesTurn = zones.zone_turns;
 
-				if (zones.status == "0" || zones.status == "2") {
+				console.log("getZones " + angular.toJson(zones.zone_turns,true));
+
+				if (zones.status == "0" || zones.status == "2" || zonesTurn.length == 0) {
 					vZonesInactive.push(zonesTables);
 				}else{
 					vZonesActive.push(zonesTables);
@@ -31,8 +32,10 @@ angular.module('zone.controller', ['ngDraggable'])
 
 			$scope.zonesActive = vZonesActive;
 			$scope.zonesInactive = vZonesInactive;
+
 		}).error(function(data,status,headers){
-			messageAlert("Error",data.error.user_msg,"warning");
+
+			messageErrorApi(data,"Error","warning");
 		});
 	};
 
@@ -66,8 +69,9 @@ angular.module('zone.controller', ['ngDraggable'])
 		var vTables = 0;
 
 		angular.forEach(zones.tables, function(tables) {
-
-			vTables + = 1;
+			if(tables.status == 1){
+				vTables + = 1;
+			}	
 		});
 
 		zones.tables_count = vTables;
@@ -102,6 +106,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	}
 
 	$scope.itemTables = [];
+	$scope.itemTablesDeleted = [];
 
 	$scope.boxTables = {
 		items : true,
@@ -112,6 +117,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.indexTable = null;
 	$scope.selectedTable = false;//validar al hacer click en el lienzo
+
+	$scope.typeForm = "create";// or edit
 
 	/*Si queremos llamar a una funcion desde directiva*/
 	this.alertaPrueba = function(){
@@ -284,6 +291,9 @@ angular.module('zone.controller', ['ngDraggable'])
 				itemTables: function () {
 					return $scope.itemTables;
 				},
+				itemTablesDeleted : function(){
+					return $scope.itemTablesDeleted;
+				},
 				indexTable : function(){
 					return $scope.indexTable;
 				},
@@ -292,6 +302,9 @@ angular.module('zone.controller', ['ngDraggable'])
 				},
 				headerZone : function(){
 					return $scope.headerZone;
+				},
+				typeForm : function(){
+					return $scope.typeForm;
 				}
 
 			}
@@ -308,6 +321,9 @@ angular.module('zone.controller', ['ngDraggable'])
 	var selectTableTypeDrop = function(data){
 		var index = $scope.itemTables.indexOf(data);
 		if (index == -1)
+			data.id = 0;
+			data.status = 1;
+
 			$scope.itemTables.push(data);
 			updateHeaderZone();
 	};
@@ -316,43 +332,77 @@ angular.module('zone.controller', ['ngDraggable'])
 		ZoneLienzoFactory.updateHeaderZone($scope.headerZone,$scope.itemTables);
 	};
 
+	var getDataTables = function(table){
+
+		var tableItem = {
+			name : table.name,
+			min_cover : table.minCover,
+			max_cover : table.maxCover,
+			config_position : table.left+","+table.top,//x,y
+			config_size : TableFactory.getIdSize(table.size),
+			config_rotation : table.rotate,
+			config_forme : TableFactory.getIdShape(table.shape),
+			id : table.id,
+			status : table.status
+		};
+
+		return tableItem;
+
+	};
+
+	var prepareDataTablesSave = function(){
+		var tables = [];
+
+		angular.forEach($scope.itemTables,function(table){
+
+			var tableItem = getDataTables(table);
+
+			tables.push(tableItem);
+
+		});
+
+		if($scope.typeForm == "edit"){
+
+			angular.forEach($scope.itemTablesDeleted,function(table){
+
+				var tableItem = getDataTables(table);
+
+				tables.push(tableItem);
+
+			});
+
+		}
+
+		console.log("prepareDataTablesSave " + angular.toJson(tables,true));
+
+		return tables;
+	};
+
 	$scope.saveZone = function(option){
 		var dataZone = {
 			name : angular.element("#zone_name").val(),
 			ms_microsite_id : IdMicroSitio,
-			tables :[]
+			tables : prepareDataTablesSave()
 		}
-
-		angular.forEach($scope.itemTables,function(table){
-
-			var tableItem = {
-				name : table.name,
-				min_cover : table.minCover,
-				max_cover : table.maxCover,
-				config_position : table.left+","+table.top,//x,y
-				config_size : TableFactory.getIdSize(table.size),
-				config_rotation : table.rotate,
-				config_forme : TableFactory.getIdShape(table.shape)
-			}
-
-			dataZone.tables.push(tableItem);
-
-		});
 
 		if (option == "create") {
 
 			ZoneFactory.createZone(dataZone).success(function(response){
-				console.log("succes createZone " + JSON.stringify(response));
 				messageAlert("Success","Zone create complete","success");
 				$state.reload();
+			}).error(function(data,status,headers){
+		
+				messageErrorApi(data,"Error","warning");
+				
 			});
 
 		}else{
 			dataZone.id = $stateParams.id;
 			ZoneFactory.editZone(dataZone).success(function(response){
-				console.log("succes editZone " + JSON.stringify(response));
 				messageAlert("Success","Zone edit complete","success");
-				$state.reload();
+				$state.go('zone.active');
+			}).error(function(data,status,headers){
+				messageErrorApi(data,"Error","warning");
 			});
 		}
 
@@ -362,12 +412,13 @@ angular.module('zone.controller', ['ngDraggable'])
 	var detectedForm = function(){
 		if ($stateParams.id != undefined) {
 
-			console.log("params edit" ,$stateParams.id);
+			$scope.typeForm = "edit";
 
-			var Zone = ZoneFactory.getZone($stateParams.id).success(function(zone){
-				angular.element("#zone_name").val(zone["data"][0].name);
+			ZoneFactory.getZone($stateParams.id).success(function(zone){
+
+				angular.element("#zone_name").val(zone.data.name);
 			
-				loadTablesEdit(zone["data"][0].tables)
+				loadTablesEdit(zone.data.tables)
 			});
 		}
 	};
@@ -375,6 +426,7 @@ angular.module('zone.controller', ['ngDraggable'])
 	var loadTablesEdit = function(tables){
 
 		angular.forEach(tables,function(data){
+			
 			var position = data.config_position.split(",");
 			var dataTable = {
 				name : data.name,
@@ -384,10 +436,17 @@ angular.module('zone.controller', ['ngDraggable'])
 				top : position[1],
 				shape : TableFactory.getLabelShape(data.config_forme),
 				size : TableFactory.getLabelSize(data.config_size),
-				rotate : data.config_rotation
+				rotate : data.config_rotation,
+				id : data.id,
+				status : data.status
 			}
 
-			$scope.itemTables.push(dataTable);
+			if(data.status == 1){
+				$scope.itemTables.push(dataTable);
+			}else{
+				$scope.itemTablesDeleted.push(dataTable);
+			}
+			
 		});
 
 		updateHeaderZone();
@@ -398,19 +457,34 @@ angular.module('zone.controller', ['ngDraggable'])
 	listCovers("min");
 	listCovers("max");       
 })
-.controller('ModalTableDeteleCtrl', function($scope,$uibModalInstance,itemTables,indexTable,boxTables,headerZone,ZoneLienzoFactory) {
+.controller('ModalTableDeteleCtrl', function($scope,$uibModalInstance,itemTables,itemTablesDeleted,indexTable,boxTables,headerZone,typeForm,ZoneLienzoFactory) {
 
 	$scope.ok = function () {
 		//show tables items
 		ZoneLienzoFactory.activarTablesItems(boxTables);
 
-		//delete item table selected
-		itemTables.splice(indexTable,1);
-		angular.element('.item-drag-table').removeClass('selected-table');
+		removeTableItem();
 
 		ZoneLienzoFactory.updateHeaderZone(headerZone,itemTables);
 
 		$uibModalInstance.close();
+	};
+
+	var removeTableItem = function(){
+		
+		//add table in tables removes
+
+		if(typeForm == "edit"){
+
+			itemTables[indexTable].status = 2;
+		
+			itemTablesDeleted.push(itemTables[indexTable]);
+		}
+
+		//delete item table selected
+		itemTables.splice(indexTable,1);
+		angular.element('.item-drag-table').removeClass('selected-table');
+	
 	};
 
 	$scope.cancel = function () {
@@ -423,9 +497,13 @@ angular.module('zone.controller', ['ngDraggable'])
 		ZoneFactory.deleteZone(idZone).success(function(response){
 			console.log("deleteZone msg " + response);
 
-			zonesInactive.splice(indexRow, 1);
+			messageAlert("Success","Zone deleted","success");
 
+			zonesInactive.splice(indexRow, 1);
 			$uibModalInstance.close();
+
+		}).error(function(data,status,headers){
+			messageErrorApi(data,"Error","warning");
 		});
 	};
 
@@ -433,37 +511,71 @@ angular.module('zone.controller', ['ngDraggable'])
 		$uibModalInstance.dismiss('cancel');
 	};
 })
-.controller('ZoneAssignTurnCtrl', function($scope,TurnFactory) {
+.controller('ZoneAssignTurnCtrl', function($scope,TypeTurnFactory,TurnFactory,$uibModal,$filter) {
 
+	$scope.typeTurns = {};
 
-	$scope.turns = {};
+	$scope.days = getDaysWeek();
+
+	$scope.turns = [];
+
+	$scope.turnDay = {id: 0 , name : 'Selected turn'};
+
+	$scope.getTurnsByType = function(typeTurn){
+	
+		var vTurns = [$scope.turnDay];
+
+		angular.forEach($scope.turns, function(data){
+			if(data.type.id == typeTurn){
+				//data.name = data.name +" ("+data.hours_ini +" "+ data.hours_end +")";
+				vTurns.push(data);
+			}
+		});
+
+		return vTurns;
+	};
+
+	$scope.selectTurno = function(typeTurn,turn,day){
+
+		var vData = {
+			day : day,
+			res_turn_id : turn.id,
+			res_type_turn :typeTurn.id
+		};
+
+		console.log("selectTurno "+ angular.toJson(vData,true));
+	};
+
+	var getTypeTurns = function(){
+
+		TypeTurnFactory.getTypeTurns().success(function(data){
+
+			$scope.typeTurns = data;
+
+		}).error(function(data,status,headers){
+
+			messageErrorApi(data,"Error","warning");
+
+		});	
+	};
 
 	var getTurns = function(){
 
 		TurnFactory.getTurns().success(function(data){
-			var vTurns = [];
+		
+			console.log("getTurnss " + angular.toJson(data.data,true));
 
-			angular.forEach(data["data"],function(turns){
-
-				var days = turns.days.length;
-
-				turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
-
-				vTurns.push(turns);
-
-			});
-
-			$scope.turns = vTurns;
+			$scope.turns = data.data;
 
 		}).error(function(data,status,headers){
 
-			messageAlert("Error",status,"warning");
+			messageErrorApi(data,"Error","warning");
 
 		});
-		
 	};
 
 	getTurns();
+	getTypeTurns();
 })
 
 ;
