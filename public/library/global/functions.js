@@ -24,6 +24,18 @@ var getDaysWeek = function(){
     return days;
 };
 
+var getDayText = function(index,option){
+    var days = getDaysWeek();
+    var dayText = days[index].label;
+
+    if(option == "short"){
+        dayText = dayText.substr(0, 1);
+    }
+
+    return dayText;
+        
+};
+
 var messageAlert = function(title,text,type){
 	swal({   
 		title: title,   

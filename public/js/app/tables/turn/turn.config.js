@@ -6,7 +6,7 @@ angular.module('turn.app', ['turn.controller','turn.service','turn.directive'])
                         templateUrl: '/js/app/tables/turn/view/index.html'
                 })
                 .state ('turn-create', {
-                        url: '/config/turn/new',
+                        url: '/config/zone/:id/turn/new',
                         templateUrl: '/js/app/tables/turn/view/turn-create.html'
                 })
                 .state ('turn-edit', {

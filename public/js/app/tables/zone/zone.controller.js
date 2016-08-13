@@ -519,6 +519,33 @@ angular.module('zone.controller', ['ngDraggable'])
 
 	$scope.turns = [];
 
+	$scope.turnDay = {id: 0 , name : 'Selected turn'};
+
+	$scope.getTurnsByType = function(typeTurn){
+	
+		var vTurns = [$scope.turnDay];
+
+		angular.forEach($scope.turns, function(data){
+			if(data.type.id == typeTurn){
+				//data.name = data.name +" ("+data.hours_ini +" "+ data.hours_end +")";
+				vTurns.push(data);
+			}
+		});
+
+		return vTurns;
+	};
+
+	$scope.selectTurno = function(typeTurn,turn,day){
+
+		var vData = {
+			day : day,
+			res_turn_id : turn.id,
+			res_type_turn :typeTurn.id
+		};
+
+		console.log("selectTurno "+ angular.toJson(vData,true));
+	};
+
 	var getTypeTurns = function(){
 
 		TypeTurnFactory.getTypeTurns().success(function(data){
@@ -530,19 +557,6 @@ angular.module('zone.controller', ['ngDraggable'])
 			messageErrorApi(data,"Error","warning");
 
 		});	
-	};
-
-	$scope.getTurnsByType = function(typeTurn){
-	
-		var vTurns = [];
-
-		angular.forEach($scope.turns, function(data){
-			if(data.type.id == typeTurn){
-				vTurns.push(data);
-			}
-		});
-
-		return vTurns;
 	};
 
 	var getTurns = function(){

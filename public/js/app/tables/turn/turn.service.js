@@ -1,20 +1,20 @@
 angular.module('turn.service', [])
 .factory('TurnFactory',function($http,ApiUrl,ApiUrlRoot){
 	return {
-		getTurns: function(){
-			return $http.get(ApiUrl+"/turn");
+		getTurns: function(vZone){
+			return $http.get(ApiUrl+"/zones/"+vZone+"/turns");
 		},
 		getTurn : function(vTurn){
-			return $http.get(ApiUrl+"/turn/"+vTurn);
+			return $http.get(ApiUrl+"/turns/"+vTurn);
 		},
-		createTurn : function(vData){
-			return $http.post(ApiUrl+"/turn",vData);
+		createTurn : function(vData,vZone){
+			return $http.post(ApiUrl+"/zones/"+vZone+"/turns",vData);
 		},
 		updateTurn : function(vData){
-			return $http.put(ApiUrl+"/turn/"+vData.id,vData);
+			return $http.put(ApiUrl+"/turns/"+vData.id,vData);
 		},
 		getTurnsAvailables: function(vDate){
-			return $http.get(ApiUrl+"/turn/"+vDate+"/availables");
+			return $http.get(ApiUrl+"/turns/"+vDate+"/availables");
 		},
 	};
 })
