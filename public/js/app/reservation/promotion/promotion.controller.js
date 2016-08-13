@@ -24,8 +24,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
     //tipoSelected:{name:'Gratis',type_event_id:3},
     descripcion:" ",
-    zonas:[{id:1,title:'Zona01'},{id:2,title:'Zona02'},{id:3,title:'Zona03'},{id:4,title:'Zona04'}],
-    zonaSelected:[2, 3],
+    zonas:[{id:1,title:'Zona01',content:'1-2'},{id:2,title:'Zona02',content:'3-4'},{id:3,title:'Zona03',content:'1-2'},{id:4,title:'Zona04',content:'3-4'}],
+    zonaSelected:'',
     caduca:false,
     publica:true,
     myImage: undefined
@@ -160,9 +160,28 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 
   /********************************************/
-  $scope.invocarZonas=function(item){
-    alert(item);
-  }
+$scope.invocarZonas=function(item){
+  openModalZones();
+}
+
+var openModalZones = function () {
+  modalInstancesZones()
+}
+
+function modalInstancesZones() {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentZone.html',
+      controller: 'ZoneInstanceCtrl',
+      size: 'lg',
+      resolve: {
+        content: function () {
+          return $scope.promotion.zonas;
+        }
+      }
+    });
+} 
+
+
 
 
 })
@@ -444,6 +463,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       console.log('Haber '+angular.toJson(data, true));      
   });
   */
+  //if ($scope.turnos.turnoSelected.indexOf(fruit) != -1) return;
   $scope.addTurno = function(){
 
     var cantidadSel=$scope.turnos.turnoSelected.length;
@@ -500,4 +520,44 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     $modalInstance.dismiss('cancel');
   };
 
+})
+
+.controller('ZoneInstanceCtrl', function($scope,$uibModal,$modalInstance,$filter,content) {
+
+  $scope.listZones = content;
+  console.log($scope.listZones);
+
+  $scope.addPrecio = function () {
+    modalInstancesPrices()
+  };
+  function modalInstancesPrices() {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentPrice.html',
+      controller: 'PriceInstanceCtrl',
+      size: 'sm',
+      resolve: {
+        content: function () {
+          return $scope.modalContentPrice;
+        }
+      }
+    });
+  } 
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+/***************Funcion ejecutada por directiva****************/
+  $scope.activarTableOptions = function(index,vthis,identificador){
+    console.log(identificador);
+  };
+})
+
+.controller('PriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
 });
+
