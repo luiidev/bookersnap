@@ -51,13 +51,13 @@
                                 <div class="form-group fg-line">
                                     <label>Shift</label>
                                     <div class="select">
-                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type" <!--ng-change="getDaysTypeTurn()"--> ></select>
+                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type_turn" <!--ng-change="getDaysTypeTurn()"--> ></select>
                                     </div>
                                 
                                 </div>   
                             </div>
                         </div>
-                        <!--
+                        
                         <div class="row">
                             <div class="col-xs-12">
                                 <p class="c-black f-500 m-b-20">Selected Days</p>
@@ -69,7 +69,35 @@
                                 </label>
 
                             </div>
-                        </div>-->
+                        </div>
+                        <hr>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="c-black f-500 m-b-20">List Turns</p>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Shift</th>
+                                        <th>Time</th>
+                                        <th>Days</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in turnsList">
+                                        <td>{{ item.type_turn.name }}</td>
+                                        <td>{{ item.hours_ini }} - {{ item.hours_end }}</td>
+                                        <td>{{ item.days_short}}</td>
+                                        <td>
+                                            <button type="button" class="btn bgm-deeporange waves-effect"><i class="zmdi zmdi-edit"></i></button>
+                                            <button type="button" class="btn bgm-cyan waves-effect"><i class="zmdi zmdi-close"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </form>
                 </div>
             </div>
