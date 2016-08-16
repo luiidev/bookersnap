@@ -30,14 +30,13 @@ Route::group(['prefix' => 'test'], function () {
 
     Route::get('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
     Route::get('/home', ['middleware' => 'auth', 'as' => 'microsite-home', 'uses' => 'Test\AuthController@Home']);
-    Route::group(['prefix' => 'ajax'], function(){
+    Route::group(['prefix' => 'ajax'], function () {
         Route::post('/get-data', 'Test\AjaxController@GetData');
         Route::post('/guardar-categoria', 'Test\AjaxController@SaveCategory');
         Route::post('/subir-logo', 'Test\AjaxController@UploadLogo');
         Route::post('/subir-favicon', 'Test\AjaxController@UploadFavicon');
     });
 });
-
 
 
 /*
@@ -59,7 +58,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
     Route::delete('example/{id}', "Admin\Example\ExampleController@delete");
 });
 
-Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas','middleware' => 'route'], function () {
+Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas', 'middleware' => 'route'], function () {
 
     Route::get('zone', "Admin\Tables\Zone\ZoneController@index");
     Route::get('zone/{id}', "Admin\Tables\Zone\ZoneController@get");
@@ -68,17 +67,17 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas','middleware' => 'ro
     Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
 
 
- 	Route::get('turn', "Admin\Tables\Turn\TurnController@index");
-	Route::get('turn/{turn}', "Admin\Tables\Turn\TurnController@get");
-	Route::post('turn', "Admin\Tables\Turn\TurnController@create");
-	Route::put('turn', "Admin\Tables\Turn\TurnController@update");
+    Route::get('turn', "Admin\Tables\Turn\TurnController@index");
+    Route::get('turn/{turn}', "Admin\Tables\Turn\TurnController@get");
+    Route::post('turn', "Admin\Tables\Turn\TurnController@create");
+    Route::put('turn', "Admin\Tables\Turn\TurnController@update");
 
-	Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
+    Route::get('zone/{id}/type-turn/{type}/days', "Admin\Tables\Turn\TypeTurnController@days");
 
-	Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
+    Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
 
-	/*
- 	Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
+    /*
+     Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
 });
 
 Route::group(['prefix' => 'v1/{lang}/'], function () {
@@ -87,19 +86,28 @@ Route::group(['prefix' => 'v1/{lang}/'], function () {
 
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function () {
 
-	Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
-	Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
-	Route::post('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
-	Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
+    Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
+    Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
+    Route::post('promotion/uploadfile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+    Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
     Route::get('promotion/gettypes', "Admin\Reservation\Promotion\PromotionController@gettypes");
     Route::get('promotion/gettypographys', "Admin\Reservation\Promotion\PromotionController@gettypographys");
-    
+
 });
 
-Route::group(['prefix' => 'v1/{lang}/master'], function(){
+Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master'], function () {
 
-    Route::get('/', 'Master\MainController@index');
-
+    Route::get('/', 'MainController@index');
+    Route::group(['prefix' => '/ajax'], function () {
+        Route::get('/category', 'CategoryController@index');
+        Route::get('/category/subcategories', 'CategoryController@showSubcategories');
+        Route::get('/category/{id}', 'CategoryController@showCategory');
+        Route::post('/category', 'CategoryController@storeCategory');
+        Route::put('/category/{id}', 'CategoryController@updateCategory');
+        Route::post('/category/upload/logo', 'CategoryController@uploadLogo');
+        Route::post('/category/upload/favicon', 'CategoryController@uploadFavicon');
+        Route::delete('/category/{id}', 'CategoryController@deleteCategory');
+    });
 });
 
 

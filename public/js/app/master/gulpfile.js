@@ -28,14 +28,18 @@ gulp.task('app-bookersnap-master-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-master-js', function () {
     gulp.src([
-            '../../../library/ngDraggable/ngDraggable.js',
+            '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
+            '../../../library/angular-loading-overlay/angular-loading-overlay.js',
+            '../../../library/angucomplete-alt/angucomplete-alt.js',
             '../../../library/global/functions.js',
             '../../../library/global/form.directive.js',
             '../../../library/input-mask/input-mask.js',
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+            '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
+            '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
             '!gulpfile.js'
         ])
-        .pipe(concat('app.bookersnap.library.tables.min.js'))
+        .pipe(concat('app.bookersnap.library.master.min.js'))
         .pipe(jsmin())
         .pipe(gulp.dest('../../dist.app/master'))
 });
@@ -52,23 +56,35 @@ gulp.task('stylus-app', function () {
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
-gulp.task('app-library-tables-css', function () {
+gulp.task('app-library-master-css', function () {
     gulp.src([
-            '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+            '../../../library/textAngular-1.5.0/bower_components/font-awesome/css/font-awesome.min.css',
+            '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
+            '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+            '../../../library/angucomplete-alt/angucomplete-alt.css'
         ])
         .pipe(minifyCss())
-        .pipe(concat('app.bookersnap.library.tables.min.css'))
-        .pipe(gulp.dest('../../../css/app/tables'));
+        .pipe(concat('app.bookersnap.library.master.min.css'))
+        .pipe(gulp.dest('../../../css/app/master'));
 });
 
 //Automatizamos esta tarea
 gulp.task('watch', function () {
-    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-tables-js']);
-    gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
-    gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
+    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-master-js']);
+    gulp.watch([
+        '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
+        '../../../library/angucomplete-alt/angucomplete-alt.js',
+        '../../../library/global/functions.js',
+        '../../../library/global/form.directive.js',
+        '../../../library/input-mask/input-mask.js',
+        '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+        '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
+        '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js'
+    ], ['app-library-master-js']);
+    gulp.watch('../../../css/app/master/*.styl', ['stylus-app']);
     gulp.watch([
         '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
-    ], ['app-library-tables-css']);
+    ], ['app-library-master-css']);
 });
 
 //ejecutamos el servidor y todos los archivos
