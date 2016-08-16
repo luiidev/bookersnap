@@ -24,7 +24,18 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
     //tipoSelected:{name:'Gratis',type_event_id:3},
     descripcion:" ",
-    zonas:[{id:1,title:'Zona01',content:'1-2'},{id:2,title:'Zona02',content:'3-4'},{id:3,title:'Zona03',content:'1-2'},{id:4,title:'Zona04',content:'3-4'}],
+    zonas:[
+      {id:1,title:'Zona01',formas:[
+        {id:'1', name:'Zona01', shape:'round', size:'medium', top:'20', left:'20',content:'1-2',precio:''},
+        {id:'2', name:'Zona01', shape:'square', size:'medium', top:'20', left:'130',content:'1-2',precio:''},
+        {id:'3', name:'Zona01', shape:'round', size:'medium', top:'20', left:'230',content:'1-2',precio:''},
+        {id:'4', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'60',content:'3-4',precio:''},
+        {id:'5', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'170',content:'3-4',precio:''}
+      ]},
+      {id:2,title:'Zona02',formas:[{id:'6', name:'Zona02', shape:'round', size:'medium', top:'90', left:'60',content:'1-2',precio:''}]},
+      {id:3,title:'Zona03',formas:[{id:'7', name:'Zona03', shape:'recta', size:'medium', top:'150', left:'120',content:'3-4',precio:''}]},
+      {id:4,title:'Zona04',formas:[{id:'8', name:'Zona04', shape:'square', size:'medium', top:'110', left:'120',content:'3-4',precio:''}]}
+    ],
     zonaSelected:'',
     caduca:false,
     publica:true,
@@ -524,12 +535,35 @@ function modalInstancesZones() {
 
 .controller('ZoneInstanceCtrl', function($scope,$uibModal,$modalInstance,$filter,content) {
 
+  $scope.itemTables = [];
+
   $scope.listZones = content;
   console.log($scope.listZones);
 
+ 
+/***************Funcion ejecutada por directiva****************/
+  
+  $scope.activarTableOptions = function(index,data){
+
+    var numero=$scope.itemTables.length;
+    if(numero>0){
+      var index = $scope.itemTables.indexOf(data);
+      if (index > -1) {
+        $scope.itemTables.splice(index, 1);
+      }else{
+        $scope.itemTables.push(data);
+      }
+    }else{
+      $scope.itemTables.push(data);
+    }
+    console.log('Seleccionados: '+angular.toJson($scope.itemTables, true));
+
+  };
+  
   $scope.addPrecio = function () {
     modalInstancesPrices()
   };
+
   function modalInstancesPrices() {
     var modalInstance = $uibModal.open({
       templateUrl: 'myModalContentPrice.html',
@@ -537,7 +571,7 @@ function modalInstancesZones() {
       size: 'sm',
       resolve: {
         content: function () {
-          return $scope.modalContentPrice;
+          return $scope.itemTables;
         }
       }
     });
@@ -547,14 +581,10 @@ function modalInstancesZones() {
     $modalInstance.dismiss('cancel');
   };
 
-/***************Funcion ejecutada por directiva****************/
-  $scope.activarTableOptions = function(index,vthis,identificador){
-    console.log(identificador);
-  };
 })
 
 .controller('PriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
-
+  $scope.itemTables = content;
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

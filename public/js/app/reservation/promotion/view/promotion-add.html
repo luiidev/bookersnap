@@ -186,7 +186,6 @@
                                             <a href="" uib-dropdown-toggle>
                                                 <i class="zmdi zmdi-more-vert"></i>
                                             </a>
-
                                             <ul class="dropdown-menu dropdown-menu-right">
                                                 <li><a ng-click="deleteTurno($index)">Eliminar</a></li>
                                                 <!--<li><a href="">Modificar</a></li>-->
@@ -230,36 +229,11 @@
     <div class="modal-body">
         <tabset justified="true">
         <tab ng-repeat="tab in listZones" heading="{{tab.title}}" active="tab.active">
-            <div class="zoneArea" style="position:relative;">
+            <div class="zoneArea minheight" style="position:relative;">
 
-                <div class="border round small" ng-select-table x="50" y="20" on-click-fn='activarTableOptions($index,this,1)'>
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                 <div class="border round medium" ng-select-table x="90" y="20" on-click-fn='activarTableOptions($index,this,2)'>
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                    <div class="border round large" ng-select-table x="150" y="20" on-click-fn='activarTableOptions($index,this,3)'>
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-
-                <div class="border square small" ng-select-table x="50" y="120">
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                 <div class="border square medium" ng-select-table x="90" y="120">
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                    <div class="border square large" ng-select-table x="150" y="120">
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-
-                <div class="border recta small" ng-select-table x="50" y="220">
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                 <div class="border recta medium" ng-select-table x="110" y="220">
-                    <div class="txtcenter">{{tab.content}}</div>
-                </div>
-                    <div class="border recta large" ng-select-table x="180" y="220">
-                    <div class="txtcenter">{{tab.content}}</div>
+                <div ng-select-table ng-repeat="obj in tab.formas" ng-class="obj.precio!='' ? 'definite-table border {{obj.shape}} {{obj.size}}':'border {{obj.shape}} {{obj.size}}'"  x="{{obj.left}}" y="{{obj.top}}" on-click-fn="activarTableOptions($index,obj)" >
+                    <div class="txtcenter">{{obj.content}}</div>
+                    <div class="txtmoneda">{{obj.precio}}</div>
                 </div>
                 
             </div>
@@ -285,7 +259,7 @@
     </div>
     <div class="modal-body">
         <div class="">
-            <div class="media">
+            <div class="media"  ng-repeat="item in itemTables">
                 <div class="pull-right">
                     <ul class="actions">
                         <li class="dropdown" uib-dropdown>
@@ -293,20 +267,19 @@
                                 <i class="zmdi zmdi-more-vert"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a ng-click="">Eliminar</a></li>
-                                <!--<li><a href="">Modificar</a></li>-->
+                                <li><a ng-click="deleteTable($index)">Eliminar</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-                <div class="">
+                <div>
                     <div class="lv-title">
-                        <span>Zona 1</span>
-                    </div>
-                    <div class="form-group fg-float m-b-30">
-                        <div class="fg-line">
-                            <input type="text" class="input-sm form-control fg-input" ng-model="mesas.precio">
-                            <label class="fg-label">Precio</label>
+                        <div> {{item.name}} 
+                            <div class="zoneArea pull-right">
+                                <div class="border {{item.shape}} {{item.size}}">
+                                    <div class="txtcenter">{{item.content}}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -316,6 +289,13 @@
     </div>
     <div class="modal-footer">
         <div class="text-center">
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" class="input-sm form-control fg-input" ng-model="mesas.precio">
+                    <label class="fg-label">Precio</label>
+                </div>
+            </div>
+
             <button class="btn btn-primary btn-icon-text waves-effect" ng-click="addPrecio()">Guardar</button>
             <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
         </div>

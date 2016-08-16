@@ -55,7 +55,7 @@ angular.module('promotion.directive', [])
       position: 'absolute',
       cursor: 'pointer',
       top: top + 'px',
-      left: left + 'px'
+      left: left + 'px',
     });
 
     element.on('click',function(event){
