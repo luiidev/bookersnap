@@ -1,0 +1,31 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container">
+
+            <div class="block-header" style="padding-bottom: 15px">
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">Create New Turn</button>
+                    </li>
+                </ul>
+            </div>
+
+      		<div class="card" id="turno-main">
+      			<div class="card-header">
+                	<h2>Guest<small></small></h2>
+            	</div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
