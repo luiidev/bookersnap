@@ -18,20 +18,15 @@ class ManageFilesHelper
     {
         return [
             [
-                'size' => 300,
-                'path' => '300x300',
+                'size' => 80,
+                'path' => '80x80',
                 'side-to-resize' => 'width'
             ],
             [
-                'size' => 500,
-                'path' => '500x500',
+                'size' => 160,
+                'path' => '160x160',
                 'side-to-resize' => 'width'
-            ],
-            [
-                'size' => 800,
-                'path' => '800x800',
-                'side-to-resize' => 'width'
-            ],
+            ]
         ];
     }
 
@@ -39,23 +34,26 @@ class ManageFilesHelper
     {
         return [
             [
-                'size' => 250,
-                'path' => '250x250',
+                'size' => 36,
+                'path' => '36x36',
                 'side-to-resize' => 'width'
             ],
             [
-                'size' => 450,
-                'path' => '450x450',
+                'size' => 80,
+                'path' => '80x80',
                 'side-to-resize' => 'width'
-            ]
+            ],
         ];
     }
 
-    public static function RemoveImagesFromDimensions(ImageService $imgService, string $baseFolder, array $dimensions, string $basename)
+    public static function RemoveImagesFromDimensions(ImageService $imgService, string $baseFolder, array $dimensions, string $basename, bool $removeBase = true)
     {
-        $imgService->RemoveImage('files/categories/' . $basename);
+        if ($removeBase) {
+            $imgService->RemoveImage('files/' . $baseFolder . '/' . $basename);
+        }
+
         foreach ($dimensions as $dim) {
-            $dir = 'files/categories/image/' . $dim['path'] . '/' . $basename;
+            $dir = 'files/' . $baseFolder . '/image/' . $dim['path'] . '/' . $basename;
             $imgService->RemoveImage($dir);
         }
     }

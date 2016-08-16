@@ -13,20 +13,22 @@ class Controller extends BaseController
 
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
 
-    public function __construct() {
-       
+    public function __construct()
+    {
+
     }
+
     /**
-        @param bool $success 
-        @param int $statuscode 
-        @param string $msg
-        @param array $data
-        @param bool $redirect
-        @param string $url
-        @param string $errorUserMsg
-        @param string $errorInternalMsg
-        @param array $arrayErrors
-    */
+     * @param bool $success
+     * @param int $statuscode
+     * @param string $msg
+     * @param array $data
+     * @param bool $redirect
+     * @param string $url
+     * @param string $errorUserMsg
+     * @param string $errorInternalMsg
+     * @param array $arrayErrors
+     */
     protected function CreateJsonResponse($success, $statusCode, $msg = null, $data = null,
                                           $redirect = false, $url = null, $errorUserMsg = null,
                                           $errorInternalMsg = null, $arrayErrors = null)
@@ -46,6 +48,15 @@ class Controller extends BaseController
         ];
 
         return response()->json($response, $statusCode);
+    }
+
+    protected function GetUserId()
+    {
+        $user = \Auth::user();
+        if (is_null($user)) {
+            return 1;
+        }
+        return $user->id;
     }
 
 }
