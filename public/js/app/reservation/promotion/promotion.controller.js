@@ -625,11 +625,11 @@ function modalInstancesZones() {
     }
   };
   $scope.deleteTable = function (item,index) {
+    //$scope.itemTables.splice(index, 1);
     //$rootScope.itemTables.splice(index, 1);
-    //var idelemento='#el'+$scope.itemTables[index].id;
-    //angular.element(idelemento).removeClass('selected-table');
-    $scope.itemTables.splice(index, 1);
-    //console.log(idelemento);
+    var idelemento='#el'+$scope.itemTables[index].id;
+    angular.element(idelemento).removeClass('selected-table');
+    console.log(idelemento);
   };
 
   

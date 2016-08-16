@@ -1,0 +1,223 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header.html'"
+        data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include src="'/template/sidebar-left.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include src="'/template/chat.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content" class="page-view">
+        <div class="container">
+            <div class="block-header">
+                <h3><i class="zmdi zmdi-view-list-alt zmdi-hc-fw"></i> Crear de Categoría</h3>
+
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect" data-ui-sref="category"
+                                ng-disabled="vm.flags.uploadingFavicon || vm.flags.uploadingLogo"
+                        >Cancelar
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect" ng-click="vm.guardarCategoria()"
+                                ng-disabled="vm.flags.uploadingFavicon || vm.flags.uploadingLogo">Guardar
+                            Categoría
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card wrapper-category">
+
+                <div class="card-header"></div>
+
+                <div class="card-body card-padding" bs-loading-overlay>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-md-4">
+                            <div class="form-group fg-float m-b-30">
+                                <div class="fg-line">
+                                    <input type="text" class="input-sm form-control fg-input"
+                                           ng-model="vm.categoria.name">
+                                    <label class="fg-label">Nombre (*)</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <p class="c-black f-500 m-t-20 m-b-20">Estado:(*)</p>
+
+                                <div class="radio">
+                                    <label class="radio radio-inline">
+                                        <input type="radio" class="radio-inline" ng-model="vm.categoria.status"
+                                               ng-value="1"/>
+                                        <i class="input-helper"></i> Activo
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" class="radio-inline" ng-model="vm.categoria.status"
+                                               ng-value="0"/>
+                                        <i class="input-helper"></i> Inactivo
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <p class="c-black f-500 m-t-20 m-b-20">Logo:(*)</p>
+
+                                <div class="fileinput fileinput-new">
+                                    <button class="btn btn-info btn-file btn-sm" ngf-select
+                                            ng-model="vm.file_image_logo"
+                                            name="myImage"
+                                            ngf-pattern="'image/*'"
+                                            ngf-accept="'image/*'"
+                                            id="fileInput" ngf-min-height="300"
+                                            ngf-change="vm.UploadImageLogo(vm.file_image_logo)"
+                                            ng-disabled="vm.file_image_logo">
+                                        Seleccionar imagen
+                                    </button>
+                                    <span href="#" class="btn btn-danger btn-sm" ng-click="vm.clearImageLogo()"
+                                          ng-show="vm.file_image_logo">Descartar imagen</span>
+                                </div>
+
+                                <div ngf-drop ng-model="vm.file_image_logo" ngf-pattern="image/*" class="cropArea">
+                                    <img-crop area-type="rectangle" image="vm.file_image_logo  | ngfDataUrl"
+                                              area-coords="vm.categoria.croppedLogo"
+                                              area-init-size="{ w:vm.categoria.croppedLogo.cropWidth,h:vm.categoria.croppedLogo.cropHeight}"
+                                              result-image="vm.croppedImageLogoDataUrl"
+                                              cropject="vm.categoria.dimensions_logo"
+                                              init-max-area="true"></img-crop>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <div class="form-group">
+                                <p class="c-black f-500 m-t-20 m-b-20">Favicon:(*)</p>
+
+                                <div class="fileinput fileinput-new">
+                                    <button class="btn btn-info btn-file btn-sm" ngf-select
+                                            ng-model="vm.file_image_favicon"
+                                            name="myImage"
+                                            ngf-pattern="'image/*'"
+                                            ngf-accept="'image/*'"
+                                            ngf-min-height="300"
+                                            ngf-change="vm.UploadImageFavicon(vm.file_image_favicon)"
+                                            ng-disabled="vm.file_image_favicon">
+                                        Seleccionar imagen
+                                    </button>
+                                    <span href="#" class="btn btn-danger btn-sm" ng-click="vm.clearImageFavicon()"
+                                          ng-show="vm.file_image_favicon">Descartar imagen</span>
+                                </div>
+
+                                <div ngf-drop ng-model="vm.file_image_favicon" ngf-pattern="image/*"
+                                     class="cropArea">
+                                    <img-crop area-type="rectangle" image="vm.file_image_favicon  | ngfDataUrl"
+                                              area-coords="vm.categoria.croppedFavicon"
+                                              area-init-size="{ w:vm.categoria.croppedFavicon.cropWidth,h:vm.categoria.croppedFavicon.cropHeight}"
+                                              cropject="vm.categoria.dimensions_favicon"
+                                              result-image="vm.croppedImageFaviconDataUrl"
+                                              init-max-area="true"></img-crop>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+
+                            <div class="form-group fg-line">
+                                <p class="c-black f-500 m-t-20 m-b-20">Buscar Subcategorías:(*)</p>
+                                <!--<input type="text" class="form-control input-sm" ng-model="vm.subcategory"/>-->
+                                <div angucomplete-alt id="_aucpl1" class=""
+                                     maxlength="50"
+                                     pause="0"
+                                     selected-object="vm.onSelectSubCategory"
+                                     local-data="vm.listSubcategorys"
+                                     search-fields="name"
+                                     title-field="name"
+                                     minlength="1"
+                                     input-class="form-control form-control-small"
+                                     match-class="highlight"
+                                     clear-selected="true"
+                                     text-searching="Buscando sugerencias"
+                                     text-no-results="No hay sugerencias. Presione enter para agregar de todas formas."
+                                     override-suggestions="true"></div>
+                            </div>
+
+                            <div class="form-horizontal" ng-show="false">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-vmiddle table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-show="vm.categoria.subcategories.length==0 || vm.categoria.subcategories == undefined">
+                                                    <td class="text-center" colspan="2">No existen categorías</td>
+                                                </tr>
+                                                <tr ng-repeat="item in vm.categoria.subcategories | orderBy:'name':reverse track by $index">
+                                                    <td>{{item.name}}</td>
+                                                    <td>
+                                                        <div class="pull-right">
+                                                            <button ng-click="vm.removeSubCategory(item)" title="Borrar"
+                                                                    class="btn btn-danger btn-icon waves-effect waves-circle m-l-30">
+                                                                <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="listview lv-bordered lv-long">
+                                <div class="lv-body">
+                                    <div class="lv-item media"
+                                         ng-show="vm.categoria.subcategories.length==0 || vm.categoria.subcategories == undefined">
+                                        <div class="checkbox pull-left">
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="lv-title text-center">No existen categorías</div>
+                                        </div>
+                                    </div>
+                                    <div class="lv-item media"
+                                         ng-repeat="item in vm.categoria.subcategories | orderBy:'name':reverse track by $index">
+                                        <div class="checkbox pull-left">
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="lv-title">{{item.name}}</div>
+
+                                            <div class="lv-actions actions dropdown" uib-dropdown>
+                                                <a href="" ng-click="vm.removeSubCategory(item)">
+                                                    <i class="zmdi zmdi-delete zmdi-hc-fw"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+
+<footer id="footer" data-ng-include src="'template/footer.html'"></footer>
+
+
