@@ -39,7 +39,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     zonaSelected:'',
     caduca:false,
     publica:true,
-    myImage: undefined
+    myImage: undefined,
+    precioDefault:'12'
   };
 
   //$scope.cropped = [{w: 200, h: 80}];
@@ -474,7 +475,7 @@ function modalInstancesZones() {
       console.log('Haber '+angular.toJson(data, true));      
   });
   */
-  //if ($scope.turnos.turnoSelected.indexOf(fruit) != -1) return;
+
   $scope.addTurno = function(){
 
     var cantidadSel=$scope.turnos.turnoSelected.length;
@@ -533,35 +534,39 @@ function modalInstancesZones() {
 
 })
 
-.controller('ZoneInstanceCtrl', function($scope,$uibModal,$modalInstance,$filter,content) {
+.controller('ZoneInstanceCtrl', function($rootScope,$scope,$uibModal,$modalInstance,$filter,content) {
 
-  $scope.itemTables = [];
-
+  $rootScope.itemTables = []; //Usar Servicio
   $scope.listZones = content;
-  console.log($scope.listZones);
-
+  //console.log($scope.listZones);
+  
  
 /***************Funcion ejecutada por directiva****************/
   
   $scope.activarTableOptions = function(index,data){
 
     var numero=$scope.itemTables.length;
+
     if(numero>0){
-      var index = $scope.itemTables.indexOf(data);
+      var index = $rootScope.itemTables.indexOf(data);
       if (index > -1) {
-        $scope.itemTables.splice(index, 1);
+        $rootScope.itemTables.splice(index, 1);
       }else{
-        $scope.itemTables.push(data);
+        $rootScope.itemTables.push(data);
       }
     }else{
-      $scope.itemTables.push(data);
+      $rootScope.itemTables.push(data);
     }
-    console.log('Seleccionados: '+angular.toJson($scope.itemTables, true));
+    //console.log('Seleccionados: '+angular.toJson($scope.itemTables, true));
 
   };
   
   $scope.addPrecio = function () {
-    modalInstancesPrices()
+    if($rootScope.itemTables.length>0){
+      modalInstancesPrices();
+    }else{
+      messageAlert("Añadir precio","Debe seleccionar al menos una mesa","warning");
+    }
   };
 
   function modalInstancesPrices() {
@@ -581,12 +586,65 @@ function modalInstancesZones() {
     $modalInstance.dismiss('cancel');
   };
 
+  $scope.desactivarTable = function (index,data) {
+    modalInstancesdesactivaPrices(data);
+  }
+  function modalInstancesdesactivaPrices(data) {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentdesactivaPrice.html',
+      controller: 'DesactivaPriceInstanceCtrl',
+      size: 'sm',
+      resolve: {
+        content: function () {
+          return data;
+        }
+      }
+    });
+  }
+  
+
 })
 
-.controller('PriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
+.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content) {
   $scope.itemTables = content;
+  $scope.precioDefault = "";
+
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
+  };
+  $scope.savePrecio = function () {
+    if($scope.precioDefault==""){
+      messageAlert("Añadir precio","Debe ingresar precio para mesas selecionadas","warning");
+    }else{
+      angular.forEach($scope.itemTables, function(objeto) {
+        objeto.precio=$scope.precioDefault;          
+      });
+      $rootScope.itemTables=[];
+      $modalInstance.close();
+      //console.log('Seleccionados '+ angular.toJson($scope.itemTables, true));
+    }
+  };
+  $scope.deleteTable = function (item,index) {
+    //$rootScope.itemTables.splice(index, 1);
+    //var idelemento='#el'+$scope.itemTables[index].id;
+    //angular.element(idelemento).removeClass('selected-table');
+    $scope.itemTables.splice(index, 1);
+    //console.log(idelemento);
+  };
+
+  
+
+})
+
+.controller('DesactivaPriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
+  $scope.itemPrices = content;
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.cleanPrecio = function () {
+    var indexforma=$scope.itemPrices.precio="";
+    $modalInstance.close();
+    $scope.itemPrices=[];
   };
 
 });

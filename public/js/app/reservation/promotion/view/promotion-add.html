@@ -231,9 +231,9 @@
         <tab ng-repeat="tab in listZones" heading="{{tab.title}}" active="tab.active">
             <div class="zoneArea minheight" style="position:relative;">
 
-                <div ng-select-table ng-repeat="obj in tab.formas" ng-class="obj.precio!='' ? 'definite-table border {{obj.shape}} {{obj.size}}':'border {{obj.shape}} {{obj.size}}'"  x="{{obj.left}}" y="{{obj.top}}" on-click-fn="activarTableOptions($index,obj)" >
+                <div ng-select-table ng-repeat="obj in tab.formas" ng-class="obj.precio!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}}':'item-active-table border {{obj.shape}} {{obj.size}}'"  x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.id}}">
                     <div class="txtcenter">{{obj.content}}</div>
-                    <div class="txtmoneda">{{obj.precio}}</div>
+                    <div class="txtmoneda" ng-show="obj.precio">{{obj.precio | currency:"S/.":2}} </div>
                 </div>
                 
             </div>
@@ -267,7 +267,7 @@
                                 <i class="zmdi zmdi-more-vert"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a ng-click="deleteTable($index)">Eliminar</a></li>
+                                <li><a ng-click="deleteTable(item,$index)">Eliminar</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -291,13 +291,40 @@
         <div class="text-center">
             <div class="form-group fg-float m-b-30">
                 <div class="fg-line">
-                    <input type="text" class="input-sm form-control fg-input" ng-model="mesas.precio">
+                    <input type="text" class="input-sm form-control fg-input" ng-model="precioDefault">
                     <label class="fg-label">Precio</label>
                 </div>
             </div>
 
-            <button class="btn btn-primary btn-icon-text waves-effect" ng-click="addPrecio()">Guardar</button>
+            <button class="btn btn-primary btn-icon-text waves-effect" ng-click="savePrecio()">Guardar</button>
             <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+        </div>
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+
+    </div>
+</script>
+
+<script type="text/ng-template" id="myModalContentdesactivaPrice.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Eliminar</h4>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <div class="media">
+               
+                <div>
+                    <div class="lv-title">
+                        <div>¿Desea eliminar el precio de la mesa?</div>
+                    </div>
+                </div>
+
+            </div>     
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-primary btn-icon-text waves-effect" ng-click="cleanPrecio()">Si</button>
+            <button class="btn btn-warning" ng-click="cancel()">No</button>
         </div>
         <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
 
