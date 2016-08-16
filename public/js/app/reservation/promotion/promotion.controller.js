@@ -22,7 +22,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     estados:[{name:'Activo',value:1},{name:'Inactivo',value:0}],
     estadoSelected:{value:1},
     //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
-    //tipoSelected:{name:'Gratis',type_event_id:3},
+    //tipoSelected:{name:'Gratis',type_event_id:3},//comentario
     descripcion:" ",
     zonas:[
       {id:1,title:'Zona01',formas:[
