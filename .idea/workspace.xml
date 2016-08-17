@@ -2,17 +2,192 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ef89a5c-92e7-4301-a6fd-89a2c4da4541" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/angular.min.js.gzip" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/icons/search-2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Http/Middleware/Cors.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/angular-sortable.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/angular-sortable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/app.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/dist/css/angular-sortable.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/dist/js/angular-sortable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/dist/js/angular-sortable.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/included-file.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/bower_overrides.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/karma.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/libs/jquery.simulate.dragandrevert.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.e2e.callbacks.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.e2e.directives.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.e2e.multi.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.e2e.nested.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.e2e.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.test-directives.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.test-helper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/sortable.tests.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular-sortable/test/spec/sortable.spec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/angular-csp.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/angular.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/angular.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/angular.min.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/angular/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/MIT-LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/dist/jquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/dist/jquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/dist/jquery.min.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/jsonp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/load.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/parseJSON.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/parseXML.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/script.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/var/nonce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/var/rquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/ajax/xhr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes/attr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes/classes.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes/prop.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes/support.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/attributes/val.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/callbacks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core/access.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core/init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core/parseHTML.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core/ready.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/core/var/rsingleTag.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/addGetHookIf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/curCSS.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/defaultDisplay.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/hiddenVisibleSelectors.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/support.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/swap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/var/cssExpand.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/var/getStyles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/var/isHidden.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/var/rmargin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/css/var/rnumnonpx.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/data.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/data/Data.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/data/accepts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/data/var/data_priv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/data/var/data_user.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/deferred.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/deprecated.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/dimensions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/effects.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/effects/Tween.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/effects/animatedSelector.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/event.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/event/ajax.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/event/alias.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/event/support.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/exports/amd.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/exports/global.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/intro.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/jquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/manipulation.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/manipulation/_evalUrl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/manipulation/support.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/manipulation/var/rcheckableType.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/offset.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/outro.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/queue.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/queue/delay.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/selector-native.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/selector-sizzle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/selector.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/serialize.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/sizzle/dist/sizzle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/sizzle/dist/sizzle.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/sizzle/dist/sizzle.min.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/traversing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/traversing/findFilter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/traversing/var/rneedsContext.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/arr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/class2type.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/concat.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/hasOwn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/indexOf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/pnum.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/push.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/rnotwhite.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/slice.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/strundefined.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/support.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/var/toString.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/jquery/src/wrap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/Gruntfile.coffee" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/src/infinite-scroll.coffee" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/lib/angular-mocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/lib/angular.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/lib/jquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/lib/sinon-chai.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/lib/sinon.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/test_infinite_scroll.coffee" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/ngInfiniteScroll/test/testacular.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/reservation/promotion/view/promotion-list.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/tables/guest/guest.config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/tables/guest/guest.controller.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/tables/guest/guest.directive.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/tables/guest/guest.service.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/tables/guest/view/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/dist.app/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/angular-local-storage.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/angular.editInPlace.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/angular.ngEnter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/bootstrap.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/jquery-ui.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/dragdrop/sortable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/library/bower_components/infinite-scroll/ng-infinite-scroll.min.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/app/app.config.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/master/app.bookersnap.library.master.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/master/app.bookersnap.master.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/reservation/app.bookersnap.library.reservation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/reservation/app.bookersnap.reservation.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/tables/app.bookersnap.library.tables.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/dist.app/tables/app.bookersnap.tables.min.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/library/angucomplete-alt" afterPath="$PROJECT_DIR$/public/library/angucomplete-alt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/master/category/view/category-create.html" afterPath="$PROJECT_DIR$/public/js/app/master/category/view/category-create.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/master/category/view/category-update.html" afterPath="$PROJECT_DIR$/public/js/app/master/category/view/category-update.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/master/category/view/index.html" afterPath="$PROJECT_DIR$/public/js/app/master/category/view/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/master/master.config.js" afterPath="$PROJECT_DIR$/public/js/app/master/master.config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/zone/zone.controller.js" afterPath="$PROJECT_DIR$/public/js/app/tables/zone/zone.controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/dist.app/master/app.bookersnap.master.min.js" afterPath="$PROJECT_DIR$/public/js/dist.app/master/app.bookersnap.master.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/theme/dist/app.level.min.js" afterPath="$PROJECT_DIR$/public/js/theme/dist/app.level.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/theme/templates.js" afterPath="$PROJECT_DIR$/public/js/theme/templates.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/dashboard/master/layout.blade.php" afterPath="$PROJECT_DIR$/resources/views/dashboard/master/layout.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/app/reservation/app.bookersnap.library.reservation.min.css" afterPath="$PROJECT_DIR$/public/css/app/reservation/app.bookersnap.library.reservation.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/reservation/gulpfile.js" afterPath="$PROJECT_DIR$/public/js/app/reservation/gulpfile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.config.js" afterPath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.controller.js" afterPath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.directive.js" afterPath="$PROJECT_DIR$/public/js/app/reservation/promotion/promotion.directive.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/reservation/promotion/view/promotion-add.html" afterPath="$PROJECT_DIR$/public/js/app/reservation/promotion/view/promotion-add.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/tables.config.js" afterPath="$PROJECT_DIR$/public/js/app/tables/tables.config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/turn.config.js" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/turn.config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/turn.controller.js" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/turn.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/turn.service.js" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/turn.service.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/view/index.html" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/view/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/view/turn-create.html" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/view/turn-create.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/tables/turn/view/turn-edit.html" afterPath="$PROJECT_DIR$/public/js/app/tables/turn/view/turn-edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/library/global/functions.js" afterPath="$PROJECT_DIR$/public/library/global/functions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/template/sidebar-left.html" afterPath="$PROJECT_DIR$/public/template/sidebar-left.html" />
     </list>
     <ignored path="web.aplication.bookersnap.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -477,6 +652,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dist.app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1374,7 +1553,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>

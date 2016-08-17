@@ -58,14 +58,23 @@ angular.module('promotion.directive', [])
       left: left + 'px',
     });
 
+
     element.on('click',function(event){
 
       event.preventDefault();
-      scope.onClickFn();
-      if (this.classList.contains('selected-table')) {
+
+      if(this.classList.contains('definite-table')== true){
+        //console.log('Desea eliminar precio precio de mesa');
         this.classList.remove('selected-table');
-      } else {
-        this.classList.add('selected-table');
+        scope.onDeselectFn();
+      }else{
+        
+        if (this.classList.contains('selected-table')) {
+          this.classList.remove('selected-table');
+        } else {
+          this.classList.add('selected-table');
+        }
+        scope.onSelectedFn();
       }
     });
   }
@@ -73,7 +82,8 @@ angular.module('promotion.directive', [])
   return {
     link: makeSelectTable,
     scope: {
-      onClickFn :  '&'
+      onSelectedFn : '&',
+      onDeselectFn : '&'
     }
   };
 
