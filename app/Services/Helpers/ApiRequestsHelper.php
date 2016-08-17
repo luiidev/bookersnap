@@ -15,11 +15,11 @@ use GuzzleHttp\Exception\RequestException;
 class ApiRequestsHelper
 {
 
-    public static function SendRequest(string $method, string $url, array $headers = null, $data)
+    public static function SendRequest(string $method, string $url, array $headers = null, $data = null)
     {
         $response = null;
         $client = new Client();
-        $json = json_encode($data);
+        $json = (is_null($data)?null:json_encode($data));
         $http_headers = [
             'content-type' => 'application/json'
         ];

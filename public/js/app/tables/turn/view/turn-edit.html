@@ -6,7 +6,7 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container" ng-controller="TurnCreateCtrl">
+        <div class="container">
             <div class="block-header" style="padding-bottom: 15px">
                 <ul class="actions">
                     <li>
@@ -19,7 +19,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                <h2>Edit Turn<small></small></h2>
+                <h2>Editar Turno<small></small></h2>
                 </div>
 
                 <div class="card-body card-padding">
@@ -27,31 +27,31 @@
                         <div class="row">
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Name</label>
+                                    <label>Nombre</label>
                                     <input  type="text" class="form-control input-sm" placeholder="Name" ng-model="turnData.name" required>
                                 </div>
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Hour ini</label>
-                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hour_ini" step="900" required >
+                                    <label>Hora inicio</label>
+                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hours_ini" step="900" required >
                                 </div>
 
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Hour end</label>
-                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hour_end" step="900" required>
+                                    <label>Hora cierre</label>
+                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hours_end" step="900" required>
                                 </div>   
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Shift</label>
+                                    <label>Tipo turno</label>
                                     <div class="select">
-                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type"></select>
+                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type_turn"></select>
                                     </div>
                                 </div>   
                             </div>

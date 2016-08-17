@@ -2,20 +2,23 @@ angular.module('turn.service', [])
 .factory('TurnFactory',function($http,ApiUrl,ApiUrlRoot){
 	return {
 		getTurns: function(){
-			return $http.get(ApiUrl+"/turn");
+			return $http.get(ApiUrl+"/turns");
 		},
 		getTurn : function(vTurn){
-			return $http.get(ApiUrl+"/turn/"+vTurn);
+			return $http.get(ApiUrl+"/turns/"+vTurn);
 		},
 		createTurn : function(vData){
-			return $http.post(ApiUrl+"/turn",vData);
+			return $http.post(ApiUrl+"/turns",vData);
 		},
 		updateTurn : function(vData){
-			return $http.put(ApiUrl+"/turn/"+vData.id,vData);
+			return $http.put(ApiUrl+"/turns/"+vData.id,vData);
 		},
 		getTurnsAvailables: function(vDate){
-			return $http.get(ApiUrl+"/turn/"+vDate+"/availables");
+			return $http.get(ApiUrl+"/turns/"+vDate+"/availables");
 		},
+		searchTurn : function(vData){
+			return $http.get(ApiUrl+"/turns/search?"+vData);
+		}
 	};
 })
 .factory('TypeTurnFactory',function($http,ApiUrl,ApiUrlRoot){
@@ -29,6 +32,15 @@ angular.module('turn.service', [])
 		}
 
 	};
+
+})
+.factory('DateFactory',function($http,$filter){
+
+	return {
+		timeFormat : function(time){
+			return $filter('date')(time,'HH:mm:ss');
+		}
+	}
 
 })
 ;

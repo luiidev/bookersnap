@@ -41,7 +41,7 @@
         <p class="f-500 c-black m-b-10">Turno</p>
         <div class="form-group">
             <div class="fg-line">
-            <button class="btn btn-primary btn-icon-text" ng-click="openModal('lg')"><i class="zmdi zmdi-apps"></i> Intervalos de promocion</button>
+            <button class="btn btn-primary btn-icon-text" ng-click="openModal('lg')"><i class="zmdi zmdi-apps"></i> Horarios de promocion</button>
             </div>
         </div>
 
@@ -70,17 +70,26 @@
         </div>
         </div>
 
-        <p class="c-black f-500 m-b-20">Tipo de promocion</p>
-        <label class="radio radio-inline m-b-30" ng-repeat="tipo in promotion.tipos">
+        <p class="c-black f-500">Tipo de promocion</p>
+        <label class="radio radio-inline" ng-repeat="tipo in promotion.tipos">
             <input type="radio" ng-model="promotion.tipoSelected.type_event_id" name="tipo" ng-value="{{tipo.type_event_id}}">
             <i class="input-helper"></i>
             {{tipo.name}}
         </label>
 
-        <div class="m-b-20" ng-show="promotion.tipoSelected.type_event_id == '4'">
+        <div ng-show="promotion.tipoSelected.type_event_id == '4'">
+        <!--
             <p class="f-500 c-black m-b-15">Zona disponible</p>
-            <select chosen multiple ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100" ng-change="invocarZonas(z.id)">
+            <select chosen ng-model="promotion.zonaSelected" ng-options="z as z.title for z in promotion.zonas track by z.id" class="w-100" ng-change="invocarZonas(promotion.zonaSelected)">
             </select>
+        -->    
+            <br>
+            <div class="form-group">
+                <div class="fg-line">
+                <button class="btn btn-primary btn-icon-text" ng-click="invocarZonas()"><i class="zmdi zmdi-apps"></i> Zonas disponibles</button>
+                </div>
+            </div>
+
         </div>
 
         <p class="c-black f-500 m-b-20 m-t-20">Estado de promocion</p>
@@ -116,96 +125,208 @@
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
-                <div class="modal-header">
-                    <h4 class="modal-title">Crear turnos</h4>
-                    <p>Definir horarios en que se aplicara la promocion</p>
+    <div class="modal-header">
+        <h4 class="modal-title">Crear turnos</h4>
+        <p>Definir horarios en que se aplicara la promocion</p>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="ng-pristine ng-valid" name="turnoFrm">
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+
+                    <div class="radio m-b-15" ng-repeat="disposicion in turnos.disposiciones">
+                        <label>
+                            <input type="radio" ng-model="turnos.disposicionSelected.id" name="disposicion" ng-value="{{disposicion.id}}">
+                            <i class="input-helper"></i>
+                            {{disposicion.name}}
+                        </label>
+                    </div>
+
                 </div>
-                <div class="modal-body">
-                <form role="form" class="ng-pristine ng-valid" name="turnoFrm">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12">
 
-                            <div class="radio m-b-15" ng-repeat="disposicion in turnos.disposiciones">
-                                <label>
-                                    <input type="radio" ng-model="turnos.disposicionSelected.id" name="disposicion" ng-value="{{disposicion.id}}">
-                                    <i class="input-helper"></i>
-                                    {{disposicion.name}}
-                                </label>
-                            </div>
+                <div ng-show="turnos.disposicionSelected.id==2">
 
-                        </div>
-
-                        <div ng-show="turnos.disposicionSelected.id==2">
-
-                        <div class="col-xs-12 col-md-12">
+                    <div class="col-xs-12 col-md-12">
                         <div class="checkbox m-b-15">
                             <label class="m-r-5 m-b-10" ng-repeat="dia in turnos.semana">
                                 <input type="checkbox" value="{{dia.id}}" ng-model="turnos.turnoSelected[$index]" ng-disabled="dia.disabled" ng-checked="dia.checked">
                                 <i class="input-helper"></i> {{dia.label}}
                             </label>
                         </div>
-                        </div>
+                    </div>
 
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group fg-line">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group fg-line">
                             <label>Hora inicio</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini" required>
-                            </div>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini">
                         </div>
+                    </div>
 
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group fg-line">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group fg-line">
                             <label>Hora final</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end" required>
-                            </div>
+                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end">
                         </div>
+                    </div>
 
-                        <button class="btn btn-primary btn-icon-text waves-effect pull-right" ng-click="addTurno()"><i class="zmdi zmdi-plus"></i> Añadir</button>
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-icon-text waves-effect" ng-click="addTurno()"><i class="zmdi zmdi-plus"></i> Añadir</button>
+                    </div>
 
-                        <div id="resultados" ng-show="existeTurno">
-                            <div class="lv-header">
-                                Turnos añadidos
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="tl-body">
-                                <div class="media" ng-repeat="turno in listTurnos track by $index">
-                                    <div class="pull-right">
-                                        <ul class="actions">
-                                            <li class="dropdown" uib-dropdown>
-                                                <a href="" uib-dropdown-toggle>
-                                                    <i class="zmdi zmdi-more-vert"></i>
-                                                </a>
-
-                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                    <li><a ng-click="deleteTurno($index)">Eliminar</a></li>
-                                                    <!--<li><a href="">Modificar</a></li>-->
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="lv-title" ng-repeat="dia in turno.dias">
-                                            <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <small class="lv-small">{{turno.hinicio | date:'h:mma'}} - {{turno.hfinal}}</small>
-                                    </div>
-
+                    <div id="resultados" ng-show="existeTurno">
+                        <div class="lv-header">
+                            Turnos añadidos
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="tl-body">
+                            <div class="media" ng-repeat="turno in listTurnos track by $index">
+                                <div class="pull-right">
+                                    <ul class="actions">
+                                        <li class="dropdown" uib-dropdown>
+                                            <a href="" uib-dropdown-toggle>
+                                                <i class="zmdi zmdi-more-vert"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li><a ng-click="deleteTurno($index)">Eliminar</a></li>
+                                                <!--<li><a href="">Modificar</a></li>-->
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </div>
-                                
+                                <div class="media-body">
+                                    <div class="lv-title" ng-repeat="dia in turno.dias">
+                                        <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <small class="lv-small">{{turno.hinicio | date:'h:mma'}} - {{turno.hfinal}}</small>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div> 
+        </form>
+
+
+    </div>
+    <div class="modal-footer">
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+        <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="myModalContentZone.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Zonas disponibles</h4>
+        <p>Seleccione sus mesas y añada un precio</p>
+    </div>
+    <div class="modal-body">
+        <tabset justified="true">
+        <tab ng-repeat="tab in listZones" heading="{{tab.title}}" active="tab.active">
+            <div class="zoneArea minheight" style="position:relative;">
+
+                <div ng-select-table ng-repeat="obj in tab.formas" ng-class="obj.precio!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}}':'item-active-table border {{obj.shape}} {{obj.size}}'"  x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.id}}">
+                    <div class="txtcenter">{{obj.content}}</div>
+                    <div class="txtmoneda" ng-show="obj.precio">{{obj.precio | currency:"S/.":2}} </div>
+                </div>
+                
+            </div>
+            
+          </tab>
+      </tabset>                
+  </div>
+  <div class="modal-footer">
+    <div class="text-center" style="position:relative;">
+        <button class="btn btn-primary btn-icon-text waves-effect" ng-click="addPrecio()"><i class="zmdi zmdi-plus"></i> Añadir precio</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+    </div>
+    <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+    
+</div>
+</script>
+
+
+<script type="text/ng-template" id="myModalContentPrice.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Mesas seleccionadas</h4>
+        <p>Ingresar precio para la lista de mesas</p>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <div class="media"  ng-repeat="item in itemTables">
+                <div class="pull-right">
+                    <ul class="actions">
+                        <li class="dropdown" uib-dropdown>
+                            <a href="" uib-dropdown-toggle>
+                                <i class="zmdi zmdi-more-vert"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a ng-click="deleteTable(item,$index)">Eliminar</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="lv-title">
+                        <div> {{item.name}} 
+                            <div class="zoneArea pull-right">
+                                <div class="border {{item.shape}} {{item.size}}">
+                                    <div class="txtcenter">{{item.content}}</div>
+                                </div>
                             </div>
                         </div>
-
-
-                        </div>
-
-                    </div> 
-                </form>
-
-                
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
-                    <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+
+            </div>     
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <div class="form-group fg-float m-b-30">
+                <div class="fg-line">
+                    <input type="text" class="input-sm form-control fg-input" ng-model="precioDefault">
+                    <label class="fg-label">Precio</label>
                 </div>
+            </div>
+
+            <button class="btn btn-primary btn-icon-text waves-effect" ng-click="savePrecio()">Guardar</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+        </div>
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+
+    </div>
+</script>
+
+<script type="text/ng-template" id="myModalContentdesactivaPrice.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Eliminar</h4>
+    </div>
+    <div class="modal-body">
+        <div class="">
+            <div class="media">
+               
+                <div>
+                    <div class="lv-title">
+                        <div>¿Desea eliminar el precio de la mesa?</div>
+                    </div>
+                </div>
+
+            </div>     
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-primary btn-icon-text waves-effect" ng-click="cleanPrecio()">Si</button>
+            <button class="btn btn-warning" ng-click="cancel()">No</button>
+        </div>
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+
+    </div>
 </script>

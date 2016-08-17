@@ -155,13 +155,26 @@ class ImageService
      *   ...
      * ]
      */
-    public function ResizeImage(string $imageFullname, string $imageBasename, $baseFolder, $dimensions)
+    public function ResizeImage(string $imageFullname, string $imageBasename, $baseFolder, $dimensions, $cropcords = null, $canvasWidth = null, $saveBaseImg = true)
     {
-        $imageInstance = Image::make($this->_public_path . $imageFullname);
-        $imageInstance->backup();
-        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder);
+
+        $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder, true);
         $this->createDirectoryIfNoExists($this->_image_path . '/' . $baseFolder . '/image');
-        $imageInstance->save($this->_image_path . '/' . $baseFolder . '/' . $imageBasename);
+        $imageInstance = Image::make($this->_public_path . $imageFullname);
+        if($saveBaseImg){
+            $imageInstance->save($this->_image_path . '/' . $baseFolder . '/' . $imageBasename);
+        }
+
+        if (!is_null($cropcords)) {
+            $factor = $imageInstance->width() / $canvasWidth;
+            $x = round($cropcords['x'] * $factor);
+            $y = round($cropcords['y'] * $factor);
+            $w = round($cropcords['w'] * $factor);
+            $h = round($cropcords['h'] * $factor);
+            $imageInstance->crop($w, $h, $x, $y);
+        }
+        $imageInstance->backup();
+
         foreach ($dimensions as $dimension) {
             $imageInstance->reset();
             $imageInstance = $this->resizeImageInMemory($imageInstance, $dimension['size'], true, $dimension['side-to-resize']);
@@ -184,14 +197,16 @@ class ImageService
     //---------------------------------------------
     // PRIVATE FUNCTIONS
     //---------------------------------------------
-    private function createDirectoryIfNoExists($path)
+    private function createDirectoryIfNoExists($path, $createGitIgnore = false)
     {
         if (!File::exists($path)) {
             File::makeDirectory($path);
-            $contents = '*';
-            $contents .= "\n";
-            $contents .= '!.gitignore';
-            File::put($path . "\\.gitignore", $contents);
+            if ($createGitIgnore) {
+                $contents = '*';
+                $contents .= "\n";
+                $contents .= '!.gitignore';
+                File::put($path . "\\.gitignore", $contents);
+            }
         }
 
     }

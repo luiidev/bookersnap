@@ -20,6 +20,15 @@ angular.module('zone.service', [])
 
 })
 
+.factory('ZoneTurnFactory',function($http,ApiUrl){
+	
+	/*return {
+		create : function(vData){
+
+		}
+	}*/
+})
+
 .factory('ZoneLienzoFactory',function(){
 	return {
 		activarTablesItems : function(boxTables){

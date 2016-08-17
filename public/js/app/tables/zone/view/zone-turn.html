@@ -14,7 +14,7 @@
                 <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
               </li>
               <li>
-                <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">Create New Turn</button>
+                <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">Create Turn</button>
               </li>
             </ul>
           </div>
@@ -26,30 +26,7 @@
 
               <div class="pm-body clearfix list-table">
 
-                <div class="card-body table-responsive">
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th ng-repeat="item in typeTurns">
-                          {{ item.name}}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="item in days">
-                        <td> {{ item.label}}</td>
-                        <td ng-repeat="data in typeTurns" >
-                            <label class="label label-default"> Turn select</label>
-
-                            <!--<label ng-repeat="item in turns | filter: data.id:strict">{{ item.name}}</label>-->
-                            <label ng-repeat="item in getTurnsByType(data.id)">{{ item.name}}</label>
-                             <!--<select ng-options="item as item.label for item in coversList.dataMax track by item.id" ng-model="coversList.selectedMax" class="form-control" ng-change=""></select>-->
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+          fdfd
               </div>
       	</div>
         </div>

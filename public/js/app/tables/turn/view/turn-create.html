@@ -6,20 +6,20 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container" ng-controller="TurnCreateCtrl">
+        <div class="container">
             <div class="block-header" style="padding-bottom: 15px">
                 <ul class="actions">
                     <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
+                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create')">Save New Turn</button>
+                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create')">Crear turno</button>
                     </li>
                 </ul>
             </div>
             <div class="card">
                 <div class="card-header">
-                <h2>New Turn<small></small></h2>
+                <h2>Nuevo Turno<small></small></h2>
                 </div>
 
                 <div class="card-body card-padding">
@@ -27,40 +27,42 @@
                         <div class="row">
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Name</label>
+                                    <label>Nombre</label>
                                     <input  type="text" class="form-control input-sm" placeholder="Name" ng-model="turnData.name" required>
                                 </div>
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Hour ini</label>
-                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hour_ini" required>
+                                    <label>Hora inicio</label>
+                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hours_ini" step="900" required>
                                 </div>
 
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Hour end</label>
-                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hour_end" required>
+                                    <label>Hora cierre</label>
+                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hours_end" step="900"required>
                                 </div>   
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
-                                    <label>Shift</label>
+                                    <label>Tipo turno</label>
                                     <div class="select">
-                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type" <!--ng-change="getDaysTypeTurn()"--> ></select>
+                                        <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnData.type_turn" <!--ng-change="getDaysTypeTurn()"--> ></select>
                                     </div>
                                 
                                 </div>   
                             </div>
                         </div>
+
                         <!--
+                        
                         <div class="row">
                             <div class="col-xs-12">
-                                <p class="c-black f-500 m-b-20">Selected Days</p>
+                                <p class="c-black f-500 m-b-20">Seleccionar dias</p>
                             </div>
                             <div class="col-xs-12">
                                <label class="checkbox checkbox-inline m-r-20" ng-repeat="dayItem in days">
@@ -69,7 +71,37 @@
                                 </label>
 
                             </div>
-                        </div>-->
+                        </div>
+                       
+                        <hr>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="c-black f-500 m-b-20">Lista de turnos creados</p>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo turno</th>
+                                        <th>Horas</th>
+                                        <th>Dias</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in turnsList">
+                                        <td>{{ item.type_turn.name }}</td>
+                                        <td>{{ item.hours_ini }} - {{ item.hours_end }}</td>
+                                        <td>{{ item.days_short}}</td>
+                                        <td>
+                                            <button type="button" class="btn bgm-deeporange waves-effect"><i class="zmdi zmdi-edit"></i></button>
+                                            <button type="button" class="btn bgm-cyan waves-effect"><i class="zmdi zmdi-close"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        -->
                     </form>
                 </div>
             </div>

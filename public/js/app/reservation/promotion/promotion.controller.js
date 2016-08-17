@@ -170,13 +170,25 @@ angular.module('promotion.controller', ['infinite-scroll','ui.sortable','sortabl
     estados:[{name:'Activo',value:1},{name:'Inactivo',value:0}],
     estadoSelected:{value:1},
     //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
-    //tipoSelected:{name:'Gratis',type_event_id:3},
+    //tipoSelected:{name:'Gratis',type_event_id:3},//comentario
     descripcion:" ",
-    zonas:[{id:1,title:'Zona01'},{id:2,title:'Zona02'},{id:3,title:'Zona03'},{id:4,title:'Zona04'}],
-    zonaSelected:[2, 3],
+    zonas:[
+      {id:1,title:'Zona01',formas:[
+        {id:'1', name:'Zona01', shape:'round', size:'medium', top:'20', left:'20',content:'1-2',precio:''},
+        {id:'2', name:'Zona01', shape:'square', size:'medium', top:'20', left:'130',content:'1-2',precio:''},
+        {id:'3', name:'Zona01', shape:'round', size:'medium', top:'20', left:'230',content:'1-2',precio:''},
+        {id:'4', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'60',content:'3-4',precio:''},
+        {id:'5', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'170',content:'3-4',precio:''}
+      ]},
+      {id:2,title:'Zona02',formas:[{id:'6', name:'Zona02', shape:'round', size:'medium', top:'90', left:'60',content:'1-2',precio:''}]},
+      {id:3,title:'Zona03',formas:[{id:'7', name:'Zona03', shape:'recta', size:'medium', top:'150', left:'120',content:'3-4',precio:''}]},
+      {id:4,title:'Zona04',formas:[{id:'8', name:'Zona04', shape:'square', size:'medium', top:'110', left:'120',content:'3-4',precio:''}]}
+    ],
+    zonaSelected:'',
     caduca:false,
     publica:true,
-    myImage: undefined
+    myImage: undefined,
+    precioDefault:'12'
   };
 
   //$scope.cropped = [{w: 200, h: 80}];
@@ -308,9 +320,28 @@ angular.module('promotion.controller', ['infinite-scroll','ui.sortable','sortabl
 
 
   /********************************************/
-  $scope.invocarZonas=function(item){
-    alert(item);
-  }
+$scope.invocarZonas=function(item){
+  openModalZones();
+}
+
+var openModalZones = function () {
+  modalInstancesZones()
+}
+
+function modalInstancesZones() {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentZone.html',
+      controller: 'ZoneInstanceCtrl',
+      size: 'lg',
+      resolve: {
+        content: function () {
+          return $scope.promotion.zonas;
+        }
+      }
+    });
+} 
+
+
 
 
 })
@@ -592,6 +623,7 @@ angular.module('promotion.controller', ['infinite-scroll','ui.sortable','sortabl
       console.log('Haber '+angular.toJson(data, true));      
   });
   */
+
   $scope.addTurno = function(){
 
     var cantidadSel=$scope.turnos.turnoSelected.length;
@@ -648,4 +680,120 @@ angular.module('promotion.controller', ['infinite-scroll','ui.sortable','sortabl
     $modalInstance.dismiss('cancel');
   };
 
+})
+
+.controller('ZoneInstanceCtrl', function($rootScope,$scope,$uibModal,$modalInstance,$filter,content) {
+
+  $rootScope.itemTables = []; //Usar Servicio
+  $scope.listZones = content;
+  //console.log($scope.listZones);
+  
+ 
+/***************Funcion ejecutada por directiva****************/
+  
+  $scope.activarTableOptions = function(index,data){
+
+    var numero=$scope.itemTables.length;
+
+    if(numero>0){
+      var index = $rootScope.itemTables.indexOf(data);
+      if (index > -1) {
+        $rootScope.itemTables.splice(index, 1);
+      }else{
+        $rootScope.itemTables.push(data);
+      }
+    }else{
+      $rootScope.itemTables.push(data);
+    }
+    //console.log('Seleccionados: '+angular.toJson($scope.itemTables, true));
+
+  };
+  
+  $scope.addPrecio = function () {
+    if($rootScope.itemTables.length>0){
+      modalInstancesPrices();
+    }else{
+      messageAlert("Añadir precio","Debe seleccionar al menos una mesa","warning");
+    }
+  };
+
+  function modalInstancesPrices() {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentPrice.html',
+      controller: 'PriceInstanceCtrl',
+      size: 'sm',
+      resolve: {
+        content: function () {
+          return $scope.itemTables;
+        }
+      }
+    });
+  } 
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+  $scope.desactivarTable = function (index,data) {
+    modalInstancesdesactivaPrices(data);
+  }
+  function modalInstancesdesactivaPrices(data) {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'myModalContentdesactivaPrice.html',
+      controller: 'DesactivaPriceInstanceCtrl',
+      size: 'sm',
+      resolve: {
+        content: function () {
+          return data;
+        }
+      }
+    });
+  }
+  
+
+})
+
+.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content) {
+  $scope.itemTables = content;
+  $scope.precioDefault = "";
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.savePrecio = function () {
+    if($scope.precioDefault==""){
+      messageAlert("Añadir precio","Debe ingresar precio para mesas selecionadas","warning");
+    }else{
+      angular.forEach($scope.itemTables, function(objeto) {
+        objeto.precio=$scope.precioDefault;          
+      });
+      $rootScope.itemTables=[];
+      $modalInstance.close();
+      //console.log('Seleccionados '+ angular.toJson($scope.itemTables, true));
+    }
+  };
+  $scope.deleteTable = function (item,index) {
+    //$scope.itemTables.splice(index, 1);
+    //$rootScope.itemTables.splice(index, 1);
+    var idelemento='#el'+$scope.itemTables[index].id;
+    angular.element(idelemento).removeClass('selected-table');
+    console.log(idelemento);
+  };
+
+  
+
+})
+
+.controller('DesactivaPriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
+  $scope.itemPrices = content;
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.cleanPrecio = function () {
+    var indexforma=$scope.itemPrices.precio="";
+    $modalInstance.close();
+    $scope.itemPrices=[];
+  };
+
 });
+

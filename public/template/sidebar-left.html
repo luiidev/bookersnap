@@ -36,9 +36,11 @@
         <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
             <a href="" toggle-submenu><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Mesas</a>
              <ul>
-                <li> <a data-ui-sref="turn" data-ng-click="mactrl.sidebarStat($event)"> Turn</a>
+                <li> <a data-ui-sref="guest" data-ng-click="mactrl.sidebarStat($event)"> Huesped</a>
                 </li>
-                <li><a data-ui-sref="zone.active" data-ng-click="mactrl.sidebarStat($event)"> Zones</a>
+                <li> <a data-ui-sref="turn" data-ng-click="mactrl.sidebarStat($event)"> Turno</a>
+                </li>
+                <li><a data-ui-sref="zone.active" data-ng-click="mactrl.sidebarStat($event)"> Zonas</a>
                 </li>
                 <li> <a data-ui-sref="book" data-ng-click="mactrl.sidebarStat($event)"> Book</a>
                 </li>
