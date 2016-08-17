@@ -6,7 +6,12 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
 	    url: '/promotion',
         templateUrl: '/js/app/reservation/promotion/view/index.html',
         controller: 'PromotionCtrl',
-	})
+	}) 
+    .state ('promotion-list', {
+        url: '/promotion/list',
+        templateUrl: '/js/app/reservation/promotion/view/promotion-list.html',
+        controller: 'PromotionListCtrl',
+    })
 	.state ('add', {
 		url: '/promotion/add',
 		views: {

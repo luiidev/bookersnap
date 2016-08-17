@@ -28,6 +28,11 @@ gulp.task('app-bookersnap-reservation-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
+    '../../../library/bower_components/infinite-scroll/ng-infinite-scroll.min.js',
+    '../../../library/bower_components/dragdrop/jquery-ui.min.js',
+    '../../../library/bower_components/dragdrop/angular-local-storage.min.js',
+    '../../../library/bower_components/dragdrop/sortable.js',
+    '../../../library/bower_components/dragdrop/angular.editInPlace.js',
     '../../../library/bower_components/chosen/chosen.jquery.js',
     '../../../library/bower_components/angular-chosen-localytics/chosen.js',
     '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
@@ -36,7 +41,7 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/textAngular-1.5.0/dist/textAngular-sanitize.min.js',
     '../../../library/ngEmoticons-master/dist/ng-emoticons.min.js',
     '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
-    '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
+    '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js', 
     '../../../library/bower_components/nouislider/jquery.nouislider.min.js',
     '../../../library/bower_components/angular-farbtastic/angular-farbtastic.js',
     '../../../library/bower_components/autosize/dist/autosize.min.js',
