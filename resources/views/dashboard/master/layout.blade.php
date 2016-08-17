@@ -9,15 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bookersnap</title>
-
+    <link href="/css/theme/app.css" rel="stylesheet">
     <!-- Vendor CSS -->
     <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
     <!-- Library min CSS -->
-    <link href="/css/app/master/app.bookersnap.library.master.min.css" rel="stylesheet">
     <!-- CSS -->
     <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
     <!-- App Css -->
     <link href="/css/app/master/style-master.min.css" rel="stylesheet">
+    {{--<link href="http://byrushan.com/projects/ma/1-5-2/angular/css/app.min.1.css" rel="stylesheet">--}}
+    <style>
+
+    </style>
 
 </head>
 <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">

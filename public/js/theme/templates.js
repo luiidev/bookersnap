@@ -1,4 +1,4 @@
-/*angular.module('materialAdmin').run(['$templateCache', function($templateCache) {
+angular.module('materialAdmin').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('template/chat.html',
@@ -78,4 +78,6 @@
     "<div class=\"clearfix\"><ul class=\"tab-nav\" ng-class=\"{'tn-vertical': vertical, 'tn-justified': justified, 'tab-nav-right': right}\" ng-transclude></ul><div class=\"tab-content\"><div class=\"tab-pane\" ng-repeat=\"tab in tabs\" ng-class=\"{active: tab.active}\" tab-content-transclude=\"tab\"></div></div></div>"
   );
 
-}]);*/
+}]);
+
+

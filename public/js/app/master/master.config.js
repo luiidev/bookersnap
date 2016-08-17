@@ -4,5 +4,6 @@
 
 angular.module('master.app',
     [
-        'category.app'
+        'category.app',
+        'microsite.app'
     ]);
