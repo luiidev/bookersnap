@@ -629,9 +629,10 @@ function modalInstancesZones() {
     //$rootScope.itemTables.splice(index, 1);
     var idelemento='#el'+$scope.itemTables[index].id;
     angular.element(idelemento).removeClass('selected-table');
+    $scope.itemTables.splice(index, 1);
     console.log(idelemento);
   };
-
+  //comentario
   
 
 })
