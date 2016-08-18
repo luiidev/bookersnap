@@ -9,7 +9,9 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
 	})
 	.state ('add', {
 		url: '/promotion/add',
-		views: {
+        templateUrl: '/js/app/reservation/promotion/view/promotion-add.html',
+        controller: 'PromotionAddCtrl',
+		/*views: {
 			'': { templateUrl: '/js/app/reservation/promotion/view/add.html' },
     		'promotion@add': {
         		templateUrl: '/js/app/reservation/promotion/view/promotion-add.html',
@@ -19,7 +21,12 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
         		templateUrl: '/js/app/reservation/promotion/view/flyer-add.html',
                 controller: 'FlyerAddCtrl',
             }
-        }
+        }*/
+    })
+    .state ('edit', {
+        url: '/promotion/:id/edit',
+        templateUrl: '/js/app/reservation/promotion/view/promotion-edit.html',
+        controller: 'PromotionAddCtrl',
     });
 
     
