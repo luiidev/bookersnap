@@ -24,6 +24,16 @@ var getDaysWeek = function(){
     return days;
 };
 
+var getGender = function(){
+    var gender = [
+        {id : 'm', label : 'Masculino'},
+        {id : 'f', label : 'Femenino'},
+      
+    ];
+
+    return gender;
+};
+
 /*----------
 // Convierte un objeto json en url con sus propiedades
 {
