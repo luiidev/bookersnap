@@ -6,12 +6,13 @@
 
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-    <section id="content" ng-controller="PromotionListCtrl">
+    <section id="content" ng-controller="PromotionListCtrl" >
         <div class="container">
+        <div class="block-header">
+        <h2>Reservaciones y promociones <span class="red">{{flag ? '(Para poder  ordenar tiene que limpiar el filtro)':''}}</span></h2>
+        </div>
 
-         <div infinite-scroll='loadMore()' infinite-scroll-distance='2'>
-           <img ng-repeat='image in images' ng-src='http://placehold.it/225x250&text={{image}}'>
-         </div>
+        <div id="filter" ng-include="'/js/app/reservation/list-promo/promotion-filtro.html'"></div>
 
           <div class="card" id="turno-main">
             <div class="card-header">
@@ -35,17 +36,24 @@
                                   <tbody class="list-unstyled" ng-repeat="promocion in promociones track by $index" ui-sortable="todoSortable" ng-model="promociones" ng-show="$index === currentShow">
                                       <tr class="todoTask" ng-repeat="todo in promociones">
                                           <td>
-                                            <img src="http://www.megainsumos.com/grafix/logo_rosa_nautica.png" width="150" height="auto"> 
+                                            <img src="http://www.zonapunto.com.pe/wp-content/uploads/2015/09/zona-punto-rosa-nautica-logo.jpg" width="150" height="auto"> 
                                             <div class="clearfix"> 
                                               <div class="btn-group inline pull-rigth" data-toggle="buttons-checkbox"> 
-                                                <div class="btn btn-sm btn-danger" ng-show="!$first" ng-click="moveUp($index)">UP</div> 
-                                                <div class="btn btn-sm btn-success" ng-show="!$last" ng-click="moveDown($index)">DOWN</div> 
+                                                <div class="btn btn-sm btn-danger visible-xs visible-sm hidden-md hidden-lg" ng-show="!$first" ng-click="moveUp($index)">UP</div> 
+                                                <div class="btn btn-sm btn-success visible-xs visible-sm hidden-md hidden-lg" ng-show="!$last" ng-click="moveDown($index)">DOWN</div> 
                                               </div> 
                                             </div>
                                           </td>
                                           <td>{{todo.title}}</td>
                                           <td>{{todo.name}}</td>
-                                          <td>{{todo.fechadecaducidad}}</td>
+                                          <td>
+                                            <span ng-if="todo.status_expire === 1">
+                                              {{todo.fechadecaducidad}}
+                                            </span>
+                                            <span ng-if="todo.status_expire === 0">
+                                              NO CADUCA
+                                            </span>
+                                          </td>
                                           <td>
                                             <div class="toggle-switch" data-ts-color="blue"  >
                                                 <input id="ts{{todo.id}}" ng-model="todo.status" ng-checked="todo.status" type="checkbox" hidden="hidden" ng-click="estadoPromocion($index)">
@@ -54,6 +62,7 @@
                                           </td>
                                           <td>
                                             <button class="btn btn-success">Editar</button>
+                                            <button class="btn btn-error">Flyer</button>
                                             <button class="btn btn-warning"  ng-click="deleteTodo(todo)">Eliminar - {{todo.id}}</button>
                                           </td>
                                       </tr>
@@ -68,10 +77,3 @@
 </section>
 
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>
-<!-- 
-<tbody class="list-unstyled" ng-repeat="todos in model track by $index" ui-sortable="todoSortable" ng-model="todos.list" ng-show="$index === currentShow" >
-                                      <tr class="todoTask" ng-repeat="todo in todos.list| filter:showFn | filter :todoSearch ">
-                                          <td><edit-in-place value="todo.taskName"></edit-in-place></td>
-                                          <td>Zone 1</td>
-                                      </tr>
-                                  </tbody>
