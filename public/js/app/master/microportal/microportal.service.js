@@ -1,13 +1,13 @@
-angular.module('microsite.service', [])
+angular.module('microportal.service', [])
     //--------------------------------------
-    // SERVICIO LISTAR MICROSITIO
+    // SERVICIO MICROPORTALES
     //--------------------------------------
-    .factory('MicrositeService', function (Ajax) {
+    .factory('MicroportalService', function (Ajax) {
         var base_url = '/v1/es/master/ajax/';
         var api_admin_url = 'http://localhost:3000/v1/es/';
         return {
             GetPage: function ($data, $listener) {
-                var $url = base_url + 'microsite';
+                var $url = api_admin_url + 'microportal';
                 Ajax.Req('patch', $url, $data, $listener);
             },
             GetCountries: function ($listener) {
@@ -15,12 +15,6 @@ angular.module('microsite.service', [])
             },
             GetCities: function ($country_id, $listener) {
                 Ajax.Req('get', api_admin_url + 'country/' + $country_id + '/cities', null, $listener);
-            },
-            GetCategories: function ($listener) {
-                Ajax.Req('get', api_admin_url + 'category', null, $listener);
-            },
-            GetSubcategories: function ($category_id, $listener) {
-                Ajax.Req('get', api_admin_url + 'category/' + $category_id + '/subcategories', null, $listener);
             },
             GetScores: function ($listener) {
                 Ajax.Req('get', api_admin_url + 'scoretype', null, $listener);
@@ -31,15 +25,20 @@ angular.module('microsite.service', [])
             GetBsServices: function ($listener) {
                 Ajax.Req('get', api_admin_url + 'bs-services', null, $listener);
             },
-            CheckSitename: function ($sitename, $msType, $listener) {
-                var data = {
-                    sitename: $sitename,
-                    free: $msType
-                };
-                Ajax.Req('post', api_admin_url + 'microsite/sitename', data, $listener);
+            GetCategories: function ($listener) {
+                Ajax.Req('get', api_admin_url + 'category', null, $listener);
             },
-            SaveMicrosite: function ($data, $listener) {
-                Ajax.Req('post', base_url + 'microsite', $data, $listener);
+            GetSubcategories: function ($category_id, $listener) {
+                Ajax.Req('get', api_admin_url + 'category/' + $category_id + '/subcategories', null, $listener);
+            },
+            CheckSitename: function ($sitename, $listener) {
+                var data = {
+                    sitename: $sitename
+                };
+                Ajax.Req('post', api_admin_url + 'microportal/sitename', data, $listener);
+            },
+            SaveMicroportal: function ($data, $listener) {
+                Ajax.Req('post', base_url + 'microportal', $data, $listener);
             }
         }
     });

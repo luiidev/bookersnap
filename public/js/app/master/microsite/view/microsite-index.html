@@ -1,0 +1,57 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header.html'"
+        data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main" bs-loading-overlay>
+    <aside id="sidebar" data-ng-include src="'/template/sidebar-left.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include src="'/template/chat.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content" class="page-view">
+        <div class="container">
+            <div class="block-header">
+                <h3>Micrositios y Microportales</h3>
+
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Total Visitas: <span>{{vm.counters.totalVisits}}</span>
+
+                    <div class="pull-right">
+                        <button class="btn btn-danger waves-effect"
+                                ui-sref="microsite-add">
+                            <i class="zmdi zmdi-plus zmdi-hc-fw"></i>
+                            Nuevo micrositio
+                        </button>
+
+                        <a class="btn btn-primary waves-effect"
+                           ui-sref="microportal-add">
+                            <i class="zmdi zmdi-plus zmdi-hc-fw"></i>
+                            Nuevo microportal
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <tabset>
+                        <tab heading="Micrositios" active="true">
+                            <div ui-view="ms"></div>
+                        </tab>
+                        <tab heading="Microportales">
+                            <div ui-view="mp"></div>
+                        </tab>
+                    </tabset>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+</section>
+
+<footer id="footer" data-ng-include src="'/template/footer.html'"></footer>
+
+
