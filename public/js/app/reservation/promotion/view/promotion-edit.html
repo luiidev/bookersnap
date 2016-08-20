@@ -20,7 +20,7 @@
                     <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
                 </li>
                 <li>
-                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
+                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('edit')">Actualizar promocion</button>
                 </li>
             </ul>
         </div>
@@ -32,8 +32,8 @@
     <div class="col-xs-12 col-md-4">
         <div class="form-group fg-float m-b-30">
             <div class="fg-line">
+                <label>Titulo</label>
                 <input type="text" class="input-sm form-control fg-input" ng-model="promotion.titulo">
-                <label class="fg-label">Titulo</label>
             </div>
         </div>
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>

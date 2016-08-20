@@ -41,6 +41,29 @@ angular.module('promotion.service', [])
   return interfazTurnos;
 
 })
+.factory('ZonesPromotionFactory',function(){
+  var zoneColection =[];
+  var interfazZones = {
+    getZonesItems: function(){
+      return zoneColection;
+    },
+    setZonesItems: function(zoneItem){
+      zoneColection.push(zoneItem);
+    },
+    delZonesItem: function(zoneItem){
+      angular.forEach(zoneColection, function(value,key) {
+        if(value.table_id==zoneItem.table_id){
+          zoneColection.splice(key,1);    
+        }
+      }); 
+    },
+    cleanZonesItems: function(){
+      zoneColection=[];
+    },
+  }
+  return interfazZones;
+
+})
 .factory('TableFactory',function(){
   return {
     getLabelShape : function(id){

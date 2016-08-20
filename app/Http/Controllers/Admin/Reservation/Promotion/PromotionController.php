@@ -48,6 +48,73 @@ class PromotionController extends Controller
                         'hfinal' => '05:02:00',
                      ),
                   ),
+               'zone'=>
+                  array (
+                   0 => 
+                   array (
+                    'zone_id' => 23,
+                    'name' => 'Zona 01',
+                    'table' => 
+                    array (
+                     0 => 
+                     array (
+                      'name_zona' => 'Zona 01',
+                      'table_id' => 1,
+                      'name' => 'MESA DE COMPAÑIA 2',
+                      'minCover' => 5,
+                      'maxCover' => NULL,
+                      'left' => '20',
+                      'top' => '20',
+                      'shape' => 'recta',
+                      'size' => 'medium',
+                      'rotate' => 45,
+                      'price' => '',
+                      ),
+                     1 => 
+                     array (
+                      'name_zona' => 'Zona 01',
+                      'table_id' => 2,
+                      'name' => 'MESA DE COMPAÑIA ALTERNA',
+                      'minCover' => 5,
+                      'maxCover' => NULL,
+                      'left' => '130',
+                      'top' => '20',
+                      'shape' => 'round',
+                      'size' => 'medium',
+                      'rotate' => 0,
+                      'price' => '',
+                      ),
+                     2 => 
+                     array (
+                      'name_zona' => 'Zona 01',
+                      'table_id' => 3,
+                      'name' => 'Obed Trejo',
+                      'minCover' => 5,
+                      'maxCover' => NULL,
+                      'left' => '230',
+                      'top' => '20',
+                      'shape' => 'round',
+                      'size' => 'small',
+                      'rotate' => 0,
+                      'price' => '52.368',
+                      ),
+                     3 => 
+                     array (
+                      'name_zona' => 'Zona 01',
+                      'table_id' => 4,
+                      'name' => 'MESA DE COMPAÑIA ALTERNA',
+                      'minCover' => 5,
+                      'maxCover' => NULL,
+                      'left' => '60',
+                      'top' => '120',
+                      'shape' => 'square',
+                      'size' => 'medium',
+                      'rotate' => 0,
+                      'price' => '',
+                      ),
+                     ),
+                    ),
+                   )
             ),
             'redirect' => false,
             'url' => NULL,
@@ -155,20 +222,20 @@ class PromotionController extends Controller
              array (
               'table_id' => 1,
               'name' => 'MESA DE COMPAÑIA 2',
-              'min_cover' => 5,
+              'min_cover' => 1,
               'max_cover' => NULL,
               'config_color' => NULL,
               'config_position' => '20,20',
               'config_forme' =>3,
               'config_size' => 2,
-              'config_rotation' => 45,
+              'config_rotation' => 0,
               'price' => '',
               ),
              1 => 
              array (
               'table_id' => 2,
               'name' => 'MESA DE COMPAÑIA ALTERNA',
-              'min_cover' => 5,
+              'min_cover' => 2,
               'max_cover' => NULL,
               'config_color' => NULL,
               'config_position' => '130,20',
@@ -181,20 +248,20 @@ class PromotionController extends Controller
              array (
               'table_id' => 3,
               'name' => 'Obed Trejo',
-              'min_cover' => 5,
+              'min_cover' => 3,
               'max_cover' => NULL,
               'config_color' => NULL,
               'config_position' => '230,20',
               'config_forme' => 1,
               'config_size' => 1,
               'config_rotation' => 0,
-              'price' => '52.368',
+              'price' => '',
               ),
              3 => 
              array (
               'table_id' => 4,
               'name' => 'MESA DE COMPAÑIA ALTERNA',
-              'min_cover' => 5,
+              'min_cover' => 4,
               'max_cover' => NULL,
               'config_color' => NULL,
               'config_position' => '60,120',
