@@ -1,4 +1,4 @@
-angular.module('promotion.app', ['promotion.controller','promotion.service','promotion.directive','promotion.filter'])
+angular.module('promotion.app', ['promotion.controller','promotionList.controller','promotion.service','promotion.directive','promotion.filter'])
 .config(function ($stateProvider, $urlRouterProvider, $httpProvider){
 
     $stateProvider
@@ -9,7 +9,7 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
 	}) 
     .state ('promotion-list', {
         url: '/promotion/list',
-        templateUrl: '/js/app/reservation/promotion/view/promotion-list.html',
+        templateUrl: '/js/app/reservation/list-promo/promotion-list.html',
         controller: 'PromotionListCtrl',
     })
 	.state ('add', {

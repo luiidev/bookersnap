@@ -3,6 +3,9 @@
  */
 
 angular.module('master.app')
+    //----------------------------------------------
+    // REALIZAR PETICIONES AJAX
+    //----------------------------------------------
     .service('Ajax', function ($http) {
         return {
             Req: function (method, url, data, listener) {
@@ -73,6 +76,85 @@ angular.module('master.app')
                         OnError(Response);
                     });
                 }
+            }
+        }
+    })
+    //----------------------------------------------
+    // ABRIR MODALES
+    //----------------------------------------------
+    .service('Modal', function ($uibModal) {
+        return {
+            Open: function (size, tplUrl, ctrl, data, backdrop, finnaly) {
+                if (backdrop == null || backdrop == undefined) {
+                    backdrop = true;
+                }
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: tplUrl,
+                    controller: ctrl,
+                    controllerAs: 'vm',
+                    size: size,
+                    backdrop: backdrop,
+                    keyboard: false,
+                    resolve: {
+                        data: function () {
+                            return data;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    //$scope.selected = selectedItem;
+                }, function () {
+                    if (!angular.isUndefined(finnaly)) {
+                        finnaly();
+                    }
+                });
+            },
+            OpenTpl: function (size, tpl, ctrl, data, backdrop, finnaly) {
+                if (backdrop == null || backdrop == undefined) {
+                    backdrop = true;
+                }
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    template: tpl,
+                    controller: ctrl,
+                    controllerAs: 'vm',
+                    size: size,
+                    backdrop: backdrop,
+                    keyboard: false,
+                    resolve: {
+                        data: function () {
+                            return data;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    //$scope.selected = selectedItem;
+                }, function () {
+                    if (!angular.isUndefined(finnaly)) {
+                        finnaly();
+                    }
+                });
+            },
+        }
+    })
+    //----------------------------------------------
+    // ESCUCHAR EVENTOS DE ANGULAR
+    //----------------------------------------------
+    .service('EventListener', function ($rootScope) {
+        return {
+            broadcast: function(action, data){
+                $rootScope.$broadcast(action, data);
+            },
+            emit: function (action, data) {
+                $rootScope.$emit(action, data);
+            },
+            receive: function (action, func) {
+                $rootScope.$on(action, function (event, data) {
+                    func(data);
+                });
             }
         }
     });

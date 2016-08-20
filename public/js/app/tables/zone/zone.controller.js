@@ -70,7 +70,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
             angular.forEach(zones.tables, function(tables) {
                 if(tables.status == 1){
-                    vTables + = 1;
+                    vTables += 1;
                 }
             });
 

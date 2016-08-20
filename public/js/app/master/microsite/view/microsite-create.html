@@ -1,0 +1,447 @@
+
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header.html'"
+        data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include src="'/template/sidebar-left.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include src="'/template/chat.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content" class="page-view">
+        <div class="container">
+            <style>
+                .map-control {
+                    background-color: #fff;
+                    margin-left: 12px;
+                    padding: 0 11px 0 13px;
+                    text-overflow: ellipsis;
+                    margin-top: 10px;
+                    border: 1px solid transparent;
+                    border-radius: 2px 0 0 2px;
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    height: 32px;
+                    outline: none;
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                !important;
+                    width: 70%;
+                }
+            </style>
+            <div class="block-header">
+
+                <h3>Nuevo Micrositio</h3>
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-danger btn-icon btn-float waves-effect waves-circle"
+                                ui-sref="microsite-list" ng-disabled="vm.flags.isProccessing"
+                                style="width:60px; height:60px;margin-left: -80px;margin-top:10px;">
+                            <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="row" bs-loading-overlay>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body card-padding">
+
+                            <div class="form-group">
+                                <label><i class="fa fa-home w-20"></i> Tipo de Micrositio</label>
+                                <br><br>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="radio radio-inline m-b-20 col-xs-12">
+                                            <input type="radio" ng-model="vm.microsite.ms_type" ng-value="1">
+                                            <i class="input-helper"></i>Microsite Premium
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="radio radio-inline m-b-20 col-xs-12">
+                                            <input type="radio" ng-model="vm.microsite.ms_type" ng-value="2">
+                                            <i class="input-helper"></i>Microsite Free
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="radio radio-inline m-b-20 col-xs-12">
+                                            <input type="radio" ng-model="vm.microsite.ms_type" ng-value="3">
+                                            <i class="input-helper"></i>Microsite Free Reclamado
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group fg-line" ng-class="(vm.micrositeError.name.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-home w-20"></i> Nombre de la
+                                    empresa</label>
+                                <input type="text" class="form-control input-sm" ng-model="vm.microsite.name"
+                                       placeholder="Escribir Nombre"/>
+                                <small class="help-block" ng-show="vm.micrositeError.name.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.name">{{error}}</span>
+                                </small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12"
+                                     ng-class="(vm.micrositeError.bs_country_id.length>0||vm.micrositeError.bs_city_id.length>0?'has-error':'')"
+                                >
+                                    <label class="control-label"><i class="fa fa-location-arrow w-20"></i>
+                                        Ubicación</label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-6">
+                                        <div class="fg-line"
+                                             ng-class="(vm.micrositeError.bs_country_id.length>0?'has-error':'')">
+                                            <div class="select">
+                                                <select class="form-control input-sm"
+                                                        ng-model="vm.microsite.bs_country_id"
+                                                        ng-change="vm.updateCities()"
+                                                        ng-options="item.id as item.name for item in vm.countries track by item.id">
+                                                    <option value="">Seleccione País</option>
+                                                </select>
+                                            </div>
+                                            <small class="help-block"
+                                                   ng-show="vm.micrositeError.bs_country_id.length>0">
+                                                <span ng-repeat="error in vm.micrositeError.bs_country_id">{{error}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="fg-line"
+                                             ng-class="(vm.micrositeError.bs_city_id.length>0?'has-error':'')">
+                                            <div class="select">
+                                                <select class="form-control input-sm" ng-model="vm.microsite.bs_city_id"
+                                                        ng-options="item.id as item.name for item in vm.cities track by item.id">
+                                                    <option value="">Seleccione Ciudad</option>
+                                                </select>
+                                            </div>
+                                            <small class="help-block" ng-show="vm.micrositeError.bs_city_id.length>0">
+                                                <span ng-repeat="error in vm.micrositeError.bs_city_id">{{error}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group fg-line"
+                                 ng-class="(vm.micrositeError.address.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-location-arrow w-20"></i> Dirección</label>
+                                <input type="text" id="searchbox" ng-model="vm.microsite.address"
+                                       class="map-control"
+                                       placeholder="Escribir Dirección" ng-show="vm.map">
+                                <ng-map style="height: 300px;"></ng-map>
+                                <small class="help-block" ng-show="vm.micrositeError.address.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.address">{{error}}</span>
+                                </small>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body card-padding">
+
+                            <div class="form-group fg-line"
+                                 ng-class="(vm.micrositeError.phone.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-phone w-20"></i> Telefono</label>
+                                <input type="text" class="form-control input-sm"
+                                       placeholder="Escribir Número de telefono"
+                                       ng-model="vm.microsite.phone"/>
+                                <small class="help-block" ng-show="vm.micrositeError.phone.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.phone">{{error}}</span>
+                                </small>
+                            </div>
+
+                            <div class="form-group fg-line"
+                                 ng-class="(vm.micrositeError.email.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-envelope w-20"></i> Correo
+                                    Electrónico</label>
+                                <input type="text" class="form-control input-sm" placeholder="Escribir Email"
+                                       ng-model="vm.microsite.email"/>
+                                <small class="help-block" ng-show="vm.micrositeError.email.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.email">{{error}}</span>
+                                </small>
+                            </div>
+
+                            <div class="form-group"
+                                 ng-class="(vm.micrositeError.site_name.length>0 || vm.micrositeError.sitename_free.length>0 ?'has-error':'')">
+                                <label class="control-label"><i
+                                        class="fa fa-globe w-20"></i> Nombre de página
+                                </label>
+
+                                <div class="pull-right">
+                                    <button class="btn btn-xs waves-effect"
+                                            ng-click="vm.verifySitenameDisp()"
+                                            ng-class="vm.classBtnAvailableSitename">
+                                        <i class="zmdi" ng-class="vm.sitenameIcon"></i> Verificar
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon f-11"
+                                          style="color: #444;">http://bookersnap.com/</span>
+
+                                    <div class="fg-line">
+                                        <input type="text" class="form-control input-sm"
+                                               placeholder="Nombre de la página"
+                                               ng-model="vm.microsite.site_name"/>
+                                    </div>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="vm.micrositeError.site_name.length>0 || vm.micrositeError.sitename_free.length>0 ">
+                                    <span ng-repeat="error in vm.micrositeError.site_name">{{error}}</span>
+                                    <span ng-repeat="error in vm.micrositeError.sitename_free">{{error}}</span>
+                                </small>
+                                <div class="has-error">
+                                    <small class="help-block" ng-bind="vm.sitename_suggestions"></small>
+                                </div>
+                            </div>
+
+                            <div class="form-group fg-line" ng-show="vm.microsite.ms_type==1"
+                                 ng-class="(vm.micrositeError.domain.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-globe w-20"></i> Dominio</label>
+                                <input type="text" class="form-control input-sm"
+                                       placeholder="http://tudominio.com"
+                                       ng-model="vm.microsite.domain"/>
+                                <small class="help-block" ng-show="vm.micrositeError.domain.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.domain">{{error}}</span>
+                                </small>
+                            </div>
+
+                            <div class="row"
+                                 ng-class="(vm.micrositeError.Categorias.length>0 || vm.micrositeError.Subcategorias.length>0 ?'has-error':'')">
+                                <div class="col-md-12">
+                                    <label class="control-label"><i class="fa fa-sitemap w-20"></i> Categoría
+                                        <button class="btn btn-success btn-xs" ng-click="vm.addCategory()">+</button>
+                                    </label>
+
+                                    <div class=""></div>
+                                </div>
+                                <div class="form-group" ng-repeat="category in vm.microsite.categories">
+
+                                    <div class="row" style="padding-left: 15px;">
+                                        <div class="col-md-5 col-xs-4">
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="form-control input-sm"
+                                                            ng-model="category.bs_category_id"
+                                                            ng-change="vm.updateSubCategories($index)"
+                                                            ng-options="item.id as item.name for item in vm.categories track by item.id">
+                                                        <option value="">Seleccione Categoría</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5  col-xs-4">
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="form-control input-sm"
+                                                            ng-model="category.bs_subcategory_id"
+                                                            ng-options="item.id as item.name for item in vm.subcategories[$index] track by item.id">
+                                                        <option value="">Seleccione SubCategoría</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2  col-xs-4">
+                                            <button class="btn btn-danger btn-icon waves-effect waves-circle"
+                                                    style="margin-top: 3px;height:25px;width:25px;"
+                                                    ng-click="vm.removeCategory(category)"><i
+                                                    class="zmdi zmdi-close"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-l-20">
+                                    <small class="help-block" ng-show="vm.micrositeError.Categorias.length>0">
+                                        <span ng-repeat="error in vm.micrositeError.Categorias">{{error}}</span>
+                                    </small>
+                                    <small class="help-block" ng-show="vm.micrositeError.Subcategorias.length>0">
+                                        <span ng-repeat="error in vm.micrositeError.Subcategorias">{{error}}</span>
+                                    </small>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" ng-class="(vm.micrositeError.description.length>0?'has-error':'')">
+                                <label class="control-label"><i class="fa fa-align-left w-20"></i> Concepto de la
+                                    empresa</label>
+
+                                <div class="fg-line">
+                                        <textarea class="form-control input-sm" rows="4"
+                                                  ng-model="vm.microsite.description"
+                                                  placeholder="Escribir Concepto de la empresa"></textarea>
+
+                                </div>
+                                <small class="help-block" ng-show="vm.micrositeError.description.length>0">
+                                    <span ng-repeat="error in vm.micrositeError.description">{{error}}</span>
+                                </small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 col-xs-12 text-center" style="margin-bottom: 20px;"
+                                     ng-class="(vm.micrositeError.Calificaciones.length>0?'has-error':'')">
+                                    <button class="btn bgm-blue waves-effect" ng-click="vm.editScores()"><i
+                                            class="fa fa-align-left w-20"></i>
+                                        Calificaciones
+                                    </button>
+                                    <small class="help-block" ng-show="vm.micrositeError.Calificaciones.length>0">
+                                        <span ng-repeat="error in vm.micrositeError.Calificaciones">{{error}}</span>
+                                    </small>
+                                </div>
+                                <div class="col-md-4 col-xs-12 text-center" style="margin-bottom: 20px;">
+                                    <button class="btn bgm-teal waves-effect" ng-click="vm.editLocalServices()">
+                                        <i class="fa fa-align-left w-20"></i> Servicios del lugar
+                                    </button>
+                                </div>
+                                <div class="col-md-4 col-xs-12 text-center" style="margin-bottom: 20px;"
+                                     ng-class="(vm.micrositeError.Servicios.length>0?'has-error':'')">
+                                    <button class="btn bgm-teal waves-effect" ng-click="vm.editBsServices()">
+                                        <i class="fa fa-align-left w-20"></i> Servicios del módulo
+                                    </button>
+                                    <small class="help-block" ng-show="vm.micrositeError.Servicios.length>0">
+                                        <span ng-repeat="error in vm.micrositeError.Servicios">{{error}}</span>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 100px;margin-top: 50px;">
+                                <div class="pull-right">
+                                    <button class="btn btn-primary btn-sm" ng-disabled="vm.flags.isProccessing"
+                                            ng-click="vm.register()">
+                                        Registrar Micrositio
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="editScores.html">
+            <div class="modal-header">
+                <button type="button" class="close" data-dixsiss="modal" aria-label="Close"
+                        ng-click="vm.close()">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Calificaciones</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="listview lv-bordered lv-lg">
+                    <div class="lv-header-alt clearfix">
+                        <h2 class="lvh-label">Seleccione los Scores</h2>
+                    </div>
+                    <div class="lv-body">
+                        <div class="lv-item media" ng-repeat="item in vm.scores">
+                            <div class="checkbox pull-left">
+                                <label>
+                                    <input type="checkbox" value="" ng-true-value="1"
+                                           ng-false-value="0"
+                                           ng-model="item.checked">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                            <div class="media-body">
+                                <div class="lv-title">
+                                    <i class="zmdi zmdi-{{item.class_icon}}"></i>
+                                    &nbsp;&nbsp;
+                                    {{item.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </script>
+        <script type="text/ng-template" id="editLocalServices.html">
+            <div class="modal-header">
+                <button type="button" class="close" data-dixsiss="modal" aria-label="Close"
+                        ng-click="vm.close()">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Servicios</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li ng-repeat="item in vm.services">
+                        <label ng-class="(item.bs_local_services_id == 0?'checkbox checkbox-inline m-r-20':'')"
+                               ng-style="(item.bs_local_services_id == -1?{'font-weight':600}:{})">
+                            <input ng-if="item.bs_local_services_id == 0" type="checkbox" ng-true-value="1"
+                                   ng-false-value="0"
+                                   ng-model="item.checked">
+                            <i class="input-helper"></i>
+                            {{item.name}}
+                        </label>
+                        <ul ng-if="item.children.length>0">
+                            <li ng-repeat="service in item.children">
+                                <label class="checkbox checkbox-inline m-r-20">
+                                    <input type="checkbox" ng-true-value="1" ng-false-value="0"
+                                           ng-model="service.checked">
+                                    <i class="input-helper"></i>
+                                    {{service.name}}
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer"></div>
+        </script>
+
+        <script type="text/ng-template" id="editBsServices.html">
+            <div class="modal-header">
+                <button type="button" class="close" data-dixsiss="modal" aria-label="Close"
+                        ng-click="vm.close()">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Servicios</h4>
+            </div>
+            <div class="modal-body">
+                <div class="listview lv-bordered lv-lg">
+                    <div class="lv-header-alt clearfix">
+                        <h2 class="lvh-label">Seleccione los servicios del micrositio</h2>
+                    </div>
+
+                    <perfect-scrollbar class="lv-body" wheel-propagation="true" wheel-speed="10"
+                                       min-scrollbar-length="20" style="overflow-y: hidden; max-height: 550px;position: relative;">
+                        <div class="lv-item media" ng-repeat="item in vm.services">
+                            <div class="checkbox pull-left">
+                                <label>
+                                    <input type="checkbox" value="" ng-true-value="1"
+                                           ng-false-value="0"
+                                           ng-model="item.checked">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                            <div class="media-body">
+                                <div class="lv-title">
+                                    <i class="zmdi zmdi-{{item.class_icon}}"></i>
+                                    &nbsp;&nbsp;
+                                    {{item.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </script>
+
+    </section>
+
+</section>
+
+
+<footer id="footer" data-ng-include src="'template/footer.html'"></footer>
+
+

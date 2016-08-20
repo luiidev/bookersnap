@@ -12,21 +12,23 @@
 
     <!-- Vendor CSS -->
     <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
-    <!-- Library min CSS -->
-    <link href="/css/app/master/app.bookersnap.library.master.min.css" rel="stylesheet">
-    <!-- CSS -->
-    <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
     <!-- App Css -->
     <link href="/css/app/master/style-master.min.css" rel="stylesheet">
+    <!-- CSS -->
+    <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
+    <!-- Library min CSS -->
+    <link href="/css/app/master/app.bookersnap.library.master.min.css" rel="stylesheet">
+
 
 </head>
 <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
 
 <data ui-view></data>
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs&libraries=places"></script>
 <!-- Vendor Bookersnap-->
 <script src="/js/theme/dist/library.bower.min.js"></script>
-<script src="/js/theme/dist/app.level.min.js"></script>
+<script src="/js/theme/dist/app.level.min.js" id="js-app-level"></script>
 <script src="/js/theme/dist/template.modules.min.js"></script>
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
