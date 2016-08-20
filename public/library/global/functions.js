@@ -26,12 +26,25 @@ var getDaysWeek = function(){
 
 var getGender = function(){
     var gender = [
-        {id : 'm', label : 'Masculino'},
-        {id : 'f', label : 'Femenino'},
+        {id : 'M', label : 'Masculino'},
+        {id : 'F', label : 'Femenino'},
       
     ];
 
     return gender;
+};
+
+/*-----
+Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
+YYYY-MM-DD
+-----*/
+var convertFechaYYMMDD = function(fecha,idioma,options){
+    var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
+    var arrayFecha = newFecha.split("/");
+
+    newFecha = arrayFecha[2]+"-"+arrayFecha[1] +"-"+arrayFecha[0];
+
+    return newFecha;
 };
 
 /*----------
