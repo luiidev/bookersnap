@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ef89a5c-92e7-4301-a6fd-89a2c4da4541" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/app/master/role/role.config.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/library/angucomplete-alt" afterPath="$PROJECT_DIR$/public/library/angucomplete-alt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/routes.php" afterPath="$PROJECT_DIR$/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/app/master/master.config.js" afterPath="$PROJECT_DIR$/public/js/app/master/master.config.js" />
     </list>
     <ignored path="web.aplication.bookersnap.iws" />
     <ignored path=".idea/workspace.xml" />
