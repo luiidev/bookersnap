@@ -6,19 +6,36 @@
 
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-    <section id="content" ng-controller="PromotionListCtrl" >
+    
+            
+    <section id="content"  >
         <div class="container">
         <div class="block-header">
         <h2>Reservaciones y promociones <span class="red">{{flag ? '(Para poder  ordenar tiene que limpiar el filtro)':''}}</span></h2>
         </div>
 
-        <div id="filter" ng-include="'/js/app/reservation/list-promo/promotion-filtro.html'"></div>
+        <div class="card-header">
+            <h2>Promociones</h2>
+            <div class="card-body card-padding">
+                <div class="btn-demo">
+                        <button class="btn btn-primary waves-effect" data-ui-sref="add">Agregar Promocion</button>
+                        <button class="btn btn-default btn-icon-text" ng-controller="GestionarCamposCtrl" ng-click="openModal('lg')"><i class="zmdi zmdi-apps"></i> Gestionar Campos</button>
+                </div>
+            </div>
+           <!--  <div class="card-body card-padding">
+                <button class="btn btn-primary waves-effect" data-ui-sref="add">Agregar Promocion</button>
+                <div class="form-group" ng-controller="GestionarCamposCtrl">
+                    <div class="fg-line">
+                    <button class="btn btn-primary btn-icon-text" ng-click="openModal('lg')"><i class="zmdi zmdi-apps"></i> Gestionar Campos</button>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
 
-          <div class="card" id="turno-main">
-            <div class="card-header">
-                  <h2>Promociones <small></small></h2>
-                  <div class="pull-right"><button class="btn btn-primary waves-effect" data-ui-sref="add">Agregar Promocion</button></div>
-              </div>
+        <div id="filter" ng-include="'/js/app/reservation/list-promo/promotion-filtro.html' "></div>
+       
+          <div class="card" id="turno-main" ng-controller="PromotionListCtrl">
               <div class="pmb-block">
                   <div class="pmbb-header">
                           <div class="card-body table-responsive">
@@ -77,3 +94,31 @@
 </section>
 
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Gestionar campos del formulario de reserva</h4>
+    </div>
+    <div class="modal-body">
+        <div class="card-body card-padding">
+ 
+               <div ng-repeat="item in list">
+                  <div class="row" >
+                      <div class="col-sm-3 m-b-15" >
+                           <label class="checkbox checkbox-inline m-r-20">
+                              <input type="checkbox" checkbox-group />
+                              <input type="checkbox" value="option1" checkbox-group>
+                              <i class="input-helper"></i>
+                              {{item.name}}
+                          </label>
+                      </div>
+                  </div>
+              </div>
+            
+            </div>
+    </div>
+    <div class="modal-footer">
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+        <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>

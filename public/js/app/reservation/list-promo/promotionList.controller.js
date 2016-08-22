@@ -1,5 +1,5 @@
 angular.module('promotionList.controller', ['ui.sortable','sortable'])
-.controller('PromotionListCtrl', function($rootScope, $scope, $http, $window, $document) {
+.controller('PromotionListCtrl', function($rootScope, $scope, $http, $window, $document, ApiUrlGeneralPromociones) {
       
       // VARIABLES DE PAGINADO
       $scope.page = 0;
@@ -33,8 +33,9 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
         }
 
             $http.get(
-              'http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions?page='+$scope.page+'&limit='
-              +$scope.limit+'&filter[fecha_inicial]='+$scope.obtenerFecha($rootScope.filtro.fecha_inicio)+'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)+'&filter[name]='+$rootScope.filtro.texto)
+              ApiUrlGeneralPromociones+'/promotions?page='+$scope.page+'&limit=' + $scope.limit+'&filter[fecha_inicial]='
+              +$scope.obtenerFecha($rootScope.filtro.fecha_inicio)+'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)
+              +'&filter[name]='+$rootScope.filtro.texto)
             .then(function(items) {
                 $scope.fetching = items.data.success;
                 for (var i = 0; i< items.data.data.length; i++) {
@@ -71,9 +72,9 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
                            if(this.window.innerHeight + this.window.window.scrollY >= $document[0].body.offsetHeight){
                               $scope.page++;
                               if($scope.fetching==true){   
-                                //$http.get('http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions?page='+$scope.page+'&limit='+$scope.limit).then(function(items) {
-                                $http.get('http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions?page='+$scope.page+'&limit='
-                                +$scope.limit+'&filter[fecha_inicial]='+$scope.obtenerFecha($rootScope.filtro.fecha_inicio)+'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)+'&filter[name]='+$rootScope.filtro.texto)
+                                $http.get(ApiUrlGeneralPromociones+'/promotions?page='+$scope.page+'&limit='+$scope.limit
+                                  +'&filter[fecha_inicial]='+$scope.obtenerFecha($rootScope.filtro.fecha_inicio)
+                                  +'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)+'&filter[name]='+$rootScope.filtro.texto)
                                 .then(function(items) {
                                 $scope.fetching = items.data.success;
                                  // Append the items to the list
@@ -104,7 +105,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
         $scope.fetching = true;
         $rootScope.filtro.texto = "";
 
-        $http.get("http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions?page="+$scope.page+"&limit="+$scope.limit)
+        $http.get(ApiUrlGeneralPromociones+"/promotions?page="+$scope.page+"&limit="+$scope.limit)
             .success(function (response) {
               if(response.success==true){
                 $scope.promociones = response.data;
@@ -128,7 +129,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
          $http({
             method: 'DELETE',
             params: {token:"sdsdf5sdf56sd6f5"},
-            url: 'http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions/'+item.id,
+            url: ApiUrlGeneralPromociones+'/promotions/'+item.id,
         }) 
         .success(function (response) {
               
@@ -189,7 +190,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
               
               $http({
                  method: 'PATCH',
-                    url: 'http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions/order?'+newurl,
+                    url: ApiUrlGeneralPromociones+'/promotions/order?'+newurl,
               }) 
               .then(function successCallback(response) {
                 if(response["success"]==false){
@@ -220,7 +221,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
 
           $http({
               method: 'PATCH',
-              url: 'http://192.168.0.107/api.promociones/public/v1/es/microsites/1/promotions/'+id+'?status='+status,
+              url: ApiUrlGeneralPromociones+' /promotions/'+id+'?status='+status,
           }) 
           .then(function successCallback(response) {
               
@@ -248,15 +249,114 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
 
     $scope.init();
 
-}).factory('notify', ['$window', function(win) {
-   /*
-   var msgs = [];
-   return function(msg) {
-     msgs.push(msg);
-     if (msgs.length === 3) {
-       win.alert(msgs.join('\n'));
-       msgs = [];
-     }
-   };*/
- }]);
+}).controller('GestionarCamposCtrl', function($scope, $uibModal) {
 
+    function modalInstances(animation, size, backdrop, keyboard) {
+
+    var modalInstance = $uibModal.open({
+      animation: animation,
+      templateUrl: 'myModalContent.html',
+      controller: 'GestionCamposReservacionesCtrl',
+      size: size,
+      resolve: {
+        content: function () {
+          return $scope.modalContent;
+        }
+      }
+    });
+ 
+  } 
+  
+  //Custom Sizes
+  $scope.openModal = function (size) {
+      modalInstances(true, size, true, true)
+  }
+
+
+}).controller('GestionCamposReservacionesCtrl',function($scope, $http, $uibModalInstance , ApiUrlGeneralPromociones){
+  
+    $scope.list = [];
+    $scope.array = [];
+    $http.get(ApiUrlGeneralPromociones + "/reservations/forms")
+      .success(function (response) {
+            if(response.success ==true){
+                
+                $scope.list = response["data"]["inputs_all"];
+               
+                for(var i = 0; i < response["data"]["inputs_form_select"].length ;i++){
+                  $scope.array.push(response["data"]["inputs_form_select"][i]["form_id"]);
+
+                }
+            }
+      });
+
+        $scope.array_ = angular.copy($scope.array);
+
+        $scope.update = function() {
+            if ($scope.array.toString() !== $scope.array_.toString()) {
+                return "Changed";
+            } else {
+                return "Not Changed";
+            }
+        };
+
+
+    /*
+    $scope.$watch("inputform", function (newVal, oldVal) {
+        console.dir(newVal,oldVal);
+    }, true); 
+    */
+    
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+}).directive("checkboxGroup", function($http, ApiUrlGeneralPromociones) {
+        return {
+            restrict: "A",
+            link: function(scope, elem, attrs) {
+
+                // Determine initial checked boxes
+                if (scope.array.indexOf(scope.item.form_id) !== -1) {
+                    elem[0].checked = true;
+                }
+
+                // Update array on click
+                elem.bind('click', function() {
+                    
+
+                    var form_id = scope.item.form_id;
+
+                    // Checked 
+                    if (elem[0].checked) {
+
+                          /* Se envian los estados y cambios */
+                          $http({
+                                  method: 'POST',
+                                  data: {form_id: form_id},
+                                  url: ApiUrlGeneralPromociones+'/reservations/forms',
+                              }) 
+                          .then(function successCallback(response) {
+                                // console.log(response);  
+                          });
+
+                          console.log(ApiUrlGeneralPromociones+'/reservations/forms');
+                        
+                    }
+                    // unchecked
+                    else {
+
+                       $http({
+                              method: 'DELETE',
+                              url: ApiUrlGeneralPromociones+'/reservations/forms/' + form_id,
+                            }) 
+                          .then(function successCallback(response) {
+                                // console.log(response);
+                          });
+
+                    }
+                    
+                });
+            }
+        }
+    });;
