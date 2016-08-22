@@ -1,0 +1,135 @@
+<div bs-loading-overlay >
+    <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header.html'"
+            data-ng-controller="headerCtrl as hctrl"></header>
+
+    <section id="main">
+        <aside id="sidebar" data-ng-include src="'/template/sidebar-left.html'"
+               data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <aside id="chat" data-ng-include src="'/template/chat.html'"
+               data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+        <section id="content" class="page-view" ui-view="">
+            <div class="container">
+                <div class="block-header">
+                    <h3>Establecer Privilegios: {{vm.role.name}} </h3>
+                    <ul class="actions">
+                        <li>
+                            <button class="btn btn-danger btn-icon btn-float waves-effect waves-circle"
+                                    ui-sref="roles"
+                                    style="width:60px; height:60px;margin-left: -80px;margin-top:10px;">
+                                <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card" >
+                    <tabset>
+                        <tab heading="{{privilege.label}}" ng-repeat="privilege in vm.privileges">
+                            <div class="listview lv-bordered lv-lg">
+
+                                <div class="lv-body">
+
+                                    <div class="lv-item media" ng-repeat="l1_children in privilege.children"
+                                         ng-init="$collapsed=false;">
+                                        <div class="checkbox pull-left">
+                                            <label ng-show="l1_children.checkeable">
+                                                <input type="checkbox" ng-model="l1_children.checked" ng-true-value="1"
+                                                       ng-false-value="0"
+                                                       ng-click="vm.checkAllPrivilegesChildren(l1_children, null)">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="lv-title" style="cursor: pointer;"
+                                                 ng-click="$collapsed=($collapsed?false:true)">
+                                                <i class="zmdi zmdi-{{l1_children.class_icon}}"></i>
+                                                {{l1_children.label}}
+                                            </div>
+                                            <div uib-collapse="!$collapsed">
+                                                <div class="lv-item media"
+                                                     ng-repeat="l2_children in l1_children.children">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" ng-model="l2_children.checked"
+                                                                   ng-true-value="1" ng-false-value="0"
+                                                                   ng-click="vm.checkAllPrivilegesChildren(l2_children, l1_children)">
+                                                            <i class="input-helper"></i>
+
+                                                            <div class="media-body">
+                                                                <div class="lv-title">
+                                                                    <i class="zmdi zmdi-{{l2_children.class_icon}}"></i>
+                                                                    {{l2_children.label}}
+                                                                </div>
+                                                            </div>
+                                                        </label>
+
+                                                    </div>
+
+                                                    <!---->
+                                                    <div uib-collapse="!$collapsed">
+                                                        <div class="lv-item media"
+                                                             ng-repeat="l3_children in l2_children.children">
+                                                            <div class="checkbox pull-left">
+                                                                <label>
+                                                                    <input type="checkbox"
+                                                                           ng-model="l3_children.checked"
+                                                                           ng-true-value="1" ng-false-value="0">
+                                                                    <i class="input-helper"></i>
+
+                                                                    <div class="media-body">
+                                                                        <div class="lv-title">
+                                                                            <i class="zmdi zmdi-{{l3_children.class_icon}}"></i>
+                                                                            {{l3_children.label}}
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="lv-actions actions"
+                                                         ng-show="l2_children.children!=null">
+                                                        <a href="" uib-dropdown-toggle aria-expanded="true"
+                                                           ng-click="$collapsed=($collapsed?false:true)">
+                                                            <i class="zmdi zmdi-{{($collapsed?'minus':'plus')}}"></i>
+                                                        </a>
+                                                    </div>
+                                                    <!---->
+
+                                                </div>
+                                            </div>
+                                            <div class="lv-actions actions" ng-show="l1_children.children!=null">
+                                                <a href="" uib-dropdown-toggle aria-expanded="true"
+                                                   ng-click="$collapsed=($collapsed?false:true)">
+                                                    <i class="zmdi zmdi-{{($collapsed?'minus':'plus')}}"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </tab>
+
+                    </tabset>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary pull-right" ng-click="vm.saveChanges()">
+                        <i class="glyphicon glyphicon-floppy-disk"></i>
+                        Guardar
+                    </button>
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </section>
+
+    <footer id="footer" data-ng-include src="'/template/footer.html'"></footer>
+</div>

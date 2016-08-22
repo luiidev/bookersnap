@@ -119,6 +119,11 @@ Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master'], function
             Route::post('/', 'MicroportalController@storeMicroportal');
         });
 
+        Route::group(['prefix' => '/roles', 'namespace' => 'Role'], function () {
+            Route::post('/', 'RoleController@StoreRole');
+            Route::put('/{id}', 'RoleController@UpdateRole');
+        });
+
     });
 });
 
