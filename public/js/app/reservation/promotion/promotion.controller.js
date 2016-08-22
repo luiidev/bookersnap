@@ -102,6 +102,7 @@ angular.module('promotion.controller', ['ui.sortable','sortable','LocalStorageMo
       }
     });
   } 
+
   //Custom Sizes
   $scope.openModal = function (size) {
       modalInstances(true, size, true, true)

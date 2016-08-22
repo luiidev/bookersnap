@@ -8,4 +8,5 @@ angular.module('reservation.app',
 .constant("IdMicroSitio",idMicrositio)
 //.constant("ApiUrlReservation", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas');
 .constant("ApiUrlReservation", "http://web.aplication.bookersnap/v1/en/admin/ms/"+idMicrositio+"/reservation")
-.constant("ApiUrlGeneral", "http://192.168.0.107/api.promociones/public/v1/es");
+.constant("ApiUrlGeneral", "http://192.168.0.107/api.promociones/public/v1/es/")
+.constant("ApiUrlGeneralPromociones", "http://192.168.0.107/api.promociones/public/v1/es/microsites/"+idMicrositio);
