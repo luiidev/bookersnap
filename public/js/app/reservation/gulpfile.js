@@ -28,7 +28,6 @@ gulp.task('app-bookersnap-reservation-js', function () {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
-    '../../../library/bower_components/infinite-scroll/ng-infinite-scroll.min.js',
     '../../../library/bower_components/dragdrop/jquery-ui.min.js',
     '../../../library/bower_components/dragdrop/angular-local-storage.min.js',
     '../../../library/bower_components/dragdrop/sortable.js',

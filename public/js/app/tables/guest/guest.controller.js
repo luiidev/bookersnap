@@ -20,7 +20,12 @@ angular.module('guest.controller', [])
 	init();
 
 })
-.controller('GuestCreateCtrl', function(GuestFactory,GuestDataFactory,$compile,$scope) {
+.controller('GuestViewCtrl', function(GuestFactory,$stateParams) {
+	var vm = this;
+
+	vm.guestId = $stateParams.guest;
+})
+.controller('GuestCreateCtrl', function(GuestFactory,GuestDataFactory,$compile,$scope,$state,$stateParams) {
 	var vm = this;
 
 	vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
@@ -34,7 +39,7 @@ angular.module('guest.controller', [])
 	vm.guestData = {
 		first_name : '',
 		last_name : '',
-		birthday : '',
+		birthdate : '',
 		gender : '',
 		phones : [],
 		emails : [],
@@ -51,7 +56,14 @@ angular.module('guest.controller', [])
 
 	vm.init = function(){
 		vm.listGender();
-		vm.listTags();
+		
+		GuestFactory.getTags().then(function success(response){
+			vm.tagsList = response.tagsList;
+			vm.tagsListAdd = response.tagsListAdd;
+			vm.loadDataGuestEdit();
+		},function error(response){
+			console.log("getTags error " , angular.toJson(response, true));
+		});	
 	};
 
 	vm.listGender = function(){
@@ -63,12 +75,31 @@ angular.module('guest.controller', [])
 		vm.contentTab = GuestFactory.getTabSelected(tabItem);	
 	};
 
+	vm.validaSaveGuest = function(frmGuest){
+		if (frmGuest.$valid) {
+			vm.saveGuest();
+		}
+	};
+
 	vm.saveGuest = function(){
-		console.log("saveGuest " + angular.toJson(vm.guestData, true));
+
+		console.log("saveGuest " + angular.toJson(vm.guestData,true));
+
+		vm.guestData.birthdate = convertFechaYYMMDD(vm.guestData.birthdate,"es-ES", {});
+		vm.guestData.gender = vm.guestData.gender.id;
+
+		var option = ($stateParams.guest != undefined) ? "edit" : "create";
+	
+		GuestFactory.saveGuest(vm.guestData,option).then(function success(response){
+			$state.reload();
+			messageAlert("Success","Huesped registrado","success");
+		},function error(response){
+			messageErrorApi(response,"Error","warning");
+		});
 	};
 
 	vm.insertPhone = function(){
-		vm.guestData.phones = GuestFactory.insertDataContact(vm.guestData.phones,vm.phone,'telefono');;
+		vm.guestData.phones = GuestFactory.insertDataContact(vm.guestData.phones,vm.phone,'telefono');
 		vm.phone = "";
 	};
 
@@ -91,46 +122,39 @@ angular.module('guest.controller', [])
 		vm.opened = true;
 	};
 
-	vm.listTags = function(){
-
-		GuestDataFactory.getAllTags().success(function(data){
-			vm.tagsList = data.data;
-
-			angular.forEach(vm.tagsList, function(value, key){
-				vm.tagsListAdd.push({
-					index : key,
-					data : []
-				});
-			});
-
-			console.log("listTags " , angular.toJson(vm.tagsListAdd,true));
-		});
-	};
-
 	vm.addTag = function(tag,category){
 
 		var index = GuestFactory.existsTag(vm.tagsListAdd[category].data,tag.id);
 
 		var tagsData = {
-				id : tag.id,
-				name : tag.name,
-				res_guest_tag_category_id : tag.res_guest_tag_gategory_id
+			id : tag.id,
+			name : tag.name,
+			res_guest_tag_category_id : tag.res_guest_tag_gategory_id
 		}
 
 		if(index == null){
 			vm.tagsListAdd[category].data.push(tagsData);
-			vm.guestData.tags.push(tagsData);
+			vm.guestData.tags.push({id : tagsData.id});
 		}else{
 			vm.tagsListAdd[category].data.splice(index, 1);
-			/*var indexTag = GuestFactory.existsTag(vm.guestData.tags,tag.id);
-			vm.vm.guestData.tags.splice(indexTag, 1);*/
+			var indexTag = GuestFactory.existsTag(vm.guestData.tags,tag.id);
+			vm.guestData.tags.splice(indexTag, 1);
 		}
+	};
 
-		console.log("addTags " + angular.toJson(vm.tagsListAdd[category].data,true));
+	vm.loadDataGuestEdit = function(){
+		if ($stateParams.guest != undefined) {
+			
+			GuestFactory.getGuest($stateParams.guest).then(function success(response){
+				vm.guestData = response.guest;
+				GuestFactory.showTags(response.guest.tags,vm.tagsListAdd);
+
+			},function error(response){
+				messageErrorApi(response,"Error","warning");
+			});
+		}
 	};
 
 	vm.init();
-
-
 })
 ;

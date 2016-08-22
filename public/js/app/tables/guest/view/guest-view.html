@@ -1,0 +1,44 @@
+<div id="profile-main">
+        <div class="pm-overview c-overflow">
+            <div class="pmo-pic">
+                <div class="p-relative">
+                    <a href="">
+                        <img class="img-responsive" src="/images/profile-pic-2.jpg" alt="">
+                    </a>
+
+                    <div class="dropdown pmop-message" uib-dropdown>
+                        <button uib-dropdown-toggle class="btn bgm-white btn-float">
+                            <i class="zmdi zmdi-comment-text-alt"></i>
+                        </button>
+
+                        <div class="dropdown-menu stop-propagate">
+                            <textarea placeholder="Write something..."></textarea>
+
+                            <button class="btn bgm-green btn-float"><i class="zmdi zmdi-mail-send"></i></button>
+                        </div>
+                    </div>
+
+                    <a href="" class="pmop-edit">
+                        <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">Update Profile Picture</span>
+                    </a>
+                </div>
+
+
+                <div class="pmo-stat">
+                    <h2 class="m-0 c-white">1562</h2>
+                    Total Connections
+                </div>
+            </div>
+     
+        </div>
+
+        <div class="pm-body clearfix">
+            <div class="row">
+                <div class="col-md-12 header-view-profile">
+                    <div class="pull-right">
+                        <button class="btn btn-danger" data-ui-sref="guest.edit({guest : vm.guestId})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
