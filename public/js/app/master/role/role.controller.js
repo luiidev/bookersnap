@@ -224,6 +224,57 @@ angular.module('role.controller', ['bsLoadingOverlay'])
 
         var vm = this;
         vm.role_id = $stateParams.id;
+        vm.role = {};
+
+        vm.checkAllPrivilegesChildren = function (item, parent) {
+            if (parent != null) {
+                if (parent.checkeable && parent.checked == 0 && item.checked == 1) {
+                    parent.checked = 1;
+                } else {
+                    var count = 0;
+                    angular.forEach(parent.children, function (child) {
+                        count += child.checked;
+                    });
+
+                    if (count == 0) {
+                        parent.checked = 0;
+                    }
+                }
+            }
+            angular.forEach(item.children, function (child) {
+                child.checked = item.checked;
+            });
+        };
+
+        vm.saveChanges = function () {
+            RoleService.SavePrivileges(vm.role_id, vm.privileges, {
+                BeforeSend: function () {
+                    bsLoadingOverlayService.start();
+                },
+                OnSuccess: function (Response) {
+                    bsLoadingOverlayService.stop();
+                    //AclService.setAbilities(Response.data.data.acl);
+                    messageAlert("Se actualizaron los privilegios.", '', 'success');
+                },
+                OnError: function (Response) {
+                    bsLoadingOverlayService.stop();
+                    var data = Response.data;
+                    if (Response.status == 401) {
+                        swal("Error", "No tiene permisos para realizar esta acción", "error");
+                    } else if (angular.isUndefined(data.error)) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    } else if (Response.status == 406 || Response.status == 422) {
+                        var errors = '';
+                        angular.forEach(Response.data.error.errors, function (error, key) {
+                            errors += '\n- ' + error + '\n';
+                        });
+                        swal(Response.data.error.user_msg, errors, "error")
+                    } else {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                }
+            });
+        };
 
         function loadPrivileges() {
             RoleService.GetPrivileges(vm.role_id, {
@@ -246,6 +297,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         //------------------------------------
 
         function init() {
+            loadPrivileges();
         }
 
         init();

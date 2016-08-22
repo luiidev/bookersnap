@@ -25,11 +25,18 @@ class RoleService
     {
         $data['user_id'] = $user_id;
         $option = '';
-        if(@$data['option'] == 'status'){
+        if (@$data['option'] == 'status') {
             $option = '?option=status';
         }
-        $url = API_ADMIN_URL . '/es/roles/' . $id.$option;
+        $url = API_ADMIN_URL . '/es/roles/' . $id . $option;
         return ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+    }
+
+    public function SavePrivilegesByRole(int $id, array $data, int $user_id)
+    {
+        $data['user_id'] = $user_id;
+        $url = API_ADMIN_URL . '/es/roles/' . $id . '/privileges';
+        return ApiRequestsHelper::SendRequest('POST', $url, null, $data);
     }
 
 }

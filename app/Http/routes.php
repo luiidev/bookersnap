@@ -122,6 +122,7 @@ Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master'], function
         Route::group(['prefix' => '/roles', 'namespace' => 'Role'], function () {
             Route::post('/', 'RoleController@StoreRole');
             Route::put('/{id}', 'RoleController@UpdateRole');
+            Route::post('/{id}/privileges', 'RoleController@StorePrivilegesByRole');
         });
 
     });

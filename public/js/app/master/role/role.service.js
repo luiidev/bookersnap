@@ -18,8 +18,11 @@ angular.module('role.service', [])
             ChangeStatus: function ($id, $data, $listener) {
                 Ajax.Req('put', base_url + 'roles/' + $id + '?option=status', $data, $listener);
             },
-            GetPrivileges: function($id, $listener){
-                Ajax.Req('get', api_admin_url + 'roles/{id}/privileges', null, $listener);
-            }
+            GetPrivileges: function ($id, $listener) {
+                Ajax.Req('get', api_admin_url + 'roles/' + $id + '/privileges', null, $listener);
+            },
+            SavePrivileges: function ($id, $data, $listener) {
+                Ajax.Req('post', api_admin_url + 'roles/' + $id + '/privileges', $data, $listener);
+            },
         }
     });

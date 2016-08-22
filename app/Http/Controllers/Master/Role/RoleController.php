@@ -30,4 +30,10 @@ class RoleController extends Controller
         return response()->json($response, $response['statuscode']);
     }
 
+    public function StorePrivilegesByRole(string $lang, int $id, Request $request)
+    {
+        $response = $this->_roleService->SavePrivilegesByRole($id, $request->all(), $this->GetUserId());
+        return response()->json($response, $response['statuscode']);
+    }
+
 }
