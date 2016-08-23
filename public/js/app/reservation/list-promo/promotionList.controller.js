@@ -290,23 +290,6 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
             }
       });
 
-        $scope.array_ = angular.copy($scope.array);
-
-        $scope.update = function() {
-            if ($scope.array.toString() !== $scope.array_.toString()) {
-                return "Changed";
-            } else {
-                return "Not Changed";
-            }
-        };
-
-
-    /*
-    $scope.$watch("inputform", function (newVal, oldVal) {
-        console.dir(newVal,oldVal);
-    }, true); 
-    */
-    
     $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
@@ -339,8 +322,6 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
                           .then(function successCallback(response) {
                                 // console.log(response);  
                           });
-
-                          console.log(ApiUrlGeneralPromociones+'/reservations/forms');
                         
                     }
                     // unchecked
@@ -351,7 +332,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
                               url: ApiUrlGeneralPromociones+'/reservations/forms/' + form_id,
                             }) 
                           .then(function successCallback(response) {
-                                // console.log(response);
+
                           });
 
                     }
