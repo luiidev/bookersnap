@@ -4,5 +4,10 @@
 
 angular.module('master.app',
     [
-        'category.app'
+        'category.app',
+        'microsite.app',
+        'microportal.app',
+        'role.app'
     ]);
+
+angular.module('bookersnap', ['master.app']);

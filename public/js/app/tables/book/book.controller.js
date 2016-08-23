@@ -135,7 +135,7 @@ angular.module('book.controller', [])
 		}).error(function(data,status,headers){
 
 			messageAlert("Error",status,"warning");
-			getTimeAvailability(BookDateFactory.changeformatDate($scope.calendarBtn.dateNumber));
+			
 		});
 	};
 

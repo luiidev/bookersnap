@@ -1,6 +1,12 @@
 /*----------
 Aqui ponemos algunas funciones globales que usaremos dentro de la aplicacion
 ------*/
+/*----------
+Obtiene el id del micrositio de nuestra Url
+http://web.aplication.bookersnap/admin/ms/1/mesas#/book
+ms/1/ 
+id = 1
+-----------*/
 var obtenerIdMicrositio = function(){
 	var url = location.href;
 	var pos = url.indexOf("ms");
@@ -22,6 +28,53 @@ var getDaysWeek = function(){
     ];
 
     return days;
+};
+
+var getGender = function(){
+    var gender = [
+        {id : 'M', label : 'Masculino'},
+        {id : 'F', label : 'Femenino'},
+      
+    ];
+
+    return gender;
+};
+
+/*-----
+Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
+YYYY-MM-DD
+-----*/
+var convertFechaYYMMDD = function(fecha,idioma,options){
+    var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
+    var arrayFecha = newFecha.split("/");
+
+    newFecha = arrayFecha[2]+"-"+arrayFecha[1] +"-"+arrayFecha[0];
+
+    return newFecha;
+};
+
+/*-------
+Para las fechas que recibimos en este formato : YYYY-mm-dd y queremos procesarlas a otro formato Date lo convertiremos a un objeto
+Date javascript
+--------*/
+
+var convertTextToDate = function(language,options,date = null){
+    if(date != null){
+        return new Date(date).toLocaleDateString(language, options);
+    }else{
+        return new Date().toLocaleDateString(language, options);
+    }
+};
+
+/*-------
+Las horas se guardan en: 00:00:00 , y esta funcion te la muestra asi: 00:00:00 AM-PM
+--------*/
+var defineTimeSytem = function(time){
+    var splitTime = time.split(":");
+    var systemTime = splitTime[0] < 12 ? "AM" : "PM";
+    var newTime =  splitTime[0] + ":"+splitTime[1] +" "+ systemTime;
+
+    return newTime;
 };
 
 /*----------

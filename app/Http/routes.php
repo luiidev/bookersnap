@@ -103,14 +103,32 @@ Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master'], function
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {
-        Route::get('/category', 'CategoryController@index');
-        Route::get('/category/subcategories', 'CategoryController@showSubcategories');
-        Route::get('/category/{id}', 'CategoryController@showCategory');
-        Route::post('/category', 'CategoryController@storeCategory');
-        Route::put('/category/{id}', 'CategoryController@updateCategory');
-        Route::post('/category/upload/logo', 'CategoryController@uploadLogo');
-        Route::post('/category/upload/favicon', 'CategoryController@uploadFavicon');
-        Route::delete('/category/{id}', 'CategoryController@deleteCategory');
+        Route::group(['prefix' => '/category'], function () {
+            Route::get('/', 'CategoryController@index');
+            Route::post('/', 'CategoryController@storeCategory');
+            Route::get('/subcategories', 'CategoryController@showSubcategories');
+            Route::get('/{id}', 'CategoryController@showCategory');
+            Route::put('/{id}', 'CategoryController@updateCategory');
+            Route::post('/upload/logo', 'CategoryController@uploadLogo');
+            Route::post('/upload/favicon', 'CategoryController@uploadFavicon');
+            Route::delete('/{id}', 'CategoryController@deleteCategory');
+        });
+
+        Route::group(['prefix' => '/microsite', 'namespace' => 'Microsite'], function () {
+            Route::post('/', 'MicrositeController@storeMicrosite');
+            Route::patch('/', 'MicrositeController@showPageMicrosite');
+        });
+
+        Route::group(['prefix' => '/microportal', 'namespace' => 'Microportal'], function () {
+            Route::post('/', 'MicroportalController@storeMicroportal');
+        });
+
+        Route::group(['prefix' => '/roles', 'namespace' => 'Role'], function () {
+            Route::post('/', 'RoleController@StoreRole');
+            Route::put('/{id}', 'RoleController@UpdateRole');
+            Route::post('/{id}/privileges', 'RoleController@StorePrivilegesByRole');
+        });
+
     });
 });
 

@@ -1,5 +1,5 @@
-angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons'])
 
+angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons'])
 .controller('PromotionCtrl', function($scope) {
   $scope.titulo="Promociones";
 })
@@ -259,6 +259,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       }
     });
   } 
+
   //Custom Sizes
   $scope.openModal = function (size) {
     modalInstances(true, size, true, true)
