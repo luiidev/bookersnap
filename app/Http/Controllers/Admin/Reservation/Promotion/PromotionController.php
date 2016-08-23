@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin\Reservation\Promotion;
 use App\Http\Controllers\Controller as Controller;
 use Illuminate\Http\Request;
+use App\Services\ImageService;
+use App\Http\Requests;
+
+//use App\Services\Master\CategoryService;
+
 
 class PromotionController extends Controller
 {
@@ -272,6 +277,39 @@ class PromotionController extends Controller
               ),
              ),
             ),
+            array (
+            'zone_id' => 24,
+            'name' => 'Zona 02',
+            'table' => 
+            array (
+             0 => 
+             array (
+              'table_id' => 5,
+              'name' => 'MESA DE COMPAÑIA 2',
+              'min_cover' => 1,
+              'max_cover' => NULL,
+              'config_color' => NULL,
+              'config_position' => '120,20',
+              'config_forme' =>3,
+              'config_size' => 2,
+              'config_rotation' => 0,
+              'price' => '',
+              ),
+             1 => 
+             array (
+              'table_id' => 6,
+              'name' => 'MESA DE COMPAÑIA 2',
+              'min_cover' => 1,
+              'max_cover' => NULL,
+              'config_color' => NULL,
+              'config_position' => '120,120',
+              'config_forme' =>3,
+              'config_size' => 2,
+              'config_rotation' => 0,
+              'price' => '',
+              ),
+             )
+            ),
            ),
           'redirect' => false,
           'url' => NULL,
@@ -316,26 +354,51 @@ class PromotionController extends Controller
       );
    }
 
-
+/*
    public function uploadFile64(Request $request){
 
       $data = $_POST['file'];
       list($type, $data) = explode(';', $data);
       list(, $data)      = explode(',', $data);
       $data = base64_decode($data);
-      $urlimage=$_SERVER['DOCUMENT_ROOT'] . "/files/flyer/image/".time().'.png';
+      $urlimage=$_SERVER['DOCUMENT_ROOT'] . "/files/promotions/image/".time().'.png';
 
       file_put_contents($urlimage, $data);
-      return $urlimage;
-      
+      return $urlimage; 
    }
+*/
    public function uploadFile(Request $request){
 
-      if ($request->file('file')->isValid()) { 
+      /*if ($request->file('file')->isValid()) { 
          $request->file('file')->move("files/flyer/image/","flyer.jpg");
-      }
+      }*/
+
+      //obtenemos la imagen
+        $imagen = $request->file('file');
+
+        //instanciamos el servicio de imagen
+        $imgService = new ImageService();
+
+        //construimos el array de validaciones
+        $validations = [
+            'mimes' => ['image/gif', 'image/jpeg', 'image/png'],
+            'max-size' => 20971520
+        ];
+        $response = $imgService->saveImageToTemp($imagen, $validations);
+
+        return response()->json($response);
 
    }
+
+   public function storePromotion(Request $request)
+    {
+
+        $user_id = $this->GetUserId();
+
+        $response = $this->_categoryService->SaveCategory($request->all(), $user_id);
+
+        return response()->json($response, $response['statuscode']);
+    }
 
  
 }

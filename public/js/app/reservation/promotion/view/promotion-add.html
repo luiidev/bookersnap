@@ -225,7 +225,7 @@
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hinicio | date:'h:mma'}} - {{turno.hfinal}}</small>
+                                    <small class="lv-small">{{turno.hours_ini | date:'h:mma'}} - {{turno.hours_end}}</small>
                                 </div>
 
                             </div>
@@ -258,7 +258,7 @@
         <tab ng-repeat="tab in listZones" heading="{{tab.name}}" active="tab.active">
             <div class="zoneArea minheight" style="position:relative;">
 
-                <div ng-select-table ng-repeat="obj in tab.table" ng-class="obj.price!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}':'item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}'"  x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.table_id}}">
+                <div ng-select-table ng-repeat="obj in tab.table" ng-class="obj.price!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}':'item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}'" x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.table_id}}">
                     <div class="txtcenter">{{obj.minCover}}</div>
                     <div class="txtmoneda" ng-show="obj.price">{{obj.price | currency:"S/.":2}} </div>
                 </div>

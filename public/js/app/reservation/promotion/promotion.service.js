@@ -18,9 +18,12 @@ angular.module('promotion.service', [])
     editPromotion : function(vData){
       return $http.put(ApiUrlReservation + '/promotion/'+vData.id,vData); 
     },
+    uploadtmpPromotion: function(file){
+    },
   };
 
 })
+
 .factory('TurnosPromotionFactory',function(){
   var turnoColection =[];
   var interfazTurnos = {
@@ -104,6 +107,18 @@ angular.module('promotion.service', [])
         break;
         case 0:
           evalua = false;
+        break;
+      }
+      return evalua;
+    },
+    getEvaluaInverse : function(valor){
+      var evalua = "";
+      switch(valor) {
+        case true:
+          evalua = 1;
+        break;
+        case false:
+          evalua = 0;
         break;
       }
       return evalua;

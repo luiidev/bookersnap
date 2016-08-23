@@ -4,9 +4,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 })
 
-.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory,TableFactory,ZonesPromotionFactory) {
+.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory,TableFactory,ZonesPromotionFactory,ApiUrlReservation) {
 
-  
   var promotionId = $stateParams.id;
   $scope.promotion={};
 
@@ -16,21 +15,20 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       var promotion=data.data;
       var vPromotion = [];
       var dataPromotion = {
-        "titulo":promotion.titulo,
-        "description":promotion.description,
-        "status_expire":TableFactory.getEvalua(promotion.status_expire),
-        "date_expire":promotion.date_expire,
-        "publication":TableFactory.getEvalua(promotion.publication),
-        "tipoSelected":{type_event_id : promotion.type_event},
-        "status":[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
-        "statusSelected":{value : promotion.status},
-        "myImage":promotion.imagen,
-        "turn": promotion.turn,
-        "zonas": promotion.zone
+        titulo:promotion.titulo,
+        description:promotion.description,
+        status_expire:TableFactory.getEvalua(promotion.status_expire),
+        date_expire:promotion.date_expire,
+        publication:TableFactory.getEvalua(promotion.publication),
+        tipoSelected:{type_event_id : promotion.type_event},
+        status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
+        statusSelected:{value : promotion.status},
+        myImage:promotion.imagen,
+        turn: promotion.turn,
+        zonas: promotion.zone
       }
       vPromotion.push(dataPromotion);
       getTypes();
-      //getZones();
       $scope.promotion=vPromotion[0];
 
       /*var zones=promotion.zone
@@ -68,6 +66,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         angular.forEach(tables, function(table) {
           var position = table.config_position.split(",");
           var dataTable = {
+            zone_id : zones.zone_id,
             name_zona : zones.name,
             table_id: table.table_id,
             name : table.name,
@@ -114,26 +113,36 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   };
   getTypes();
   
-  
-  //$scope.cropped = [{w: 200, h: 80}];
-  $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
 
-  /*$scope.imgPreview=[];
-  var datosPreview={
-    sizes:{w:$scope.cropped.cropWidth,h:$scope.cropped.cropHeight},
-    coodinates:{x:$scope.cropped.cropLeft,y:$scope.cropped.cropTop}
-  };
-  $scope.imgPreview.push(datosPreview);*/
-  $scope.addCroppingWatcher=function(){ console.log('hecho');}
+  $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
+  //$scope.addCroppingWatcher=function(){ console.log('hecho');}
 
   $scope.validarImg=function(file){
     if(file==null){ 
       messageAlert("Flyer","Seleccione imagen mayor a 300px x 300px","warning");
       delete $scope.promotion.myImage;
+      return;
     }
+    Upload.upload({
+        url: ApiUrlReservation+'/promotion/uploadFile',
+          data: {file: file}
+        }).then(function (resp) {
+          $scope.imagetmp=resp.data
+          //console.log('Json: '+angular.toJson(resp.data,true));
+        },function (resp) {
+          console.log('Error status: ' + resp.status);
+    });
   }
   
-  $scope.modalContent=TurnosPromotionFactory.getTurnosItems();
+  var existsZone=function(zones,idZone){
+    var index=null;
+    angular.forEach(zones, function(zone,key){
+      if(zone.zone_id==idZone){
+        index=key;
+      }
+    });
+    return index;
+  }
 
   $scope.savePromotion=function(option){
 
@@ -145,49 +154,76 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
     var date_expire ='';
     if($scope.promotion.status_expire==true){
-      fecha_caduca=$scope.promotion.date_expire;
+      date_expire=convertFechaYYMMDD($scope.promotion.date_expire,"es-ES",{});
     }else{
       date_expire='';
     }
 
-    var zone;
+    var zones;
+    var vZones = [];
     var condi_zone=$scope.promotion.tipoSelected.type_event_id;
     if(condi_zone==3){
-      zone=[];
+      zones=[];
     }else{
-      zone=$scope.lstZone;  
+      zones=$scope.lstZone;
+      angular.forEach(zones, function(zone) {
+        var indexZone=existsZone(vZones,zone.zone_id);
+        if(indexZone==null){
+          var dataTable = {
+            zone_id:zone.zone_id,
+            name:zone.name,
+            table:[{table_id : zone.table_id, price : zone.price}]
+          }
+          vZones.push(dataTable);
+        }else{
+          vZones[indexZone].table.push({table_id : zone.table_id, price : zone.price});
+        }
+        
+      });
+      //console.log('Zonas lst'+angular.toJson(vZones,true));
     }
 
     var imagen='';
     if($scope.promotion.myImage){
-      imagen=cleanString($scope.promotion.myImage.name);
+      basename=$scope.imagetmp.basename;
+      fullname=$scope.imagetmp.fullname;
+      cropper=$scope.cropper;
+      cropped=$scope.cropped;
     }else{
-      imagen='';
+      basename='';
+      fullname='';
+      cropper='';
+      //cropped='';
     }
     //console.log($scope.promotion.myImage);
 
     var datosPromotion={
       "microsite_id":1,
-      "event_id":1,
-      "token":"abc123456",
-      "titulo":$scope.promotion.titulo,
+      //"event_id":1,
+      //"token":"abc123456",
+      //"titulo":$scope.promotion.titulo,
       "description":$scope.promotion.description,
-      "status_expire":$scope.promotion.status_expire,
-      "date_expire":date_expire ,
-      "publication":$scope.promotion.publication,
-      "tipo":$scope.promotion.tipoSelected.value,
+      "image":basename,
+      "type_event":$scope.promotion.tipoSelected.type_event_id,
       "status":$scope.promotion.statusSelected.value,
-      "type_event_id":$scope.promotion.tipoSelected.type_event_id,
-      "image":imagen,
+      "status_expire":TableFactory.getEvaluaInverse($scope.promotion.status_expire),
+      "date_expire":date_expire,
+      //"publication":$scope.promotion.publication,
+      //"tipo":$scope.promotion.tipoSelected.value,      
+      "image_fullname":fullname,
+      "cropper":cropper,
+      "cropped":cropped,
       "turn": $scope.lstTurn,
-      "zone":zone
+      "zone":vZones
     };
 
-    /*
+    
     if (option == "create") {
-
+     
+      
       PromotionFactory.createPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Zone create complete","success");
+        console.log('Guardando'+angular.toJson(datosPromotion,true));
         //$state.reload();
       }).error(function(data,status,headers){
         messageErrorApi(data,"Error","warning");
@@ -202,14 +238,14 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         messageErrorApi(data,"Error","warning");
       });
     }
-    */
-    console.log('Guardando'+angular.toJson(datosPromotion,true));
+    
+    
     //console.log(TurnosPromotionFactory.getTurnosItems());
   }
 
   
   
-
+  $scope.modalContent=TurnosPromotionFactory.getTurnosItems();
   function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
       animation: animation,
@@ -260,21 +296,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     delete $scope.croppedDataUrl;
   };
 
-
-  var uploadImage = function (file) {
-    Upload.upload({
-            //url: './public/file/img/promotions',
-            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
-            data: {file: file}
-          }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-          }, function (resp) {
-            console.log('Error status: ' + resp.status);
-          }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-          });
-        };
 
         var uploadImage64=function(file){
           Upload.upload({
@@ -390,8 +411,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         var opciones={
           //actividad:$scope.actividadSelected,
           dias:$scope.turnoSelected,
-          hinicio:$scope.turnos.hours_ini,
-          hfinal:$scope.turnos.hours_end,
+          hours_ini:$scope.turnos.hours_ini,
+          hours_end:$scope.turnos.hours_end,
         };
         
         //$scope.listTurnos.push(opciones);
