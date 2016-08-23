@@ -40,6 +40,7 @@ gulp.task('app-library-reservation-js', function () {
     '../../../library/bower_components/nouislider/jquery.nouislider.min.js',
     '../../../library/bower_components/angular-farbtastic/angular-farbtastic.js',
     '../../../library/bower_components/autosize/dist/autosize.min.js',
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
     '../../../library/html2canvas/html2canvas.js',
     '../../../library/html2canvas/canvas2image.js',
     '../../../library/global/functions.js',

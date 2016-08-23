@@ -11,7 +11,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   if(promotionId){
     $scope.titulo="Actualizar promoción";
-    PromotionFactory.getPromotion(12).success(function(data){
+    PromotionFactory.getPromotion(promotionId).success(function(data){
       var promotion=data.data;
       var vPromotion = [];
       var dataPromotion = {
@@ -42,6 +42,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         TurnosPromotionFactory.setTurnosItems(turn);
       });
       //console.log(angular.toJson($scope.promotion, true));
+      console.log(angular.toJson(data, true));
     });
   }else{
     $scope.titulo="Nueva promoción";
@@ -212,7 +213,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       //"tipo":$scope.promotion.tipoSelected.value,      
       "image_fullname":fullname,
       "cropper":cropper,
-      "cropped":cropped,
+      //"cropped":cropped,
       "turn": $scope.lstTurn,
       "zone":vZones
     };
@@ -220,10 +221,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     
     if (option == "create") {
      
-      
       PromotionFactory.createPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Se ha creado promoción con éxito","success");
-        //console.log('Guardando'+angular.toJson(datosPromotion,true));
+        console.log('Guardando'+angular.toJson(datosPromotion,true));
         //$state.reload();
       }).error(function(data,status,headers){
         messageErrorApi(data,"Error","warning");
@@ -410,7 +410,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
         var opciones={
           //actividad:$scope.actividadSelected,
-          dias:$scope.turnoSelected,
+          days:$scope.turnoSelected,
           hours_ini:$scope.turnos.hours_ini,
           hours_end:$scope.turnos.hours_end,
         };

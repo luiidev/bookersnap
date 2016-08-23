@@ -1,22 +1,22 @@
 angular.module('promotion.service', [])
-.factory('PromotionFactory',function($http,ApiUrlReservation,ApiUrlGeneral){
+.factory('PromotionFactory',function($http,ApiUrlReservation){
   return {
-    getTypes: function(vData){
+    getTypes: function(){
       return $http.get(ApiUrlReservation+"/promotion/gettypes");
       //return $http.get(ApiUrlGeneral+"/promotions/types"); 
     },
-    getZones: function(vData){
+    getZones: function(){
       return $http.get(ApiUrlReservation+"/promotion/getzones");
       //return $http.get(ApiUrlGeneral+"/promotions/types"); 
     },
-    createPromotion : function(vData){
-      return $http.post(ApiUrlReservation + '/promotion',vData); 
+    createPromotion : function(pData){
+      return $http.post(ApiUrlReservation + '/promotion',pData); 
     },
-    getPromotion : function(vId){
-      return $http.get(ApiUrlReservation+"/promotion/"+vId); 
+    getPromotion : function(pId){
+      return $http.get(ApiUrlReservation+"/promotion/"+pId); 
     },
-    editPromotion : function(vData){
-      return $http.put(ApiUrlReservation + '/promotion/'+vData.id,vData); 
+    editPromotion : function(pData){
+      return $http.put(ApiUrlReservation + '/promotion/'+pData.id,pData); 
     },
     uploadtmpPromotion: function(file){
     },

@@ -221,11 +221,11 @@
                                     </ul>
                                 </div>
                                 <div class="media-body">
-                                    <div class="lv-title" ng-repeat="dia in turno.dias">
+                                    <div class="lv-title" ng-repeat="dia in turno.days">
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hinicio | date:'h:mma'}} - {{turno.hfinal}}</small>
+                                    <small class="lv-small">{{turno.hours_ini | date:'h:mma'}} - {{turno.hours_end}}</small>
                                 </div>
 
                             </div>
