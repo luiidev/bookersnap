@@ -9,4 +9,5 @@ return array(
 );*/
 
 define('API_AUTH_URL', 'http://localhost:3001/v1');
-define('API_ADMIN_URL', 'http://192.168.0.107/api.promociones/public/v1');
+define('API_ADMIN_URL', 'http://localhost:3000/v1');
+define('API_PROMO_URL', 'http://api-promotion.vh/v1');

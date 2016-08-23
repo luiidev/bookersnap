@@ -13,7 +13,7 @@ angular.module('promotion.service', [])
       return $http.post(ApiUrlReservation + '/promotion',vData); 
     },
     getPromotion : function(vId){
-      return $http.get(ApiUrlReservation+"/promotion/"+vId+"/getpromotion"); 
+      return $http.get(ApiUrlReservation+"/promotion/"+vId); 
     },
     editPromotion : function(vData){
       return $http.put(ApiUrlReservation + '/promotion/'+vData.id,vData); 

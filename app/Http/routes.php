@@ -87,13 +87,15 @@ Route::group(['prefix' => 'v1/{lang}/'], function () {
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function () {
 
     Route::get('promotion', "Admin\Reservation\Promotion\PromotionController@index");
-    Route::get('promotion/{id}/getpromotion', "Admin\Reservation\Promotion\PromotionController@getpromotion");
-    Route::get('promotion/getzones', "Admin\Reservation\Promotion\PromotionController@getzones");
+    Route::post('promotion', "Admin\Reservation\Promotion\PromotionController@storePromotion");
     Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
-    Route::post('promotion/uploadFile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
-    Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
     Route::get('promotion/gettypes', "Admin\Reservation\Promotion\PromotionController@gettypes");
     Route::get('promotion/gettypographys', "Admin\Reservation\Promotion\PromotionController@gettypographys");
+    Route::get('promotion/getzones', "Admin\Reservation\Promotion\PromotionController@getzones");
+    Route::get('promotion/{id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
+    Route::post('promotion/uploadFile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+    //Route::post('promotion/uploadfile64', "Admin\Reservation\Promotion\PromotionController@uploadfile64");
+
 
 });
 

@@ -222,8 +222,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
      
       
       PromotionFactory.createPromotion(datosPromotion).success(function(response){
-        messageAlert("Success","Zone create complete","success");
-        console.log('Guardando'+angular.toJson(datosPromotion,true));
+        messageAlert("Success","Se ha creado promoción con éxito","success");
+        //console.log('Guardando'+angular.toJson(datosPromotion,true));
         //$state.reload();
       }).error(function(data,status,headers){
         messageErrorApi(data,"Error","warning");

@@ -6,6 +6,6 @@ angular.module('flyer.app', ['flyer.controller','flyer.service','flyer.directive
 	    url: '/promotion/:id/flyer',
         templateUrl: '/js/app/reservation/flyer/view/flyer.html',
         controller: 'FlyerAddCtrl',
-	}); 
+	});
 
 });

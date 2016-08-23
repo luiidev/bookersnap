@@ -28,8 +28,7 @@ angular.module('promotion.app', ['promotion.controller','promotion.service','pro
         templateUrl: '/js/app/reservation/promotion/view/promotion-edit.html',
         controller: 'PromotionAddCtrl',
     });
-
-    
+     
 
 
 });
