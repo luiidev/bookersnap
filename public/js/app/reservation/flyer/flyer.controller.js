@@ -9,25 +9,27 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
   $scope.textIndex=0;
 
   var getLabel=function(){
-  FlyerFactory.getLabel().success(function(data){
-    var vTexto = [];
-    angular.forEach(data['data'], function(label) {
-          vTexto.push(label); 
+    FlyerFactory.getLabel().success(function(data){
+
+      var vTexto = [];
+      angular.forEach(data['data'], function(label) {
+            vTexto.push(label); 
+      });
+      $scope.flyer.labels = vTexto;
+      $scope.flyer.labelSelected=$scope.flyer.labels[0];
+      
     });
-    $scope.flyer.labels = vTexto;
-    $scope.flyer.labelSelected=$scope.flyer.labels[0];
-  });
   }
 
   var getTypographys=function(){
-  FlyerFactory.getTypographys().success(function(data){
-    var vTipography = [];
-    angular.forEach(data['data'], function(tipography) {
-          vTipography.push(tipography); 
+    FlyerFactory.getTypographys().success(function(data){
+      var vTipography = [];
+      angular.forEach(data['data'], function(tipography) {
+            vTipography.push(tipography); 
+      });
+      $scope.flyer.fonts = vTipography;
+      $scope.flyer.fontSelected=$scope.flyer.fonts[0];
     });
-    $scope.flyer.fonts = vTipography;
-    $scope.flyer.fontSelected=$scope.flyer.fonts[0];
-  });
   }
 
 
@@ -81,6 +83,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
   $scope.changeFunction=function(){
     $scope.textActive=false;
   }
+
   /*Obtener datos de texto seleccionado*/
   $scope.selectedText=function(index){
     $scope.textIndex=index;
@@ -102,22 +105,22 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
     }
   };
   
-  /*Eliminar dato del array textFlyer*/
-  $scope.deleteText=function(){
+  /* Eliminar dato del array textFlyer */
+  $scope.deleteText=function() {
     $scope.textFlyer.splice($scope.textIndex,1);
     $scope.textActive=false;
     $scope.textAplica=false;
     cleanText();
   }
 
-  var cleanText=function(){
+  var cleanText=function() {
     $scope.flyer.labelSelected=$scope.flyer.labels[0];
     //$scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
     //$scope.flyer.sizeSelected={id: 14, valor: '14px'};
     //$scope.flyer.colorSelected={color: '#03A9F4'};
   }
 
-  $scope.noEditar=function(){
+  $scope.noEditar=function() {
     $scope.textActive=false;
     cleanText();
   }
