@@ -10,3 +10,4 @@ return array(
 
 define('API_AUTH_URL', 'http://localhost:3001/v1');
 define('API_ADMIN_URL', 'http://localhost:3000/v1');
+define('API_PROMO_URL', 'http://api-promotion.vh/v1');

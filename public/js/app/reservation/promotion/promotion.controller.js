@@ -1,94 +1,251 @@
-angular.module('promotion.controller', ['ui.sortable','sortable','LocalStorageModule','ngFileUpload','ngImgCrop','textAngular','ngEmoticons','farbtastic','localytics.directives'])
+
+angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular','ngEmoticons'])
 .controller('PromotionCtrl', function($scope) {
-
   $scope.titulo="Promociones";
-	
 })
-.controller('PromotionAddCtrl', function($scope,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory) {
 
-  $scope.titulo="Nueva promoción";
-  
-  PromotionFactory.getTypes().success(function(data){
-    var vTypes = [];
-    angular.forEach(data['data'], function(types) {
-          vTypes.push(types); 
+.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory,TableFactory,ZonesPromotionFactory,ApiUrlReservation) {
+
+  var promotionId = $stateParams.id;
+  $scope.promotion={};
+
+  if(promotionId){
+    $scope.titulo="Actualizar promoción";
+    PromotionFactory.getPromotion(promotionId).success(function(data){
+      var promotion=data.data;
+      var vPromotion = [];
+      var dataPromotion = {
+        titulo:promotion.titulo,
+        description:promotion.description,
+        status_expire:TableFactory.getEvalua(promotion.status_expire),
+        date_expire:promotion.date_expire,
+        publication:TableFactory.getEvalua(promotion.publication),
+        tipoSelected:{type_event_id : promotion.type_event},
+        status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
+        statusSelected:{value : promotion.status},
+        myImage:promotion.imagen,
+        turn: promotion.turn,
+        zonas: promotion.zone
+      }
+      vPromotion.push(dataPromotion);
+      getTypes();
+      $scope.promotion=vPromotion[0];
+
+      /*var zones=promotion.zone
+      angular.forEach(zones, function(zone,key) {
+        //console.log('key: '+key+' zona: '+zone.table_id)
+        //TurnosPromotionFactory.setTurnosItems(turn);
+      });
+      */
+      var turnos=promotion.turn
+      angular.forEach(turnos, function(turn) {
+        TurnosPromotionFactory.setTurnosItems(turn);
+      });
+      //console.log(angular.toJson($scope.promotion, true));
+      console.log(angular.toJson(data, true));
     });
-    $scope.promotion.tipos = vTypes;
-    $scope.promotion.tipoSelected=$scope.promotion.tipos[0];
-    //console.log(vTypes);
-  });
+  }else{
+    $scope.titulo="Nueva promoción";
+    $scope.promotion={
+      titulo:"",
+      description : "",
+      status_expire : false,
+      date_expire : "",
+      publication:false,
+      status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
+      statusSelected:{value:1},
+      myImage: undefined
+    };
 
-  $scope.promotion={
-    estados:[{name:'Activo',value:1},{name:'Inactivo',value:0}],
-    estadoSelected:{value:1},
-    //tipos:[{name:'Gratis',type_event_id:3},{name:'De pago',type_event_id:4}],
-    //tipoSelected:{name:'Gratis',type_event_id:3},//comentario
-    descripcion:" ",
-    zonas:[
-      {id:1,title:'Zona01',formas:[
-        {id:'1', name:'Zona01', shape:'round', size:'medium', top:'20', left:'20',content:'1-2',precio:''},
-        {id:'2', name:'Zona01', shape:'square', size:'medium', top:'20', left:'130',content:'1-2',precio:''},
-        {id:'3', name:'Zona01', shape:'round', size:'medium', top:'20', left:'230',content:'1-2',precio:''},
-        {id:'4', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'60',content:'3-4',precio:''},
-        {id:'5', name:'Zona01', shape:'recta', size:'medium', top:'120', left:'170',content:'3-4',precio:''}
-      ]},
-      {id:2,title:'Zona02',formas:[{id:'6', name:'Zona02', shape:'round', size:'medium', top:'90', left:'60',content:'1-2',precio:''}]},
-      {id:3,title:'Zona03',formas:[{id:'7', name:'Zona03', shape:'recta', size:'medium', top:'150', left:'120',content:'3-4',precio:''}]},
-      {id:4,title:'Zona04',formas:[{id:'8', name:'Zona04', shape:'square', size:'medium', top:'110', left:'120',content:'3-4',precio:''}]}
-    ],
-    zonaSelected:'',
-    caduca:false,
-    publica:true,
-    myImage: undefined,
-    precioDefault:'12'
+
+    var getZones = function(){
+    PromotionFactory.getZones().success(function(data){
+      var vZones = [];
+      angular.forEach(data['data'], function(zones) {
+        var tables = zones.table;
+        var vTables = [];
+        angular.forEach(tables, function(table) {
+          var position = table.config_position.split(",");
+          var dataTable = {
+            zone_id : zones.zone_id,
+            name_zona : zones.name,
+            table_id: table.table_id,
+            name : table.name,
+            minCover : table.min_cover,
+            maxCover : table.max_cover,
+            left : position[0],
+            top : position[1],
+            shape : TableFactory.getLabelShape(table.config_forme),
+            size : TableFactory.getLabelSize(table.config_size),
+            rotate : table.config_rotation,
+            price : table.price,
+          }
+          vTables.push(dataTable); 
+        });
+        var dataZone = {
+          zone_id : zones.zone_id,
+          name :  zones.name,
+          table : vTables,
+        }
+        vZones.push(dataZone);
+      });
+      $scope.promotion.zonas = vZones;
+      //console.log(angular.toJson(vZones,true));
+    });
+    };
+    getZones();
+  }
+
+  
+
+  var getTypes = function(){
+    PromotionFactory.getTypes().success(function(data){
+      var vTypes = [];
+      angular.forEach(data['data'], function(types) {
+        vTypes.push(types); 
+      });
+      $scope.promotion.tipos = vTypes;
+
+      if(!promotionId){
+        $scope.promotion.tipoSelected=$scope.promotion.tipos[0];
+      }
+      
+    });
   };
+  getTypes();
+  
 
-  //$scope.cropped = [{w: 200, h: 80}];
   $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
-
-
-  /*$scope.imgPreview=[];
-  var datosPreview={
-    sizes:{w:$scope.cropped.cropWidth,h:$scope.cropped.cropHeight},
-    coodinates:{x:$scope.cropped.cropLeft,y:$scope.cropped.cropTop}
-  };
-  $scope.imgPreview.push(datosPreview);*/
-  $scope.addCroppingWatcher=function(){ console.log('hecho');}
+  //$scope.addCroppingWatcher=function(){ console.log('hecho');}
 
   $scope.validarImg=function(file){
     if(file==null){ 
       messageAlert("Flyer","Seleccione imagen mayor a 300px x 300px","warning");
       delete $scope.promotion.myImage;
+      return;
     }
+    Upload.upload({
+        url: ApiUrlReservation+'/promotion/uploadFile',
+          data: {file: file}
+        }).then(function (resp) {
+          $scope.imagetmp=resp.data
+          //console.log('Json: '+angular.toJson(resp.data,true));
+        },function (resp) {
+          console.log('Error status: ' + resp.status);
+    });
   }
+  
+  var existsZone=function(zones,idZone){
+    var index=null;
+    angular.forEach(zones, function(zone,key){
+      if(zone.zone_id==idZone){
+        index=key;
+      }
+    });
+    return index;
+  }
+
+  $scope.savePromotion=function(option){
+
+    //uploadImage($scope.promotion.myImage);
+    //uploadImage64($scope.croppedDataUrl);
+
+    $scope.lstTurn=TurnosPromotionFactory.getTurnosItems();
+    $scope.lstZone=ZonesPromotionFactory.getZonesItems();
+
+    var date_expire ='';
+    if($scope.promotion.status_expire==true){
+      date_expire=convertFechaYYMMDD($scope.promotion.date_expire,"es-ES",{});
+    }else{
+      date_expire='';
+    }
+
+    var zones;
+    var vZones = [];
+    var condi_zone=$scope.promotion.tipoSelected.type_event_id;
+    if(condi_zone==3){
+      zones=[];
+    }else{
+      zones=$scope.lstZone;
+      angular.forEach(zones, function(zone) {
+        var indexZone=existsZone(vZones,zone.zone_id);
+        if(indexZone==null){
+          var dataTable = {
+            zone_id:zone.zone_id,
+            name:zone.name,
+            table:[{table_id : zone.table_id, price : zone.price}]
+          }
+          vZones.push(dataTable);
+        }else{
+          vZones[indexZone].table.push({table_id : zone.table_id, price : zone.price});
+        }
+        
+      });
+      //console.log('Zonas lst'+angular.toJson(vZones,true));
+    }
+
+    var imagen='';
+    if($scope.promotion.myImage){
+      basename=$scope.imagetmp.basename;
+      fullname=$scope.imagetmp.fullname;
+      cropper=$scope.cropper;
+      cropped=$scope.cropped;
+    }else{
+      basename='';
+      fullname='';
+      cropper='';
+      //cropped='';
+    }
+    //console.log($scope.promotion.myImage);
+
+    var datosPromotion={
+      "microsite_id":1,
+      //"event_id":1,
+      //"token":"abc123456",
+      //"titulo":$scope.promotion.titulo,
+      "description":$scope.promotion.description,
+      "image":basename,
+      "type_event":$scope.promotion.tipoSelected.type_event_id,
+      "status":$scope.promotion.statusSelected.value,
+      "status_expire":TableFactory.getEvaluaInverse($scope.promotion.status_expire),
+      "date_expire":date_expire,
+      //"publication":$scope.promotion.publication,
+      //"tipo":$scope.promotion.tipoSelected.value,      
+      "image_fullname":fullname,
+      "cropper":cropper,
+      //"cropped":cropped,
+      "turn": $scope.lstTurn,
+      "zone":vZones
+    };
+
+    
+    if (option == "create") {
+     
+      PromotionFactory.createPromotion(datosPromotion).success(function(response){
+        messageAlert("Success","Se ha creado promoción con éxito","success");
+        console.log('Guardando'+angular.toJson(datosPromotion,true));
+        //$state.reload();
+      }).error(function(data,status,headers){
+        messageErrorApi(data,"Error","warning");
+      });
+
+    }else{
+      datosPromotion.id = $stateParams.id;
+      PromotionFactory.editPromotion(datosPromotion).success(function(response){
+        messageAlert("Success","Zone edit complete","success");
+        //$state.go('zone.active');
+      }).error(function(data,status,headers){
+        messageErrorApi(data,"Error","warning");
+      });
+    }
+    
+    
+    //console.log(TurnosPromotionFactory.getTurnosItems());
+  }
+
+  
   
   $scope.modalContent=TurnosPromotionFactory.getTurnosItems();
-
-  $scope.savePromotion=function(){
-
-    uploadImage($scope.promotion.myImage);
-    uploadImage64($scope.croppedDataUrl);
-
-    $scope.datosPromotion={
-      "microsite_id":1,
-      "event_id":1,
-      "token":"abc123456",
-      "titulo":$scope.promotion.titulo,
-      "description":$scope.promotion.descripcion,
-      "status_expire":$scope.promotion.caduca,
-      "date_expire":$scope.promotion.fecha_caduca,
-      "publica":$scope.promotion.publica,
-      "tipo":$scope.promotion.tipoSelected.value,
-      "status":$scope.promotion.estadoSelected.value,
-      "image":cleanString($scope.promotion.myImage.name)
-    };
-    console.log('Guardando'+angular.toJson($scope.datosPromotion,true));
-    console.log(TurnosPromotionFactory.getTurnosItems());
-  }
-
-  
-  
-
   function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
       animation: animation,
@@ -105,322 +262,85 @@ angular.module('promotion.controller', ['ui.sortable','sortable','LocalStorageMo
 
   //Custom Sizes
   $scope.openModal = function (size) {
-      modalInstances(true, size, true, true)
+    modalInstances(true, size, true, true)
   }
 
 
- 
+
 	//Opciones de calendario
 	$scope.today = function() {
-        $scope.dt = new Date();
-    };
-    $scope.today();
+    $scope.dt = new Date();
+  };
+  $scope.today();
 
-    $scope.open = function($event, opened) {
-    	$event.preventDefault();
-        $event.stopPropagation();
-        $scope[opened] = true;
-    };
+  $scope.open = function($event, opened) {
+   $event.preventDefault();
+   $event.stopPropagation();
+   $scope[opened] = true;
+ };
 
-    $scope.dateOptions = {
-    	formatYear: 'yy',
-        startingDay: 1
-    };
-    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = $scope.formats[0];
+ $scope.dateOptions = {
+   formatYear: 'yy',
+   startingDay: 1
+ };
+ $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+ $scope.format = $scope.formats[0];
 
   //Recortar imagen
-    $scope.myImage = undefined;
- 	  $scope.croppedDataUrl='';   
- 	  $scope.imageCropStep = 1;
-    
+  $scope.myImage = undefined;
+  $scope.croppedDataUrl='';   
+  $scope.imageCropStep = 1;
+
 
   $scope.clearImagePromotion = function() {
-		  delete $scope.promotion.myImage;
-		  delete $scope.croppedDataUrl;
-   };
-
-
-  var uploadImage = function (file) {
-        Upload.upload({
-            //url: './public/file/img/promotions',
-            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
-            data: {file: file}
-        }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
+    delete $scope.promotion.myImage;
+    delete $scope.croppedDataUrl;
   };
 
-  var uploadImage64=function(file){
-    Upload.upload({
+
+        var uploadImage64=function(file){
+          Upload.upload({
             url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile64',
             data: {file: file}
-        }).then(function (resp) {
+          }).then(function (resp) {
             console.log(resp);
             //console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-        }, function (resp) {
+          }, function (resp) {
             console.log('Error status: ' + resp.status);
-        }, function (evt) {
+          }, function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-    });
-  }
-
-
-  /********************************************/
-$scope.invocarZonas=function(item){
-  openModalZones();
-}
-
-var openModalZones = function () {
-  modalInstancesZones()
-}
-
-function modalInstancesZones() {
-    var modalInstance = $uibModal.open({
-      templateUrl: 'myModalContentZone.html',
-      controller: 'ZoneInstanceCtrl',
-      size: 'lg',
-      resolve: {
-        content: function () {
-          return $scope.promotion.zonas;
-        }
-      }
-    });
-} 
-
-
-
-
-})
-.controller('FlyerAddCtrl', function($scope,Upload,PromotionFactory) {
-
- 	$scope.titulo="Diseñar Flyer";
-
-  $scope.textFlyer=[];
-  $scope.textActive=false;
-  $scope.textIndex=0;
-
-  PromotionFactory.getLabel().success(function(data){
-    var vTexto = [];
-    angular.forEach(data['data'], function(label) {
-          vTexto.push(label); 
-    });
-    $scope.flyer.labels = vTexto;
-    $scope.flyer.labelSelected=$scope.flyer.labels[0];
-  });
-
-  PromotionFactory.getTypographys().success(function(data){
-    var vTipography = [];
-    angular.forEach(data['data'], function(tipography) {
-          vTipography.push(tipography); 
-    });
-    $scope.flyer.fonts = vTipography;
-    $scope.flyer.fontSelected=$scope.flyer.fonts[0];
-  });
-
-
-  $scope.flyer={
-    sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'}],
-    sizeSelected:{id: 14, valor: '14px'},
-    colorSelected:{color: '#03A9F4'},
-    //states:[{name: 'Activo',value:1},{name: 'Inactivo',value:0}],
-    //stateSelected:{value: 1}
-  }
-
-  /*Agregar datos a un array textFlyer*/
-  $scope.addText=function(){
-    if ($scope.flyer.labelSelected) {
-
-        if($scope.textFlyer.length==0){
-          crearTexto();
-        }else{
-          var exists = false;
-          angular.forEach($scope.textFlyer, function(objetos) {
-            if($scope.flyer.labelSelected.label_id==objetos.label.label_id){
-                exists = true;
-                messageAlert("Flyer","Texto ya se encuentra ubicado sobre el flyer","warning");
-            }          
           });
-          if (exists === false) {
-            crearTexto();
-          }
         }
-        
-    }else{
-      messageAlert("Flyer","Debe seleccionar un texto","warning");
-    }
-  }
 
-  var crearTexto=function(){
-    var texto={
-      label:$scope.flyer.labelSelected,
-      typography:{typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name},
-      font_size:$scope.flyer.sizeSelected.id+"px",
-      color:$scope.flyer.colorSelected.color
-      //top:Math.floor((Math.random() * 100) + 40)+"px",
-      //left: Math.floor((Math.random() * 300) + 40)+"px"
-    };
-    $scope.textFlyer.push(texto);
-    cleanText();
-  }
 
-  $scope.changeFunction=function(){
-    $scope.textActive=false;
-  }
-  /*Obtener datos de texto seleccionado*/
-  $scope.selectedText=function(index){
-    $scope.textIndex=index;
-    $scope.flyer.labelSelected=$scope.textFlyer[index].label;
-    $scope.flyer.fontSelected={typography_id:$scope.textFlyer[index].typography.typography_id,name:$scope.textFlyer[index].typography.name};
-    $scope.flyer.sizeSelected.id= $scope.textFlyer[index].font_size.replace("px","");
-    $scope.flyer.colorSelected.color=$scope.textFlyer[index].color;
-    $scope.textActive=true;
-    //console.log("selectedText "+angular.element('.text-flyer').eq(index).css("top"));
-  }
+        /********************************************/
+        $scope.invocarZonas=function(item){
+          openModalZones();
+        }
 
-  /*Actualizar datos en el array textFlyer*/
-  /*
-  $scope.updateText=function(){
-    if($scope.flyer.labelSelected.label_id==$scope.textFlyer[$scope.textIndex].label.label_id){
-    $scope.textFlyer[$scope.textIndex].label=$scope.flyer.labelSelected;
-    $scope.textFlyer[$scope.textIndex].tipografy=$scope.flyer.fontSelected.name;
-    $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
-    $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;   
-    $scope.textActive=false;
-    cleanText();
-    }else{ 
-      messageAlert("Flyer","Modificacion no corresponde a objeto seleccionado","warning");
-    }
-  }
-*/
-  $scope.autoPropiedad = function () {
-    if($scope.textFlyer.length!=0){
-      $scope.textFlyer[$scope.textIndex].font_size=$scope.flyer.sizeSelected.id+"px";
-      $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
-      $scope.textFlyer[$scope.textIndex].typography={typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name};
-    }
-  };
-  
-  /*Eliminar dato del array textFlyer*/
-  $scope.deleteText=function(){
-    $scope.textFlyer.splice($scope.textIndex,1);
-    $scope.textActive=false;
-    cleanText();
-  }
+        var openModalZones = function () {
+          modalInstancesZones()
+        }
 
-  var cleanText=function(){
-    $scope.flyer.labelSelected=$scope.flyer.labels[0];
-    //$scope.flyer.fontSelected={id: 'Arial', title: 'Arial'};
-    //$scope.flyer.sizeSelected={id: 14, valor: '14px'};
-    //$scope.flyer.colorSelected={color: '#03A9F4'};
-  }
-
-  $scope.noEditar=function(){
-    $scope.textActive=false;
-    cleanText();
-  }
-
-  $scope.existeFlyer=false;
-  $scope.uploadImageFlyer = function (file) {
-        $scope.temporal=file;
-        $scope.existeFlyer=true;
-  };
-  var uploadFile=function(file){
-    Upload.upload({
-            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile',
-            data: {file: file}
-        }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-    });
-  }
-  var uploadFile64=function(file){
-    Upload.upload({
-            url:'http://web.aplication.bookersnap/v1/es/admin/ms/12/reservation/promotion/uploadfile64',
-            data: {file: file}
-        }).then(function (resp) {
-            console.log(resp);
-            //console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-    });
-  }
-
-  $scope.clearImageFlyer = function() {
-      delete $scope.coleccion.fileimg;
-  };
-
-  var generateFlyer=function(){
-
-    html2canvas(angular.element('.svgArea'), {
-      onrendered: function(canvas) {
-
-        theCanvas = canvas;
-        var img = canvas.toDataURL("image/png");
-        //Canvas2Image.convertToPNG(canvas);
-        document.body.appendChild(canvas);
-        //uploadFile64(img);
-        //console.log(img);
-      }
-    });
-
-  }
-  //console.log($scope.existeFlyer);
-  $scope.saveFlyer=function(){
-    if($scope.existeFlyer){ 
-
-      angular.forEach($scope.textFlyer, function(data,index){
-      //data.label_id="1";
-      //data.x=angular.element('.text-flyer').eq(index).css("left");
-      data.coodinates={
-        x:angular.element('.text-flyer').eq(index).css("left"),
-        y:angular.element('.text-flyer').eq(index).css("top")
-      }
+        function modalInstancesZones() {
+          var modalInstance = $uibModal.open({
+            templateUrl: 'myModalContentZone.html',
+            controller: 'ZoneInstanceCtrl',
+            size: 'lg',
+            resolve: {
+              content: function () {
+                return $scope.promotion.zonas;
+              }
+            }
+          });
+        } 
 
       })
 
-      uploadFile($scope.coleccion.fileimg);
-      generateFlyer();
-      $scope.principal={
-      "microsite_id":1,
-      "event_id":1,
-      "token":"abc123456",
-      //"status":$scope.flyer.stateSelected.value,
-      "image":cleanString($scope.coleccion.fileimg.name),
-      "label":$scope.textFlyer
-      };
-      console.log("General  "+angular.toJson($scope.principal,true));
-      messageAlert("Flyer","Se ha adjuntado correctamente el flyer","success");
-
-    }else{ 
-        messageAlert("Flyer","Debe seleccionar una imagen para el flyer","warning");
-    };
-
-    
-    
-  }
-
-  
-  
-
-})
-
 .controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter,TurnosPromotionFactory,content) {
-    
-    $scope.listTurnos = content;
+
+  $scope.listTurnos = content;
     //console.log('Hay '+ angular.toJson(content, true));
     //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
     $scope.turnoIndex=0;
@@ -434,21 +354,21 @@ function modalInstancesZones() {
 
     $scope.turnos = {
       actividades:[
-        {id: 1, name: 'Reservacion'},
-        {id: 2, name: 'Comida'},
-        {id: 3, name: 'Cena'},
-        {id: 4, name: 'Bar noche'},
+      {id: 1, name: 'Reservacion'},
+      {id: 2, name: 'Comida'},
+      {id: 3, name: 'Cena'},
+      {id: 4, name: 'Bar noche'},
       ],
       semana:[
-        {id : 0, label : 'Domingo',disabled : false,checked : false},
-        {id : 1, label : 'Lunes',disabled : false,checked : false},
-        {id : 2, label : 'Martes',disabled : false,checked : false},
-        {id : 3, label : 'Miercoles',disabled : false,checked : false},
-        {id : 4, label : 'Jueves',disabled : false,checked : false},
-        {id : 5, label : 'Viernes',disabled : false,checked : false},
-        {id : 6, label : 'Sabado',disabled : false,checked : false},
+      {id : 0, label : 'Domingo',disabled : false,checked : false},
+      {id : 1, label : 'Lunes',disabled : false,checked : false},
+      {id : 2, label : 'Martes',disabled : false,checked : false},
+      {id : 3, label : 'Miercoles',disabled : false,checked : false},
+      {id : 4, label : 'Jueves',disabled : false,checked : false},
+      {id : 5, label : 'Viernes',disabled : false,checked : false},
+      {id : 6, label : 'Sabado',disabled : false,checked : false},
       ],
-      actividadSelected : {id: 1, name: 'Reservacion'},
+      //actividadSelected : {id: 1, name: 'Reservacion'},
       turnoSelected:[],
       hours_ini : '',
       hours_end : '',
@@ -463,13 +383,13 @@ function modalInstancesZones() {
 
     var getDaysSelected = function(days){
       var daysData = [];
-
       angular.forEach(days, function(data,key){
         if(data){
           daysData.push({ day : key});
+          //daysData.push(key);
         }
       });
-    return daysData;
+      return daysData;
     };
 
   /*$scope.$watch('turnoSelected',function(data){ //Step 1
@@ -487,13 +407,13 @@ function modalInstancesZones() {
         $scope.turnoSelected = days;
         $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
         $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
-        $scope.actividadSelected=$scope.turnos.actividadSelected;
+        //$scope.actividadSelected=$scope.turnos.actividadSelected;
 
         var opciones={
-          actividad:$scope.actividadSelected,
-          dias:$scope.turnoSelected,
-          hinicio:$scope.turnos.hours_ini,
-          hfinal:$scope.turnos.hours_end,
+          //actividad:$scope.actividadSelected,
+          days:$scope.turnoSelected,
+          hours_ini:$scope.turnos.hours_ini,
+          hours_end:$scope.turnos.hours_end,
         };
         
         //$scope.listTurnos.push(opciones);
@@ -502,7 +422,7 @@ function modalInstancesZones() {
         //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
 
         cleanTurno();
-        console.log($scope.listTurnos);
+        //console.log($scope.listTurnos);
         //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
       }else{
         messageAlert("Turnos","Debe seleccionar campos de hora","warning");
@@ -510,7 +430,7 @@ function modalInstancesZones() {
     }else{
       messageAlert("Turnos","Debe seleccionar al menos un dia de la semana","warning");
     }
- 
+
   };
   $scope.deleteTurno = function (item) {
     $scope.turnoIndex=item;
@@ -524,7 +444,7 @@ function modalInstancesZones() {
     $scope.horarios.hour_end='';
     $scope.turnos.turnoSelected=[];
   }
- 
+
   /*
   $scope.ok = function () {
     $modalInstance.close();
@@ -537,16 +457,16 @@ function modalInstancesZones() {
 
 .controller('ZoneInstanceCtrl', function($rootScope,$scope,$uibModal,$modalInstance,$filter,content) {
 
-  $rootScope.itemTables = []; //Usar Servicio
-  $scope.listZones = content;
+  $scope.listZones = content;//Todas las zonas en blanco
+  $rootScope.itemTables = []; //Array para cuadros moraditos  
   //console.log($scope.listZones);
   
- 
-/***************Funcion ejecutada por directiva****************/
+
+  /***************Funcion ejecutada por directiva****************/
   
   $scope.activarTableOptions = function(index,data){
 
-    var numero=$scope.itemTables.length;
+    var numero=$rootScope.itemTables.length;
 
     if(numero>0){
       var index = $rootScope.itemTables.indexOf(data);
@@ -562,6 +482,8 @@ function modalInstancesZones() {
 
   };
   
+
+
   $scope.addPrecio = function () {
     if($rootScope.itemTables.length>0){
       modalInstancesPrices();
@@ -569,7 +491,6 @@ function modalInstancesZones() {
       messageAlert("Añadir precio","Debe seleccionar al menos una mesa","warning");
     }
   };
-
   function modalInstancesPrices() {
     var modalInstance = $uibModal.open({
       templateUrl: 'myModalContentPrice.html',
@@ -577,20 +498,20 @@ function modalInstancesZones() {
       size: 'sm',
       resolve: {
         content: function () {
-          return $scope.itemTables;
+          return $rootScope.itemTables;
         }
       }
     });
   } 
-
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
 
+
   $scope.desactivarTable = function (index,data) {
-    modalInstancesdesactivaPrices(data);
+    modalInstancesdesactivaPrices(index,data);
   }
-  function modalInstancesdesactivaPrices(data) {
+  function modalInstancesdesactivaPrices(index,data) {
     var modalInstance = $uibModal.open({
       templateUrl: 'myModalContentdesactivaPrice.html',
       controller: 'DesactivaPriceInstanceCtrl',
@@ -606,7 +527,8 @@ function modalInstancesZones() {
 
 })
 
-.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content) {
+.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content,ZonesPromotionFactory) {
+  
   $scope.itemTables = content;
   $scope.precioDefault = "";
 
@@ -618,35 +540,37 @@ function modalInstancesZones() {
       messageAlert("Añadir precio","Debe ingresar precio para mesas selecionadas","warning");
     }else{
       angular.forEach($scope.itemTables, function(objeto) {
-        objeto.precio=$scope.precioDefault;          
+        objeto.price=$scope.precioDefault;
+        ZonesPromotionFactory.setZonesItems(objeto);          
       });
       $rootScope.itemTables=[];
       $modalInstance.close();
-      //console.log('Seleccionados '+ angular.toJson($scope.itemTables, true));
+      //var almacen=ZonesPromotionFactory.getZonesItems();
+      //console.log('Almacen '+ angular.toJson(almacen, true));
     }
   };
   $scope.deleteTable = function (item,index) {
-    //$scope.itemTables.splice(index, 1);
-    //$rootScope.itemTables.splice(index, 1);
-    var idelemento='#el'+$scope.itemTables[index].id;
+    var idelemento='#el'+$scope.itemTables[index].table_id;
     angular.element(idelemento).removeClass('selected-table');
-    console.log(idelemento);
-  };
-
-  
+    $scope.itemTables.splice(index, 1);
+  }; 
 
 })
 
-.controller('DesactivaPriceInstanceCtrl', function($scope,$modalInstance,$filter,content) {
+.controller('DesactivaPriceInstanceCtrl', function($scope,$rootScope,$modalInstance,$filter,content,ZonesPromotionFactory) {
   $scope.itemPrices = content;
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
   $scope.cleanPrecio = function () {
-    var indexforma=$scope.itemPrices.precio="";
+    var indexforma=$scope.itemPrices.price="";
+    ZonesPromotionFactory.delZonesItem($scope.itemPrices);
     $modalInstance.close();
     $scope.itemPrices=[];
+    //var almacen=ZonesPromotionFactory.getZonesItems();
+    //console.log('Almacen2 '+ angular.toJson(almacen, true));
   };
 
 });
+
 

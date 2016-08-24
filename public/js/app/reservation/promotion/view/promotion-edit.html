@@ -7,7 +7,7 @@
 
     <section id="content">
         <div class="container">
-            <div class="card wrapper-promotion" id="turno-main">
+            <div class="card wrapper-promotion">
 
 
 
@@ -20,7 +20,7 @@
                     <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
                 </li>
                 <li>
-                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
+                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('edit')">Actualizar promocion</button>
                 </li>
             </ul>
         </div>
@@ -68,9 +68,9 @@
         </div>
     
         <div ng-show="promotion.status_expire">
-            <div class="date-picker input-group" ng-class="{ 'is-opened': opened2 == true }">
+            <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
                 <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
-                <div class="fg-line">
+                <div class="fg-line" ng-class="{ 'fg-toggled': opened2 == true }">
                     <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="promotion.date_expire" is-open="opened2" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione una fecha" />
                 </div>
             </div>
@@ -253,12 +253,12 @@
         <h4 class="modal-title">Zonas disponibles</h4>
         <p>Seleccione sus mesas y añada un precio</p>
     </div>
-    <div class="modal-body maxwidth">
+    <div class="modal-body">
         <tabset justified="true">
         <tab ng-repeat="tab in listZones" heading="{{tab.name}}" active="tab.active">
             <div class="zoneArea minheight" style="position:relative;">
 
-                <div ng-select-table ng-repeat="obj in tab.table" ng-class="obj.price!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}':'item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}'" x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.table_id}}">
+                <div ng-select-table ng-repeat="obj in tab.table" ng-class="obj.price!='' ? 'definite-table item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}':'item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}'"  x="{{obj.left}}" y="{{obj.top}}" on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" id="el{{obj.table_id}}">
                     <div class="txtcenter">{{obj.minCover}}</div>
                     <div class="txtmoneda" ng-show="obj.price">{{obj.price | currency:"S/.":2}} </div>
                 </div>

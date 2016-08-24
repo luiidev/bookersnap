@@ -1,8 +1,8 @@
 angular.module('turn.service', [])
 .factory('TurnFactory',function($http,ApiUrl,ApiUrlRoot){
 	return {
-		getTurns: function(){
-			return $http.get(ApiUrl+"/turns");
+		getTurns: function(vOptions){
+			return $http.get(ApiUrl+"/turns?"+vOptions);
 		},
 		getTurn : function(vTurn){
 			return $http.get(ApiUrl+"/turns/"+vTurn);

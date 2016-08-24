@@ -8,7 +8,7 @@
     <section id="content">
         <div class="container">
 
-                   <div class="block-header" style="padding-bottom: 15px">
+            <div class="block-header" style="padding-bottom: 15px">
                 <ul class="actions">
                     <li>
                         <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
@@ -31,9 +31,10 @@
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Shift Name</th>
-                        <th>Hours</th>
-                        <th>Status</th>
+                        <th>Tipo turno</th>
+                        <th>Hora</th>
+                        <th>Zonas</th>
+                        <th>Estado</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -42,6 +43,7 @@
                        <td>{{item.name}}</td>
                        <td>{{item.type_turn.name}}</td>
                        <td>{{item.hours_ini}} - {{item.hours_end}}</td>
+                       <td> {{ item.zones}}</td>
                        <td>
                         <label class="label label-success f-12" ng-if="item.status == 1">Active</label>
                         <label class="label label-danger f-12" ng-if="item.status == 0">Inactive</label>
