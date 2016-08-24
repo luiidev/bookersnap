@@ -4,14 +4,22 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 })
 
-.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,TurnosPromotionFactory,TableFactory,ZonesPromotionFactory,ApiUrlReservation) {
+.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,PromotionDataFactory,TurnosPromotionDataFactory,TableFactory,ZonesPromotionDataFactory,AppBookersnap) {
 
   var promotionId = $stateParams.id;
   $scope.promotion={};
 
+  var getZones = function(){
+    PromotionFactory.listZones().then(function success(data){
+      $scope.promotion.zonas = data;
+    },function error(data){
+      messageErrorApi(data,"Error","warning");
+    });
+  };
+
   if(promotionId){
     $scope.titulo="Actualizar promoción";
-    PromotionFactory.getPromotion(promotionId).success(function(data){
+    PromotionDataFactory.getPromotion(promotionId).success(function(data){
       var promotion=data.data;
       var vPromotion = [];
       var dataPromotion = {
@@ -29,17 +37,18 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       }
       vPromotion.push(dataPromotion);
       getTypes();
-      $scope.promotion=vPromotion[0];
 
+      $scope.promotion=vPromotion[0];
+      getZones();
       /*var zones=promotion.zone
       angular.forEach(zones, function(zone,key) {
         //console.log('key: '+key+' zona: '+zone.table_id)
-        //TurnosPromotionFactory.setTurnosItems(turn);
+        //TurnosPromotionDataFactory.setTurnosItems(turn);
       });
       */
       var turnos=promotion.turn
       angular.forEach(turnos, function(turn) {
-        TurnosPromotionFactory.setTurnosItems(turn);
+        TurnosPromotionDataFactory.setTurnosItems(turn);
       });
       //console.log(angular.toJson($scope.promotion, true));
       console.log(angular.toJson(data, true));
@@ -57,49 +66,13 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       myImage: undefined
     };
 
-
-    var getZones = function(){
-    PromotionFactory.getZones().success(function(data){
-      var vZones = [];
-      angular.forEach(data['data'], function(zones) {
-        var tables = zones.table;
-        var vTables = [];
-        angular.forEach(tables, function(table) {
-          var position = table.config_position.split(",");
-          var dataTable = {
-            zone_id : zones.zone_id,
-            name_zona : zones.name,
-            table_id: table.table_id,
-            name : table.name,
-            minCover : table.min_cover,
-            maxCover : table.max_cover,
-            left : position[0],
-            top : position[1],
-            shape : TableFactory.getLabelShape(table.config_forme),
-            size : TableFactory.getLabelSize(table.config_size),
-            rotate : table.config_rotation,
-            price : table.price,
-          }
-          vTables.push(dataTable); 
-        });
-        var dataZone = {
-          zone_id : zones.zone_id,
-          name :  zones.name,
-          table : vTables,
-        }
-        vZones.push(dataZone);
-      });
-      $scope.promotion.zonas = vZones;
-      //console.log(angular.toJson(vZones,true));
-    });
-    };
     getZones();
   }
 
   
 
   var getTypes = function(){
-    PromotionFactory.getTypes().success(function(data){
+    PromotionDataFactory.getTypes().success(function(data){
       var vTypes = [];
       angular.forEach(data['data'], function(types) {
         vTypes.push(types); 
@@ -125,7 +98,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       return;
     }
     Upload.upload({
-        url: ApiUrlReservation+'/promotion/uploadFile',
+        url: AppBookersnap+'/promotion/uploadFile',
           data: {file: file}
         }).then(function (resp) {
           $scope.imagetmp=resp.data
@@ -150,8 +123,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     //uploadImage($scope.promotion.myImage);
     //uploadImage64($scope.croppedDataUrl);
 
-    $scope.lstTurn=TurnosPromotionFactory.getTurnosItems();
-    $scope.lstZone=ZonesPromotionFactory.getZonesItems();
+    $scope.lstTurn=TurnosPromotionDataFactory.getTurnosItems();
+    $scope.lstZone=ZonesPromotionDataFactory.getZonesItems();
 
     var date_expire ='';
     if($scope.promotion.status_expire==true){
@@ -221,7 +194,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     
     if (option == "create") {
      
-      PromotionFactory.createPromotion(datosPromotion).success(function(response){
+      PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Se ha creado promoción con éxito","success");
         console.log('Guardando'+angular.toJson(datosPromotion,true));
         //$state.reload();
@@ -231,7 +204,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
     }else{
       datosPromotion.id = $stateParams.id;
-      PromotionFactory.editPromotion(datosPromotion).success(function(response){
+      PromotionDataFactory.editPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Zone edit complete","success");
         //$state.go('zone.active');
       }).error(function(data,status,headers){
@@ -240,12 +213,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }
     
     
-    //console.log(TurnosPromotionFactory.getTurnosItems());
+    //console.log(TurnosPromotionDataFactory.getTurnosItems());
   }
 
   
   
-  $scope.modalContent=TurnosPromotionFactory.getTurnosItems();
+  $scope.modalContent=TurnosPromotionDataFactory.getTurnosItems();
   function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
       animation: animation,
@@ -338,11 +311,11 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
       })
 
-.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter,TurnosPromotionFactory,content) {
+.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter,TurnosPromotionDataFactory,content) {
 
   $scope.listTurnos = content;
     //console.log('Hay '+ angular.toJson(content, true));
-    //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
+    //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
     $scope.turnoIndex=0;
 
     var cantidad=$scope.listTurnos.length;
@@ -417,9 +390,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         };
         
         //$scope.listTurnos.push(opciones);
-        TurnosPromotionFactory.setTurnosItems(opciones);
+        TurnosPromotionDataFactory.setTurnosItems(opciones);
         $scope.existeTurno=true;
-        //$scope.listTurnos=TurnosPromotionFactory.getTurnosItems();
+        //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
 
         cleanTurno();
         //console.log($scope.listTurnos);
@@ -435,7 +408,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.deleteTurno = function (item) {
     $scope.turnoIndex=item;
     //$scope.listTurnos.splice($scope.turnoIndex,1);
-    TurnosPromotionFactory.delTurnosItem($scope.turnoIndex);
+    TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
     cleanTurno();
   };
 
@@ -527,7 +500,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content,ZonesPromotionFactory) {
+.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content,ZonesPromotionDataFactory) {
   
   $scope.itemTables = content;
   $scope.precioDefault = "";
@@ -541,11 +514,11 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }else{
       angular.forEach($scope.itemTables, function(objeto) {
         objeto.price=$scope.precioDefault;
-        ZonesPromotionFactory.setZonesItems(objeto);          
+        ZonesPromotionDataFactory.setZonesItems(objeto);          
       });
       $rootScope.itemTables=[];
       $modalInstance.close();
-      //var almacen=ZonesPromotionFactory.getZonesItems();
+      //var almacen=ZonesPromotionDataFactory.getZonesItems();
       //console.log('Almacen '+ angular.toJson(almacen, true));
     }
   };
@@ -557,17 +530,17 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('DesactivaPriceInstanceCtrl', function($scope,$rootScope,$modalInstance,$filter,content,ZonesPromotionFactory) {
+.controller('DesactivaPriceInstanceCtrl', function($scope,$rootScope,$modalInstance,$filter,content,ZonesPromotionDataFactory) {
   $scope.itemPrices = content;
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
   $scope.cleanPrecio = function () {
     var indexforma=$scope.itemPrices.price="";
-    ZonesPromotionFactory.delZonesItem($scope.itemPrices);
+    ZonesPromotionDataFactory.delZonesItem($scope.itemPrices);
     $modalInstance.close();
     $scope.itemPrices=[];
-    //var almacen=ZonesPromotionFactory.getZonesItems();
+    //var almacen=ZonesPromotionDataFactory.getZonesItems();
     //console.log('Almacen2 '+ angular.toJson(almacen, true));
   };
 
