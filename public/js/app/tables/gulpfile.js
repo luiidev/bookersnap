@@ -55,7 +55,7 @@ gulp.task('stylus-app', function() {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-tables-css', function () {
   gulp.src([
-    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
     ])
   .pipe(minifyCss())
   .pipe(concat('app.bookersnap.library.tables.min.css'))
@@ -68,7 +68,7 @@ gulp.task('watch', function(){
     gulp.watch(['../../../library/global/functions.js','../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
-    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+    '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
     ], ['app-library-tables-css']);
 });
 

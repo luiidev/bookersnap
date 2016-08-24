@@ -22,6 +22,7 @@ angular.module('guest.controller', [])
 })
 .controller('GuestViewCtrl', function(GuestFactory,GuestDataFactory,$stateParams) {
 	var vm = this;
+	var dateNow = convertFechaYYMMDD(new Date(),"es-ES",{});
 
 	vm.guestId = $stateParams.guest;
 
@@ -30,24 +31,30 @@ angular.module('guest.controller', [])
 		contact : '',
 		reservations : {
 			resumen : {},
-			data : []
-		},
-
+			past : [],
+			last : []
+		}
 	};
 
 	vm.paginationReservation = {
 		totalItems : 0,
 		currentPage : 1,
 		maxSize : 10,
-		itemsPage :3
+		itemsPage :1
 	};
 
 	vm.init = function(){
 		vm.getGuest();
+
 		vm.getReservations({
 			page : vm.paginationReservation.currentPage,
-			page_size : vm.paginationReservation.itemsPage
-		});
+			page_size : vm.paginationReservation.itemsPage,
+			end_date : dateNow
+		},"past");
+
+		vm.getReservations({
+			start_date : dateNow
+		},"last");
 
 		vm.getResumenReservation();
 	};
@@ -66,7 +73,7 @@ angular.module('guest.controller', [])
 		}
 	};
 
-	vm.getReservations = function(options){
+	vm.getReservations = function(options,type){
 
 		options = getAsUriParameters(options);
 
@@ -74,8 +81,12 @@ angular.module('guest.controller', [])
 
 		GuestFactory.reservationsList(vm.guestId,options).then(function success(response){
 			
-			vm.paginationReservation.totalItems = response.pagination.total;
-			vm.guestData.reservations.data = response.data;
+			if(type == "last"){
+				vm.guestData.reservations.last = response.data;
+			}else{
+				vm.guestData.reservations.past = response.data;
+				vm.paginationReservation.totalItems = response.pagination.total;
+			}
 
 			setTimeout(function(){
 				angular.element("#item-reserva").removeClass("hide");
@@ -89,8 +100,9 @@ angular.module('guest.controller', [])
 	vm.pageReservationChanged = function(page){
 		vm.getReservations({
 			page : page,
-			page_size : vm.paginationReservation.itemsPage
-		});
+			page_size : vm.paginationReservation.itemsPage,
+			end_date : dateNow
+		},"past");
 	};
 
 	vm.getResumenReservation = function(){
@@ -108,6 +120,7 @@ angular.module('guest.controller', [])
 	var vm = this;
 
 	vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+	vm.format = vm.formats[1];
 
 	vm.contentTab = {
 		active : "datos.html",
@@ -199,6 +212,7 @@ angular.module('guest.controller', [])
 		$event.preventDefault();
 		$event.stopPropagation();
 		vm.opened = true;
+		console.log("abrir");
 	};
 
 	vm.addTag = function(tag,category){
