@@ -4,22 +4,38 @@ angular.module('turn.controller', ['form.directive'])
 
 	$scope.turns = {};
 
-	var getTurns = function(){
+	var init = function(){
+		getTurns({
+			with : "availability.zone|availability.rule|type_turn"
+		});
+	};
 
-		TurnFactory.getTurns().success(function(data){
+	var getTurns = function(options){
+
+		options = getAsUriParameters(options);
+
+		TurnFactory.getTurns(options).success(function(data){
 			var vTurns = [];
-
-			console.log("getTurnss " + angular.toJson(data.data,true));
-
 			angular.forEach(data.data,function(turns){
 
 				//var days = turns.days.length;
 
 				//turns.status = ((days >=1 && turns.status == 1) ? 1 : 0);
+				//turns.zones = turns.availability;
+
+				var vZones = [];
+
+				angular.forEach(turns.availability, function(availability){
+					vZones.push(availability.zone.name);
+				});
+
+				turns.zones = vZones.join(", ");
 
 				vTurns.push(turns);
 
 			});
+
+			console.log("getTurnss " + angular.toJson(vTurns,true));
 
 			$scope.turns = vTurns;
 
@@ -31,7 +47,7 @@ angular.module('turn.controller', ['form.directive'])
 		
 	};
 
-	getTurns();
+	init();
 })
 .controller('TurnCreateCtrl', function($scope,$stateParams,$state,$filter,TurnFactory,TypeTurnFactory,IdMicroSitio,DateFactory) {
 

@@ -11,11 +11,14 @@
               <ul class="calendar-box">
                 <li><a href="javascript:void(0)" ng-click="setDate('-')"><i class="zmdi zmdi-chevron-left calendar-btn"></i></a></li>
                 <li>
-                  <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" ng-click="openCalendar($event, 'opened')" uib-datepicker-popup="{{calendarBtn.format}}" show-weeks="false" ng-model="calendarBtn.dateCalendar" is-open="opened" min-date="minDate" datepicker-options="calendarBtn.dateOptions" ng-required="true" close-text="Close">
+                <div class="date-picker" ng-class="{ 'is-opened': opened == true }">
+                       <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" ng-click="openCalendar($event, 'opened')" uib-datepicker-popup="{{calendarBtn.format}}" show-weeks="false" ng-model="calendarBtn.dateCalendar" is-open="opened" min-date="minDate" datepicker-options="calendarBtn.dateOptions" ng-required="true" close-text="Close">
                   {{calendarBtn.dateText}}
                   </br>
                   <small>All Shifts - 10 Covers</small>
                   </button>
+                </div>
+             
                 </li>
                 <li><a href="javascript:void(0)" ng-click="setDate('+')"><i class="zmdi zmdi-chevron-right calendar-btn"></i></a></li>
               </ul>
