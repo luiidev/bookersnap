@@ -1,5 +1,5 @@
 angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.directives'])
-.controller('FlyerAddCtrl', function($scope,Upload,FlyerFactory,ApiUrlReservation) {
+.controller('FlyerAddCtrl', function($scope,Upload,FlyerFactory,AppBookersnap) {
 
  	$scope.titulo="Diseñar Flyer";
 
@@ -125,7 +125,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
   $scope.existeFlyer=false;
   $scope.uploadImageFlyer = function (file) {
       Upload.upload({
-        url: ApiUrlReservation+'/promotion/uploadFile',
+        url: AppBookersnap+'/promotion/uploadFile',
           data: {file: file}
         }).then(function (resp) {
           $scope.imagetmp=resp.data
