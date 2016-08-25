@@ -5,11 +5,11 @@ angular.module('guest.controller', [])
 
 	vm.guestList = [];
 
-	var init = function(){
-		guestAll();
+	vm.init = function(){
+		vm.guestAll();
 	};
 
-	var guestAll = function(){
+	vm.guestAll = function(){
 		GuestFactory.guestList().then(function success(response){
 			vm.guestList = response;
 		},function error(response){
@@ -17,18 +17,110 @@ angular.module('guest.controller', [])
 		});
 	};
 
-	init();
+	vm.init();
 
 })
-.controller('GuestViewCtrl', function(GuestFactory,$stateParams) {
+.controller('GuestViewCtrl', function(GuestFactory,GuestDataFactory,$stateParams) {
 	var vm = this;
+	var dateNow = convertFechaYYMMDD(new Date(),"es-ES",{});
 
 	vm.guestId = $stateParams.guest;
+
+	vm.guestData = {
+		name : '',
+		contact : '',
+		reservations : {
+			resumen : {},
+			past : [],
+			last : []
+		}
+	};
+
+	vm.paginationReservation = {
+		totalItems : 0,
+		currentPage : 1,
+		maxSize : 10,
+		itemsPage :1
+	};
+
+	vm.init = function(){
+		vm.getGuest();
+
+		vm.getReservations({
+			page : vm.paginationReservation.currentPage,
+			page_size : vm.paginationReservation.itemsPage,
+			end_date : dateNow
+		},"past");
+
+		vm.getReservations({
+			start_date : dateNow
+		},"last");
+
+		vm.getResumenReservation();
+	};
+
+	vm.getGuest = function(){
+		if ($stateParams.guest != undefined) {
+			
+			GuestDataFactory.getGuest($stateParams.guest).then(function success(response){
+				var data = response.data.data;
+				vm.guestData.name = data.first_name +" "+ data.last_name;
+				vm.guestData.contact = GuestFactory.parserContactData(data);
+				
+			},function error(response){
+				messageErrorApi(response,"Error","warning");
+			});
+		}
+	};
+
+	vm.getReservations = function(options,type){
+
+		options = getAsUriParameters(options);
+
+		angular.element("#item-reserva").addClass("hide");
+
+		GuestFactory.reservationsList(vm.guestId,options).then(function success(response){
+			
+			if(type == "last"){
+				vm.guestData.reservations.last = response.data;
+			}else{
+				vm.guestData.reservations.past = response.data;
+				vm.paginationReservation.totalItems = response.pagination.total;
+			}
+
+			setTimeout(function(){
+				angular.element("#item-reserva").removeClass("hide");
+			},500);
+			
+		},function error(response){
+			messageErrorApi(response,"Error","warning");
+		});
+	};
+
+	vm.pageReservationChanged = function(page){
+		vm.getReservations({
+			page : page,
+			page_size : vm.paginationReservation.itemsPage,
+			end_date : dateNow
+		},"past");
+	};
+
+	vm.getResumenReservation = function(){
+		GuestFactory.getResumenReservation(vm.guestId).then(function success(response){
+			console.log(angular.toJson(response,true));
+			vm.guestData.reservations.resumen = response;
+		},function error(response){
+			messageErrorApi(response,"Error","warning");
+		});
+	}
+
+	vm.init();
 })
 .controller('GuestCreateCtrl', function(GuestFactory,GuestDataFactory,$compile,$scope,$state,$stateParams) {
 	var vm = this;
 
 	vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+	vm.format = vm.formats[1];
 
 	vm.contentTab = {
 		active : "datos.html",
@@ -120,6 +212,7 @@ angular.module('guest.controller', [])
 		$event.preventDefault();
 		$event.stopPropagation();
 		vm.opened = true;
+		console.log("abrir");
 	};
 
 	vm.addTag = function(tag,category){

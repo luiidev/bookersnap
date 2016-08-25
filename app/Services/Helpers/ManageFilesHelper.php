@@ -30,6 +30,22 @@ class ManageFilesHelper
         ];
     }
 
+    public static function GetDimensionsPromotionImg()
+    {
+        return [
+            [
+                'size' => 320,
+                'path' => '320x320',
+                'side-to-resize' => 'width'
+            ],
+            [
+                'size' => 800,
+                'path' => '800x800',
+                'side-to-resize' => 'width'
+            ]
+        ];
+    }
+
     public static function GetDimensionsCategoryFavicon()
     {
         return [

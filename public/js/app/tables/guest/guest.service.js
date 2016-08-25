@@ -15,6 +15,9 @@ angular.module('guest.service', [])
 		},
 		update : function(vData){
 			return $http.put(ApiUrl + '/guests/'+vData.id,vData); 
+		},
+		getReservations : function(idGuest,options){
+			return $http.get(ApiUrl+"/guests/"+idGuest+"/reservations?"+options);
 		}
 	}
 
@@ -25,23 +28,15 @@ angular.module('guest.service', [])
 		guestList : function(){
 			var guestAll = [];
 			var defered = $q.defer();  
+			var me = this;
 
 			GuestDataFactory.getAllGuest().success(function(data){
 
 				data = data.data.data;
 
 				angular.forEach(data, function(value, key){
-	
-					if (value.phones.length == 0 && value.emails.length == 0) {
-						value.contact = "sin telefono / correo";
-					}else{
-						if(value.phones.length > 0){
-							value.contact = value.phones[0].number;
-						}
-						if(value.emails.length > 0){
-							value.contact = value.emails[0].email;
-						}
-					}
+
+					value.contact = me.parserContactData(value);
 
 					guestAll.push(value);
 				});
@@ -224,6 +219,81 @@ angular.module('guest.service', [])
 			});
 
 			return defered.promise;
+		},
+		parserContactData : function(value){
+			var contact = "";
+
+			if (value.phones.length == 0 && value.emails.length == 0) {
+				contact = "sin telefono / correo";
+			}else{
+
+				if(value.phones.length > 0){
+					contact = value.phones[0].number;
+				}
+
+				if(value.emails.length > 0){
+					contact = value.emails[0].email;
+				}
+			}
+			return contact;
+		},
+		reservationsList : function(idGuest,options){
+			var defered = $q.defer(); 
+
+			GuestDataFactory.getReservations(idGuest,options).success(function(data){
+				var reservData = {
+					pagination : {
+						last_page : data.last_page,
+						next_page_url : data.next_page_url,
+						per_page : data.per_page,
+						total : data.total
+					},
+					data : []
+				};
+
+				angular.forEach(data.data, function(value, key){
+					value.date_reservation_text = convertTextToDate("es-ES", {weekday: "long", month: "short",day: "numeric"},value.date_reservation);
+					value.hours_reservation_text = defineTimeSytem(value.hours_reservation);
+
+					reservData.data.push(value);
+				});
+
+				defered.resolve(reservData);
+			}).error(function(data,status,headers){
+				defered.reject(data);
+			});
+
+			return defered.promise;
+		},
+		getResumenReservation : function(idGuest){
+			var defered = $q.defer(); 
+
+			GuestDataFactory.getReservations(idGuest,"").success(function(data){
+
+				var reservData = {
+					finished : 0,
+					canceled : 0
+				};
+
+				angular.forEach(data.data, function(value, key){
+
+					if(value.res_reservation_status_id == 9 || value.res_reservation_status_id == 10){
+						reservData.canceled += 1; 
+					}
+
+					if(value.res_reservation_status_id == 12 ){
+						reservData.finished += 1; 
+					}
+					
+				});
+
+				defered.resolve(reservData);
+			}).error(function(data,status,headers){
+				defered.reject(data);
+			});
+
+			return defered.promise;
+
 		}
 	}
 })
