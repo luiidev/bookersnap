@@ -15,7 +15,12 @@ angular.module('microsite.app', ['microsite.controller', 'microsite.service'])
                     'mp@microsite-list': {
                         templateUrl: '/js/app/master/microportal/view/microportal-list.html',
                         controller: 'MicroportalListController',
-                        controllerAs: 'vm',
+                        controllerAs: 'vm'
+                    }
+                },
+                resolve: {
+                    'acl': function ($q, AclService, AccessService) {
+                        return AccessService.check($q, AclService, 'microsites-manage');
                     }
                 }
             })
@@ -23,6 +28,11 @@ angular.module('microsite.app', ['microsite.controller', 'microsite.service'])
                 url: '/microsite/add',
                 templateUrl: '/js/app/master/microsite/view/microsite-create.html',
                 controller: 'MicrositeCreateController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    'acl': function ($q, AclService, AccessService) {
+                        return AccessService.check($q, AclService, 'microsites-manage');
+                    }
+                }
             })
     });

@@ -18,7 +18,7 @@
         <div>
             <h3>Login with bookersnap</h3>
 
-            <form method='post'>
+            <form method='post' action="">
                 <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
                 <label>Email: <input type="text" name="email" value="{{old('email')}}"/></label>
                 <label>Password: <input type="password" name="password"/></label>

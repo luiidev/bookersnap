@@ -5,6 +5,11 @@ angular.module('microportal.app', ['microportal.controller', 'microportal.servic
                 url: '/microportal/add',
                 templateUrl: '/js/app/master/microportal/view/microportal-create.html',
                 controller: 'MicroportalCreateController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    'acl': function ($q, AclService, AccessService) {
+                        return AccessService.check($q, AclService, 'microportals-manage');
+                    }
+                }
             })
     });
