@@ -1,10 +1,5 @@
 angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.directives'])
-<<<<<<< HEAD
-.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http,ApiUrlGeneral) {
-=======
-.controller('FlyerAddCtrl', function($scope,Upload,FlyerFactory,AppBookersnap) {
->>>>>>> 24052672d325140b19d9d9b83c244ec3789012bb
-
+.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap) {
  	$scope.titulo="Diseñar Flyer";
 
   $scope.textFlyer=[];
@@ -44,8 +39,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
 
   var getFlyer=function(){
     var id_flyer = $stateParams.id;
-    var microsite_id = obtenerIdMicrositio(); 
-    FlyerFactory.getFlyer(id_flyer, microsite_id).success(function(response){
+    FlyerFactory.getFlyer(id_flyer).success(function(response){
 
       /* Estado para identificar cuando se registra o actualiza el flyer 
       *  True = Update
@@ -247,7 +241,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       var microsite_id = obtenerIdMicrositio();   
       $http({
         method : "POST",
-        url : ApiUrlGeneral+'microsites/'+ microsite_id +'/promotions/flyers',
+        url : ApiUrlReservation+'microsites/'+ microsite_id +'/promotions/flyers',
         data : {
               microsite_id: obtenerIdMicrositio(),
               event_id: $stateParams.id,
