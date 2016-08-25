@@ -107,12 +107,12 @@ var getDayText = function(index,option){
     return dayText;      
 };
 
-var messageAlert = function(title,text,type){
+var messageAlert = function(title,text,type, time=2000){
 	swal({   
 		title: title,   
 		text: text,   
 		type: type,   
-    	timer: 2000,   
+    	timer: time,   
     	showConfirmButton: false
 	});
 };
