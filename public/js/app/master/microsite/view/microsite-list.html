@@ -1,0 +1,124 @@
+<div class="table-responsive" >
+    <table class="table table-striped table-vmiddle">
+        <thead>
+        <tr>
+            <th>Logo</th>
+            <th>Nombre</th>
+            <th>Dominio</th>
+            <th>Categoría</th>
+            <th>Sub Categoría</th>
+            <th ng-class="(vm.orderVisits=='desc'?'':'dropup')" style="cursor: pointer;"
+                ng-click="vm.orderByVisit()">Conversiones <span class="caret"></span></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <form class="fg-line" ng-submit="vm.search()">
+                    <input type="text" ng-model="vm.filters.name"
+                           class="form-control input-sm"/>
+                </form>
+            </td>
+            <td>
+                <form class="fg-line" ng-submit="vm.search()">
+                    <input type="text" ng-model="vm.filters.domain"
+                           class="form-control input-sm">
+                </form>
+            </td>
+            <td>
+                <form class="fg-line" ng-submit="vm.search()">
+                    <input type="text" ng-model="vm.filters.category"
+                           class="form-control input-sm">
+                </form>
+            </td>
+            <td>
+                <form class="fg-line" ng-submit="vm.search()">
+                    <input type="text" ng-model="vm.filters.subcategory"
+                           class="form-control input-sm">
+                </form>
+            </td>
+            <td>
+                <div class="fg-line">
+                    <input date-range-picker class="form-control date-picker"
+                           type="text" readonly style="background: white;"
+                           ng-model="vm.count_filter_selected"
+                           options="vm.datepickerOptions"/>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr>-->
+        <!--<td colspan="6" ng-show="vm.flags.isLoading && !vm.flags.serverError"-->
+        <!--class="text-center">-->
+        <!--Cargando Datos...-->
+        <!--</td>-->
+        <!--</tr>-->
+        <tr>
+            <td colspan="6" ng-show="vm.flags.serverError" class="text-center">Hubo un error
+                interno
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" ng-show="vm.pagination.items == 0 && !vm.flags.serverError"
+                class="text-center">
+                No se encontraron resultados
+            </td>
+        </tr>
+        <tr ng-repeat="item in vm.pagination.items" ng-show="!vm.flags.serverError"
+            ng-init="flagctg=false;flagsubctg=false">
+            <td>
+                <img ng-src="{{(item.image_logo!=null?vm.urlImgMs+item.image_logo:(item.categories.length>0?vm.urlImgCategory+item.categories[0].image_logo:null))}}"
+                     alt=""/>
+            </td>
+            <td>{{item.name}} <i
+                    ng-class="(item.site_name!=null?'zmdi zmdi-star zmdi-hc-fw':null)"></i>
+            </td>
+            <td>
+                <a href="{{item.full_domain}}" target="_blank"> {{item.full_domain}}</a>
+            </td>
+            <td>
+                <span ng-show="item.categories.length==0">-</span>
+
+                <div ng-repeat="ctg in item.categories" ng-show="$index==0 || flagctg">
+                    {{ctg.name}}
+                </div>
+                <a href="javascript:" ng-show="item.categories.length>1"
+                   ng-click="flagctg=(flagctg?false:true);">
+                    {{(flagctg?"Ver menos":"Ver más...")}}
+                </a>
+            </td>
+            <td>
+                <span ng-show="item.subcategories.length==0">-</span>
+
+                <div ng-repeat="subctg in item.subcategories"
+                     ng-show="$index==0 || flagsubctg">
+                    {{subctg.name}}
+                </div>
+                <a href="javascript:" ng-show="item.subcategories.length>1"
+                   ng-click="flagsubctg=(flagsubctg?false:true);">
+                    {{(flagsubctg?"Ver menos":"Ver más...")}}
+                </a>
+            </td>
+            <td><span>{{item.countVisits}}</span></td>
+
+            <td>
+                <button class="btn btn-primary btn-icon waves-effect waves-circle"
+                        title="ver Dashboard">
+                    <i class="zmdi zmdi-view-dashboard zmdi-hc-fw"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="ng-table-pager" style="background: white;">
+        <uib-pagination boundary-links="true" total-items="vm.pagination.total"
+                        ng-model="vm.pagination.page"
+                        class="pagination-sm" max-size="5"
+                        items-per-page="vm.pagination.page_size"
+                        previous-text="<" next-text=">" first-text="<<"
+                        ng-change="vm.changePage()"
+                        last-text=">>"></uib-pagination>
+    </div>
+</div>
+

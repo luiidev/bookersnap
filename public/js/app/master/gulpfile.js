@@ -35,8 +35,13 @@ gulp.task('app-library-master-js', function () {
             '../../../library/global/form.directive.js',
             '../../../library/input-mask/input-mask.js',
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+            '../../../library/bootstrap-daterangepicker/moment.js',
+            '../../../library/bootstrap-daterangepicker/daterangepicker.js',
+            '../../../library/angular-daterangepicker-master/js/angular-daterangepicker.min.js',
             '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
             '../../../library/ng-file-upload-master/dist/ng-file-upload.min.js',
+            '../../../library/angularjs-google-maps/build/scripts/ng-map.min.js',
+            '../../../library/angular-acl/angular-acl.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.master.min.js'))
@@ -60,8 +65,9 @@ gulp.task('app-library-master-css', function () {
     gulp.src([
             '../../../library/textAngular-1.5.0/bower_components/font-awesome/css/font-awesome.min.css',
             '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
+            '../../../library/angucomplete-alt/angucomplete-alt.css',
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-            '../../../library/angucomplete-alt/angucomplete-alt.css'
+            '../../../library/bootstrap-daterangepicker/daterangepicker.css',
         ])
         .pipe(minifyCss())
         .pipe(concat('app.bookersnap.library.master.min.css'))
@@ -88,4 +94,7 @@ gulp.task('watch', function () {
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-bookersnap-master-js', 'stylus-app', 'app-library-master-js', 'app-library-master-css']);
+//gulp.task('default', ['watch', 'app-bookersnap-master-js', 'stylus-app', 'app-library-master-js', 'app-library-master-css']);
+
+//gulp.task('default', ['app-bookersnap-master-js', 'app-library-master-js']);
+gulp.task('default', ['app-bookersnap-master-js']);

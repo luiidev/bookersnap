@@ -88,11 +88,15 @@ class ImageService
      *   ]
      * ]
      */
+
     public function saveImageToTemp(UploadedFile $file, array $validations)
     {
+
         $outputFormat = $file->getClientOriginalExtension();
 
+
         $this->validateFile($file->getMimeType(), $file->getSize(), $validations['mimes'], $validations['max-size']);
+        
 
         $img = Image::make($file)->encode($outputFormat);
 
@@ -217,8 +221,9 @@ class ImageService
      * @param array $mimes : array con los mimes validos
      * @param int $maxSize : tamaño maximo del archivo
      */
-    private function validateFile($mimeType, $size, array $mimes, int $maxSize)
-    {
+    private function validateFile($mimeType, $size, array $mimes, $maxSize)
+    {   
+        
         // ['image/gif', 'image/jpeg', 'image/png', 'image/webp', 'application/octet-stream']
         if (!in_array($mimeType, $mimes)) {
             abort(400, trans('messages.invalid_field'));
@@ -227,6 +232,7 @@ class ImageService
         if ($size > $maxSize) {
             abort(400, trans('messages.heavy_file'));
         }
+        
     }
 
     private function ValidateImageDimensions($width, $height, array $minDimensions = null, array $maxDimensions = null)

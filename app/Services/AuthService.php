@@ -9,12 +9,19 @@
 namespace App\Services;
 
 use App\Services\Helpers\ApiRequestsHelper;
-use Config;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class AuthService
 {
+
+    protected $_api_auth_url;
+
+    public function __construct()
+    {
+        $this->_api_auth_url = config('settings.API_AUTH_URL');
+    }
+
     public function ValidateSocialResponse(string $data = null)
     {
         if ($data == null) {
@@ -38,7 +45,7 @@ class AuthService
 
     public function LoginSocialUserData($data)
     {
-        $url = Config::get("constants.url.api.auth");
+        $url = $this->_api_auth_url;
         $url .= '/es/auth/socialnetwork';
 
         $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data->user);
@@ -56,7 +63,7 @@ class AuthService
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
         }
-        $url = API_AUTH_URL . '/es/auth/bookersnap';
+        $url = $this->_api_auth_url . '/es/auth/bookersnap';
         $data = [
             'email' => $email,
             'password' => $password

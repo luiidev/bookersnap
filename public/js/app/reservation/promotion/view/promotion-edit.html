@@ -33,7 +33,7 @@
         <div class="form-group fg-float m-b-30">
             <div class="fg-line">
                 <label>Titulo</label>
-                <input type="text" class="input-sm form-control fg-input" ng-model="promotion.titulo">
+                <input type="text" class="input-sm form-control fg-input" ng-model="promotion.title">
             </div>
         </div>
         <p class="c-black f-500 m-t-20 m-b-20">Descripción</p>
@@ -68,9 +68,9 @@
         </div>
     
         <div ng-show="promotion.status_expire">
-            <div class="date-picker input-group dp-blue m-b-20" ng-class="{ 'is-opened': opened2 == true }">
+            <div class="date-picker input-group m-b-20" ng-class="{ 'is-opened': opened2 == true }">
                 <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
-                <div class="fg-line" ng-class="{ 'fg-toggled': opened2 == true }">
+                <div class="fg-line">
                     <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="promotion.date_expire" is-open="opened2" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Seleccione una fecha" />
                 </div>
             </div>

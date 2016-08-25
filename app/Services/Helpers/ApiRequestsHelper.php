@@ -11,6 +11,7 @@ namespace App\Services\Helpers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use Session;
 
 class ApiRequestsHelper
 {
@@ -19,7 +20,7 @@ class ApiRequestsHelper
     {
         $response = null;
         $client = new Client();
-        $json = (is_null($data)?null:json_encode($data));
+        $json = (is_null($data) ? null : json_encode($data));
         $http_headers = [
             'content-type' => 'application/json'
         ];
@@ -28,6 +29,13 @@ class ApiRequestsHelper
                 $http_headers[$key] = $value;
             }
         }
+        $request = request();
+        $http_headers['user-agent'] = $request->server('HTTP_USER_AGENT');
+        $api_token = $request->session()->get('api-token');
+        if (!is_null($api_token)) {
+            $http_headers['Authorization'] = 'Bearer ' . $api_token;
+        }
+
         try {
             $res = $client->request($method, $url, [
                 'headers' => $http_headers,

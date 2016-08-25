@@ -1,0 +1,231 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'template/header.html'"
+        data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main"  bs-loading-overlay >
+    <aside id="sidebar" data-ng-include src="'/template/sidebar-left-master.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include src="'template/chat.html'"
+           data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content" class="page-view" >
+        <div class="container">
+            <div class="block-header">
+
+                <h3>Nuevo Microportal</h3>
+
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-danger btn-icon btn-float waves-effect waves-circle"
+                                ui-sref="microsite-list" ng-disabled="vm.flags.isProccessing"
+                                style="width:60px; height:60px;margin-left: -80px;margin-top:10px;">
+                            <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw"></i>
+                        </button>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body card-padding">
+
+                    <div class="form-group fg-line"
+                         ng-class="(vm.microportalError.name.length>0?'has-error':'')">
+                        <label class="control-label">
+                            <i class="zmdi zmdi-home zmdi-hc-fw"></i> Nombre de la empresa
+                        </label>
+                        <input class="form-control input-sm" ng-model="vm.microportal.name"/>
+                        <small class="help-block" ng-show="vm.microportalError.name.length>0">
+                            <span ng-repeat="error in vm.microportalError.name"> {{error}} </span>
+                        </small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12"
+                             ng-class="(vm.microportalError.bs_country_id.length>0||vm.microportalError.bs_city_id.length>0?'has-error':'')"
+                        >
+                            <label class="control-label"><i class="fa fa-location-arrow w-20"></i>
+                                Ubicación</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="row" style="padding-left: 15px;padding-right: 15px;">
+                                <div class="col-md-6">
+                                    <div class="fg-line"
+                                         ng-class="(vm.microportalError.bs_country_id.length>0?'has-error':'')">
+                                        <div class="select">
+                                            <select class="form-control input-sm"
+                                                    ng-model="vm.microportal.bs_country_id"
+                                                    ng-change="vm.updateCities()"
+                                                    ng-options="item.id as item.name for item in vm.countries track by item.id">
+                                                <option value="">Seleccione País</option>
+                                            </select>
+                                        </div>
+                                        <small class="help-block"
+                                               ng-show="vm.microportalError.bs_country_id.length>0">
+                                            <span ng-repeat="error in vm.microportalError.bs_country_id">{{error}}</span>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="fg-line"
+                                         ng-class="(vm.microportalError.bs_city_id.length>0?'has-error':'')">
+
+                                        <angucomplete-alt id="microsite-citie"
+                                                          placeholder="Buscar Ciudad"
+                                                          pause="0"
+                                                          selected-object="vm.OnCitySelected"
+                                                          local-data="vm.cities"
+                                                          search-fields="name"
+                                                          title-field="name"
+                                                          minlength="3"
+                                                          input-class="form-control input-sm"
+                                                          text-no-results="No se encontraron resultados"
+                                                          focus-out="vm.OnCityOut()"
+                                        ></angucomplete-alt>
+                                        <!--<select class="form-control input-sm" ng-model="vm.microportal.bs_city_id"-->
+                                        <!--ng-disabled="vm.flags.loadingCities"-->
+                                        <!--ng-options="item.id as item.name for item in vm.listCities track by item.id">-->
+                                        <!--<option value="">Seleccione Ciudad</option>-->
+                                        <!--</select>-->
+
+                                        <small class="help-block" ng-show="vm.microportalError.bs_city_id.length>0">
+                                            <span ng-repeat="error in vm.microportalError.bs_city_id">{{error}}</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="(vm.microportalError.site_name.length>0?'has-error':'')">
+                        <label class="control-label"><i
+                                class="fa fa-globe w-20"></i> Nombre de página
+                        </label>
+
+                        <div class="pull-right">
+                            <button class="btn btn-xs waves-effect"
+                                    ng-click="vm.verifySitenameDisp()"
+                                    ng-class="vm.classBtnAvailableSitename">
+                                <i class="zmdi" ng-class="vm.sitenameIcon"></i> Verificar
+                            </button>
+                        </div>
+                        <div class="input-group">
+                                    <span class="input-group-addon f-11"
+                                          style="color: #444;">http://bookersnap.com/</span>
+
+                            <div class="fg-line">
+                                <input type="text" class="form-control input-sm"
+                                       placeholder="Nombre de la página"
+                                       ng-model="vm.microportal.site_name"/>
+                            </div>
+                        </div>
+                        <small class="help-block"
+                               ng-show="vm.microportalError.site_name.length>0">
+                            <span ng-repeat="error in vm.microportalError.site_name">{{error}}</span>
+                        </small>
+                        <div class="has-error">
+                            <small class="help-block" ng-bind="vm.sitename_suggestions"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-group fg-line"
+                         ng-class="(vm.microportalError.domain.length>0?'has-error':'')">
+                        <label class="control-label"><i class="fa fa-globe w-20"></i> Dominio</label>
+                        <input type="text" class="form-control input-sm"
+                               placeholder="http://tudominio.com"
+                               ng-model="vm.microportal.domain"/>
+                        <small class="help-block" ng-show="vm.microportalError.domain.length>0">
+                            <span ng-repeat="error in vm.microportalError.domain">{{error}}</span>
+                        </small>
+                    </div>
+
+                    <div class="row"
+                         ng-class="(vm.microportalError.Categorias.length>0 || vm.microportalError.Subcategorias.length>0 ?'has-error':'')">
+                        <div class="col-md-12">
+                            <label class="control-label"><i class="fa fa-sitemap w-20"></i> Categoría
+                                <button class="btn btn-success btn-xs" ng-click="vm.addCategory()">+</button>
+                            </label>
+
+                            <div class=""></div>
+                        </div>
+                        <div class="form-group" ng-repeat="category in vm.microportal.categories">
+
+                            <div class="row" style="padding-left: 15px;">
+                                <div class="col-md-5 col-xs-4">
+                                    <div class="fg-line">
+                                        <div class="select">
+                                            <select class="form-control input-sm"
+                                                    ng-model="category.bs_category_id"
+                                                    ng-change="vm.updateSubCategories($index)"
+                                                    ng-options="item.id as item.name for item in vm.categories track by item.id">
+                                                <option value="">Seleccione Categoría</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5  col-xs-4">
+                                    <div class="fg-line">
+                                        <div class="select">
+                                            <select class="form-control input-sm"
+                                                    ng-model="category.bs_subcategory_id"
+                                                    ng-options="item.id as item.name for item in vm.subcategories[$index] track by item.id">
+                                                <option value="">{{(vm.subcategories[$index].length==0?"No hay subCategorías":"Seleccione SubCategoría")}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2  col-xs-4">
+                                    <button class="btn btn-danger btn-icon waves-effect waves-circle"
+                                            style="margin-top: 3px;height:25px;width:25px;"
+                                            ng-click="vm.removeCategory(category)"><i
+                                            class="zmdi zmdi-close"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-l-20">
+                            <small class="help-block" ng-show="vm.microportalError.Categorias.length>0">
+                                <span ng-repeat="error in vm.microportalError.Categorias">{{error}}</span>
+                            </small>
+                            <small class="help-block" ng-show="vm.microportalError.Subcategorias.length>0">
+                                <span ng-repeat="error in vm.microportalError.Subcategorias">{{error}}</span>
+                            </small>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-class="(vm.microportalError.description.length>0?'has-error':'')">
+                        <label class="control-label"><i class="fa fa-align-left w-20"></i> Concepto de la
+                            empresa</label>
+
+                        <div class="fg-line">
+                                        <textarea class="form-control input-sm" rows="4"
+                                                  ng-model="vm.microportal.description"
+                                                  placeholder="Escribir Concepto de la empresa"></textarea>
+
+                        </div>
+                        <small class="help-block" ng-show="vm.microportalError.description.length>0">
+                            <span ng-repeat="error in vm.microportalError.description">{{error}}</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 100px;margin-top: 20px;">
+                <div class="pull-right">
+                    <button class="btn btn-primary btn-sm" ng-disabled="vm.flags.isProccessing"
+                            ng-click="vm.register()">
+                        Registrar Microportal
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</section>
+
+
+<footer id="footer" data-ng-include src="'template/footer.html'"></footer>
+

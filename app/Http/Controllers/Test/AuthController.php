@@ -104,11 +104,12 @@ class AuthController extends Controller
             if ($this->LoginUser($user['id'], $extras)) {
                 return response()->redirectTo($response->url)->with('message', 'Bienvenido Usuario.');
             }
-            return redirect()->route($response->url)->with('error-message', 'Hubo un error al iniciar la sesión.');
+            return redirect()->to($response->url)->with('error-message', 'Hubo un error al iniciar la sesión.');
         } catch (HttpException $e) {
             $msg = $e->getMessage();
             return redirect()->route('microsite-login')->with('error-message', $msg);
         } catch (\Exception $e) {
+            //echo $e->getMessage()." ".$e->getFile()." ".$e->getLine();exit;
             $msg = 'Ocurrió un error interno.';
             return redirect()->route('microsite-login')->with('error-message', $msg);
         }

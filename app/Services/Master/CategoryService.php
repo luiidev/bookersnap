@@ -11,23 +11,31 @@ namespace App\Services\Master;
 use App\Services\Helpers\ApiRequestsHelper;
 use App\Services\Helpers\ManageFilesHelper;
 use App\Services\ImageService;
+use Intervention\Image\Exception\NotReadableException;
 
 class CategoryService
 {
 
+    private $_api_admin_url;
+
+    public function __construct()
+    {
+        $this->_api_admin_url = config('settings.API_ADMIN_URL');
+    }
+
     public function GetCategory(int $id)
     {
-        $url = API_ADMIN_URL . '/es/category/' . $id;
+        $url = $this->_api_admin_url . '/es/category/' . $id;
         return ApiRequestsHelper::SendRequest('GET', $url);
     }
 
     public function GetCategories()
     {
-        $url = API_ADMIN_URL . '/es/category?status=1,0';
+        $url = $this->_api_admin_url . '/es/category?status=1,0';
         return ApiRequestsHelper::SendRequest('GET', $url);
     }
 
-    public function SaveCategory($data, int $user_id)
+    public function SaveCategory($data, int $user_id, array $credentials)
     {
         //construir el array de redimensiones
         $dimensionsLogo = ManageFilesHelper::GetDimensionsCategoryLogo();
@@ -38,9 +46,9 @@ class CategoryService
             $imageService->ResizeImage(@$data['image_logo_fullname'], @$data['image_logo'], 'categories', $dimensionsLogo, @$data['croppedLogo'], @$data['dimensions_logo']['canvasWidth']);
             $imageService->ResizeImage(@$data['image_favicon_fullname'], @$data['image_favicon'], 'categories', $dimensionsFavicon, @$data['croppedFavicon'], @$data['dimensions_favicon']['canvasWidth']);
             $data['user_id'] = $user_id;
-            $url = API_ADMIN_URL . '/es/category';
+            $url = $this->_api_admin_url . '/es/category';
             //Se envía la solicitud al api
-            $response = ApiRequestsHelper::SendRequest('POST', $url, null, $data);
+            $response = ApiRequestsHelper::SendRequest('POST', $url, $credentials, $data);
             if ($response['success']) {
                 //Se borran las imagenes de las carpetas temporales
                 $imageService->RemoveImage($data['image_logo_fullname']);
@@ -58,7 +66,7 @@ class CategoryService
         }
     }
 
-    public function UpdateCategory($data, $id, int $user_id)
+    public function UpdateCategory($data, $id, int $user_id, array $credentials)
     {
         //construir el array de redimensiones
         $dimensionsLogo = ManageFilesHelper::GetDimensionsCategoryLogo();
@@ -83,9 +91,9 @@ class CategoryService
             }
 
             $data['user_id'] = $user_id;
-            $url = API_ADMIN_URL . '/es/category/' . $id;
+            $url = $this->_api_admin_url . '/es/category/' . $id;
             //Se envía la solicitud al api
-            $response = ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+            $response = ApiRequestsHelper::SendRequest('PUT', $url, $credentials, $data);
             if ($response['success']) {
                 //Se borran las imagenes de las carpetas temporales
                 if (isset($data['image_logo_fullname'])) {
@@ -109,18 +117,18 @@ class CategoryService
         }
     }
 
-    public function DeleteCategory($id)
+    public function DeleteCategory($id, array $credentials)
     {
-        $url = API_ADMIN_URL . '/es/category/' . $id . '?field=status';
+        $url = $this->_api_admin_url . '/es/category/' . $id . '?field=status';
         $data = [
             'status' => 2
         ];
-        return ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+        return ApiRequestsHelper::SendRequest('PUT', $url, $credentials, $data);
     }
 
     public function GetSubcategories()
     {
-        $url = API_ADMIN_URL . '/es/subcategory';
+        $url = $this->_api_admin_url . '/es/subcategory';
         return ApiRequestsHelper::SendRequest('GET', $url);
     }
 
