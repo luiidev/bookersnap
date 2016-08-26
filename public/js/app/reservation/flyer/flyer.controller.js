@@ -158,7 +158,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
   $scope.uploadImageFlyer = function (file) {
       
       Upload.upload({
-        url: AppBookersnap+'/promotion/uploadFile',
+        url: AppBookersnap+'/flyer/uploadFile',
           data: {file: file}
         }).then(function (resp) {
           $scope.imagetmp=resp.data
@@ -240,7 +240,18 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       }
 
 
+       $http({
+                method : "POST",
+                data: $scope.principal,
+                url : AppBookersnap + '/flyer',
+                }).then(function mySucces(response) {
+                  console.log(response);
+                }, function myError(response) {
+                  console.log(response);
+                });   
+
       /* Se procede a guardar la informacion a la base de datos */
+      /*          
       var microsite_id = obtenerIdMicrositio();   
       $http({
         method : "POST",
@@ -264,17 +275,6 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
 
           if(response.data.success == true){
 
-
-              $http({
-                method : "POST",
-                data: $scope.principal,
-                url : AppBookersnap + '/promotion',
-                }).then(function mySucces(response) {
-                  console.log(response);
-                }, function myError(response) {
-                  console.log(response);
-                });   
-
               //messageAlert("Success", "Guardado exitoso" , "success", 2000);
               //$state.go("promotion-list");
           }else {
@@ -286,11 +286,11 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
           messageAlert("Errores", mensaje, "warning", 6000);
       });
       
-
+    */  
+  
     }else{ 
         messageAlert("Flyer","Debe seleccionar una imagen para el flyer","warning");
     };
-
     
   }
 
