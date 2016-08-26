@@ -7,5 +7,4 @@ angular.module('reservation.app',['promotion.app','flyer.app'])
 .constant("UrlGeneral", "http://api-promotion.vh/v1/es")
 .constant("ApiUrlMesas", "http://api-mesas.vh/v1/es/microsites/"+idMicrositio)
 .constant("ApiUrlReservation", "http://api-promotion.vh/v1/es/microsites/"+idMicrositio)
-//.constant("ApiUrlGeneralPromociones", "http://api-promotion.vh/v1/es/microsites/"+idMicrositio);
 

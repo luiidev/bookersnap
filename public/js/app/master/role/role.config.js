@@ -5,13 +5,23 @@ angular.module('role.app', ['role.controller', 'role.service'])
                 url: '/roles',
                 templateUrl: '/js/app/master/role/view/roles-list.html',
                 controller: 'RolesListController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    'acl': function ($q, AclService, AccessService) {
+                        return AccessService.check($q, AclService, 'roles-manage');
+                    }
+                }
             })
 
             .state ('roles-privileges', {
                 url: '/roles/:id/privileges',
                 templateUrl: '/js/app/master/role/view/roles-privileges.html',
                 controller: 'RolesPrivilegesController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    'acl': function ($q, AclService, AccessService) {
+                        return AccessService.check($q, AclService, 'roles-manage');
+                    }
+                }
             })
     });

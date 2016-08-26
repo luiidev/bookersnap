@@ -20,22 +20,26 @@ angular.module('role.controller', ['bsLoadingOverlay'])
             createRole: true
         };
         vm.flags = {
-            isUpdating: false
+            isUpdating: false,
+            isLoading: false
         };
         vm.rolesList = [];
 
         vm.listarRoles = function () {
             RoleService.GetRoles({
                 BeforeSend: function () {
+                    vm.flags.isLoading = true;
                     bsLoadingOverlayService.start();
-
                 },
                 OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
                     bsLoadingOverlayService.stop();
                     vm.rolesList = Response.data.data;
                     initTableRoles();
                 },
                 OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                    initTableRoles();
                     bsLoadingOverlayService.stop();
                 }
             });
@@ -67,6 +71,8 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                                 errors += '\n- ' + error + '\n';
                             });
                             swal(Response.data.error.user_msg, errors, "error")
+                        } else if (Response.status == 403) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal("Error", data.error.user_msg, "error")
                         }
@@ -121,7 +127,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                     vm.flags.isUpdating = false;
                     bsLoadingOverlayService.stop();
                     var data = Response.data;
-                    if (Response.status == 401) {
+                    if (Response.status == 401 || Response.status == 403) {
                         swal("Error", "No tiene permisos para realizar esta acción", "error");
                     } else if (angular.isUndefined(data.error)) {
                         swal("Error", "Ocurrió un error en el servidor", "error");
@@ -160,7 +166,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                     bsLoadingOverlayService.stop();
                     var data = Response.data;
                     item.status = previousStatus;
-                    if (Response.status == 401) {
+                    if (Response.status == 401 || Response.status == 403) {
                         swal("Error", "No tiene permisos para realizar esta acción", "error");
                     } else if (angular.isUndefined(data.error)) {
                         swal("Error", "Ocurrió un error en el servidor", "error");
@@ -218,7 +224,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
 
     })
     //----------------------------------------------
-    // CREAR MICROPORTALES
+    // PRIVILEGIOS POR ROLES
     //----------------------------------------------
     .controller('RolesPrivilegesController', function (RoleService, bsLoadingOverlayService, $stateParams) {
 
@@ -259,7 +265,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                 OnError: function (Response) {
                     bsLoadingOverlayService.stop();
                     var data = Response.data;
-                    if (Response.status == 401) {
+                    if (Response.status == 401 || Response.status == 403) {
                         swal("Error", "No tiene permisos para realizar esta acción", "error");
                     } else if (angular.isUndefined(data.error)) {
                         swal("Error", "Ocurrió un error en el servidor", "error");

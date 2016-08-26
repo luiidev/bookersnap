@@ -25,6 +25,7 @@
 
 <data ui-view></data>
 
+
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs&libraries=places"></script>
 <!-- Vendor Bookersnap-->
 <script src="/js/theme/dist/library.bower.min.js"></script>
@@ -35,6 +36,33 @@
 <script type="text/javascript" src="/js/dist.app/master/app.bookersnap.library.master.min.js"></script>
 <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
 <script type="text/javascript" src="/js/dist.app/master/app.bookersnap.master.min.js"></script>
+
+<script>
+    angular.module('auth.app').service('PrivilegeService', function () {
+        var svc = this;
+        svc.info = JSON.parse('{!! $acl !!}');
+        svc.GetRole = function () {
+            return svc.info.role;
+        };
+        svc.GetAcl = function () {
+            return svc.info.acl;
+        }
+    });
+
+    var setAuthHeaders = function ($http) {
+
+        var headers = {
+            'X-CSRF-TOKEN': '{{ csrf_token()}}',
+            "type-admin": 1123
+        };
+        $.ajaxSetup({headers: headers});
+
+        //$http.defaults.headers.common['ms-mp-id'] = null;
+        $http.defaults.headers.common['type-admin'] = 1;
+        $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
+    }
+
+</script>
 
 <script type="text/ng-template" id="overlay-template.html">
     <div style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.7);z-index: 10;">

@@ -13,10 +13,12 @@ class CategoryController extends Controller
 {
 
     protected $_categoryService;
+    protected $_credentiales;
 
     public function __construct(CategoryService $categoryService)
     {
         $this->_categoryService = $categoryService;
+        $this->_credentiales = ['type-admin' => 1];
     }
 
     public function index()
@@ -38,7 +40,7 @@ class CategoryController extends Controller
 
         $user_id = $this->GetUserId();
 
-        $response = $this->_categoryService->SaveCategory($request->all(), $user_id);
+        $response = $this->_categoryService->SaveCategory($request->all(), $user_id, $this->_credentiales);
 
         return response()->json($response, $response['statuscode']);
     }
@@ -48,14 +50,14 @@ class CategoryController extends Controller
 
         $user_id = $this->GetUserId();
 
-        $response = $this->_categoryService->UpdateCategory($request->all(), $id, $user_id);
+        $response = $this->_categoryService->UpdateCategory($request->all(), $id, $user_id, $this->_credentiales);
 
         return response()->json($response, $response['statuscode']);
     }
 
     public function deleteCategory($lang, int $id)
     {
-        $response = $this->_categoryService->DeleteCategory($id);
+        $response = $this->_categoryService->DeleteCategory($id, $this->_credentiales);
 
         return response()->json($response, $response['statuscode']);
     }

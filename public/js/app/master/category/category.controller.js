@@ -239,6 +239,8 @@ angular.module('category.controller', ['ngFileUpload', 'ngImgCrop', 'angucomplet
                                 errors += '\n- ' + error + '\n';
                             });
                             swal(Response.data.error.user_msg, errors, "error")
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal("Error", data.error.user_msg, "error")
                         }
@@ -423,6 +425,8 @@ angular.module('category.controller', ['ngFileUpload', 'ngImgCrop', 'angucomplet
                                 errors += '\n- ' + error + '\n';
                             });
                             swal(Response.data.error.user_msg, errors, "error")
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal("Error", data.error.user_msg, "error")
                         }

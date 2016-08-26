@@ -1,0 +1,68 @@
+<div class="sidebar-inner c-overflow">
+    <div class="profile-menu">
+        <a href="" toggle-submenu>
+            <div class="profile-pic">
+                <img src="/img/profile-pics/1.jpg" alt="">
+            </div>
+
+            <div class="profile-info">
+                Josue Diaz
+                <i class="zmdi zmdi-caret-down"></i>
+            </div>
+        </a>
+
+        <ul class="main-menu">
+            <li>
+                <a data-ui-sref="pages.profile.profile-about" data-ng-click="mactrl.sidebarStat($event)"><i
+                        class="zmdi zmdi-account"></i> Ver Perfil</a>
+            </li>
+            <li>
+                <a href=""><i class="zmdi zmdi-input-antenna"></i> Seguridad</a>
+            </li>
+            <li>
+                <a href=""><i class="zmdi zmdi-settings"></i> Configuración</a>
+            </li>
+            <li>
+                <a href=""><i class="zmdi zmdi-time-restore"></i> Salir</a>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="main-menu">
+
+        <li data-ui-sref-active="active">
+            <a data-ui-sref="home" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-home"></i> Home</a>
+        </li>
+
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+            <a href="" toggle-submenu><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Micrositios</a>
+            <ul>
+                <li><a data-ui-sref="microsite-list" data-ng-click="mactrl.sidebarStat($event)"> Ver todos</a>
+                </li>
+                <li><a data-ui-sref="microsite-add" data-ng-click="mactrl.sidebarStat($event)"> Crear Micrositio</a>
+                </li>
+                <li><a data-ui-sref="microportal-add" data-ng-click="mactrl.sidebarStat($event)"> Crear Microportal</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+            <a href="" toggle-submenu><i class="zmdi zmdi-view-compact"></i> Categorías</a>
+            <ul>
+                <li><a data-ui-sref="category"
+                       data-ng-click="mactrl.sidebarStat($event)">Ver todas</a></li>
+                <li><a data-ui-sref="category-add" data-ng-click="mactrl.sidebarStat($event)">Crear Categoría</a></li>
+            </ul>
+        </li>
+
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+            <a href="" toggle-submenu><i class="zmdi zmdi-view-compact"></i> Roles</a>
+            <ul>
+                <li><a data-ui-sref="roles-list" data-ng-click="mactrl.sidebarStat($event)">Ver
+                    todos</a></li>
+            </ul>
+        </li>
+
+
+    </ul>
+</div>

@@ -97,7 +97,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
 
 });
 
-Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master'], function () {
+Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {
