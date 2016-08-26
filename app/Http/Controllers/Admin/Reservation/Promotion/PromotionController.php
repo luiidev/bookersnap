@@ -27,8 +27,7 @@ class PromotionController extends Controller
     return response()->json($response, $response['statuscode']);
   }
    
- 
-   public function getLabel(){
+  public function getLabel(){
       return response()->json(
          array (
             'success' => true,
@@ -67,9 +66,9 @@ class PromotionController extends Controller
             )
          )
       );
-   }
+  }
 
-   public function getTypographys(){
+  public function getTypographys(){
       return response()->json(
          array (
             'success' => true,
@@ -103,9 +102,9 @@ class PromotionController extends Controller
             )
          )
       );
-   }
+  }
 
-   public function uploadFile(Request $request){
+  public function uploadFile(Request $request){
 
       //obtenemos la imagen
         $imagen = $request->file('file');
@@ -122,13 +121,14 @@ class PromotionController extends Controller
 
         return response()->json($response);
 
-   }
+  }
 
   public function storePromotion(Request $request)
   { 
       $user_id = 1;
       $response = $this->_promotionService->SavePromotion($request->all(), $user_id);
       return response()->json($response, $response['statuscode']);
+
   }
 
   public function updatePromotion($lang, $id, Request $request)

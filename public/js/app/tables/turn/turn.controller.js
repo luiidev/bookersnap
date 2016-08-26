@@ -40,15 +40,14 @@ angular.module('turn.controller', ['form.directive'])
 	$scope.turnForm = {
 		hours_ini : '',
 		hours_end : '',
-		type_turn : '',
-
+		type_turn : ''
 	};
+
+	$scope.zonesTable = false;//validar si se oculta la lista de zonas (cuando estamos en mesas)
 
 	$scope.typeTurns = {
 		data : ''
 	};
-
-	$scope.zoneId = $stateParams.id;
 
 	$scope.turnsList = {};
 
@@ -57,10 +56,18 @@ angular.module('turn.controller', ['form.directive'])
 		zones_data : []
 	};
 
+	$scope.zoneSelected = {
+		name : '',
+		rule : '',
+		tables : []
+	};
+
+	$scope.mesasCheckAll = false;
+
 	var init = function(){
 		getTypeTurns();
 
-		//loadDataTurnoEdit();
+		loadDataTurnoEdit();
 	};
 
 	var getTypeTurns = function(){
@@ -94,35 +101,23 @@ angular.module('turn.controller', ['form.directive'])
 	var loadDataTurnoEdit = function(){
 		if ($stateParams.turn != undefined) {
 
-			TurnFactory.getTurn($stateParams.turn).success(function(data){
-				
-				data = data.data;
+			var params = "with=turn_zone.zone|turn_zone.rule|turn_zone.zone.tables|turn_zone.zone.turns";
 
-				console.log("loadDataTurnoEdit " + angular.toJson(data,true));
+			TurnFactory.getTurn($stateParams.turn,params).then(
+				function success(data){
 
-				$scope.turnData.name = data.name;
-				$scope.turnData.hours_ini = data.hours_ini;
-				$scope.turnData.hours_end = data.hours_end;
+					$scope.turnData = data.turnData;
+					$scope.turnForm = data.turnForm;
+					$scope.turnDataClone = data.turnDataClone;
 
-				var hour_ini = data.hours_ini.split(":");
-				var hour_end = data.hours_end.split(":");
+					$scope.turnZoneAdd.zones_id = data.zonesId;
+					$scope.turnZoneAdd.zones_data = data.dataZones;
 
-				$scope.turnForm.hours_ini = new Date(1970, 0, 1,hour_ini[0],hour_ini[1],hour_ini[2]);
-				$scope.turnForm.hours_end = new Date(1970, 0, 1,hour_end[0],hour_end[1],hour_end[2]);
-
-				$scope.turnForm.type_turn = { id : data.type_turn.id , label : ''};
-
-				$scope.turnDataClone = $scope.turnData;
-
-				console.log("loadDataTurnoCloned " + angular.toJson($scope.turnDataClone,true));
-
-				/*angular.forEach(data.days, function(day, key){
-					$scope.turnData.days[day.day] = true;
-				});*/
-
-			}).error(function(data,status,headers){
-				messageErrorApi(data,"Error","warning");
-			});
+				},
+				function error(data){
+					messageErrorApi(data,"Error","warning");
+				}
+			);
 		}
 	};
 
@@ -169,7 +164,42 @@ angular.module('turn.controller', ['form.directive'])
 		TurnFactory.deleteZone($scope.turnZoneAdd,zoneId);
 	};
 
+	$scope.showTables = function(zone){
+		$scope.zonesTable = true;
+		$scope.zoneSelected.name = zone.name;
+		$scope.zoneSelected.rule = zone.rule.name;
+
+		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn).then(
+			function success(response){
+				$scope.zoneSelected.tables = response;
+			},
+			function error(response){
+
+			}
+		);
+	};
+
+	$scope.selectedAllTables = function(){
+		console.log("selectedAllTables ");
+	};
+
+	$scope.editTableAvailability = function(){
+		$uibModal.open({
+			animation: true,
+			templateUrl: 'myModalTableTime.html',
+			size: 'lg',
+			controller : 'ModalTableTimeCtrl',
+			resolve: {
+				
+			}
+        });
+	};
+
 	init();
+})
+
+.controller('ModalTableTimeCtrl', function($scope,$uibModalInstance) {
+
 })
 
 .controller('ModalTurnZoneCtrl', function($scope,$uibModalInstance,TurnFactory,turnZoneAdd) {

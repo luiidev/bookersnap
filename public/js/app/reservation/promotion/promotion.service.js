@@ -7,14 +7,12 @@ angular.module('promotion.service', [])
     getPromotion : function(pId){
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
-    editPromotion : function(pData){
+    updatePromotion : function(pData){
       return $http.put(AppBookersnap + '/promotion/'+pData.id,pData); 
     },
     uploadtmpPromotion: function(file){
     },
   };
-
-
 })
 
 .factory('ZonasDataFactory',function($http,ApiUrlMesas,ApiUrlReservation){
@@ -36,7 +34,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory){
+.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory,UrlRepository){
   return {
     listZones: function(){
       var defered=$q.defer();
@@ -104,7 +102,8 @@ angular.module('promotion.service', [])
           tipoSelected:{type_event_id : promotion.type_event},
           status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
           statusSelected:{value : promotion.status},
-          myImage:'',
+          myImage:UrlRepository+'/promotions/'+promotion.image,
+          imagenOriginal:promotion.image,
           turn: promotion.turn,
           //zonas: promotion.zone
         }
@@ -128,9 +127,9 @@ angular.module('promotion.service', [])
         var vZones = [];
         angular.forEach(data.data, function(zones) {
             var tables = zones.table;
+            var vTables = [];
             angular.forEach(tables, function(table) {
               var position = table.config_position.split(",");
-              if(table.price!=''){
                 var dataTable = {
                   zone_id : zones.zone_id,
                   name_zona : zones.name,
@@ -145,10 +144,17 @@ angular.module('promotion.service', [])
                   rotate : table.config_rotation,
                   price : table.price,
                 }
-                ZonesActiveFactory.setZonesItems(dataTable);
-                vZones.push(dataTable);
-              }
+                if(table.price!=''){
+                  ZonesActiveFactory.setZonesItems(dataTable);
+                }
+                vTables.push(dataTable);
             });
+            var dataZone = {
+              zone_id : zones.zone_id,
+              name :  zones.name,
+              table : vTables,
+            }
+            vZones.push(dataZone);
         });
         
         defered.resolve(vZones);
