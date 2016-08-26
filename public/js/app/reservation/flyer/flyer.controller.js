@@ -1,5 +1,5 @@
 angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.directives'])
-.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap) {
+.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap,UrlGeneral) {
  	$scope.titulo="Diseñar Flyer";
 
   $scope.textFlyer=[];
@@ -168,7 +168,9 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
           $scope.existeFlyer=false;
           console.log('Error status: ' + resp.status);
     });
-    
+
+
+   
   };
  
   $scope.clearImageFlyer = function() {
@@ -226,7 +228,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
         "token":"abc123456",
         "status": 1,
         "image": $scope.imagetmp.basename,
-        //"image_fullname":$scope.imagetmp.fullname,
+        "image_fullname":$scope.imagetmp.fullname,
         "label": {
             "label_id": $scope.textFlyer[0].label.label_id,
             "coodinates": ejeX + "," + ejeY,
@@ -237,11 +239,12 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
         }
       }
 
+
       /* Se procede a guardar la informacion a la base de datos */
       var microsite_id = obtenerIdMicrositio();   
       $http({
         method : "POST",
-        url : ApiUrlReservation+'microsites/'+ microsite_id +'/promotions/flyers',
+        url : UrlGeneral+'/microsites/'+ microsite_id +'/promotions/flyers',
         data : {
               microsite_id: obtenerIdMicrositio(),
               event_id: $stateParams.id,
@@ -260,8 +263,20 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       }).then(function mySucces(response) {
 
           if(response.data.success == true){
-              messageAlert("Success", "Guardado exitoso" , "success", 2000);
-              $state.go("promotion-list");
+
+
+              $http({
+                method : "POST",
+                data: $scope.principal,
+                url : AppBookersnap + '/promotion',
+                }).then(function mySucces(response) {
+                  console.log(response);
+                }, function myError(response) {
+                  console.log(response);
+                });   
+
+              //messageAlert("Success", "Guardado exitoso" , "success", 2000);
+              //$state.go("promotion-list");
           }else {
               messageAlert("Error", "Error al guardar" , "warning", 2000);
           }

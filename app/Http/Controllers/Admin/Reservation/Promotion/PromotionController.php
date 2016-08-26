@@ -125,7 +125,7 @@ class PromotionController extends Controller
    }
 
   public function storePromotion(Request $request)
-  {
+  { 
       $user_id = 1;
       $response = $this->_promotionService->SavePromotion($request->all(), $user_id);
       return response()->json($response, $response['statuscode']);
