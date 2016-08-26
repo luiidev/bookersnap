@@ -1,5 +1,5 @@
 angular.module('promotionList.controller', ['ui.sortable','sortable'])
-.controller('PromotionListCtrl', function($rootScope, $scope, $http, $window, $document, ApiUrlGeneralPromociones) {
+.controller('PromotionListCtrl', function($rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
       
       // VARIABLES DE PAGINADO
       $scope.page = 0;
@@ -33,7 +33,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
         }
 
             $http.get(
-              ApiUrlGeneralPromociones+'/promotions?page='+$scope.page+'&limit=' + $scope.limit+'&filter[fecha_inicial]='
+              ApiUrlReservation+'/promotions?page='+$scope.page+'&limit=' + $scope.limit+'&filter[fecha_inicial]='
               +$scope.obtenerFecha($rootScope.filtro.fecha_inicio)+'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)
               +'&filter[name]='+$rootScope.filtro.texto)
             .then(function(items) {
@@ -72,7 +72,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
                            if(this.window.innerHeight + this.window.window.scrollY >= $document[0].body.offsetHeight){
                               $scope.page++;
                               if($scope.fetching==true){   
-                                $http.get(ApiUrlGeneralPromociones+'/promotions?page='+$scope.page+'&limit='+$scope.limit
+                                $http.get(ApiUrlReservation+'/promotions?page='+$scope.page+'&limit='+$scope.limit
                                   +'&filter[fecha_inicial]='+$scope.obtenerFecha($rootScope.filtro.fecha_inicio)
                                   +'&filter[fecha_final]='+$scope.obtenerFecha($rootScope.filtro.fecha_fin)+'&filter[name]='+$rootScope.filtro.texto)
                                 .then(function(items) {
@@ -105,7 +105,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
         $scope.fetching = true;
         $rootScope.filtro.texto = "";
 
-        $http.get(ApiUrlGeneralPromociones+"/promotions?page="+$scope.page+"&limit="+$scope.limit)
+        $http.get(ApiUrlReservation+"/promotions?page="+$scope.page+"&limit="+$scope.limit)
             .success(function (response) {
               if(response.success==true){
                 $scope.promociones = response.data;
@@ -129,7 +129,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
          $http({
             method: 'DELETE',
             params: {token:"sdsdf5sdf56sd6f5"},
-            url: ApiUrlGeneralPromociones+'/promotions/'+item.id,
+            url: ApiUrlReservation+'/promotions/'+item.id,
         }) 
         .success(function (response) {
               
@@ -190,7 +190,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
               
               $http({
                  method: 'PATCH',
-                    url: ApiUrlGeneralPromociones+'/promotions/order?'+newurl,
+                    url: ApiUrlReservation+'/promotions/order?'+newurl,
               }) 
               .then(function successCallback(response) {
                 if(response["success"]==false){
@@ -221,7 +221,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
 
           $http({
               method: 'PATCH',
-              url: ApiUrlGeneralPromociones+' /promotions/'+id+'?status='+status,
+              url: ApiUrlReservation+' /promotions/'+id+'?status='+status,
           }) 
           .then(function successCallback(response) {
               
@@ -273,11 +273,11 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
   }
 
 
-}).controller('GestionCamposReservacionesCtrl',function($scope, $http, $uibModalInstance , ApiUrlGeneralPromociones){
+}).controller('GestionCamposReservacionesCtrl',function($scope, $http, $uibModalInstance , ApiUrlReservation){
   
     $scope.list = [];
     $scope.array = [];
-    $http.get(ApiUrlGeneralPromociones + "/reservations/forms")
+    $http.get(ApiUrlReservation + "/reservations/forms")
       .success(function (response) {
             if(response.success ==true){
                 
@@ -294,7 +294,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
       $uibModalInstance.dismiss('cancel');
     };
 
-}).directive("checkboxGroup", function($http, ApiUrlGeneralPromociones) {
+}).directive("checkboxGroup", function($http, ApiUrlReservation) {
         return {
             restrict: "A",
             link: function(scope, elem, attrs) {
@@ -317,7 +317,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
                           $http({
                                   method: 'POST',
                                   data: {form_id: form_id},
-                                  url: ApiUrlGeneralPromociones+'/reservations/forms',
+                                  url: ApiUrlReservation+'/reservations/forms',
                               }) 
                           .then(function successCallback(response) {
                                 // console.log(response);  
@@ -329,7 +329,7 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
 
                        $http({
                               method: 'DELETE',
-                              url: ApiUrlGeneralPromociones+'/reservations/forms/' + form_id,
+                              url: ApiUrlReservation+'/reservations/forms/' + form_id,
                             }) 
                           .then(function successCallback(response) {
 

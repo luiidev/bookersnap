@@ -12,10 +12,12 @@ class MicrositeController extends Controller
 {
 
     protected $_micrositeService;
+    protected $_credentiales;
 
     public function __construct(MicrositeService $micrositeService)
     {
         $this->_micrositeService = $micrositeService;
+        $this->_credentiales = ['type-admin' => 1];
     }
 
     public function showPageMicrosite(Request $request)
@@ -24,8 +26,9 @@ class MicrositeController extends Controller
         return response()->json($response, $response['statuscode']);
     }
 
-    public function storeMicrosite(Request $request){
-        $response = $this->_micrositeService->SaveMicrosite($request->all(), $this->GetUserId());
+    public function storeMicrosite(Request $request)
+    {
+        $response = $this->_micrositeService->SaveMicrosite($request->all(), $this->GetUserId(), $this->_credentiales);
         return response()->json($response, $response['statuscode']);
     }
 

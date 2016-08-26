@@ -102,6 +102,7 @@ angular.module('microportal.controller', ['bsLoadingOverlay'])
     //----------------------------------------------
     .controller('MicroportalCreateController', function (MicroportalService, bsLoadingOverlayService, $state) {
         var vm = this;
+
         vm.microportal = {
             site_name: '',
             categories: [{bs_category_id: null, bs_subcategory_id: null}]
@@ -115,6 +116,7 @@ angular.module('microportal.controller', ['bsLoadingOverlay'])
         vm.flags = {
             isProccessing: false
         };
+
 
         vm.updateCities = function () {
             MicroportalService.GetCities(vm.microportal.bs_country_id, {
@@ -222,6 +224,8 @@ angular.module('microportal.controller', ['bsLoadingOverlay'])
                                 $suggestions += '\n-' + sugg.sitename;
                             });
                             swal('No Disponible. Intenta con estos nombres:', $suggestions, 'error');
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal('Error', Response.data.error.user_msg, 'error');
                         }
@@ -268,6 +272,8 @@ angular.module('microportal.controller', ['bsLoadingOverlay'])
                                 errors += '\n- ' + error + '\n';
                             });
                             swal(Response.data.error.user_msg, errors, "error")
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal("Error", data.error.user_msg, "error")
                         }

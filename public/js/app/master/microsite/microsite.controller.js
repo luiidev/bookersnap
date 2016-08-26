@@ -337,9 +337,11 @@ angular.module('microsite.controller', ['bsLoadingOverlay', 'daterangepicker', '
                             var data = Response.data.data;
                             var $suggestions = '';
                             angular.forEach(data.suggestions, function (sugg) {
-                                $suggestions += '\n-' + sugg.sitename;
+                                $suggestions += '\n- ' + sugg.sitename;
                             });
                             swal('No Disponible. Intenta con estos nombres:', $suggestions, 'error');
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal('Error', Response.data.error.user_msg, 'error');
                         }
@@ -379,6 +381,8 @@ angular.module('microsite.controller', ['bsLoadingOverlay', 'daterangepicker', '
                                 errors += '\n- ' + error + '\n';
                             });
                             swal(Response.data.error.user_msg, errors, "error")
+                        } else if (Response.status == 403 || Response.status == 401) {
+                            swal('Acceso denegado', null, "error")
                         } else {
                             swal("Error", data.error.user_msg, "error")
                         }
