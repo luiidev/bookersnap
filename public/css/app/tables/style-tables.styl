@@ -244,9 +244,30 @@
 	& .footer-paginador
 		padding 0 40px
 /*--------------TURNOS------------------*/
+$background-tables-head = #eee
+
 .box-turno-create
 	& hr 
 		border-top 1px dashed #ccc
+	& .box-zones
+		transition all linear 0.5s
+		& .table>thead>tr>th
+			background-color $background-tables-head
+	& .box-tables
+		transition all linear 0.3s
+		& .header-rule
+			border 1px solid #ccc
+			border-radius 5px
+			padding 7px 15px
+			& label 
+				margin-bottom 0
+		& .table>thead>tr>th
+			background-color $background-tables-head
+	& .ng-hide
+		opacity 0
+	& .ng-show
+		opacity 1
+		
 		
 				
 			
