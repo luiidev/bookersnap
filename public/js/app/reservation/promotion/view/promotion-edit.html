@@ -124,10 +124,16 @@
             <span href="#" class="btn btn-danger" ng-click="clearImagePromotion()" ng-show="promotion.myImage">Cancelar</span>
         </div>
         
+        <!--<div class="cropArea" ng-hide="promotion.myImage">
+             <img-crop area-type="rectangle" image="urlimagen" area-coords="cropped" result-image="croppedDataUrl" init-max-area="true"></img-crop>
+        </div>-->
+        
         <div ngf-drop ng-model="promotion.myImage" ngf-pattern="image/*" class="cropArea">
-            <img-crop area-type="rectangle" image="promotion.myImage  | ngfDataUrl" area-coords="cropped"                 
-             area-init-size="{ w:cropped.cropWidth,h:cropped.cropHeight}" cropject="cropper" result-image="croppedDataUrl" init-max-area="true"></img-crop>
+            <img-crop area-type="rectangle" image="promotion.myImage" area-coords="cropped"                 
+             area-init-size="{ w:cropped.cropWidth,h:cropped.cropHeight}" cropject="cropper" result-image="croppedDataUrl" ></img-crop>
         </div>
+        
+        
         <br>
         
         <!--<div><img ng-src="{{croppedDataUrl}}" ng-model="croppedDataUrl"/></div>-->

@@ -90,8 +90,10 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::post('promotion', "Admin\Reservation\Promotion\PromotionController@storePromotion");
     Route::get('promotion/getlabel', "Admin\Reservation\Promotion\PromotionController@getlabel");
     Route::get('promotion/gettypographys', "Admin\Reservation\Promotion\PromotionController@gettypographys");
-    Route::get('promotion/{id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
     Route::post('promotion/uploadFile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
+    Route::get('promotion/{id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
+    Route::post('promotion/{id}', "Admin\Reservation\Promotion\PromotionController@updatePromotion");
+    
 
 });
 

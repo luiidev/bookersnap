@@ -174,13 +174,14 @@ class ImageService
             $imageInstance->crop($w, $h, $x, $y);
         }
         $imageInstance->backup();
-
-        foreach ($dimensions as $dimension) {
-            $imageInstance->reset();
-            $imageInstance = $this->resizeImageInMemory($imageInstance, $dimension['size'], true, $dimension['side-to-resize']);
-            $pathToResize = $this->_image_path . '/' . $baseFolder . '/image/' . $dimension['path'];
-            $this->createDirectoryIfNoExists($pathToResize);
-            $imageInstance->save($pathToResize . '/' . $imageBasename);
+        if (!is_null($dimensions)) {
+            foreach ($dimensions as $dimension) {
+                $imageInstance->reset();
+                $imageInstance = $this->resizeImageInMemory($imageInstance, $dimension['size'], true, $dimension['side-to-resize']);
+                $pathToResize = $this->_image_path . '/' . $baseFolder . '/image/' . $dimension['path'];
+                $this->createDirectoryIfNoExists($pathToResize);
+                $imageInstance->save($pathToResize . '/' . $imageBasename);
+            }
         }
         $imageInstance->destroy();
     }
