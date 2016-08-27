@@ -124,12 +124,9 @@
         
         <div ngf-drop ng-model="promotion.myImage" ngf-pattern="image/*" class="cropArea">
             <img-crop area-type="rectangle" image="promotion.myImage  | ngfDataUrl" area-coords="cropped"                 
-             area-init-size="{ w:cropped.cropWidth,h:cropped.cropHeight}" cropject="cropper" result-image="croppedDataUrl" init-max-area="true"></img-crop>
+             area-init-size="{ w:cropped.cropWidth,h:cropped.cropHeight}" cropject="cropper" result-image="croppedDataUrl" init-max-area="true" class="visual"></img-crop>
         </div>
-        <!--<div ngf-drop ng-if="promotion.myImage==''" class="cropArea">
-            none
-        </div>
-        -->
+        
         <br>
         
         <!--<div><img ng-src="{{croppedDataUrl}}" ng-model="croppedDataUrl"/></div>-->

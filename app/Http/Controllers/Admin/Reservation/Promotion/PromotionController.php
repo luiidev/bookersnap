@@ -21,14 +21,13 @@ class PromotionController extends Controller
       return response()->json($response, $response['statuscode']);
   }
 
-  public function showPromotion($lang, int $micro, int $id)
+  public function showPromotion($lang, int $micro_id, int $promotion_id)
   {
-    $response = $this->_promotionService->GetPromotion($id);
+    $response = $this->_promotionService->GetPromotion($promotion_id);
     return response()->json($response, $response['statuscode']);
   }
    
- 
-   public function getLabel(){
+  public function getLabel(){
       return response()->json(
          array (
             'success' => true,
@@ -67,9 +66,9 @@ class PromotionController extends Controller
             )
          )
       );
-   }
+  }
 
-   public function getTypographys(){
+  public function getTypographys(){
       return response()->json(
          array (
             'success' => true,
@@ -103,9 +102,9 @@ class PromotionController extends Controller
             )
          )
       );
-   }
+  }
 
-   public function uploadFile(Request $request){
+  public function uploadFile(Request $request){
 
       //obtenemos la imagen
         $imagen = $request->file('file');
@@ -122,20 +121,21 @@ class PromotionController extends Controller
 
         return response()->json($response);
 
-   }
+  }
 
-  public function storePromotion(Request $request)
+  public function createPromotion(Request $request)
   {
       $user_id = 1;
       $response = $this->_promotionService->SavePromotion($request->all(), $user_id);
       return response()->json($response, $response['statuscode']);
+
   }
 
-  public function updatePromotion($lang, $id, Request $request)
+  public function updatePromotion($lang, $micro_id, $promotion_id, Request $request)
   {
       //$user_id = $this->GetUserId();
       $user_id = 1;
-      $response = $this->_promotionService->UpdatePromotion($request->all(), $id, $user_id);
+      $response = $this->_promotionService->UpdatePromotion($request->all(), $micro_id, $promotion_id, $user_id);
       return response()->json($response, $response['statuscode']);
   }
 

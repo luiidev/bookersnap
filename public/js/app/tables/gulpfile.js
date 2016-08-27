@@ -21,7 +21,7 @@ gulp.task('app-bookersnap-tables-js', function () {
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.tables.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin()) solo cuando pasamos a produccion
         .pipe(gulp.dest('../../dist.app/tables'))
 });
 

@@ -4,8 +4,8 @@ angular.module('turn.service', [])
 		getTurns: function(vOptions){
 			return $http.get(ApiUrl+"/turns?"+vOptions);
 		},
-		getTurn : function(vTurn){
-			return $http.get(ApiUrl+"/turns/"+vTurn);
+		getTurn : function(vTurn,vOptions){
+			return $http.get(ApiUrl+"/turns/"+vTurn+"?"+vOptions);
 		},
 		createTurn : function(vData){
 			return $http.post(ApiUrl+"/turns",vData);
@@ -18,6 +18,9 @@ angular.module('turn.service', [])
 		},
 		searchTurn : function(vData){
 			return $http.get(ApiUrl+"/turns/search?"+vData);
+		},
+		getTurnZoneTables : function(vZone,vTurn){
+			return $http.get(ApiUrl+"/turns/"+vTurn+"/zones/"+vZone+"/tables");
 		}
 	};
 })
@@ -41,8 +44,7 @@ angular.module('turn.service', [])
 		}
 	}
 })
-
-.factory('TurnFactory',function(TurnDataFactory,DateFactory,ZoneFactory,$q){
+.factory('TurnFactory',function(TurnDataFactory,DateFactory,ZoneFactory,BookDateFactory,$q){
 
 	return {
 		listTurns : function(options){
@@ -171,8 +173,78 @@ angular.module('turn.service', [])
 			if(index != -1){
 				turnZoneAdd.zones_id.splice(index, 1);
 				turnZoneAdd.zones_data.splice(index, 1);
-			}
-			
+			}	
+		},
+		getTurn : function(idTurn,options){
+			var defered = $q.defer();
+
+			TurnDataFactory.getTurn(idTurn,options).success(function(data){
+				data = data.data;
+				
+				var turnData = {
+					name : data.name,
+					hours_ini : data.hours_ini,
+					hours_end : data.hours_end
+				}
+
+				var hour_ini = data.hours_ini.split(":");
+				var hour_end = data.hours_end.split(":");
+
+				var turnForm = {
+					hours_ini : new Date(1970, 0, 1,hour_ini[0],hour_ini[1],hour_ini[2]),
+					hours_end : new Date(1970, 0, 1,hour_end[0],hour_end[1],hour_end[2]),
+					type_turn : { id : data.res_type_turn_id, label : ''}
+				}
+
+				var turnDataClone = turnData;
+				var zonesId = [];
+				var dataZones = [];
+
+				angular.forEach(data.turn_zone,function(zones){
+					zonesId.push(zones.zone.id);
+
+					var turnsData = [];
+
+					angular.forEach(zones.zone.turns, function(turns, key){
+						turnsData.push(turns.name);
+					});
+
+					zones.zone.turns_asign = turnsData.join(", ");
+					zones.zone.rule = zones.rule;
+					dataZones.push(zones.zone);
+
+				});
+
+				var responseData = {
+					turnData : turnData,
+					turnForm : turnForm,
+					turnDataClone : turnDataClone,
+					zonesId : zonesId,
+					dataZones : dataZones
+				}
+
+				defered.resolve(responseData);
+
+			}).error(function(data,status,headers){
+				defered.reject(data);
+			});
+
+			return defered.promise;
+		},
+		getTurnZoneTables : function(idZone,idTurn){
+			var defered = $q.defer();
+
+			TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
+				defered.resolve(data.data);
+			}).error(function(data,status,headers){
+				defered.reject(data);
+			});
+
+			return defered.promise;
+		},
+		generatedTimeTable : function(turnData){
+			var times = BookDateFactory.rangeDateAvailable(15,turnData);
+			return times;
 		}
 
 	};
