@@ -10,5 +10,3 @@ angular.module('master.app',
         'role.app',
         'auth.app'
     ]);
-
-angular.module('bookersnap', ['master.app']);
