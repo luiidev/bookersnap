@@ -44,7 +44,7 @@ angular.module('turn.service', [])
 		}
 	}
 })
-.factory('TurnFactory',function(TurnDataFactory,DateFactory,ZoneFactory,$q){
+.factory('TurnFactory',function(TurnDataFactory,DateFactory,ZoneFactory,BookDateFactory,$q){
 
 	return {
 		listTurns : function(options){
@@ -241,6 +241,10 @@ angular.module('turn.service', [])
 			});
 
 			return defered.promise;
+		},
+		generatedTimeTable : function(turnData){
+			var times = BookDateFactory.rangeDateAvailable(15,turnData);
+			return times;
 		}
 
 	};

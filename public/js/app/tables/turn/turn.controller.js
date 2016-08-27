@@ -59,7 +59,8 @@ angular.module('turn.controller', ['form.directive'])
 	$scope.zoneSelected = {
 		name : '',
 		rule : '',
-		tables : []
+		tables : [],
+		timesDefault : []
 	};
 
 	$scope.mesasCheckAll = false;
@@ -172,9 +173,13 @@ angular.module('turn.controller', ['form.directive'])
 		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn).then(
 			function success(response){
 				$scope.zoneSelected.tables = response;
+				
+				$scope.zoneSelected.timesDefault = TurnFactory.generatedTimeTable($scope.turnData);
+				console.log("generatedTimeTable " + angular.toJson($scope.zoneSelected.timesDefault,true));
+				console.log("getTurnZoneTables " + $scope.turnData.hours_ini);
 			},
 			function error(response){
-
+				messageErrorApi(response,"Error","warning");
 			}
 		);
 	};
@@ -190,7 +195,9 @@ angular.module('turn.controller', ['form.directive'])
 			size: 'lg',
 			controller : 'ModalTableTimeCtrl',
 			resolve: {
-				
+				timesDefault : function(){
+					return $scope.zoneSelected.timesDefault;
+				}
 			}
         });
 	};
@@ -198,8 +205,20 @@ angular.module('turn.controller', ['form.directive'])
 	init();
 })
 
-.controller('ModalTableTimeCtrl', function($scope,$uibModalInstance) {
+.controller('ModalTableTimeCtrl', function($scope,$uibModalInstance,timesDefault) {
+	$scope.timesTables = [];
 
+ 
+	var listTime = function(){
+		$scope.timesTables = timesDefault;
+		console.log("timesDefault " ,angular.toJson(timesDefault,true));
+	};
+
+	$scope.selectRule = function(obj){
+		console.log("selectRule " + obj);
+	};
+
+	listTime();
 })
 
 .controller('ModalTurnZoneCtrl', function($scope,$uibModalInstance,TurnFactory,turnZoneAdd) {

@@ -146,7 +146,6 @@
 
                                         <div class="col-xs-4 text-right">
                                             
-
                                             <button type="button" class="btn btn-danger waves-effect" ng-click="zonesTable=false"><i class="zmdi zmdi-arrow-back"></i> Regresar</button>
                                             <button type="button" class="btn btn-info waves-effect" ng-click="editTableAvailability()"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar disponibilidad</button>
                                         </div>  
@@ -250,6 +249,65 @@
     </div>
 
     <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Seleccionar todos</th>
+                            <th> 
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions"  value="online" ng-model="rulesOnline" ng-click="selectRule(rulesOnline)">
+                                    <i class="input-helper"></i>
+                                    Online
+                                </label>
+                            </th>
+                            <th>
+                                 <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions" value="local" ng-model="rulesLocal" ng-click="selectRule(rulesLocal)">
+                                    <i class="input-helper"></i>
+                                    Solo en local
+                                </label>
+                            </th>
+                            <th>
+                                 <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions" value="disabled" ng-model="">
+                                    <i class="input-helper"></i>
+                                    No disponible
+                                </label>
+                            </th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="time in timesTables">
+                            <td>{{ time }}</td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ $index }}" value="option1" ng-checked="rulesOnline">
+                                    <i class="input-helper"></i>
+                                    Online
+                                </label>
+                            </td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ $index }}" value="option1" ng-checked="rulesLocal">
+                                    <i class="input-helper"></i>
+                                    Solo en local
+                                </label>
+                            </td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ $index }}" value="option1">
+                                    <i class="input-helper"></i>
+                                    No disponible
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer">
