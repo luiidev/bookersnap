@@ -175,7 +175,7 @@
                                                     <tr ng-repeat="tables in zoneSelected.tables">
                                                         <td>
                                                             <label class="checkbox checkbox-inline m-r-20">
-                                                                <input type="checkbox" value="{{ tables.id }}" ng-checked="mesasCheckAll">
+                                                                <input type="checkbox" value="{{ tables.id }}" ng-checked="mesasCheckAll" ng-click="selectItemTable(tables)">
                                                                 <i class="input-helper"></i>
                                                             </label>
                                                         </td>
@@ -257,21 +257,21 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="online" ng-model="rulesOnline" ng-click="selectRule(rulesOnline)">
+                                    <input type="radio" name="inlineRadioOptions"  value="" ng-click="checkRule('online')">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="local" ng-model="rulesLocal" ng-click="selectRule(rulesLocal)">
+                                    <input type="radio" name="inlineRadioOptions" value=""  ng-click="checkRule('local')">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="disabled" ng-model="">
+                                    <input type="radio" name="inlineRadioOptions" value="" ng-click="checkRule('disabled')">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
@@ -281,24 +281,24 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="time in timesTables">
-                            <td>{{ time }}</td>
+                            <td>{{ time.time }}</td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ $index }}" value="option1" ng-checked="rulesOnline">
+                                    <input type="radio" name="rule{{ time.index }}" value="3" ng-checked="rules.online" ng-click="checkRule(time.index,3)">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ $index }}" value="option1" ng-checked="rulesLocal">
+                                    <input type="radio" name="rule{{ time.index }}" value="2" ng-checked="rules.local" ng-click="checkRule(time.index,2)">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ $index }}" value="option1">
+                                    <input type="radio" name="rule{{ time.index }}" value="1" ng-checked="rules.disabled" ng-click="checkRule(time.index,1)">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
