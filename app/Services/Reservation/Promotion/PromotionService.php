@@ -8,16 +8,20 @@ use App\Services\ImageService;
 
 class PromotionService
 {
+    private $API_PROMO_URL;
+    public function __construct(){
+        $this->API_PROMO_URL = config("settings.API_PROMO_URL");
+    }
 
-    public function GetPromotion(int $id)
+    public function GetPromotion(int $promotion_id)
     {
-        $url = API_PROMO_URL . '/es/microsites/1/promotions/' . $id;
+        $url = $this->API_PROMO_URL . '/es/microsites/1/promotions/' . $promotion_id;
         return ApiRequestsHelper::SendRequest('GET', $url);
     }
 
     public function GetPromotions()
     {
-        $url = API_PROMO_URL . '/es/microsites/1/promotions?status=1,0';
+        $url = $this->API_PROMO_URL . '/es/microsites/1/promotions?status=1,0';
         return ApiRequestsHelper::SendRequest('GET', $url);
     }
 
@@ -31,9 +35,10 @@ class PromotionService
         try {
             $imageService->ResizeImage(@$data['image_fullname'], @$data['image'], 'promotions', $dimensionsImg, @$data['cropper']['areaCoords'], @$data['cropper']['canvasWidth']);
             $data['user_id'] = '1';
-            $url = API_PROMO_URL . '/es/microsites/1/promotions';
+            $url = $this->API_PROMO_URL . '/es/microsites/1/promotions';
             //Se envía la solicitud al api
             $response = ApiRequestsHelper::SendRequest('POST', $url, null, $data);
+
             if ($response['success']) {
                 //Se borran las imagenes de las carpetas temporales
                 $imageService->RemoveImage($data['image_fullname']);
@@ -50,17 +55,18 @@ class PromotionService
         }
     }
 
-    public function UpdatePromotion($data, $id, int $user_id)
+    public function UpdatePromotion($data, $micro_id, $promotion_id, int $user_id)
     {
         //construir el array de redimensiones
         $dimensionsImg = ManageFilesHelper::GetDimensionsPromotionImg();
 
         //crear instancia de image service
         $imageService = new ImageService();
-        $resp = $this->GetPromotion($id);
+        $resp = $this->GetPromotion($promotion_id);        
+
         $promotion = $resp['data'];
         try {
-            if ($data['image'] == $category['image']) {
+            if ($data['image'] == $promotion['image']) {
                 $imgFullname = '/files/promotions/image/800x800/' . @$data['image'];
                 $imageService->ResizeImage($imgFullname, @$data['image'], 'promotions', $dimensionsImg, @$data['cropper']['areaCoords'], @$data['cropper']['canvasWidth'], false);
             } else {
@@ -68,10 +74,15 @@ class PromotionService
             }
 
             //$data['user_id'] = $user_id;
-            $data['user_id'] = 1;
-            $url = API_ADMIN_URL . '/es/microsites/1/promotions/' . $id;
+            $data['user_id'] = '1';
+            $url = $this->API_PROMO_URL . '/es/microsites/1/promotions/' . $promotion_id;
             //Se envía la solicitud al api
+            //echo $promotion_id;
+            //die();
             $response = ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+            dd($response);
+            //exit();
+
             if ($response['success']) {
                 //Se borran las imagenes de las carpetas temporales
                 if (isset($data['image_fullname'])) {

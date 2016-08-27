@@ -1,5 +1,5 @@
 angular.module('promotion.service', [])
-.factory('PromotionDataFactory',function($http,AppBookersnap){
+.factory('PromotionDataFactory',function($http,AppBookersnap,ApiUrlReservation){
   return {
     createPromotion : function(pData){
       return $http.post(AppBookersnap + '/promotion',pData); 
@@ -8,20 +8,20 @@ angular.module('promotion.service', [])
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
     updatePromotion : function(pData){
-      return $http.put(AppBookersnap + '/promotion/'+pData.id,pData); 
+      return $http.put(AppBookersnap + '/promotion/'+pData.event_id,pData); 
     },
     uploadtmpPromotion: function(file){
+    },
+    getTablesPayment: function(pId){
+      return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
     },
   };
 })
 
-.factory('ZonasDataFactory',function($http,ApiUrlMesas,ApiUrlReservation){
+.factory('ZonasDataFactory',function($http,ApiUrlMesas){
   return {
     getZones: function(){
       return $http.get(ApiUrlMesas+"/zones");
-    },
-    getZone: function(pId){
-      return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
     },
   }
 })
@@ -120,49 +120,76 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
-    onlyZone: function(pId){
+    listTablesPayment: function(pId){
       var defered=$q.defer();
-      ZonasDataFactory.getZone(pId).success(function(data){
+      PromotionDataFactory.getTablesPayment(pId).success(function(data){
         
-        var vZones = [];
-        angular.forEach(data.data, function(zones) {
-            var tables = zones.table;
-            var vTables = [];
-            angular.forEach(tables, function(table) {
-              var position = table.config_position.split(",");
-                var dataTable = {
-                  zone_id : zones.zone_id,
-                  name_zona : zones.name,
-                  table_id: table.table_id,
-                  name : table.name,
-                  minCover : table.min_cover,
-                  maxCover : table.max_cover,
-                  left : position[0],
-                  top : position[1],
-                  shape : TableFactory.getLabelShape(table.config_forme),
-                  size : TableFactory.getLabelSize(table.config_size),
-                  rotate : table.config_rotation,
-                  price : table.price,
-                }
-                if(table.price!=''){
-                  ZonesActiveFactory.setZonesItems(dataTable);
-                }
-                vTables.push(dataTable);
-            });
-            var dataZone = {
-              zone_id : zones.zone_id,
-              name :  zones.name,
-              table : vTables,
-            }
-            vZones.push(dataZone);
-        });
-        
-        defered.resolve(vZones);
+        defered.resolve(data.data);
       }).error(function(data, status, headers){
         defered.reject(data);
       });     
       return defered.promise;
     },
+    listZonesEdit:function(pId){
+      var me=this;
+      var defered=$q.defer();
+      me.listZones().then(
+        function success(data){
+          return data;
+        },
+        function error(data){
+          return data;
+        }
+
+      ).then(function(zones){
+        me.listTablesPayment(pId).then(
+          function success(tables){
+             var vTables=[];
+             angular.forEach(tables, function(tableData) {
+              angular.forEach(tableData, function(table) {
+                vTables.push(table);
+              });
+
+             });
+           return vTables;
+          },
+          function error(response){
+            return response;
+          }
+        ).then(
+          function success(tablesPay){
+           var vZonas=[];
+
+            angular.forEach(zones, function(zone) {
+              var vTable={
+                zone_id : zone.zone_id,
+                name:zone.name,
+                table:[]
+              }
+              angular.forEach(zone.table, function(table) {
+                angular.forEach(tablesPay, function(tableData) {
+              
+                    if(tableData.table_id==table.table_id && tableData.price!=''){
+                      ZonesActiveFactory.setZonesItems(table);
+                      table.price=tableData.price;
+                    }
+                });
+                vTable.table.push(table);
+              }); 
+              vZonas.push(vTable);          
+            });
+     
+            defered.resolve(vZonas);
+          },
+          function error(response){
+            defered.reject(response);
+          }
+        );
+        
+      });
+
+      return defered.promise;
+    }
   }
 })
 

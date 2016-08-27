@@ -28,8 +28,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     });
   };
 
-  var getZone = function(){
-    PromotionFactory.onlyZone(promotionId).then(function success(data){
+  var listTablesPayment = function(){
+    PromotionFactory.listTablesPayment(promotionId).then(function success(data){
       $scope.promotion.zonas = data;
     },function error(data){
       messageErrorApi(data,"Error","warning");
@@ -49,7 +49,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         $scope.promotion=data;
         //console.log(data);
         getTypes();
-        getZone();
+        $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
 
         //$scope.urlimagen=UrlRepository+'/promotions/'+$scope.promotion.imagen;
         $scope.promotion.myImage=data.myImage;
@@ -125,6 +125,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
     $scope.lstTurn=TurnosPromotionDataFactory.getTurnosItems();
     $scope.lstZone=ZonesActiveFactory.getZonesItems();
+    //console.log('LSTzONAS '+angular.toJson($scope.lstZone, true));
 
     var date_expire ='';
     if($scope.promotion.status_expire==true){
@@ -198,26 +199,44 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       "zone":vZones
     };
 
+    var datosPromotionEditar={
+      //"microsite_id":1,
+      //"event_id":1,
+      //"token":"abc123456",
+      "title":$scope.promotion.title,
+      "description":$scope.promotion.description,
+      "image":basename,
+      "type_event":$scope.promotion.tipoSelected.type_event_id,
+      "status":$scope.promotion.statusSelected.value,
+      "status_expire":TableFactory.getEvaluaInverse($scope.promotion.status_expire),
+      "date_expire":date_expire,
+      //"publication":$scope.promotion.publication,
+      //"tipo":$scope.promotion.tipoSelected.value,      
+      "image_fullname":fullname,
+      "cropper":cropper,
+    };
+
     
     if (option == "create") {
      
       PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Se ha creado la promoción con éxito","success");
-        //console.log('Guardando'+angular.toJson(datosPromotion,true));
+        console.log('Guardando'+angular.toJson(datosPromotion,true));
       }).error(function(data,status,headers){
         messageErrorApi(data,"Error","warning");
       });
+      //console.log('Guardando '+angular.toJson(datosPromotion,true));
       
     }else{
-      datosPromotion.id = parseInt($stateParams.id);
-      /*
-      PromotionDataFactory.updatePromotion(datosPromotion).success(function(response){
+      datosPromotionEditar.event_id = parseInt($stateParams.id);
+      
+      PromotionDataFactory.updatePromotion(datosPromotionEditar).success(function(response){
         messageAlert("Success","Se actualizado la promoción con éxito","success");
         //$state.go('zone.active');
       }).error(function(data,status,headers){
-        messageErrorApi(data,"Error","warning");
+        messageErrorApi(status,"Error","warning");
       });
-      */
+      
       console.log('Actualizando '+angular.toJson(datosPromotion,true));
     }
     
