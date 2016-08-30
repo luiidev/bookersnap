@@ -155,17 +155,29 @@ angular.module('turn.service', [])
 			turnData.res_type_turn_id = turnForm.type_turn.id;
 
 			var turnZones = [];
+			var self = this;
 
 			angular.forEach(turnZoneAdd.zones_id, function(zones, key){
 				turnZones.push({
 					res_zone_id : zones,
-					res_turn_rule_id : 1
+					res_turn_rule_id : 1,
+					tables : self.getTablesZoneRules(turnZoneAdd.zonesTables,zones)
 				});
 			});
 
 			turnData.turn_zone = turnZones;
 
 			return turnData;
+		},
+		getTablesZoneRules : function(zonesTables,zoneId){
+			var data = [];
+			angular.forEach(zonesTables, function(value, key){
+				if(value.zone_id == zoneId){
+					data.push(value.tables);
+				}
+			});
+		
+			return data;
 		},
 		deleteZone : function(turnZoneAdd,zoneId){
 			var index = turnZoneAdd.zones_id.indexOf(zoneId);
@@ -309,19 +321,42 @@ angular.module('turn.service', [])
 
 			return data;
 		},
-		checkRuleTable : function(timeIndex,rule,tableItem){
+		checkRuleTable : function(indexTime,rule,tableItem,rulesDataTemp){
 
+			var jsonData = angular.toJson(rulesDataTemp);
+
+			if(rulesDataTemp.length == 0 || jsonData.indexOf(indexTime) == -1){
+				rulesDataTemp.push({
+					rule_id : rule,
+					index_time : indexTime	
+				});
+			}else{
+				angular.forEach(rulesDataTemp, function(rules, key){
+					if(rules.index_time == indexTime){
+						rules.rule_id = rule;	
+					}
+				});
+			}
+		},
+		saveRuleTable : function(tableItem,rulesDataTemp){
 			angular.forEach(tableItem, function(table, key){
 				angular.forEach(table.availability, function(rules, key){
 
-					if(key == timeIndex){
-						rules.rule_id = rule;
-						console.log("checkRuleTable " + angular.toJson(rules, true));
-					}
-					
+					angular.forEach(rulesDataTemp, function(rulesTemp){
+
+						if(key == rulesTemp.index_time){
+							rules.rule_id = rulesTemp.rule_id;
+
+							console.log("saveRuleTable " + angular.toJson(rules,true));
+						}
+						
+					});
+
 				});
 				
 			});
+
+			return tableItem;
 		}
 
 	};
