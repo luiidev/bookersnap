@@ -15,6 +15,12 @@ angular.module('promotion.service', [])
     getTablesPayment: function(pId){
       return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
     },
+    deleteTablesPayment: function(pId,tpId){
+      return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tpId);
+    },
+    createTablesPayment: function(pData){
+      return $http.post(ApiUrlReservation+"/promotions/"+pData.event_id+"/table/payments",pData);
+    }
   };
 })
 
@@ -22,7 +28,7 @@ angular.module('promotion.service', [])
   return {
     getZones: function(){
       return $http.get(ApiUrlMesas+"/zones");
-    },
+    }
   }
 })
 
@@ -123,7 +129,6 @@ angular.module('promotion.service', [])
     listTablesPayment: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getTablesPayment(pId).success(function(data){
-        
         defered.resolve(data.data);
       }).error(function(data, status, headers){
         defered.reject(data);
@@ -159,7 +164,7 @@ angular.module('promotion.service', [])
         ).then(
           function success(tablesPay){
            var vZonas=[];
-
+           //console.log(tablesPay);
             angular.forEach(zones, function(zone) {
               var vTable={
                 zone_id : zone.zone_id,
@@ -167,13 +172,18 @@ angular.module('promotion.service', [])
                 table:[]
               }
               angular.forEach(zone.table, function(table) {
-                angular.forEach(tablesPay, function(tableData) {
-              
-                    if(tableData.table_id==table.table_id && tableData.price!=''){
-                      ZonesActiveFactory.setZonesItems(table);
-                      table.price=tableData.price;
-                    }
-                });
+
+
+                if(tablesPay){
+
+                  angular.forEach(tablesPay, function(tableData) {                    
+                      if(tableData.table_id==table.table_id && tableData.price!=''){
+                        ZonesActiveFactory.setZonesItems(table);
+                        table.price=tableData.price;
+                      }
+                  });
+                }
+                
                 vTable.table.push(table);
               }); 
               vZonas.push(vTable);          
@@ -182,6 +192,7 @@ angular.module('promotion.service', [])
             defered.resolve(vZonas);
           },
           function error(response){
+            //console.log('deverias03');
             defered.reject(response);
           }
         );
@@ -208,6 +219,12 @@ angular.module('promotion.service', [])
     },
     cleanTurnosItems: function(){
       turnoColection=[];
+    },
+    createTurnPromotion : function(pId,tData){
+      //return $http.post(AppBookersnap + '/promotion',pData); 
+    },
+    deleteTurnPromotion: function(pId,tId){
+      //return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tId);
     },
   }
   return interfazTurnos;

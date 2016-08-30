@@ -184,14 +184,30 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini">
+                            <div class="select">
+                                <select class="form-control" ng-model="horarios.hour_ini">
+                                    <option value="1">01:00:00</option>
+                                    <option value="2">02:00:00</option>
+                                    <option value="3">03:00:00</option>
+                                    <option value="4">04:00:00</option>
+                                    <option value="5">05:00:00</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                             <label>Hora final</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end">
+                            <div class="select">
+                                <select class="form-control" ng-model="horarios.hour_end">
+                                    <option value="1">01:00:00</option>
+                                    <option value="2">02:00:00</option>
+                                    <option value="3">03:00:00</option>
+                                    <option value="4">04:00:00</option>
+                                    <option value="5">05:00:00</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 

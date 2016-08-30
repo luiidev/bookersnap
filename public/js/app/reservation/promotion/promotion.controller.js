@@ -288,12 +288,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   /********************************************/
   $scope.invocarZonas=function(item){
-    openModalZones();
+    openModalZones(item);
   }
-  var openModalZones = function () {
-    modalInstancesZones()
+  var openModalZones = function (item) {
+    modalInstancesZones(item)
   }
-  function modalInstancesZones() {
+  function modalInstancesZones(item) {
     var modalInstance = $uibModal.open({
       templateUrl: 'myModalContentZone.html',
       controller: 'ZoneInstanceCtrl',
@@ -301,6 +301,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       resolve: {
         content: function () {
           return $scope.promotion.zonas;
+        },
+        type_event: function () {
+          return item;
         }
       }
     });
@@ -308,7 +311,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('TurnoInstanceCtrl', function($scope,$modalInstance,$filter,TurnosPromotionDataFactory,content) {
+.controller('TurnoInstanceCtrl', function($scope,$stateParams,$modalInstance,$filter,TurnosPromotionDataFactory,content) {
 
   $scope.listTurnos = content;
     //console.log('Hay '+ angular.toJson(content, true));
@@ -385,8 +388,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
           hours_ini:$scope.turnos.hours_ini,
           hours_end:$scope.turnos.hours_end,
         };
-        
-        //$scope.listTurnos.push(opciones);
+        var promotionId = $stateParams.id;
+        if(promotionId){
+          console.log('Guardar para promocion '+promotionId+' los datos: '+angular.toJson(opciones, true));
+        }
         TurnosPromotionDataFactory.setTurnosItems(opciones);
         $scope.existeTurno=true;
         //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
@@ -402,8 +407,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }
 
   };
-  $scope.deleteTurno = function (item) {
+  $scope.deleteTurno = function (item,turn_id) {
+    var promotionId = $stateParams.id;
     $scope.turnoIndex=item;
+    console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn_id,true));
     //$scope.listTurnos.splice($scope.turnoIndex,1);
     TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
     cleanTurno();
@@ -425,11 +432,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('ZoneInstanceCtrl', function($rootScope,$scope,$uibModal,$modalInstance,$filter,content) {
+.controller('ZoneInstanceCtrl', function($rootScope,$scope,$uibModal,$modalInstance,$filter,content,type_event) {
 
   $scope.listZones = content;//Todas las zonas en blanco
-  $rootScope.itemTables = []; //Array para cuadros moraditos  
-  //console.log($scope.listZones);
+  $rootScope.itemTables = []; //Array para cuadros moraditos 
+  $scope.type_event=type_event;
+  //console.log($scope.type_event);
   
 
   /***************Funcion ejecutada por directiva****************/
@@ -455,12 +463,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
   $scope.addPrecio = function () {
     if($rootScope.itemTables.length>0){
-      modalInstancesPrices();
+      modalInstancesPrices($scope.type_event);
     }else{
       messageAlert("Añadir precio","Debe seleccionar al menos una mesa","warning");
     }
   };
-  function modalInstancesPrices() {
+  function modalInstancesPrices(type_event) {
     var modalInstance = $uibModal.open({
       templateUrl: 'myModalContentPrice.html',
       controller: 'PriceInstanceCtrl',
@@ -468,7 +476,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       resolve: {
         content: function () {
           return $rootScope.itemTables;
-        }
+        },
+        type_event: function () {
+          return type_event;
+        },
       }
     });
   } 
@@ -495,11 +506,16 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   
 })
 
-.controller('PriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content,ZonesActiveFactory) {
+.controller('PriceInstanceCtrl', function($rootScope,$stateParams,$scope,$modalInstance,$filter,content,type_event,ZonesActiveFactory,PromotionDataFactory) {
   
   $scope.itemTables = content;
   $scope.precioDefault = "";
+  var promotionId = $stateParams.id;
 
+  //console.log($scope.itemTables);
+  //console.log(type_event);
+  //console.log(promotionId);
+  
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
@@ -507,6 +523,17 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     if($scope.precioDefault==""){
       messageAlert("Añadir precio","Debe ingresar precio para mesas selecionadas","warning");
     }else{
+      var vTable={
+        event_id:parseInt(promotionId),
+        type_event:parseInt(type_event),
+        tables_pay:[]
+      }
+      angular.forEach($scope.itemTables, function(table) {
+        vTable.tables_pay.push({table_id:table.table_id, price:$scope.precioDefault, zone_id:table.zone_id});
+      });
+      PromotionDataFactory.createTablesPayment(vTable);
+      console.log('Guardar: '+angular.toJson(vTable,true));
+
       angular.forEach($scope.itemTables, function(objeto) {
         objeto.price=$scope.precioDefault;
         ZonesActiveFactory.setZonesItems(objeto);          
@@ -523,13 +550,17 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('DesactivaPriceInstanceCtrl', function($rootScope,$scope,$modalInstance,$filter,content,ZonesActiveFactory) {
+.controller('DesactivaPriceInstanceCtrl', function($rootScope,$scope,$stateParams,$modalInstance,$filter,content,ZonesActiveFactory,PromotionDataFactory) {
+  
+  var promotionId = $stateParams.id;
   $scope.itemPrices = content;
+  //console.log($scope.itemPrices);
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
   $scope.cleanPrecio = function () {
     var indexforma=$scope.itemPrices.price="";
+    PromotionDataFactory.deleteTablesPayment(promotionId,$scope.itemPrices.table_id);
     ZonesActiveFactory.delZonesItem($scope.itemPrices);
     $modalInstance.close();
     $scope.itemPrices=[];
