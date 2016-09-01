@@ -34,15 +34,15 @@ class FlyerService
         $dimensionsImg = ManageFilesHelper::GetDimensionsPromotionImg();
         //crear instancia de image service
         $imageService = new ImageService();
-        //dd($data); die();
+
         try {
             $imageService->ResizeImage(@$data['image_fullname'], @$data['image'], 'flyer', $dimensionsImg, NULL, NULL);
             $data['user_id'] = '1';
 
-            $url = $this->API_PROMO_URL . '/es/microsites/1/flyer';
+            $url = $this->API_PROMO_URL . '/es/microsites/1/promotions/flyers';
             //Se envía la solicitud al api
-            /*
             $response = ApiRequestsHelper::SendRequest('POST', $url, null, $data);
+            //dd($response); die();
 
             if ($response['success']) {
                 //Se borran las imagenes de las carpetas temporales
@@ -52,7 +52,7 @@ class FlyerService
                 ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'flyer', $dimensionsImg, $data['image']);
             }
             return $response;
-            */
+            
         } catch (NotReadableException $e) {
             abort(400, trans('messages.image_not_readable'));
         } catch (\Exception $e) {

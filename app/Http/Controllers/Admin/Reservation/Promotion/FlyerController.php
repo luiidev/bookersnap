@@ -120,17 +120,16 @@ class FlyerController extends Controller
             'max-size' => 20971520
         ];
         $response = $imgService->saveImageToTemp($imagen, $validations);
-
+        
         return response()->json($response);
 
   }
 
   public function storeFlyer(Request $request)
-  { 
+  {   
       $user_id = 1;
       $response = $this->_flyerService->SaveFlyer($request->all(), $user_id);
       return response()->json($response, $response['statuscode']);
-
   }
   /*
   public function updateFlyer($lang, $id, Request $request)

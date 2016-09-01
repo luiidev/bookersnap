@@ -15,29 +15,26 @@
 </div>
 <div class="card-body card-padding">
 	<div class="row" >
-    	<div class="col-md-8 fileinput fileinput-new" data-provides="fileinput">
-     
+    	
+        <div class="col-md-8 fileinput fileinput-new" data-provides="fileinput">
             <div class="m-b-10">
-
                 <div class="fileinput fileinput-new">
                     <span class="btn btn-info btn-file">
                         <span ngf-select ngf-change='uploadImageFlyer(coleccion.fileimg)' ng-model="coleccion.fileimg" name="fileimg" ngf-pattern="'image/*'" ngf-accept="'image/*'">Seleccionar imagen</span>
                     </span>
                     <span href="#" class="btn btn-danger" ng-click="clearImageFlyer()" ng-show="coleccion.fileimg">Cancelar</span>
                 </div>
-
             </div>
-    		
     		<div class="svgArea">
 		    	<div class="thumbnail imgLienzo" ng-click="noEditar()">
                     <img ngf-background="coleccion.fileimg" ngf-src="coleccion.fileimg" ngf-no-object-url="true">
                 </div>   
-                <div ng-repeat="obj in textFlyer" class="text-flyer" ng-draggable>
-                    <div class="{{obj.typography.name}}" style="font-size: {{obj.font_size}}; color:{{obj.color}};" ng-click="selectedText($index)">{{obj.label.name}}</div>  
+                <div ng-repeat="obj in textFlyer" class="text-flyer" ng-draggable >
+                    <div class="etiqueta {{obj.typography.name}}" style="font-size: {{obj.font_size}}; color:{{obj.color}}; top: {{obj.top}}; left: {{obj.left}}" ng-click="selectedText($index)">{{obj.label.name}}</div>  
                 </div>
 		    </div>
-
     	</div>
+        
     	<div class="col-md-4">
             <!--
             <p class="c-black f-500 m-b-15">Estado de Flyer</p>
