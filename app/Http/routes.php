@@ -28,7 +28,7 @@ Route::group(['prefix' => 'test'], function () {
             'uses' => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
     });
 
-    Route::get('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
+    Route::post('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
     Route::get('/home', ['middleware' => 'auth', 'as' => 'microsite-home', 'uses' => 'Test\AuthController@Home']);
     Route::group(['prefix' => 'ajax'], function () {
         Route::post('/get-data', 'Test\AjaxController@GetData');
@@ -93,11 +93,11 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::post('promotion/uploadFile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
     Route::get('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
     Route::put('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@updatePromotion");
-    
+
 
 });
 
-Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {
@@ -129,5 +129,17 @@ Route::group(['prefix' => 'v1/{lang}/master', 'namespace' => 'Master', 'middlewa
 
     });
 });
+
+Route::get("/web/ls", function () {
+    return view("localStorageApi");
+});
+
+Route::group(['prefix' => '/auth'], function () {
+    Route::post("/loginBySharedToken", ["uses" => "Test\AuthController@loginBySharedToken", "middleware" => "guest"]);
+
+    Route::post("/removeSharedToken", ["uses" => "Test\AuthController@removeSharedToken"]);
+});
+
+
 
 
