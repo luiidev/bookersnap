@@ -184,14 +184,20 @@
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_ini">
+                            <div class="select">
+                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.index" name="hour_ini">
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group fg-line">
                             <label>Hora final</label>
-                            <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="horarios.hour_end">
+                            <div class="select">
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.index" name="hour_end">
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -213,7 +219,7 @@
                                                 <i class="zmdi zmdi-more-vert"></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a ng-click="deleteTurno($index)">Eliminar</a></li>
+                                                <li><a ng-click="deleteTurno($index,turno)">Eliminar</a></li>
                                                 <!--<li><a href="">Modificar</a></li>-->
                                             </ul>
                                         </li>

@@ -68,6 +68,37 @@ class PromotionController extends Controller
       );
   }
 
+  public function getHorario(){
+      return response()->json(
+         array (
+            'success' => true,
+            'statuscode' => 201,
+            'msg' => 'messages.turn_restriction_list',
+            'data' => 
+            array (
+                  'microsite_id' => 1,
+                  'hours_ini' => '13:00:00',
+                  'hours_end' => '18:00:00',
+               /*1 => 
+                  array (
+                  'horario_id' => 2,
+                  'hours_end' => '18:00:00',
+                  ),
+                */
+            ),
+            'redirect' => false,
+            'url' => NULL,
+            'error' => 
+            array (
+               'user_msg' => NULL,
+               'internal_msg' => NULL,
+               'errors' => NULL,
+            )
+         )
+      );
+  }
+
+
   public function getTypographys(){
       return response()->json(
          array (

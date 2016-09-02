@@ -40,6 +40,64 @@ var getGender = function(){
     return gender;
 };
 
+/*
+Las horas (solo hora) si estan asi : 7  y necesitamos = 07 esta funcion lo convierte
+*/
+var parseHour = function(hour){
+
+    if(hour <= 9){
+        hour = "0" + hour;
+    }
+
+    return hour;
+};
+
+/*
+Si queremos quitar textos de una cadena
+
+@element = contiene el texto
+@textSearch = array de elementos que deseamos eliminar - reemplazar
+@textReplace = "" si queremos borrar
+
+retorna texto limpio
+*/
+var replaceText = function(element,textSearch,textReplace){
+
+    textSearch.forEach(function(value,index){
+        element = element.replace(value,textReplace);
+    });
+
+    return element;
+};
+
+/*
+Tenemos esta hora = 7:15:00 y queremos agregarle minutos si sobrepasa los 60 le aumenta una hora
+return @hour = hora final
+*/
+var addHourByMin = function(hour){
+
+    var hoursFinal = "";
+    var hoursArray = hour.split(":");
+    var hourMin = parseInt(replaceText(hoursArray[1],["AM","PM"],"").trim());
+
+    hour = replaceText(hour,["AM","PM",""],"");
+    hour = hour.substring(0,2);
+    hour = hour.replace(":","");
+
+    if(hourMin < 45){
+        hourMin = hourMin + 15;
+    }else{
+        hour = parseInt(hour) + 1; 
+        hourMin = "00";
+    }
+
+    hour = parseHour(hour);
+    hoursFinal = hour +":"+hourMin+":00";
+
+    return hoursFinal;
+
+};
+
 /*-----
 Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
 YYYY-MM-DD

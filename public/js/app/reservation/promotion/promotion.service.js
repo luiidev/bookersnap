@@ -7,6 +7,9 @@ angular.module('promotion.service', [])
     getPromotion : function(pId){
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
+    getHorario : function(){
+      return $http.get(AppBookersnap+"/promotion/gethorario"); 
+    },
     updatePromotion : function(pData){
       return $http.put(AppBookersnap + '/promotion/'+pData.event_id,pData); 
     },
@@ -15,6 +18,12 @@ angular.module('promotion.service', [])
     getTablesPayment: function(pId){
       return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
     },
+    deleteTablesPayment: function(pId,tpId){
+      return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tpId);
+    },
+    createTablesPayment: function(pData){
+      return $http.post(ApiUrlReservation+"/promotions/"+pData.event_id+"/table/payments",pData);
+    }
   };
 })
 
@@ -22,7 +31,7 @@ angular.module('promotion.service', [])
   return {
     getZones: function(){
       return $http.get(ApiUrlMesas+"/zones");
-    },
+    }
   }
 })
 
@@ -88,6 +97,18 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
+    listSchedules: function(){
+      var defered=$q.defer();
+      PromotionDataFactory.getHorario().success(function(data){
+       //var vSchedules=[];
+        var schedules = data.data;
+        var vSchedules=TurnosPromotionDataFactory.generatedTimeTable(schedules);
+        defered.resolve(vSchedules);     
+      }).error(function(data, status, headers){
+        defered.reject(data);
+      });     
+      return defered.promise;
+    },
     onlyPromotion: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getPromotion(pId).success(function(data){
@@ -123,7 +144,6 @@ angular.module('promotion.service', [])
     listTablesPayment: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getTablesPayment(pId).success(function(data){
-        
         defered.resolve(data.data);
       }).error(function(data, status, headers){
         defered.reject(data);
@@ -159,7 +179,7 @@ angular.module('promotion.service', [])
         ).then(
           function success(tablesPay){
            var vZonas=[];
-
+           //console.log(tablesPay);
             angular.forEach(zones, function(zone) {
               var vTable={
                 zone_id : zone.zone_id,
@@ -167,13 +187,18 @@ angular.module('promotion.service', [])
                 table:[]
               }
               angular.forEach(zone.table, function(table) {
-                angular.forEach(tablesPay, function(tableData) {
-              
-                    if(tableData.table_id==table.table_id && tableData.price!=''){
-                      ZonesActiveFactory.setZonesItems(table);
-                      table.price=tableData.price;
-                    }
-                });
+
+
+                if(tablesPay){
+
+                  angular.forEach(tablesPay, function(tableData) {                    
+                      if(tableData.table_id==table.table_id && tableData.price!=''){
+                        ZonesActiveFactory.setZonesItems(table);
+                        table.price=tableData.price;
+                      }
+                  });
+                }
+                
                 vTable.table.push(table);
               }); 
               vZonas.push(vTable);          
@@ -182,6 +207,7 @@ angular.module('promotion.service', [])
             defered.resolve(vZonas);
           },
           function error(response){
+            //console.log('deverias03');
             defered.reject(response);
           }
         );
@@ -193,7 +219,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('TurnosPromotionDataFactory',function(){
+.factory('TurnosPromotionDataFactory',function(TableFactory){
   var turnoColection =[];
   var interfazTurnos = {
     nombre: "turnos",
@@ -209,6 +235,45 @@ angular.module('promotion.service', [])
     cleanTurnosItems: function(){
       turnoColection=[];
     },
+    createTurnPromotion : function(pId,tData){
+      //return $http.post(AppBookersnap + '/promotion',pData); 
+    },
+    deleteTurnPromotion: function(pId,tId){
+      //return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tId);
+    },
+    generatedTimeTable : function(turnData){
+      var times = TableFactory.rangeDateAvailable(60,turnData);
+      var timesFinal = [];
+
+      angular.forEach(times, function(value, key){
+        var hourIndex = value.indexOf(":");
+        var min = value.substr(hourIndex);
+
+        hourIndex = value.substr(0,hourIndex);
+        
+        min = min.replace(":","");
+        min = min.replace("AM","");
+        min = min.replace("PM","");
+
+        var index = hourIndex * 4;
+
+        if(min == 15){
+          index +=1;
+        }else if(min == 30){
+          index +=2;
+        }else if(min == 45){
+          index +=3;
+        }
+
+        timesFinal.push({
+          time : value,
+          index : index
+        });
+  
+      });
+      return timesFinal;
+    },
+    
   }
   return interfazTurnos;
 
@@ -291,6 +356,40 @@ angular.module('promotion.service', [])
         break;
       }
       return evalua;
+    },
+    rangeDateAvailable: function(minSteep,turn){
+
+      var iniHour = turn.hours_ini.substr(0,2);
+      var iniMin = turn.hours_ini.substr(3,2);
+
+      var endHour = parseInt(turn.hours_end.substr(0,2));
+      var endMin = parseInt(turn.hours_end.substr(3,2));
+
+      var hour = parseInt(iniHour);
+      var min = parseInt(iniMin);
+
+      var time = [];
+  
+      while(hour <= endHour){
+
+        var sHorario = (hour <=12) ? "AM":"PM";
+
+        var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+        time.push(hora);
+        
+        if(min == (60 - minSteep) ){
+          hour += 1;
+          min = 0;
+        }else{
+          if(hour == endHour && min == endMin){
+            hour = 45;
+          }
+          min += minSteep;  
+        }
+          
+      }
+
+      return time;
     },
   }
 });
