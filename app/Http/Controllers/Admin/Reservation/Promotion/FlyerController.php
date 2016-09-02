@@ -55,10 +55,9 @@ class FlyerController extends Controller
       return response()->json($response, $response['statuscode']);
   }
 
-  public function updateFlyer($lang, $ms_microsite, $id_flyer,Request $request)
+  public function updateFlyer($lang, $ms_microsite, $id_flyer, Request $request)
   {   
-      dd($request->all()); die();
-
+     
       $user_id = 1;
       $response = $this->_flyerService->UpdateFlyer($request->all(), $id_flyer, $user_id);
       return response()->json($response, $response['statuscode']);
