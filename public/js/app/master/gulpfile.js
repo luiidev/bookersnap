@@ -35,7 +35,7 @@ gulp.task('app-library-master-js', function () {
             '../../../library/global/form.directive.js',
             '../../../library/input-mask/input-mask.js',
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-            '../../../library/bootstrap-daterangepicker/moment.js',
+            //'../../../library/bootstrap-daterangepicker/moment.js',
             '../../../library/bootstrap-daterangepicker/daterangepicker.js',
             '../../../library/angular-daterangepicker-master/js/angular-daterangepicker.min.js',
             '../../../library/ng-file-upload-master/dist/ng-file-upload-shim.min.js',
@@ -94,7 +94,7 @@ gulp.task('watch', function () {
 });
 
 //ejecutamos el servidor y todos los archivos
-//gulp.task('default', ['watch', 'app-bookersnap-master-js', 'stylus-app', 'app-library-master-js', 'app-library-master-css']);
+gulp.task('default', ['watch', 'app-bookersnap-master-js', 'stylus-app', 'app-library-master-js', 'app-library-master-css']);
 
 //gulp.task('default', ['app-bookersnap-master-js', 'app-library-master-js']);
-gulp.task('default', ['app-bookersnap-master-js']);
+//gulp.task('default', ['app-bookersnap-master-js']);

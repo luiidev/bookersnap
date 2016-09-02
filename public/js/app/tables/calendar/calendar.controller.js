@@ -126,19 +126,19 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
             $modalInstance.dismiss();
         };
 
-        vm.shceduleBreakfast = function () {
+        vm.scheduleBreakfast = function () {
 
         };
 
-        vm.shceduleBrunch = function () {
+        vm.scheduleBrunch = function () {
 
         };
 
-        vm.shceduleLunch = function () {
+        vm.scheduleLunch = function () {
 
         };
 
-        vm.shceduleDinner = function () {
+        vm.scheduleDinner = function () {
 
         };
 

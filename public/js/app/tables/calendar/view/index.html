@@ -73,7 +73,7 @@
                                 <td>{{vm.shifts.breakfast.data.start}} - {{vm.shifts.breakfast.data.end}}</td>
                                 <td class="text-right">
                                     <a href="javascript:" ng-if="vm.shifts.breakfast.data==null"
-                                       ng-click="vm.shceduleBreakfast()">Añadir turno</a>
+                                       ng-click="vm.scheduleBreakfast()">Añadir turno</a>
                                     <a href="javascript:"
                                        ng-if="vm.shifts.breakfast.data">
                                         Editar
@@ -95,7 +95,7 @@
                                 <td>{{vm.shifts.brunch.data.start}} - {{vm.shifts.brunch.data.end}}</td>
                                 <td class="text-right">
                                     <a href="javascript:" ng-if="vm.shifts.brunch.data==null"
-                                       ng-click="vm.shceduleBrunch()">Añadir turno</a>
+                                       ng-click="vm.scheduleBrunch()">Añadir turno</a>
                                     <a href="javascript:"
                                        ng-if="vm.shifts.brunch.data">
                                         Editar
@@ -117,7 +117,7 @@
                                 <td>{{vm.shifts.lunch.data.start}} - {{vm.shifts.lunch.data.end}}</td>
                                 <td class="text-right">
                                     <a href="javascript:" ng-if="vm.shifts.lunch.data==null"
-                                       ng-click="vm.shceduleLunch()">Añadir turno</a>
+                                       ng-click="vm.scheduleLunch()">Añadir turno</a>
                                     <a href="javascript:"
                                        ng-if="vm.shifts.lunch.data">
                                         Editar
@@ -139,7 +139,7 @@
                                 <td>{{vm.shifts.dinner.data.start}} - {{vm.shifts.dinner.data.end}}</td>
                                 <td class="text-right">
                                         <a href="javascript:" ng-if="vm.shifts.dinner.data==null"
-                                           ng-click="vm.shceduleDinner()">Añadir turno</a>
+                                           ng-click="vm.scheduleDinner()">Añadir turno</a>
                                         <a href="javascript:"
                                            ng-if="vm.shifts.dinner.data">
                                             Editar
@@ -168,7 +168,7 @@
             </script>
 
             <!-- Add event -->
-            <script type="ng-template">
+            <script type="ng-template" type="text/ng-template" id="schedule.html">
 
             </script>
 
