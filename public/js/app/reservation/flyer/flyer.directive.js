@@ -6,22 +6,24 @@ angular.module('flyer.directive', [])
     var startX = 0;
     var startY = 0;
 
-    var x = 0;
-    var y = 0;
+    //var x = 0;
+    //var y = 0;
     
-    setTimeout(function(){
+    //setTimeout(function(){
       
-      x = element[0].querySelector(".etiqueta").offsetTop;
-      y = element[0].querySelector(".etiqueta").offsetLeft;
+      var x = element[0].querySelector(".etiqueta").offsetLeft;
+      var y = element[0].querySelector(".etiqueta").offsetTop;
 
-    },200);
+      //console.log(x,y);
+    //},200);
 
-    element.css({
+     element.css({
       position: 'absolute',
       cursor: 'pointer',
       top: y + 'px',
       left: x + 'px'
     });
+
 
     element.on('mousedown', function(event) {
       event.preventDefault();

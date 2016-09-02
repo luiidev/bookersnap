@@ -60,9 +60,13 @@ class FlyerService
             abort(500, trans('error.500'));
         }
     }
-    /*
-    public function UpdatePromotion($data, $id, int $user_id)
-    {
+
+    
+    public function UpdateFlyer($data, $id_flyer, int $user_id)
+    {   
+
+        dd($data);
+
         //construir el array de redimensiones
         $dimensionsImg = ManageFilesHelper::GetDimensionsPromotionImg();
 
@@ -101,5 +105,4 @@ class FlyerService
         }
     }
    
-    */
 }
