@@ -4,10 +4,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 })
 
-.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,PromotionDataFactory,TurnosPromotionDataFactory,TableFactory,ZonesActiveFactory,AppBookersnap,UrlRepository) {
+.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,PromotionDataFactory,TurnosPromotionDataFactory,TableFactory,ZonesActiveFactory,AppBookersnap,UrlRepository,TurnosPromotionDataFactory) {
 
   var promotionId = $stateParams.id;
   $scope.promotion={};
+
+  PromotionFactory.listSchedules();
 
   var getTypes = function(){
     PromotionFactory.listTypes().then(function success(data){
@@ -47,13 +49,15 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       $scope.titulo="Actualizar promoción";
       PromotionFactory.onlyPromotion(promotionId).then(function success(data){
         $scope.promotion=data;
-        //console.log(data);
+        //$scope.zoneSelected.timesDefault = TurnosPromotionDataFactory.generatedTimeTable(data.turn);
+        console.log(data.turn);
         getTypes();
+        //
         $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
 
         //$scope.urlimagen=UrlRepository+'/promotions/'+$scope.promotion.imagen;
         $scope.promotion.myImage=data.myImage;
-        //console.log(data.myImage);
+        //console.log($scope.promotion.myImage);
         $scope.croppedDataUrl=''; 
 
         var handleFileSelect=function(evt) {
@@ -311,11 +315,44 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 })
 
-.controller('TurnoInstanceCtrl', function($scope,$stateParams,$modalInstance,$filter,TurnosPromotionDataFactory,content) {
+.controller('TurnoInstanceCtrl', function($scope,$stateParams,$modalInstance,$filter,TurnosPromotionDataFactory,content,PromotionFactory) {
+
 
   $scope.listTurnos = content;
     //console.log('Hay '+ angular.toJson(content, true));
     //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
+
+  var getDaysSelected = function(days){
+      var daysData = [];
+      angular.forEach(days, function(data,key){
+        if(data){
+          daysData.push({ day : key});
+          //daysData.push(key);
+        }
+      });
+      return daysData;
+  };
+/*
+//Usados para habilitar/deshabilitar checkbox//
+  var disabledDaysSelected = function(days){
+      angular.forEach(days, function(data,key){
+        if(data){
+          var id=data.day;
+          $scope.turnos.semana[id].disabled=true;
+        }
+      });
+  };
+
+  var enabledDaysSelected = function(days){
+      angular.forEach(days, function(data,key){
+        if(data){
+          var id=data.day;
+          $scope.turnos.semana[id].disabled=false;
+        }
+      });
+  };
+*/
+    
     $scope.turnoIndex=0;
 
     var cantidad=$scope.listTurnos.length;
@@ -348,22 +385,45 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       disposiciones:[{id:1,name:'Aplicar siempre'},{id:2,name:'Añadir turno a la promocion'}],
       disposicionSelected:{id:1, name:'Aplicar siempre'},
     };
+
+    var getHorarios = function(){
+      PromotionFactory.listSchedules().then(function success(data){
+        $scope.turnos.hours_ini = data;
+        //var ultimo = $scope.turnos.hours_ini.pop();
+        $scope.turnos.hours_end = data;
+        //var primero = $scope.turnos.hours_end.shift();
+        //$scope.turnos.hour_ini = $scope.turnos.hours_ini[0];
+        //$scope.turnos.hour_end = $scope.turnos.hours_ini[1];
+      },function error(data){
+        messageErrorApi(data,"Error","warning");
+      });
+    };
+  getHorarios();
     
     $scope.horarios = {
       hour_ini : '',
       hour_end : ''
     };
 
-    var getDaysSelected = function(days){
-      var daysData = [];
-      angular.forEach(days, function(data,key){
-        if(data){
-          daysData.push({ day : key});
+    var promotionId = $stateParams.id;
+    if(promotionId){
+      //var days = [];
+      angular.forEach($scope.listTurnos, function(turn){
+        if(turn){
+          var days=turn.days;
+          //console.log(days);
+          //disabledDaysSelected(days);
+          //days.push(day);
+          //var coleccion=turn.days;
           //daysData.push(key);
         }
+        //return days;
       });
-      return daysData;
-    };
+      //disabledDaysSelected(days);
+      //console.log(days);
+    }
+
+    
 
   /*$scope.$watch('turnoSelected',function(data){ //Step 1
       console.log('Haber '+angular.toJson(data, true));      
@@ -374,12 +434,14 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
     var cantidadSel=$scope.turnos.turnoSelected.length;
     if(cantidadSel>0){
-      if($scope.horarios.hour_ini!="" && $scope.horarios.hour_end!=""){
-
+      if($scope.turnos.hour_ini && $scope.turnos.hour_end){
+        
         var days = getDaysSelected($scope.turnos.turnoSelected);
         $scope.turnoSelected = days;
-        $scope.turnos.hours_ini = $filter('date')($scope.horarios.hour_ini,'HH:mm:ss');
-        $scope.turnos.hours_end = $filter('date')($scope.horarios.hour_end,'HH:mm:ss');
+        //disabledDaysSelected(days);
+
+        $scope.turnos.hours_ini = $filter('date')($scope.turnos.hour_ini.time,'HH:mm:ss');
+        $scope.turnos.hours_end = $filter('date')($scope.turnos.hour_end.time,'HH:mm:ss');
         //$scope.actividadSelected=$scope.turnos.actividadSelected;
 
         var opciones={
@@ -407,18 +469,20 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }
 
   };
-  $scope.deleteTurno = function (item,turn_id) {
+  $scope.deleteTurno = function (item,turn) {
     var promotionId = $stateParams.id;
     $scope.turnoIndex=item;
-    console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn_id,true));
+    //enabledDaysSelected(turn.days);
+    console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn.turn_id,true));
     //$scope.listTurnos.splice($scope.turnoIndex,1);
     TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
     cleanTurno();
   };
 
   var cleanTurno=function(){
-    $scope.horarios.hour_ini='';
-    $scope.horarios.hour_end='';
+    getHorarios();
+    $scope.turnos.hour_ini='';
+    $scope.turnos.hour_end='';
     $scope.turnos.turnoSelected=[];
   }
 
