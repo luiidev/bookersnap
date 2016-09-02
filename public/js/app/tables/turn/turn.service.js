@@ -132,6 +132,8 @@ angular.module('turn.service', [])
 
 			if(option == "create"){
 				defered = me.createTurn(turnData);
+			}else{
+				defered = me.editTurn(turnData);
 			}
 
 			return defered;
@@ -148,9 +150,21 @@ angular.module('turn.service', [])
 
 			return defered.promise;
 		},
+		editTurn : function(turnData){
+			var defered = $q.defer(); 
+
+			TurnDataFactory.updateTurn(turnData).success(function(data){
+				console.log("editTurn " + angular.toJson(data,true));
+				defered.resolve(data);
+			}).error(function(data,status,headers){
+				defered.reject(data);
+			});
+
+			return defered.promise;
+		},
 		constructStructureSave: function(turnData,turnForm,turnZoneAdd){
-			turnData.hours_ini = DateFactory.timeFormat(turnForm.hours_ini,'HH:mm:ss');
-			turnData.hours_end = DateFactory.timeFormat(turnForm.hours_end,'HH:mm:ss');
+			turnData.hours_ini = replaceText(turnForm.hours_ini.time,["AM","PM"," "],"");
+			turnData.hours_end = replaceText(turnForm.hours_end.time,["AM","PM"," "],"");
 
 			turnData.res_type_turn_id = turnForm.type_turn.id;
 
@@ -170,13 +184,12 @@ angular.module('turn.service', [])
 			return turnData;
 		},
 		getTablesZoneRules : function(zonesTables,zoneId){
-			var data = [];
+			var data = {};
 			angular.forEach(zonesTables, function(value, key){
 				if(value.zone_id == zoneId){
-					data.push(value.tables);
+					data = value.tables;
 				}
 			});
-		
 			return data;
 		},
 		deleteZone : function(turnZoneAdd,zoneId){
@@ -189,22 +202,24 @@ angular.module('turn.service', [])
 		},
 		getTurn : function(idTurn,options){
 			var defered = $q.defer();
+			var self = this;
 
 			TurnDataFactory.getTurn(idTurn,options).success(function(data){
 				data = data.data;
 				
 				var turnData = {
+					id : data.id,
 					name : data.name,
 					hours_ini : data.hours_ini,
 					hours_end : data.hours_end
 				}
 
-				var hour_ini = data.hours_ini.split(":");
-				var hour_end = data.hours_end.split(":");
+				var hour_ini = self.getIndexHour(data.hours_ini);
+				var hour_end = self.getIndexHour(data.hours_end);
 
 				var turnForm = {
-					hours_ini : new Date(1970, 0, 1,hour_ini[0],hour_ini[1],hour_ini[2]),
-					hours_end : new Date(1970, 0, 1,hour_end[0],hour_end[1],hour_end[2]),
+					hours_ini : { index : hour_ini,time :data.hours_ini },
+					hours_end : { index : hour_end , time : data.hours_end},
 					type_turn : { id : data.res_type_turn_id, label : ''}
 				}
 
@@ -243,40 +258,33 @@ angular.module('turn.service', [])
 
 			return defered.promise;
 		},
-		getTurnZoneTables : function(idZone,idTurn){
+		getTurnZoneTables : function(idZone,idTurn,option){
 			var defered = $q.defer();
 
-			TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
-				defered.resolve(data.data);
-			}).error(function(data,status,headers){
-				defered.reject(data);
-			});
-
+			if(option == "edit"){
+				TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
+					defered.resolve(data.data);
+				}).error(function(data,status,headers){
+					defered.reject(data);
+				});
+			}else{
+				ZoneFactory.getTables(idZone).success(function(data){
+					defered.resolve(data.data);
+				}).error(function(data,status,headers){
+					defered.reject(data);
+				});
+			}
+		
 			return defered.promise;
 		},
 		generatedTimeTable : function(turnData){
 			var times = BookDateFactory.rangeDateAvailable(15,turnData);
 			var timesFinal = [];
+			var self = this;
 
 			angular.forEach(times, function(value, key){
-				var hourIndex = value.indexOf(":");
-				var min = value.substr(hourIndex);
 
-				hourIndex = value.substr(0,hourIndex);
-				
-				min = min.replace(":","");
-				min = min.replace("AM","");
-				min = min.replace("PM","");
-
-				var index = hourIndex * 4;
-
-				if(min == 15){
-					index +=1;
-				}else if(min == 30){
-					index +=2;
-				}else if(min == 45){
-					index +=3;
-				}
+				var index = self.getIndexHour(value);
 
 				timesFinal.push({
 					time : value,
@@ -285,6 +293,29 @@ angular.module('turn.service', [])
 	
 			});
 			return timesFinal;
+		},
+		getIndexHour : function(value){
+			var hourIndex = value.indexOf(":");
+			var min = value.substr(hourIndex);
+
+			hourIndex = parseInt(value.substr(0,hourIndex));
+
+			min = min.replace(":","");
+			min = min.replace("AM","");
+			min = min.replace("PM","");
+			min = parseInt(min);
+
+			var index = hourIndex * 4;
+
+			if(min == 15){
+				index +=1;
+			}else if(min == 30){
+				index +=2;
+			}else if(min == 45){
+				index +=3;
+			}
+
+			return index;
 		},
 		checkTableZone : function(tablesId,idTable){
 			var index = tablesId.indexOf(idTable);
@@ -357,6 +388,19 @@ angular.module('turn.service', [])
 			});
 
 			return tableItem;
+		},
+		listHour : function(hourIni,hourEnd){
+
+			var params = {
+				hours_ini : hourIni,
+				hours_end : hourEnd
+			}
+
+			var self = this;
+
+			var listTime = self.generatedTimeTable(params);
+
+		    return listTime;
 		}
 
 	};

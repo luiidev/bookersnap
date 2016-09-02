@@ -13,7 +13,7 @@
                         <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('edit')">Editar turno</button>
+                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('edit',frmTurn)">Editar turno</button>
                     </li>
                 </ul>
             </div>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="card-body card-padding">
-                    <form role="form" class="ng-pristine ng-valid" name="turnForm">
+                    <form role="form" class="ng-pristine ng-valid" name="frmTurn">
                         <div class="row">
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
@@ -35,7 +35,11 @@
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
                                     <label>Hora inicio</label>
-                                    <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hours_ini" step="900" required>
+                                    <div class="select">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="selectHour('ini')">
+                                           <option value=""></option>
+                                       </select>
+                                    </div>
                                 </div>
 
                             </div>
@@ -43,7 +47,11 @@
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
                                     <label>Hora cierre</label>
-                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hours_end" step="900"required>
+                                    <div class="select">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ...">
+                                           <option value=""></option>
+                                       </select>
+                                    </div>
                                 </div>   
                             </div>
 
@@ -107,7 +115,7 @@
                                              <td>{{ zone.turns_asign}}</td>
                                              <td>
                                                  
-                                                 <button type="button" class="btn btn-info waves-effect" ng-click="showTables(zone)"><i class="zmdi zmdi-open-in-new zmdi-hc-fw"></i> Mesas</button>
+                                                 <button type="button" class="btn btn-info waves-effect" ng-click="showTables(zone,'edit')"><i class="zmdi zmdi-open-in-new zmdi-hc-fw"></i> Mesas</button>
                                                  <button type="button" class="btn btn-danger waves-effect" ng-click="deleteZone(zone.id)"><i class="zmdi zmdi-close"></i></button>
                                              </td>
                                          </tr>
