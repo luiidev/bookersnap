@@ -95,6 +95,10 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::get('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
     Route::put('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@updatePromotion");
     
+    /* Flyer */
+    Route::post('flyer/uploadFile', "Admin\Reservation\Promotion\FlyerController@uploadfile");
+    Route::post('flyer', "Admin\Reservation\Promotion\FlyerController@storeFlyer");
+    Route::put('flyer/{id_flyer}', "Admin\Reservation\Promotion\FlyerController@updateFlyer");
 
 });
 

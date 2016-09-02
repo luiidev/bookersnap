@@ -1,19 +1,29 @@
 angular.module('flyer.directive', [])
 .directive('ngDraggable', function($document, $window){
   function makeDraggable(scope, element, attr) {
+
+    
     var startX = 0;
     var startY = 0;
 
-    // Start with a random pos
-    var x = Math.floor((Math.random() * 300) + 40);
-    var y = Math.floor((Math.random() * 200) + 40);
+    //var x = 0;
+    //var y = 0;
+    
+    //setTimeout(function(){
+      
+      var x = element[0].querySelector(".etiqueta").offsetLeft;
+      var y = element[0].querySelector(".etiqueta").offsetTop;
 
-    element.css({
+      //console.log(x,y);
+    //},200);
+
+     element.css({
       position: 'absolute',
       cursor: 'pointer',
       top: y + 'px',
       left: x + 'px'
     });
+
 
     element.on('mousedown', function(event) {
       event.preventDefault();
