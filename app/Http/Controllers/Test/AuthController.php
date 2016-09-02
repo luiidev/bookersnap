@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Test;
 
 use App\Services\AuthService;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class AuthController extends Controller
 {
@@ -46,9 +48,12 @@ class AuthController extends Controller
                 ]
             ];
             if ($this->LoginUser($user['id'], $extras)) {
-                return response()->redirectTo(route('microsite-home'))->with('message', 'Bienvenido Usuario.')->withInput();
+                $bsAuthToken = $this->generateBsAuthToken($user['id']);
+                return response()->redirectTo(route('microsite-home'))
+                    ->with('message', 'Bienvenido Usuario.')
+                    ->with("bsAuthToken", $bsAuthToken);
             }
-            $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.');
+            $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
         } catch (HttpException $e) {
             $msg = $e->getMessage();
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
@@ -101,8 +106,12 @@ class AuthController extends Controller
                     $userlogin['bs_socialnetwork_id'] => $userlogin
                 ]
             ];
+
             if ($this->LoginUser($user['id'], $extras)) {
-                return response()->redirectTo($response->url)->with('message', 'Bienvenido Usuario.');
+                $bsAuthToken = $this->generateBsAuthToken($user['id']);
+                return response()->redirectTo($response->url)
+                    ->with('message', 'Bienvenido Usuario.')
+                    ->with("bsAuthToken", $bsAuthToken);
             }
             return redirect()->to($response->url)->with('error-message', 'Hubo un error al iniciar la sesión.');
         } catch (HttpException $e) {
@@ -115,10 +124,54 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Cambiar $route a la que va a quedar como ruta de login.
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function Logout()
     {
+        $request = request();
         $this->LogoutUser();
+        $route = route('microsite-login');
+        if ($request->ajax() || $request->wantsJson()) {
+            return $this->CreateJsonResponse(true, 200, null, null, true, $route);
+        }
         return response()->redirectToRoute('microsite-home');
+    }
+
+    public function loginBySharedToken(Request $req)
+    {
+        $bsAuthToken = $req->input('_authToken');
+        $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
+        try {
+            $result = $this->_authService->CheckBsAuthToken($decodedToken['id'], $decodedToken['key']);
+            if ($result) {
+                $req->session()->set('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $decodedToken['id']);
+                $req->session()->set('user-login', $decodedToken['user-login']);
+                $req->session()->set('api-token', $decodedToken['api-token']);
+                return $this->CreateJsonResponse(true, 200);
+            }
+        } catch (HttpException $e) {
+            return $this->CreateJsonResponse(false, 400, null, null, false, null, $e->getMessage(), $e->getMessage() . '\n' . '{$e->getFile()}: {$e->getLine()}');
+        } catch (\Exception $e) {
+            return $this->CreateJsonResponse(false, 500, null, null, false, null, 'Ocurrió un error interno', $e->getMessage() . '\n' . '{$e->getFile()}: {$e->getLine()}');
+        }
+    }
+
+    public function removeSharedToken(Request $req)
+    {
+        $bsAuthToken = $req->input("_authToken");
+        $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
+        try {
+            $result = $this->_authService->removeBsAuthToken($decodedToken["id"], $decodedToken["key"]);
+            if ($result) {
+                return $this->CreateJsonResponse(true, 200);
+            }
+        } catch (HttpException $e) {
+            return $this->CreateJsonResponse(false, 400, null, null, false, null, $e->getMessage(), $e->getMessage() . "\n" . "{$e->getFile()}: {$e->getLine()}");
+        } catch (\Exception $e) {
+            return $this->CreateJsonResponse(false, 500, null, null, false, null, "Ocurrió un error interno", $e->getMessage() . "\n" . "{$e->getFile()}: {$e->getLine()}");
+        }
     }
 
     //---------------------------------------
@@ -153,6 +206,22 @@ class AuthController extends Controller
         $request = request();
         $request->session()->forget(['user-login', 'api-token']);
         Auth::logout();
+    }
+
+    /**
+     * @param bs_user $bs_user
+     * @return string
+     */
+    private function generateBsAuthToken(int $bs_user_id)
+    {
+        $request = request();
+        $session = $request->session();
+        $tokenKey = str_random(10);
+        $this->_authService->saveSharedLoginToken($bs_user_id, $tokenKey, $request->server("HTTP_USER_AGENT"));
+        $token = ['id' => $bs_user_id, 'user-login' => $session->get('user-login')
+            , 'api-token' => $session->get('api-token'), 'key' => $tokenKey];
+        $bsAuthToken = Crypt::encrypt(json_encode($token));
+        return $bsAuthToken;
     }
 
 }

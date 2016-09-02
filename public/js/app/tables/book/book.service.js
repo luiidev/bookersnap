@@ -27,16 +27,17 @@ angular.module('book.service', [])
 
 				var sHorario = (hour <=12) ? "AM":"PM";
 
-				time.push({time : hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario});
+				var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+				time.push(hora);
 				
 				if(min == (60 - minSteep) ){
-					hour + = 1;
+					hour += 1;
 					min = 0;
 				}else{
 					if(hour == endHour && min == endMin){
 						hour = 45;
 					}
-					min + = minSteep;	
+					min += minSteep;	
 				}
 					
 			}

@@ -21,7 +21,7 @@ gulp.task('app-bookersnap-reservation-js', function () {
     '!gulpfile.js'
     ])
   .pipe(concat('app.bookersnap.reservation.min.js'))
-  .pipe(jsmin())
+  //.pipe(jsmin())
   .pipe(gulp.dest('../../dist.app/reservation'))
 });
 

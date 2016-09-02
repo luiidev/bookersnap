@@ -1,5 +1,5 @@
 angular.module('promotion.service', [])
-.factory('PromotionDataFactory',function($http,AppBookersnap){
+.factory('PromotionDataFactory',function($http,AppBookersnap,ApiUrlReservation){
   return {
     createPromotion : function(pData){
       return $http.post(AppBookersnap + '/promotion',pData); 
@@ -7,22 +7,31 @@ angular.module('promotion.service', [])
     getPromotion : function(pId){
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
+    getHorario : function(){
+      return $http.get(AppBookersnap+"/promotion/gethorario"); 
+    },
     updatePromotion : function(pData){
-      return $http.put(AppBookersnap + '/promotion/'+pData.id,pData); 
+      return $http.put(AppBookersnap + '/promotion/'+pData.event_id,pData); 
     },
     uploadtmpPromotion: function(file){
     },
+    getTablesPayment: function(pId){
+      return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
+    },
+    deleteTablesPayment: function(pId,tpId){
+      return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tpId);
+    },
+    createTablesPayment: function(pData){
+      return $http.post(ApiUrlReservation+"/promotions/"+pData.event_id+"/table/payments",pData);
+    }
   };
 })
 
-.factory('ZonasDataFactory',function($http,ApiUrlMesas,ApiUrlReservation){
+.factory('ZonasDataFactory',function($http,ApiUrlMesas){
   return {
     getZones: function(){
       return $http.get(ApiUrlMesas+"/zones");
-    },
-    getZone: function(pId){
-      return $http.get(ApiUrlReservation+"/promotions/"+pId+"/table/payments");
-    },
+    }
   }
 })
 
@@ -88,6 +97,18 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
+    listSchedules: function(){
+      var defered=$q.defer();
+      PromotionDataFactory.getHorario().success(function(data){
+       //var vSchedules=[];
+        var schedules = data.data;
+        var vSchedules=TurnosPromotionDataFactory.generatedTimeTable(schedules);
+        defered.resolve(vSchedules);     
+      }).error(function(data, status, headers){
+        defered.reject(data);
+      });     
+      return defered.promise;
+    },
     onlyPromotion: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getPromotion(pId).success(function(data){
@@ -120,53 +141,85 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
-    onlyZone: function(pId){
+    listTablesPayment: function(pId){
       var defered=$q.defer();
-      ZonasDataFactory.getZone(pId).success(function(data){
-        
-        var vZones = [];
-        angular.forEach(data.data, function(zones) {
-            var tables = zones.table;
-            var vTables = [];
-            angular.forEach(tables, function(table) {
-              var position = table.config_position.split(",");
-                var dataTable = {
-                  zone_id : zones.zone_id,
-                  name_zona : zones.name,
-                  table_id: table.table_id,
-                  name : table.name,
-                  minCover : table.min_cover,
-                  maxCover : table.max_cover,
-                  left : position[0],
-                  top : position[1],
-                  shape : TableFactory.getLabelShape(table.config_forme),
-                  size : TableFactory.getLabelSize(table.config_size),
-                  rotate : table.config_rotation,
-                  price : table.price,
-                }
-                if(table.price!=''){
-                  ZonesActiveFactory.setZonesItems(dataTable);
-                }
-                vTables.push(dataTable);
-            });
-            var dataZone = {
-              zone_id : zones.zone_id,
-              name :  zones.name,
-              table : vTables,
-            }
-            vZones.push(dataZone);
-        });
-        
-        defered.resolve(vZones);
+      PromotionDataFactory.getTablesPayment(pId).success(function(data){
+        defered.resolve(data.data);
       }).error(function(data, status, headers){
         defered.reject(data);
       });     
       return defered.promise;
     },
+    listZonesEdit:function(pId){
+      var me=this;
+      var defered=$q.defer();
+      me.listZones().then(
+        function success(data){
+          return data;
+        },
+        function error(data){
+          return data;
+        }
+
+      ).then(function(zones){
+        me.listTablesPayment(pId).then(
+          function success(tables){
+             var vTables=[];
+             angular.forEach(tables, function(tableData) {
+              angular.forEach(tableData, function(table) {
+                vTables.push(table);
+              });
+
+             });
+           return vTables;
+          },
+          function error(response){
+            return response;
+          }
+        ).then(
+          function success(tablesPay){
+           var vZonas=[];
+           //console.log(tablesPay);
+            angular.forEach(zones, function(zone) {
+              var vTable={
+                zone_id : zone.zone_id,
+                name:zone.name,
+                table:[]
+              }
+              angular.forEach(zone.table, function(table) {
+
+
+                if(tablesPay){
+
+                  angular.forEach(tablesPay, function(tableData) {                    
+                      if(tableData.table_id==table.table_id && tableData.price!=''){
+                        ZonesActiveFactory.setZonesItems(table);
+                        table.price=tableData.price;
+                      }
+                  });
+                }
+                
+                vTable.table.push(table);
+              }); 
+              vZonas.push(vTable);          
+            });
+     
+            defered.resolve(vZonas);
+          },
+          function error(response){
+            //console.log('deverias03');
+            defered.reject(response);
+          }
+        );
+        
+      });
+
+      return defered.promise;
+    }
   }
 })
 
-.factory('TurnosPromotionDataFactory',function(){
+.factory('TurnosPromotionDataFactory',function(TableFactory){
   var turnoColection =[];
   var interfazTurnos = {
     nombre: "turnos",
@@ -182,6 +235,45 @@ angular.module('promotion.service', [])
     cleanTurnosItems: function(){
       turnoColection=[];
     },
+    createTurnPromotion : function(pId,tData){
+      //return $http.post(AppBookersnap + '/promotion',pData); 
+    },
+    deleteTurnPromotion: function(pId,tId){
+      //return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tId);
+    },
+    generatedTimeTable : function(turnData){
+      var times = TableFactory.rangeDateAvailable(60,turnData);
+      var timesFinal = [];
+
+      angular.forEach(times, function(value, key){
+        var hourIndex = value.indexOf(":");
+        var min = value.substr(hourIndex);
+
+        hourIndex = value.substr(0,hourIndex);
+        
+        min = min.replace(":","");
+        min = min.replace("AM","");
+        min = min.replace("PM","");
+
+        var index = hourIndex * 4;
+
+        if(min == 15){
+          index +=1;
+        }else if(min == 30){
+          index +=2;
+        }else if(min == 45){
+          index +=3;
+        }
+
+        timesFinal.push({
+          time : value,
+          index : index
+        });
+  
+      });
+      return timesFinal;
+    },
+    
   }
   return interfazTurnos;
 
@@ -264,6 +356,40 @@ angular.module('promotion.service', [])
         break;
       }
       return evalua;
+    },
+    rangeDateAvailable: function(minSteep,turn){
+
+      var iniHour = turn.hours_ini.substr(0,2);
+      var iniMin = turn.hours_ini.substr(3,2);
+
+      var endHour = parseInt(turn.hours_end.substr(0,2));
+      var endMin = parseInt(turn.hours_end.substr(3,2));
+
+      var hour = parseInt(iniHour);
+      var min = parseInt(iniMin);
+
+      var time = [];
+  
+      while(hour <= endHour){
+
+        var sHorario = (hour <=12) ? "AM":"PM";
+
+        var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+        time.push(hora);
+        
+        if(min == (60 - minSteep) ){
+          hour += 1;
+          min = 0;
+        }else{
+          if(hour == endHour && min == endMin){
+            hour = 45;
+          }
+          min += minSteep;  
+        }
+          
+      }
+
+      return time;
     },
   }
 });

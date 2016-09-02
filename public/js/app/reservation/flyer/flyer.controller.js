@@ -1,20 +1,20 @@
 angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.directives'])
-.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap) {
- 	$scope.titulo="Diseñar Flyer";
-
+.controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap,UrlGeneral, UrlRepository) {
+ 	
+  $scope.titulo="Diseñar Flyer";
   $scope.textFlyer=[];
   $scope.textActive=false;
   $scope.textAplica=false;
   $scope.textIndex=0;
-  $scope.existFlyer = false;
-  //console.log($stateParams.id);
+  $scope.existFlyer = false; // Estado que nos dice si existe el flyer en la base de datos
+  $scope.flyer_id = "";
+  $scope.postFlyer = [];
+
   var getLabel=function(){
     FlyerFactory.getLabel().success(function(response){
-
       
       var vTexto = [];
       angular.forEach(response['data']['label'], function(item) {
-            //console.log(item);
             vTexto.push(item); 
       });
       
@@ -46,27 +46,59 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       *  False = Create 
       */
       if(response.success){
-        $scope.existFlyer = response.success; 
-        $scope.flyer.labelSelected.label_id = response.data.flyerlabel[0].label_id; 
-        $scope.flyer.fontSelected.typography_id = response.data.flyerlabel[0].tipografy;
-        $scope.flyer["colorSelected"]["color"]= response.data.flyerlabel[0].color;
-        $scope.flyer.sizeSelected.valor = response.data.flyerlabel[0].font_size + "px";
-        $scope.flyer.sizeSelected.id = response.data.flyerlabel[0].font_size;
+
+        $scope.existFlyer = response.success;
+        $scope.existeFlyer=true; // Si la imagen esta cargada es TRUE
+        angular.forEach(response.data.flyerlabel, function(data,index){
+
+          var coordenada = data.coodinates.split(",");
+
+          var texto={
+          label: {
+                  label_id:data.flyer_label_id,
+                  name: data.label,
+                 },
+          typography:{typography_id: data.tipografy},
+          font_size: data.font_size + "px",
+          color:data.color,
+          left: coordenada[0]+"px",
+          top:coordenada[1]+"px",
+          };
+
+          $scope.textFlyer.push(texto);
+
+        });
+
+         /** CARGA DE IMAGEN A LA VISTA **/
+        $scope.coleccion = {
+         fileimg:UrlRepository + '/flyer/' + response.data.image,
+        }
+
+        var handleFileSelect=function(evt) {
+               var file=evt.currentTarget.files[0];
+               var reader = new FileReader();
+               reader.onload = function (evt) {
+                 $scope.$apply(function($scope){
+                   $scope.coleccion.fileimg=evt.target.result;
+                 });
+               };
+               reader.readAsDataURL(file);
+             };
+        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+        /** FIN CARGA DE IMAGEN A LA VISTA **/
+
       }
     });
   }
 
-
-
-  // console.log($stateParams.id);
-
-  $scope.flyer={
+  $scope.flyer = {
     //sizes:[{id:10, valor: '10px'},{id:12, valor: '12px'},{id: 14, valor: '14px'},{id: 16, valor: '16px'}],
     sizeSelected:{id: 14, valor: '14px'},
     colorSelected:{color: '#03A9F4'},
     //states:[{name: 'Activo',value:1},{name: 'Inactivo',value:0}],
     //stateSelected:{value: 1}
   }
+
   getFlyer();
   getLabel();
   getTypographys();
@@ -74,6 +106,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
 
   /*Agregar datos a un array textFlyer*/
   $scope.addText=function(){
+
     if ($scope.flyer.labelSelected) {
 
         if($scope.textFlyer.length==0){
@@ -94,9 +127,11 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
     }else{
       messageAlert("Flyer","Debe seleccionar un texto","warning");
     }
+
   }
 
   var crearTexto=function(){
+
     var texto={
       label:$scope.flyer.labelSelected,
       typography:{typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name},
@@ -105,8 +140,10 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       //top:Math.floor((Math.random() * 100) + 40)+"px",
       //left: Math.floor((Math.random() * 300) + 40)+"px"
     };
+    
     $scope.textFlyer.push(texto);
     cleanText();
+
   }
 
   $scope.changeFunction=function(){
@@ -122,7 +159,6 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
     $scope.flyer.colorSelected.color=$scope.textFlyer[index].color;
     $scope.textActive=true;
     $scope.textAplica=true;
-    //console.log("selectedText "+angular.element('.text-flyer').eq(index).css("top"));
   }
 
   $scope.autoPropiedad = function () {
@@ -131,6 +167,7 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       $scope.textFlyer[$scope.textIndex].color=$scope.flyer.colorSelected.color;
       $scope.textFlyer[$scope.textIndex].typography={typography_id:$scope.flyer.fontSelected.typography_id,name:$scope.flyer.fontSelected.name};
       //$scope.flyer.sizeSelected={id: 14, valor: '14px'};
+
     }
   };
   
@@ -157,25 +194,27 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
   $scope.existeFlyer=false;
   $scope.uploadImageFlyer = function (file) {
       
-      Upload.upload({
-        url: AppBookersnap+'/promotion/uploadFile',
-          data: {file: file}
-        }).then(function (resp) {
-          $scope.imagetmp=resp.data
-          $scope.existeFlyer=true;
-          console.log('Json: '+angular.toJson(resp.data,true));
-        },function (resp) {
-          $scope.existeFlyer=false;
-          console.log('Error status: ' + resp.status);
-    });
-    
+    if(file!=null){
+        Upload.upload({
+          url: AppBookersnap+'/flyer/uploadFile',
+            data: {file: file}
+          }).then(function (resp) {
+            $scope.imagetmp = resp.data;
+            $scope.existeFlyer=true;
+
+          },function (resp) {
+            $scope.existeFlyer=false;
+            console.log('Error status: ' + resp.status);
+      });
+    }
   };
- 
+  
   $scope.clearImageFlyer = function() {
+      $scope.existeFlyer=false;
       delete $scope.coleccion.fileimg;
   };
 
-/*
+  /*
   var generateFlyer=function(){
 
     html2canvas(angular.element('.svgArea'), {
@@ -192,91 +231,117 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
 
   }
   */
+
   $scope.saveFlyer=function(){
-    if($scope.existeFlyer){ 
 
-      angular.forEach($scope.textFlyer, function(data,index){
-      //data.label_id="1";
-      //data.x=angular.element('.text-flyer').eq(index).css("left");
-      data.coodinates={
-        x:angular.element('.text-flyer').eq(index).css("left"),
-        y:angular.element('.text-flyer').eq(index).css("top")
-      }
+    /* Se construye el array con la estructura que recibe el API*/
+    $scope.label = [];
 
-      })
+    if($scope.existeFlyer){ // Para validar si se selecciono una imagen
 
-      //generateFlyer();
-      $scope.principal={
-        "microsite_id": obtenerIdMicrositio(),
-        "event_id": $stateParams.id,
-        "token":"abc123456",
-        //"status":$scope.flyer.stateSelected.value,
-        "image":$scope.imagetmp.basename,
-        "image_fullname":$scope.imagetmp.fullname,
-        "label":$scope.textFlyer
-      };
+      if($scope.existFlyer==false){ // Para saber si existe registrado dentro de la Base de datos
 
+        angular.forEach($scope.textFlyer, function(data,index){
+        
+          var ejeX= angular.element('.text-flyer').eq(index).css("left").replace("px","");
+          var ejeY= angular.element('.text-flyer').eq(index).css("top").replace("px","");  
 
-      var ejeX= $scope.textFlyer[0].coodinates.x.replace("px","");
-      var ejeY= $scope.textFlyer[0].coodinates.y.replace("px","");
+          $scope.label.push({
+            label_id : data.label.label_id,
+            coodinates: ejeX +","+ejeY,
+            font_size: data.font_size,
+            tipografy: data.typography.typography_id,
+            color: data.color,
+          });    
 
-      $scope.postFlyer = {
-        "microsite_id": obtenerIdMicrositio(),
-        "event_id": $stateParams.id,
-        "token":"abc123456",
-        "status": 1,
-        "image": $scope.imagetmp.basename,
-        //"image_fullname":$scope.imagetmp.fullname,
-        "label": {
-            "label_id": $scope.textFlyer[0].label.label_id,
-            "coodinates": ejeX + "," + ejeY,
-            "font_size": $scope.textFlyer[0].font_size,
-            "tipografy": $scope.textFlyer[0].typography.typography_id,
-            "font_align": "",
-            "color": $scope.textFlyer[0].color,         
-        }
-      }
+        });
 
-      /* Se procede a guardar la informacion a la base de datos */
-      var microsite_id = obtenerIdMicrositio();   
-      $http({
-        method : "POST",
-        url : ApiUrlReservation+'microsites/'+ microsite_id +'/promotions/flyers',
-        data : {
-              microsite_id: obtenerIdMicrositio(),
-              event_id: $stateParams.id,
-              token:"abc123456",
-              status: 1,
-              image: $scope.imagetmp.basename,
-              label: {
-                  label_id: $scope.textFlyer[0].label.label_id, 
-                  coodinates: ejeX + "," + ejeY,
-                  font_size: $scope.textFlyer[0].font_size,
-                  tipografy: $scope.textFlyer[0].typography.typography_id,
-                  font_align: "",
-                  color: $scope.textFlyer[0].color,         
-              }
-            },
-      }).then(function mySucces(response) {
-
-          if(response.data.success == true){
-              messageAlert("Success", "Guardado exitoso" , "success", 2000);
-              $state.go("promotion-list");
-          }else {
-              messageAlert("Error", "Error al guardar" , "warning", 2000);
-          }
-
-      }, function myError(response) {
-          var mensaje = response.data["jsonError"].join("\n");
-          messageAlert("Errores", mensaje, "warning", 6000);
-      });
+        $scope.postFlyer = {
+          "microsite_id": obtenerIdMicrositio(),
+          "event_id": $stateParams.id,
+          "token": "abc123456",
+          "image": (typeof($scope.imagetmp)!="undefined")?$scope.imagetmp.basename:"",
+          "image_fullname":(typeof($scope.imagetmp)!="undefined")?$scope.imagetmp.fullname:"",
+          "status": 1,  
+          "label": $scope.label,
+        }  
       
+        $http({
+            method : "POST",
+            data: $scope.postFlyer,
+            url : AppBookersnap + '/flyer',
+        }).then(function mySucces(response) {
+            console.log(response);
+            if(response.data.success == true ){
+              messageAlert("Success", "Guardado exitoso" , "success", 2000);
+              //$state.go("promotion-list");
+            }
+        }, function myError(response) {
+            console.log("Error:",response);
+        });   
 
+      }else{
+
+        angular.forEach($scope.textFlyer, function(data,index){
+          
+          /* Etiquetas superiores */
+          var headX = parseInt(angular.element('.text-flyer').eq(index).css("left").replace("px",""));
+          var headY =  parseInt(angular.element('.text-flyer').eq(index).css("top").replace("px",""));
+          console.clear();
+          console.log(headX, headY);
+          
+          /* Etiquetas internas del texto */
+          var etiquetaX= parseInt(angular.element('.etiqueta').eq(index).css("left").replace("px",""));
+          var etiquetaY= parseInt(angular.element('.etiqueta').eq(index).css("top").replace("px",""));
+          console.log(etiquetaX, etiquetaY);
+
+          /* Se inserta la coordenada final siempre y cuando se muevan las etiquetas de lo 
+          contrario se mantienen las mismas coordenadas tomando como referencia las que estan en las etiquetas 
+          interiores */
+          var ejeX = (headX==0)?etiquetaX:(etiquetaX + headX);
+          var ejeY = (headY==0)?etiquetaY:(etiquetaY + headY);
+          console.log(ejeX, ejeY);
+          
+           $scope.label.push({
+            label_id : data.label.label_id,
+            coodinates: ejeX +","+ejeY,
+            font_size: data.font_size,
+            tipografy: data.typography.typography_id,
+            color: data.color,
+          });    
+          
+        });
+
+        //console.log($scope.label);
+        
+        $scope.postFlyer = {
+          "microsite_id": obtenerIdMicrositio(),
+          "event_id": $stateParams.id,
+          "token": "abc123456",
+          "image": (typeof($scope.imagetmp)!="undefined")?$scope.imagetmp.basename:"",
+          "image_fullname":(typeof($scope.imagetmp)!="undefined")?$scope.imagetmp.fullname:"",
+          "status": 1,  
+          "label": $scope.label,
+        } 
+
+        
+        $http({
+            method : "PUT",
+            data: $scope.postFlyer,
+            url : AppBookersnap + '/flyer/' + $stateParams.id,
+        }).then(function mySucces(response) {
+            console.log("Success:",response);
+        }, function myError(response) {
+            console.log("Error:",response);
+        });
+        
+      } 
+        
+        
     }else{ 
         messageAlert("Flyer","Debe seleccionar una imagen para el flyer","warning");
-    };
-
-    
-  }
+    };  
+        
+  }     
 
 })

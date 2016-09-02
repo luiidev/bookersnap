@@ -1,9 +1,7 @@
-
-
 <div>
 
     Bienvenido(a) {{$user['fullname']}}!
 
-    <a href="auth/logout">Cerrar Sesión</a>
+    <a href="javascript:" onclick="_logout();">Cerrar Sesión</a><br>
 
 </div>

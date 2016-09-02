@@ -3,7 +3,7 @@ angular.module('microportal.service', [])
     // SERVICIO MICROPORTALES
     //--------------------------------------
     .factory('MicroportalService', function (Ajax) {
-        var base_url = '/v1/es/master/ajax/';
+        var base_url = '/master/ajax/';
         var api_admin_url = 'http://localhost:3000/v1/es/';
         return {
             GetPage: function ($data, $listener) {
