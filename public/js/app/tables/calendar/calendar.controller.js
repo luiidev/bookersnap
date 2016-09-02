@@ -14,13 +14,13 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
     //-----------------------------------------------
     // CALENDAR CONTROLLER
     //-----------------------------------------------
-    .controller('CalendarIndexController', function (CalendarIndexService, bsLoadingOverlayService) {
+    .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $modal) {
         var vm = this;
 
         function GetEvents() {
             var month = vm.calendar.fullCalendar('getDate').format('YYYY-MM');
             bsLoadingOverlayService.start();
-            CalendarIndexService.GetShifts(month, {
+            CalendarService.GetShifts(month, {
                 OnSuccess: function (Response) {
                     bsLoadingOverlayService.stop();
                     vm.events = Response.data.data;
@@ -35,23 +35,6 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         function updateCalendar() {
             vm.calendar.fullCalendar('removeEvents');
             vm.calendar.fullCalendar('addEventSource', vm.events);
-        }
-
-        function format_time(str_date, str_hour) {
-            // formats a javascript Date object into a 12h AM/PM time string
-            var date_obj = new Date(str_date + " " + str_hour);
-            var hour = date_obj.getHours();
-            var minute = date_obj.getMinutes();
-            var amPM = (hour > 11) ? "pm" : "am";
-            if (hour > 12) {
-                hour -= 12;
-            } else if (hour == 0) {
-                hour = "12";
-            }
-            if (minute < 10) {
-                minute = "0" + minute;
-            }
-            return hour + ":" + minute + amPM;
         }
 
         function initCalendar() {
@@ -70,9 +53,23 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 events: vm.events,
                 eventOrder: 'start_time',
                 select: function (start, end, allDay) {
-
+                    //alert(4545)
                 },
                 eventClick: function (calEvent, jsEvent, view) {
+                    OpenDay(calEvent.date);
+                    //console.log(calEvent.date);
+                },
+                dayClick: function (date, jsEvent, view) {
+                    var $date = date.format('YYYY-MM-DD');
+                    OpenDay($date);
+                    //console.log();
+
+                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+                    //alert('Current view: ' + view.name);
+
+                    // change the day's background color just for fun
+                    //$(this).css('background-color', 'red');
 
                 },
                 viewRender: function (view, element) {
@@ -82,9 +79,26 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 eventRender: function (event, element) {
                     var $text = '<div class="fc-content" >';
                     $text += '<h5 class="text-center" style="color:white;margin: 2px;white-space: pre-line">' + event.title + '</h5>';
-                    $text += '<div class="fc-title text-center">' + format_time(event.date, event.start_time) + ' - ' + format_time(event.date, event.end_time) + '</div>';
+                    $text += '<div class="fc-title text-center">' + CalendarService.FormatTime(event.date, event.start_time) + ' - ' + CalendarService.FormatTime(event.date, event.end_time) + '</div>';
                     $text += '</div>';
                     element.html($text);
+                }
+            });
+        }
+
+        function OpenDay($date) {
+            var modalInstance = $modal.open({
+                templateUrl: 'addEvent.html',
+                controller: 'DayShiftController',
+                controllerAs: 'vm',
+                backdrop: 'static',
+                keyboard: false,
+                resolve: {
+                    data: function () {
+                        return {
+                            date: $date
+                        };
+                    }
                 }
             });
         }
@@ -95,4 +109,90 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
         init();
 
+    })
+
+    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService) {
+        var vm = this;
+        vm.date = data.date;
+
+        vm.shifts = {
+            breakfast: {id: 1, data: null},
+            brunch: {id: 2, data: null},
+            lunch: {id: 3, data: null},
+            dinner: {id: 4, data: null}
+        };
+
+        vm.dismiss = function () {
+            $modalInstance.dismiss();
+        };
+
+        vm.shceduleBreakfast = function () {
+
+        };
+
+        vm.shceduleBrunch = function () {
+
+        };
+
+        vm.shceduleLunch = function () {
+
+        };
+
+        vm.shceduleDinner = function () {
+
+        };
+
+        function GetData() {
+            bsLoadingOverlayService.start();
+            CalendarService.GetShiftByDate(vm.date, {
+                OnSuccess: function (Response) {
+                    bsLoadingOverlayService.stop();
+                    var data = Response.data.data;
+                    angular.forEach(data, function (item) {
+                        var shift = {
+                            title: item.title,
+                            start: CalendarService.FormatTime(item.date, item.start_time),
+                            end: CalendarService.FormatTime(item.date, item.end_time)
+                        };
+                        switch (item.turn.type_turn.id) {
+                            case 1:
+                                vm.shifts.breakfast.data = shift;
+                                break;
+                            case 2:
+                                vm.shifts.brunch.data = shift;
+                                break;
+                            case 3:
+                                vm.shifts.lunch.data = shift;
+                                break;
+                            case 4:
+                                vm.shifts.dinner.data = shift;
+                                break;
+                        }
+                    });
+                },
+                OnError: function (Response) {
+                    bsLoadingOverlayService.stop();
+                }
+            });
+        }
+
+        function getMonthNames() {
+            return [
+                "Enero", "Febrero", "Marzo",
+                "Abril", "Mayo", "Junio", "Julio",
+                "Agosto", "Setiembre", "Octubre",
+                "Noviembre", "Diciembre"
+            ];
+        }
+
+        function init() {
+            var $date = moment(vm.date);
+
+            vm.fulldate = ($date.format("dddd D [de] MMMM [de] YYYY"));
+
+            GetData();
+        }
+
+        init();
     });
+;

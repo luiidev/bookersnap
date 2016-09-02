@@ -1,4 +1,4 @@
-angular.module('turn.controller', ['form.directive'])
+angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 .controller('TurnCtrl', function($scope,$stateParams,TurnFactory) {
 
@@ -26,16 +26,16 @@ angular.module('turn.controller', ['form.directive'])
 .controller('TurnCreateCtrl', function($scope,$stateParams,$state,$filter,$uibModal,TurnFactory,TypeTurnFactory,DateFactory) {
 
 	$scope.turnData = {
+		id : '',
 		name : '',
 		hours_ini : '',
 		hours_end : '',
 		res_type_turn_id : '',
 		status : 1,
 		turn_zone : []
-		//days : []
 	};
 
-	$scope.turnDataClone = {};//para validar si ha ocurrido algun cambio en la data (editar)f
+	$scope.turnDataClone = {};//para validar si ha ocurrido algun cambio en la data (editar)
 
 	$scope.turnForm = {
 		hours_ini : '',
@@ -68,10 +68,27 @@ angular.module('turn.controller', ['form.directive'])
 
 	$scope.mesasCheckAll = false;
 
+	$scope.formDataDefault = {
+		hours_ini : [],
+		hours_end : []
+	};
+
 	var init = function(){
-		getTypeTurns();
+		listHourIni();
+		$scope.selectHour();
 
 		loadDataTurnoEdit();
+		getTypeTurns();
+	};
+
+	var listHourIni = function(){
+		$scope.formDataDefault.hours_ini = TurnFactory.listHour("00:00:00","23:30:00");
+		$scope.turnForm.hours_ini = $scope.formDataDefault.hours_ini[64];
+	};
+
+	var listHourEnd = function(hoursIni ,hoursEnd){
+		$scope.formDataDefault.hours_end = TurnFactory.listHour("00:00:00","23:30:00");
+		$scope.turnForm.hours_end = $scope.formDataDefault.hours_end[80];
 	};
 
 	var getTypeTurns = function(){
@@ -91,7 +108,7 @@ angular.module('turn.controller', ['form.directive'])
 
 		console.log("saveTurn " + angular.toJson($scope.turnData,true));
 
-		/*TurnFactory.saveTurn($scope.turnData,option).then(
+		TurnFactory.saveTurn($scope.turnData,option).then(
 			function success(response){
 				messageAlert("Success","Turno registrado","success");
 				$state.reload();
@@ -99,7 +116,7 @@ angular.module('turn.controller', ['form.directive'])
 			function error(response){
 				messageErrorApi(response,"Error","warning");
 			}
-		);*/
+		);
 	};
 
 	var loadDataTurnoEdit = function(){
@@ -116,6 +133,10 @@ angular.module('turn.controller', ['form.directive'])
 
 					$scope.turnZoneAdd.zones_id = data.zonesId;
 					$scope.turnZoneAdd.zones_data = data.dataZones;
+
+					//listHourEnd($scope.turnData.hours_ini,$scope.turnData.hours_end);
+					//$scope.selectHour();
+					console.log("getTurn " + angular.toJson(data.turnForm,true));
 
 					$scope.zoneSelected.timesDefault = TurnFactory.generatedTimeTable($scope.turnData);
 
@@ -156,12 +177,17 @@ angular.module('turn.controller', ['form.directive'])
 			}	
 		}
 
-		//console.log("returnBoxZones " + angular.toJson($scope.turnZoneAdd.zonesTables,true));
+		console.log("returnBoxZones " + angular.toJson($scope.turnZoneAdd.zonesTables,true));
 	};
 
-	$scope.validateSaveTurn = function(option){
+	$scope.selectHour = function(){
+		var hoursFinal = addHourByMin($scope.turnForm.hours_ini.time) ;
+		listHourEnd(hoursFinal,"11:45:00");	
+	};
 
-		if ($scope.turnForm.$valid) {
+	$scope.validateSaveTurn = function(option,frmTurn){
+
+		if (frmTurn.$valid) {
 			TurnFactory.validateTurn($scope.turnData,$scope.turnForm,$scope.turnDataClone).then(
 				function success(response){
 					if(response == true){
@@ -182,7 +208,7 @@ angular.module('turn.controller', ['form.directive'])
 			);
 		}else{
 			messageAlert("Mensaje del sistema","Faltan datos","info");
-			saveTurn(option);
+		
 		}
 	};
 
@@ -214,16 +240,13 @@ angular.module('turn.controller', ['form.directive'])
 		TurnFactory.deleteZone($scope.turnZoneAdd,zoneId);
 	};
 
-	$scope.showTables = function(zone){
+	$scope.showTables = function(zone,option){
 		$scope.zonesTable = true;
 
 		$scope.zoneSelected.id = zone.id;
 		$scope.zoneSelected.name = zone.name;
-		//$scope.zoneSelected.rule = zone.rule.name;
 
-		//console.log("showTables " + angular.toJson($scope.zoneSelected,true));
-
-		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn).then(
+		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option).then(
 			function success(response){
 				$scope.zoneSelected.tables = response;
 				console.log("getTurnZoneTables " + angular.toJson(response,true));

@@ -13,7 +13,7 @@
                         <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create')">Crear turno</button>
+                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create',frmTurn)">Crear turno</button>
                     </li>
                 </ul>
             </div>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="card-body card-padding">
-                    <form role="form" class="ng-pristine ng-valid" name="turnForm">
+                    <form role="form" class="ng-pristine ng-valid" name="frmTurn">
                         <div class="row">
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
@@ -33,17 +33,31 @@
                             </div>
 
                             <div class="col-xs-3">
+
                                 <div class="form-group fg-line">
+                                    <label>Hora inicio</label>
+                                    <div class="select">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="selectHour('ini')">
+                                           <option value=""></option>
+                                       </select>
+                                    </div>
+                                </div>  
+                                <!--<div class="form-group fg-line">
                                     <label>Hora inicio</label>
                                     <input  type="time" class="form-control input-sm"  placeholder="HH:mm:ss" ng-model="turnForm.hours_ini" step="900" required>
                                 </div>
+                                -->
 
                             </div>
 
                             <div class="col-xs-3">
                                 <div class="form-group fg-line">
                                     <label>Hora cierre</label>
-                                    <input type="time" class="form-control input-sm" placeholder="HH:mm:ss" ng-model="turnForm.hours_end" step="900"required>
+                                    <div class="select">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ...">
+                                           <option value=""></option>
+                                       </select>
+                                    </div>
                                 </div>   
                             </div>
 
@@ -53,7 +67,6 @@
                                     <div class="select">
                                         <select next-on-enter class="form-control" ng-options="item as item.name for item in typeTurns.data track by item.id" ng-model="turnForm.type_turn" <!--ng-change="getDaysTypeTurn()"--> ></select>
                                     </div>
-                                
                                 </div>   
                             </div>
                         </div>
@@ -87,7 +100,7 @@
                             </div>
                         </div>
                         <div class="row m-t-10">
-                            <div class="col-xs-12 box-zones">
+                            <div class="col-xs-12 box-zones" ng-hide="zonesTable">
                                <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -105,13 +118,88 @@
                                            <td>{{ zone.date_add }}</td>
                                            <td>{{ zone.turns_asign}}</td>
                                            <td>
-                                            <button type="button" class="btn btn-info waves-effect" ng-click="showTables(zone)"><i class="zmdi zmdi-open-in-new zmdi-hc-fw"></i> Mesas</button>
+                                            <button type="button" class="btn btn-info waves-effect" ng-click="showTables(zone,'create')"><i class="zmdi zmdi-open-in-new zmdi-hc-fw"></i> Mesas</button>
                                             <button type="button" class="btn btn-danger  waves-effect" ng-click="deleteZone(zone.id)"><i class="zmdi zmdi-close"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                                <div class="col-xs-12 box-tables" ng-show="zonesTable">
+
+                                    <div class="row m-b-10">
+                                        <div class="col-xs-8 text-left">
+                                            <div class="row">
+                                                <div class="col-md-3"><h4>{{ zoneSelected.name}}</h4></div>
+                                                <div class="col-md-9 header-rule">
+                                                    
+                                                    <label class="m-r-20">Aplicar a todos : </label>
+                                                    <label class="checkbox checkbox-inline m-r-20">
+                                                        <input type="checkbox" value="option1">
+                                                        <i class="input-helper"></i>
+                                                        Online
+                                                    </label>
+                                                    <label class="checkbox checkbox-inline m-r-20">
+                                                        <input type="checkbox" value="option2">
+                                                        <i class="input-helper"></i>
+                                                        Solo en local
+                                                    </label>
+                                                    <label class="checkbox checkbox-inline m-r-20">
+                                                        <input type="checkbox" value="option3">
+                                                        <i class="input-helper"></i>
+                                                        No disponible
+                                                    </label>
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-4 text-right">
+                                            
+                                            <button type="button" class="btn btn-danger waves-effect" ng-click="returnBoxZones()"><i class="zmdi zmdi-arrow-back"></i> Regresar</button>
+                                            <button type="button" class="btn btn-info waves-effect" ng-click="editTableAvailability()"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar disponibilidad</button>
+                                        </div>  
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                        <hr>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>  
+                                                            <label class="checkbox checkbox-inline m-r-20">
+                                                                <input type="checkbox" value="" ng-click="selectedAllTables()" ng-model="mesasCheckAll">
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </th>
+                                                        <th>Mesa</th>
+                                                        <th>Mínimo</th>
+                                                        <th>Máximo</th>
+                                                        <th>Disponibilidad</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="tables in zoneSelected.tables">
+                                                        <td>
+                                                            <label class="checkbox checkbox-inline m-r-20">
+                                                                <input type="checkbox" value="{{ tables.id }}" ng-checked="mesasCheckAll" ng-click="selectItemTable(tables)">
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{ tables.name }}</td>
+                                                        <td>{{ tables.min_cover }}</td>
+                                                        <td>{{ tables.max_cover }}</td>
+                                                        <td> <span class="f-700">In-House-Only</span> {{ turnData.hours_ini }} - {{ turnData.hours_end }} </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div> 
+                                    </div>
+                                                             
+                                </div>
                         </div>
                      
                     </form>
@@ -162,6 +250,79 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cerrar</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="myModalTableTime.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Tabla de disponibilidad</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Seleccionar todos</th>
+                            <th> 
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions"  value="" ng-click="checkRule('online')">
+                                    <i class="input-helper"></i>
+                                    Online
+                                </label>
+                            </th>
+                            <th>
+                                 <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions" value=""  ng-click="checkRule('local')">
+                                    <i class="input-helper"></i>
+                                    Solo en local
+                                </label>
+                            </th>
+                            <th>
+                                 <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="inlineRadioOptions" value="" ng-click="checkRule('disabled')">
+                                    <i class="input-helper"></i>
+                                    No disponible
+                                </label>
+                            </th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="time in timesTables">
+                            <td>{{ time.time }}</td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ time.index }}" value="2" ng-checked="rules.online" ng-click="checkRule(time.index,2)">
+                                    <i class="input-helper"></i>
+                                    Online
+                                </label>
+                            </td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ time.index }}" value="1" ng-checked="rules.local" ng-click="checkRule(time.index,1)">
+                                    <i class="input-helper"></i>
+                                    Solo en local
+                                </label>
+                            </td>
+                            <td>
+                                <label class="radio radio-inline m-r-20">
+                                    <input type="radio" name="rule{{ time.index }}" value="0" ng-checked="rules.disabled" ng-click="checkRule(time.index,0)">
+                                    <i class="input-helper"></i>
+                                    No disponible
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="saveRules()">Guardar</button>
+        <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
     </div>
 </script>
 

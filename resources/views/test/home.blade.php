@@ -1,5 +1,7 @@
 <html ng-app="app">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token()}}">
+    <script src="/library/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script>
         angular.module('app', []).
@@ -42,7 +44,21 @@
 </div>
 
 
+<script src="/library/bookersnap/auth/logout.js"></script>
+<script src="/library/cross-domain-local-storage-2.0.3/dist/scripts/xdLocalStorage.min.js"></script>
+{{--auth--}}
+@if(session('bsAuthToken'))
+    <script src="/library/bookersnap/auth/ss_set.js"></script>
+    <script>fn_ss_set(xdLocalStorage, "{{session('bsAuthToken')}}");</script>
+@elseif(Auth::check())
+    <script src="/library/bookersnap/auth/ss_in.js"></script>
+@else
+    <script src="/library/bookersnap/auth/ss_out.js"></script>
+@endif
+
+
 </body>
+
 
 </html>
 

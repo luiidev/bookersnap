@@ -1,0 +1,8 @@
+.DS_Store
+.tmp
+.idea
+coverage
+node_modules
+bower_components
+*.iml
+*.log
