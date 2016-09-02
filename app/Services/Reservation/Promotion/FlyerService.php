@@ -61,19 +61,68 @@ class FlyerService
         }
     }
 
-    
+     public function UpdateFlyer($data,  $id_flyer, int $user_id)
+    {   
+        //construir el array de redimensiones
+        $dimensionsImg = ManageFilesHelper::GetDimensionsPromotionImg();
+        //crear instancia de image service
+        $imageService = new ImageService();
+
+        //echo dd($data["image"]);
+
+        if($data['image'] == ""){
+
+            $url = $this->API_PROMO_URL . '/es/microsites/1/promotions/flyers/'.$id_flyer;
+            //Se envía la solicitud al api
+            $response = ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+            return $response;
+            
+        }else{
+
+            try {
+                $imageService->ResizeImage(@$data['image_fullname'], @$data['image'], 'flyer', $dimensionsImg, NULL, NULL);
+                $data['user_id'] = '1';
+
+                $url = $this->API_PROMO_URL . '/es/microsites/1/promotions/flyers/'.$id_flyer;
+                //Se envía la solicitud al api
+                $response = ApiRequestsHelper::SendRequest('PUT', $url, null, $data);
+             
+                if ($response['success']) {
+                    //Se borran las imagenes de las carpetas temporales
+                    $imageService->RemoveImage($data['image_fullname']);
+                } else {
+                    //Se borran las imagenes de las carpetas de redimension.
+                    ManageFilesHelper::RemoveImagesFromDimensions($imageService, 'flyer', $dimensionsImg, $data['image']);
+                }
+                return $response;
+                
+            } catch (NotReadableException $e) {
+                abort(400, trans('messages.image_not_readable'));
+            } catch (\Exception $e) {
+                //var_dump($e->getMessage());exit;
+                abort(500, trans('error.500'));
+            }
+
+        }
+    }
+
+    /*
     public function UpdateFlyer($data, $id_flyer, int $user_id)
     {   
-
-        dd($data);
 
         //construir el array de redimensiones
         $dimensionsImg = ManageFilesHelper::GetDimensionsPromotionImg();
 
         //crear instancia de image service
         $imageService = new ImageService();
-        $resp = $this->GetPromotion($id);
-        $promotion = $resp['data'];
+        
+        
+        // $resp = $this->GetPromotion($id);
+        // $promotion = $resp['data'];
+        
+        
+        //dd($data);
+
         try {
             if ($data['image'] == $category['image']) {
                 $imgFullname = '/files/promotions/image/800x800/' . @$data['image'];
@@ -104,5 +153,6 @@ class FlyerService
             abort(500, trans('error.500'));
         }
     }
+    */
    
 }
