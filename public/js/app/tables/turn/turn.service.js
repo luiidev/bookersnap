@@ -163,8 +163,8 @@ angular.module('turn.service', [])
 			return defered.promise;
 		},
 		constructStructureSave: function(turnData,turnForm,turnZoneAdd){
-			turnData.hours_ini = replaceText(turnForm.hours_ini.time,["AM","PM"," "],"");
-			turnData.hours_end = replaceText(turnForm.hours_end.time,["AM","PM"," "],"");
+			turnData.hours_ini = turnForm.hours_ini.time;
+			turnData.hours_end = turnForm.hours_end.time;
 
 			turnData.res_type_turn_id = turnForm.type_turn.id;
 
@@ -285,6 +285,7 @@ angular.module('turn.service', [])
 			angular.forEach(times, function(value, key){
 
 				var index = self.getIndexHour(value);
+				value = replaceText(value,["AM","PM"," "],"");
 
 				timesFinal.push({
 					time : value,
@@ -389,18 +390,48 @@ angular.module('turn.service', [])
 
 			return tableItem;
 		},
-		listHour : function(hourIni,hourEnd){
+		listHour : function(hourIni,hourEnd,availabilityTime){
 
-			var params = {
-				hours_ini : hourIni,
-				hours_end : hourEnd
-			}
+		    var listTime = [];
 
-			var self = this;
+		    angular.forEach(availabilityTime, function(value, key){
 
-			var listTime = self.generatedTimeTable(params);
+		    	if(value.index >= hourIni && value.index <= hourEnd){
+		    		listTime.push({
+		    			time : value.time,
+		    			index : value.index
+		    		});
+		    	}
+
+		    });
 
 		    return listTime;
+		},
+		initAvailability : function(){
+			var times = [];
+
+			for (i = 0; i <120; i++) {
+				var time = i * 60 * 15;
+				var nextday = (i < 96) ? 0 : 1;
+
+				if( i >= 52 && i < 96){
+					var a = (i - 48) * 60 * 15;
+					time = moment.utc(a*1000).format('HH:mm') +" PM";
+				}else if(i <52){
+					time = moment.utc(time*1000).format('HH:mm') +" AM";
+				}else{
+					time = moment.utc(time*1000).format('HH:mm') +" AM";
+				}
+	
+				times.push({
+					time : time,
+					rule_id : "-1",
+					nextday : nextday,
+					index : i
+				});
+			};
+
+			return times;
 		}
 
 	};

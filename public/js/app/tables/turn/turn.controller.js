@@ -70,25 +70,33 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 	$scope.formDataDefault = {
 		hours_ini : [],
-		hours_end : []
+		hours_end : [],
+		listAvailability : []
 	};
 
 	var init = function(){
-		listHourIni();
-		$scope.selectHour();
+		$scope.formDataDefault.listAvailability = TurnFactory.initAvailability();
 
+		listHourIni();
+		listHourEnd();
+		
 		loadDataTurnoEdit();
 		getTypeTurns();
+
+		$scope.generatedTimeTable();
 	};
 
 	var listHourIni = function(){
-		$scope.formDataDefault.hours_ini = TurnFactory.listHour("00:00:00","23:30:00");
-		$scope.turnForm.hours_ini = $scope.formDataDefault.hours_ini[64];
+		$scope.formDataDefault.hours_ini = TurnFactory.listHour(0,95,$scope.formDataDefault.listAvailability);
+		$scope.turnForm.hours_ini = $scope.formDataDefault.hours_ini[64];		
 	};
 
-	var listHourEnd = function(hoursIni ,hoursEnd){
-		$scope.formDataDefault.hours_end = TurnFactory.listHour("00:00:00","23:30:00");
-		$scope.turnForm.hours_end = $scope.formDataDefault.hours_end[80];
+	var listHourEnd = function(){
+
+		var hourIniIndex = parseInt($scope.turnForm.hours_ini.index) + 1;
+
+		$scope.formDataDefault.hours_end = TurnFactory.listHour(hourIniIndex,120,$scope.formDataDefault.listAvailability);
+		$scope.turnForm.hours_end = $scope.formDataDefault.hours_end[0];
 	};
 
 	var getTypeTurns = function(){
@@ -134,11 +142,7 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 					$scope.turnZoneAdd.zones_id = data.zonesId;
 					$scope.turnZoneAdd.zones_data = data.dataZones;
 
-					//listHourEnd($scope.turnData.hours_ini,$scope.turnData.hours_end);
-					//$scope.selectHour();
-					console.log("getTurn " + angular.toJson(data.turnForm,true));
-
-					$scope.zoneSelected.timesDefault = TurnFactory.generatedTimeTable($scope.turnData);
+					$scope.generatedTimeTable();
 
 				},
 				function error(data){
@@ -180,9 +184,19 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		console.log("returnBoxZones " + angular.toJson($scope.turnZoneAdd.zonesTables,true));
 	};
 
-	$scope.selectHour = function(){
-		var hoursFinal = addHourByMin($scope.turnForm.hours_ini.time) ;
-		listHourEnd(hoursFinal,"11:45:00");	
+	$scope.generatedTimeTable = function(hourEnd){
+	
+		if (hourEnd == true) {
+			listHourEnd();
+		}
+		
+		$scope.turnData.hours_ini = $scope.turnForm.hours_ini.time;
+		$scope.turnData.hours_end = $scope.turnForm.hours_end.time;
+
+		$scope.zoneSelected.timesDefault = TurnFactory.listHour($scope.turnForm.hours_ini.index,$scope.turnForm.hours_end.index,$scope.formDataDefault.listAvailability);
+
+		console.log("generatedTimeTable " + angular.toJson($scope.zoneSelected.timesDefault ,true));
+
 	};
 
 	$scope.validateSaveTurn = function(option,frmTurn){
@@ -229,7 +243,6 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 	$scope.returnBoxZones = function(){
 
 		$scope.zonesTable=false;
-
 		// Al regresar,retornamos la data que hallamos guardado (reglas de las mesas)
 		addTablesRules();
 
@@ -298,6 +311,7 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
  	$scope.rules.online = false;
  	$scope.rules.disabled = false;
  	$scope.rules.local = false;
+ 	$scope.rules.value = 1;
  	$scope.rules.dataTemp = [];
 
  	var tableItem = [];
@@ -309,7 +323,7 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 	var listTime = function(){
 		$scope.timesTables = timesDefault;
-		//console.log("timesDefault " ,angular.toJson(timesDefault,true));
+		console.log("timesDefault " ,angular.toJson(timesDefault,true));
 	};
 
 	var listTimeTable = function(){
@@ -347,22 +361,33 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 				$scope.rules.local = true;
 				$scope.rules.disabled = false;
 				$scope.rules.online = false;
+				$scope.rules.value = 1;
 				break;
 			case "disabled":
 				$scope.rules.disabled = true;
 				$scope.rules.local = false;
 				$scope.rules.online = false;
+				$scope.rules.value = 0;
 				break;
 			case "online":
 				$scope.rules.online = true;
 				$scope.rules.disabled = false;
 				$scope.rules.local = false;
+				$scope.rules.value = 2;
 				break;
 		}
+
+		angular.forEach($scope.timesTables, function(value, key){
+			TurnFactory.checkRuleTable(value.index,$scope.rules.value,tableItem,$scope.rules.dataTemp);
+		});
+
+		console.log("checkRule " + angular.toJson($scope.rules.dataTemp,true));
+		
 	};
 
 	$scope.checkRule = function(timeIndex,value){
 		TurnFactory.checkRuleTable(timeIndex,value,tableItem,$scope.rules.dataTemp);
+		console.log("checkRule " + angular.toJson($scope.rules.dataTemp,true));
 	};
 
 	$scope.saveRules = function(){
