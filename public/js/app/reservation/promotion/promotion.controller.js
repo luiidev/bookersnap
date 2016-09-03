@@ -50,7 +50,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       PromotionFactory.onlyPromotion(promotionId).then(function success(data){
         $scope.promotion=data;
         //$scope.zoneSelected.timesDefault = TurnosPromotionDataFactory.generatedTimeTable(data.turn);
-        console.log(data.turn);
+        //console.log(data.turn);
         getTypes();
         //
         $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
@@ -383,8 +383,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       hours_ini : '',
       hours_end : '',
       disposiciones:[{id:1,name:'Aplicar siempre'},{id:2,name:'Añadir turno a la promocion'}],
-      disposicionSelected:{id:1, name:'Aplicar siempre'},
     };
+    if($scope.listTurnos!=''){
+      $scope.turnos.disposicionSelected={id:2,name:'Añadir turno a la promocion'};
+    }else{
+      $scope.turnos.disposicionSelected={id:1, name:'Aplicar siempre'};
+    }
 
     var getHorarios = function(){
       PromotionFactory.listSchedules().then(function success(data){
@@ -435,7 +439,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     var cantidadSel=$scope.turnos.turnoSelected.length;
     if(cantidadSel>0){
       if($scope.turnos.hour_ini && $scope.turnos.hour_end){
-        
+        if($scope.turnos.hour_ini.time != $scope.turnos.hour_end.time){        
         var days = getDaysSelected($scope.turnos.turnoSelected);
         $scope.turnoSelected = days;
         //disabledDaysSelected(days);
@@ -461,6 +465,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         cleanTurno();
         //console.log($scope.listTurnos);
         //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
+        }else{
+          messageAlert("Turnos","Hora de inicio coincide con Hora final","warning");
+        }
       }else{
         messageAlert("Turnos","Debe seleccionar campos de hora","warning");
       }

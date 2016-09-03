@@ -192,12 +192,7 @@
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
                             <div class="select">
-                                <select class="form-control" ng-model="horarios.hour_ini">
-                                    <option value="1">01:00:00</option>
-                                    <option value="2">02:00:00</option>
-                                    <option value="3">03:00:00</option>
-                                    <option value="4">04:00:00</option>
-                                    <option value="5">05:00:00</option>
+                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.index" name="hour_ini">
                                 </select>
                             </div>
                         </div>
@@ -207,12 +202,7 @@
                         <div class="form-group fg-line">
                             <label>Hora final</label>
                             <div class="select">
-                                <select class="form-control" ng-model="horarios.hour_end">
-                                    <option value="6">01:00:00</option>
-                                    <option value="7">02:00:00</option>
-                                    <option value="8">03:00:00</option>
-                                    <option value="9">04:00:00</option>
-                                    <option value="10">05:00:00</option>
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.index" name="hour_end">
                                 </select>
                             </div>
                         </div>

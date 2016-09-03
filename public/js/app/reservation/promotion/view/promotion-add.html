@@ -195,7 +195,7 @@
                         <div class="form-group fg-line">
                             <label>Hora final</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.index" name="hour_end">
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time|toMeridiana for t in turnos.hours_end track by t.index" name="hour_end">
                                 </select>
                             </div>
                         </div>
