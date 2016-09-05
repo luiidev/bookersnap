@@ -8,7 +8,7 @@ angular.module('promotion.service', [])
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
     getHorario : function(){
-      return $http.get(AppBookersnap+"/promotion/gethorario"); 
+      return $http.get(ApiUrlReservation+"/shifts"); 
     },
     updatePromotion : function(pData){
       return $http.put(AppBookersnap + '/promotion/'+pData.event_id,pData); 
@@ -301,7 +301,7 @@ angular.module('promotion.service', [])
   return interfazZones;
 
 })
-.factory('TableFactory',function(){
+.factory('TableFactory',function($filter){
   return {
     getLabelShape : function(id){
       var label = "";
@@ -359,36 +359,106 @@ angular.module('promotion.service', [])
     },
     rangeDateAvailable: function(minSteep,turn){
 
-      var iniHour = turn.hours_ini.substr(0,2);
-      var iniMin = turn.hours_ini.substr(3,2);
+      var iniHour = turn.hours_ini_min.substr(0,2);
+      var iniMin = turn.hours_ini_min.substr(3,2);
 
-      var endHour = parseInt(turn.hours_end.substr(0,2));
-      var endMin = parseInt(turn.hours_end.substr(3,2));
+      var endHour = parseInt(turn.hours_end_max.substr(0,2));
+      var endMin = parseInt(turn.hours_end_max.substr(3,2));
 
       var hour = parseInt(iniHour);
       var min = parseInt(iniMin);
 
       var time = [];
   
-      while(hour <= endHour){
+      if(hour <= endHour){
+        while(hour <= endHour){
 
-        var sHorario = (hour <=12) ? "AM":"PM";
+          //var sHorario = (hour <=11) ? "AM":"PM";
 
-        var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
-        time.push(hora);
-        
-        if(min == (60 - minSteep) ){
-          hour += 1;
-          min = 0;
-        }else{
-          if(hour == endHour && min == endMin){
-            hour = 45;
-          }
-          min += minSteep;  
-        }
+          //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
           
-      }
+          var hora = hour +":"+ ((min == 0) ? "00" : min) + ":00";
+          //console.log(hora);
+          var d = new Date(0,0,0,hour,0,0);
+          var hola = moment(d).valueOf();
+          var hora2 = $filter('date')(hola,'h:mm:ss a');
+          console.log(hora2);
 
+          time.push(hora);
+          
+          if(min == (60 - minSteep) ){
+            hour += 1;
+            min = 0;
+          }else{
+            if(hour == endHour && min == endMin){
+              hour = 45;
+            }
+            min += minSteep;  
+          }
+            
+        }
+      }else if(endHour < hour){
+
+          //var sHorario = (hour <=11) ? "AM":"PM";
+          //var sHorarioEnd = (endHour <=11) ? "AM":"PM";
+
+          if(hour<=11){
+            var num01=24-hour;
+            for (a = 0; a < num01; a++) {
+              //var sHorario = (hour <=11) ? "AM":"PM";
+              //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+              var hora = hour +":"+ ((min == 0) ? "00" : min);
+              var d = new Date(0,0,0,hour,0,0);
+              var hola = moment(d).valueOf();
+              var hora2 = $filter('date')(hola,'h:mm:ss a');
+              console.log(hora2);
+
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                hour += 1;
+                min = 0;
+              }
+            }
+
+          }else{
+            var num01=24-hour;
+             for (i = 0; i < num01; i++) {
+              //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+              var hora = hour +":"+ ((min == 0) ? "00" : min);
+
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                hour += 1;
+                min = 0;
+              }
+            }
+          }
+
+          if(endHour>11){
+            //var num02=24-endHour;
+          }else{
+            var num02=endHour-0;
+            for (h = 0; h <= num02; h++) {
+              //var hora = h +":"+ ((min == 0) ? "00" : min) + " " + sHorarioEnd
+              var hora = h +":"+ ((min == 0) ? "00" : min);
+
+              var d = new Date(0,0,0,h,0,0);
+              var hola = moment(d).valueOf();
+              var hora2 = $filter('date')(hola,'h:mm:ss a');
+              console.log(hora2);
+
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                endHour += 1;
+                min = 0;
+              }
+            }
+          }
+
+      }
       return time;
     },
   }

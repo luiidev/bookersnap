@@ -37,7 +37,7 @@
                                 <div class="form-group fg-line">
                                     <label>Hora inicio</label>
                                     <div class="select">
-                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="selectHour('ini')">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(true)">
                                            <option value=""></option>
                                        </select>
                                     </div>
@@ -54,7 +54,7 @@
                                 <div class="form-group fg-line">
                                     <label>Hora cierre</label>
                                     <div class="select">
-                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ...">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(false)">
                                            <option value=""></option>
                                        </select>
                                     </div>
@@ -267,21 +267,21 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="" ng-click="checkRule('online')">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')" >
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value=""  ng-click="checkRule('local')">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')" >
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="" ng-click="checkRule('disabled')">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>

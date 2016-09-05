@@ -76,9 +76,8 @@ class PromotionController extends Controller
             'msg' => 'messages.turn_restriction_list',
             'data' => 
             array (
-                  'microsite_id' => 1,
-                  'hours_ini' => '13:00:00',
-                  'hours_end' => '18:00:00',
+                  'hours_ini_min' => '08:00:00',
+                  'hours_end_max' => '02:00:00',
                /*1 => 
                   array (
                   'horario_id' => 2,
