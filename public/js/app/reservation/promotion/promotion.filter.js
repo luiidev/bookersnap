@@ -25,19 +25,19 @@ angular.module('promotion.filter', [])
     }
 })
 
-.filter("toMeridiana", function(){
-    return function(hora){
-        var puntos = ":"
-        var meridiano = " am"
-        if(hora > 12){hora -= 12; meridiano = " pm"}
-        if (hora < 10) {hora = "0" + hora}
-        //if (minuto < 10) {minuto = "0" + minuto}
-        puntos == ":" ? puntos = " " : puntos = ":"
-        var horita = hora + puntos  + meridiano
-        return horita;
+.filter("toMeridiano", function($filter){
+    return function(hour){
+
+        var pos = hour.indexOf(":");
+        //var min = hour.substr(hourIndex);
+        var hourIndex = hour.substr(0,pos);
+
+        var d = new Date(0,0,0,hourIndex,0,0);
+        var formato = moment(d).valueOf();
+        var hora = $filter('date')(formato,'h:mm a');
+        return hora;
     }
 })
-
 
 .filter("diaSemana", function(){
     return function(num) {

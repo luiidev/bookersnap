@@ -4,12 +4,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.titulo="Promociones";
 })
 
-.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,PromotionDataFactory,TurnosPromotionDataFactory,TableFactory,ZonesActiveFactory,AppBookersnap,UrlRepository,TurnosPromotionDataFactory) {
+.controller('PromotionAddCtrl', function($scope,$rootScope,$state,$stateParams,Upload,$timeout,$uibModal,PromotionFactory,PromotionDataFactory,TurnosPromotionDataFactory,TableFactory,ZonesActiveFactory,AppBookersnap,UrlRepository) {
 
   var promotionId = $stateParams.id;
   $scope.promotion={};
-
-  PromotionFactory.listSchedules();
 
   var getTypes = function(){
     PromotionFactory.listTypes().then(function success(data){
@@ -38,26 +36,19 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     });
   };
 
-    //Recortar imagen
-  //$scope.myImage = undefined;
+  //Recortar imagen
   $scope.croppedDataUrl='';   
   $scope.imageCropStep = 1;
   $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
-  //$scope.addCroppingWatcher=function(){ console.log('hecho');}
 
   if(promotionId){
       $scope.titulo="Actualizar promoción";
       PromotionFactory.onlyPromotion(promotionId).then(function success(data){
         $scope.promotion=data;
-        //$scope.zoneSelected.timesDefault = TurnosPromotionDataFactory.generatedTimeTable(data.turn);
-        //console.log(data.turn);
         getTypes();
-        //
-        $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
 
-        //$scope.urlimagen=UrlRepository+'/promotions/'+$scope.promotion.imagen;
+        $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
         $scope.promotion.myImage=data.myImage;
-        //console.log($scope.promotion.myImage);
         $scope.croppedDataUrl=''; 
 
         var handleFileSelect=function(evt) {
@@ -106,6 +97,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
           data: {file: file}
         }).then(function (resp) {
           $scope.imagetmp=resp.data
+          //var formatea=cleanString($scope.imagetmp.basename);
         },function (resp) {
           messageAlert("Imagen","Se ha producido error interno al subir imagen","warning");
           console.log('Error status: ' + resp.status);
@@ -225,11 +217,11 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
      
       PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
         messageAlert("Success","Se ha creado la promoción con éxito","success");
-        console.log('Guardando'+angular.toJson(datosPromotion,true));
+        //console.log('Guardando'+angular.toJson(datosPromotion,true));
       }).error(function(data,status,headers){
-        messageErrorApi(data,"Error","warning");
+        messageErrorApi(status,"Error","warning");
       });
-      //console.log('Guardando '+angular.toJson(datosPromotion,true));
+      console.log('Guardando '+angular.toJson(datosPromotion,true));
       
     }else{
       datosPromotionEditar.event_id = parseInt($stateParams.id);
@@ -241,7 +233,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         messageErrorApi(status,"Error","warning");
       });
       
-      console.log('Actualizando '+angular.toJson(datosPromotion,true));
+      //console.log('Actualizando '+angular.toJson(datosPromotion,true));
     }
     
   }
@@ -265,16 +257,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.openModal = function (size) {
     modalInstances(true, size, true, true)
   }
-/*
-  //Custom Sizes
-  
 
-	//Opciones de calendario
-	$scope.today = function() {
-    $scope.dt = new Date();
-  };
-  $scope.today();
-*/
   $scope.open = function($event, opened) {
    $event.preventDefault();
    $event.stopPropagation();
@@ -319,8 +302,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 
   $scope.listTurnos = content;
-    //console.log('Hay '+ angular.toJson(content, true));
-    //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
+  //console.log($scope.listTurnos);
 
   var getDaysSelected = function(days){
       var daysData = [];
@@ -393,46 +375,22 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     var getHorarios = function(){
       PromotionFactory.listSchedules().then(function success(data){
         $scope.turnos.hours_ini = data;
-        //var ultimo = $scope.turnos.hours_ini.pop();
         $scope.turnos.hours_end = data;
-        //var primero = $scope.turnos.hours_end.shift();
-        //$scope.turnos.hour_ini = $scope.turnos.hours_ini[0];
-        //$scope.turnos.hour_end = $scope.turnos.hours_ini[1];
       },function error(data){
         messageErrorApi(data,"Error","warning");
       });
     };
-  getHorarios();
-    
-    $scope.horarios = {
-      hour_ini : '',
-      hour_end : ''
-    };
+    getHorarios();
+
 
     var promotionId = $stateParams.id;
     if(promotionId){
-      //var days = [];
       angular.forEach($scope.listTurnos, function(turn){
         if(turn){
           var days=turn.days;
-          //console.log(days);
-          //disabledDaysSelected(days);
-          //days.push(day);
-          //var coleccion=turn.days;
-          //daysData.push(key);
         }
-        //return days;
       });
-      //disabledDaysSelected(days);
-      //console.log(days);
     }
-
-    
-
-  /*$scope.$watch('turnoSelected',function(data){ //Step 1
-      console.log('Haber '+angular.toJson(data, true));      
-  });
-  */
 
   $scope.addTurno = function(){
 
@@ -442,21 +400,28 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         if($scope.turnos.hour_ini.time != $scope.turnos.hour_end.time){        
         var days = getDaysSelected($scope.turnos.turnoSelected);
         $scope.turnoSelected = days;
-        //disabledDaysSelected(days);
 
-        $scope.turnos.hours_ini = $filter('date')($scope.turnos.hour_ini.time,'HH:mm:ss');
-        $scope.turnos.hours_end = $filter('date')($scope.turnos.hour_end.time,'HH:mm:ss');
-        //$scope.actividadSelected=$scope.turnos.actividadSelected;
+        $scope.turnos.hours_ini = $scope.turnos.hour_ini.time_ori;
+        $scope.turnos.hours_end = $scope.turnos.hour_end.time_ori;
 
         var opciones={
-          //actividad:$scope.actividadSelected,
           days:$scope.turnoSelected,
           hours_ini:$scope.turnos.hours_ini,
           hours_end:$scope.turnos.hours_end,
         };
         var promotionId = $stateParams.id;
         if(promotionId){
-          console.log('Guardar para promocion '+promotionId+' los datos: '+angular.toJson(opciones, true));
+
+          var turnOpciones=[];
+          turnOpciones.push(opciones);
+          var newopciones={
+            type_event:parseInt(promotionId),
+            shift_promotion:turnOpciones
+          };
+          TurnosPromotionDataFactory.createTurnPromotion(promotionId,newopciones).success(function(data){
+            opciones.turn_id=data.data;
+          });
+
         }
         TurnosPromotionDataFactory.setTurnosItems(opciones);
         $scope.existeTurno=true;
@@ -479,8 +444,11 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.deleteTurno = function (item,turn) {
     var promotionId = $stateParams.id;
     $scope.turnoIndex=item;
-    //enabledDaysSelected(turn.days);
-    console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn.turn_id,true));
+    if(promotionId){
+      TurnosPromotionDataFactory.deleteTurnPromotion(promotionId,turn.turn_id);
+      //console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn.turn_id,true));
+    }
+
     //$scope.listTurnos.splice($scope.turnoIndex,1);
     TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
     cleanTurno();
@@ -493,10 +461,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     $scope.turnos.turnoSelected=[];
   }
 
-  /*
-  $scope.ok = function () {
-    $modalInstance.close();
-  };*/
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
@@ -594,16 +558,22 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     if($scope.precioDefault==""){
       messageAlert("Añadir precio","Debe ingresar precio para mesas selecionadas","warning");
     }else{
+
       var vTable={
         event_id:parseInt(promotionId),
         type_event:parseInt(type_event),
         tables_pay:[]
       }
+
       angular.forEach($scope.itemTables, function(table) {
         vTable.tables_pay.push({table_id:table.table_id, price:$scope.precioDefault, zone_id:table.zone_id});
       });
-      PromotionDataFactory.createTablesPayment(vTable);
-      console.log('Guardar: '+angular.toJson(vTable,true));
+
+      var promotionId = $stateParams.id;
+      if(promotionId){
+        PromotionDataFactory.createTablesPayment(vTable);
+        //console.log('Guardar: '+angular.toJson(vTable,true));
+      }
 
       angular.forEach($scope.itemTables, function(objeto) {
         objeto.price=$scope.precioDefault;
@@ -625,18 +595,17 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   
   var promotionId = $stateParams.id;
   $scope.itemPrices = content;
-  //console.log($scope.itemPrices);
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
   $scope.cleanPrecio = function () {
     var indexforma=$scope.itemPrices.price="";
-    PromotionDataFactory.deleteTablesPayment(promotionId,$scope.itemPrices.table_id);
+    if(promotionId){
+      PromotionDataFactory.deleteTablesPayment(promotionId,$scope.itemPrices.table_id);
+    }
     ZonesActiveFactory.delZonesItem($scope.itemPrices);
     $modalInstance.close();
     $scope.itemPrices=[];
   };
 
 });
-
-

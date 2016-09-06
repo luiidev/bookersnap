@@ -185,7 +185,7 @@
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.index" name="hour_ini">
+                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.time_ori" name="hour_ini">
                                 </select>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
                         <div class="form-group fg-line">
                             <label>Hora final</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time|toMeridiana for t in turnos.hours_end track by t.index" name="hour_end">
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.time_ori" name="hour_end">
                                 </select>
                             </div>
                         </div>
@@ -230,7 +230,7 @@
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hours_ini | date:'h:mma'}} - {{turno.hours_end}}</small>
+                                    <small class="lv-small">{{turno.hours_ini}} - {{turno.hours_end}}</small>
                                 </div>
 
                             </div>
