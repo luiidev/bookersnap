@@ -63,7 +63,12 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		rule : '',
 		tables : [],
 		timesDefault : [],
-		tablesId : [] //cuando marcamos check en la mesa se agrega
+		tablesId : [], //cuando marcamos check en la mesa se agrega
+		chkRulesAll : {
+			online : true,
+			local : false,
+			disabled : true
+		}
 	};
 
 	$scope.mesasCheckAll = false;
@@ -169,10 +174,10 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 			var existeZone = 0;
 
 			angular.forEach($scope.turnZoneAdd.zonesTables, function(value, key){
-				if(value.zone_id == $scope.zoneSelected.id ){
+				if(value.zone_id == $scope.zoneSelected.id ){ 
 					value = vData;
 					existeZone +=1;
-					console.log("ya existe " + value.zone_id);
+					
 				}
 			});
 
@@ -181,7 +186,9 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 			}	
 		}
 
-		console.log("returnBoxZones " + angular.toJson($scope.turnZoneAdd.zonesTables,true));
+		//console.log("returnBoxZones " + angular.toJson(vData,true));
+
+		//console.log("returnBoxZones 2 " + angular.toJson($scope.turnZoneAdd.zonesTables,true));
 	};
 
 	$scope.generatedTimeTable = function(hourEnd){
@@ -196,7 +203,6 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		$scope.zoneSelected.timesDefault = TurnFactory.listHour($scope.turnForm.hours_ini.index,$scope.turnForm.hours_end.index,$scope.formDataDefault.listAvailability);
 
 		console.log("generatedTimeTable " + angular.toJson($scope.zoneSelected.timesDefault ,true));
-
 	};
 
 	$scope.validateSaveTurn = function(option,frmTurn){
@@ -244,7 +250,7 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 		$scope.zonesTable=false;
 		// Al regresar,retornamos la data que hallamos guardado (reglas de las mesas)
-		addTablesRules();
+		//addTablesRules();
 
 		$scope.zoneSelected.tablesId.length = 0;
 	};
@@ -259,10 +265,9 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		$scope.zoneSelected.id = zone.id;
 		$scope.zoneSelected.name = zone.name;
 
-		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option).then(
+		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option,$scope.turnZoneAdd.zonesTables).then(
 			function success(response){
 				$scope.zoneSelected.tables = response;
-				console.log("getTurnZoneTables " + angular.toJson(response,true));
 			},
 			function error(response){
 				messageErrorApi(response,"Error","warning");
@@ -297,12 +302,17 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
         });
 	};
 
-	$scope.selectItemTable = function(table){
+	$scope.checkTableZone = function(table){
 		TurnFactory.checkTableZone($scope.zoneSelected.tablesId,table.id);
-		console.log("selectItemTable " + angular.toJson($scope.zoneSelected.tablesId,true));
+		console.log("checkTableZone " + angular.toJson($scope.zoneSelected.tablesId,true));
 	};
 
-	init();
+	$scope.checkRuleTableAll = function(rule){
+		TurnFactory.checkRuleTableAll($scope.zoneSelected.tables,rule,$scope.turnForm);
+		addTablesRules();
+	};
+
+	init();     
 })
 .controller('ModalTableTimeCtrl', function($scope,$uibModalInstance,timesDefault,tablesId,tablesData,TurnFactory) {
 	$scope.timesTables = [];

@@ -206,7 +206,7 @@ angular.module('turn.service', [])
 
 			TurnDataFactory.getTurn(idTurn,options).success(function(data){
 				data = data.data;
-				
+		
 				var turnData = {
 					id : data.id,
 					name : data.name,
@@ -258,27 +258,49 @@ angular.module('turn.service', [])
 
 			return defered.promise;
 		},
-		getTurnZoneTables : function(idZone,idTurn,option){
+		getTurnZoneTables : function(idZone,idTurn,option,zonesTablesAdd){
 			var defered = $q.defer();
+			var self = this;
 
-			if(option == "edit"){
-				TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
-					defered.resolve(data.data);
-				}).error(function(data,status,headers){
-					defered.reject(data);
-				});
+			var tablesZoneExists = self.searchZoneByZoneAdd(zonesTablesAdd,idZone);
+
+			if(tablesZoneExists != null){
+				defered.resolve(tablesZoneExists.tables);
 			}else{
-				ZoneFactory.getTables(idZone).success(function(data){
-					defered.resolve(data.data);
-				}).error(function(data,status,headers){
-					defered.reject(data);
-				});
+
+				if(option == "edit"){
+					TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
+						defered.resolve(data.data);
+					}).error(function(data,status,headers){
+						defered.reject(data);
+					});
+				}else{
+					ZoneFactory.getTables(idZone).success(function(data){
+						defered.resolve(data.data);
+					}).error(function(data,status,headers){
+						defered.reject(data);
+					});
+				}
+
 			}
-		
+			
 			return defered.promise;
 		},
+		searchZoneByZoneAdd : function(zonesTablesAdd,idZone){
+			var tablesZone = null;
+
+			angular.forEach(zonesTablesAdd, function(data, key){
+				if(data.zone_id == idZone){
+					tablesZone = data;
+					console.log("searchZoneByZoneAdd " + angular.toJson(data,true));
+				}
+				
+			});
+
+			return tablesZone;
+		},
 		generatedTimeTable : function(turnData){
-			var times = BookDateFactory.rangeDateAvailable(15,turnData);
+			/*var times = BookDateFactory.rangeDateAvailable(15,turnData);
 			var timesFinal = [];
 			var self = this;
 
@@ -293,7 +315,8 @@ angular.module('turn.service', [])
 				});
 	
 			});
-			return timesFinal;
+
+			return timesFinal;*/	
 		},
 		getIndexHour : function(value){
 			var hourIndex = value.indexOf(":");
@@ -432,7 +455,42 @@ angular.module('turn.service', [])
 			};
 
 			return times;
+		},
+		checkRuleTableAll : function(tables,rule,turnForm){
+			var self = this;
+			angular.forEach(tables,function(data){
+
+				data = self.updateTextAvailabilityTable(data,rule,turnForm);
+
+				angular.forEach(data.availability,function(rules){
+					rules.rule_id = rule;
+				});	
+
+			});
+		},
+		updateTextAvailabilityTable : function(table,rule,turnForm){
+
+			table.rules_disabled = "";
+			table.rules_local = "";
+			table.rules_online = "";
+
+			table.res_turn_rule_id = rule;
+	
+			switch(rule){
+				case 0:
+					table.rules_disabled = turnForm.hours_ini.time +" - "+ turnForm.hours_end.time;
+					break;
+				case 1:
+					table.rules_local = turnForm.hours_ini.time +" - "+ turnForm.hours_end.time;
+					break;
+				case 2:
+					table.rules_online = turnForm.hours_ini.time +" - "+ turnForm.hours_end.time;
+					break;
+			}
+
+			return table;
 		}
+
 
 	};
 
