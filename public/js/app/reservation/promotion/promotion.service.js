@@ -100,7 +100,6 @@ angular.module('promotion.service', [])
     listSchedules: function(){
       var defered=$q.defer();
       PromotionDataFactory.getHorario().success(function(data){
-       //var vSchedules=[];
         var schedules = data.data;
         var vSchedules=TurnosPromotionDataFactory.generatedTimeTable(schedules);
         defered.resolve(vSchedules);     
@@ -133,27 +132,7 @@ angular.module('promotion.service', [])
         var turnos=promotion.turn
         
         angular.forEach(turnos, function(turn) {
-          
-          var iniHour = parseInt(turn.hours_ini.substr(0,2));
-          var endHour = parseInt(turn.hours_end.substr(0,2));
-
-          var di = new Date(0,0,0,iniHour,0,0);
-          var formato_ini = moment(di).valueOf();
-          var hora_inicio = $filter('date')(formato_ini,'h:mm a');
-
-          var de = new Date(0,0,0,endHour,0,0);
-          var formato_end = moment(de).valueOf();
-          var hora_final = $filter('date')(formato_end,'h:mm a');
-
-          var lstTurn={
-            days:turn.days,
-            hours_end:hora_inicio,
-            hours_ini:hora_final,
-            hours_end_web:turn.hours_end_web,
-            hours_ini_web:turn.hours_ini_web,
-            turn_id:turn.turn_id
-          }
-          TurnosPromotionDataFactory.setTurnosItems(lstTurn);
+          TurnosPromotionDataFactory.setTurnosItems(turn);
         });
 
         defered.resolve(vPromotion[0]);     
@@ -167,7 +146,7 @@ angular.module('promotion.service', [])
       PromotionDataFactory.getTablesPayment(pId).success(function(data){
         defered.resolve(data.data);
       }).error(function(data, status, headers){
-        defered.reject(data);
+        defered.reject(data.data);
       });     
       return defered.promise;
     },
@@ -190,17 +169,17 @@ angular.module('promotion.service', [])
               angular.forEach(tableData, function(table) {
                 vTables.push(table);
               });
-
              });
            return vTables;
           },
           function error(response){
+            //console.log('Aqui graficar zonas');
             return response;
           }
         ).then(
           function success(tablesPay){
            var vZonas=[];
-           //console.log(tablesPay);
+           
             angular.forEach(zones, function(zone) {
               var vTable={
                 zone_id : zone.zone_id,
@@ -209,9 +188,7 @@ angular.module('promotion.service', [])
               }
               angular.forEach(zone.table, function(table) {
 
-
                 if(tablesPay){
-
                   angular.forEach(tablesPay, function(tableData) {                    
                       if(tableData.table_id==table.table_id && tableData.price!=''){
                         ZonesActiveFactory.setZonesItems(table);
