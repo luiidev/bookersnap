@@ -19,6 +19,10 @@ Route::get('/admin/ms/{id}/reservation', function () {
     return view('reservation');
 });
 
+Route::get('/', function () {
+    echo "Hola!!";
+})->middleware('checkCountry');
+
 Route::group(['prefix' => 'test'], function () {
     Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
         Route::get('/', ['as' => 'microsite-login', 'uses' => 'Test\AuthController@Index']);
@@ -36,6 +40,13 @@ Route::group(['prefix' => 'test'], function () {
         Route::post('/subir-logo', 'Test\AjaxController@UploadLogo');
         Route::post('/subir-favicon', 'Test\AjaxController@UploadFavicon');
     });
+
+    //test de redireccion por dominio, es importante agregar el middleware checkCountry para que funcione la
+    //redireccion y el seteo de idioma
+    Route::group(['prefix' => 'redirect', 'middleware' => 'checkCountry'], function () {
+        Route::get('/', 'Test\PortalController@index');
+    });
+
 });
 
 
@@ -95,7 +106,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::get('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
     Route::put('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@updatePromotion");
 
-    
+
     /* Flyer */
     Route::post('flyer/uploadFile', "Admin\Reservation\Promotion\FlyerController@uploadfile");
     Route::post('flyer', "Admin\Reservation\Promotion\FlyerController@storeFlyer");

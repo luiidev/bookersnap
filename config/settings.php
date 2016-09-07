@@ -22,5 +22,6 @@ return array(
 return [
     'API_AUTH_URL' => 'http://localhost:3001/v1',
     'API_ADMIN_URL' => 'http://localhost:3000/v1',
-    'API_PROMO_URL' => 'http://api-promotion.vh/v1'
+    'API_PROMO_URL' => 'http://api-promotion.vh/v1',
+    'MAIN_DOMAIN' => 'reservantro2.com'
 ];
