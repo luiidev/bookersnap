@@ -27,7 +27,7 @@ angular.module('promotion.filter', [])
 
 .filter("toMeridiano", function($filter){
     return function(hour){
-
+      if(hour != null){
         var pos = hour.indexOf(":");
         //var min = hour.substr(hourIndex);
         var hourIndex = hour.substr(0,pos);
@@ -36,6 +36,7 @@ angular.module('promotion.filter', [])
         var formato = moment(d).valueOf();
         var hora = $filter('date')(formato,'h:mm a');
         return hora;
+      }
     }
 })
 

@@ -84,7 +84,7 @@ class PromotionService
             if(!empty($data['image'])){
 
                 if ($data['image'] == $promotion['image']) {
-                    $imgFullname = '/files/promotions/image/800x800/' . @$data['image'];
+                    $imgFullname = '/files/promotions/' . @$data['image'];
                     $imageService->ResizeImage($imgFullname, @$data['image'], 'promotions', $dimensionsImg, @$data['cropper']['areaCoords'], @$data['cropper']['canvasWidth'], false);
                 } else {
                     $imageService->ResizeImage(@$data['image_fullname'], @$data['image'], 'promotions', $dimensionsImg, @$data['cropper']['areaCoords'], @$data['cropper']['canvasWidth']);

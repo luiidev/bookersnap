@@ -108,6 +108,7 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
+    /*Formatear datos de promocion a editar*/
     onlyPromotion: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getPromotion(pId).success(function(data){
@@ -117,7 +118,7 @@ angular.module('promotion.service', [])
           title:promotion.title,
           description:promotion.description,
           status_expire:TableFactory.getEvalua(promotion.status_expire),
-          date_expire:promotion.date_expire,
+          date_expire:TableFactory.getFormatofecha(promotion.date_expire),
           publication:TableFactory.getEvalua(promotion.publication),
           tipoSelected:{type_event_id : promotion.type_event},
           status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
@@ -150,6 +151,7 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
+    /*Formatear zonas y zonas pagadas*/
     listZonesEdit:function(pId){
       var me=this;
       var defered=$q.defer();
@@ -173,7 +175,6 @@ angular.module('promotion.service', [])
            return vTables;
           },
           function error(response){
-            //console.log('Aqui graficar zonas');
             return response;
           }
         ).then(
@@ -205,7 +206,6 @@ angular.module('promotion.service', [])
             defered.resolve(vZonas);
           },
           function error(response){
-            //console.log('deverias03');
             defered.reject(response);
           }
         );
@@ -283,6 +283,7 @@ angular.module('promotion.service', [])
   return interfazTurnos;
 
 })
+/*Ir guardando zonas con precio asignado*/
 .factory('ZonesActiveFactory',function(){
   var zoneColection =[];
   var interfazZones = {
@@ -361,6 +362,14 @@ angular.module('promotion.service', [])
         break;
       }
       return evalua;
+    },
+    getFormatofecha : function(valor){
+      if(valor=="0000-00-00"){
+        return "";
+      }else{
+        return valor;
+      }
+      
     },
     rangeDateAvailable: function(minSteep,turn){
 
