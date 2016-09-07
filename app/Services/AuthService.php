@@ -59,7 +59,7 @@ class AuthService
         return null;
     }
 
-    public function LoginBsUserData(string $email, string $password)
+    public function LoginBsUserData(string $email, string $password, $ip_address)
     {
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
@@ -67,7 +67,8 @@ class AuthService
         $url = $this->_api_auth_url . '/es/auth/bookersnap';
         $data = [
             'email' => $email,
-            'password' => $password
+            'password' => $password,
+            '_ip_address' => $ip_address
         ];
         $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
 

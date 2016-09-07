@@ -118,7 +118,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     });
     return index;
   }
-
+  //console.log('Fecha '+$scope.promotion.date_expire);
   /*Accion de boton Guardar promocion*/
   $scope.savePromotion=function(option){
 
@@ -215,7 +215,15 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       if (option == "create") {
        
         PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
-          messageAlert("Success","Se ha creado la promoción con éxito","success");
+          if(response.success){
+            messageAlert("Success","Se ha creado la promoción con éxito","success");
+            var redireccionar = function() {
+              $state.go('promotion-list');
+            }
+            $timeout(redireccionar, 2000);
+          }else{
+            messageErrorApi(response.msg,"Corregir turnos","error");
+          }
           //console.log('Guardando'+angular.toJson(datosPromotion,true));
         }).error(function(data,status,headers){
           messageErrorApi(status,"Error","warning");
@@ -226,7 +234,12 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         datosPromotionEditar.event_id = parseInt($stateParams.id);
         
         PromotionDataFactory.updatePromotion(datosPromotionEditar).success(function(response){
+          //console.log(angular.toJson(response,true));
           messageAlert("Success","Se actualizado la promoción con éxito","success");
+          var redireccionar = function() {
+              $state.go('promotion-list');
+          }
+          $timeout(redireccionar, 2000);
         }).error(function(data,status,headers){
           messageErrorApi(status,"Error","warning");
         });
@@ -271,8 +284,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
    $event.stopPropagation();
    $scope[opened] = true;
   };
-  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-  $scope.format = $scope.formats[0];
+  //$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+  //$scope.format = $scope.formats[0];
 
   
   /*Apertura modal Configurar zonas de paga*/
@@ -409,29 +422,35 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
             hours_ini:$scope.turnos.hours_ini,
             hours_end:$scope.turnos.hours_end,
           };
+          
           var promotionId = $stateParams.id;
           if(promotionId){
-
-            var turnOpciones=[];
-            turnOpciones.push(opciones);
+            //var turnOpciones=[];
+            //turnOpciones.push(opciones);
             var newopciones={
-              type_event:parseInt(promotionId),
-              shift_promotion:turnOpciones
+              shift_promotion:opciones
             };
-            TurnosPromotionDataFactory.createTurnPromotion(promotionId,newopciones).success(function(data){
-              opciones.turn_id=data.data;
+            TurnosPromotionDataFactory.createTurnPromotion(promotionId,newopciones).success(function(response){
+              if(response.success){
+                opciones.turn_id=response.data;
+                //console.log('Enviando'+angular.toJson(opciones,true));
+                TurnosPromotionDataFactory.setTurnosItems(opciones);
+                cleanTurno();
+              }else{
+                cleanTurno();
+                messageAlert("Corregir turnos",response.msg,"error");
+              }
             });
 
-          }
-          TurnosPromotionDataFactory.setTurnosItems(opciones);
-          $scope.existeTurno=true;
-          //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
-
-          cleanTurno();
-          //console.log($scope.listTurnos);
-          //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
           }else{
-            messageAlert("Turnos","Hora de inicio coincide con Hora final","warning");
+            TurnosPromotionDataFactory.setTurnosItems(opciones);
+            cleanTurno();
+          }
+
+          $scope.existeTurno=true;
+
+          }else{
+            messageAlert("Corregir horas","Hora de inicio coincide con Hora final","error");
           }
         }else{
           messageAlert("Turnos","Debe seleccionar campos de hora","warning");
@@ -550,10 +569,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
   $scope.itemTables = content;
   $scope.precioDefault = "";
   var promotionId = $stateParams.id;
-
-  //console.log($scope.itemTables);
-  //console.log(type_event);
-  //console.log(promotionId);
   
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');

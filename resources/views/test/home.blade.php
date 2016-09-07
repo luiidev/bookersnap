@@ -44,18 +44,8 @@
 </div>
 
 
-<script src="/library/bookersnap/auth/logout.js"></script>
-<script src="/library/cross-domain-local-storage-2.0.3/dist/scripts/xdLocalStorage.min.js"></script>
-{{--auth--}}
-@if(session('bsAuthToken'))
-    <script src="/library/bookersnap/auth/ss_set.js"></script>
-    <script>fn_ss_set(xdLocalStorage, "{{session('bsAuthToken')}}");</script>
-@elseif(Auth::check())
-    <script src="/library/bookersnap/auth/ss_in.js"></script>
-@else
-    <script src="/library/bookersnap/auth/ss_out.js"></script>
-@endif
-
+{{--Agregamos los scripts que permiten el inicio de sesion en todos los dominios--}}
+@include('_shared.scripts_auth')
 
 </body>
 

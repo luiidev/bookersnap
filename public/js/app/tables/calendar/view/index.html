@@ -62,98 +62,34 @@
                         <table class="table table-condensed table-striped">
                             <thead>
                             <tr>
-                                <th width="30%">Turnos</th>
-                                <th width="30%">Horario</th>
+                                <th width="20%">Turno</th>
+                                <th width="20%">Nombre</th>
+                                <th width="20%">Horario</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>{{vm.shifts.breakfast.data.title || "-"}}</td>
-                                <td>{{vm.shifts.breakfast.data.start}} - {{vm.shifts.breakfast.data.end}}</td>
+                            <tr ng-repeat="item in vm.shifts">
+                                <td>{{item.name}}</td>
+                                <td>{{item.turn.name || "-"}}</td>
+                                <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
                                 <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.breakfast.data==null"
-                                       ng-click="vm.scheduleBreakfast()">Añadir turno</a>
+                                    <a href="javascript:" ng-if="item.turn==null"
+                                       ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
                                     <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
+                                       ng-if="item.turn">
                                         Editar
                                     </a>
                                     &nbsp;&nbsp;
                                     <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
+                                       ng-if="item.turn">
                                         Reemplazar
                                     </a>
                                     &nbsp;&nbsp;
                                     <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
+                                       ng-if="item.turn">
                                         Borrar
                                     </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.brunch.data.title || "-"}}</td>
-                                <td>{{vm.shifts.brunch.data.start}} - {{vm.shifts.brunch.data.end}}</td>
-                                <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.brunch.data==null"
-                                       ng-click="vm.scheduleBrunch()">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.lunch.data.title || "-"}}</td>
-                                <td>{{vm.shifts.lunch.data.start}} - {{vm.shifts.lunch.data.end}}</td>
-                                <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.lunch.data==null"
-                                       ng-click="vm.scheduleLunch()">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.dinner.data.title || "-"}}</td>
-                                <td>{{vm.shifts.dinner.data.start}} - {{vm.shifts.dinner.data.end}}</td>
-                                <td class="text-right">
-                                        <a href="javascript:" ng-if="vm.shifts.dinner.data==null"
-                                           ng-click="vm.scheduleDinner()">Añadir turno</a>
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
-                                            Editar
-                                        </a>
-                                        &nbsp;&nbsp;
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
-                                            Reemplazar
-                                        </a>
-                                        &nbsp;&nbsp;
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
-                                            Borrar
-                                        </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -162,14 +98,61 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link" data-ng-click="addEvent()">Add Event</button>
-                    <button type="button" class="btn btn-link" data-ng-click="vm.dismiss()">Close</button>
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
                 </div>
             </script>
 
             <!-- Add event -->
-            <script type="ng-template" type="text/ng-template" id="schedule.html">
+            <script type="text/ng-template" id="schedule.html">
+                <div class="modal-header">
+                    <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
 
+                    <div class="m-t-20 m-b-20 m-l-20">
+                        <label class="radio radio-inline m-r-20">
+                            <input type="radio" name="scheduleOption" ng-model="vm.scheduleOption" ng-value="0">
+                            <i class="input-helper"></i>
+                            <span style="font-weight: bold">Solo para {{vm.formatted_date}}</span>
+                        </label>
+                        <i class="input-helper"></i>
+                        <label class="radio radio-inline m-r-20">
+                            <input type="radio" name="scheduleOption" ng-model="vm.scheduleOption" ng-value="1">
+                            <i class="input-helper"></i>
+                            <span style="font-weight: bold">Para todos los {{vm.day_name}}</span>
+                        </label>
+                    </div>
+
+                    <div class="listview lv-bordered lv-lg">
+
+                        <div class="lv-body">
+                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                <div class="media-body">
+                                    <div class="lv-title">
+                                        <span style="font-weight: bold;">{{shift.name}}</span>
+                                        <span class="m-l-30">
+                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                        </span>
+                                    </div>
+                                    <div class="lv-actions">
+                                        <button class="btn btn-primary" ng-disabled="vm.flags.isLoading"
+                                                ng-click="vm.schedule(shift.id)">
+                                            Programar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
+                </div>
             </script>
 
 
