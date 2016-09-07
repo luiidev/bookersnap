@@ -36,7 +36,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     });
   };
 
-  //Recortar imagen
+  /*Parametros iniciales para recorte de imagen*/
   $scope.croppedDataUrl='';   
   $scope.imageCropStep = 1;
   $scope.cropped={cropWidth:100,cropHeight:100,cropTop:0,cropLeft:10}
@@ -46,22 +46,26 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       PromotionFactory.onlyPromotion(promotionId).then(function success(data){
         $scope.promotion=data;
         getTypes();
-
         $scope.promotion.zonas=PromotionFactory.listZonesEdit(promotionId);
-        $scope.promotion.myImage=data.myImage;
-        $scope.croppedDataUrl=''; 
+        /*Preguntar si existe imagen*/
+        if(data.imagenOriginal){
+          $scope.promotion.myImage=data.myImage;
+          $scope.croppedDataUrl=''; 
 
-        var handleFileSelect=function(evt) {
-          var file=evt.currentTarget.files[0];
-          var reader = new FileReader();
-          reader.onload = function (evt) {
-            $scope.$apply(function($scope){
-              $scope.promotion.myImage=evt.target.result;
-            });
+          var handleFileSelect=function(evt) {
+            var file=evt.currentTarget.files[0];
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+              $scope.$apply(function($scope){
+                $scope.promotion.myImage=evt.target.result;
+              });
+            };
+            reader.readAsDataURL(file);
           };
-          reader.readAsDataURL(file);
-        };
-        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+          angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+        }else{
+          $scope.promotion.myImage="";
+        }
 
 
       },function error(data){
@@ -83,9 +87,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       };
       getTypes();
       getZones();
+
   } 
 
-
+  /*Accion de boton Seleccionar imagen y subida a carpeta temporal*/
   $scope.validarImg=function(file){
     if(file==null){ 
       messageAlert("Flyer","Seleccione imagen mayor a 300px x 300px","warning");
@@ -97,13 +102,13 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
           data: {file: file}
         }).then(function (resp) {
           $scope.imagetmp=resp.data
-          //var formatea=cleanString($scope.imagetmp.basename);
         },function (resp) {
           messageAlert("Imagen","Se ha producido error interno al subir imagen","warning");
           console.log('Error status: ' + resp.status);
     });
   }
   
+  /*Funcion para agrupar table en zones*/
   var existsZone=function(zones,idZone){
     var index=null;
     angular.forEach(zones, function(zone,key){
@@ -114,6 +119,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     return index;
   }
 
+  /*Accion de boton Guardar promocion*/
   $scope.savePromotion=function(option){
 
     //uploadImage($scope.promotion.myImage);
@@ -121,8 +127,8 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
     $scope.lstTurn=TurnosPromotionDataFactory.getTurnosItems();
     $scope.lstZone=ZonesActiveFactory.getZonesItems();
-    //console.log('LSTzONAS '+angular.toJson($scope.lstZone, true));
 
+    /*Validaciones y formatos de campos*/
     var date_expire ='';
     if($scope.promotion.status_expire==true){
       date_expire=convertFechaYYMMDD($scope.promotion.date_expire,"es-ES",{});
@@ -151,7 +157,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         }
         
       });
-      //console.log('Zonas lst'+angular.toJson(vZones,true));
     }
 
     var imagen='';
@@ -173,12 +178,10 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       cropper='';
       //cropped='';
     }
-    //console.log($scope.promotion.myImage);
-
+    
+    /*Formatear objetos a enviar al guardar y/o actualizar*/
     var datosPromotion={
-      "microsite_id":1,
-      //"event_id":1,
-      //"token":"abc123456",
+      //"microsite_id":1,
       "title":$scope.promotion.title,
       "description":$scope.promotion.description,
       "image":basename,
@@ -186,8 +189,7 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       "status":$scope.promotion.statusSelected.value,
       "status_expire":TableFactory.getEvaluaInverse($scope.promotion.status_expire),
       "date_expire":date_expire,
-      //"publication":$scope.promotion.publication,
-      //"tipo":$scope.promotion.tipoSelected.value,      
+      //"publication":$scope.promotion.publication,   
       "image_fullname":fullname,
       "cropper":cropper,
       //"cropped":cropped,
@@ -196,9 +198,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     };
 
     var datosPromotionEditar={
-      //"microsite_id":1,
-      //"event_id":1,
-      //"token":"abc123456",
       "title":$scope.promotion.title,
       "description":$scope.promotion.description,
       "image":basename,
@@ -206,40 +205,48 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       "status":$scope.promotion.statusSelected.value,
       "status_expire":TableFactory.getEvaluaInverse($scope.promotion.status_expire),
       "date_expire":date_expire,
-      //"publication":$scope.promotion.publication,
-      //"tipo":$scope.promotion.tipoSelected.value,      
+      //"publication":$scope.promotion.publication,   
       "image_fullname":fullname,
       "cropper":cropper,
     };
 
-    
-    if (option == "create") {
-     
-      PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
-        messageAlert("Success","Se ha creado la promoción con éxito","success");
-        //console.log('Guardando'+angular.toJson(datosPromotion,true));
-      }).error(function(data,status,headers){
-        messageErrorApi(status,"Error","warning");
-      });
-      console.log('Guardando '+angular.toJson(datosPromotion,true));
+    if ($scope.promotion.description!=''){
       
+      if (option == "create") {
+       
+        PromotionDataFactory.createPromotion(datosPromotion).success(function(response){
+          messageAlert("Success","Se ha creado la promoción con éxito","success");
+          //console.log('Guardando'+angular.toJson(datosPromotion,true));
+        }).error(function(data,status,headers){
+          messageErrorApi(status,"Error","warning");
+        });
+        //console.log('Guardando '+angular.toJson(datosPromotion,true));
+        
+      }else{
+        datosPromotionEditar.event_id = parseInt($stateParams.id);
+        
+        PromotionDataFactory.updatePromotion(datosPromotionEditar).success(function(response){
+          messageAlert("Success","Se actualizado la promoción con éxito","success");
+        }).error(function(data,status,headers){
+          messageErrorApi(status,"Error","warning");
+        });
+        //console.log('Actualizando '+angular.toJson(datosPromotion,true));
+      }
+
     }else{
-      datosPromotionEditar.event_id = parseInt($stateParams.id);
-      
-      PromotionDataFactory.updatePromotion(datosPromotionEditar).success(function(response){
-        messageAlert("Success","Se actualizado la promoción con éxito","success");
-        //$state.go('zone.active');
-      }).error(function(data,status,headers){
-        messageErrorApi(status,"Error","warning");
-      });
-      
-      //console.log('Actualizando '+angular.toJson(datosPromotion,true));
+      messageAlert("Promoción","Debe ingresar descripcion de la promoción","warning");
     }
     
   }
 
-  
-  
+  /*Accion Cancelar imagen cargada*/
+  $scope.clearImagePromotion = function() {
+    delete $scope.promotion.myImage;
+    delete $scope.croppedDataUrl;
+  };
+
+
+  /*Apertura modal Turno*/
   $scope.modalContent=TurnosPromotionDataFactory.getTurnosItems();
   function modalInstances(animation, size, backdrop, keyboard) {
     var modalInstance = $uibModal.open({
@@ -258,22 +265,17 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     modalInstances(true, size, true, true)
   }
 
+  /*Apertura modal Fecha de caducidad*/
   $scope.open = function($event, opened) {
    $event.preventDefault();
    $event.stopPropagation();
    $scope[opened] = true;
- };
- $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
- $scope.format = $scope.formats[0];
-
-  $scope.clearImagePromotion = function() {
-    delete $scope.promotion.myImage;
-    delete $scope.croppedDataUrl;
   };
+  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format = $scope.formats[0];
 
-
-
-  /********************************************/
+  
+  /*Apertura modal Configurar zonas de paga*/
   $scope.invocarZonas=function(item){
     openModalZones(item);
   }
@@ -300,10 +302,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
 
 .controller('TurnoInstanceCtrl', function($scope,$stateParams,$modalInstance,$filter,TurnosPromotionDataFactory,content,PromotionFactory) {
 
-
   $scope.listTurnos = content;
-  //console.log($scope.listTurnos);
 
+  /*Funcion que guarda dias seleccionados*/
   var getDaysSelected = function(days){
       var daysData = [];
       angular.forEach(days, function(data,key){
@@ -314,8 +315,9 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       });
       return daysData;
   };
-/*
-//Usados para habilitar/deshabilitar checkbox//
+  
+  /*
+  //Usados para habilitar/deshabilitar checkbox//
   var disabledDaysSelected = function(days){
       angular.forEach(days, function(data,key){
         if(data){
@@ -333,10 +335,11 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         }
       });
   };
-*/
+  */
     
     $scope.turnoIndex=0;
 
+    /*Manejar la visualizacion de listado de turnos creados*/
     var cantidad=$scope.listTurnos.length;
     if(cantidad>0){
       $scope.existeTurno=true;
@@ -345,12 +348,6 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
     }
 
     $scope.turnos = {
-      actividades:[
-      {id: 1, name: 'Reservacion'},
-      {id: 2, name: 'Comida'},
-      {id: 3, name: 'Cena'},
-      {id: 4, name: 'Bar noche'},
-      ],
       semana:[
       {id : 0, label : 'Domingo',disabled : false,checked : false},
       {id : 1, label : 'Lunes',disabled : false,checked : false},
@@ -360,18 +357,20 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       {id : 5, label : 'Viernes',disabled : false,checked : false},
       {id : 6, label : 'Sabado',disabled : false,checked : false},
       ],
-      //actividadSelected : {id: 1, name: 'Reservacion'},
       turnoSelected:[],
       hours_ini : '',
       hours_end : '',
       disposiciones:[{id:1,name:'Aplicar siempre'},{id:2,name:'Añadir turno a la promocion'}],
     };
+
+    /*Manejar la visualizacion opciones de Turno*/
     if($scope.listTurnos!=''){
       $scope.turnos.disposicionSelected={id:2,name:'Añadir turno a la promocion'};
     }else{
       $scope.turnos.disposicionSelected={id:1, name:'Aplicar siempre'};
     }
 
+    /*Funcion para obtener los horarios de un micrositio*/
     var getHorarios = function(){
       PromotionFactory.listSchedules().then(function success(data){
         $scope.turnos.hours_ini = data;
@@ -392,78 +391,83 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
       });
     }
 
-  $scope.addTurno = function(){
+    /*Accion de boton Añadir*/
+    $scope.addTurno = function(){
 
-    var cantidadSel=$scope.turnos.turnoSelected.length;
-    if(cantidadSel>0){
-      if($scope.turnos.hour_ini && $scope.turnos.hour_end){
-        if($scope.turnos.hour_ini.time != $scope.turnos.hour_end.time){        
-        var days = getDaysSelected($scope.turnos.turnoSelected);
-        $scope.turnoSelected = days;
+      var cantidadSel=$scope.turnos.turnoSelected.length;
+      if(cantidadSel>0){
+        if($scope.turnos.hour_ini && $scope.turnos.hour_end){
+          if($scope.turnos.hour_ini.time != $scope.turnos.hour_end.time){        
+          var days = getDaysSelected($scope.turnos.turnoSelected);
+          $scope.turnoSelected = days;
 
-        $scope.turnos.hours_ini = $scope.turnos.hour_ini.time_ori;
-        $scope.turnos.hours_end = $scope.turnos.hour_end.time_ori;
+          $scope.turnos.hours_ini = $scope.turnos.hour_ini.time_ori;
+          $scope.turnos.hours_end = $scope.turnos.hour_end.time_ori;
 
-        var opciones={
-          days:$scope.turnoSelected,
-          hours_ini:$scope.turnos.hours_ini,
-          hours_end:$scope.turnos.hours_end,
-        };
-        var promotionId = $stateParams.id;
-        if(promotionId){
-
-          var turnOpciones=[];
-          turnOpciones.push(opciones);
-          var newopciones={
-            type_event:parseInt(promotionId),
-            shift_promotion:turnOpciones
+          var opciones={
+            days:$scope.turnoSelected,
+            hours_ini:$scope.turnos.hours_ini,
+            hours_end:$scope.turnos.hours_end,
           };
-          TurnosPromotionDataFactory.createTurnPromotion(promotionId,newopciones).success(function(data){
-            opciones.turn_id=data.data;
-          });
+          var promotionId = $stateParams.id;
+          if(promotionId){
 
-        }
-        TurnosPromotionDataFactory.setTurnosItems(opciones);
-        $scope.existeTurno=true;
-        //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
+            var turnOpciones=[];
+            turnOpciones.push(opciones);
+            var newopciones={
+              type_event:parseInt(promotionId),
+              shift_promotion:turnOpciones
+            };
+            TurnosPromotionDataFactory.createTurnPromotion(promotionId,newopciones).success(function(data){
+              opciones.turn_id=data.data;
+            });
 
-        cleanTurno();
-        //console.log($scope.listTurnos);
-        //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
+          }
+          TurnosPromotionDataFactory.setTurnosItems(opciones);
+          $scope.existeTurno=true;
+          //$scope.listTurnos=TurnosPromotionDataFactory.getTurnosItems();
+
+          cleanTurno();
+          //console.log($scope.listTurnos);
+          //console.log('Turnos: '+angular.toJson($scope.listTurnos, true));
+          }else{
+            messageAlert("Turnos","Hora de inicio coincide con Hora final","warning");
+          }
         }else{
-          messageAlert("Turnos","Hora de inicio coincide con Hora final","warning");
+          messageAlert("Turnos","Debe seleccionar campos de hora","warning");
         }
       }else{
-        messageAlert("Turnos","Debe seleccionar campos de hora","warning");
+        messageAlert("Turnos","Debe seleccionar al menos un dia de la semana","warning");
       }
-    }else{
-      messageAlert("Turnos","Debe seleccionar al menos un dia de la semana","warning");
+
+    };
+
+    /*Accion de boton Eliminar turno*/
+    $scope.deleteTurno = function (item,turn) {
+      var promotionId = $stateParams.id;
+      $scope.turnoIndex=item;
+      if(promotionId){
+        TurnosPromotionDataFactory.deleteTurnPromotion(promotionId,turn.turn_id);
+        //console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn.turn_id,true));
+      }
+
+      //$scope.listTurnos.splice($scope.turnoIndex,1);
+      TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
+      cleanTurno();
+    };
+
+    /*Funcion para limpiar input de entrada*/
+    var cleanTurno=function(){
+      getHorarios();
+      $scope.turnos.hour_ini='';
+      $scope.turnos.hour_end='';
+      $scope.turnos.turnoSelected=[];
     }
 
-  };
-  $scope.deleteTurno = function (item,turn) {
-    var promotionId = $stateParams.id;
-    $scope.turnoIndex=item;
-    if(promotionId){
-      TurnosPromotionDataFactory.deleteTurnPromotion(promotionId,turn.turn_id);
-      //console.log(angular.toJson('Pasar promocion '+promotionId+' y turno ha eliminar '+turn.turn_id,true));
-    }
-
-    //$scope.listTurnos.splice($scope.turnoIndex,1);
-    TurnosPromotionDataFactory.delTurnosItem($scope.turnoIndex);
-    cleanTurno();
-  };
-
-  var cleanTurno=function(){
-    getHorarios();
-    $scope.turnos.hour_ini='';
-    $scope.turnos.hour_end='';
-    $scope.turnos.turnoSelected=[];
-  }
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+    /*Accion de boton Cerrar modal*/
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
 
 })
 
@@ -569,9 +573,13 @@ angular.module('promotion.controller', ['ngFileUpload','ngImgCrop','textAngular'
         vTable.tables_pay.push({table_id:table.table_id, price:$scope.precioDefault, zone_id:table.zone_id});
       });
 
-      var promotionId = $stateParams.id;
+      
       if(promotionId){
-        PromotionDataFactory.createTablesPayment(vTable);
+        PromotionDataFactory.createTablesPayment(vTable).success(function(data){
+            //console.log(data);
+        },function error(data){
+          messageErrorApi(data,"Error","warning");
+        });
         //console.log('Guardar: '+angular.toJson(vTable,true));
       }
 

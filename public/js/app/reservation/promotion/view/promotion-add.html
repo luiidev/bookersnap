@@ -7,22 +7,23 @@
 
     <section id="content">
         <div class="container">
+
+            <div class="block-header" style="padding-top: 15px">
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
+                    </li>
+                </ul>
+            </div>
+
             <div class="card wrapper-promotion" id="turno-main">
 
-
-<div class="card-header">
-<h2>{{titulo}} <small></small></h2>
-<div class="block-header" style="padding-bottom: 15px">
-            <ul class="actions">
-                <li>
-                    <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
-                </li>
-                <li>
-                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
-                </li>
-            </ul>
-        </div>
-</div>
+            <div class="card-header">
+                <h2>{{titulo}} <small></small></h2>
+            </div>
 
 <div class="card-body card-padding">
 
@@ -230,7 +231,7 @@
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hours_ini}} - {{turno.hours_end}}</small>
+                                    <small class="lv-small">{{turno.hours_ini|toMeridiano}} - {{turno.hours_end|toMeridiano}}</small>
                                 </div>
 
                             </div>
@@ -307,7 +308,7 @@
                 <div>
                     <div class="lv-title">
                         <div> {{item.name_zona}} 
-                            <div class="zoneArea pull-right">
+                            <div class="zoneArea transparente pull-right">
                                 <div class="border {{item.shape}} {{item.size}} rt{{item.rotate}}">
                                     <div class="txtcenter">{{item.minCover}}</div>
                                 </div>
