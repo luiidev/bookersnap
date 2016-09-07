@@ -1,19 +1,17 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+  |--------------------------------------------------------------------------
+  | Application Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register all of the routes for an application.
+  | It's a breeze. Simply tell Laravel the URIs it should respond to
+  | and give it the controller to call when that URI is requested.
+  |
+ */
 
-Route::get('/admin/ms/{id}/mesas', function () {
-    return view('mesas');
-});
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas', 'middleware' => 'auth']);
 
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('reservation');
@@ -51,13 +49,13 @@ Route::group(['prefix' => 'test'], function () {
 
 
 /*
-|--------------------------------------------------------------------------
-| Routes Example : v1/{lang}/admin/ms/{micro}/example
-|--------------------------------------------------------------------------
-|
-| Seguir este patron cuando agregemos un nuevo modulo.
-|
-*/
+  |--------------------------------------------------------------------------
+  | Routes Example : v1/{lang}/admin/ms/{micro}/example
+  |--------------------------------------------------------------------------
+  |
+  | Seguir este patron cuando agregemos un nuevo modulo.
+  |
+ */
 Route::pattern('micro', '[0-9]+');
 
 Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/example'], function () {
@@ -88,7 +86,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas', 'middleware' => 'r
     Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
 
     /*
-     Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete");*/
+      Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete"); */
 });
 
 Route::group(['prefix' => 'v1/{lang}/'], function () {
@@ -111,7 +109,6 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::post('flyer/uploadFile', "Admin\Reservation\Promotion\FlyerController@uploadfile");
     Route::post('flyer', "Admin\Reservation\Promotion\FlyerController@storeFlyer");
     Route::put('flyer/{id_flyer}', "Admin\Reservation\Promotion\FlyerController@updateFlyer");
-
 });
 
 Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
@@ -143,7 +140,6 @@ Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'au
             Route::put('/{id}', 'RoleController@UpdateRole');
             Route::post('/{id}/privileges', 'RoleController@StorePrivilegesByRole');
         });
-
     });
 });
 
