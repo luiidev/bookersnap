@@ -7,23 +7,22 @@
 
     <section id="content">
         <div class="container">
-            <div class="card wrapper-promotion">
 
-
-
-
-<div class="card-header">
-<h2>{{titulo}} <small></small></h2>
-<div class="block-header" style="padding-bottom: 15px">
-            <ul class="actions">
+            <div class="block-header" style="padding-bottom: 15px">
+                <ul class="actions">
                 <li>
                     <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
                 </li>
                 <li>
                     <button class="btn btn-primary waves-effect" ng-click="savePromotion('edit')">Actualizar promocion</button>
                 </li>
-            </ul>
-        </div>
+                </ul>
+            </div>
+
+            <div class="card wrapper-promotion">
+
+<div class="card-header">
+<h2>{{titulo}} <small></small></h2>
 </div>
 
 <div class="card-body card-padding">
@@ -192,7 +191,7 @@
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.index" name="hour_ini">
+                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.time_ori" name="hour_ini">
                                 </select>
                             </div>
                         </div>
@@ -202,7 +201,7 @@
                         <div class="form-group fg-line">
                             <label>Hora final</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.index" name="hour_end">
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.time_ori" name="hour_end">
                                 </select>
                             </div>
                         </div>
@@ -237,7 +236,7 @@
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hours_ini | date:'h:mma'}} - {{turno.hours_end}}</small>
+                                    <small class="lv-small">{{turno.hours_ini|toMeridiano}} - {{turno.hours_end|toMeridiano}}</small>
                                 </div>
 
                             </div>
@@ -314,7 +313,7 @@
                 <div>
                     <div class="lv-title">
                         <div> {{item.name_zona}} 
-                            <div class="zoneArea pull-right">
+                            <div class="zoneArea transparente pull-right">
                                 <div class="border {{item.shape}} {{item.size}} rt{{item.rotate}}">
                                     <div class="txtcenter">{{item.minCover}}</div>
                                 </div>

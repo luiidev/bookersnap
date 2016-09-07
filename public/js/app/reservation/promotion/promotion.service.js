@@ -43,7 +43,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory,UrlRepository){
+.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory,UrlRepository,$filter){
   return {
     listZones: function(){
       var defered=$q.defer();
@@ -100,7 +100,6 @@ angular.module('promotion.service', [])
     listSchedules: function(){
       var defered=$q.defer();
       PromotionDataFactory.getHorario().success(function(data){
-       //var vSchedules=[];
         var schedules = data.data;
         var vSchedules=TurnosPromotionDataFactory.generatedTimeTable(schedules);
         defered.resolve(vSchedules);     
@@ -131,6 +130,7 @@ angular.module('promotion.service', [])
         vPromotion.push(dataPromotion);
 
         var turnos=promotion.turn
+        
         angular.forEach(turnos, function(turn) {
           TurnosPromotionDataFactory.setTurnosItems(turn);
         });
@@ -146,7 +146,7 @@ angular.module('promotion.service', [])
       PromotionDataFactory.getTablesPayment(pId).success(function(data){
         defered.resolve(data.data);
       }).error(function(data, status, headers){
-        defered.reject(data);
+        defered.reject(data.data);
       });     
       return defered.promise;
     },
@@ -169,17 +169,17 @@ angular.module('promotion.service', [])
               angular.forEach(tableData, function(table) {
                 vTables.push(table);
               });
-
              });
            return vTables;
           },
           function error(response){
+            //console.log('Aqui graficar zonas');
             return response;
           }
         ).then(
           function success(tablesPay){
            var vZonas=[];
-           //console.log(tablesPay);
+           
             angular.forEach(zones, function(zone) {
               var vTable={
                 zone_id : zone.zone_id,
@@ -188,9 +188,7 @@ angular.module('promotion.service', [])
               }
               angular.forEach(zone.table, function(table) {
 
-
                 if(tablesPay){
-
                   angular.forEach(tablesPay, function(tableData) {                    
                       if(tableData.table_id==table.table_id && tableData.price!=''){
                         ZonesActiveFactory.setZonesItems(table);
@@ -219,7 +217,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('TurnosPromotionDataFactory',function(TableFactory){
+.factory('TurnosPromotionDataFactory',function($http,TableFactory,$filter,ApiUrlReservation){
   var turnoColection =[];
   var interfazTurnos = {
     nombre: "turnos",
@@ -236,24 +234,26 @@ angular.module('promotion.service', [])
       turnoColection=[];
     },
     createTurnPromotion : function(pId,tData){
-      //return $http.post(AppBookersnap + '/promotion',pData); 
+      return $http.post(ApiUrlReservation + '/promotions/'+pId+'/shifts',tData); 
     },
     deleteTurnPromotion: function(pId,tId){
-      //return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tId);
+      return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/shifts/"+tId);
     },
     generatedTimeTable : function(turnData){
       var times = TableFactory.rangeDateAvailable(60,turnData);
       var timesFinal = [];
 
       angular.forEach(times, function(value, key){
+
         var hourIndex = value.indexOf(":");
         var min = value.substr(hourIndex);
 
         hourIndex = value.substr(0,hourIndex);
         
-        min = min.replace(":","");
-        min = min.replace("AM","");
-        min = min.replace("PM","");
+        
+        //min = min.replace(":","");
+        //min = min.replace("AM","");
+        //min = min.replace("PM","");
 
         var index = hourIndex * 4;
 
@@ -265,8 +265,13 @@ angular.module('promotion.service', [])
           index +=3;
         }
 
+        var d = new Date(0,0,0,hourIndex,0,0);
+        var formato = moment(d).valueOf();
+        var hora = $filter('date')(formato,'h:mm a');
+
         timesFinal.push({
-          time : value,
+          time : hora,
+          time_ori:value,
           index : index
         });
   
@@ -374,16 +379,8 @@ angular.module('promotion.service', [])
         while(hour <= endHour){
 
           //var sHorario = (hour <=11) ? "AM":"PM";
-
           //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
-          
           var hora = hour +":"+ ((min == 0) ? "00" : min) + ":00";
-          //console.log(hora);
-          var d = new Date(0,0,0,hour,0,0);
-          var hola = moment(d).valueOf();
-          var hora2 = $filter('date')(hola,'h:mm:ss a');
-          console.log(hora2);
-
           time.push(hora);
           
           if(min == (60 - minSteep) ){
@@ -399,20 +396,11 @@ angular.module('promotion.service', [])
         }
       }else if(endHour < hour){
 
-          //var sHorario = (hour <=11) ? "AM":"PM";
-          //var sHorarioEnd = (endHour <=11) ? "AM":"PM";
-
           if(hour<=11){
             var num01=24-hour;
             for (a = 0; a < num01; a++) {
-              //var sHorario = (hour <=11) ? "AM":"PM";
-              //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
-              var hora = hour +":"+ ((min == 0) ? "00" : min);
-              var d = new Date(0,0,0,hour,0,0);
-              var hola = moment(d).valueOf();
-              var hora2 = $filter('date')(hola,'h:mm:ss a');
-              console.log(hora2);
 
+              var hora = hour +":"+ ((min == 0) ? "00" : min);
               time.push(hora);
 
               if(min == (60 - minSteep) ){
@@ -424,9 +412,7 @@ angular.module('promotion.service', [])
           }else{
             var num01=24-hour;
              for (i = 0; i < num01; i++) {
-              //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
               var hora = hour +":"+ ((min == 0) ? "00" : min);
-
               time.push(hora);
 
               if(min == (60 - minSteep) ){
@@ -441,14 +427,8 @@ angular.module('promotion.service', [])
           }else{
             var num02=endHour-0;
             for (h = 0; h <= num02; h++) {
-              //var hora = h +":"+ ((min == 0) ? "00" : min) + " " + sHorarioEnd
+
               var hora = h +":"+ ((min == 0) ? "00" : min);
-
-              var d = new Date(0,0,0,h,0,0);
-              var hola = moment(d).valueOf();
-              var hora2 = $filter('date')(hola,'h:mm:ss a');
-              console.log(hora2);
-
               time.push(hora);
 
               if(min == (60 - minSteep) ){

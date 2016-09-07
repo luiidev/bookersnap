@@ -36,7 +36,7 @@
                                 <div class="form-group fg-line">
                                     <label>Hora inicio</label>
                                     <div class="select">
-                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="selectHour('ini')">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index" ng-model="turnForm.hours_ini" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(true)">
                                            <option value=""></option>
                                        </select>
                                     </div>
@@ -48,7 +48,7 @@
                                 <div class="form-group fg-line">
                                     <label>Hora cierre</label>
                                     <div class="select">
-                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ...">
+                                       <select chosen class="form-control" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index" ng-model="turnForm.hours_end" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(false)">
                                            <option value=""></option>
                                        </select>
                                     </div>
