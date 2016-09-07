@@ -15,6 +15,30 @@ angular.module('promotion.filter', [])
         }
     }
 })
+.filter("toMidnight", function(){
+    return function(text){
+        if(text=='0:00 AM'){
+            return '12:00 AM';
+        }else{
+          return text;
+        }
+    }
+})
+
+.filter("toMeridiano", function($filter){
+    return function(hour){
+
+        var pos = hour.indexOf(":");
+        //var min = hour.substr(hourIndex);
+        var hourIndex = hour.substr(0,pos);
+
+        var d = new Date(0,0,0,hourIndex,0,0);
+        var formato = moment(d).valueOf();
+        var hora = $filter('date')(formato,'h:mm a');
+        return hora;
+    }
+})
+
 .filter("diaSemana", function(){
     return function(num) {
         if(num != null){

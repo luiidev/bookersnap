@@ -12,14 +12,17 @@ angular.module('book.service', [])
 	return {
 		rangeDateAvailable: function(minSteep,turn){
 
-			var iniHour = turn.hours_ini.substr(0,2);
-			var iniMin = turn.hours_ini.substr(3,2);
+			var iniHour = turn.hours_ini.split(":");
+			var iniMin = turn.hours_ini.split(":");
 
-			var endHour = parseInt(turn.hours_end.substr(0,2));
-			var endMin = parseInt(turn.hours_end.substr(3,2));
+			var endHour = turn.hours_end.split(":");
+			var endMin = turn.hours_end.split(":");
 
-			var hour = parseInt(iniHour);
-			var min = parseInt(iniMin);
+			endHour = parseInt(endHour[0]);
+			endMin = parseInt(endMin[1]);
+
+			var hour = parseInt(iniHour[0]);
+			var min = parseInt(iniMin[1]);
 
 			var time = [];
 	
