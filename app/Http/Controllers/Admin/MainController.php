@@ -11,6 +11,7 @@ use Session;
 class MainController extends Controller {
 
     public function mesas($id) {
+        return view('mesas');
         $user_id = $this->GetUserId();
         $checkService = new CheckAdminService();
         try {

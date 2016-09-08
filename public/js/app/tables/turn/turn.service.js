@@ -252,7 +252,11 @@ angular.module('turn.service', [])
 				}
 
 				var hour_ini = self.getIndexHour(data.hours_ini);
-				var hour_end = self.getIndexHour(data.hours_end);
+				var hour_end = self.getIndexHour(data.hours_end,1);//esto pendiente
+
+				/*if(moment(data.hour_ini).(data.hour_end)){
+					alert("dsd");
+				}*/
 
 				var turnForm = {
 					hours_ini : { index : hour_ini,time_original :data.hours_ini,time : listAvailability[hour_ini].time },
@@ -363,7 +367,7 @@ angular.module('turn.service', [])
 
 			return timesFinal;*/	
 		},
-		getIndexHour : function(value){
+		getIndexHour : function(value,nextday = 0){
 			var hourIndex = value.indexOf(":");
 			var min = value.substr(hourIndex);
 
@@ -384,6 +388,7 @@ angular.module('turn.service', [])
 				index +=3;
 			}
 
+			index = index + 96 * nextday;
 			return index;
 		},
 		checkTableZone : function(tablesId,idTable){
