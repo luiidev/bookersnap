@@ -121,6 +121,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.typeForm = "create";// or edit
 
+        $scope.saveClick = false;//valida click en guardar - no doble click
+
         /*Si queremos llamar a una funcion desde directiva*/
         this.alertaPrueba = function(){
         };
@@ -348,7 +350,6 @@ angular.module('zone.controller', ['ngDraggable'])
             };
 
             return tableItem;
-
         };
 
         var prepareDataTablesSave = function(){
@@ -386,15 +387,16 @@ angular.module('zone.controller', ['ngDraggable'])
                 tables : prepareDataTablesSave()
             }
 
+            $scope.saveClick = true;
+
             if (option == "create") {
 
                 ZoneFactory.createZone(dataZone).success(function(response){
                     messageAlert("Success","Zone create complete","success");
                     $state.reload();
                 }).error(function(data,status,headers){
-
+                    $scope.saveClick = false;;
                     messageErrorApi(data,"Error","warning");
-
                 });
 
             }else{
@@ -403,6 +405,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     messageAlert("Success","Zone edit complete","success");
                     $state.go('zone.active');
                 }).error(function(data,status,headers){
+                    $scope.saveClick = false;
                     messageErrorApi(data,"Error","warning");
                 });
             }

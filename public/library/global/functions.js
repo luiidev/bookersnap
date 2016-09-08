@@ -211,12 +211,7 @@ var cleanString = function(cadena){
       cadena= cadena.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
     }
     cadena = cadena.toLowerCase();
-    cadena.replace(/\s/g,"");
-    //cadena.replace(/^\s+|\s+$/g,"");
-    //cadena.replace(/\s+$/g,"");
-    //cadena.replace(/^\s*|\s*$/g, '_');
-    //cadena.replace(' ','');
-
+    cadena = cadena.replace(/\s/g,"-");
     cadena = cadena.replace(/[áàäâå]/gi,"a");
     cadena = cadena.replace(/[éèëê]/gi, 'e');
     cadena = cadena.replace(/[íìïî]/gi, 'i');
@@ -224,6 +219,7 @@ var cleanString = function(cadena){
     cadena = cadena.replace(/[úùüû]/gi, 'u');
     cadena = cadena.replace(/[ýÿ]/gi, 'y');
     cadena = cadena.replace(/ñ/gi, 'n');
+
     return cadena;
 };
 

@@ -52,5 +52,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'social-login-token' => \App\Http\Middleware\CheckSocialLoginToken::class,
         'route' => \App\Http\Middleware\RouteMiddleware::class,
+        'checkCountry' => \App\Http\Middleware\CheckCountry::class,
     ];
 }

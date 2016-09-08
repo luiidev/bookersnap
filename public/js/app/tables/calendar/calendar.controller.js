@@ -20,7 +20,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         function GetEvents() {
             var month = vm.calendar.fullCalendar('getDate').format('YYYY-MM');
             bsLoadingOverlayService.start();
-            CalendarService.GetShifts(month, {
+            CalendarService.GetShiftsByMonth(month, {
                 OnSuccess: function (Response) {
                     bsLoadingOverlayService.stop();
                     vm.events = Response.data.data;
@@ -111,35 +111,19 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
     })
 
-    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService) {
+    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService, $modal) {
         var vm = this;
         vm.date = data.date;
+        vm.flags = {isLoading: false};
 
-        vm.shifts = {
-            breakfast: {id: 1, data: null},
-            brunch: {id: 2, data: null},
-            lunch: {id: 3, data: null},
-            dinner: {id: 4, data: null}
-        };
+        vm.shifts = [];
 
         vm.dismiss = function () {
             $modalInstance.dismiss();
         };
 
-        vm.shceduleBreakfast = function () {
-
-        };
-
-        vm.shceduleBrunch = function () {
-
-        };
-
-        vm.shceduleLunch = function () {
-
-        };
-
-        vm.shceduleDinner = function () {
-
+        vm.AddSchedule = function (type_shift_id, $name) {
+            openDialogShedule(type_shift_id, $name)
         };
 
         function GetData() {
@@ -147,28 +131,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
             CalendarService.GetShiftByDate(vm.date, {
                 OnSuccess: function (Response) {
                     bsLoadingOverlayService.stop();
-                    var data = Response.data.data;
-                    angular.forEach(data, function (item) {
-                        var shift = {
-                            title: item.title,
-                            start: CalendarService.FormatTime(item.date, item.start_time),
-                            end: CalendarService.FormatTime(item.date, item.end_time)
-                        };
-                        switch (item.turn.type_turn.id) {
-                            case 1:
-                                vm.shifts.breakfast.data = shift;
-                                break;
-                            case 2:
-                                vm.shifts.brunch.data = shift;
-                                break;
-                            case 3:
-                                vm.shifts.lunch.data = shift;
-                                break;
-                            case 4:
-                                vm.shifts.dinner.data = shift;
-                                break;
-                        }
-                    });
+                    vm.shifts = Response.data.data;
                 },
                 OnError: function (Response) {
                     bsLoadingOverlayService.stop();
@@ -176,13 +139,46 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
             });
         }
 
-        function getMonthNames() {
-            return [
-                "Enero", "Febrero", "Marzo",
-                "Abril", "Mayo", "Junio", "Julio",
-                "Agosto", "Setiembre", "Octubre",
-                "Noviembre", "Diciembre"
-            ];
+        function openDialogShedule(type_shift_id, $name) {
+            vm.flags.isLoading = true;
+            CalendarService.GetShiftsByType(type_shift_id, {
+                OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        var $type_shift = {id: type_shift_id, name: $name};
+                        var modalInstance = $modal.open({
+                            templateUrl: 'schedule.html',
+                            controller: 'ScheduleShiftController',
+                            controllerAs: 'vm',
+                            backdrop: 'static',
+                            keyboard: false,
+                            resolve: {
+                                data: function () {
+                                    return {
+                                        typeShift: $type_shift,
+                                        date: vm.date,
+                                        shifts: Response.data.data
+                                    };
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        if (Response.status == 401 || Response.status == 403) {
+                            swal("Error", "No tiene permisos para realizar esta acción", "error");
+                        } else {
+                            swal("Error", "Ocurrió un error en el servidor", "error");
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                }
+            });
         }
 
         function init() {
@@ -194,5 +190,50 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         }
 
         init();
+    })
+
+    .controller('ScheduleShiftController', function (data, $modalInstance, CalendarService) {
+        var vm = this;
+        vm.typeShift = data.typeShift;
+        vm.scheduleOption = 0;
+        vm.shifts = data.shifts;
+        vm.date = data.date;
+        vm.flags = {isLoading: false};
+
+        vm.dismiss = function () {
+            $modalInstance.dismiss();
+        };
+
+        vm.am_pm = function (time) {
+            return CalendarService.FormatTime(vm.date, time);
+        };
+
+        vm.schedule = function (shift_id) {
+            vm.flags.isLoading = true;
+            CalendarService.ScheduleShift(shift_id, vm.date, {
+                OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        if (Response.data.statuscode == 200) {
+                            $modalInstance.dismiss();
+                            messageAlert('Rol actualizado', '', 'success');
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                }
+            });
+        };
+
+        function init() {
+            CalendarService.SetCalendarLocale();
+            var $moment = moment(vm.date);
+            vm.formatted_date = $moment.format('MMMM DD');
+            vm.day_name = $moment.format('dddd') + ($moment.day() == 6 || $moment.day() == 0 ? 's' : '');
+        }
+
+        init();
     });
-;

@@ -7,22 +7,23 @@
 
     <section id="content">
         <div class="container">
+
+            <div class="block-header" style="padding-top: 15px">
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
+                    </li>
+                </ul>
+            </div>
+
             <div class="card wrapper-promotion" id="turno-main">
 
-
-<div class="card-header">
-<h2>{{titulo}} <small></small></h2>
-<div class="block-header" style="padding-bottom: 15px">
-            <ul class="actions">
-                <li>
-                    <button class="btn btn-default waves-effect" data-ui-sref="promotion">Cancelar</button>
-                </li>
-                <li>
-                    <button class="btn btn-primary waves-effect" ng-click="savePromotion('create')">Guardar promocion</button>
-                </li>
-            </ul>
-        </div>
-</div>
+            <div class="card-header">
+                <h2>{{titulo}} <small></small></h2>
+            </div>
 
 <div class="card-body card-padding">
 
@@ -66,10 +67,10 @@
         </div>
     
         <div ng-show="promotion.status_expire">
-            <div class="date-picker input-group m-b-20" ng-class="{ 'is-opened': opened2 == true }">
+            <div class="date-picker input-group m-b-20" ng-class="{ 'is-opened': opened == true }">
                 <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
                 <div class="fg-line">
-                    <input ng-click="open($event, 'opened2')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="promotion.date_expire" is-open="opened2" min-date="minDate" ng-required="true" close-text="Close" placeholder="Seleccione una fecha" />
+                    <input ng-click="open($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="promotion.date_expire" is-open="opened" min-date="minDate" ng-required="true" close-text="Close" placeholder="Seleccione una fecha" />
                 </div>
             </div>
         </div>    
@@ -185,7 +186,7 @@
                         <div class="form-group fg-line">
                             <label>Hora inicio</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.index" name="hour_ini">
+                                <select class="form-control" ng-model="turnos.hour_ini" ng-options="t as t.time for t in turnos.hours_ini track by t.time_ori" name="hour_ini">
                                 </select>
                             </div>
                         </div>
@@ -195,7 +196,7 @@
                         <div class="form-group fg-line">
                             <label>Hora final</label>
                             <div class="select">
-                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.index" name="hour_end">
+                                <select class="form-control" ng-model="turnos.hour_end" ng-options="t as t.time for t in turnos.hours_end track by t.time_ori" name="hour_end">
                                 </select>
                             </div>
                         </div>
@@ -230,7 +231,7 @@
                                         <span class="pull-left">- {{dia.day | diaSemana}}&nbsp;</span>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <small class="lv-small">{{turno.hours_ini | date:'h:mma'}} - {{turno.hours_end}}</small>
+                                    <small class="lv-small">{{turno.hours_ini|toMeridiano}} - {{turno.hours_end|toMeridiano}}</small>
                                 </div>
 
                             </div>
@@ -307,7 +308,7 @@
                 <div>
                     <div class="lv-title">
                         <div> {{item.name_zona}} 
-                            <div class="zoneArea pull-right">
+                            <div class="zoneArea transparente pull-right">
                                 <div class="border {{item.shape}} {{item.size}} rt{{item.rotate}}">
                                     <div class="txtcenter">{{item.minCover}}</div>
                                 </div>
