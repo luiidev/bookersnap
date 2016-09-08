@@ -17,7 +17,7 @@ angular.module('promotion.directive', [])
     element.on('click',function(event){
 
       event.preventDefault();
-
+      console.log("Test");
       if(this.classList.contains('definite-table')== true){
         //console.log('Desea eliminar precio precio de mesa');
         this.classList.remove('selected-table');
@@ -25,6 +25,7 @@ angular.module('promotion.directive', [])
       }else{
         
         if (this.classList.contains('selected-table')) {
+
           this.classList.remove('selected-table');
         } else {
           this.classList.add('selected-table');
