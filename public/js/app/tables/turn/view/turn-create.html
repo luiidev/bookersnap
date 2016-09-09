@@ -13,7 +13,7 @@
                         <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create',frmTurn)">Crear turno</button>
+                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create',frmTurn)" ng-disabled="turnForm.saveClick">Crear turno</button>
                     </li>
                 </ul>
             </div>

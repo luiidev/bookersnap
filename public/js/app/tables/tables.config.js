@@ -14,5 +14,5 @@ angular.module('tables.app',
     .constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en')
     
             .run(function($http){
-                setAuthHeaders($http);
+                //setAuthHeaders($http);
             });

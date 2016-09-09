@@ -104,18 +104,18 @@ angular.module('promotionList.controller', ['ui.sortable','sortable'])
         $rootScope.flag = false;
         $scope.fetching = true;
         $rootScope.filtro.texto = "";
-
+        //console.log(ApiUrlReservation+"/promotions?page="+$scope.page+"&limit="+$scope.limit);
         $http.get(ApiUrlReservation+"/promotions?page="+$scope.page+"&limit="+$scope.limit)
             .success(function (response) {
-              if(response.success==true){
+              //if(response.success==true){
                 $scope.promociones = response.data;
                 $scope.items = response.data;
-              }
+              //}
             })
             .error(function () {
 
             });
-      
+        //console.log($scope.promociones);
         $scope.show = "All";
         $scope.currentShow = 0; 
         $scope.scroll();

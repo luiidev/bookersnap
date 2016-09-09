@@ -132,18 +132,18 @@
                                                 <div class="col-md-9 header-rule">
                                                     
                                                     <label class="m-r-20">Aplicar a todos : </label>
-                                                    <label class="checkbox checkbox-inline m-r-20">
-                                                        <input type="checkbox" value="option1">
+                                                    <label class="radio radio-inline m-r-20">
+                                                        <input type="radio" value=""  name="chkRuleAll" ng-model="zoneSelected.chkRulesAll.online" ng-click="checkRuleTableAll(2)">
                                                         <i class="input-helper"></i>
                                                         Online
                                                     </label>
-                                                    <label class="checkbox checkbox-inline m-r-20">
-                                                        <input type="checkbox" value="option2">
+                                                    <label class="radio radio-inline m-r-20">
+                                                        <input type="radio" value=""  name="chkRuleAll" ng-model="zoneSelected.chkRulesAll.local" ng-click="checkRuleTableAll(1)">
                                                         <i class="input-helper"></i>
                                                         Solo en local
                                                     </label>
-                                                    <label class="checkbox checkbox-inline m-r-20">
-                                                        <input type="checkbox" value="option3">
+                                                    <label class="radio radio-inline m-r-20">
+                                                        <input type="radio" value="" name="chkRuleAll" ng-model="zoneSelected.chkRulesAll.disabled" ng-click="checkRuleTableAll(0)">
                                                         <i class="input-helper"></i>
                                                         No disponible
                                                     </label>
@@ -155,7 +155,7 @@
                                         <div class="col-xs-4 text-right">
                                             
                                             <button type="button" class="btn btn-danger waves-effect" ng-click="returnBoxZones()"><i class="zmdi zmdi-arrow-back"></i> Regresar</button>
-                                            <button type="button" class="btn btn-info waves-effect" ng-click="editTableAvailability()"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar disponibilidad</button>
+                                            <button type="button" class="btn btn-info waves-effect" ng-click="editTableAvailability()" ng-disabled="zoneSelected.tablesId.length == 0"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar disponibilidad</button>
                                         </div>  
 
                                     </div>
@@ -183,14 +183,31 @@
                                                     <tr ng-repeat="tables in zoneSelected.tables">
                                                         <td>
                                                             <label class="checkbox checkbox-inline m-r-20">
-                                                                <input type="checkbox" value="{{ tables.id }}" ng-checked="mesasCheckAll" ng-click="selectItemTable(tables)">
+                                                                <input type="checkbox" value="{{ tables.id }}" ng-checked="mesasCheckAll" ng-click="checkTableZone(tables)">
                                                                 <i class="input-helper"></i>
                                                             </label>
                                                         </td>
                                                         <td>{{ tables.name }}</td>
                                                         <td>{{ tables.min_cover }}</td>
                                                         <td>{{ tables.max_cover }}</td>
-                                                        <td> <span class="f-700">In-House-Only</span> {{ turnData.hours_ini }} - {{ turnData.hours_end }} </td>
+                                                        <td> 
+
+                                                            <div ng-show="tables.rules_disabled.length > 0" class="rules disabled">
+                                                                <span class="f-700"> No disponible : </span> 
+                                                                {{ tables.rules_disabled}}
+                                                            </div>
+
+                                                            <div ng-show="tables.rules_local.length > 0" class="rules local">
+                                                                <span class="f-700"> Solo en local : </span> 
+                                                                {{ tables.rules_local}}
+                                                            </div>
+
+                                                            <div ng-show="tables.rules_online.length > 0" class="rules online">
+                                                                <span class="f-700"> Online : </span> 
+                                                                {{ tables.rules_online}}
+                                                            </div>
+
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
