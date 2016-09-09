@@ -51,43 +51,4 @@ function _logout() {
             }
         });
     }
-
-//
-//    $.ajax({
-//        url: "/ajax/auth/domains",
-//        method: "post",
-//        type: "json",
-//        beforeSend: function () {
-//            console.log("Cerrando los servicios");
-//        },
-//        success: function (json) {
-//            console.log(json.domains);
-//            close_session(json.domains, json.domains.length, 0);
-//        },
-//        error: function () {
-//            alert("ocurrió un error al cerrar sesión");
-//        }
-//    });
-//
-//    function close_session(array_url, length, i) {
-//        if (i < length) {
-//            var $options = {
-//                url: array_url[i] + "/auth/logout",
-//                data: null,
-//                callbackParameter: "callback",
-//                success: function (json, textStatus, xOptions) {
-//                    if (json.status == 200) {
-//                        i++;
-//                        close_session(array_url, length, i);
-//                    }
-//                },
-//                error: function () {
-//                    $.jsonp($options);
-//                }
-//            };
-//            $.jsonp($options);
-//        } else {
-//            location.href = "/auth/logout";
-//        }
-//    }
 }

@@ -21,7 +21,7 @@ class CheckCountry
         $domain = request()->server('SERVER_NAME');
         $mainDomain = config('settings.MAIN_DOMAIN');
 
-        //Si es dominio principal ejem: reservantro.com, reservantro.com.mx, etc
+        //Si es dominio principal ejem: reservantro2.com, reservantro2.com.mx, etc
         if (strpos($domain, $mainDomain) !== false) {
             $isSetHttpReferer = (is_null($request->server('HTTP_REFERER')) ? false : true);
             $countryService = $this->makeCountryService();
@@ -29,10 +29,13 @@ class CheckCountry
             $ip = '77.50.101.152';
             //$ip = '187.156.15.8';
             //$ip = '80.38.43.128';
+            $ip = '565.286.456.009';
 
             try {
                 //consulta al api si es necesario redireccionar y/o que idioma setear en la aplicacion
                 $response = $countryService->CheckCountryByIpAddress($domain, $request->path(), $ip, $isSetHttpReferer);
+                //dd($response);
+                //var_Dump($response);
             } catch (\Exception $e) {
                 $response = [
                     'redirect' => false

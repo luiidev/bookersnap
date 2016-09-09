@@ -14,6 +14,8 @@ class MainController extends Controller {
         $user_id = $this->GetUserId();
         $checkService = new CheckAdminService();
         try {
+            //Verifica que el usuario que esta en sesion tiene permisos para entrar a la aplicacion
+            //Si no, redirige.
             $response = $checkService->checkIfMsAdmin($user_id, $id);
             $token = Session::get('api-token');
             $data = ['acl' => json_encode($response), 'apitoken' => $token, 'ms_id' => $id]; 
