@@ -251,20 +251,16 @@ angular.module('turn.service', [])
 					hours_end : data.hours_end
 				}
 
+				var nextDay = self.getHourNextDay(data.hours_ini,data.hours_end);
+
 				var hour_ini = self.getIndexHour(data.hours_ini);
-				var hour_end = self.getIndexHour(data.hours_end,1);//esto pendiente
-
-				/*if(moment(data.hour_ini).(data.hour_end)){
-					alert("dsd");
-				}*/
-
+				var hour_end = self.getIndexHour(data.hours_end,nextDay);//esto pendiente
+			
 				var turnForm = {
 					hours_ini : { index : hour_ini,time_original :data.hours_ini,time : listAvailability[hour_ini].time },
 					hours_end : { index : hour_end , time_original : data.hours_end,time : listAvailability[hour_end].time },
 					type_turn : { id : data.res_type_turn_id, label : ''}
 				}
-
-				console.log("turnForm " + angular.toJson(turnForm,true));
 
 				var turnDataClone = turnData;
 				var zonesId = [];
@@ -316,6 +312,9 @@ angular.module('turn.service', [])
 				if(option == "edit"){
 					TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
 						//data = self.checkRuleTableAll(data.data,1,turnForm);
+						
+						self.setAvailabilityText(data.data,turnForm);
+
 						defered.resolve(data.data);
 					}).error(function(data,status,headers){
 						defered.reject(data);
@@ -330,10 +329,59 @@ angular.module('turn.service', [])
 						defered.reject(data);
 					});
 				}
-
 			}
 			
 			return defered.promise;
+		},
+		setAvailabilityText : function(tables,turnForm){
+
+			var self = this;
+
+			var rulesData = [];
+			
+			angular.forEach(tables, function(data,key){
+				
+
+				if(key == 0){
+					var vData = {};
+					for (var i = turnForm.hours_ini.index ; i <= turnForm.hours_end.index; i++) {
+
+						console.log("getAvailabilityText  " , data.availability[i].time);
+						
+						var ruleId = self.getAvailabilityRuleId(data.availability,i);
+						var ruleIdOld = self.getAvailabilityRuleId(data.availability,i -1);
+						var ruleIdNext = self.getAvailabilityRuleId(data.availability,i +1);
+
+
+						if(ruleIdOld != ruleId || i == turnForm.hours_ini.index){
+							vData.hours_ini = data.availability[i].time;
+							vData.hours_end = vData.hours_ini;
+							vData.rule_id = ruleId;
+						}else if(ruleIdOld == ruleId){
+							vData.hours_end = data.availability[i].time;
+						}
+
+						if(ruleIdNext != ruleId || i == turnForm.hours_end.index){
+							rulesData.push(vData);
+							console.log("creo un registro", ruleId);
+						}
+	
+					}
+				
+				console.log("rulesData  " , angular.toJson(rulesData,true));
+				}
+
+	
+				
+			});
+
+		},
+		getAvailabilityRuleId : function(availability,index){
+			var ruleId = -1;
+
+			ruleId = availability[index].rule_id;
+
+			return ruleId;
 		},
 		searchZoneByZoneAdd : function(zonesTablesAdd,idZone){
 			var tablesZone = null;
@@ -367,7 +415,7 @@ angular.module('turn.service', [])
 
 			return timesFinal;*/	
 		},
-		getIndexHour : function(value,nextday = 0){
+		getIndexHour : function(value,nextDay = 0){
 			var hourIndex = value.indexOf(":");
 			var min = value.substr(hourIndex);
 
@@ -388,8 +436,19 @@ angular.module('turn.service', [])
 				index +=3;
 			}
 
-			index = index + 96 * nextday;
+			index = index + 96 * nextDay;
 			return index;
+		},
+		getHourNextDay : function(hoursIni , hoursEnd){
+			var nextDay = 0;
+			var xHourIni = hoursIni.split(":");
+			var xHourEnd = hoursEnd.split(":");
+
+			if(xHourEnd[0] < xHourIni[0] ){
+				nextDay = 1;
+			}
+
+			return nextDay;
 		},
 		checkTableZone : function(tablesId,idTable){
 			var index = tablesId.indexOf(idTable);

@@ -111,6 +111,11 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 				$scope.zoneSelected.chkRulesAll.disabled = true;
 				$scope.zoneSelected.chkRulesAll.local = true;
 				break;
+			case '-1':
+				$scope.zoneSelected.chkRulesAll.online = true;
+				$scope.zoneSelected.chkRulesAll.disabled = true;
+				$scope.zoneSelected.chkRulesAll.local = true;
+				break;
 			default:
 				$scope.zoneSelected.chkRulesAll.online = true;
 				$scope.zoneSelected.chkRulesAll.disabled = true;
@@ -181,8 +186,6 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 					$scope.turnZoneAdd.zones_data = data.dataZones;
 
 					$scope.generatedTimeTable(true,"edit");
-
-					console.log("turnForm 2 " + angular.toJson($scope.turnForm,true));
 
 				},
 				function error(data){
@@ -255,10 +258,13 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 		$scope.zonesTable = false;
 		// Al regresar,retornamos la data que hallamos guardado (reglas de las mesas)
-		//TurnFactory.addRulesTable($scope.zoneSelected,$scope.turnZoneAdd);
+		TurnFactory.addRulesTable($scope.zoneSelected,$scope.turnZoneAdd);
+
+		console.log("returnBoxZones " + angular.toJson($scope.zoneSelected,true));
 
 		$scope.zoneSelected.tablesId.length = 0;
 		$scope.zoneSelected.rule = 1;
+
 	};
 
 	$scope.deleteZone = function(zoneId){
@@ -271,8 +277,14 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		$scope.zoneSelected.id = zone.id;
 		$scope.zoneSelected.name = zone.name;
 
+		if(option == "edit"){
+			$scope.zoneSelected.rule = zone.rule.id;
+		}
+		
 		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option,$scope.turnZoneAdd,$scope.turnForm,$scope.zoneSelected).then(
 			function success(response){
+
+				//console.log("showTables " + angular.toJson(response,true));
 
 				$scope.zoneSelected.tables = response;
 
@@ -315,14 +327,16 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 	};
 
 	$scope.checkTableZone = function(table){
+	
 		TurnFactory.checkTableZone($scope.zoneSelected.tablesId,table.id);
+		TurnFactory.addRulesTable($scope.zoneSelected,$scope.turnZoneAdd);
+		
 		console.log("checkTableZone " + angular.toJson($scope.zoneSelected.tablesId,true));
 	};
 
 	$scope.checkRuleTableAll = function(rule){
 		$scope.zoneSelected.rule = rule;
 		checkedRulesDefault(rule);
-		console.log("checkRuleTableAll " + rule);
 
 		TurnFactory.checkRuleTableAll($scope.zoneSelected.tables,rule,$scope.turnForm);
 		TurnFactory.addRulesTable($scope.zoneSelected,$scope.turnZoneAdd);
