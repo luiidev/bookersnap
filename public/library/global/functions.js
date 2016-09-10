@@ -98,6 +98,23 @@ var addHourByMin = function(hour){
 
 };
 
+/*
+    Se recibe un rango de horas (12:00:00 - 16:00:00) y se devuelve un array con las horas seleccionadas en el mismo formato
+    con un lapso de 15 minutos cada uno 
+*/
+var getRangoHours = function(horaInicial, horaFinal){
+    
+    var newHoursIni = horaInicial;
+    var arrayHoras = [];
+    arrayHoras.push({hour24: horaInicial, hour12: defineTimeSytem(horaInicial)});
+    while (newHoursIni != horaFinal) {
+        newHoursIni = addHourByMin(newHoursIni);
+        arrayHoras.push({hour24: newHoursIni, hour12: defineTimeSytem(newHoursIni)}); 
+    }
+    return arrayHoras;
+
+}
+
 /*-----
 Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
 YYYY-MM-DD
@@ -136,18 +153,24 @@ var defineTimeSytem = function(time){
 };
 
 var convertDateTo24Hour = function(timeStr){
-    var meridian = timeStr.substr(timeStr.length-2).toLowerCase();
-    var hours    = timeStr.substring(0, timeStr.indexOf(':'));
-    var minutes  = timeStr.substring(timeStr.indexOf(':')+1, timeStr.indexOf(' '));
-    if (meridian=='pm')
-    {
-        hours = (hours=='12') ? '00' : parseInt(hours)+12 ;
+    if(timeStr==undefined){
+        return null;
+    }else{
+        
+        var meridian = timeStr.substr(timeStr.length-2).toLowerCase();
+        var hours    = timeStr.substring(0, timeStr.indexOf(':'));
+        var minutes  = timeStr.substring(timeStr.indexOf(':')+1, timeStr.indexOf(' '));
+        if (meridian=='pm')
+        {
+            hours = (hours=='12') ? '00' : parseInt(hours)+12 ;
+        }
+        else if(hours.length<2)
+        {
+            hours = '0' + hours;
+        }
+        return hours+':'+minutes+':'+"00";
+
     }
-    else if(hours.length<2)
-    {
-        hours = '0' + hours;
-    }
-    return hours+':'+minutes+':'+"00";
 }
  
 /*----------
@@ -230,7 +253,7 @@ var convertFechaYYMMDD = function(fecha,idioma,options){
     var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
     var arrayFecha = newFecha.split("/");
 
-    newFecha = arrayFecha[2]+"-"+arrayFecha[1] +"-"+arrayFecha[0];
+    newFecha = arrayFecha[2]+"-"+ arrayFecha[1] +"-"+arrayFecha[0];
 
     return newFecha;
 };
