@@ -88,8 +88,16 @@ angular.module('calendar.service', [])
                 };
             },
             ScheduleShift: function (id, date, $listener) {
-                //$http.post(url_api_mesas + '/', {res_turn_id:1, date: date}, then($listener.OnSuccess, $listener.OnError));
-                $listener.OnSuccess({data: {statuscode: 200}, status: 200});
+                $http.post(url_api_mesas + '/microsites/1/calendar', {
+                    res_turn_id: id,
+                    date: date
+                }).then($listener.OnSuccess, $listener.OnError);
+                //$listener.OnSuccess({data: {statuscode: 200}, status: 200});
+            },
+
+            DeleteShift: function (id, date, $listener) {
+                $http.delete(url_api_mesas + '/microsites/1/calendar?res_turn_id=' + id + '&date=' + date).
+                then($listener.OnSuccess, $listener.OnError);
             }
         };
     })

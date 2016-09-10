@@ -17,6 +17,8 @@ class MainController extends Controller
         $user_id = $this->GetUserId();
         $checkService = new CheckAdminService();
         try {
+            //Se verifica si el usuario en sesion tiene acceso a la aplicacion master,
+            // sino se redirecciona a la pagina principal
             $response = $checkService->checkIfMaster($user_id);
             $token = Session::get('api-token');
             $data = ['acl' => json_encode($response), 'apitoken' => $token];

@@ -96,7 +96,10 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 resolve: {
                     data: function () {
                         return {
-                            date: $date
+                            date: $date,
+                            GetEvents: function () {
+                                GetEvents();
+                            }
                         };
                     }
                 }
@@ -124,6 +127,37 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
         vm.AddSchedule = function (type_shift_id, $name) {
             openDialogShedule(type_shift_id, $name)
+        };
+
+        vm.removeSchedule = function (id) {
+
+            swal({
+                title: "Confimar",
+                text: "Se va eliminar el turno",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sí, borrar ahora",
+                cancelButtonText: "No, cancelar",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    bsLoadingOverlayService.start();
+                    CalendarService.DeleteShift(id, vm.date, {
+                        OnSuccess: function (Response) {
+                            bsLoadingOverlayService.stop();
+                            GetData();
+                            data.GetEvents();
+                        },
+                        OnError: function (Response) {
+                            bsLoadingOverlayService.stop();
+                        }
+                    });
+                }
+            });
+
+
         };
 
         function GetData() {
@@ -157,7 +191,11 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                                     return {
                                         typeShift: $type_shift,
                                         date: vm.date,
-                                        shifts: Response.data.data
+                                        shifts: Response.data.data,
+                                        updateShifts: function () {
+                                            GetData();
+                                            data.GetEvents();
+                                        }
                                     };
                                 }
                             }
@@ -195,7 +233,6 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
     .controller('ScheduleShiftController', function (data, $modalInstance, CalendarService) {
         var vm = this;
         vm.typeShift = data.typeShift;
-        vm.scheduleOption = 0;
         vm.shifts = data.shifts;
         vm.date = data.date;
         vm.flags = {isLoading: false};
@@ -214,9 +251,10 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 OnSuccess: function (Response) {
                     vm.flags.isLoading = false;
                     try {
-                        if (Response.data.statuscode == 200) {
+                        if (Response.data.statuscode == 201) {
+                            data.updateShifts();
                             $modalInstance.dismiss();
-                            messageAlert('Rol actualizado', '', 'success');
+                            messageAlert('Turno Programado', '', 'success');
                         }
                     } catch (e) {
                         swal("Error", "Ocurrió un error en el servidor", "error");
@@ -224,6 +262,11 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 },
                 OnError: function (Response) {
                     vm.flags.isLoading = false;
+                    try {
+                        swal("Error", Response.data.error.user_msg, "error");
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
                 }
             });
         };
