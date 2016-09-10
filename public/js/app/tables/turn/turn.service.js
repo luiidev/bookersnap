@@ -311,11 +311,10 @@ angular.module('turn.service', [])
 
 				if(option == "edit"){
 					TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
-						//data = self.checkRuleTableAll(data.data,1,turnForm);
-						
-						self.setAvailabilityText(data.data,turnForm);
+		
+						var rulesTables = self.setAvailabilityText(data.data,turnForm);
+						defered.resolve(rulesTables);
 
-						defered.resolve(data.data);
 					}).error(function(data,status,headers){
 						defered.reject(data);
 					});
@@ -337,44 +336,70 @@ angular.module('turn.service', [])
 
 			var self = this;
 
-			var rulesData = [];
-			
 			angular.forEach(tables, function(data,key){
 				
+				var vData = {};
+				var rulesData = [];
 
-				if(key == 0){
-					var vData = {};
-					for (var i = turnForm.hours_ini.index ; i <= turnForm.hours_end.index; i++) {
+				for (var i = turnForm.hours_ini.index ; i <= turnForm.hours_end.index; i++) {
 
-						console.log("getAvailabilityText  " , data.availability[i].time);
-						
-						var ruleId = self.getAvailabilityRuleId(data.availability,i);
-						var ruleIdOld = self.getAvailabilityRuleId(data.availability,i -1);
-						var ruleIdNext = self.getAvailabilityRuleId(data.availability,i +1);
+					var ruleId = self.getAvailabilityRuleId(data.availability,i);
+					var ruleIdOld = self.getAvailabilityRuleId(data.availability,i -1);
+					var ruleIdNext = self.getAvailabilityRuleId(data.availability,i +1);
 
+					if(ruleIdOld != ruleId || i == turnForm.hours_ini.index){
 
-						if(ruleIdOld != ruleId || i == turnForm.hours_ini.index){
-							vData.hours_ini = data.availability[i].time;
-							vData.hours_end = vData.hours_ini;
-							vData.rule_id = ruleId;
-						}else if(ruleIdOld == ruleId){
-							vData.hours_end = data.availability[i].time;
-						}
+						vData.hours_ini = data.availability[i].time;
+						vData.hours_end = vData.hours_ini;
+						vData.rule_id = ruleId;
 
-						if(ruleIdNext != ruleId || i == turnForm.hours_end.index){
-							rulesData.push(vData);
-							console.log("creo un registro", ruleId);
-						}
-	
+					}else if(ruleIdOld == ruleId){
+						vData.hours_end = data.availability[i].time;
 					}
-				
-				console.log("rulesData  " , angular.toJson(rulesData,true));
+
+					if(ruleIdNext != ruleId || i == turnForm.hours_end.index){
+						rulesData.push(vData);
+						vData = {};
+					}
 				}
 
-	
-				
+				data = self.setRuleTextTable(data,rulesData);
+
 			});
 
+			return tables;
+		},
+		setRuleTextTable : function(table,rulesData){
+
+			var rulesTable = {
+				rulesDisabled : [],
+				rulesOnline : [],
+				rulesLocal : []
+			}
+
+			angular.forEach(rulesData,function(rules,key){
+
+				var vData = rules.hours_ini +" - "+ rules.hours_end
+
+				switch(rules.rule_id){
+					case 0:
+						rulesTable.rulesDisabled.push(vData);
+						break;
+					case 1:
+						rulesTable.rulesLocal.push(vData);
+						break;
+					case 2:
+						rulesTable.rulesOnline.push(vData);
+						break;
+				}
+
+			});
+
+			table.rules_disabled = rulesTable.rulesDisabled.toString();
+			table.rules_local = rulesTable.rulesLocal.toString();
+			table.rules_online = rulesTable.rulesOnline.toString();
+	
+			return table;
 		},
 		getAvailabilityRuleId : function(availability,index){
 			var ruleId = -1;
@@ -505,7 +530,6 @@ angular.module('turn.service', [])
 		saveRuleTable : function(tableItem,rulesDataTemp){
 			angular.forEach(tableItem, function(table, key){
 				angular.forEach(table.availability, function(rules, key){
-
 					angular.forEach(rulesDataTemp, function(rulesTemp){
 
 						if(key == rulesTemp.index_time){
@@ -516,8 +540,7 @@ angular.module('turn.service', [])
 						
 					});
 
-				});
-				
+				});	
 			});
 
 			return tableItem;
@@ -637,6 +660,19 @@ angular.module('turn.service', [])
 					turnZoneAdd.zonesTables.push(vData);
 				}	
 			}
+		},
+		ruleExitsOne : function(tables,ruleId,turnForm){
+			var rule = 1;
+
+			angular.forEach(tables, function(table,key){
+				for (var i = turnForm.hours_ini.index ; i <= turnForm.hours_end.index; i++) {
+					if(table.availability[i].rule_id != ruleId){
+						rule +=1;
+					}
+				}
+			});
+
+			return rule;
 		}
 
 	};

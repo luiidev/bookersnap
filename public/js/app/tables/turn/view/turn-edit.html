@@ -176,7 +176,7 @@
                                                         <th>Mínimo</th>
                                                         <th>Máximo</th>
                                                         <th>Disponibilidad</th>
-                                                        <th></th>
+                                                
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -282,21 +282,21 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="" ng-click="checkRule('online')">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value=""  ng-click="checkRule('local')">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="" ng-click="checkRule('disabled')">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
