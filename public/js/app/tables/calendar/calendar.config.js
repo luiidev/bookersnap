@@ -52,9 +52,9 @@ angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
             } else {
                 swal("Error", "Ocurrió un error en el servidor", "error");
             }
-        }
+        };
 
         return {
             error: error
-        }
+        };
     });

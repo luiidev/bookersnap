@@ -32,6 +32,10 @@ angular.module('calendar.service', [])
                 }
                 return hour + ":" + minute + amPM;
             },
+            isBefore: function(date, now){
+                var dateCalendar = moment(date);
+                return moment(dateCalendar).isBefore(now);
+            },
             GetShiftsByMonth: function ($month, $listener) {
                 $http.get(url_api_mesas + '/microsites/1/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
             },
@@ -108,4 +112,4 @@ angular.module('calendar.service', [])
                 }).then($listener.OnSuccess, $listener.OnError);
             },
         };
-    })
+    });

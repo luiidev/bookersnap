@@ -17,6 +17,8 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
     .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $modal) {
         var vm = this;
 
+        var now;
+
         function GetEvents() {
             var month = vm.calendar.fullCalendar('getDate').format('YYYY-MM');
             bsLoadingOverlayService.start();
@@ -62,21 +64,15 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 dayClick: function (date, jsEvent, view) {
                     var $date = date.format('YYYY-MM-DD');
                     OpenDay($date);
-                    //console.log();
-
-                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                    //alert('Current view: ' + view.name);
-
-                    // change the day's background color just for fun
-                    //$(this).css('background-color', 'red');
-
                 },
                 viewRender: function (view, element) {
                     GetEvents();
                 },
-
                 eventRender: function (event, element) {
+                    if (CalendarService.isBefore(event.date, now)) {
+                        $(element).addClass('day-disabled');
+                    }
+
                     var $text = '<div class="fc-content" >';
                     $text += '<h5 class="text-center" style="color:white;margin: 2px;white-space: pre-line">' + event.title + '</h5>';
                     $text += '<div class="fc-title text-center">' + CalendarService.FormatTime(event.date, event.start_time) + ' - ' + CalendarService.FormatTime(event.date, event.end_time) + '</div>';
@@ -87,6 +83,10 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         }
 
         function OpenDay($date) {
+            if (CalendarService.isBefore($date, now)) {
+                return false;
+            }
+
             var modalInstance = $modal.open({
                 templateUrl: 'addEvent.html',
                 controller: 'DayShiftController',
@@ -106,7 +106,17 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
             });
         }
 
+        function DateNow() {
+            now = moment();
+            now.set({ 'hour': 0,
+                'minute': 0,
+                'second': 0,
+                'millisecond': 0
+            });
+        }
+
         function init() {
+            DateNow();
             initCalendar();
         }
 
@@ -126,7 +136,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         };
 
         vm.AddSchedule = function (type_shift_id, $name) {
-            openDialogShedule(type_shift_id, $name)
+            openDialogShedule(type_shift_id, $name);
         };
 
         vm.removeSchedule = function (id) {
@@ -218,7 +228,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         }
 
         vm.changeSchedule = function (type_shift_id, $name, turn_id) {
-            openDialogChangeShedule(type_shift_id, $name, turn_id)
+            openDialogChangeShedule(type_shift_id, $name, turn_id);
         };
 
         function openDialogChangeShedule(type_shift_id, $name, turn_id) {
@@ -383,4 +393,4 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         }
 
         init();
-    })
+    });
