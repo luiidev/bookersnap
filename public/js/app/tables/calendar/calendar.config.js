@@ -39,7 +39,6 @@ angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
 
     .factory("$response", function(){
         var error = function(response) {
-            console.log(response.data, typeof response.data);
             if (typeof response.data == "object") {
                     if (response.data.error !== null) {
                         swal("Error", response.data.error.user_msg || "Ocurrió un error en el servidor", "error");
