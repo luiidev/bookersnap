@@ -16,6 +16,14 @@ angular.module('block.service', [])
 						  })
 
 		},
+		deleteBlock: function(id_block){
+				return $http({url:ApiUrlMesas+"/blocks/"+id_block, method: "DELETE"}).then(function successCallback(response) {
+						    return response;
+						  }, function errorCallback(response) {
+						  	return response;
+						  })
+
+		},
 		editBlock: function(variablesUrl, data){
 				return $http({url: ApiUrlMesas + "/blocks" + variablesUrl, method: "PUT", data: data}); 
 		},

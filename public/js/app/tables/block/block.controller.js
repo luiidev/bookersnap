@@ -75,18 +75,8 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = {
-            dataMin : [],
-            selectedMin : '',
-            dataMax : [],
-            selectedMax : ''
-        }
-
-        $scope.boxTables = {
-            items : true,
-            item : false
-        }
-
+        $scope.coversList = BlockFactory.coverList();
+        $scope.boxTables = BlockFactory.boxTables();
 
         var listCovers = function(option){
 
@@ -324,10 +314,9 @@ angular.module('block.controller', [])
             });  
         }).then(function(){
 
-              // Se obtiene de array de las mesas que estan en ese rango de fecha
-              BlockFactory.getAllBlock("fecha="+$scope.fecha).then(function(response){
+            // Se obtiene de array de las mesas que estan en ese rango de fecha
+            BlockFactory.getAllBlock("fecha="+$scope.fecha).then(function(response){
               
-                console.log(response.data.data);
                 var mesasFuturasBloqueadas = [];
                 angular.forEach(response.data.data, function(mesaFuturaBloqueada, i) {
                     if(mesaFuturaBloqueada.res_block_id != block_id){
@@ -343,7 +332,6 @@ angular.module('block.controller', [])
                     angular.forEach(zona.tables, function(mesa, i) {
                             // Iteracion para identificar las mesas bloqueadas 
                             for(var p=0; p < mesasFuturasBloqueadas.length; p++){
-                                //console.log(mesasFuturasBloqueadas);
                                 if(mesa.id == mesasFuturasBloqueadas[p].res_table_id){
                                     $scope.zones[key].tables[i].classBloqueado = "selected-table-2";
                                 }
@@ -353,7 +341,7 @@ angular.module('block.controller', [])
                     });    
                 });
                 //////////////////////////////////////////////////////////////////////////////////////
-              });  
+            });  
         });
 
         /** Pantalla Add Block **/
@@ -396,18 +384,8 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = {
-            dataMin : [],
-            selectedMin : '',
-            dataMax : [],
-            selectedMax : ''
-        }
-
-        $scope.boxTables = {
-            items : true,
-            item : false
-        }
-
+        $scope.coversList = BlockFactory.coverList();
+        $scope.boxTables = BlockFactory.boxTables();
         
         var listCovers = function(option){
 
@@ -524,6 +502,20 @@ angular.module('block.controller', [])
             $scope.opened = true;
         };
 
+
+        $scope.deleteBlock = function(){
+            
+            // Se obtiene de array de las mesas que estan en ese rango de fecha
+            BlockFactory.deleteBlock(block_id).then(function(response){
+                if(response.data.success == true){
+                    messageAlert("Warning",response.data.msg,"warning",3000);
+                } else if(response.data.success == false){
+                    messageAlert("Warning",response.data.msg,"warning",3000);
+                }           
+            });  
+
+        };
+
         $scope.object = [];
         $scope.saveZone = function(option){
                 
@@ -557,6 +549,7 @@ angular.module('block.controller', [])
             }
             
         };
+
        
         /* Esta clase recorre las mesas listadas y crea un nuevo objeto dataTable que se iterara en la vista para imprimir las mesas * */
         var loadTablesEdit = function(tables){
