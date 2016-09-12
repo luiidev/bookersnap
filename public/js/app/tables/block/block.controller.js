@@ -1,5 +1,5 @@
 angular.module('block.controller', [])
-.controller('blockCtr', function($scope,$http, $sce,$state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('blockCtr', function($scope,$http, $state, $sce,$stateParams,$document, ApiUrlMesas,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
         $scope.fecha = $stateParams.fecha;
 
@@ -39,7 +39,7 @@ angular.module('block.controller', [])
         $scope.shifts = [];
         $scope.startTimes = [];
         $scope.endTimes = [];
-        $http.get(ApiUrl + '/calendar/' + $stateParams.fecha+'/shifts').success(function(response) {
+        $http.get(ApiUrlMesas + '/calendar/' + $stateParams.fecha+'/shifts').success(function(response) {
             angular.forEach(response.data, function(item, i) {
                 if(item.turn != null){ // Se obtienes los Shifts que contienen datos
 
@@ -75,8 +75,17 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = BlockFactory.coverList();
-        $scope.boxTables = BlockFactory.boxTables();
+        $scope.coversList = {
+            dataMin : [],
+            selectedMin : '',
+            dataMax : [],
+            selectedMax : ''
+        }
+
+        $scope.boxTables = {
+            items : true,
+            item : false
+        }
 
 
         var listCovers = function(option){
@@ -125,9 +134,11 @@ angular.module('block.controller', [])
             /*************************************************************************************/
 
                 $scope.mesasBloqueadas.push(data.id);
-                 /* Mensaje */
+
+            /* Mensaje */
             var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
             $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
+
           };
           
           $scope.desactivarTable = function (index,data) {
@@ -153,9 +164,11 @@ angular.module('block.controller', [])
                 data.class = "";
                 $scope.mesasBloqueadas.splice(item, 1);
             }
-             /* Mensaje */
+
+            /* Mensaje */
             var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
             $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
+
           }
 
         var getDataTableSelected = function(index){
@@ -261,7 +274,7 @@ angular.module('block.controller', [])
         listCovers("max");
     })
 
-.controller('blockCtrEdit', function($scope,$http, $sce, $state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('blockCtrEdit', function($scope,$http, $sce, $state,$stateParams,$document, ApiUrlMesas,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
         $scope.fecha = $stateParams.fecha;
         var block_id = $stateParams.block_id;
@@ -347,7 +360,7 @@ angular.module('block.controller', [])
         $scope.shifts = [];
         $scope.startTimes = [];
         $scope.endTimes = [];
-        $http.get(ApiUrl + '/calendar/' + $stateParams.fecha+'/shifts').success(function(response) {
+        $http.get(ApiUrlMesas + '/calendar/' + $stateParams.fecha+'/shifts').success(function(response) {
             angular.forEach(response.data, function(item, i) {
                 if(item.turn != null){ // Se obtienes los Shifts que contienen datos
 
@@ -383,9 +396,19 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = BlockFactory.coverList();
-        $scope.boxTables = BlockFactory.boxTables();
+        $scope.coversList = {
+            dataMin : [],
+            selectedMin : '',
+            dataMax : [],
+            selectedMax : ''
+        }
 
+        $scope.boxTables = {
+            items : true,
+            item : false
+        }
+
+        
         var listCovers = function(option){
 
             var coverList = "";

@@ -1,15 +1,15 @@
 angular.module('block.service', [])
-.factory('BlockFactory',function($http,ApiUrl){
+.factory('BlockFactory',function($http,ApiUrlMesas){
 	return {
 		getAllBlock: function(vDate){
-				return $http.get(ApiUrl+"/blocks/tables?"+vDate); 
+				return $http.get(ApiUrlMesas+"/blocks/tables?"+vDate); 
 		},
 		getBlock: function(vDate){
-				return $http.get(ApiUrl+"/blocks/"+vDate); 
+				return $http.get(ApiUrlMesas+"/blocks/"+vDate); 
 		},
 		addNewBlock: function(data){
 
-				return $http({url:ApiUrl+"/blocks", method: "POST", data: data}).then(function successCallback(response) {
+				return $http({url:ApiUrlMesas+"/blocks", method: "POST", data: data}).then(function successCallback(response) {
 						    return response;
 						  }, function errorCallback(response) {
 						  	return response;
@@ -17,7 +17,7 @@ angular.module('block.service', [])
 
 		},
 		editBlock: function(variablesUrl, data){
-				return $http({url: ApiUrl + "/blocks" + variablesUrl, method: "PUT", data: data}); 
+				return $http({url: ApiUrlMesas + "/blocks" + variablesUrl, method: "PUT", data: data}); 
 		},
 		coverList: function (){
 			return {
