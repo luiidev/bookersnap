@@ -263,7 +263,6 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 
 		$scope.zoneSelected.tablesId.length = 0;
 		$scope.zoneSelected.rule = 1;
-
 	};
 
 	$scope.deleteZone = function(zoneId){
@@ -280,17 +279,19 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 			$scope.zoneSelected.rule = zone.rule.id;
 		}
 		
-		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option,$scope.turnZoneAdd,$scope.turnForm,$scope.zoneSelected).then(
+		TurnFactory.getTurnZoneTables(zone.id,$stateParams.turn,option,$scope.turnZoneAdd,$scope.turnForm,$scope.zoneSelected,$scope.formDataDefault.listAvailability).then(
 			function success(response){
 
 				$scope.zoneSelected.tables = response;
 
-				console.log("showTables " + angular.toJson($scope.zoneSelected.tables,true));
+				//console.log("showTables " + angular.toJson($scope.zoneSelected.tables,true));
 
 				var tableRuleId = TurnFactory.getTurnRuleId($scope.turnZoneAdd.zonesTables,zone.id);
 				var oneRule = TurnFactory.ruleExitsOne($scope.zoneSelected.tables,tableRuleId,$scope.turnForm);
 				
 				tableRuleId = (oneRule == 1) ? tableRuleId : '-1';
+
+				//console.log("tableRuleId -  oneRule " + tableRuleId + " "+ oneRule);
 
 				checkedRulesDefault(tableRuleId);
 
@@ -333,7 +334,7 @@ angular.module('turn.controller', ['form.directive','localytics.directives'])
 		TurnFactory.checkTableZone($scope.zoneSelected.tablesId,table.id);
 		TurnFactory.addRulesTable($scope.zoneSelected,$scope.turnZoneAdd);
 		
-		console.log("checkTableZone " + angular.toJson($scope.zoneSelected.tablesId,true));
+		console.log("checkTableZone " + angular.toJson($scope.zoneSelected.table,true));
 	};
 
 	$scope.checkRuleTableAll = function(rule){

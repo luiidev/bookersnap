@@ -1,16 +1,16 @@
 angular.module('book.service', [])
-.factory('BookFactory',function($http,ApiUrl){
+.factory('BookFactory',function($http,ApiUrlMesas){
 	return {
 		getBooks: function(vDate){
-			// return $http.get(ApiUrl+"/book/"+vDate); 
+			// return $http.get(ApiUrlMesas+"/book/"+vDate); 
 		}
 	};
 
 })
-.factory('BlockFactory',function($http,ApiUrl){
+.factory('BlockFactory',function($http,ApiUrlMesas){
 	return {
 		getAllBlock: function(vDate){
-				return $http.get(ApiUrl+"/blocks?"+vDate); 
+				return $http.get(ApiUrlMesas+"/blocks?"+vDate); 
 		}
 	};
 

@@ -1,23 +1,23 @@
 angular.module('zone.service', [])
-.factory('ZoneFactory',function($http,ApiUrl){
+.factory('ZoneFactory',function($http,ApiUrlMesas){
 	return {
 		getZones: function(vOptions){
-			return $http.get(ApiUrl+"/zones?"+vOptions); 
+			return $http.get(ApiUrlMesas+"/zones?"+vOptions); 
 		},
 		getZone : function(vId){
-			return $http.get(ApiUrl+"/zones/"+vId); 
+			return $http.get(ApiUrlMesas+"/zones/"+vId); 
 		},
 		createZone : function(vData){
-			return $http.post(ApiUrl + '/zones',vData); 
+			return $http.post(ApiUrlMesas+'/zones',vData); 
 		},
 		editZone : function(vData){
-			return $http.put(ApiUrl + '/zones/'+vData.id,vData); 
+			return $http.put(ApiUrlMesas+'/zones/'+vData.id,vData); 
 		},
 		deleteZone : function(vId){
-			return $http.delete(ApiUrl + '/zones/'+vId); 
+			return $http.delete(ApiUrlMesas+'/zones/'+vId); 
 		},
 		getTables : function(vId){
-			return $http.get(ApiUrl+"/zones/"+vId+"/tables"); 
+			return $http.get(ApiUrlMesas+"/zones/"+vId+"/tables"); 
 		}
 	};
 
