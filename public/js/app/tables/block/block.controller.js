@@ -1,5 +1,5 @@
 angular.module('block.controller', [])
-.controller('blockCtr', function($scope,$http, $state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('blockCtr', function($scope,$http, $sce,$state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
         $scope.fecha = $stateParams.fecha;
 
@@ -12,7 +12,6 @@ angular.module('block.controller', [])
               // Se obtiene de array de las mesas que estan en ese rango de fecha
               BlockFactory.getAllBlock("fecha="+$scope.fecha).then(function(response){
                 var mesasFuturasBloqueadas = response.data.data;
-                //console.log(mesasFuturasBloqueadas);
 
                 /////////////////////////////////////////////////////////////////////////////////////// 
                 //Se agrega la clase para identificar los bloqueos futuros dentro del array principal  
@@ -24,13 +23,16 @@ angular.module('block.controller', [])
                                 if(mesa.id == mesasFuturasBloqueadas[p].res_table_id){
                                     $scope.zones[key].tables[i].classBloqueado = "selected-table-2";
                                 }
-
                             }
                     // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
                     });    
                 });
                 //////////////////////////////////////////////////////////////////////////////////////
               }); 
+
+        }).then(function(){
+
+        
         });  
 
         /** Pantalla Crear Block **/
@@ -73,17 +75,8 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = {
-            dataMin : [],
-            selectedMin : '',
-            dataMax : [],
-            selectedMax : ''
-        }
-
-        $scope.boxTables = {
-            items : true,
-            item : false
-        }
+        $scope.coversList = BlockFactory.coverList();
+        $scope.boxTables = BlockFactory.boxTables();
 
 
         var listCovers = function(option){
@@ -132,6 +125,9 @@ angular.module('block.controller', [])
             /*************************************************************************************/
 
                 $scope.mesasBloqueadas.push(data.id);
+                 /* Mensaje */
+            var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
+            $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
           };
           
           $scope.desactivarTable = function (index,data) {
@@ -157,6 +153,9 @@ angular.module('block.controller', [])
                 data.class = "";
                 $scope.mesasBloqueadas.splice(item, 1);
             }
+             /* Mensaje */
+            var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
+            $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
           }
 
         var getDataTableSelected = function(index){
@@ -258,13 +257,11 @@ angular.module('block.controller', [])
 
         };
 
-        //detectedForm();
-
         listCovers("min");
         listCovers("max");
     })
 
-.controller('blockCtrEdit', function($scope,$http, $state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
+.controller('blockCtrEdit', function($scope,$http, $sce, $state,$stateParams,$document, ApiUrl,BlockFactory, ZoneFactory,ZoneLienzoFactory,TableFactory,$uibModal,IdMicroSitio) {
 
         $scope.fecha = $stateParams.fecha;
         var block_id = $stateParams.block_id;
@@ -276,6 +273,11 @@ angular.module('block.controller', [])
             angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
                     $scope.mesasBloqueadas.push(mesa.id);    
             });
+
+            /* Mensaje */
+            var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
+            $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
+  
             return $scope.mesasBloqueadas;
     
         }).then(function (mesasBloqueadas){
@@ -348,10 +350,6 @@ angular.module('block.controller', [])
         $http.get(ApiUrl + '/calendar/' + $stateParams.fecha+'/shifts').success(function(response) {
             angular.forEach(response.data, function(item, i) {
                 if(item.turn != null){ // Se obtienes los Shifts que contienen datos
-                    
-                    //$scope.shifts.push({id: item.id, name: item.name}); // Lista de shifts a mostrar 
-                    //$scope.startTimes = getRangoHours(item.turn.hours_ini, item.turn.hours_end);
-                    //$scope.endTimes = getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end);   
 
                      $scope.shifts.push({
                         id: item.id,
@@ -385,18 +383,8 @@ angular.module('block.controller', [])
             $scope.endTimes = item.endTimes;
          };
 
-        $scope.coversList = {
-            dataMin : [],
-            selectedMin : '',
-            dataMax : [],
-            selectedMax : ''
-        }
-
-        $scope.boxTables = {
-            items : true,
-            item : false
-        }
-
+        $scope.coversList = BlockFactory.coverList();
+        $scope.boxTables = BlockFactory.boxTables();
 
         var listCovers = function(option){
 
@@ -423,7 +411,7 @@ angular.module('block.controller', [])
                 $scope.coversList.selectedMax = coverList[0];
             }
         };
-
+        
         
           /***************Funcion ejecutada por directiva****************/
           $scope.mesasBloqueadas = [];
@@ -444,6 +432,10 @@ angular.module('block.controller', [])
             /*************************************************************************************/
 
                 $scope.mesasBloqueadas.push(data.id);
+
+                /* Mensaje */
+                var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
+                $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
           };
           
           $scope.desactivarTable = function (index,data) {
@@ -469,6 +461,12 @@ angular.module('block.controller', [])
                 data.class = "";
                 $scope.mesasBloqueadas.splice(item, 1);
             }
+
+
+            /* Mensaje */
+            var res = $scope.mesasBloqueadas.toString().replace(/,/g,", "); 
+            $scope.someSafeContent = $sce.trustAsHtml("<b>" + res + "</b>");
+
           }
 
         var getDataTableSelected = function(index){

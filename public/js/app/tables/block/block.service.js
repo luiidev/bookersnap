@@ -18,7 +18,22 @@ angular.module('block.service', [])
 		},
 		editBlock: function(variablesUrl, data){
 				return $http({url: ApiUrl + "/blocks" + variablesUrl, method: "PUT", data: data}); 
+		},
+		coverList: function (){
+			return {
+	            dataMin : [],
+	            selectedMin : '',
+	            dataMax : [],
+	            selectedMax : ''
+        	};
+		},
+		boxTables: function (){
+			return {
+	            items : true,
+	            item : false
+        	};
 		}
+
 	};
 
 });
