@@ -82,7 +82,7 @@
                                     </a>
                                     &nbsp;&nbsp;
                                     <a href="javascript:"
-                                       ng-if="item.turn">
+                                       ng-if="item.turn" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)">
                                         Reemplazar
                                     </a>
                                     &nbsp;&nbsp;
@@ -141,6 +141,42 @@
                 </div>
             </script>
 
+            <!-- Add event -->
+            <script type="text/ng-template" id="changeSchedule.html">
+                <div class="modal-header">
+                    <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+
+                    <div class="listview lv-bordered lv-lg">
+
+                        <div class="lv-body">
+                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                <div class="media-body">
+                                    <div class="lv-title">
+                                        <span style="font-weight: bold;">{{shift.name}}</span>
+                                        <span class="m-l-30">
+                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                        </span>
+                                    </div>
+                                    <div class="lv-actions">
+                                        <button class="btn btn-primary"   ng-disabled="vm.flags.isLoading"
+                                                ng-click="vm.changeCheduless(shift.id)">
+                                            Programar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
+                </div>
+            </script>
 
             <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
             <!--data-select="clctrl.onSelect(start, end)"></div>-->

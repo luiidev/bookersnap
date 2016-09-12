@@ -96,8 +96,16 @@ angular.module('calendar.service', [])
             },
 
             DeleteShift: function (id, date, $listener) {
-                $http.delete(url_api_mesas + '/microsites/1/calendar?res_turn_id=' + id + '&date=' + date).
+                $http.delete(url_api_mesas + '/microsites/1/calendar/' + id , { params: {date: date}}).
                 then($listener.OnSuccess, $listener.OnError);
-            }
+            },
+
+            ChangeSchedule: function (turn_id, shift_id, date, $listener) {
+                $http.put(url_api_mesas + '/microsites/1/calendar/change', {
+                    turn_id: turn_id,
+                    shift_id: shift_id,
+                    date: date
+                }).then($listener.OnSuccess, $listener.OnError);
+            },
         };
     })
