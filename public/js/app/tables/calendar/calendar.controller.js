@@ -70,7 +70,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 },
                 eventRender: function (event, element) {
                     if (CalendarService.isBefore(event.date, now)) {
-                        $(element).addClass('day-disabled');
+                        $(element).addClass('event-disabled');
                     }
 
                     var $text = '<div class="fc-content" >';
@@ -158,6 +158,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                             bsLoadingOverlayService.stop();
                             GetData();
                             data.GetEvents();
+                            vm.dismiss();
                         },
                         OnError: function (Response) {
                             bsLoadingOverlayService.stop();
@@ -197,6 +198,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                             resolve: {
                                 data: function () {
                                     return {
+                                        modalInstance: $modalInstance,
                                         typeShift: $type_shift,
                                         date: vm.date,
                                         shifts: Response.data.data,
@@ -247,6 +249,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                             resolve: {
                                 data: function () {
                                     return {
+                                        modalInstance: $modalInstance,
                                         turn_id: turn_id,
                                         typeShift: $type_shift,
                                         date: vm.date,
@@ -295,6 +298,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         vm.shifts = data.shifts;
         vm.date = data.date;
         vm.flags = {isLoading: false};
+        var modalInstanceBefore = data.modalInstance;
 
         vm.dismiss = function () {
             $modalInstance.dismiss();
@@ -312,8 +316,9 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     try {
                         if (Response.data.statuscode == 201) {
                             data.updateShifts();
-                            $modalInstance.dismiss();
                             messageAlert('Turno Programado', '', 'success');
+                            vm.dismiss();
+                            modalInstanceBefore.dismiss();
                         }
                     } catch (e) {
                         swal("Error", "Ocurrió un error en el servidor", "error");
@@ -346,6 +351,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         vm.date = data.date;
         vm.flags = {isLoading: false};
         var turn_id = data.turn_id;
+        var modalInstanceBefore = data.modalInstance;
 
         vm.dismiss = function () {
             $modalInstance.dismiss();
@@ -363,8 +369,9 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     try {
                         if (Response.data.statuscode == 201) {
                             data.updateShifts();
-                            $modalInstance.dismiss();
                             messageAlert('Turno Reprogramado', '', 'success');
+                            vm.dismiss();
+                            modalInstanceBefore.dismiss();
                         }
                     } catch (e) {
                         swal("Error", "Ocurrió un error en el servidor", "error");

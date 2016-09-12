@@ -283,5 +283,12 @@ $background-tables-head = #eee
 			
 /*--------------Calendario------------------*/
 					
-.day-disabled
+.event-disabled
 	opacity: .5
+	
+#calendar a:not(.event-disabled)
+	cursor: pointer
+
+#calendar a.event-disabled
+	cursor: context-menu;
+	
