@@ -14,6 +14,6 @@ angular.module('tables.app',
     .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/en/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en')
     
-            .run(function($http){
-                //setAuthHeaders($http);
-            });
+    .run(function($http){
+        //setAuthHeaders($http);
+    });
