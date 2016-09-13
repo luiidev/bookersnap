@@ -508,7 +508,7 @@ angular.module('block.controller', [])
             // Se obtiene de array de las mesas que estan en ese rango de fecha
             BlockFactory.deleteBlock(block_id).then(function(response){
                 if(response.data.success == true){
-                    messageAlert("Warning",response.data.msg,"warning",3000);
+                    messageAlert("Success",response.data.msg,"success",3000);
                 } else if(response.data.success == false){
                     messageAlert("Warning",response.data.msg,"warning",3000);
                 }           
