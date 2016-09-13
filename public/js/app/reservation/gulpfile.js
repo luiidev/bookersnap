@@ -25,6 +25,15 @@ gulp.task('app-bookersnap-reservation-js', function () {
   .pipe(gulp.dest('../../dist.app/reservation'))
 });
 
+gulp.task('app-bookersnap-tables-js', function () {
+    gulp.src([
+            '../tables/zone/zone.service.js',
+        ])
+        .pipe(concat('app.bookersnap.tables.services.min.js'))
+        .pipe(jsmin())
+        .pipe(gulp.dest('../../dist.app/reservation'))
+});
+
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-reservation-js', function () {
   gulp.src([
@@ -95,4 +104,4 @@ gulp.task('watch', function(){
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch','app-bookersnap-reservation-js','stylus-app','app-library-reservation-js','app-library-reservation-css']);
+gulp.task('default', ['watch','app-bookersnap-reservation-js','stylus-app','app-bookersnap-tables-js','app-library-reservation-js','app-library-reservation-css']);

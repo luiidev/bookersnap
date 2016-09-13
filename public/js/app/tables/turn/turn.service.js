@@ -1,37 +1,37 @@
 angular.module('turn.service', [])
-.factory('TurnDataFactory',function($http,ApiUrl,ApiUrlRoot){
+.factory('TurnDataFactory',function($http,ApiUrlMesas,ApiUrlRoot){
 	return {
 		getTurns: function(vOptions){
-			return $http.get(ApiUrl+"/turns?"+vOptions);
+			return $http.get(ApiUrlMesas+"/turns?"+vOptions);
 		},
 		getTurn : function(vTurn,vOptions){
-			return $http.get(ApiUrl+"/turns/"+vTurn+"?"+vOptions);
+			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"?"+vOptions);
 		},
 		createTurn : function(vData){
-			return $http.post(ApiUrl+"/turns",vData);
+			return $http.post(ApiUrlMesas+"/turns",vData);
 		},
 		updateTurn : function(vData){
-			return $http.put(ApiUrl+"/turns/"+vData.id,vData);
+			return $http.put(ApiUrlMesas+"/turns/"+vData.id,vData);
 		},
 		getTurnsAvailables: function(vDate){
-			return $http.get(ApiUrl+"/turns/"+vDate+"/availables");
+			return $http.get(ApiUrlMesas+"/turns/"+vDate+"/availables");
 		},
 		searchTurn : function(vData){
-			return $http.get(ApiUrl+"/turns/search?"+vData);
+			return $http.get(ApiUrlMesas+"/turns/search?"+vData);
 		},
 		getTurnZoneTables : function(vZone,vTurn){
-			return $http.get(ApiUrl+"/turns/"+vTurn+"/zones/"+vZone+"/tables");
+			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"/zones/"+vZone+"/tables");
 		}
 	};
 })
-.factory('TypeTurnFactory',function($http,ApiUrl,ApiUrlRoot){
+.factory('TypeTurnFactory',function($http,ApiUrlMesas,ApiUrlRoot){
 
 	return {
 		getTypeTurns : function(){
 			return $http.get(ApiUrlRoot+"/type-turn");
 		},
 		getDaysTypeTurn : function(vTypeTurn){
-			return $http.get(ApiUrl+"/type-turn/"+vTypeTurn+"/days");
+			return $http.get(ApiUrlMesas+"/type-turn/"+vTypeTurn+"/days");
 		}
 
 	};
@@ -297,7 +297,7 @@ angular.module('turn.service', [])
 
 			return defered.promise;
 		},
-		getTurnZoneTables : function(idZone,idTurn,option,turnZoneAdd,turnForm,zoneSelected){
+		getTurnZoneTables : function(idZone,idTurn,option,turnZoneAdd,turnForm,zoneSelected,listAvailability){
 			var defered = $q.defer();
 			var self = this;
 
@@ -312,7 +312,7 @@ angular.module('turn.service', [])
 				if(option == "edit"){
 					TurnDataFactory.getTurnZoneTables(idZone,idTurn).success(function(data){
 		
-						var rulesTables = self.setAvailabilityText(data.data,turnForm);
+						var rulesTables = self.setAvailabilityText(data.data,turnForm,listAvailability);
 						defered.resolve(rulesTables);
 
 					}).error(function(data,status,headers){
@@ -332,7 +332,7 @@ angular.module('turn.service', [])
 			
 			return defered.promise;
 		},
-		setAvailabilityText : function(tables,turnForm){
+		setAvailabilityText : function(tables,turnForm,listAvailability){
 
 			var self = this;
 
@@ -348,13 +348,13 @@ angular.module('turn.service', [])
 					var ruleIdNext = self.getAvailabilityRuleId(data.availability,i +1);
 
 					if(ruleIdOld != ruleId || i == turnForm.hours_ini.index){
-
-						vData.hours_ini = data.availability[i].time;
+						
+						vData.hours_ini = listAvailability[i].time;
 						vData.hours_end = vData.hours_ini;
 						vData.rule_id = ruleId;
 
 					}else if(ruleIdOld == ruleId){
-						vData.hours_end = data.availability[i].time;
+						vData.hours_end = listAvailability[i].time;
 					}
 
 					if(ruleIdNext != ruleId || i == turnForm.hours_end.index){
@@ -420,25 +420,6 @@ angular.module('turn.service', [])
 			});
 
 			return tablesZone;
-		},
-		generatedTimeTable : function(turnData){
-			/*var times = BookDateFactory.rangeDateAvailable(15,turnData);
-			var timesFinal = [];
-			var self = this;
-
-			angular.forEach(times, function(value, key){
-
-				var index = self.getIndexHour(value);
-				value = replaceText(value,["AM","PM"," "],"");
-
-				timesFinal.push({
-					time : value,
-					index : index
-				});
-	
-			});
-
-			return timesFinal;*/	
 		},
 		getIndexHour : function(value,nextDay = 0){
 			var hourIndex = value.indexOf(":");

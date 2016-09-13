@@ -266,7 +266,7 @@ angular.module('promotion.service', [])
         }
 
         var d = new Date(0,0,0,hourIndex,0,0);
-        var formato = moment(d).valueOf();
+        var formato = moment(d).valueOf();123546465
         var hora = $filter('date')(formato,'h:mm a');
 
         timesFinal.push({

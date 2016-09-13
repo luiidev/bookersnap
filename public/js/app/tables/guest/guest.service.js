@@ -1,23 +1,23 @@
 angular.module('guest.service', [])
-.factory('GuestDataFactory',function($http,ApiUrl,ApiUrlRoot){
+.factory('GuestDataFactory',function($http,ApiUrlMesas,ApiUrlRoot){
 	return {
 		getAllGuest : function(){
-			return $http.get(ApiUrl+"/guests");
+			return $http.get(ApiUrlMesas+"/guests");
 		},
 		getAllTags : function(){
-			return $http.get(ApiUrl+"/guests/tags");
+			return $http.get(ApiUrlMesas+"/guests/tags");
 		},
 		getGuest : function(idGuest){
-			return $http.get(ApiUrl+"/guests/"+idGuest);
+			return $http.get(ApiUrlMesas+"/guests/"+idGuest);
 		},
 		create : function(vData){
-			return $http.post(ApiUrl + '/guests',vData); 
+			return $http.post(ApiUrlMesas+'/guests',vData); 
 		},
 		update : function(vData){
-			return $http.put(ApiUrl + '/guests/'+vData.id,vData); 
+			return $http.put(ApiUrlMesas+'/guests/'+vData.id,vData); 
 		},
 		getReservations : function(idGuest,options){
-			return $http.get(ApiUrl+"/guests/"+idGuest+"/reservations?"+options);
+			return $http.get(ApiUrlMesas+"/guests/"+idGuest+"/reservations?"+options);
 		}
 	}
 

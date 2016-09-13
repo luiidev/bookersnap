@@ -45,10 +45,7 @@ Las horas (solo hora) si estan asi : 7  y necesitamos = 07 esta funcion lo convi
 */
 var parseHour = function(hour){
 
-    if(hour <= 9){
-        hour = "0" + hour;
-    }
-
+    hour=("0" + hour).slice (-2); // devolverá “01” si h=1; “12” si h=12
     return hour;
 };
 
@@ -75,7 +72,6 @@ Tenemos esta hora = 7:15:00 y queremos agregarle minutos si sobrepasa los 60 le 
 return @hour = hora final
 */
 var addHourByMin = function(hour){
-
     var hoursFinal = "";
     var hoursArray = hour.split(":");
     var hourMin = parseInt(replaceText(hoursArray[1],["AM","PM"],"").trim());
@@ -93,7 +89,6 @@ var addHourByMin = function(hour){
 
     hour = parseHour(hour);
     hoursFinal = hour +":"+hourMin+":00";
-
     return hoursFinal;
 
 };
@@ -103,7 +98,7 @@ var addHourByMin = function(hour){
     con un lapso de 15 minutos cada uno 
 */
 var getRangoHours = function(horaInicial, horaFinal){
-    
+
     var newHoursIni = horaInicial;
     var arrayHoras = [];
     arrayHoras.push({hour24: horaInicial, hour12: defineTimeSytem(horaInicial)});
@@ -112,7 +107,6 @@ var getRangoHours = function(horaInicial, horaFinal){
         arrayHoras.push({hour24: newHoursIni, hour12: defineTimeSytem(newHoursIni)}); 
     }
     return arrayHoras;
-
 }
 
 /*-----

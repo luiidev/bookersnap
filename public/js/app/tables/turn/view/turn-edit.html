@@ -13,7 +13,7 @@
                         <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('edit',frmTurn)">Editar turno</button>
+                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('edit',frmTurn)" ng-disabled="turnForm.saveClick">Editar turno</button>
                     </li>
                 </ul>
             </div>
@@ -309,21 +309,21 @@
                             <td>{{ time.time }}</td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ time.index }}" value="2" ng-checked="rules.online" ng-click="checkRule(time.index,2)">
+                                    <input type="radio" name="rule{{ time.index }}" value="2" ng-checked="rules.online[{{time.index}}]" ng-click="checkRule(time.index,2)">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ time.index }}" value="1" ng-checked="rules.local" ng-click="checkRule(time.index,1)">
+                                    <input type="radio" name="rule{{ time.index }}" value="1" ng-checked="rules.local[{{time.index}}]" ng-click="checkRule(time.index,1)">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </td>
                             <td>
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="rule{{ time.index }}" value="0" ng-checked="rules.disabled" ng-click="checkRule(time.index,0)">
+                                    <input type="radio" name="rule{{ time.index }}" value="0" ng-checked="rules.disabled[{{time.index}}]" ng-click="checkRule(time.index,0)">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
