@@ -23,18 +23,35 @@
       		  <div class="card-header">
               <h2>{{vm.titulo}} <small></small></h2>
             </div>
-            <div class="">
+            <div class="row">
+              <div class="col-xs-9 box-lienzo-zone">
               <tabset justified="true">
                 <tab ng-repeat="tab in vm.zonas" heading="{{tab.name}}" active="tab.active">
                   <div class="zoneArea minheight" style="position:relative;">
-                  <div ng-select-table ng-repeat="obj in tab.table" class="item-active-table border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}" x="{{obj.left}}" y="{{obj.top}}" id="el{{obj.id}}">
-                    <div class="txtcenter">{{obj.name}}</div>
-                  </div>
+
+                      <div ng-detail-table ng-repeat="obj in tab.table" class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}" x="{{obj.left}}" y="{{obj.top}}" id="el{{obj.id}}" on-click-fn="vm.mostrarDetail($index,obj)">
+                          <div class="txtcenter">{{obj.name}}</div>
+                      </div>
                           
                   </div>    
                 </tab>
                
-              </tabset>                
+              </tabset> 
+              </div>
+              <div class="col-xs-3">
+                <p class="f-16">Detalle de reservaciones</p>
+                <tabset justified="true">
+                  <tab heading="Pendientes" class="f-11" active="tab.active">
+                    <div class="">Pendientes</div>
+                  </tab>
+                  <tab heading="En mesa" class="f-11">
+                    <div class="">Momento</div>
+                  </tab>
+                  <tab heading="Todos" class="f-11">
+                    <div class="">Todos</div>
+                  </tab>
+                </tabset> 
+              </div>
             </div>
 
       		</div>
@@ -43,3 +60,49 @@
 </section>
 
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+
+<script type="text/ng-template" id="myModalContentDetail.html">
+    <div class="modal-header">
+        <h4 class="modal-title">{{vmd.itemReservations.name_zona}} - {{vmd.itemReservations.name}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="listview lv-bordered lv-lg">
+          <div class="lv-header-alt clearfix">
+            <h2 class="f-14">Proximas reservas y bloqueos</h2>
+          </div>
+          <div class="lv-body">
+            <!--<p>No hay una reservacion para mesa selecionada</p>-->
+            <div class="lv-item media border-left-amber">
+              <div class="pull-right">
+                <span class="badge bgm-amber">14+</span>
+              </div>
+              <div class="media-body">
+                <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                <ul class="lv-attrs">
+                  <li><i class="zmdi zmdi-time"></i> 6:30am - 11:00am</li>
+                </ul>
+              </div>
+            </div>
+
+
+            <div class="lv-item media border-left-green">
+              <div class="media-body">
+                <div class="lv-title"><i class="zmdi zmdi-calendar-check"></i> Norman Osbord</div>
+                <ul class="lv-attrs">
+                  <li><i class="zmdi zmdi-time"></i> 6:30am - 11:00am</li>
+                  <li><i class="zmdi zmdi-account-o"></i> 02 Personas</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+        </div>
+        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
+
+    </div>
+</script>
