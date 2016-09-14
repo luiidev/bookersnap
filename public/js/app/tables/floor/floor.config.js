@@ -4,7 +4,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
 		$stateProvider
 			.state('floor', {
 				url: '/floor',
-				templateUrl: '/js/app/reservation/floor/view/index.html',
+				templateUrl: '/js/app/tables/floor/view/index.html',
 				controller: 'FloorCtrl',
 				controllerAs: 'vm'
 			})
