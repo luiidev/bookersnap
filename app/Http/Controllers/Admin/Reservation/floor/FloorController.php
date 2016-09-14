@@ -1,25 +1,13 @@
 <?php
-
 namespace App\Http\Controllers\Admin\Reservation\Floor;
 use App\Http\Controllers\Controller as Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests;
 
 //use App\Services\Reservation\Floor\FloorService;
 
 class FloorController extends Controller
 {
-  /*protected $_floorService;
-  public function __construct(FloorService $floor){
-    $this->_floorService = $floor;
-  }
-  */
-  public function index()
-  {
-      //$response = $this->_floorService->GetPromotions();
-      //return response()->json($response, $response['statuscode']);
-  }
-   
+
   public function getReservas(){
       return response()->json(
          array (
@@ -28,38 +16,51 @@ class FloorController extends Controller
             'msg' => 'messages.turn_restriction_list',
             'data' => 
             array (
-               0 => 
+                0 => 
                   array (
-                  "res_block_id": 11,
-                  "res_table_id": 1,
-                  "res_reservation_id": null,
-                  "num_people": 1,
-                  "start_time": "7:00:00",
-                  "end_time": "10:00:00",
+                    "res_block_id"=> 11,
+                    "res_table_id"=> 1,
+                    "res_reservation_id"=> null,
+                    "num_people"=> null,
+                    "start_time"=> "8:00:00",
+                    "end_time"=> "9:00:00",
                   ),
-               1 => 
+                1 => 
                   array (
-                  "res_block_id": 1,
-                  "res_table_id": 2,
-                  "res_reservation_id": null,
-                  "num_people": 1,
-                  "start_time": "7:00:00",
-                  "end_time": "10:00:00", 
+                    "res_block_id"=> 1,
+                    "res_table_id"=> 2,
+                    "res_reservation_id"=> null,
+                    "num_people"=> null,
+                    "start_time"=> "7:00:00",
+                    "end_time"=> "10:00:00", 
                   ),
-               2 => 
+                2 => 
                   array (
-                  "res_block_id": null,
-                  "res_table_id": 1,
-                  "res_reservation_id": 1,
-                  "num_people": 1,
-                  "start_time": "11:00:00",
-                  "end_time": "12:00:00",  
+                  "res_block_id"=> null,
+                  "res_table_id"=> 3,
+                  "res_reservation_id"=> 1,
+                  "num_people"=> 4,
+                  "start_time"=> "11:00:00",
+                  "end_time"=> "12:00:00",  
                   ),
-               3 => 
+                3 => 
                   array (
-                  'label_id' => 4,
-                  'name' => 'Hora_de_reservacion.',
-                  )
+                  "res_block_id"=> null,
+                  "res_table_id"=> 3,
+                  "res_reservation_id"=> 2,
+                  "num_people"=> 2,
+                  "start_time"=> "3:00:00",
+                  "end_time"=> "5:00:00",  
+                  ),
+                4 => 
+                  array (
+                    "res_block_id"=> 12,
+                    "res_table_id"=> 3,
+                    "res_reservation_id"=> null,
+                    "num_people"=> null,
+                    "start_time"=> "8:00:00",
+                    "end_time"=> "9:00:00",
+                  ),
             ),
             'redirect' => false,
             'url' => NULL,
@@ -72,5 +73,7 @@ class FloorController extends Controller
          )
       );
   }
+
+}
 
   

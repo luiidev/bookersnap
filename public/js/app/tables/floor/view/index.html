@@ -40,6 +40,13 @@
               </div>
               <div class="col-xs-3">
                 <p class="f-16">Detalle de reservaciones</p>
+                <ul class="tab-nav">
+                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.reservation" class="f-11">Reservation</a></li>
+                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.walkin" class="f-11">Waitlist</a></li>
+                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.server" class="f-11">Server</a></li>
+                </ul>
+                <data ui-view></data>
+                <!--
                 <tabset justified="true">
                   <tab heading="Reservation" class="f-11" active="tab.active">
                     <div class="" ng-include="'/js/app/tables/floor/view/reservation.html'" ng-controller="reservationController as rm">
@@ -57,6 +64,7 @@
                     </div>
                   </tab>
                 </tabset> 
+                -->
               </div>
             </div>
 
@@ -69,7 +77,7 @@
 
 <script type="text/ng-template" id="myModalContentDetail.html">
     <div class="modal-header">
-        <h4 class="modal-title">{{vmd.itemReservations.name_zona}} - {{vmd.itemReservations.name}}</h4>
+        <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>
     </div>
     <div class="modal-body">
         <div class="listview lv-bordered lv-lg">
@@ -78,27 +86,23 @@
           </div>
           <div class="lv-body">
             <!--<p>No hay una reservacion para mesa selecionada</p>-->
-            <div class="lv-item media border-left-amber">
-              <div class="pull-right">
+            <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'" >
+              <!--<div class="pull-right" ng-if="item.block_id">
                 <span class="badge bgm-amber">14+</span>
               </div>
+              -->
               <div class="media-body">
-                <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> Norman Osbord</div>
                 <ul class="lv-attrs">
-                  <li><i class="zmdi zmdi-time"></i> 6:30am - 11:00am</li>
+                  <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                  <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
                 </ul>
               </div>
             </div>
 
-
-            <div class="lv-item media border-left-green">
-              <div class="media-body">
-                <div class="lv-title"><i class="zmdi zmdi-calendar-check"></i> Norman Osbord</div>
-                <ul class="lv-attrs">
-                  <li><i class="zmdi zmdi-time"></i> 6:30am - 11:00am</li>
-                  <li><i class="zmdi zmdi-account-o"></i> 02 Personas</li>
-                </ul>
-              </div>
+            <div class="not-information" ng-if="vmd.itemReservations==''">
+              No existe mesas reservadas o bloqueadas
             </div>
 
           </div>

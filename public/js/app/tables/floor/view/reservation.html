@@ -1,1 +1,34 @@
-<p>Hola reservation</p>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
+            <div class="fg-line">
+            	<input type="text" class="form-control" placeholder="Buscar por huésped...">
+            </div>
+            
+         </div>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<tabset justified="true">
+			<tab heading="Pendientes" active="tab.active" class="f-11">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="value in rm.listado" ng-if="value.reservation_id">
+						<div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i> Norman Osbord</div>
+						<div>{{value.start_time}} - {{value.end_time}}</br>
+						{{value.num_people}} personas</div>
+					</li>
+				</ul>
+			</tab>
+			<tab heading="En mesa" class="f-11">
+		   er
+			</tab>
+			<tab heading="Todos" class="f-11">
+		   ju
+			</tab>           
+		</tabset>
+	</div>
+</div>
