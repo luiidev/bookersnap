@@ -41,14 +41,20 @@
               <div class="col-xs-3">
                 <p class="f-16">Detalle de reservaciones</p>
                 <tabset justified="true">
-                  <tab heading="Pendientes" class="f-11" active="tab.active">
-                    <div class="">Pendientes</div>
+                  <tab heading="Reservation" class="f-11" active="tab.active">
+                    <div class="" ng-include="'/js/app/tables/floor/view/reservation.html'" ng-controller="reservationController as rm">
+                      
+                    </div>
                   </tab>
-                  <tab heading="En mesa" class="f-11">
-                    <div class="">Momento</div>
+                  <tab heading="WaitList" class="f-11">
+                    <div class="" ng-include="'/js/app/tables/floor/view/waitlist.html'" ng-controller="waitlistController as wm">
+                      
+                    </div>
                   </tab>
-                  <tab heading="Todos" class="f-11">
-                    <div class="">Todos</div>
+                  <tab heading="Servers" class="f-11">
+                    <div class="" ng-include="'/js/app/tables/floor/view/server.html'" ng-controller="serverController as sm">
+                      
+                    </div>
                   </tab>
                 </tabset> 
               </div>
