@@ -32,7 +32,7 @@ angular.module('block.controller', [])
 
         });  
 
-        /** Pantalla Crear Block **/
+        /** Carga la informacion de la pantalla add Block **/
         $scope.shifts = [];
         $scope.startTimes = [];
         $scope.endTimes = [];
@@ -206,7 +206,7 @@ angular.module('block.controller', [])
         // Se trae la informacion del bloqueo para poder mostrar las tablas y editar
         BlockFactory.getBlock(block_id).then(function(response){
 
-            $scope.startTime =  convertFechaYYMMDD(response.data.data.start_time);
+            $scope.tableBlock = response.data.data;
             angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
                     $scope.mesasBloqueadas.push(mesa.id);    
             });
@@ -222,9 +222,9 @@ angular.module('block.controller', [])
 
                     $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
 
-                    //////////////////////////////////////////////////////////////////////////////////// 
-                    //Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada  
-                    ////////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////////
+                    //Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada// 
+                    ////////////////////////////////////////////////////////////////////////////////////////
                     angular.forEach($scope.zones, function(zona, key) {
 
                         angular.forEach(zona.tables, function(mesa, i) {
@@ -238,9 +238,7 @@ angular.module('block.controller', [])
 
                             }
                             // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
-
-                        });    
-
+                        });  
                     });
                     //////////////////////////////////////////////////////////////////////////////////////
             });  
@@ -276,7 +274,7 @@ angular.module('block.controller', [])
             });  
         });
 
-        /** Pantalla Add Block **/
+        /** carga la información de la pantalla edit Block **/
         $scope.shifts = [];
         $scope.startTimes = [];
         $scope.endTimes = [];
@@ -291,12 +289,51 @@ angular.module('block.controller', [])
                         endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end),
                      });
 
-                    // Se muestra el primer array para cuando se esta creando el bloqueo
+                     /* Rango de horas */
+                     rangoInicialItem = item.turn.hours_ini;
+                     rangoFinalItem = item.turn.hours_end;
+
+                     rangoInicialTableBlock = $scope.tableBlock.start_time;
+                     rangoFinalTableBlock = $scope.tableBlock.end_time;
+
+                     console.log("item ini:", rangoInicialItem);
+                     console.log("item end:", rangoFinalItem);
+                     console.log("scope ini:", rangoInicialTableBlock);
+                     console.log("scope end:", rangoFinalTableBlock);
+
+                     if(rangoInicialTableBlock >= rangoInicialItem && rangoFinalTableBlock <= rangoFinalItem){
+
+                        var indexFound = $scope.shifts.length - 1;
+                        $scope.shift = $scope.shifts[indexFound];
+
+                        angular.forEach($scope.shifts[indexFound].startTimes, function(startTime, i) {
+                            if(startTime.hour24 == rangoInicialTableBlock){
+                                
+                                $scope.startTimes = $scope.shifts[indexFound].startTimes;
+                                $scope.endTimes = $scope.shifts[indexFound].endTimes;
+
+                                $scope.startTime = $scope.shifts[indexFound].startTimes[i];
+                                $scope.endTime = $scope.shifts[indexFound].endTimes[i];
+                            }
+                            /*
+                            */
+                        }); 
+                     }
+
+                    /*
                     $scope.shift = $scope.shifts[0];
                     $scope.startTimes = $scope.shifts[0].startTimes;
-                    $scope.endTimes = $scope.shifts[0].endTimes;       
+                    $scope.endTimes = $scope.shifts[0].endTimes;
+                    */       
                 }
             });
+
+            /* Se busca si el rango coincide con el editar */
+            // console.log($scope.shifts);
+            // Se muestra el primer array para cuando se esta creando el bloqueo
+            //console.log($scope.tableBlock.start_time);
+            //console.log($scope.tableBlock.end_time);
+
         });    
         
         // Se muestran las mesas de la zona seleccionada   
