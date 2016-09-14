@@ -41,4 +41,20 @@ angular.module('floor.controller', [])
 		};
 
 
-	});
+	})
+
+.controller('reservationController', function($scope) {
+	var rm = this;
+
+})
+
+.controller('waitlistController', function($scope) {
+	var wm = this;
+
+
+})
+
+.controller('serverController', function($scope) {
+	var sm = this;
+
+});
