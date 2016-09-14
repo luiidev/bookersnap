@@ -282,26 +282,25 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')" ng-checked="rulesAll.online">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')" ng-checked="rulesAll.local">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')" ng-checked="rulesAll.disabled">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
                             </th>
-                          
                         </tr>
                     </thead>
                     <tbody>
