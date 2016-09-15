@@ -18,6 +18,13 @@ angular.module('server.service', [])
 						  	return response;
 						  })
 			},
+			deleteServer: function(id_server){
+				return $http({url:ApiUrlMesas+"/servers/"+id_server, method: "DELETE"}).then(function successCallback(response) {
+						    return response;
+						  }, function errorCallback(response) {
+						  	return response;
+						  })
+			},
 		}
 	})
 	.factory('ColorFactory', function() {

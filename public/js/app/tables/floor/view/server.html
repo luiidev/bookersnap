@@ -1,71 +1,5 @@
-<style type="text/css">
-    .ServerColor-previewContainer {
-        margin: -5px;
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .ServerColor-preview {
-        width: 28px;
-        height: 28px;
-        box-shadow: 0 0 0 1px #eee;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
-        border-radius: 3px;
-        margin: 5px;
-        cursor: pointer;
-    }
-    .u-visuallyHidden {
-        border: 0;
-        clip: rect(0 0 0 0);
-        height: 1px;
-        margin: -1px;
-        overflow: hidden;
-        padding: 0;
-        position: absolute;
-        width: 1px;
-    }
-    .Card input, .Card textarea, .Card select{
-        background: none;
-        outline: none;
-        font-size: 1em;
-        resize: none;
-    }
-    .ServerColor-preview.is-selected {
-        box-shadow: 0 0 0 3px #3a99d8;
-    }
-</style>
-<style>
-.etiqueta {
-    position: relative;
-    border: none;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    text-decoration: none;
-    overflow: hidden;
-    cursor: pointer;
-}
-.etiqueta:after {
-    content: "";
-    background: #90EE90;
-    display: block;
-    position: absolute;
-    padding-top: 300%;
-    padding-left: 350%;
-    margin-left: -20px!important;
-    margin-top: -120%;
-    opacity: 0;
-    transition: all 0.8s
-}
-.etiqueta:active:after {
-    opacity: 1;
-    transition: 0s
-}
-</style>
 <div class="col-sm-12 m-b-20">
-    <button class="btn btn-success">New Server</button>
+    <button class="btn btn-success">Add Server</button>
     <p class="f-500 m-b-20 c-black">Servers register</p>
     <ul class="list-group">
         <li class="list-group-item etiqueta" ng-repeat="server in sm.servers" ng-click="sm.editServer(server)" style="cursor: pointer">
@@ -76,11 +10,12 @@
 </div>
 
 <div class="col-sm-12 m-b-20" id="form_new_server">
-    <h3>New Server</h3>
+    <h3 ng-show="sm.flagServer == false">New Server</h3>
+    <h3 ng-show="sm.flagServer == true">Update Server</h3>
     <div class="input-group">
         <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
         <div class="fg-line">
-            <input type="text" class="form-control" ng-model="sm.server.name" placeholder="Server">
+            <input type="text" class="form-control" ng-model="sm.name" placeholder="Server">
         </div>
     </div>
     <div class="js-available-color-group">
@@ -88,16 +23,13 @@
             <div class="Form-field Form-field--smallSpacing">
                 <div class="ServerColor-previewContainer">
                     <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
-
-                         <!-- <input type="radio" name="color_hex" ng-model="sm.color" class="u-visuallyHidden" value="{{color.colorHexadecimal}}" id="color_hex_{{color.colorHexadecimal}}"> --> 
-        
                     </label>
                 </div>
             </div>
     </div>
     <div class="input-group">
         <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
-
         <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
+        <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
     </div>    
 </div>

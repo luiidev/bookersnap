@@ -101,7 +101,7 @@ angular.module('floor.controller', [])
 	sm.tables = [{id:1},{id:2},{id:3},{id:4},{id:5}]; // El array ingresa de la lista de pruebas
 	sm.flagServer = false; 
 	sm.data = [];
-	/*
+	
 	ServerFactory.getAllServer().then(function(response){
 		sm.servers = response.data.data;
 	});
@@ -124,7 +124,7 @@ angular.module('floor.controller', [])
 		sm.flagServer = true;
 		var position=sm.servers.indexOf(server);
 		sm.server = sm.servers[position];
-		sm.server.name = sm.server.name;
+		sm.name = sm.server.name;
 
 		for(var i=0; i < sm.colors.length; i++){
 			sm.colors[i].classSelect = "";
@@ -138,7 +138,8 @@ angular.module('floor.controller', [])
 
 	var limpiarData = function(){
 
-		sm.server.name = "";
+		sm.name = "";
+		sm.color = "";
 		for(var i=0; i < sm.colors.length; i++){
 			sm.colors[i].classSelect = "";
 		}
@@ -150,7 +151,7 @@ angular.module('floor.controller', [])
 		if(sm.flagServer == false){
 
 			sm.data = {
-				name : sm.server.name,
+				name : sm.name,
 				color : sm.color,
 				tables: sm.tables
 			};
@@ -161,6 +162,7 @@ angular.module('floor.controller', [])
 					var mensaje = setearJsonError(response.data.jsonError);
 					messageAlert("Warning", mensaje,"warning", 3000);
 				}else if(response.data.success == true) {
+					console.log("Se crea el server");
 					var mensaje = response.data.msg;
 					messageAlert("success", mensaje,"success", 3000);
 					sm.servers.push(response.data.data);
@@ -171,37 +173,67 @@ angular.module('floor.controller', [])
 
 		}else if(sm.flagServer == true){
 			
-			console.log(sm.server);
-			
 			sm.data = {
 				id : sm.server.id,
-				name : sm.server.name,
+				name : sm.name,
 				color : sm.color,
 				tables: sm.tables
 			};
 			
 			ServerFactory.updateServer(sm.data, sm.server.id).then(function(response){
-
+				console.log(response);
+				
 				if(response.data.response == false){
 					var mensaje = setearJsonError(response.data.jsonError);
 					messageAlert("Warning", mensaje,"warning", 3000);
 				}else if(response.data.success == true) {
 					var mensaje = response.data.msg;
+					sm.server.name = sm.name;
+					sm.server.color = sm.color;
 					messageAlert("success", mensaje,"success", 3000);
-					sm.servers.push(response.data.data);
+					sm.flagServer = false;
 					limpiarData();
+				}else if(response.data.success == false){
+					var mensaje = response.data.msg;
+					messageAlert("Warning", mensaje,"warning", 3000);
 				}
-
+				
 			});
 			
 		}
 	}
 
 	sm.cancelEditServer =  function(server){
-
 		sm.flagServer = false;
 		limpiarData();
+	};
+
+	sm.deleteServer =  function(){
+			
+		ServerFactory.deleteServer(sm.server.id).then(function(response){
+
+			if(response.data.response == false){
+					var mensaje = setearJsonError(response.data.jsonError);
+					messageAlert("Warning", mensaje,"warning", 2000);
+			}else if(response.data.success == true) {
+					var mensaje = response.data.msg;
+
+					/* Se filtra el item y se elimina del array*/
+					for (var i=0; i < sm.servers.length; i++){
+						if(sm.servers[i].id == sm.server.id){
+							sm.servers.splice(i,1);
+						}
+					}
+
+					messageAlert("success", mensaje,"success", 1000);
+					sm.flagServer = false;
+					limpiarData();
+			}else if(response.data.success == false){
+					var mensaje = response.data.msg;
+					messageAlert("Warning", mensaje,"warning", 2000);
+			}
+		});
 
 	};
-	*/
+
 });
