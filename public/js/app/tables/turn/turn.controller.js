@@ -32,8 +32,13 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			hours_end: '',
 			res_type_turn_id: '',
 			status: 1,
-			turn_zone: []
+			turn_zone: [],
+			days: []
 		};
+
+		$scope.dayHide = false;
+
+		$scope.days = [];
 
 		$scope.turnDataClone = {}; //para validar si ha ocurrido algun cambio en la data (editar)
 
@@ -41,7 +46,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			hours_ini: '',
 			hours_end: '',
 			type_turn: '',
-			saveClick: false // validamos que no se haga dbClik al guardar
+			saveClick: false, // validamos que no se haga dbClik al guardar
+			days: []
 		};
 
 		$scope.zonesTable = false; //validar si se oculta la lista de zonas (cuando estamos en mesas)
@@ -55,7 +61,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		$scope.turnZoneAdd = {
 			zones_id: [],
 			zones_data: [],
-			zonesTables: [] //van las tablas y sus reglas, zone_id , tables -> rules
+			zonesTables: [], //van las tablas y sus reglas, zone_id , tables -> rules
+			zonesDeleted: [] // las zonas eliminadas
 		};
 
 		$scope.zoneSelected = {
@@ -89,9 +96,15 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			loadDataTurnoEdit();
 			getTypeTurns();
 
-			if ($stateParams.turn == undefined) {
+			if ($stateParams.turn === undefined) {
 				$scope.generatedTimeTable(false, "create");
 			}
+
+			listDays();
+		};
+
+		var listDays = function() {
+			$scope.days = getDaysWeek();
 		};
 
 		var checkedRulesDefault = function(rule) {
@@ -186,6 +199,12 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 						$scope.generatedTimeTable(true, "edit");
 
+						if ($scope.turnData.days.length <= 0) {
+							$scope.dayHide = true;
+						}
+
+						console.log("turnData " + angular.toJson($scope.turnData, true));
+						console.log("turnData " + angular.toJson($scope.turnForm, true));
 					},
 					function error(data) {
 						messageErrorApi(data, "Error", "warning");
@@ -194,9 +213,22 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			}
 		};
 
+		$scope.activeDay = function() {
+			if ($scope.dayHide == true) {
+				$scope.dayHide = false;
+			} else {
+				$scope.dayHide = true;
+			}
+		};
+
+		$scope.checkDay = function(dayId) {
+			TurnFactory.checkDay($scope.turnData.days, dayId);
+			console.log("checkDay " + angular.toJson($scope.turnData.days, true));
+		};
+
 		$scope.generatedTimeTable = function(hourEnd, option) {
 
-			if (hourEnd == true) {
+			if (hourEnd === true) {
 				listHourEnd(option);
 			}
 
@@ -216,15 +248,15 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 						$scope.turnForm.saveClick = false;
 
-						if (response == true) {
+						if (response === true) {
 							messageAlert("Mensaje del sistema", "Ya existe este horario", "info");
 						}
 
-						if ($scope.turnZoneAdd.zones_id.length == 0) {
+						if ($scope.turnZoneAdd.zones_id.length === 0) {
 							messageAlert("Mensaje del sistema", "Necesitas asignar minimo una zona", "info");
 						}
 
-						if (response == false && $scope.turnZoneAdd.zones_id.length > 0) {
+						if (response === false && $scope.turnZoneAdd.zones_id.length > 0) {
 							saveTurn(option);
 						}
 					},
@@ -239,7 +271,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			}
 		};
 
-		$scope.showZones = function() {
+		$scope.showZones = function(option) {
 			$uibModal.open({
 				animation: true,
 				templateUrl: 'myModalZones.html',
@@ -248,6 +280,9 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 				resolve: {
 					turnZoneAdd: function() {
 						return $scope.turnZoneAdd;
+					},
+					optionForm: function() {
+						return option;
 					}
 				}
 			});
@@ -265,8 +300,11 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			$scope.zoneSelected.rule = 1;
 		};
 
-		$scope.deleteZone = function(zoneId) {
-			TurnFactory.deleteZone($scope.turnZoneAdd, zoneId);
+		$scope.deleteZone = function(zone, option) {
+			var jsonZone = angular.toJson(zone);
+			var zoneRule = (option == "edit" && jsonZone.indexOf("rule") != -1) ? zone.rule.id : "";
+
+			TurnFactory.deleteZone($scope.turnZoneAdd, zone.id, zoneRule, option);
 		};
 
 		$scope.showTables = function(zone, option) {
@@ -325,7 +363,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 						return $scope.zoneSelected.tables;
 					},
 					turnForm: function() {
-						return $scope.turnForm
+						return $scope.turnForm;
 					},
 					listAvailability: function() {
 						return $scope.formDataDefault.listAvailability;
@@ -435,7 +473,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 				ruleId = table[0].availability[i].rule_id;
 
 				if (ruleId != null) {
-					ruleId == ruleId;
+					ruleId = ruleId;
 				}
 
 				switch (ruleId) {
@@ -493,18 +531,14 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 			var zoneData = TurnFactory.searchZoneByZoneAdd(turnZoneAdd.zonesTables, zoneSelected.id);
 
-			//console.log("saveRules total tableItem - zoneData.Tables ", tablesId.length, " - ", zoneData.tables.length);
-			//console.log("sss" + angular.toJson(tablesData, true));
 			if (tablesId.length == tablesData.length) {
-				console.log("son iguales " + $scope.rules.value);
-				//console.log("son iguales 2" + angular.toJson(rulesTable, true));
+
 				angular.forEach(turnZoneAdd.zonesTables, function(zone, key) {
 					if (zone.zone_id == zoneSelected.id) {
 						zone.res_turn_rule_id = $scope.rules.value;
 					}
 				});
 			}
-
 		};
 
 		var updateCheckRuleAll = function(rule, value) {
@@ -571,7 +605,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 		init();
 	})
-	.controller('ModalTurnZoneCtrl', function($scope, $uibModalInstance, TurnFactory, turnZoneAdd) {
+	.controller('ModalTurnZoneCtrl', function($scope, $uibModalInstance, TurnFactory, turnZoneAdd, optionForm) {
 
 		$scope.cancel = function() {
 			$uibModalInstance.dismiss('cancel');
@@ -595,6 +629,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 					});
 
 					$scope.zonesList = vZones;
+
 				},
 				function error(response) {
 					messageErrorApi(response, "Error", "warning");
@@ -602,15 +637,24 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			);
 		};
 
-		$scope.asignZone = function(zone) {
+		$scope.assignZone = function(zone) {
 			var index = turnZoneAdd.zones_id.indexOf(zone.id);
 
 			if (index == -1) {
 				turnZoneAdd.zones_id.push(zone.id);
 				turnZoneAdd.zones_data.push(zone);
+
 			} else {
 				turnZoneAdd.zones_id.splice(index, 1);
 				turnZoneAdd.zones_data.splice(index, 1);
+			}
+
+			if (optionForm == "edit") {
+				angular.forEach(turnZoneAdd.zonesDeleted, function(value, key) {
+					if (value.res_zone_id == zone.id) {
+						turnZoneAdd.zonesDeleted.splice(key, 1);
+					}
+				});
 			}
 		};
 

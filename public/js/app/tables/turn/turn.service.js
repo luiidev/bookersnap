@@ -42,7 +42,7 @@ angular.module('turn.service', [])
 			timeFormat: function(time) {
 				return $filter('date')(time, 'HH:mm:ss');
 			}
-		}
+		};
 	})
 	.factory('TurnFactory', function(TurnDataFactory, DateFactory, ZoneFactory, BookDateFactory, $q) {
 
@@ -80,7 +80,7 @@ angular.module('turn.service', [])
 					hours_ini: DateFactory.timeFormat(turnForm.hours_ini),
 					hours_end: DateFactory.timeFormat(turnForm.hours_end),
 					type_turn: turnForm.type_turn.id
-				}
+				};
 
 				var defered = $q.defer();
 
@@ -150,7 +150,6 @@ angular.module('turn.service', [])
 
 				return defered.promise;
 			},
-
 			editTurn: function(turnData) {
 				var defered = $q.defer();
 
@@ -192,6 +191,10 @@ angular.module('turn.service', [])
 
 				});
 
+				angular.forEach(turnZoneAdd.zonesDeleted, function(zones, key) {
+					turnZones.push(zones);
+				});
+
 				turnData.turn_zone = turnZones;
 
 				return turnData;
@@ -222,7 +225,8 @@ angular.module('turn.service', [])
 				});
 				return data;
 			},
-			deleteZone: function(turnZoneAdd, zoneId) {
+			deleteZone: function(turnZoneAdd, zoneId, zoneRule, option) {
+
 				var index = turnZoneAdd.zones_id.indexOf(zoneId);
 
 				if (index != -1) {
@@ -236,7 +240,29 @@ angular.module('turn.service', [])
 					}
 				});
 
-				console.log("deleteZone " + angular.toJson(turnZoneAdd, true));
+				if (option == "edit") {
+
+					var vData = {
+						res_zone_id: zoneId,
+						res_turn_rule_id: zoneRule,
+						unlink: true,
+						tables: []
+					};
+
+					var validaDelete = 0;
+
+					angular.forEach(turnZoneAdd.zonesDeleted, function(zone, key) {
+						if (zone.zone_id == zoneId) {
+							validaDelete = 1;
+						}
+					});
+
+					if (validaDelete === 0) {
+						turnZoneAdd.zonesDeleted.push(vData);
+					}
+
+					console.log("deleteZone " + angular.toJson(turnZoneAdd, true));
+				}
 			},
 			getTurn: function(idTurn, options, listAvailability) {
 				var defered = $q.defer();
@@ -249,8 +275,9 @@ angular.module('turn.service', [])
 						id: data.id,
 						name: data.name,
 						hours_ini: data.hours_ini,
-						hours_end: data.hours_end
-					}
+						hours_end: data.hours_end,
+						days: data.days
+					};
 
 					var nextDay = self.getHourNextDay(data.hours_ini, data.hours_end);
 
@@ -271,8 +298,12 @@ angular.module('turn.service', [])
 						type_turn: {
 							id: data.res_type_turn_id,
 							label: ''
-						}
-					}
+						},
+						days: self.activeCheckDays(data.days)
+					};
+
+					//turnForm.days[0] = true;
+					//self.activeCheckDays(turnForm);
 
 					var turnDataClone = turnData;
 					var zonesId = [];
@@ -290,7 +321,6 @@ angular.module('turn.service', [])
 						zones.zone.turns_asign = turnsData.join(", ");
 						zones.zone.rule = zones.rule;
 						dataZones.push(zones.zone);
-
 					});
 
 					var responseData = {
@@ -299,7 +329,7 @@ angular.module('turn.service', [])
 						turnDataClone: turnDataClone,
 						zonesId: zonesId,
 						dataZones: dataZones
-					}
+					};
 
 					defered.resolve(responseData);
 
@@ -308,6 +338,18 @@ angular.module('turn.service', [])
 				});
 
 				return defered.promise;
+			},
+			activeCheckDays: function(days) {
+				var daysData = [];
+
+				for (var i = 0; i <= 6; i++) {
+					var checked = (days.indexOf(i) != -1) ? true : false;
+					daysData.push({
+						id: i,
+						checked: checked
+					});
+				}
+				return daysData;
 			},
 			getTurnZoneTables: function(idZone, idTurn, option, turnZoneAdd, turnForm, zoneSelected, listAvailability) {
 				var defered = $q.defer();
@@ -387,11 +429,11 @@ angular.module('turn.service', [])
 					rulesDisabled: [],
 					rulesOnline: [],
 					rulesLocal: []
-				}
+				};
 
 				angular.forEach(rulesData, function(rules, key) {
 
-					var vData = rules.hours_ini + " - " + rules.hours_end
+					var vData = rules.hours_ini + " - " + rules.hours_end;
 
 					switch (rules.rule_id) {
 						case 0:
@@ -580,7 +622,7 @@ angular.module('turn.service', [])
 						nextday: nextday,
 						index: i
 					});
-				};
+				}
 
 				return times;
 			},
@@ -626,7 +668,7 @@ angular.module('turn.service', [])
 					zone_id: zoneSelected.id,
 					res_turn_rule_id: zoneSelected.rule,
 					tables: []
-				}
+				};
 
 				angular.forEach(zoneSelected.tables, function(value, key) {
 					vData.tables.push(value);
@@ -665,6 +707,15 @@ angular.module('turn.service', [])
 				});
 
 				return rule;
+			},
+			checkDay: function(days, dayId) {
+				var index = days.indexOf(dayId);
+
+				if (index == -1) {
+					days.push(dayId);
+				} else {
+					days.splice(index, 1);
+				}
 			}
 
 		};

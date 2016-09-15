@@ -85,6 +85,8 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas', 'middleware' => 'r
 
     Route::get('turn/{date}/availables', "Admin\Tables\Turn\TurnController@getAllAvailables");
 
+    Route::get('reservation/getreservas', "Admin\Reservation\Floor\FloorController@getReservas");
+
     /*
       Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete"); */
 });
