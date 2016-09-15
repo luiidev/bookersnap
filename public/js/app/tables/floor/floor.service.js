@@ -93,61 +93,61 @@ angular.module('floor.service', [])
 			})
 			return defered.promise;
 		},
+		/*
+				listZonesReservation: function() {
+					var me = this;
+					var defered = $q.defer();
+					me.listZones().then(function success(data) {
+						return data;
+					}, function error(data) {
+						return data;
+					}).then(function(zones) {
+						me.listReservation().then(function success(tables) {
+								return tables;
+							},
+							function error(response) {
+								return response;
+							}).then(function success(tablesRes) {
+								var vZonas = [];
 
-		listZonesReservation: function() {
-			var me = this;
-			var defered = $q.defer();
-			me.listZones().then(function success(data) {
-				return data;
-			}, function error(data) {
-				return data;
-			}).then(function(zones) {
-				me.listReservation().then(function success(tables) {
-						return tables;
-					},
-					function error(response) {
-						return response;
-					}).then(function success(tablesRes) {
-						var vZonas = [];
+								angular.forEach(zones, function(zone) {
+									var vTable = {
+										zone_id: zone.zone_id,
+										name: zone.name,
+										table: []
+									}
+									angular.forEach(zone.table, function(table) {
 
-						angular.forEach(zones, function(zone) {
-							var vTable = {
-								zone_id: zone.zone_id,
-								name: zone.name,
-								table: []
-							}
-							angular.forEach(zone.table, function(table) {
-
-								if (tablesRes) {
-									angular.forEach(tablesRes, function(tableData, key) {
-										//console.log(angular.toJson(tableData, true));
-										if (tableData.table_id == table.table_id) {
-											//console.log(angular.toJson(key, true));
-											table.block_id = tableData.block_id;
-											table.reservation_id = tableData.reservation_id;
-											table.num_people = tableData.num_people;
-											table.start_time = tableData.start_time;
-											table.end_time = tableData.end_time;
+										if (tablesRes) {
+											angular.forEach(tablesRes, function(tableData, key) {
+												//console.log(angular.toJson(tableData, true));
+												if (tableData.table_id == table.table_id) {
+													//console.log(angular.toJson(key, true));
+													table.block_id = tableData.block_id;
+													table.reservation_id = tableData.reservation_id;
+													table.num_people = tableData.num_people;
+													table.start_time = tableData.start_time;
+													table.end_time = tableData.end_time;
+												}
+											});
 										}
+										vTable.table.push(table);
 									});
-								}
-								vTable.table.push(table);
-							});
-							vZonas.push(vTable);
-						});
+									vZonas.push(vTable);
+								});
 
-						defered.resolve(vZonas);
-					},
-					function error(response) {
-						defered.reject(response);
-					}
-				);
+								defered.resolve(vZonas);
+							},
+							function error(response) {
+								defered.reject(response);
+							}
+						);
 
-			});
+					});
 
-			return defered.promise;
-		}
-
+					return defered.promise;
+				}
+		*/
 	}
 
 })
