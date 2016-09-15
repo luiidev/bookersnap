@@ -1,8 +1,39 @@
+<style type="text/css">
+    .ServerColor-previewContainer {
+        margin: -5px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ServerColor-preview {
+        width: 28px;
+        height: 28px;
+        box-shadow: 0 0 0 1px #eee;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        margin: 5px;
+        cursor: pointer;
+    }
+    .u-visuallyHidden {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+  
+    .ServerColor-preview.is-selected {
+        box-shadow: 0 0 0 3px #3a99d8;
+    }
+</style>
 <div class="col-sm-12 m-b-20">
     <button class="btn btn-success">Add Server</button>
     <p class="f-500 m-b-20 c-black">Servers register</p>
     <ul class="list-group">
-        <li class="list-group-item etiqueta" ng-repeat="server in sm.servers" ng-click="sm.editServer(server)" style="cursor: pointer">
+        <li class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
             <span class="badge" style="background-color:{{server.color}} !important " > &nbsp</span>
             {{server.name}}
         </li>

@@ -1,5 +1,5 @@
 angular.module('floor.controller', [])
-	.controller('FloorCtrl', function($uibModal, FloorFactory) {
+	.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
 		var vm = this;
 		vm.titulo = "Floor";
 		var getZones = function() {
@@ -11,6 +11,11 @@ angular.module('floor.controller', [])
 			});
 		};
 		getZones();
+
+		ServerFactory.getAllServer().then(function(response){
+			$rootScope.servers = response.data.data;
+		});
+
 		/*
 		var getZonesReservation = function() {
 			FloorFactory.listZonesReservation().then(function success(data) {
@@ -93,19 +98,17 @@ angular.module('floor.controller', [])
 
 
 })
-
-.controller('serverController', function($scope, ServerFactory, ColorFactory) {
-
+ 
+.controller('serverController', function($scope, $rootScope,ServerFactory, ColorFactory) {
+	console.log($rootScope.servers);
 	var sm = this;
-	sm.servers = [];
+	//$rootScope.servers = [];
 	sm.tables = [{id:1},{id:2},{id:3},{id:4},{id:5}]; // El array ingresa de la lista de pruebas
 	sm.flagServer = false; 
 	sm.data = [];
 	
-	ServerFactory.getAllServer().then(function(response){
-		sm.servers = response.data.data;
-	});
-
+	console.log($rootScope.servers);
+	
 	sm.colors= ColorFactory.getColor();
 
 	sm.selectColor =  function(color){
@@ -122,14 +125,14 @@ angular.module('floor.controller', [])
 	sm.editServer =  function(server){
 
 		sm.flagServer = true;
-		var position=sm.servers.indexOf(server);
-		sm.server = sm.servers[position];
+		var position=$rootScope.servers.indexOf(server);
+		sm.server = $rootScope.servers[position];
 		sm.name = sm.server.name;
 
 		for(var i=0; i < sm.colors.length; i++){
 			sm.colors[i].classSelect = "";
-			if(sm.colors[i].colorHexadecimal == sm.servers[position].color){
-				sm.color = sm.servers[position].color;
+			if(sm.colors[i].colorHexadecimal == $rootScope.servers[position].color){
+				sm.color = $rootScope.servers[position].color;
 				sm.colors[i].classSelect = "is-selected";
 			}
 		}
@@ -165,7 +168,7 @@ angular.module('floor.controller', [])
 					console.log("Se crea el server");
 					var mensaje = response.data.msg;
 					messageAlert("success", mensaje,"success", 3000);
-					sm.servers.push(response.data.data);
+					$rootScope.servers.push(response.data.data);
 					limpiarData();
 				}
 
@@ -219,9 +222,9 @@ angular.module('floor.controller', [])
 					var mensaje = response.data.msg;
 
 					/* Se filtra el item y se elimina del array*/
-					for (var i=0; i < sm.servers.length; i++){
-						if(sm.servers[i].id == sm.server.id){
-							sm.servers.splice(i,1);
+					for (var i=0; i < $rootScope.servers.length; i++){
+						if($rootScope.servers[i].id == sm.server.id){
+							$rootScope.servers.splice(i,1);
 						}
 					}
 
