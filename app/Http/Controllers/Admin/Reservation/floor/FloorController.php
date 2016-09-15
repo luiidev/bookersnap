@@ -24,6 +24,8 @@ class FloorController extends Controller
                     "num_people"=> null,
                     "start_time"=> "8:00:00",
                     "end_time"=> "9:00:00",
+                    "first_name"=> null,
+                    "last_name"=> null
                   ),
                 1 => 
                   array (
@@ -32,7 +34,9 @@ class FloorController extends Controller
                     "res_reservation_id"=> null,
                     "num_people"=> null,
                     "start_time"=> "7:00:00",
-                    "end_time"=> "10:00:00", 
+                    "end_time"=> "10:00:00",
+                    "first_name"=> null,
+                    "last_name"=> null
                   ),
                 2 => 
                   array (
@@ -41,7 +45,9 @@ class FloorController extends Controller
                   "res_reservation_id"=> 1,
                   "num_people"=> 4,
                   "start_time"=> "11:00:00",
-                  "end_time"=> "12:00:00",  
+                  "end_time"=> "12:00:00", 
+                  "first_name"=> "Scarlett",
+                  "last_name"=> "Johansson" 
                   ),
                 3 => 
                   array (
@@ -50,7 +56,9 @@ class FloorController extends Controller
                   "res_reservation_id"=> 2,
                   "num_people"=> 2,
                   "start_time"=> "3:00:00",
-                  "end_time"=> "5:00:00",  
+                  "end_time"=> "5:00:00",
+                  "first_name"=> "Norman",
+                  "last_name"=> "Osborn"  
                   ),
                 4 => 
                   array (
@@ -60,6 +68,8 @@ class FloorController extends Controller
                     "num_people"=> null,
                     "start_time"=> "8:00:00",
                     "end_time"=> "9:00:00",
+                    "first_name"=> null,
+                    "last_name"=> null
                   ),
             ),
             'redirect' => false,

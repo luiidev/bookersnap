@@ -1,8 +1,9 @@
 angular.module('floor.service', [])
-	.factory('FloorDataFactory', function($http, ApiUrlRoot) {
+	.factory('FloorDataFactory', function($http, ApiUrlMesas) {
 		return {
 			getReservas: function() {
-				return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
+				//return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
+				return $http.get(ApiUrlMesas + "/reservations");
 			},
 		}
 	})
@@ -59,7 +60,9 @@ angular.module('floor.service', [])
 						reservation_id: reserva.res_reservation_id,
 						num_people: reserva.num_people,
 						start_time: reserva.start_time,
-						end_time: reserva.end_time
+						end_time: reserva.end_time,
+						first_name: reserva.first_name,
+						last_name: reserva.last_name
 					}
 					vReservation.push(dataReservation);
 				});

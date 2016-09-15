@@ -4,30 +4,49 @@
 		<div class="input-group">
 			<span class="input-group-addon"><i class="zmdi zmdi-search"></i></span>
             <div class="fg-line">
-            	<input type="text" class="form-control" placeholder="Buscar por huésped...">
-            </div>
-            
-         </div>
-	</div>
-</div>
-<br>
-<div class="row">
-	<div class="col-sm-12">
+            	<input type="text" class="form-control" ng-model="rm.busqueda" placeholder="Buscar por huésped u horario...">
+            </div> 
+        </div>
+        <br>
 		<tabset justified="true">
 			<tab heading="Pendientes" active="tab.active" class="f-11">
 				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="value in rm.listado" ng-if="value.reservation_id">
-						<div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i> Norman Osbord</div>
+					<li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda" ng-if="value.reservation_id">
+						<div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i> {{value.first_name}} {{value.last_name}}</div>
 						<div>{{value.start_time}} - {{value.end_time}}</br>
 						{{value.num_people}} personas</div>
 					</li>
 				</ul>
 			</tab>
 			<tab heading="En mesa" class="f-11">
-		   er
+		   	Lista en espera
 			</tab>
 			<tab heading="Todos" class="f-11">
-		   ju
+		   		<div class="listview lv-bordered lv-lg">
+		         
+		          <div class="lv-body">
+		            <!--<p>No hay una reservacion para mesa selecionada</p>-->
+		            <div ng-repeat="item in rm.listado|filter:rm.busqueda|orderBy:item.first_name" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'" >
+		              <!--<div class="pull-right" ng-if="item.block_id">
+		                <span class="badge bgm-amber">14+</span>
+		              </div>
+		              -->
+		              <div class="media-body">
+		                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+		                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
+		                <ul class="lv-attrs">
+		                  <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+		                  <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
+		                </ul>
+		              </div>
+		            </div>
+
+		            <div class="not-information" ng-if="vmd.itemReservations==''">
+		              No existe mesas reservadas o bloqueadas
+		            </div>
+
+		          </div>
+		        </div>
 			</tab>           
 		</tabset>
 	</div>

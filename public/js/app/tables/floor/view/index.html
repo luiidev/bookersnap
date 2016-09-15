@@ -46,25 +46,6 @@
                     <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.server" class="f-11">Server</a></li>
                 </ul>
                 <data ui-view></data>
-                <!--
-                <tabset justified="true">
-                  <tab heading="Reservation" class="f-11" active="tab.active">
-                    <div class="" ng-include="'/js/app/tables/floor/view/reservation.html'" ng-controller="reservationController as rm">
-                      
-                    </div>
-                  </tab>
-                  <tab heading="WaitList" class="f-11">
-                    <div class="" ng-include="'/js/app/tables/floor/view/waitlist.html'" ng-controller="waitlistController as wm">
-                      
-                    </div>
-                  </tab>
-                  <tab heading="Servers" class="f-11">
-                    <div class="" ng-include="'/js/app/tables/floor/view/server.html'" ng-controller="serverController as sm">
-                      
-                    </div>
-                  </tab>
-                </tabset> 
-                -->
               </div>
             </div>
 
@@ -93,7 +74,7 @@
               -->
               <div class="media-body">
                 <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
-                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> Norman Osbord</div>
+                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
                 <ul class="lv-attrs">
                   <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
                   <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>

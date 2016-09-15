@@ -54,20 +54,6 @@ angular.module('floor.controller', [])
 		};
 		getTableReservation();
 
-		/*if (content.block_id || content.reservation_id) {
-
-			if (content.reservation_id) {
-				console.log('res');
-				vmd.itemReservations = content;
-			}
-			if (content.block_id) {
-				console.log(content);
-				vmd.itemBlocked = content;
-			}
-		} else {
-			console.log('not');
-		}*/
-		//console.log('Agregar otra clase' + angular.toJson(content, true));
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		};
