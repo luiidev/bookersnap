@@ -54,7 +54,12 @@ angular.module('floor.controller', [])
 
 })
 
-.controller('serverController', function($scope) {
+.controller('serverController', function($scope, ServerFactory) {
 	var sm = this;
+	sm.servers = [];
+	ServerFactory.getAllServer().then(function(response){
+		sm.servers = response.data.data;
+		console.log(sm.servers);
+	});
 
 });
