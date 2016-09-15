@@ -1,1 +1,66 @@
-<p>Hola Servers</p>
+<style type="text/css">
+    .ServerColor-previewContainer {
+        margin: -5px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ServerColor-preview {
+        width: 28px;
+        height: 28px;
+        box-shadow: 0 0 0 1px #eee;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        margin: 5px;
+        cursor: pointer;
+    }
+    .u-visuallyHidden {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+  
+    .ServerColor-preview.is-selected {
+        box-shadow: 0 0 0 3px #3a99d8;
+    }
+</style>
+<div class="col-sm-12 m-b-20">
+    <button class="btn btn-success">Add Server</button>
+    <p class="f-500 m-b-20 c-black">Servers register</p>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
+            <span class="badge" style="background-color:{{server.color}} !important " > &nbsp</span>
+            {{server.name}}
+        </li>
+    </ul>
+</div>
+
+<div class="col-sm-12 m-b-20" id="form_new_server">
+    <h3 ng-show="sm.flagServer == false">New Server</h3>
+    <h3 ng-show="sm.flagServer == true">Update Server</h3>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+        <div class="fg-line">
+            <input type="text" class="form-control" ng-model="sm.name" placeholder="Server">
+        </div>
+    </div>
+    <div class="js-available-color-group">
+            <div class="Form-nestedLabel">Available Colors</div>
+            <div class="Form-field Form-field--smallSpacing">
+                <div class="ServerColor-previewContainer">
+                    <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
+                    </label>
+                </div>
+            </div>
+    </div>
+    <div class="input-group">
+        <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
+        <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
+        <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
+    </div>    
+</div>

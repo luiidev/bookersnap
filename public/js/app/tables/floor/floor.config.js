@@ -1,4 +1,4 @@
-angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter'])
+angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service'])
 	.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
 		$stateProvider

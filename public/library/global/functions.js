@@ -146,6 +146,11 @@ var defineTimeSytem = function(time){
     return newTime;
 };
 
+var setearJsonError = function (jsonError){
+    var energy = jsonError.join("\n");
+    return energy;
+}
+
 var convertDateTo24Hour = function(timeStr){
     if(timeStr==undefined){
         return null;
