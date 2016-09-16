@@ -83,12 +83,22 @@ angular.module('floor.controller', [])
         var wm = this;
 
 
-})
-.controller('serverTablesController',function($scope){
-	var se = this;
-	console.log("Test de prueba");
-})
-.controller('serverController', function($scope, $rootScope, ServerFactory, ColorFactory) {
+    })
+    .controller('serverTablesController', function($scope) {
+        var se = this;
+        
+        /* Se traen las zonas a mostrar en la vista */
+        var getZones = function() {
+            FloorFactory.listZones().then(function success(data) {
+                se.zonas = data;
+            }, function error(data) {
+                messageErrorApi(data, "Error", "warning");
+            });
+        };
+        getZones();
+
+    })
+    .controller('serverController', function($scope, $rootScope, ServerFactory, ColorFactory) {
 
         var sm = this;
         sm.tables = [{
@@ -147,7 +157,7 @@ angular.module('floor.controller', [])
 
         sm.saveOrUpdateServer = function() {
 
-            if (sm.flagServer == false) {
+            if (sm.flagServer === false) {
 
                 sm.data = {
                     name: sm.name,
@@ -156,13 +166,13 @@ angular.module('floor.controller', [])
                 };
 
                 ServerFactory.addServer(sm.data).then(function(response) {
-
-                    if (response.data.response == false) {
-                        var mensaje = setearJsonError(response.data.jsonError);
+                    var mensaje = "";
+                    if (response.data.response === false) {
+                        mensaje = setearJsonError(response.data.jsonError);
                         messageAlert("Warning", mensaje, "warning", 3000);
-                    } else if (response.data.success == true) {
+                    } else if (response.data.success === true) {
                         console.log("Se crea el server");
-                        var mensaje = response.data.msg;
+                        mensaje = response.data.msg;
                         messageAlert("success", mensaje, "success", 3000);
                         $rootScope.servers.push(response.data.data);
                         limpiarData();
@@ -170,7 +180,7 @@ angular.module('floor.controller', [])
 
                 });
 
-            } else if (sm.flagServer == true) {
+            } else if (sm.flagServer === true) {
 
                 sm.data = {
                     id: sm.server.id,
@@ -181,26 +191,26 @@ angular.module('floor.controller', [])
 
                 ServerFactory.updateServer(sm.data, sm.server.id).then(function(response) {
                     console.log(response);
-
-                    if (response.data.response == false) {
-                        var mensaje = setearJsonError(response.data.jsonError);
+                    var mensaje = "";
+                    if (response.data.response === false) {
+                        mensaje = setearJsonError(response.data.jsonError);
                         messageAlert("Warning", mensaje, "warning", 3000);
-                    } else if (response.data.success == true) {
-                        var mensaje = response.data.msg;
+                    } else if (response.data.success === true) {
+                        mensaje = response.data.msg;
                         sm.server.name = sm.name;
                         sm.server.color = sm.color;
                         messageAlert("success", mensaje, "success", 3000);
                         sm.flagServer = false;
                         limpiarData();
-                    } else if (response.data.success == false) {
-                        var mensaje = response.data.msg;
+                    } else if (response.data.success === false) {
+                        mensaje = response.data.msg;
                         messageAlert("Warning", mensaje, "warning", 3000);
                     }
 
                 });
 
             }
-        }
+        };
 
         sm.cancelEditServer = function(server) {
             sm.flagServer = false;
@@ -211,15 +221,16 @@ angular.module('floor.controller', [])
 
             ServerFactory.deleteServer(sm.server.id).then(function(response) {
 
-                if (response.data.response == false) {
-                    var mensaje = setearJsonError(response.data.jsonError);
+                var mensaje = "";
+                if (response.data.response === false) {
+                    mensaje = setearJsonError(response.data.jsonError);
                     messageAlert("Warning", mensaje, "warning", 2000);
-                } else if (response.data.success == true) {
-                    var mensaje = response.data.msg;
+                } else if (response.data.success === true) {
+                    mensaje = response.data.msg;
 
                     /* Se filtra el item y se elimina del array*/
                     for (var i = 0; i < $rootScope.servers.length; i++) {
-                        if ($rootScope.servers[i].id == sm.server.id) {
+                        if ($rootScope.servers[i].id === sm.server.id) {
                             $rootScope.servers.splice(i, 1);
                         }
                     }
@@ -227,8 +238,8 @@ angular.module('floor.controller', [])
                     messageAlert("success", mensaje, "success", 1000);
                     sm.flagServer = false;
                     limpiarData();
-                } else if (response.data.success == false) {
-                    var mensaje = response.data.msg;
+                } else if (response.data.success === false) {
+                    mensaje = response.data.msg;
                     messageAlert("Warning", mensaje, "warning", 2000);
                 }
             });
