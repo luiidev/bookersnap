@@ -1,5 +1,6 @@
 angular.module('floor.controller', [])
-    .controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
+
+.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
         var vm = this;
         vm.titulo = "Floor";
         var getZones = function() {
@@ -66,6 +67,7 @@ angular.module('floor.controller', [])
 
     })
 
+
 .controller('reservationController', function(FloorFactory) {
     var rm = this;
 
@@ -80,23 +82,13 @@ angular.module('floor.controller', [])
 })
 
 .controller('waitlistController', function($scope) {
-        var wm = this;
+    var wm = this;
+})
 
 
-    })
-    .controller('serverTablesController', function($scope) {
+.controller('serverTablesController', function($scope) {
         var se = this;
-        
-        /* Se traen las zonas a mostrar en la vista */
-        var getZones = function() {
-            FloorFactory.listZones().then(function success(data) {
-                se.zonas = data;
-            }, function error(data) {
-                messageErrorApi(data, "Error", "warning");
-            });
-        };
-        getZones();
-
+        console.log("Test de prueba");
     })
     .controller('serverController', function($scope, $rootScope, ServerFactory, ColorFactory) {
 
@@ -137,7 +129,7 @@ angular.module('floor.controller', [])
 
             for (var i = 0; i < sm.colors.length; i++) {
                 sm.colors[i].classSelect = "";
-                if (sm.colors[i].colorHexadecimal == $rootScope.servers[position].color) {
+                if (sm.colors[i].colorHexadecimal === $rootScope.servers[position].color) {
                     sm.color = $rootScope.servers[position].color;
                     sm.colors[i].classSelect = "is-selected";
                 }
@@ -171,7 +163,6 @@ angular.module('floor.controller', [])
                         mensaje = setearJsonError(response.data.jsonError);
                         messageAlert("Warning", mensaje, "warning", 3000);
                     } else if (response.data.success === true) {
-                        console.log("Se crea el server");
                         mensaje = response.data.msg;
                         messageAlert("success", mensaje, "success", 3000);
                         $rootScope.servers.push(response.data.data);
@@ -190,7 +181,6 @@ angular.module('floor.controller', [])
                 };
 
                 ServerFactory.updateServer(sm.data, sm.server.id).then(function(response) {
-                    console.log(response);
                     var mensaje = "";
                     if (response.data.response === false) {
                         mensaje = setearJsonError(response.data.jsonError);
@@ -220,7 +210,6 @@ angular.module('floor.controller', [])
         sm.deleteServer = function() {
 
             ServerFactory.deleteServer(sm.server.id).then(function(response) {
-
                 var mensaje = "";
                 if (response.data.response === false) {
                     mensaje = setearJsonError(response.data.jsonError);
