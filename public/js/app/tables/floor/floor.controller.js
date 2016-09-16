@@ -1,5 +1,6 @@
 angular.module('floor.controller', [])
-	.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
+
+.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
 		var vm = this;
 		vm.titulo = "Floor";
 		var getZones = function() {
@@ -66,6 +67,7 @@ angular.module('floor.controller', [])
 
 	})
 
+
 .controller('reservationController', function(FloorFactory) {
 	var rm = this;
 
@@ -85,154 +87,156 @@ angular.module('floor.controller', [])
 
 })
 
-.controller('serverController', function($scope, $rootScope, ServerFactory, ColorFactory) {
-	console.log($rootScope.servers);
-	var sm = this;
-	//$rootScope.servers = [];
-	sm.tables = [{
-		id: 1
-	}, {
-		id: 2
-	}, {
-		id: 3
-	}, {
-		id: 4
-	}, {
-		id: 5
-	}]; // El array ingresa de la lista de pruebas
-	sm.flagServer = false;
-	sm.data = [];
 
-	console.log($rootScope.servers);
+.controller('serverTablesController', function($scope) {
+		var se = this;
+		console.log("Test de prueba");
+	})
+	.controller('serverController', function($scope, $rootScope, ServerFactory, ColorFactory) {
 
-	sm.colors = ColorFactory.getColor();
+		var sm = this;
+		sm.tables = [{
+			id: 1
+		}, {
+			id: 2
+		}, {
+			id: 3
+		}, {
+			id: 4
+		}, {
+			id: 5
+		}]; // El array ingresa de la lista de pruebas
+		sm.flagServer = false;
+		sm.data = [];
 
-	sm.selectColor = function(color) {
+		sm.colors = ColorFactory.getColor();
 
-		sm.color = color.colorHexadecimal;
-		var position = sm.colors.indexOf(color);
-		for (var i = 0; i < sm.colors.length; i++) {
-			sm.colors[i].classSelect = "";
-		}
-		sm.colors[position].classSelect = "is-selected";
+		sm.selectColor = function(color) {
 
-	};
+			sm.color = color.colorHexadecimal;
+			var position = sm.colors.indexOf(color);
+			for (var i = 0; i < sm.colors.length; i++) {
+				sm.colors[i].classSelect = "";
+			}
+			sm.colors[position].classSelect = "is-selected";
 
-	sm.editServer = function(server) {
+		};
 
-		sm.flagServer = true;
-		var position = $rootScope.servers.indexOf(server);
-		sm.server = $rootScope.servers[position];
-		sm.name = sm.server.name;
+		sm.editServer = function(server) {
 
-		for (var i = 0; i < sm.colors.length; i++) {
-			sm.colors[i].classSelect = "";
-			if (sm.colors[i].colorHexadecimal == $rootScope.servers[position].color) {
-				sm.color = $rootScope.servers[position].color;
-				sm.colors[i].classSelect = "is-selected";
+			sm.flagServer = true;
+			var position = $rootScope.servers.indexOf(server);
+			sm.server = $rootScope.servers[position];
+			sm.name = sm.server.name;
+
+			for (var i = 0; i < sm.colors.length; i++) {
+				sm.colors[i].classSelect = "";
+				if (sm.colors[i].colorHexadecimal == $rootScope.servers[position].color) {
+					sm.color = $rootScope.servers[position].color;
+					sm.colors[i].classSelect = "is-selected";
+				}
+			}
+
+		};
+
+		var limpiarData = function() {
+
+			sm.name = "";
+			sm.color = "";
+			for (var i = 0; i < sm.colors.length; i++) {
+				sm.colors[i].classSelect = "";
+			}
+
+		};
+
+		sm.saveOrUpdateServer = function() {
+
+			if (sm.flagServer == false) {
+
+				sm.data = {
+					name: sm.name,
+					color: sm.color,
+					tables: sm.tables
+				};
+
+				ServerFactory.addServer(sm.data).then(function(response) {
+
+					if (response.data.response == false) {
+						var mensaje = setearJsonError(response.data.jsonError);
+						messageAlert("Warning", mensaje, "warning", 3000);
+					} else if (response.data.success == true) {
+						console.log("Se crea el server");
+						var mensaje = response.data.msg;
+						messageAlert("success", mensaje, "success", 3000);
+						$rootScope.servers.push(response.data.data);
+						limpiarData();
+					}
+
+				});
+
+			} else if (sm.flagServer == true) {
+
+				sm.data = {
+					id: sm.server.id,
+					name: sm.name,
+					color: sm.color,
+					tables: sm.tables
+				};
+
+				ServerFactory.updateServer(sm.data, sm.server.id).then(function(response) {
+					console.log(response);
+
+					if (response.data.response == false) {
+						var mensaje = setearJsonError(response.data.jsonError);
+						messageAlert("Warning", mensaje, "warning", 3000);
+					} else if (response.data.success == true) {
+						var mensaje = response.data.msg;
+						sm.server.name = sm.name;
+						sm.server.color = sm.color;
+						messageAlert("success", mensaje, "success", 3000);
+						sm.flagServer = false;
+						limpiarData();
+					} else if (response.data.success == false) {
+						var mensaje = response.data.msg;
+						messageAlert("Warning", mensaje, "warning", 3000);
+					}
+
+				});
+
 			}
 		}
 
-	};
+		sm.cancelEditServer = function(server) {
+			sm.flagServer = false;
+			limpiarData();
+		};
 
-	var limpiarData = function() {
+		sm.deleteServer = function() {
 
-		sm.name = "";
-		sm.color = "";
-		for (var i = 0; i < sm.colors.length; i++) {
-			sm.colors[i].classSelect = "";
-		}
-
-	};
-
-	sm.saveOrUpdateServer = function() {
-
-		if (sm.flagServer == false) {
-
-			sm.data = {
-				name: sm.name,
-				color: sm.color,
-				tables: sm.tables
-			};
-
-			ServerFactory.addServer(sm.data).then(function(response) {
+			ServerFactory.deleteServer(sm.server.id).then(function(response) {
 
 				if (response.data.response == false) {
 					var mensaje = setearJsonError(response.data.jsonError);
-					messageAlert("Warning", mensaje, "warning", 3000);
-				} else if (response.data.success == true) {
-					console.log("Se crea el server");
-					var mensaje = response.data.msg;
-					messageAlert("success", mensaje, "success", 3000);
-					$rootScope.servers.push(response.data.data);
-					limpiarData();
-				}
-
-			});
-
-		} else if (sm.flagServer == true) {
-
-			sm.data = {
-				id: sm.server.id,
-				name: sm.name,
-				color: sm.color,
-				tables: sm.tables
-			};
-
-			ServerFactory.updateServer(sm.data, sm.server.id).then(function(response) {
-				console.log(response);
-
-				if (response.data.response == false) {
-					var mensaje = setearJsonError(response.data.jsonError);
-					messageAlert("Warning", mensaje, "warning", 3000);
+					messageAlert("Warning", mensaje, "warning", 2000);
 				} else if (response.data.success == true) {
 					var mensaje = response.data.msg;
-					sm.server.name = sm.name;
-					sm.server.color = sm.color;
-					messageAlert("success", mensaje, "success", 3000);
+
+					/* Se filtra el item y se elimina del array*/
+					for (var i = 0; i < $rootScope.servers.length; i++) {
+						if ($rootScope.servers[i].id == sm.server.id) {
+							$rootScope.servers.splice(i, 1);
+						}
+					}
+
+					messageAlert("success", mensaje, "success", 1000);
 					sm.flagServer = false;
 					limpiarData();
 				} else if (response.data.success == false) {
 					var mensaje = response.data.msg;
-					messageAlert("Warning", mensaje, "warning", 3000);
+					messageAlert("Warning", mensaje, "warning", 2000);
 				}
-
 			});
 
-		}
-	}
+		};
 
-	sm.cancelEditServer = function(server) {
-		sm.flagServer = false;
-		limpiarData();
-	};
-
-	sm.deleteServer = function() {
-
-		ServerFactory.deleteServer(sm.server.id).then(function(response) {
-
-			if (response.data.response == false) {
-				var mensaje = setearJsonError(response.data.jsonError);
-				messageAlert("Warning", mensaje, "warning", 2000);
-			} else if (response.data.success == true) {
-				var mensaje = response.data.msg;
-
-				/* Se filtra el item y se elimina del array*/
-				for (var i = 0; i < $rootScope.servers.length; i++) {
-					if ($rootScope.servers[i].id == sm.server.id) {
-						$rootScope.servers.splice(i, 1);
-					}
-				}
-
-				messageAlert("success", mensaje, "success", 1000);
-				sm.flagServer = false;
-				limpiarData();
-			} else if (response.data.success == false) {
-				var mensaje = response.data.msg;
-				messageAlert("Warning", mensaje, "warning", 2000);
-			}
-		});
-
-	};
-
-});
+	});
