@@ -1,14 +1,10 @@
 <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
 <section id="main">
     <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
     <section id="content">
         <div class="container">
-
-        	 <div class="block-header" style="padding-top: 15px">
+            <div class="block-header" style="padding-top: 15px">
                 <ul class="actions">
                     <li>
                         <button class="btn btn-default waves-effect" data-ui-sref="floor">Cancelar</button>
@@ -17,83 +13,53 @@
                         <button class="btn btn-primary waves-effect" ng-click="">Create reservation</button>
                     </li>
                 </ul>
-          </div>
-
-      		<div class="card" id="turno-main">
-      		  <div class="card-header">
-              <h2>{{vm.titulo}} <small></small></h2>
             </div>
-            <div class="row">
-              <div class="col-xs-9 box-lienzo-zone">
-              <tabset justified="true">
-                <tab ng-repeat="tab in vm.zonas" heading="{{tab.name}}" active="tab.active">
-                  <div class="zoneArea minheight" style="position:relative;">
-
-                      <div ng-detail-table ng-repeat="obj in tab.table" class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}" x="{{obj.left}}" y="{{obj.top}}" id="el{{obj.id}}" on-click-fn="vm.mostrarDetail($index,obj)">
-                          <div class="txtcenter">{{obj.name}}</div>
-                      </div>
-                          
-                  </div>    
-                </tab>
-               
-              </tabset> 
-              </div>
-              <div class="col-xs-3">
-                <p class="f-16">Detalle de reservaciones</p>
-                <ul class="tab-nav">
-                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.reservation" class="f-11">Reservation</a></li>
-                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.walkin" class="f-11">Waitlist</a></li>
-                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="floor.server" class="f-11">Server</a></li>
-                </ul>
-                <data ui-view></data>
-              </div>
+            <div class="card" id="turno-main">
+                <div class="card-header">
+                    <h2>{{vm.titulo}} <small></small></h2>
+                </div>
+                <div>
+                    <section>
+                        <div ui-view="principal"></div>
+                    </section>
+                    <section>
+                        <div ui-view="tabReservaciones"></div>
+                    </section>
+                </div>
             </div>
-
-      		</div>
         </div>
     </section>
 </section>
-
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>
-
 <script type="text/ng-template" id="myModalContentDetail.html">
     <div class="modal-header">
         <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>
     </div>
     <div class="modal-body">
         <div class="listview lv-bordered lv-lg">
-          <div class="lv-header-alt clearfix">
-            <h2 class="f-14">Proximas reservas y bloqueos</h2>
-          </div>
-          <div class="lv-body">
-            <!--<p>No hay una reservacion para mesa selecionada</p>-->
-            <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'" >
-              <!--<div class="pull-right" ng-if="item.block_id">
-                <span class="badge bgm-amber">14+</span>
-              </div>
-              -->
-              <div class="media-body">
-                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
-                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
-                <ul class="lv-attrs">
-                  <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
-                  <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
-                </ul>
-              </div>
+            <div class="lv-header-alt clearfix">
+                <h2 class="f-14">Proximas reservas y bloqueos</h2>
             </div>
-
-            <div class="not-information" ng-if="vmd.itemReservations==''">
-              No existe mesas reservadas o bloqueadas
+            <div class="lv-body">
+                <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'">
+                    <div class="media-body">
+                        <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                        <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
+                        <ul class="lv-attrs">
+                            <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                            <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="not-information" ng-if="vmd.itemReservations==''">
+                    No existe mesas reservadas o bloqueadas
+                </div>
             </div>
-
-          </div>
         </div>
     </div>
     <div class="modal-footer">
         <div class="text-center">
             <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
         </div>
-        <!--<button class="btn btn-primary" ng-click="validateSaveTurno()">OK</button>-->
-
     </div>
 </script>
