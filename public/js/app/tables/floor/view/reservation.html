@@ -31,6 +31,9 @@
 		                <span class="badge bgm-amber">14+</span>
 		              </div>
 		              -->
+		              <div class="pull-right" ng-if="item.reservation_id">
+		                <span class="box-status {{item.res_reservation_status_id | statusReservation}}"></span>
+		              </div>
 		              <div class="media-body">
 		                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
 		                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>

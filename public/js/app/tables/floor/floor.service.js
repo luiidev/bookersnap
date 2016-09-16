@@ -5,7 +5,7 @@ angular.module('floor.service', [])
 				//return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
 				return $http.get(ApiUrlMesas + "/reservations");
 			},
-		}
+		};
 	})
 
 .factory('FloorFactory', function($q, ZoneFactory, TableFactory, FloorDataFactory) {
@@ -32,14 +32,14 @@ angular.module('floor.service', [])
 							size: TableFactory.getLabelSize(table.config_size),
 							rotate: table.config_rotation,
 							price: table.price,
-						}
+						};
 						vTables.push(dataTable);
 					});
 					var dataZone = {
 						zone_id: zones.zone_id,
 						name: zones.name,
 						table: vTables,
-					}
+					};
 					vZones.push(dataZone);
 				});
 
@@ -59,11 +59,12 @@ angular.module('floor.service', [])
 						block_id: reserva.res_block_id,
 						reservation_id: reserva.res_reservation_id,
 						num_people: reserva.num_people,
+						res_reservation_status_id: reserva.res_reservation_status_id,
 						start_time: reserva.start_time,
 						end_time: reserva.end_time,
 						first_name: reserva.first_name,
 						last_name: reserva.last_name
-					}
+					};
 					vReservation.push(dataReservation);
 				});
 
@@ -90,7 +91,7 @@ angular.module('floor.service', [])
 				//return vTables;
 			}, function error(data) {
 				return data;
-			})
+			});
 			return defered.promise;
 		},
 		/*
@@ -115,7 +116,7 @@ angular.module('floor.service', [])
 										zone_id: zone.zone_id,
 										name: zone.name,
 										table: []
-									}
+									};
 									angular.forEach(zone.table, function(table) {
 
 										if (tablesRes) {
@@ -148,6 +149,6 @@ angular.module('floor.service', [])
 					return defered.promise;
 				}
 		*/
-	}
+	};
 
-})
+});
