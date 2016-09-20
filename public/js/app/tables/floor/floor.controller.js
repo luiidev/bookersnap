@@ -66,7 +66,7 @@ angular.module('floor.controller', [])
 	var getlistZonesBloqueosReservas = function() {
 		FloorFactory.listZonesBloqueosReservas().then(function success(data) {
 			rm.listado = data;
-			console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
+			//console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
 		});
 	};
 	getlistZonesBloqueosReservas();
