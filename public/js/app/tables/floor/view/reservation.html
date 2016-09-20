@@ -13,7 +13,7 @@
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda" ng-if="value.reservation_id">
 						<div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
-						Mesa: {{value.table_name}} - {{value.first_name}} {{value.last_name}}</div>
+						Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
 						<div>{{value.start_time}} - {{value.end_time}}</br>
 						{{value.num_people}} personas</div>
 					</li>
@@ -36,8 +36,8 @@
 		                <span class="box-status {{item.res_reservation_status_id | statusReservation}}"></span>
 		              </div>
 		              <div class="media-body">
-		                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa {{item.table_name}} bloqueada</div>
-		                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> Mesa: {{item.table_name}} <br>{{item.first_name}} {{item.last_name}}</div>
+		                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa {{item.name}} bloqueada</div>
+		                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> Mesa: {{item.name}} <br>{{item.first_name}} {{item.last_name}}</div>
 		                <ul class="lv-attrs">
 		                  <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
 		                  <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>

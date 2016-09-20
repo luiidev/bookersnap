@@ -62,21 +62,14 @@ angular.module('floor.controller', [])
 .controller('reservationController', function(FloorFactory) {
 	var rm = this;
 
-	var getlistBloqueos = function() {
-		FloorFactory.listBloqueos().then(function success(data) {
-			rm.listado = data;
-			//console.log('Listado bloqueos: ' + angular.toJson(data, true));
-		});
-	};
-	getlistBloqueos();
 
-	var getlistReservas = function() {
-		FloorFactory.listBloqueosReservas().then(function success(data) {
+	var getlistZonesBloqueosReservas = function() {
+		FloorFactory.listZonesBloqueosReservas().then(function success(data) {
 			rm.listado = data;
-			//console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
+			console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
 		});
 	};
-	getlistReservas();
+	getlistZonesBloqueosReservas();
 
 
 }).

@@ -202,7 +202,7 @@ angular.module('floor.service', [])
 									price: table.price,
 								};
 								angular.forEach(blocks, function(block) {
-									console.log(blocks);
+									//console.log(blocks);
 									if (block.table_id === table.id) {
 										dataTable.res_reservation_status_id = block.res_reservation_status_id;
 									}
@@ -218,6 +218,63 @@ angular.module('floor.service', [])
 						});
 
 						defered.resolve(vZones);
+
+					},
+					function error(response) {
+						defered.reject(response);
+					}
+				);
+
+			});
+			return defered.promise;
+		},
+		listZonesBloqueosReservas: function() {
+			var me = this;
+			var defered = $q.defer();
+			ZoneFactory.getZones().success(function(data) {
+				return data;
+			}).error(function(data) {
+				defered.reject(data);
+			}).then(function(zonesData) {
+
+				me.listBloqueosReservas().then(function success(response) {
+					return response;
+				}, function error(response) {
+					return response;
+				}).then(function success(blocks) {
+						var vTables = [];
+						angular.forEach(zonesData.data.data, function(zone) {
+							var tables = zone.tables;
+
+							angular.forEach(tables, function(table) {
+
+								angular.forEach(blocks, function(block) {
+									//console.log(blocks);
+									if (block.table_id === table.id) {
+										var dataTable = {
+											zone_id: zone.id,
+											name_zona: zone.name,
+											table_id: table.id,
+											name: table.name,
+											block_id: block.block_id,
+											reservation_id: block.reservation_id,
+											num_people: block.num_people,
+											res_reservation_status_id: block.res_reservation_status_id,
+											start_date: block.start_date,
+											start_time: block.start_time,
+											end_time: block.end_time,
+											first_name: block.first_name,
+											last_name: block.last_name,
+										};
+										vTables.push(dataTable);
+									}
+								});
+
+							});
+
+						});
+
+						defered.resolve(vTables);
 
 					},
 					function error(response) {
