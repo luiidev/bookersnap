@@ -4,7 +4,7 @@ angular.module('floor.controller', [])
 		var vm = this;
 		vm.titulo = "Floor";
 		var getZones = function() {
-			FloorFactory.listZones().then(function success(data) {
+			FloorFactory.listZonesReservas().then(function success(data) {
 				vm.zonas = data;
 				//console.log('Formateado: ' + angular.toJson(data, true));
 			}, function error(data) {
@@ -17,15 +17,6 @@ angular.module('floor.controller', [])
 			$rootScope.servers = response.data.data;
 		});
 
-		/*
-		var getZonesReservation = function() {
-			FloorFactory.listZonesReservation().then(function success(data) {
-				vm.zonas = data;
-				//console.log('Formateado: ' + angular.toJson(data, true));
-			});
-		};
-		getZonesReservation();
-		*/
 		vm.mostrarDetail = function(index, data) {
 			modalInstancesDetail(index, data);
 		};
@@ -53,9 +44,9 @@ angular.module('floor.controller', [])
 		};
 
 		var getTableReservation = function() {
-			FloorFactory.listTableReservation(content.table_id).then(function success(data) {
+			FloorFactory.rowTableReservation(content.table_id).then(function success(data) {
 				vmd.itemReservations = data;
-				//console.log(angular.toJson(data, true));
+				//console.log('PopUp: ' + angular.toJson(data, true));
 			});
 		};
 		getTableReservation();
@@ -71,13 +62,22 @@ angular.module('floor.controller', [])
 .controller('reservationController', function(FloorFactory) {
 	var rm = this;
 
-	var getlistReservation = function() {
-		FloorFactory.listReservation().then(function success(data) {
+	var getlistBloqueos = function() {
+		FloorFactory.listBloqueos().then(function success(data) {
 			rm.listado = data;
-			//console.log(angular.toJson(data, true));
+			//console.log('Listado bloqueos: ' + angular.toJson(data, true));
 		});
 	};
-	getlistReservation();
+	getlistBloqueos();
+
+	var getlistReservas = function() {
+		FloorFactory.listBloqueosReservas().then(function success(data) {
+			rm.listado = data;
+			//console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
+		});
+	};
+	getlistReservas();
+
 
 })
 
