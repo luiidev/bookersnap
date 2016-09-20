@@ -35,9 +35,9 @@
     <button class="btn btn-success">Add Server</button>
     <p class="f-500 m-b-20 c-black">Servers register</p>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
+        <li ui-sref="floor.server.edit({server_id: {{server.id}}})" class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
                 <span class="badge" style="background-color:{{server.color}} !important "> &nbsp</span> 
-                <a data-ui-sref="floor.server.edit" >{{server.name}}</a>
+                {{server.name}} - {{server.id}}
         </li>   
     </ul>
 </div>
@@ -65,5 +65,8 @@
         <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
         <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
         <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
+    </div>
+     <div class="input-group">
+        <p>{{se.mesasSeleccionadas}}</p>
     </div>
 </div>

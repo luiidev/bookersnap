@@ -110,7 +110,7 @@ angular.module('block.controller', [])
 
         $scope.desactivarTable = function(index, data) {
             BlockFactory.uncheckTable($scope, $sce, index, data);
-        }
+        };
 
         var getDataTableSelected = function(index) {
 
