@@ -1,0 +1,298 @@
+
+<ion-view view-title="Lista de zonas">
+  <ion-content>
+      <section id="main">
+    <section id="content">
+        <div class="container zone-container">
+            <div class="block-header">
+                <ul class="actions">
+                    <li>
+                        <button class="btn btn-default waves-effect" data-ui-sref="zone.active">Cancel</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary waves-effect" ng-click="saveZone('create')" ng-disabled="saveClick">Save New Zone</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-body card-padding box-zone-create">
+                    <div class="header-zone-create">
+                            <div class="col-xs-3 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <span class="input-group-addon"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw"></i></span>
+                                    <div class="fg-line">
+                                        <input type="text" class="form-control" id="zone_name" placeholder="Zone name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-2">
+                                <div class="input-group fg-float">
+                                        <label class="fg-label"><span class="label label-danger">{{ headerZone.tables}}</span> Tables</label>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="input-group fg-float">
+                                        <label class="fg-label"><span class="label label-danger">{{ headerZone.maxCovers}}</span> Max Covers</label>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <div class="input-group fg-float">
+                                        <label class="fg-label"><span class="label label-danger">{{ headerZone.minCovers}}</span> Min Covers</label>
+                                </div>
+                            </div>
+
+                            <!--
+                            <div class="col-xs-3 padding-left-none">
+                                <div class="input-group fg-float float-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn bgm-gray waves-effect">Layout</button>
+                                        <button type="button" class="btn btn-default waves-effect">Combine tables</button>
+                                    </div>
+                                </div>
+                                
+                            </div>-->
+                         
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-9 box-lienzo-zone">
+                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
+                                <button type="button" class="btn btn-default btn-settings waves-effect" ng-click="showSettings()"> <i class="zmdi zmdi-settings zmdi-hc-fw"></i></button>
+
+                                <div ng-repeat="obj in itemTables" ng-drag="true" ng-drag-data="obj" ng-drag-table  on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}"  top="{{obj.top}}" left="{{obj.left}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" shape="{{obj.shape}}" size="{{obj.size}}" rotate="{{obj.rotate}}">
+                                        <div>{{obj.name}}</div>
+                                        <div class="border shape-table {{obj.shape}} {{obj.size}}"></div>    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3 box-tables" id="tables-settings">
+                            <div class="box-tables-items" ng-show="boxTables.items">
+                                <div class="row item-table no-border descripcion">
+                                    <h3>Add tables to your floor</h3>
+                                </div>
+                                <div class="row descripcion">
+                                    <p>Easily drag and drop your tables,name them and pick your min and max cover counts.</p>
+                                </div>
+
+                                <div class="row item-table no-border title">
+                                    Round Tables
+                                </div>
+
+                                <div class="row item-table-box">
+                                    <div class="col-md-4">
+                                        <div class="title-table">Bar stool</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round small" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'small',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'r1')"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round medium" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'medium',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'r2')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border round large" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'round',size:'large',minCover:'1',maxCover:'2',rotate:'0'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'r3')"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row item-table no-border title">
+                                    Square Tables
+                                </div>
+
+                                <div class="row item-table-box draggable-objects">
+                                    <div class="col-md-4">
+                                        <div class="title-table">1-2 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border square small" ng-drag="true" ng-drag-data="{name:'1-2 top',shape:'square',size:'small',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s1')" ng-center-anchor="true"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border square medium" ng-drag="true" ng-drag-data="{name:'2-4 top',shape:'square',size:'medium',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s2')" ng-center-anchor="true"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border square large" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'square',size:'large',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-drag-success="onDragComplete($data,$event,'s3')" ng-center-anchor="true"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row item-table no-border title">
+                                    Rectangular Tables
+                                </div>
+
+                                <div class="row item-table-box last">
+                                    <div class="col-md-4">
+                                        <div class="title-table">1-2 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border recta small" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'small',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'re1')"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="title-table">2-4 top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border recta medium" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'medium',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'re2')"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="title-table">4-6+ top</div>
+                                        <div class="table-box" ng-if="true">
+                                            <div class="border recta large" ng-drag="true" ng-drag-data="{name:'4-6 top',shape:'recta',size:'large',rotate:'0',minCover:'1',maxCover:'2'}" data-allow-transform="true" ng-center-anchor="true" ng-drag-success="onDragComplete($data,$event,'re3')"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="box-tables-item-option" ng-show="boxTables.item">
+                                <div class="row item-table title first">
+                                    Table Name
+                                </div>
+
+                                <div class="row item-table-box">
+                                  
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Name</label>
+                                            <input type="text" class="form-control input-sm" id="name-table" placeholder="Name" ng-keyup="editNameTable()">
+                                        </div>
+                                  
+                                    <!--<div class="col-md-6">
+                                        <div class="form-group text-rotate group-btn-rotate">
+                                            <label>Rotate Name</label>
+                                            <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-left"></i></button> <button class="btn btn-default waves-effect btn-lg btn-rotate"><i class="zmdi zmdi-rotate-right"></i></button>
+                                        </div>
+                                     </div>
+                                     -->
+                                </div>
+                                <div class="row item-table title">
+                                    Table Shape & Position
+                                </div>
+
+                                <div class="row item-table-box last">
+
+                                        <div class="form-group text-rotate group-btn-rotate">
+                                            <label>Shape</label>
+                                            <div>
+                                                <div class="btn-group btn-group-lg">
+                                                    <button type="button" class="btn btn-default shape rounds" ng-click="changeShapeTable('round')"><i class="round round-btn-shape"></i></button>
+                                                    <button type="button" class="btn btn-default shape squares" ng-click="changeShapeTable('square')"><i class="square-btn-shape"></i></button>
+                                                    <button type="button" class="btn btn-default shape rectas" ng-click="changeShapeTable('recta')"><i class="recta-btn-shape"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                </div>
+
+                                <div class="row item-table-box last  m-b-0 p-b-0">
+    
+                                    <div class="form-group text-rotate fg-line">
+                                        <label>Table size</label>
+                                        <div class="fg-line">
+                                            <div class="select">
+                                                <select ng-options="item as item.label for item in sizeTableList.data track by item.id" ng-model="sizeTableList.selectedOption" class="form-control" ng-change="changeSizeTable()" ></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     
+                                </div>
+
+                                <div class="row item-table-box">
+                                    
+                                    <div class="form-group text-rotate group-btn-rotate">
+                                        <label>Rotate Table</label>
+                                        <div>
+                                            <button class="btn btn-default waves-effect btn-lg btn-rotate" ng-click="rotateShapeTable()"><i class="zmdi zmdi-rotate-left"></i></button> <button class="btn btn-default waves-effect btn-lg btn-rotate" ng-click="rotateShapeTable()"><i class="zmdi zmdi-rotate-right"></i></button>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+
+                                <div class="row item-table title">
+                                    Table Capacity
+                                </div>
+
+                                <div class="row item-table-box last m-b-0 p-b-0">
+                                    <div class="col-md-12 p-0">
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Min covers</label>
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select ng-options="item as item.label for item in coversList.dataMin track by item.id" ng-model="coversList.selectedMin" class="form-control" ng-change="tableCapacity('min')"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row item-table-box last">
+                           
+                                    <div class="col-md-12 p-0">
+                                        <div class="form-group text-rotate fg-line">
+                                            <label>Max covers</label>
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                  <select ng-options="item as item.label for item in coversList.dataMax track by item.id" ng-model="coversList.selectedMax" class="form-control" ng-change="tableCapacity('max')"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                                <div class="row item-table-box last">
+                                    <div class="box-buttons-item-table">
+
+                                       <div class="col-md-5">
+                                            <button class="btn btn-danger waves-effect" ng-click="deleteSelectTableItem()"><i class="zmdi zmdi-delete zmdi-hc-fw"></i></button>
+                                       </div>
+
+                                       <div class="col-md-5">
+                                            <button class="btn btn-primary waves-effect" ng-click="doneTableSelected()"><i class="zmdi zmdi-check zmdi-hc-fw"></i></button>
+                                       </div>
+                                        
+                                    </div>
+                                </div>
+
+                            </div>
+                 
+                        </div>  
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="myModalDeleteTable.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">Are you sure want to delete this table?</h3>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="ok()">Yes</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                </div>
+            </script>
+                
+        </div>
+    </section>
+</section>
+  </ion-content>
+</ion-view>
+
+
