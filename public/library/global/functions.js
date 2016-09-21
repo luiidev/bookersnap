@@ -219,11 +219,11 @@ var messageAlert = function(title, text, type, time) {
     });
 };
 
-var messageErrorApi = function(data, title, type,time) {
+var messageErrorApi = function(data, title, type, time) {
     var errorJson = JSON.stringify(data);
 
     if (errorJson.indexOf("error") > 0) {
-        messageAlert(title, data.error.user_msg, type,time);
+        messageAlert(title, data.error.user_msg, type, time);
     } else {
         messageAlert(title, data, type, time);
     }
@@ -262,4 +262,18 @@ var convertFechaYYMMDD = function(fecha, idioma, options) {
     newFecha = arrayFecha[2] + "-" + arrayFecha[1] + "-" + arrayFecha[0];
 
     return newFecha;
+};
+
+/*---- Loading de ionic para moviles,tablets, lo usaremos para cuando grabemos informacion o consultemos, asi el usuario sabra que la aplicacion
+esta realizando alguna acción
+-----*/
+var loadingShow = function(ionicLoading, message) {
+    ionicLoading.show({
+        template: message
+    }).then(function() {
+        console.log("The loading indicator is now displayed");
+    });
+};
+var loadingHide = function(ionicLoading) {
+    ionicLoading.hide();
 };

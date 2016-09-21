@@ -1,0 +1,150 @@
+<div id="profile-main">
+        <div class="pm-overview c-overflow">
+            <div class="pmo-pic">
+                <div class="p-relative">
+                    <a href="">
+                        <img class="img-responsive" src="img/profile-pic-2.jpg" alt="">
+                    </a>
+
+                    <div class="dropdown pmop-message" uib-dropdown>
+                        <button uib-dropdown-toggle class="btn bgm-white btn-float">
+                            <i class="zmdi zmdi-comment-text-alt"></i>
+                        </button>
+
+                        <div class="dropdown-menu stop-propagate">
+                            <textarea placeholder="Write something..."></textarea>
+
+                            <button class="btn bgm-green btn-float"><i class="zmdi zmdi-mail-send"></i></button>
+                        </div>
+                    </div>
+
+                    <a href="" class="pmop-edit">
+                        <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">Update Profile Picture</span>
+                    </a>
+                </div>
+
+
+                <div class="pmo-stat">
+                    <h2 class="m-0 c-white">1562</h2>
+                    Total Connections
+                </div>
+            </div>
+                
+            <div class="pmo-block pmo-contact hidden-xs">
+                <h2>{{ vm.guestData.name }}</h2>
+
+                <ul>
+                    <li><i class="zmdi zmdi-phone"></i> {{ vm.guestData.contact }}</li>
+                </ul>
+            </div>
+     
+        </div>
+
+        <div class="pm-body clearfix">
+            <div class="row header-view-profile">
+                <div class="col-md-12 col-xs-12">
+                    <div class="pull-right button-edit">
+                        <button class="btn btn-danger" data-ui-sref="mesas.guest.edit({guest : vm.guestId})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Editar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">   
+                <div class="col-md-12 col-xs-12">
+                    <ol class="breadcrumb">
+                        <li><a href="#">Visitas</a> <label class="badge"> {{ vm.guestData.reservations.resumen.finished }}</label></li>
+                        <li><a href="#">Reservaciones</a> <label class="badge"> {{ vm.paginationReservation.totalItems }}</label></li>
+                        <li class="active">Cancelados <label class="badge"> {{ vm.guestData.reservations.resumen.canceled }}</label></li>
+                    </ol>
+                </div>
+            </div>
+          
+         
+                <div class="row header-list-reservation">
+                    <h4>Reservaciones futuras</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 lv-body">
+                        <div class="lv-item media" ng-repeat="reservation in vm.guestData.reservations.last">
+                            <div class="media-body">
+                                <div class="col-xs-3">
+                                    <span class="f-700">Fecha</span>
+                                    <p>{{ reservation.date_reservation_text }}</p>
+                                </div>
+                                <div class="col-xs-2">
+                                 <span class="f-700">Hora</span>  
+                                 <p>{{ reservation.hours_reservation_text }}</p>
+                             </div>
+                             <div class="col-xs-2">
+                                <span class="f-700">Tamaño</span>
+                                <p>{{ reservation.num_people }}</p>
+                            </div>
+                            <div class="col-xs-2">
+                                <span class="f-700">Mesas</span>
+                                <p>{{ reservation.tables.length }}</p>
+                            </div>
+                            <div class="col-xs-3">
+                                <!--<button class="btn btn-success btn-icon waves-effect waves-circle"><i class="zmdi zmdi-sign-in zmdi-hc-fw"></i></button>-->
+                                <label class="label" style="background: {{ reservation.status.color }}"> {{ reservation.status.name }}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 notes">
+                            Observaciones : {{ reservation.note || "Ninguna" }}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <hr>
+                    </div>                      
+                </div>
+              
+                <div class="row header-list-reservation">
+                    <h4>Reservaciones pasadas</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 lv-body" id="item-reserva">
+                        <div class="media lv-item" ng-repeat="reservation in vm.guestData.reservations.past">
+                            <div class="media-body">
+                                <div class="col-xs-3">
+                                    <span class="f-700">Fecha</span>
+                                    <p>{{ reservation.date_reservation_text }}</p>
+                                </div>
+                                <div class="col-xs-2">
+                                 <span class="f-700">Hora</span>  
+                                 <p>{{ reservation.hours_reservation_text }}</p>
+                             </div>
+                             <div class="col-xs-2">
+                                <span class="f-700">Tamaño</span>
+                                <p>{{ reservation.num_people }}</p>
+                            </div>
+                        <div class="col-xs-2">
+                            <span class="f-700">Mesas</span>
+                            <p>{{ reservation.tables.length }}</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <label class="label" style="background: {{ reservation.status.color }}"> {{ reservation.status.name }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 notes">
+                        Observaciones : {{ reservation.note || "Ninguna" }}
+                    </div>
+                        </div>
+                    </div>
+                </div>
+
+            
+                <div class="row footer-paginador" ng-show = "vm.guestData.reservations.past.length > 0" >
+                   <div class="col-md-12">
+                        <uib-pagination total-items="vm.paginationReservation.totalItems" ng-model="vm.paginationReservation.currentPage" max-size="vm.paginationReservation.maxSize" ng-change="vm.pageReservationChanged(vm.paginationReservation.currentPage)" items-per-page="vm.paginationReservation.itemsPage"></uib-pagination>
+                    </div>
+                </div>
+        
+        </div>
+    </div>

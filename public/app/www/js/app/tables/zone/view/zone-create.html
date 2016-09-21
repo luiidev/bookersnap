@@ -1,5 +1,5 @@
 
-<ion-view view-title="Lista de zonas">
+<ion-view view-title="Crear zona">
   <ion-content>
       <section id="main">
     <section id="content">
@@ -55,20 +55,22 @@
                             </div>-->
                          
                     </div>
-                    <div class="row">
-                        <div class="col-xs-9 box-lienzo-zone">
-                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
+                    <div class="row box-main">
+
+                        <div class="box-lienzo">
+                            <div class="col-xs-9 box-lienzo-zone">
+                                <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
                                 <button type="button" class="btn btn-default btn-settings waves-effect" ng-click="showSettings()"> <i class="zmdi zmdi-settings zmdi-hc-fw"></i></button>
 
-                                <div ng-repeat="obj in itemTables" ng-drag="true" ng-drag-data="obj" ng-drag-table  on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}"  top="{{obj.top}}" left="{{obj.left}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" shape="{{obj.shape}}" size="{{obj.size}}" rotate="{{obj.rotate}}">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-drag-table  on-click-fn='activarTableOptions($index,this)' class="item-drag-table  rt{{obj.rotate}}" id="tb-item{{$index}}"  top="{{obj.top}}" left="{{obj.left}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" shape="{{obj.shape}}" size="{{obj.size}}" rotate="{{obj.rotate}}">
                                         <div>{{obj.name}}</div>
                                         <div class="border shape-table {{obj.shape}} {{obj.size}}"></div>    
                                 </div>
                                 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-3 box-tables" id="tables-settings">
+                            <div class="col-xs-3 box-tables" id="tables-settings">
                             <div class="box-tables-items" ng-show="boxTables.items">
                                 <div class="row item-table no-border descripcion">
                                     <h3>Add tables to your floor</h3>
@@ -272,7 +274,9 @@
 
                             </div>
                  
-                        </div>  
+                            </div>  
+                        </div>
+
                     </div>
                 </div>
             </div>

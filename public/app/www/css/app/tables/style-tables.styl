@@ -105,20 +105,29 @@
 		border-radius 5px
 		//margin-bottom 5px
 		float left
-	& .box-lienzo-zone
-		padding-left 10px
-		width 675px !important
-		& .lienzo 
-			background-color #eee
-			min-height 740px
-			overflow hidden
-			& .btn-settings
-				right 0
-				position absolute
-				opacity 0
+	& .box-main
+		position relative
+		height 780px
+		& .box-lienzo 
+			position absolute
+			width 100%
+			top 0
+			& .box-lienzo-zone
+				padding-left 10px
+				width 675px !important
+				& .lienzo 
+					background-color #eee
+					min-height 740px
+					overflow hidden
+					& .btn-settings
+						right 0
+						position absolute
+						opacity 0
 	& .box-tables
 		padding-left 7px
 		padding-right 0px
+		right -15px
+		position absolute
 		& .descripcion 
 			padding 0 4px
 			& h3 
@@ -160,10 +169,11 @@
 /* -------RESPONSIVE ZONES-----*/
 @media (max-width:768px)
 	.box-zone-create
-		.box-tables
+		& .box-tables
 			display none
-			position relative
-			right 229px
+			//position relative
+			//right 229px
+			//right 0
 			top 50px
 			z-index 1500
 			background #fff
@@ -182,14 +192,16 @@
 			width 700px!important
 			margin 0
 	.box-zone-create 
-		& .box-lienzo-zone
-			padding-right 0
-			& .lienzo
-				width 662px
-				& .btn-settings
-					opacity 1
+		& .box-main
+			& .box-lienzo
+				& .box-lienzo-zone
+					padding-right 0
+					& .lienzo
+						width 662px
+						& .btn-settings
+							opacity 1
 
-/*Create zone drag and drop*/
+/*---------Create zone drag and drop-----*/
 [ng-drag]
 	-moz-user-select -moz-none
 	-khtml-user-select none
@@ -270,8 +282,10 @@
 	& hr 
 		border-top 1px dashed #ccc
 	& .box-tags 
-		& hr 
-			border-top 1px solid #ccc
+		& .tags-row 
+			border-bottom 1px solid #ccc
+			margin-bottom 15px
+			padding-bottom 7px
 		& .label
 			margin-right 5px
 			font-size 0.9em
@@ -294,6 +308,33 @@
 				font-size 85%
 	& .footer-paginador
 		padding 0 40px
+		
+/* -------RESPONSIVE GUEST-----*/
+@media (min-width:768px) and (max-width:950px)
+	#profile-main 
+		& .pm-overview
+			width 100%
+			position relative
+		& .pm-body 
+			padding-left 15px
+		& .header-list-reservation
+			padding 0 20px
+		& .header-view-profile
+			& .button-edit
+				float none!important
+				text-align center
+				margin-bottom 15px
+		& .lv-item
+			padding 20px 0
+		& .lv-body
+			padding 0
+	#messages-main 
+		& .ms-menu
+			width 210px
+		& .ms-body 
+			padding-left 210px
+		
+
 /*--------------TURNOS------------------*/
 $background-tables-head = #eee
 
