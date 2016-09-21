@@ -1,0 +1,51 @@
+
+<ion-view view-title="Lista de zonas">
+  <ion-content>
+    <section id="main">
+
+        <section id="content">
+            <div class="container">
+            
+                <div class="block-header">
+                    <ul class="actions">
+                        <li>
+                            <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary waves-effect" data-ui-sref="mesas.zone-create">Create Zone</button>
+                        </li>
+                    </ul>
+                </div>
+               <div class="card">
+    
+                <div class="pm-body clearfix list-table">
+                    <ul class="tab-nav">
+                        <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="mesas.zone.active">Active</a></li>
+                        <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="mesas.zone.inactive">Inactive</a></li>
+                    </ul>
+                    <data ui-view></data>
+                </div>
+
+                </div>
+
+            </div>
+        </section>
+    </section>
+  </ion-content>
+    <script type="text/ng-template" id="myModalDeleteZone.html">
+
+        <div class="modal-header">
+            <h3 class="modal-title">Are you sure want to delete this zone?</h3>
+        </div>
+
+        <div class="modal-body">
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="deleteZone()">Yes</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+    </script>
+</ion-view>
+
+

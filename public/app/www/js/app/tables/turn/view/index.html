@@ -1,0 +1,74 @@
+<ion-view view-title="Lista de turnos">
+  <ion-content>
+    <section id="main">
+
+      <section id="content">
+          <div class="container">
+
+              <div class="block-header">
+                  <ul class="actions">
+                      <li>
+                          <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
+                      </li>
+                      <li>
+                          <button class="btn btn-primary waves-effect" data-ui-sref="mesas.turn-create">Create New Turn</button>
+                      </li>
+                  </ul>
+              </div>
+
+            <div class="card" id="turno-main">
+       
+                <div class="pm-body clearfix list-table">
+
+                  <div class="card-body table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Tipo turno</th>
+                          <th>Hora</th>
+                          <th>Zonas</th>
+                          <th>Estado</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="item in turns">
+                         <td>{{item.name}}</td>
+                         <td>{{item.type_turn.name}}</td>
+                         <td>{{item.hours_ini}} - {{item.hours_end}}</td>
+                         <td> {{ item.zones}}</td>
+                         <td>
+                          <label class="label label-success f-12" ng-if="item.status == 1">Active</label>
+                          <label class="label label-danger f-12" ng-if="item.status == 0">Inactive</label>
+                        </td>
+                        <td>
+                          <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="mesas.turn-edit({turn : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit turn</button> </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+
+                  </div>
+
+                  <div class="row">
+                      <div class="col-xs-12 text-center" ng-show="turns.length == 0">
+                        <div class="preloader pl-lg">
+                          <svg class="pl-circular" viewBox="25 25 50 50">
+                            <circle class="plc-path" cx="50" cy="50" r="20"></circle>
+                          </svg>
+                        </div>
+                      </div>
+                  </div>
+
+                </div>
+     
+          </div>
+          </div>
+      </section>
+    </section>
+  </ion-content>
+</ion-view>
+
+
+

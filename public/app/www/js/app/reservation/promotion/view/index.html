@@ -1,0 +1,67 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container">
+
+        	<!--<div class="block-header">
+        		<h2>Listado de turno <small>Descripcion de pantalla turnos</small></h2>
+        	</div>-->
+
+      		<div class="card" id="turno-main">
+      			<div class="card-header">
+                            <h2>Promociones <small></small></h2>
+                            <div class="pull-right"><button class="btn btn-primary waves-effect" data-ui-sref="add">Agregar Promocion</button></div>
+                        </div>
+              <div class="pmb-block">
+                  <div class="pmbb-header">
+                          <div class="card-body table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th>Nombre</th>
+                                          <th>Descripcion</th>
+                                          <th>Fecha de caducidad</th>
+                                          <th>Estado</th>
+                                          <th>Acciones</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td>1</td>
+                                          <td>Zone 1</td>
+                                          <td>3</td>
+                                          <td>45</td>
+                                          <td><label class="label label-success f-12">Active</label></td>
+                                          <td>
+                                            <button class="btn btn-default btn-icon-text waves-effect"><i class="zmdi zmdi-refresh"></i> Editar</button>
+                                            <button class="btn btn-default btn-icon-text waves-effect"><i class="zmdi zmdi-close"></i> Eliminar</button>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>2</td>
+                                          <td>Zone 1</td>
+                                          <td>3</td>
+                                          <td>45</td>
+                                          <td><label class="label label-danger f-12">Inactive</label></td>
+                                          <td><button class="btn btn-default btn-icon-text waves-effect"><i class="zmdi zmdi-refresh"></i> Editar</button>
+                                            <button class="btn btn-default btn-icon-text waves-effect"><i class="zmdi zmdi-close"></i> Eliminar</button></td>
+                                      </tr>
+                                    
+                               
+                                  </tbody>
+                              </table>
+                          </div>
+                  </div>
+              </div>
+      		</div>
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
