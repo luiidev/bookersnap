@@ -124,7 +124,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
     })
 
-    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService, $modal, $response) {
+    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService, $modal) {
         var vm = this;
         vm.date = data.date;
         vm.flags = {isLoading: false};
@@ -162,7 +162,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                         },
                         OnError: function (Response) {
                             bsLoadingOverlayService.stop();
-                            $response.error(Response);
+                            message.apiError(Response);
                         }
                     });
                 }
@@ -345,7 +345,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         init();
     })
 
-    .controller('ScheduleChangeController', function (data, $modalInstance, CalendarService, $response) {
+    .controller('ScheduleChangeController', function (data, $modalInstance, CalendarService) {
         var vm = this;
         vm.typeShift = data.typeShift;
         vm.date = data.date;
@@ -369,7 +369,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     try {
                         if (Response.data.statuscode == 201) {
                             data.updateShifts();
-                            messageAlert('Turno Reprogramado', '', 'success');
+                            message.success('Turno Reprogramado');
                             vm.dismiss();
                             modalInstanceBefore.dismiss();
                         }
@@ -379,7 +379,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 },
                 OnError: function (Response) {
                     vm.flags.isLoading = false;
-                    $response.error(Response);
+                    message.apiError(Response);
                 }
             });
         };

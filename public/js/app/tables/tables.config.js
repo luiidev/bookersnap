@@ -11,7 +11,8 @@ angular.module('tables.app',
     ])
     .constant("IdMicroSitio", idMicrositio)
     //.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas')
-    .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/en/microsites/' + idMicrositio)
+    // .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/en/microsites/' + idMicrositio)
+    .constant("ApiUrlMesas", "http://localhost:3004/v1/es/microsites/" + idMicrositio)
     .constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en')
     
     .run(function($http){

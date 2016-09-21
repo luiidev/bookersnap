@@ -28,7 +28,7 @@ angular.module('turn.service', [])
 
 	return {
 		getTypeTurns : function(){
-			return $http.get(ApiUrlRoot+"/type-turn");
+			return $http.get(ApiUrlMesas+"/type-turn");
 		},
 		getDaysTypeTurn : function(vTypeTurn){
 			return $http.get(ApiUrlMesas+"/type-turn/"+vTypeTurn+"/days");
