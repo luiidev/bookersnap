@@ -1,0 +1,14 @@
+<div class="col-xs-9 box-lienzo-zone">
+    <tabset justified="true">
+        <tab ng-repeat="tab in vm.zonas" heading="{{tab.name}}" active="tab.active">
+            <div class="zoneArea minheight" style="position:relative;">
+                <div ng-detail-table ng-repeat="obj in tab.table" class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}" x="{{obj.left}}" y="{{obj.top}}" id="el{{obj.id}}" on-click-fn="vm.mostrarDetail($index,obj)">
+                    <div class="txtcenter">
+                    	<div class="name-table">{{obj.name}}</div>
+                    	<div class="box-status {{obj.res_reservation_status_id | statusReservation}} icon-status-table"></div>
+                    </div>
+                </div>
+            </div>
+        </tab>
+    </tabset>
+</div>

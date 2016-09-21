@@ -5,6 +5,7 @@ angular.module('tables.app', [
         'zone.app',
         'guest.app',
         'book.app',
+        'floor.app',
         /*'block.app',
         'guest.app',
         'calendar.app',

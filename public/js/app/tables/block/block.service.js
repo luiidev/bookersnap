@@ -13,7 +13,7 @@ angular.module('block.service', [])
 						    return response;
 						  }, function errorCallback(response) {
 						  	return response;
-						  })
+						  });
 
 		},
 		deleteBlock: function(id_block){
@@ -21,7 +21,7 @@ angular.module('block.service', [])
 						    return response;
 						  }, function errorCallback(response) {
 						  	return response;
-						  })
+						  });
 
 		},
 		editBlock: function(variablesUrl, data){

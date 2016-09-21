@@ -42,7 +42,7 @@ angular.module('floor.directive', [])
                 cursor: 'pointer',
                 top: top + 'px',
                 left: left + 'px',
-                border: '2px solid ' + attr.color,
+                border: '2px solid '+attr.color,
                 none: 'none',
             });
 
