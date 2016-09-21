@@ -1,0 +1,101 @@
+
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container zone-container" ng-controller="blockCtr">
+            <div class="card">
+                <div class="card-body card-padding box-zone-create">
+                    <div class="row header-zone-create">
+                        <div class="col-md-12">
+                            <div class="col-xs-2 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <select  ng-model="zone" ng-options="item.name for item in zones " ng-change="selectZone(zone)">
+                                    <option value="" disabled="disabled" selected="true">Select Zone</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
+                                    &nbsp;&nbsp;&nbsp;  
+                                    <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-9 box-lienzo-zone">
+                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-select-table  on-selected-fn="activarTableOptions($index,obj)"  on-deselect-fn="desactivarTable($index,obj)" on-click-fn='activarTableOptions($index,this)' class="item-drag-table  {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit">
+                                        <div>{{obj.name}}</div>
+                                        <div class="border shape-table {{obj.shape}} {{obj.size}}"></div> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3 box-tables">
+                            <div class="box-tables-items" ng-show="boxTables.items">
+                                <div class="row item descripcion">
+                                    <h3 class="center">Crear Bloqueo</h3>
+                                </div>
+                                <div class="space-24"></div>
+                                <div class="row item-table-box">
+                                  <div class="col-md-12">
+                                        <div class="title-table">Date</div>
+                                          <div class="date-picker input-group" ng-class="{ 'is-opened': opened == true }">
+                                              <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
+                                              <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
+                                                  <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
+                                              </div>
+                                          </div>
+                                  </div>
+                                </div>
+                                <div class="row item-table-box">
+                                  <div class="col-md-12">
+                                        <div class="title-table">Shift</div>
+                                    <select ng-model="shift" ng-options=" shift.name for shift in shifts" ng-change="changueRange(shift)">
+                                      <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="row item-table-box">
+                                  <div class="col-md-6">
+                                        <div class="title-table">Start Time</div>
+                                        <select ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes">
+                                          <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        </select>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <div class="title-table">End Time</div>
+                                        <select ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes">
+                                          <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        </select>
+                                  </div>
+                                </div>
+                                 <div class="row item-table-box">
+                                  <div class="col-md-12">
+                                        <div class="title-table">Tables</div>
+                                         <div data-ng-bind-html="someSafeContent"></div>
+                                  </div>
+                                </div>
+                                <div class="row item-table-box">
+                                  <div class="col-md-12">
+                                        <button class="btn btn-primary waves-effect" ng-click="saveZone('create')">Save Zone</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>

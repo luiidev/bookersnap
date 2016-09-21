@@ -1,4 +1,5 @@
-var idMicrositio = obtenerIdMicrositio();
+// var idMicrositio = obtenerIdMicrositio();
+var idMicrositio = 1;
 angular.module('reservation.app', ['promotion.app', 'flyer.app'])
 	.constant("IdMicroSitio", idMicrositio)
 	//.constant("ApiUrlReservation", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas');

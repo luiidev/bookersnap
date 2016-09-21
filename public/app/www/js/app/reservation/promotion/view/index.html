@@ -1,9 +1,6 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
+<ion-view view-title="Lista de promociones">
+  <ion-content>
 <section id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
         <div class="container">
@@ -15,7 +12,7 @@
       		<div class="card" id="turno-main">
       			<div class="card-header">
                             <h2>Promociones <small></small></h2>
-                            <div class="pull-right"><button class="btn btn-primary waves-effect" data-ui-sref="add">Agregar Promocion</button></div>
+                            <div class="pull-right"><button class="btn btn-primary waves-effect" data-ui-sref="reservation.add">Agregar Promocion</button></div>
                         </div>
               <div class="pmb-block">
                   <div class="pmbb-header">
@@ -63,5 +60,5 @@
         </div>
     </section>
 </section>
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+</ion-content>
+</ion-view>
