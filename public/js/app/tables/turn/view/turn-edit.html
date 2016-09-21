@@ -66,15 +66,17 @@
                             </div>
                         </div>
 
-                        <!--
-                        
                         <div class="row">
                             <div class="col-xs-12">
-                                <p class="c-black f-500 m-b-20">Seleccionar dias</p>
+                                <p class="c-black f-500 m-b-20">
+                                <button class="btn btn-default btn-icon-text waves-effect" ng-click="activeDay()"><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> Seleccionar dias</button>
+                                  </p>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" ng-hide="dayHide">
                                <label class="checkbox checkbox-inline m-r-20" ng-repeat="dayItem in days">
-                                    <input type="checkbox" value="{{dayItem.id}}" ng-model="turnData.days[$index]" ng-disabled="dayItem.disabled">
+                                    <!--<input type="checkbox" value="{{dayItem.id}}" ng-model="turnForm.days[$index]" ng-disabled="dayItem.disabled">-->
+                                   
+                                    <input type="checkbox" value="{{dayItem.id}}" ng-click="checkDay(dayItem.id)" ng-checked="turnForm.days[$index].checked == true">
                                     <i class="input-helper"></i> {{dayItem.label}}
                                 </label>
 
@@ -82,11 +84,11 @@
                         </div>
                        
                         <hr>
-                        <br>-->
+                        <br>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="text-center">
-                                    <button type="button" class="btn bgm-orange" ng-click="showZones()"> <i class="zmdi zmdi-assignment-check zmdi-hc-fw"></i> Asignar zonas</button>
+                                    <button type="button" class="btn bgm-orange" ng-click="showZones('edit')"> <i class="zmdi zmdi-assignment-check zmdi-hc-fw"></i> Asignar zonas</button>
                                 </div>
                                 
                             </div>
@@ -116,7 +118,7 @@
                                              <td>
                                                  
                                                  <button type="button" class="btn btn-info waves-effect" ng-click="showTables(zone,'edit')"><i class="zmdi zmdi-open-in-new zmdi-hc-fw"></i> Mesas</button>
-                                                 <button type="button" class="btn btn-danger waves-effect" ng-click="deleteZone(zone.id)"><i class="zmdi zmdi-close"></i></button>
+                                                 <button type="button" class="btn btn-danger waves-effect" ng-click="deleteZone(zone,'edit')"><i class="zmdi zmdi-close"></i></button>
                                              </td>
                                          </tr>
                                         </tbody>
@@ -251,7 +253,7 @@
                             <td>
                                <div class="checkbox m-b-15">
                                     <label>
-                                        <input type="checkbox" value="{{zone.id}}" ng-click="asignZone(zone)" ng-checked="{{zone.checked}}">
+                                        <input type="checkbox" value="{{zone.id}}" ng-click="assignZone(zone)" ng-checked="{{zone.checked}}">
                                         <i class="input-helper"></i>    
                                     </label>
                                 </div>
@@ -282,26 +284,25 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')" ng-checked="rulesAll.online">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')" ng-checked="rulesAll.local">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')" ng-checked="rulesAll.disabled">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
                             </th>
-                          
                         </tr>
                     </thead>
                     <tbody>

@@ -16,7 +16,7 @@ var obtenerIdMicrositio = function(){
 	return id;
 };
 
-var getDaysWeek = function(){
+var getDaysWeek = function() {
     var days = [
         {id : 0, label : 'Domingo'},
         {id : 1, label : 'Lunes'},
@@ -107,7 +107,7 @@ var getRangoHours = function(horaInicial, horaFinal){
         arrayHoras.push({hour24: newHoursIni, hour12: defineTimeSytem(newHoursIni)}); 
     }
     return arrayHoras;
-}
+};
 
 /*-----
 Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
@@ -146,6 +146,11 @@ var defineTimeSytem = function(time){
     return newTime;
 };
 
+var setearJsonError = function (jsonError){
+    var energy = jsonError.join("\n");
+    return energy;
+}
+
 var convertDateTo24Hour = function(timeStr){
     if(timeStr==undefined){
         return null;
@@ -165,7 +170,7 @@ var convertDateTo24Hour = function(timeStr){
         return hours+':'+minutes+':'+"00";
 
     }
-}
+};
  
 /*----------
 // Convierte un objeto json en url con sus propiedades
@@ -184,7 +189,7 @@ var getAsUriParameters = function(data) {
         encodeURIComponent(data[prop]) + '&';
     }
     return url.substring(0, url.length - 1)
-}
+};
 
 var getDayText = function(index,option){
     var days = getDaysWeek();

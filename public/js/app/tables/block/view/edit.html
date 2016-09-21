@@ -12,15 +12,22 @@
                 <div class="card-body card-padding box-zone-create">
                     <div class="row header-zone-create">
                         <div class="col-md-12">
-                            <div class="col-xs-6 padding-left-none">
+                            <div class="col-xs-2 padding-left-none">
                                 <div class="input-group fg-float">
                                     <select  ng-model="zone" ng-options="item.name for item in zones " ng-change="selectZone(zone)">
                                     <option value="" disabled="disabled" selected="true">Seleccione Zona</option>
                                     </select>
                                 </div>
                             </div>
-                            
-                        </div> 
+                            <div class="col-xs-4 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
+                                    &nbsp;&nbsp;&nbsp;  
+                                    <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-9 box-lienzo-zone">
@@ -35,7 +42,7 @@
                         <div class="col-xs-3 box-tables">
                             <div class="box-tables-items" ng-show="boxTables.items">
                                 <div class="row item descripcion">
-                                    <h3 class="center">Crear Bloqueo</h3>
+                                    <h3 class="center">Editar Bloqueo</h3>
                                 </div>
                                 <div class="space-24"></div>
                                 <div class="row item-table-box">
@@ -44,7 +51,7 @@
                                           <div class="date-picker input-group" ng-class="{ 'is-opened': opened == true }">
                                               <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
                                               <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
-                                                  <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="fecha" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
+                                                  <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
                                               </div>
                                           </div>
                                   </div>
@@ -88,19 +95,6 @@
                     </div>
                 </div>
             </div>
-
-            <script type="text/ng-template" id="myModalDeleteTable.html">
-                <div class="modal-header">
-                    <h3 class="modal-title">Are you sure want to delete this table?</h3>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="ok()">Yes</button>
-                    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-                </div>
-            </script>
-                
         </div>
     </section>
 </section>
