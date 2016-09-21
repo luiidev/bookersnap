@@ -5,62 +5,62 @@
     <section id="content">
         <div class="container">
 
-            <div class="block-header">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="mesas.guest.create">Agregar Huésped</button>
-                        
-                    </li>
-                </ul>
-            </div>
-
-            <div class="card m-b-0" id="messages-main">
-
-                <div class="ms-menu" data-ng-class="{ 'toggled': mactrl.lvMenuStat }">
-            
-                    <div class="ms-block">
-                 
-                        <div class="fg-line">
-                            <input type="text" class="form-control" ng-model="vm.name" placeholder="Nombre">
-                        </div>
-                    
-                    </div>
-
-                    <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
-                  
-                        <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
-                            <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
-                                <div class="lv-avatar bgm-orange pull-left">m</div>
-                                <div class="media-body">
-                                    <div class="lv-title">{{ item.first_name }}</div>
-                                    <div class="lv-small">{{ item.contact }}</div>
-                                </div>
-                            </a>
-                        
-                        </div>
-
-                    </div>
+                <div class="block-header">
+                    <ul class="actions">
+                        <li>
+                            <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary waves-effect" data-ui-sref="mesas.guest.create">Agregar Huésped</button>
+                            
+                        </li>
+                    </ul>
                 </div>
- 
-                <div class="ms-body">
 
-                    <div class="listview lv-message">
+                <div class="card m-b-0" id="messages-main">
+
+                    <div class="ms-menu" data-ng-class="{ 'toggled': mactrl.lvMenuStat }">
+                
+                        <div class="ms-block">
+                     
+                            <div class="fg-line">
+                                <input type="text" class="form-control" ng-model="vm.name" placeholder="Nombre">
+                            </div>
+                        
+                        </div>
+
+                        <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
                       
-                        <div class="lv-body" style="min-height: 600px">
-                             <data ui-view="guestView"></data>
-                        </div>
-                        
-                        <div class="clearfix"></div>
+                            <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
+                                <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
+                                    <div class="lv-avatar bgm-orange pull-left">m</div>
+                                    <div class="media-body">
+                                        <div class="lv-title">{{ item.first_name }}</div>
+                                        <div class="lv-small">{{ item.contact }}</div>
+                                    </div>
+                                </a>
+                            
+                            </div>
 
+                        </div>
+                    </div>
+     
+                    <div class="ms-body">
+
+                        <div class="listview lv-message">
+                          
+                            <div class="lv-body" style="min-height: 600px">
+                                 <data ui-view="guestView"></data>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
     </section>
-</section>
+    </section>
   </ion-content>
 </ion-view>
 
