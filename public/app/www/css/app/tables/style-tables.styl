@@ -1,0 +1,496 @@
+.modal-header
+	text-align center
+.modal-footer
+	text-align center
+	
+.list-table
+	padding 0 25px
+	& .table-responsive
+		padding 15px 0
+
+.block-header
+	padding-bottom 15px
+
+.float-right
+	float right
+.padding-left-none
+	padding-left 0
+.zone-container
+	width 940px !important
+	& .container
+		max-width none !important
+	& .card 
+		width 940px !important
+.box-zone-create
+	& .form-group
+		&.text-rotate
+			text-align left
+		&.group-btn-rotate
+			& .btn-rotate
+				padding 4px 12px
+				& i 
+					font-size 1.2em
+					margin-top 4px
+			& .shape 
+				padding 10px 20px
+				&:nth-child(2)
+					border-left 1px solid rgba(0,0,0,.16)
+				&:nth-child(3)
+					border-left 1px solid rgba(0,0,0,.16)
+				& > i 
+					float left
+					background-color #777
+					&.round-btn-shape
+						width 20px
+						height 20px
+					&.square-btn-shape
+						width 20px
+						height 20px
+					&.recta-btn-shape
+						width 35px
+						height 20px
+				
+	& .selected-table
+		& .border
+			border 2px solid #011A52!important
+			background-color #0639AF
+			opacity 0.5
+	& .selected-table-2
+		& .border
+			border 5px solid red!important
+			opacity 0.3		
+	& .round
+		border-radius 50%
+	& .rt45
+		-moz-transform rotate(45deg)
+		-ms-transform rotate(45deg)
+		-webkit-transform rotate(45deg)
+		transform rotate(45deg)
+	& .shape-table
+		background-color #fff
+	& .border
+		border 1px solid #ccc
+		z-index 100
+		&.round.small
+			width 30px
+			height 30px
+		&.round.medium
+			width 50px 
+			height 50px
+		&.round.large
+			width 75px
+			height 75px
+		&.square.small
+			width 30px
+			height 30px
+		&.square.medium
+			width 50px 
+			height 50px
+		&.square.large
+			width 75px
+			height 75px
+		&.recta.small
+			width 45px
+			height 27px
+		&.recta.medium
+			width 60px 
+			height 32px 
+		&.recta.large
+			width 75px
+			height 48px
+			
+	& .header-zone-create
+		padding 8px
+		border 1px solid #DEDEDE
+		border-radius 5px
+		//margin-bottom 5px
+		float left
+	& .box-main
+		position relative
+		height 780px
+		& .box-lienzo 
+			position absolute
+			width 100%
+			top 0
+			& .box-lienzo-zone
+				padding-left 10px
+				width 675px !important
+				& .lienzo 
+					background-color #eee
+					min-height 740px
+					overflow hidden
+					& .btn-settings
+						right 0
+						position absolute
+						opacity 0
+	& .box-tables
+		padding-left 7px
+		padding-right 0px
+		right -15px
+		position absolute
+		& .descripcion 
+			padding 0 4px
+			& h3 
+				font-size 1.5em
+				margin-top 10px
+		& .item-table
+			border-bottom 1px solid #ccc
+			&.no-border
+				border-bottom 0
+			&.title
+				padding 4px 10px
+				font-size 1.1em
+				background-color #eee
+				font-weight bold
+				&.first 
+					margin-top 10px
+					border-top 1px solid #ccc
+				&.no-background
+					background-color transparent
+		& .item-table-box
+			padding-top 7px
+			text-align center
+			padding-bottom 8px
+			border-bottom 1px solid #ccc
+			margin-bottom 5px
+			& .box-buttons-item-table
+				margin-top 25px
+				float left
+			&.last
+				border-bottom 0
+			& .col-md-4
+				padding-left 0
+			& .title-table
+				font-size 1em
+			& .table-box
+				text-align center
+				display inline-block
+				
+/* -------RESPONSIVE ZONES-----*/
+@media (max-width:768px)
+	.box-zone-create
+		& .box-tables
+			display none
+			//position relative
+			//right 229px
+			//right 0
+			top 50px
+			z-index 1500
+			background #fff
+			width 230px
+			& .box-tables-items
+				& .descripcion
+					margin 0
+				& .title 
+					margin 0
+				& .item-table-box 
+					margin 0
+	.zone-container
+		width 700px!important
+		padding 0	
+		& .card 
+			width 700px!important
+			margin 0
+	.box-zone-create 
+		& .box-main
+			& .box-lienzo
+				& .box-lienzo-zone
+					padding-right 0
+					& .lienzo
+						width 662px
+						& .btn-settings
+							opacity 1
+
+/*---------Create zone drag and drop-----*/
+[ng-drag]
+	-moz-user-select -moz-none
+	-khtml-user-select none
+	-webkit-user-select none
+	-ms-user-select none
+	user-select none
+	cursor move
+	&.drag-over
+		border solid 1px rgba(255, 0, 0, 0.5)
+	&.dragging
+		opacity 0.5
+		border solid 1px rgba(255, 0, 0, 0.5)
+		background rgba(255, 0, 0, 0.5)
+[ng-drop]
+	background rgba(0, 255, 0, 0.5)
+	text-align center
+	display block
+	//margin 20px auto
+	position relative
+	& div
+		position relative
+		z-index 2
+		
+/*--------------BOOK------------------*/
+
+.container-book
+	& .lv-body
+		& .lv-item
+			cursor pointer
+			//background-color #e6f3dc
+			border-left 4px solid #2196f3
+			&:first-child 
+				border-top 1px solid #ccc
+			&:not(:last-child)
+				border-bottom 1px dashed #ccc
+	& .calendar-box
+		list-style none
+		display inline-block
+		margin 0 
+		padding 0
+		&>li 
+			display inline-block
+			vertical-align top
+			& i.calendar-btn 
+				font-size 5em
+				color #ccc
+		& .date-picker
+			width 200px
+	& .pagination.search-guest
+		& li 
+			&.active .btn
+				background-color #00bcd4
+				color #fff
+			& .btn
+				&:hover
+					background-color #00bcd4
+					color #fff
+		& .dropdown-menu.guest-list
+			left -55px
+			border-radius 7px
+			&:before
+				content " "
+				top -20px
+				left 64px
+				position absolute
+				border-width 10px
+				border-bottom-color #fff
+				border-style solid
+				color transparent
+			&>li
+				text-align center
+		
+
+/*--------------GUEST------------------*/
+
+#profile-main
+	min-height 800px
+	& hr 
+		border-top 1px dashed #ccc
+	& .box-tags 
+		& .tags-row 
+			border-bottom 1px solid #ccc
+			margin-bottom 15px
+			padding-bottom 7px
+		& .label
+			margin-right 5px
+			font-size 0.9em
+			display inline-block
+			cursor pointer
+	& .header-view-profile
+		padding-right 16px
+		padding-top 15px
+	& .header-list-reservation
+		padding 0 53px
+	& .listview
+		& .lv-item
+			& .media-body
+				border-bottom 1px solid #E5E5E5
+			& .notes 
+				padding 10px 15px
+			&:not(:last-child)
+				border-bottom 1px dashed #ccc
+			& .label 
+				font-size 85%
+	& .footer-paginador
+		padding 0 40px
+		
+/* -------RESPONSIVE GUEST-----*/
+@media (min-width:768px) and (max-width:950px)
+	#profile-main 
+		& .pm-overview
+			width 100%
+			position relative
+		& .pm-body 
+			padding-left 15px
+		& .header-list-reservation
+			padding 0 20px
+		& .header-view-profile
+			& .button-edit
+				float none!important
+				text-align center
+				margin-bottom 15px
+		& .lv-item
+			padding 20px 0
+		& .lv-body
+			padding 0
+	#messages-main 
+		& .ms-menu
+			width 210px
+		& .ms-body 
+			padding-left 210px
+		
+
+/*--------------TURNOS------------------*/
+$background-tables-head = #eee
+
+.box-turno-create
+	& hr 
+		border-top 1px dashed #ccc
+	& .box-zones
+		transition all linear 0.5s
+		& .table>thead>tr>th
+			background-color $background-tables-head
+	& .box-tables
+		transition all linear 0.3s
+		& .header-rule
+			border 1px solid #ccc
+			border-radius 5px
+			padding 7px 9px
+			& label 
+				margin-bottom 0
+		& .table>thead>tr>th
+			background-color $background-tables-head
+	& .ng-hide
+		opacity 0
+	& .ng-show
+		opacity 1
+	& .table .rules
+		& span
+			font-weight bold
+		&.disabled
+			color #f44336
+		&.local
+			color #9E9E9E
+		&.online
+			color #2196F3
+	& label
+		&.checkbox-inline
+			line-height 4px
+			
+/*--------------Calendario------------------*/
+					
+.event-disabled
+	opacity: .5
+	
+#calendar a:not(.event-disabled)
+	cursor: pointer
+
+#calendar a.event-disabled
+	cursor: context-menu;
+	
+/*--------------Floor------------------*/
+.border-left-green
+	border-left 3px solid rgba(76,175,80,0.7);
+.border-left-amber
+	border-left 3px solid rgba(255,152,0,0.7);
+.not-information
+	padding 10px
+	margin-top 10px
+.zoneArea
+	background #eee
+	&.minheight
+		min-height 740px
+	&.transparente
+		background transparent
+	& .selected-table
+		&.border
+			border 1px solid #011A52!important
+			background-color #0639AF
+			opacity 0.5
+			color #fff
+			/*
+			&.border-red
+				border 2px solid #dc614d!important
+			&.border-orange
+				border 2px solid #ff9800!important
+			&.border-green
+				border 2px solid #4caf50!important
+			&.border-yellow
+				border 2px solid #fcce18!important
+			&.border-blue
+				border 2px solid #03a9f4!important
+			&.border-gray
+				border 2px solid #c1bfbf!important
+			*/
+	& .border
+		border 1px solid #ccc
+		z-index 100
+		&.border-red
+			border 2px solid #dc614d
+		&.border-orange
+			border 2px solid #ff9800
+		&.border-green
+			border 2px solid #4caf50
+		&.border-yellow
+			border 2px solid #fcce18
+		&.border-blue
+			border 2px solid #03a9f4
+		&.border-gray
+			border 2px solid #c1bfbf		
+		& .txtcenter
+			top 34%
+			text-align center
+			position relative
+		& .txtmoneda
+			text-align center
+			position relative
+			bottom -30px
+		&.round.small
+			width 30px
+			height 30px
+			& .txtcenter
+				top 26%
+			& .txtmoneda
+				bottom -13px
+		&.round.medium
+			width 50px 
+			height 50px
+		&.round.large
+			width 75px
+			height 75px
+			& .txtmoneda
+				bottom -57px
+		&.square.small
+			width 30px
+			height 30px
+			& .txtcenter
+				top 20%
+			& .txtmoneda
+				bottom -13px
+		&.square.medium
+			width 50px 
+			height 50px
+		&.square.large
+			width 75px
+			height 75px
+			& .txtmoneda
+				bottom -57px
+		&.recta
+			& .txtcenter
+				top 24%
+		&.recta.small
+			width 45px
+			height 27px
+			& .txtmoneda
+				bottom -10px
+		&.recta.medium
+			width 60px 
+			height 32px
+			& .txtmoneda
+				bottom -13px 
+		&.recta.large
+			width 75px
+			height 48px
+	& .definite-table
+		&.border
+			border 1px solid #479d4b!important
+			background-color #4caf50
+			opacity 0.8
+			color #fff
+			& .txtmoneda
+				color #242424

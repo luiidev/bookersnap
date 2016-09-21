@@ -1,0 +1,7 @@
+{
+	"name": "MASTER.PROJECT.IONIC",
+	"app_id": "",
+	"gulpStartupTasks": [
+		"app-level-js"
+	]
+}

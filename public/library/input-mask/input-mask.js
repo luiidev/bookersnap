@@ -1,54 +1,34 @@
- /**
- * jquery.mask.js
- * @version: v1.5.3
- * @author: Igor Escobar
- *
- * Created by Igor Escobar on 2012-03-10. Please report any bug at http://blog.igorescobar.com
- *
- * Copyright (c) 2012 Igor Escobar http://blog.igorescobar.com
- *
- * The MIT License (http://www.opensource.org/licenses/mit-license.php)
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-
-(function ($) {
+(function($) {
     "use strict";
-    var Mask = function (el, mask, options) {
-        var jMask = this, old_value;
+    var Mask = function(el, mask, options) {
+        var jMask = this,
+            old_value;
         el = $(el);
 
-        mask = typeof mask === "function" ? mask(el.val(), undefined, el,  options) : mask;
+        mask = typeof mask === "function" ? mask(el.val(), undefined, el, options) : mask;
 
         jMask.init = function() {
             options = options || {};
 
             jMask.byPassKeys = [9, 16, 17, 18, 36, 37, 38, 39, 40, 91];
             jMask.translation = {
-                '0': {pattern: /\d/},
-                '9': {pattern: /\d/, optional: true},
-                '#': {pattern: /\d/, recursive: true},
-                'A': {pattern: /[a-zA-Z0-9]/},
-                'S': {pattern: /[a-zA-Z]/}
+                '0': {
+                    pattern: /\d/
+                },
+                '9': {
+                    pattern: /\d/,
+                    optional: true
+                },
+                '#': {
+                    pattern: /\d/,
+                    recursive: true
+                },
+                'A': {
+                    pattern: /[a-zA-Z0-9]/
+                },
+                'S': {
+                    pattern: /[a-zA-Z]/
+                }
             };
 
             jMask.translation = $.extend({}, jMask.translation, options.translation);
@@ -67,7 +47,7 @@
         };
 
         var p = {
-            getCaret: function () {
+            getCaret: function() {
                 var sel,
                     pos = 0,
                     ctrl = el.get(0),
@@ -77,15 +57,15 @@
                 // IE Support
                 if (dSel && navigator.appVersion.indexOf("MSIE 10") === -1) {
                     ctrl.focus();
-                    sel = dSel.createRange ();
-                    sel.moveStart ('character', -ctrl.value.length);
+                    sel = dSel.createRange();
+                    sel.moveStart('character', -ctrl.value.length);
                     pos = sel.text.length;
-                } 
+                }
                 // Firefox support
                 else if (cSelStart || cSelStart === '0') {
                     pos = cSelStart;
                 }
-                
+
                 return pos;
             },
             setCaret: function(pos) {
@@ -93,7 +73,7 @@
 
                 if (ctrl.setSelectionRange) {
                     ctrl.focus();
-                    ctrl.setSelectionRange(pos,pos);
+                    ctrl.setSelectionRange(pos, pos);
                 } else if (ctrl.createTextRange) {
                     range = ctrl.createTextRange();
                     range.collapse(true);
@@ -118,34 +98,35 @@
             },
             val: function(v) {
                 var isInput = el.get(0).tagName.toLowerCase() === "input";
-                return arguments.length > 0 
-                    ? (isInput ? el.val(v) : el.text(v)) 
-                    : (isInput ? el.val() : el.text());
+                return arguments.length > 0 ? (isInput ? el.val(v) : el.text(v)) : (isInput ? el.val() : el.text());
             },
             behaviour: function(e) {
                 e = e || window.event;
                 if ($.inArray(e.keyCode || e.which, jMask.byPassKeys) === -1) {
-                    
+
                     var changeCaret, caretPos = p.getCaret();
                     if (caretPos < p.val().length) {
                         changeCaret = true;
                     }
-                    
+
                     p.val(p.getMasked());
-                    
+
                     if (changeCaret) {
-                        p.setCaret(caretPos);     
+                        p.setCaret(caretPos);
                     }
 
                     return p.callbacks(e);
                 }
             },
-            getMasked: function (skipMaskChars) {
+            getMasked: function(skipMaskChars) {
                 var buf = [],
                     value = p.val(),
-                    m = 0, maskLen = mask.length,
-                    v = 0, valLen = value.length,
-                    offset = 1, addMethod = "push",
+                    m = 0,
+                    maskLen = mask.length,
+                    v = 0,
+                    valLen = value.length,
+                    offset = 1,
+                    addMethod = "push",
                     resetPos = -1,
                     lastMaskChar,
                     check;
@@ -156,12 +137,12 @@
                     lastMaskChar = 0;
                     m = maskLen - 1;
                     v = valLen - 1;
-                    check = function () {
+                    check = function() {
                         return m > -1 && v > -1;
                     };
                 } else {
                     lastMaskChar = maskLen - 1;
-                    check = function () {
+                    check = function() {
                         return m < maskLen && v < valLen;
                     };
                 }
@@ -174,7 +155,7 @@
                     if (translation) {
                         if (valDigit.match(translation.pattern)) {
                             buf[addMethod](valDigit);
-                             if (translation.recursive) {
+                            if (translation.recursive) {
                                 if (resetPos === -1) {
                                     resetPos = m;
                                 } else if (m === lastMaskChar) {
@@ -195,7 +176,7 @@
                         if (!skipMaskChars) {
                             buf[addMethod](maskDigit);
                         }
-                        
+
                         if (valDigit === maskDigit) {
                             v += offset;
                         }
@@ -203,15 +184,15 @@
                         m += offset;
                     }
                 }
-                
+
                 var lastMaskCharDigit = mask.charAt(lastMaskChar);
                 if (maskLen === valLen + 1 && !jMask.translation[lastMaskCharDigit]) {
                     buf.push(lastMaskCharDigit);
                 }
-                
+
                 return buf.join("");
             },
-            callbacks: function (e) {
+            callbacks: function(e) {
                 var val = p.val(),
                     changed = p.val() !== old_value;
                 if (changed === true) {
@@ -232,13 +213,13 @@
 
         // public methods
         jMask.remove = function() {
-          p.destroyEvents();
-          p.val(jMask.getCleanVal()).removeAttr('maxlength');
+            p.destroyEvents();
+            p.val(jMask.getCleanVal()).removeAttr('maxlength');
         };
 
         // get value without mask
         jMask.getCleanVal = function() {
-           return p.getMasked(true);
+            return p.getMasked(true);
         };
 
         jMask.init();
