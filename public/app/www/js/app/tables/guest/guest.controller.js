@@ -140,6 +140,11 @@ angular.module('guest.controller', [])
 			tags: []
 		};
 
+		vm.guestFormData = {
+			gender: '',
+			birthdate: ''
+		};
+
 		vm.tagsList = [];
 		vm.tagsListAdd = [];
 
@@ -162,7 +167,8 @@ angular.module('guest.controller', [])
 
 		vm.listGender = function() {
 			vm.genderData = getGender();
-			vm.guestData.gender = vm.genderData[0];
+			//vm.guestData.gender = vm.genderData[0];
+			vm.guestFormData.gender = vm.genderData[0];
 		};
 
 		vm.selectTab = function(tabItem) {
@@ -180,10 +186,12 @@ angular.module('guest.controller', [])
 
 		vm.saveGuest = function() {
 
-			console.log("saveGuest " + angular.toJson(vm.guestData, true));
+			console.log("saveGuest date " + vm.guestData.birthdate);
 
 			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestData.birthdate, "es-ES", {});
-			vm.guestData.gender = vm.guestData.gender.id;
+			vm.guestData.gender = vm.guestFormData.gender.id;
+
+			console.log("saveGuest " + angular.toJson(vm.guestData, true));
 
 			var option = ($stateParams.guest !== undefined) ? "edit" : "create";
 
@@ -192,7 +200,7 @@ angular.module('guest.controller', [])
 			GuestFactory.saveGuest(vm.guestData, option).then(function success(response) {
 				loadingHide($ionicLoading);
 				messageAlert("Success", "Huesped registrado", "success", 2000);
-				$state.reload();
+				//$state.reload();
 			}, function error(response) {
 				loadingHide($ionicLoading);
 				messageErrorApi(response, "Error", "warning", 2000);
@@ -253,6 +261,8 @@ angular.module('guest.controller', [])
 				GuestFactory.getGuest($stateParams.guest).then(function success(response) {
 					vm.guestData = response.guest;
 					GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
+
+					console.log("loadDataGuestEdit " + angular.toJson(vm.guestData, true));
 					loadingHide($ionicLoading);
 				}, function error(response) {
 					loadingHide($ionicLoading);

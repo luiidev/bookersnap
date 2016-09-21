@@ -122,7 +122,6 @@ var getRangoHours = function(horaInicial, horaFinal) {
     }
     return arrayHoras;
 };
-
 /*-----
 Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
 YYYY-MM-DD
@@ -135,7 +134,6 @@ var convertFechaYYMMDD = function(fecha, idioma, options) {
 
     return newFecha;
 };
-
 /*-------
 Para las fechas que recibimos en este formato : YYYY-mm-dd y queremos procesarlas a otro formato Date lo convertiremos a un objeto
 Date javascript
@@ -256,7 +254,6 @@ var cleanString = function(cadena) {
 
     return cadena;
 };
-
 
 /*---- Loading de ionic para moviles,tablets, lo usaremos para cuando grabemos informacion o consultemos, asi el usuario sabra que la aplicacion
 esta realizando alguna acción
