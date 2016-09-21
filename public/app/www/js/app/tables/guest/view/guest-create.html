@@ -92,7 +92,7 @@
             				<div class="col-xs-6">
             					<div class="form-group fg-line">
             						<div class="select">
-            							<select class="form-control" ng-model="vm.guestData.gender" ng-options="item as item.label for item in vm.genderData track by item.id">
+            							<select class="form-control" ng-model="vm.guestFormData.gender" ng-options="item as item.label for item in vm.genderData track by item.id">
             							</select>
             						</div>
             					</div>
@@ -185,7 +185,7 @@
 							</div>
 						</div>   
 
-						<div class="card-body card-padding">
+						<div class="row">
 							<div class="col-xs-12">
 								<button class="btn btn-primary waves-effect" type="button" ng-click="vm.validaSaveGuest(frmGuest)"><i class=""></i> Guardar</button>
 							</div>
