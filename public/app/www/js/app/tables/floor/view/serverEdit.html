@@ -1,0 +1,21 @@
+<style type="text/css">
+	
+	.is-selected{
+		background-color: #011A52 !important;
+		opacity 0.5 !important;
+	}
+	
+</style>
+
+<div class="col-sm-8 col-xs-12 box-lienzo-zone">
+    <h1> Edicion de servidores</h1>
+    <tabset justified="true">
+        <tab ng-repeat="tab in se.zonas" heading="{{tab.name}}" active="tab.active">
+            <div class="zoneArea minheight" style="position:relative;">
+                <div ng-table ng-repeat="obj in tab.table" class="{{obj.tableSelectedByServer}} border {{obj.shape}} {{obj.size}} rt{{obj.rotate}}" x="{{obj.left}}" y="{{obj.top}}" color="{{obj.color}}" id="el{{obj.table_id}}" ng-click="se.selectTable(obj)">
+                    <div class="txtcenter"> {{obj.name}}</div>
+                </div>
+            </div>
+        </tab>
+    </tabset>
+</div>
