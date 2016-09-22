@@ -34,9 +34,14 @@ gulp.task('app-library-tables-js', function() {
             '../../../../../../public/library/global/form.directive.js',
             '../../../../../../public/library/input-mask/input-mask.js',
             '../../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-            // '../../../../../../public/library/ngScroll/src/jquery.mCustomScrollbar.concat.min.js',
-            //'../../../../../../public/library/ngScroll/src/scrollbars.js',
-
+            '../../../../../../public/library/sparklines/jquery.sparkline.min.js',
+            '../../../../../../public/library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+            '../../../../../../public/library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
+            //'../../../../../../public/library/bower_components/chosen/chosen.jquery.js',
+            // '../../../../../../public/library/bower_components/angular-chosen-localytics/chosen.js',
+            '../../../../../library/sparklines/jquery.sparkline.min.js',
+            '../../../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+            '../../../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.tables.min.js'))
@@ -61,8 +66,9 @@ gulp.task('stylus-app', function() {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-tables-css', function() {
     gulp.src([
-            '../../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
-            //'../../../../../../public/library/ngScroll/scroll.css',
+            '../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+            '../../../../../public/library/bower_components/chosen/chosen.css',
+            '../../../../../../bower_components/fullcalendar/dist/fullcalendar.min.css',
         ])
         .pipe(minifyCss())
         .pipe(concat('app.bookersnap.library.tables.min.css'))
@@ -72,10 +78,12 @@ gulp.task('app-library-tables-css', function() {
 //Automatizamos esta tarea
 gulp.task('watch', function() {
     gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-tables-js']);
-    gulp.watch(['../../../../../../public/library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
+    gulp.watch(['../../../../../public/library/global/functions.js', '../../../../../public/library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
-        '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
+        '../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+        '../../../../../public/library/bower_components/chosen/chosen.css',
+        '../../../../../../bower_components/fullcalendar/dist/fullcalendar.min.css',
     ], ['app-library-tables-css']);
 });
 

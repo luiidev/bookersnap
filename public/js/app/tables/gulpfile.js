@@ -54,7 +54,6 @@ gulp.task('stylus-app', function() {
             suffix: '.min'
         }))
         .pipe(gulp.dest('../../../css/app/tables'));
-
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc

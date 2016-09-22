@@ -1,183 +1,185 @@
 <ion-view view-title="Lista de turnos">
-  <ion-content>
-<section id="main" bs-loading-overlay>
+    <ion-content>
 
-    <section id="content">
-        <div class="container c-alt">
-            <div class="block-header">
-                <h2>Calendar</h2>
+        <section id="main">
 
-                <ul class="actions">
-                    <li>
-                        <a href="">
-                            <i class="zmdi zmdi-trending-up"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="zmdi zmdi-check-all"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown" uib-dropdown>
-                        <a href="" uib-dropdown-toggle>
-                            <i class="zmdi zmdi-more-vert"></i>
-                        </a>
+            <section id="content">
+                <div class="container c-alt">
+                    <div class="block-header">
+                        <h2>Calendar</h2>
 
-                        <ul class="dropdown-menu dropdown-menu-right">
+                        <ul class="actions">
                             <li>
-                                <a href="">Refresh</a>
+                                <a href="">
+                                    <i class="zmdi zmdi-trending-up"></i>
+                                </a>
                             </li>
                             <li>
-                                <a href="">Manage Widgets</a>
+                                <a href="">
+                                    <i class="zmdi zmdi-check-all"></i>
+                                </a>
                             </li>
-                            <li>
-                                <a href="">Widgets Settings</a>
+                            <li class="dropdown" uib-dropdown>
+                                <a href="" uib-dropdown-toggle>
+                                    <i class="zmdi zmdi-more-vert"></i>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <a href="">Refresh</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Manage Widgets</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Widgets Settings</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <button ng-click="vm.addEvent()">add events</button>
-            <button ng-click="vm.updateEvents()">update events</button>
-            <!--<turn-calendar id="calendar" events="vm.events" on-month-change="vm.changeMonth(view, date)"-->
-            <!--on-select-event="vm.selectEvent(calEvent, jsEvent, view)"-->
-            <!--set-update-data="vm.setFnUpdateData(fn)"></turn-calendar>-->
-
-            <div id="calendar"></div>
-
-            <!-- Add event -->
-            <script type="text/ng-template" id="addEvent.html">
-                <div class="modal-header">
-                    <h4 class="modal-title">{{vm.fulldate}}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-condensed table-striped">
-                            <thead>
-                            <tr>
-                                <th width="20%">Turno</th>
-                                <th width="20%">Nombre</th>
-                                <th width="20%">Horario</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="item in vm.shifts">
-                                <td>{{item.name}}</td>
-                                <td>{{item.turn.name || "-"}}</td>
-                                <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
-                                <td class="text-right">
-                                    <a href="javascript:" ng-if="item.turn==null"
-                                       ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="item.turn">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.removeSchedule(item.turn.id)">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
-                            data-ng-click="vm.dismiss()">Cerrar
-                    </button>
-                </div>
-            </script>
+                    <button ng-click="vm.addEvent()">add events</button>
+                    <button ng-click="vm.updateEvents()">update events</button>
+                    <!--<turn-calendar id="calendar" events="vm.events" on-month-change="vm.changeMonth(view, date)"-->
+                    <!--on-select-event="vm.selectEvent(calEvent, jsEvent, view)"-->
+                    <!--set-update-data="vm.setFnUpdateData(fn)"></turn-calendar>-->
 
-            <!-- Add event -->
-            <script type="text/ng-template" id="schedule.html">
-                <div class="modal-header">
-                    <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
-                </div>
-                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+                    <div id="calendar"></div>
 
-                    <div class="listview lv-bordered lv-lg">
+                    <!-- Add event -->
+                    <script type="text/ng-template" id="addEvent.html">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{{vm.fulldate}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <table class="table table-condensed table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Turno</th>
+                                        <th width="20%">Nombre</th>
+                                        <th width="20%">Horario</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in vm.shifts">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.turn.name || "-"}}</td>
+                                        <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
+                                        <td class="text-right">
+                                            <a href="javascript:" ng-if="item.turn==null"
+                                               ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
+                                            <a href="javascript:"
+                                               ng-if="item.turn">
+                                                Editar
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="javascript:"
+                                               ng-if="item.turn" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)">
+                                                Reemplazar
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="javascript:"
+                                               ng-if="item.turn" ng-click="vm.removeSchedule(item.turn.id)">
+                                                Borrar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                        <div class="lv-body">
-                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
-                                <div class="media-body">
-                                    <div class="lv-title">
-                                        <span style="font-weight: bold;">{{shift.name}}</span>
-                                        <span class="m-l-30">
-                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
-                                        </span>
-                                    </div>
-                                    <div class="lv-actions">
-                                        <button class="btn btn-primary" ng-disabled="vm.flags.isLoading"
-                                                ng-click="vm.schedule(shift.id)">
-                                            Programar
-                                        </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                                    data-ng-click="vm.dismiss()">Cerrar
+                            </button>
+                        </div>
+                    </script>
+
+                    <!-- Add event -->
+                    <script type="text/ng-template" id="schedule.html">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
+                        </div>
+                        <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+
+                            <div class="listview lv-bordered lv-lg">
+
+                                <div class="lv-body">
+                                    <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                        <div class="media-body">
+                                            <div class="lv-title">
+                                                <span style="font-weight: bold;">{{shift.name}}</span>
+                                                <span class="m-l-30">
+                                                    {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                                </span>
+                                            </div>
+                                            <div class="lv-actions">
+                                                <button class="btn btn-primary" ng-disabled="vm.flags.isLoading"
+                                                        ng-click="vm.schedule(shift.id)">
+                                                    Programar
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                                    data-ng-click="vm.dismiss()">Cerrar
+                            </button>
+                        </div>
+                    </script>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
-                            data-ng-click="vm.dismiss()">Cerrar
-                    </button>
-                </div>
-            </script>
+                    <!-- Add event -->
+                    <script type="text/ng-template" id="changeSchedule.html">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
+                        </div>
+                        <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
 
-            <!-- Add event -->
-            <script type="text/ng-template" id="changeSchedule.html">
-                <div class="modal-header">
-                    <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
-                </div>
-                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+                            <div class="listview lv-bordered lv-lg">
 
-                    <div class="listview lv-bordered lv-lg">
-
-                        <div class="lv-body">
-                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
-                                <div class="media-body">
-                                    <div class="lv-title">
-                                        <span style="font-weight: bold;">{{shift.name}}</span>
-                                        <span class="m-l-30">
-                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
-                                        </span>
-                                    </div>
-                                    <div class="lv-actions">
-                                        <button class="btn btn-primary"   ng-disabled="vm.flags.isLoading"
-                                                ng-click="vm.changeCheduless(shift.id)">
-                                            Programar
-                                        </button>
+                                <div class="lv-body">
+                                    <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                        <div class="media-body">
+                                            <div class="lv-title">
+                                                <span style="font-weight: bold;">{{shift.name}}</span>
+                                                <span class="m-l-30">
+                                                    {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                                </span>
+                                            </div>
+                                            <div class="lv-actions">
+                                                <button class="btn btn-primary"   ng-disabled="vm.flags.isLoading"
+                                                        ng-click="vm.changeCheduless(shift.id)">
+                                                    Programar
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                                    data-ng-click="vm.dismiss()">Cerrar
+                            </button>
+                        </div>
+                    </script>
+
+                    <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
+                    <!--data-select="clctrl.onSelect(start, end)"></div>-->
+
 
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
-                            data-ng-click="vm.dismiss()">Cerrar
-                    </button>
-                </div>
-            </script>
+            </section>
+        </section>
 
-            <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
-            <!--data-select="clctrl.onSelect(start, end)"></div>-->
-
-
-        </div>
-    </section>
-</section>
-</ion-content>
-</ion-view>
+    </ion-content>
+  </ion-view>
