@@ -1,14 +1,17 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
+.controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory, $ionicLoading) {
 		var vm = this;
 		vm.titulo = "Floor";
 		var getZones = function() {
+			loadingShow($ionicLoading, "Cargando ...");
 			FloorFactory.listZonesReservas().then(function success(data) {
+				loadingHide($ionicLoading);
 				vm.zonas = data;
 				//console.log('Formateado: ' + angular.toJson(data, true));
 			}, function error(data) {
-				messageErrorApi(data, "Error", "warning");
+				loadingHide($ionicLoading);
+				messageErrorApi(data, "Error", "warning", 2000);
 			});
 		};
 		getZones();
@@ -60,9 +63,8 @@ angular.module('floor.controller', [])
 
 
 .controller('reservationController', function(FloorFactory) {
+
 	var rm = this;
-
-
 	var getlistZonesBloqueosReservas = function() {
 		FloorFactory.listZonesBloqueosReservas().then(function success(data) {
 			rm.listado = data;

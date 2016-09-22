@@ -163,7 +163,7 @@ var defineTimeSytem = function(time) {
     return newTime;
 };
 
-var setearJsonError = function(jsonError) {
+var setearJsonError = function (jsonError){
     var energy = jsonError.join("\n");
     return energy;
 };
