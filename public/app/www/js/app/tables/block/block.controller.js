@@ -1,6 +1,6 @@
 angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
-        console.log("Test");
+        $scope.titulo = "Crear Bloqueo";
         $scope.date = $stateParams.date;
 
         /* Listado array de zonas incluyendo sus zonas */
