@@ -147,6 +147,11 @@ var convertTextToDate = function(language, options, date) {
     }
 };
 
+var convertFechaToDate = function(date) {
+    var fecha = new Date(date + " 00:00:00");
+    return fecha;
+};
+
 /*-------
 Las horas se guardan en: 00:00:00 , y esta funcion te la muestra asi: 00:00:00 AM-PM
 --------*/
