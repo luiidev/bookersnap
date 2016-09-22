@@ -143,13 +143,9 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.onDropComplete = function(data, evt) {
 
-            //data.top = evt.y - 251 + 20 - evt.element.centerY;
-            //data.left = evt.x - 401 + 10 - evt.element.centerX;
-            var w = $window.pageYOffset;
-            var elemento = $("#main");
-            var posicion = elemento.position();
+            data.top = evt.y - 251 + 20 - evt.element.centerY;
+            data.left = evt.x - 401 + 10 - evt.element.centerX;
 
-            console.log($("#main"));
             //capturamos la posicion donde se queda
             console.log("onDropCompleteReal " + evt.x + " - " + evt.y);
             console.log("onDropCompleteEditado " + data.left + " - " + data.top);
