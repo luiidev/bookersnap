@@ -35,26 +35,4 @@ angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
                 }
             })
 
-    })
-
-    .factory("$response", function(){
-        var error = function(response) {
-            if (typeof response.data == "object") {
-                    if (response.data.error !== null) {
-                        swal("Error", response.data.error.user_msg || "Ocurrió un error en el servidor", "error");
-                    } else {
-                        if (response.status == 401 || response.status == 403) {
-                            swal("Error", "No tiene permisos para realizar esta acción", "error");
-                        } else {
-                            swal("Error", "Ocurrió un error en el servidor", "error");
-                        }
-                    }
-            } else {
-                swal("Error", "Ocurrió un error en el servidor", "error");
-            }
-        };
-
-        return {
-            error: error
-        };
     });
