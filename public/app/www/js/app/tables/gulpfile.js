@@ -39,6 +39,9 @@ gulp.task('app-library-tables-js', function() {
             '../../../../../../public/library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
             //'../../../../../../public/library/bower_components/chosen/chosen.jquery.js',
             // '../../../../../../public/library/bower_components/angular-chosen-localytics/chosen.js',
+            '../../../../../library/sparklines/jquery.sparkline.min.js',
+            '../../../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+            '../../../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.tables.min.js'))
@@ -64,7 +67,8 @@ gulp.task('stylus-app', function() {
 gulp.task('app-library-tables-css', function() {
     gulp.src([
             '../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
-            '../../../../../public/library/bower_components/chosen/chosen.css'
+            '../../../../../public/library/bower_components/chosen/chosen.css',
+            '../../../../../../bower_components/fullcalendar/dist/fullcalendar.min.css',
         ])
         .pipe(minifyCss())
         .pipe(concat('app.bookersnap.library.tables.min.css'))
@@ -77,7 +81,9 @@ gulp.task('watch', function() {
     gulp.watch(['../../../../../public/library/global/functions.js', '../../../../../public/library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
-        '../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
+        '../../../../../public/library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+        '../../../../../public/library/bower_components/chosen/chosen.css',
+        '../../../../../../bower_components/fullcalendar/dist/fullcalendar.min.css',
     ], ['app-library-tables-css']);
 });
 
