@@ -19,15 +19,28 @@
 
                 <div class="card m-b-0" id="messages-main">
 
-                    <div class="ms-menu" data-ng-class="{ 'toggled': mactrl.lvMenuStat }">
-                
-                        <div class="ms-block">
-                     
-                            <div class="fg-line">
-                                <input type="text" class="form-control" ng-model="vm.name" placeholder="Nombre">
-                            </div>
-                        
+                <div class="ms-menu" data-ng-class="{ 'toggled': mactrl.lvMenuStat }">
+            
+                    <div class="ms-block">
+                 
+                        <div class="fg-line">
+                            <input type="text" class="form-control" ng-model="vm.name" placeholder="Nombre">
                         </div>
+                    
+                    </div>
+                    <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
+                        <ion-scroll  direction="y" style="height: 500px">
+                            <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
+                                <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
+                                    <div class="lv-avatar bgm-orange pull-left">m</div>
+                                    <div class="media-body">
+                                        <div class="lv-title">{{ item.first_name }}</div>
+                                        <div class="lv-small">{{ item.contact }}</div>
+                                    </div>
+                                </a>
+                            
+                            </div>
+                        </ion-scroll>
 
                         <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
                       

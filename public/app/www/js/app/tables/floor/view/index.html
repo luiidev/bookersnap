@@ -1,0 +1,67 @@
+<ion-view view-title="Floor">
+    <ion-content>
+        <section id="main">
+            <section id="content">
+                <div class="container">
+                    <div class="block-header" style="padding-top: 15px">
+                        <ul class="actions">
+                            <li>
+                                <button class="btn btn-default waves-effect" data-ui-sref="mesas.floor.reservation">Cancelar</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-primary waves-effect" ng-click="">Create reservation</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card" id="turno-main">
+                        <div class="card-header">
+                            <h2>{{vm.titulo}} <small></small></h2>
+                        </div>
+                        <div>
+                            <section>
+                                <div ui-view="tabReservaciones"></div>
+                            </section>
+                            <section>
+                                <div ui-view="principal"></div>
+                            </section>
+                            
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </ion-content>
+    <script type="text/ng-template" id="myModalContentDetail.html">
+            <div class="modal-header">
+                <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="listview lv-bordered lv-lg">
+                    <div class="lv-header-alt clearfix">
+                        <h2 class="f-14">Proximas reservas y bloqueos</h2>
+                    </div>
+                    <div class="lv-body">
+                        <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'">
+                            <div class="media-body">
+                                <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                                <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
+                                <ul class="lv-attrs">
+                                    <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                                    <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="not-information" ng-if="vmd.itemReservations==''">
+                            No existe mesas reservadas o bloqueadas
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+                </div>
+            </div>
+    </script>
+</ion-view>
+  

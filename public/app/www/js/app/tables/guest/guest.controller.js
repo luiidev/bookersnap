@@ -140,6 +140,11 @@ angular.module('guest.controller', [])
 			tags: []
 		};
 
+		vm.guestFormData = {
+			gender: '',
+			birthdate: ''
+		};
+
 		vm.tagsList = [];
 		vm.tagsListAdd = [];
 
@@ -162,7 +167,8 @@ angular.module('guest.controller', [])
 
 		vm.listGender = function() {
 			vm.genderData = getGender();
-			vm.guestData.gender = vm.genderData[0];
+			//vm.guestData.gender = vm.genderData[0];
+			vm.guestFormData.gender = vm.genderData[0];
 		};
 
 		vm.selectTab = function(tabItem) {
@@ -180,10 +186,8 @@ angular.module('guest.controller', [])
 
 		vm.saveGuest = function() {
 
-			console.log("saveGuest " + angular.toJson(vm.guestData, true));
-
-			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestData.birthdate, "es-ES", {});
-			vm.guestData.gender = vm.guestData.gender.id;
+			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestFormData.birthdate, "es-ES", {});
+			vm.guestData.gender = vm.guestFormData.gender.id;
 
 			var option = ($stateParams.guest !== undefined) ? "edit" : "create";
 
@@ -221,7 +225,6 @@ angular.module('guest.controller', [])
 			$event.preventDefault();
 			$event.stopPropagation();
 			vm.opened = true;
-			console.log("abrir");
 		};
 
 		vm.addTag = function(tag, category) {
@@ -252,7 +255,14 @@ angular.module('guest.controller', [])
 				loadingShow($ionicLoading, "Cargando ...");
 				GuestFactory.getGuest($stateParams.guest).then(function success(response) {
 					vm.guestData = response.guest;
+
+					vm.guestFormData.birthdate = convertFechaToDate(vm.guestData.birthdate);
+					vm.guestFormData.gender = vm.guestData.gender;
+
 					GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
+
+					console.log("loadDataGuestEdit " + angular.toJson(vm.guestData, true));
+
 					loadingHide($ionicLoading);
 				}, function error(response) {
 					loadingHide($ionicLoading);
