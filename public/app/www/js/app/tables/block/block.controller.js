@@ -2,7 +2,7 @@ angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
         $scope.titulo = "Crear Bloqueo";
         $scope.date = $stateParams.date;
-
+        alert("TEST");
         /* Listado array de zonas incluyendo sus zonas */
         ZoneFactory.getZones().then(function(response) {
             $scope.zones = response.data.data; // Lista de Zonas que contienen mesas

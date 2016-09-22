@@ -5,28 +5,30 @@
                 <div class="container" ng-controller="blockCtr">
                     <div class="card">
                         <div class="card-header">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <div class="fg-line">
-                                        <div class="select">
-                                            <select ng-model="zone" class="form-control" ng-options="item.name for item in zones " ng-change="selectZone(zone)">
-                                                <option value="" disabled="disabled" selected="true">Select Zone</option>
-                                            </select>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="fg-line">
+                                            <div class="select">
+                                                <select ng-model="zone" class="form-control" ng-options="item.name for item in zones " ng-change="selectZone(zone)">
+                                                    <option value="" disabled="disabled" selected="true">Select Zone</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6 padding-right">
-                                <div class="input-group fg-float">
-                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
+                                <div class="col-sm-6 padding-right">
+                                    <div class="input-group fg-float">
+                                        <button class="button button-positive" ng-click="selectAllTables()">Select All</button>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <button class="button button-positive" ng-click="unselectAllTables()">Select None</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body card-padding box-zone-create">
                             <div class="row">
-                                <div class="col-sm-8 m-b-20">
+                                <div class="col-sm-9">
                                     <div class="box-lienzo-zone">
                                         <div class="lienzo zoneArea minheight" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
                                             <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-select-table on-selected-fn="activarTableOptions($index,obj)" on-deselect-fn="desactivarTable($index,obj)" on-click-fn='activarTableOptions($index,this)' class="item-drag-table  {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit">
@@ -36,17 +38,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 m-b-20">
+                                <div class="col-sm-3">
                                     <div class="box-tables-items" ng-show="boxTables.items">
                                         <div class="row item descripcion m-b-10">
                                             <h2 class="center ">Crear Bloqueo</h2>
                                         </div>
                                         <div class="space-24"></div>
                                         <div class="row item-table-box">
-                                            <div class="col-md-12">
+                                            <div class="col-sm-12">
                                                 <div class="title-table">Date</div>
                                                 <div class="date-picker input-group" ng-class="{ 'is-opened': opened == true }">
-                                                    <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
                                                     <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
                                                         <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
                                                     </div>
@@ -54,7 +55,7 @@
                                             </div>
                                         </div>
                                         <div class="row item-table-box">
-                                            <div class="col-md-12 col-xs-12 col-sm12 col-lg-12">
+                                            <div class="col-sm-12">
                                                 <div class="title-table">Shift</div>
                                                 <div class="form-group">
                                                     <div class="fg-line">
@@ -68,7 +69,7 @@
                                             </div>
                                         </div>
                                         <div class="row item-table-box">
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-md-6 col-lg-6">
+                                            <div class="col-sm-12">
                                                 <div class="title-table">Start Time</div>
                                                 <div class="form-group">
                                                     <div class="fg-line">
@@ -80,7 +81,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-md-6 col-lg-6">
+                                            <div class="col-sm-12">
                                                 <div class="title-table">End Time</div>
                                                 <div class="form-group">
                                                     <div class="fg-line">
@@ -94,7 +95,7 @@
                                             </div>
                                         </div>
                                         <div class="row item-table-box">
-                                            <div class="col-md-12">
+                                            <div class="col-sm-12">
                                                 <h4>Tables</h4>
                                                 <div data-ng-bind-html="someSafeContent"></div>
                                             </div>
@@ -103,7 +104,7 @@
                                         </br>
                                         <div class="row item-table-box">
                                             <div class="col-md-12">
-                                                <button class="btn btn-primary waves-effect" ng-click="saveZone('create')">Save Zone</button>
+                                                <button class="button button-positive" ng-click="saveZone('create')">Save Zone</button>
                                             </div>
                                         </div>
                                     </div>
