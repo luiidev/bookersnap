@@ -1,6 +1,6 @@
 angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
-
+        console.log("Test");
         $scope.date = $stateParams.date;
 
         /* Listado array de zonas incluyendo sus zonas */
@@ -38,7 +38,7 @@ angular.module('block.controller', [])
         $scope.endTimes = [];
         $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
             angular.forEach(response.data, function(item, i) {
-                if (item.turn != null) { // Se obtienes los Shifts que contienen datos
+                if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
 
                     $scope.shifts.push({
                         id: item.id,
@@ -89,7 +89,7 @@ angular.module('block.controller', [])
                 var data = {
                     label: i + " covers",
                     id: i
-                }
+                };
 
                 coverList.push(data);
             }
@@ -148,7 +148,7 @@ angular.module('block.controller', [])
         $scope.saveZone = function(option) {
 
 
-            if ($scope.startTime == undefined || $scope.endTime == undefined || $scope.date == undefined) {
+            if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
 
                 messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
 
@@ -160,7 +160,7 @@ angular.module('block.controller', [])
                     start_time: $scope.startTime.hour24,
                     end_time: $scope.endTime.hour24,
                     tables: [],
-                }
+                };
 
                 //Se crea el array de mesas bloqueadas          
                 for (var i = 0; i < $scope.mesasBloqueadas.length; i++) {
@@ -172,7 +172,7 @@ angular.module('block.controller', [])
                 BlockFactory.addNewBlock($scope.object).then(function(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000);
-                    } else if (response.data.response == false) {
+                    } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 2000);
                     }
                 });
@@ -189,11 +189,11 @@ angular.module('block.controller', [])
 
         $scope.selectAllTables = function() {
             BlockFactory.selectAllTables($scope, $sce, loadTablesEdit);
-        }
+        };
 
         $scope.unselectAllTables = function() {
             BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
-        }
+        };
 
 
         listCovers("min");
@@ -282,7 +282,7 @@ angular.module('block.controller', [])
     $scope.endTimes = [];
     $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
         angular.forEach(response.data, function(item, i) {
-            if (item.turn != null) { // Se obtienes los Shifts que contienen datos
+            if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
 
                 $scope.shifts.push({
                     id: item.id,
@@ -322,19 +322,8 @@ angular.module('block.controller', [])
                     });
                 }
 
-                /*
-                $scope.shift = $scope.shifts[0];
-                $scope.startTimes = $scope.shifts[0].startTimes;
-                $scope.endTimes = $scope.shifts[0].endTimes;
-                */
             }
         });
-
-        /* Se busca si el rango coincide con el editar */
-        // console.log($scope.shifts);
-        // Se muestra el primer array para cuando se esta creando el bloqueo
-        //console.log($scope.tableBlock.start_time);
-        //console.log($scope.tableBlock.end_time);
 
     });
 
@@ -372,7 +361,7 @@ angular.module('block.controller', [])
             var data = {
                 label: i + " covers",
                 id: i
-            }            
+            };
             coverList.push(data);
         }
 
@@ -392,7 +381,7 @@ angular.module('block.controller', [])
 
     $scope.desactivarTable = function(index, data) {
         BlockFactory.uncheckTable($scope, $sce, index, data);
-    }
+    };
 
     var getDataTableSelected = function(index) {
 
@@ -431,9 +420,9 @@ angular.module('block.controller', [])
 
         // Se obtiene de array de las mesas que estan en ese rango de fecha
         BlockFactory.deleteBlock(block_id).then(function(response) {
-            if (response.data.success == true) {
+            if (response.data.success === true) {
                 messageAlert("Success", response.data.msg, "success", 3000);
-            } else if (response.data.success == false) {
+            } else if (response.data.success === false) {
                 messageAlert("Warning", response.data.msg, "warning", 3000);
             }
         });
@@ -443,7 +432,7 @@ angular.module('block.controller', [])
     $scope.object = [];
     $scope.saveZone = function(option) {
 
-        if ($scope.startTime == undefined || $scope.endTime == undefined || $scope.date == undefined) {
+        if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
 
             messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
 
@@ -455,7 +444,7 @@ angular.module('block.controller', [])
                 start_time: $scope.startTime.hour24,
                 end_time: $scope.endTime.hour24,
                 tables: [],
-            }
+            };
 
             //Se crea el array de mesas bloqueadas          
             for (var i = 0; i < $scope.mesasBloqueadas.length; i++) {
@@ -467,7 +456,7 @@ angular.module('block.controller', [])
             BlockFactory.editBlock("/" + block_id, $scope.object).then(function(response) {
                 if (response.data.success === true) {
                     messageAlert("Success", response.data.msg, "success", 3000);
-                } else if (response.data.success == false) {
+                } else if (response.data.success === false) {
                     messageAlert("Warning", response.data.msg, "warning", 3000);
                 }
             });
@@ -483,11 +472,11 @@ angular.module('block.controller', [])
 
     $scope.selectAllTables = function() {
         BlockFactory.selectAllTables($scope, $sce, loadTablesEdit);
-    }
+    };
 
     $scope.unselectAllTables = function() {
         BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
-    }
+    };
 
 
     listCovers("min");

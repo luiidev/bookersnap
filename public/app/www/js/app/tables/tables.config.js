@@ -6,10 +6,11 @@ angular.module('tables.app', [
         'guest.app',
         'book.app',
         'floor.app',
-        /*'block.app',
-        'guest.app',
+        'block.app',
+        'floor.app'
+        /*
         'calendar.app',
-        'floor.app'*/
+        */
     ])
     .constant("IdMicroSitio", idMicrositio)
     //.constant("ApiUrlMesas", 'http://api-mesas.vh/v1/en/microsites/' + idMicrositio)
