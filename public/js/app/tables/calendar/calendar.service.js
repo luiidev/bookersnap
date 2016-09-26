@@ -35,13 +35,13 @@ angular.module('calendar.service', [])
                 return moment(dateCalendar).isBefore(now);
             },
             GetShiftsByMonth: function ($month, $listener) {
-                $http.get(ApiUrlMesas + '/microsites/1/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
             },
             GetShiftByDate: function ($date, $listener) {
-                $http.get(ApiUrlMesas + '/microsites/1/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
             },
             GetShiftsByType: function (id, $listener) {
-                $http.get(ApiUrlMesas + '/microsites/1/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);
                 //var $res = {};
                 //var $response = [
                 //    {id: 1, name: 'Turno D1', hours_ini: '07:00:00', hours_end: '10:00:00'},
@@ -90,7 +90,7 @@ angular.module('calendar.service', [])
                 };
             },
             ScheduleShift: function (id, date, $listener) {
-                $http.post(ApiUrlMesas + '/microsites/1/calendar', {
+                $http.post(ApiUrlMesas + '/calendar', {
                     res_turn_id: id,
                     date: date
                 }).then($listener.OnSuccess, $listener.OnError);
@@ -98,12 +98,12 @@ angular.module('calendar.service', [])
             },
 
             DeleteShift: function (id, date, $listener) {
-                $http.delete(ApiUrlMesas + '/microsites/1/calendar/' + id , { params: {date: date}}).
+                $http.delete(ApiUrlMesas + '/calendar/' + id , { params: {date: date}}).
                 then($listener.OnSuccess, $listener.OnError);
             },
 
             ChangeSchedule: function (turn_id, shift_id, date, $listener) {
-                $http.put(ApiUrlMesas + '/microsites/1/calendar/change', {
+                $http.put(ApiUrlMesas + '/calendar/change', {
                     turn_id: turn_id,
                     shift_id: shift_id,
                     date: date
