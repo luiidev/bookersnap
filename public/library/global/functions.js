@@ -93,18 +93,68 @@ var addHourByMin = function(hour){
 
 };
 
+
+var roundByUp = function(numero, factor) {
+
+    while (numero % factor !== 0) {
+        numero++;
+    }
+
+    if (numero % 60 === 0) {
+        return "00";
+    } else {
+        return numero;
+    }
+
+};
+
+
+var roundByDown = function(numero, factor) {
+
+    while (numero % factor !== 0) {
+        numero--;
+    }
+
+    if (numero % 60 === 0) {
+        return "00";
+    } else {
+        return numero;
+    }
+
+};
+
 /*
     Se recibe un rango de horas (12:00:00 - 16:00:00) y se devuelve un array con las horas seleccionadas en el mismo formato
     con un lapso de 15 minutos cada uno 
 */
-var getRangoHours = function(horaInicial, horaFinal){
+var getRangoHours = function(horaInicial, horaFinal) {
+
+    var arrayInicial = horaInicial.split(":");
+    var arrayFinal = horaFinal.split(":");
+
+    if (!arrayInicial[1] % 15) {
+        console.log(arrayInicial[1] + " es multiplo de 15");
+    }
+
+    /** 
+    Se aplica un redondeo hace arriba cuando se obtienen horas distorcionadas ejemplo: 05:13:00  esto se redondea ya
+    que la bd soporta rangos de 15 en 15 
+    **/
+    horaFinal = (arrayFinal[1] % 15 === 0) ? horaFinal : (arrayFinal[0] + ":" + roundByUp(arrayFinal[1], 15) + ":" + arrayFinal[2]);
+    horaInicial = (arrayInicial[1] % 15 === 0) ? horaInicial : (arrayInicial[0] + ":" + roundByDown(arrayInicial[1], 15) + ":" + arrayInicial[2]);
 
     var newHoursIni = horaInicial;
     var arrayHoras = [];
-    arrayHoras.push({hour24: horaInicial, hour12: defineTimeSytem(horaInicial)});
+    arrayHoras.push({
+        hour24: horaInicial,
+        hour12: defineTimeSytem(horaInicial)
+    });
     while (newHoursIni != horaFinal) {
         newHoursIni = addHourByMin(newHoursIni);
-        arrayHoras.push({hour24: newHoursIni, hour12: defineTimeSytem(newHoursIni)}); 
+        arrayHoras.push({
+            hour24: newHoursIni,
+            hour12: defineTimeSytem(newHoursIni)
+        });
     }
     return arrayHoras;
 };
