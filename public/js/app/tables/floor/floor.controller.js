@@ -6,7 +6,7 @@ angular.module('floor.controller', [])
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                //console.log('Formateado: ' + angular.toJson(data, true));
+                console.log('Formateado: ' + angular.toJson(data, true));
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -165,7 +165,7 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
 
     };
 
-     sm.newServer = function(server) {
+    sm.newServer = function(server) {
         console.log(server);
 
         sm.flagServer = true;
