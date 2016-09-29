@@ -24,7 +24,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
                     console.log("getZones " + angular.toJson(zones.turns, true));
 
-                    if (zones.status == "0" || zones.status == "2" || zonesTurn.length == 0) {
+                    if (zones.status == "0" || zones.status == "2" || zonesTurn.length === 0) {
                         vZonesInactive.push(zonesTables);
                     } else {
                         vZonesActive.push(zonesTables);
@@ -131,9 +131,6 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.saveClick = false; //valida click en guardar - no doble click
 
-        /*Si queremos llamar a una funcion desde directiva*/
-        this.alertaPrueba = function() {};
-
         $scope.onDragComplete = function(data, evt, type) {
             $scope.typeDrag = type;
             selectTableTypeDrag(data, type);
@@ -141,10 +138,11 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.onDropComplete = function(data, evt) {
 
-            data.top = evt.y - 251 + 20 - evt.element.centerY;
-            data.left = evt.x - 401 + 10 - evt.element.centerX;
-            //capturamos la posicion donde se queda
-            console.log("onDropComplete " + evt.x + " - " + evt.y);
+            var position = ZoneLienzoFactory.positionTable(evt);
+
+            data.top = position.y;
+            data.left = position.x;
+
             selectTableTypeDrop(data);
 
             $scope.typeDrag = "";
@@ -152,7 +150,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.onLienzo = function() {
 
-            if ($scope.indexTable != null && $scope.selectedTable == false) {
+            if ($scope.indexTable !== null && $scope.selectedTable === false) {
                 console.log("onLienzo");
                 $scope.activarTablesItems();
             }
@@ -163,8 +161,8 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.changeShapeTable = function(shape) {
             $scope.itemTables[$scope.indexTable].shape = shape;
 
-            angular.element(".text-rotate .btn-group .shape").removeClass("active");
-            angular.element(".shape." + shape + "s").addClass("active");
+            /*angular.element(".text-rotate .btn-group .shape").removeClass("active");
+            angular.element(".shape." + shape + "s").addClass("active");*/
         };
 
         $scope.changeSizeTable = function() {
@@ -213,13 +211,13 @@ angular.module('zone.controller', ['ngDraggable'])
             setTimeout(function() {
                 $scope.$apply(function() {
 
-                    if ($scope.boxTables.item == false || ($scope.boxTables.item == true && $scope.selectedTable == true && angular.element('.item-drag-table').hasClass('selected-table') == false)) {
+                    if ($scope.boxTables.item === false || ($scope.boxTables.item === true && $scope.selectedTable === true && angular.element('.item-drag-table').hasClass('selected-table') === false)) {
 
                         $scope.boxTables.item = true;
                         $scope.boxTables.items = false;
                     } else {
 
-                        if (angular.element('.item-drag-table').hasClass('selected-table') == false) {
+                        if (angular.element('.item-drag-table').hasClass('selected-table') === false) {
 
                             $scope.boxTables.item = false;
                             $scope.boxTables.items = true;
@@ -248,7 +246,7 @@ angular.module('zone.controller', ['ngDraggable'])
                 var data = {
                     label: i + " covers",
                     id: i
-                }
+                };
 
                 coverList.push(data);
             }
@@ -391,7 +389,7 @@ angular.module('zone.controller', ['ngDraggable'])
                 name: angular.element("#zone_name").val(),
                 ms_microsite_id: IdMicroSitio,
                 tables: prepareDataTablesSave()
-            }
+            };
 
             $scope.saveClick = true;
 
@@ -420,7 +418,7 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         var detectedForm = function() {
-            if ($stateParams.id != undefined) {
+            if ($stateParams.id !== undefined) {
 
                 $scope.typeForm = "edit";
 
@@ -428,7 +426,7 @@ angular.module('zone.controller', ['ngDraggable'])
 
                     angular.element("#zone_name").val(zone.data.name);
 
-                    loadTablesEdit(zone.data.tables)
+                    loadTablesEdit(zone.data.tables);
                 });
             }
         };
@@ -449,7 +447,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     rotate: data.config_rotation,
                     id: data.id,
                     status: data.status
-                }
+                };
 
                 if (data.status == 1) {
                     $scope.itemTables.push(dataTable);
