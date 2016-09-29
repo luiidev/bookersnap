@@ -59,14 +59,29 @@
             </div>
         </div>
     </div>
-    <div class="input-group">
-        <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
-        &nbsp;
-        <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
-        &nbsp;
-        <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
+    <div class="js-available-color-group m-t-20 m-b-20">
+        <div class="Form-nestedLabel">Colores tomados</div>
+        <div class="Form-field Form-field--smallSpacing">
+            <div class="ServerColor-previewContainer">
+                <label class="ServerColor-preview  for=" color_hex_{{color}} " style="background-color: {{color}}; " ng-repeat="color in vm.colorsSelect ">
+            </label>
+        </div>
     </div>
-    <div class="input-group">
-        <p>{{se.mesasSeleccionadas}}</p>
+    <div class="js-available-color-group m-t-20 m-b-20 ">
+        <div class="Form-nestedLabel ">Tables</div>
+            <div class="ServerColor-previewContainer " >
+                <p ng-repeat="table in mesasSeleccionadas "><label>{{table.name}}</label><button class="btn btn-success " ng-click="sm.removeTable(table) ">X</button> - </p>
+            </div>
+            <div class="input-group ">
+                <button class="btn btn-success " ng-click="sm.saveOrUpdateServer() ">Guardar</button>
+                &nbsp;
+                <button class="btn btn-warning " ng-click="sm.cancelEditServer() ">Cancelar</button>
+                &nbsp;
+                <button class="btn btn-error " ng-click="sm.deleteServer() " ng-show="sm.flagServer==true ">Delete</button>
+            </div>
+            <div class="input-group ">
+                <p>{{se.mesasSeleccionadas}}</p>
+            </div>
+        </div>
     </div>
 </div>
