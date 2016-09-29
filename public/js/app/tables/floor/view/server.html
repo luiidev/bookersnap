@@ -31,19 +31,17 @@
     box-shadow: 0 0 0 3px #3a99d8;
 }
 </style>
-<div class="col-sm-12 m-b-20">
-    <button class="btn btn-success">Add Server</button>
-    <p class="f-500 m-b-20 c-black">Servers register</p>
+<div class="col-sm-12 m-t-20" ng-show="!sm.showForm">
+    <p class="f-500 m-b-20 c-black">Servers register &nbsp&nbsp&nbsp
+        <button class="btn bt-xs btn-success" ng-click="sm.showForm = true"><i class="zmdi zmdi-plus-circle"></i> Server</button>
+    </p>
     <ul class="list-group">
         <li ui-sref="floor.server.edit({server_id: {{server.id}}})" class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
-                <span class="badge" style="background-color:{{server.color}} !important "> &nbsp</span> 
-                {{server.name}} - {{server.id}}
-        </li>   
+            <span class="badge" style="background-color:{{server.color}} !important "> &nbsp</span> {{server.name}}
+        </li>
     </ul>
 </div>
-
-
-<div class="col-sm-12 m-b-20" id="form_new_server">
+<div class="col-sm-12 m-b-20" id="form_new_server" ng-show="sm.showForm">
     <h3 ng-show="sm.flagServer == false">New Server</h3>
     <h3 ng-show="sm.flagServer == true">Update Server</h3>
     <div class="input-group">
@@ -52,21 +50,23 @@
             <input type="text" class="form-control" ng-model="sm.name" placeholder="Server">
         </div>
     </div>
-    <div class="js-available-color-group">
+    <div class="js-available-color-group m-t-20 m-b-20">
         <div class="Form-nestedLabel">Available Colors</div>
         <div class="Form-field Form-field--smallSpacing">
             <div class="ServerColor-previewContainer">
-                    <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
-                    </label>
+                <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
+                </label>
             </div>
         </div>
     </div>
     <div class="input-group">
         <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
+        &nbsp;
         <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
+        &nbsp;
         <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
     </div>
-     <div class="input-group">
+    <div class="input-group">
         <p>{{se.mesasSeleccionadas}}</p>
     </div>
 </div>
