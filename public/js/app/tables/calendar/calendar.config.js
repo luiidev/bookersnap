@@ -6,7 +6,7 @@ angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
 
     .config(function ($stateProvider) {
         $stateProvider
-            .state ('calendar-index', {
+            .state ('calendar', {
                 url: '/calendar',
                 templateUrl: '/js/app/tables/calendar/view/index.html',
                 controller: 'CalendarIndexController',

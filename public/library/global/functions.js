@@ -17,40 +17,42 @@ var obtenerIdMicrositio = function() {
 };
 
 var getDaysWeek = function() {
-    var days = [{
-        id: 0,
-        label: 'Domingo'
-    }, {
-        id: 1,
-        label: 'Lunes'
-    }, {
-        id: 2,
-        label: 'Martes'
-    }, {
-        id: 3,
-        label: 'Miercoles'
-    }, {
-        id: 4,
-        label: 'Jueves'
-    }, {
-        id: 5,
-        label: 'Viernes'
-    }, {
-        id: 6,
-        label: 'Sabado'
-    }, ];
+    var days = [
+        { id: 0, label: 'Domingo' },
+        { id: 1, label: 'Lunes' },
+        { id: 2, label: 'Martes' },
+        { id: 3, label: 'Miercoles' },
+        { id: 4, label: 'Jueves' },
+        { id: 5, label: 'Viernes' },
+        { id: 6, label: 'Sabado' },
+    ];
 
     return days;
 };
+var uniqueArray = function(origArr) {
+    var newArr = [],
+        origLen = origArr.length,
+        found, x, y;
+
+    for (x = 0; x < origLen; x++) {
+        found = undefined;
+        for (y = 0; y < newArr.length; y++) {
+            if (origArr[x] === newArr[y]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            newArr.push(origArr[x]);
+        }
+    }
+    return newArr;
+}
 
 var getGender = function() {
-    var gender = [{
-            id: 'M',
-            label: 'Masculino'
-        }, {
-            id: 'F',
-            label: 'Femenino'
-        },
+    var gender = [
+        { id: 'M', label: 'Masculino' },
+        { id: 'F', label: 'Femenino' },
 
     ];
 
@@ -195,7 +197,7 @@ Date javascript
 --------*/
 
 var convertTextToDate = function(language, options, date = null) {
-    if (date !== null) {
+    if (date != null) {
         return new Date(date).toLocaleDateString(language, options);
     } else {
         return new Date().toLocaleDateString(language, options);
@@ -216,9 +218,10 @@ var defineTimeSytem = function(time) {
 var setearJsonError = function(jsonError) {
     var energy = jsonError.join("\n");
     return energy;
-};
+}
+
 var convertDateTo24Hour = function(timeStr) {
-    if (timeStr === undefined) {
+    if (timeStr == undefined) {
         return null;
     } else {
 
@@ -251,7 +254,7 @@ var getAsUriParameters = function(data) {
         url += encodeURIComponent(prop) + '=' +
             encodeURIComponent(data[prop]) + '&';
     }
-    return url.substring(0, url.length - 1);
+    return url.substring(0, url.length - 1)
 };
 
 var getDayText = function(index, option) {
@@ -273,37 +276,6 @@ var messageAlert = function(title, text, type, time = 2000) {
         timer: time,
         showConfirmButton: false
     });
-};
-
-
-var messageErrorApi = function(data, title, type) {
-    var jsonResponse = JSON.stringify(data);
-    var body = null;
-
-    if (data !== null && data !== undefined) {
-
-        if (data.error !== null) {
-
-            console.log("error " + angular.toJson(data, true));
-
-            if (jsonResponse.indexOf("name") != -1) {
-                body = data.name;
-            }
-
-            if (jsonResponse.indexOf("user_msg") != -1) {
-                body = data.error.user_msg;
-            }
-
-        } else {
-            if (data.status == 401 || data.status == 403) {
-                body = "No tiene permisos para realizar esta acción";
-            } else {
-                body = "Ocurrió un error en el servidor";
-            }
-        }
-    } else {
-        body = "Ocurrió un error en el servidor";
-    }
 };
 
 var message = {};
@@ -333,13 +305,9 @@ message.error = function(title, text, time) {
 
 message.short = function(title, text, time, icon) {
     if (typeof text == "number") {
-        return this.show(title, "", icon, {
-            timer: text
-        });
+        return this.show(title, "", icon, { timer: text });
     } else if (typeof time == "number") {
-        return this.show(title, text, icon, {
-            timer: time
-        });
+        return this.show(title, text, icon, { timer: time });
     }
     return this.show(title, text, icon);
 };
@@ -370,6 +338,15 @@ message.apiError = function(response, title, icon, options) {
     return this.show(title, body, icon, options);
 };
 
+var messageErrorApi = function(data, title, type) {
+    var errorJson = JSON.stringify(data);
+
+    if (errorJson.indexOf("error") > 0) {
+        messageAlert(title, data.error.user_msg, type);
+    } else {
+        messageAlert(title, data, type);
+    }
+};
 
 var historyBack = function() {
     window.history.back();

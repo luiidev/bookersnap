@@ -1,13 +1,15 @@
 <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'"
         data-ng-controller="headerCtrl as hctrl"></header>
 
-<section id="main" bs-loading-overlay>
+<section id="main">
     <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container c-alt">
+        <div class="container">
+
+            <loading-box wait="vm.loading" time="5000" size="xxl"></loading-box>
 
             <div id="calendar"></div>
 
@@ -33,28 +35,26 @@
                                 <td>{{item.turn.name || "-"}}</td>
                                 <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
                                 <td class="text-right">
-                                    <a href="javascript:" ng-if="item.turn==null"
-                                       ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="item.turn">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.removeSchedule(item.turn.id)">
-                                        Borrar
-                                    </a>
+                                    <a href="javascript:" ng-if="item.turn==null" ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
+                                    <div ng-if="item.turn">
+                                        <a href="javascript:" ng-click="vm.moduleEdit(item.turn.id)" ng-disabled="vm.flags.isLoading">Editar</a>
+                                        &nbsp;&nbsp;
+                                        <a href="javascript:" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)" ng-disabled="vm.flags.isLoading">
+                                            Reemplazar
+                                        </a>
+                                        &nbsp;&nbsp;
+                                        <a href="javascript:" ng-click="vm.removeSchedule(item.turn.id)" ng-disabled="vm.flags.isLoading">
+                                            Borrar
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
@@ -128,8 +128,10 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
                             data-ng-click="vm.dismiss()">Cerrar
@@ -137,13 +139,8 @@
                 </div>
             </script>
 
-            <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
-            <!--data-select="clctrl.onSelect(start, end)"></div>-->
-
-
         </div>
     </section>
 </section>
-
 
 <footer id="footer" data-ng-include="'/template/footer.html'"></footer>
