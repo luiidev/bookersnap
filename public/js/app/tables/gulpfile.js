@@ -18,6 +18,7 @@ gulp.task('app-bookersnap-tables-js', function() {
     gulp.src([
             '**/*.js',
             '../app.config.js',
+            '../app.directive.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.tables.min.js'))
@@ -36,6 +37,8 @@ gulp.task('app-library-tables-js', function() {
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
             '../../../library/bower_components/chosen/chosen.jquery.js',
             '../../../library/bower_components/angular-chosen-localytics/chosen.js',
+            '../../../library/bower_components/jquery-ui/jquery-ui.js',
+            '../../../library/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
             '../../../library/sparklines/jquery.sparkline.min.js',
             '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
             '../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
@@ -48,7 +51,9 @@ gulp.task('app-library-tables-js', function() {
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
 gulp.task('stylus-app', function() {
-    gulp.src('../../../css/app/tables/*.styl')
+    gulp.src([
+            '../../../css/app/tables/*.styl'
+        ])
         .pipe(stylus({
             use: nib()
         }))
@@ -73,7 +78,7 @@ gulp.task('app-library-tables-css', function() {
 
 //Automatizamos esta tarea
 gulp.task('watch', function() {
-    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-tables-js']);
+    gulp.watch(['**/*.js', '../app.config.js', '../app.directive.js'], ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
