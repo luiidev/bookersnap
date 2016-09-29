@@ -2830,40 +2830,22 @@ body.login-content:before {
 }
 
 #calendar .fc-toolbar {
-  height: 300px;
-  background-image: url('../../img/cal-header.jpg');
-  background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-position: center;
-  background-position: inherit;
+  height: 50px;
+  background-color: #009688;
 }
 
 #calendar .fc-toolbar:before {
   content: "";
   height: 50px;
   width: 100%;
-  background: rgba(0, 0, 0, 0.36);
+  /*background: rgba(0, 0, 0, 0.36);*/
   position: absolute;
   bottom: 0;
   left: 0;
 }
 
 #calendar .fc-toolbar .fc-center {
-  margin-top: 238px;
   position: relative;
-}
-
-@media screen and (max-width: 991px) {
-  #calendar .fc-toolbar {
-    height: 200px;
-  }
-
-  #calendar .fc-toolbar .fc-center {
-    margin-top: 138px;
-  }
 }
 
 #calendar .fc-day-header {
@@ -2898,7 +2880,7 @@ body.login-content:before {
 
 .fc-toolbar {
   margin-bottom: 0;
-  padding: 20px 7px 19px;
+  padding: 8px 30px;
   position: relative;
 }
 
@@ -2959,7 +2941,7 @@ body.login-content:before {
 }
 
 .fc-event .fc-title {
-  padding: 2px 8px;
+  padding: 0 0 2px;
   display: block;
 }
 

@@ -6,15 +6,6 @@ angular.module('calendar.service', [])
 
     .service('CalendarService', function ($http, ApiUrlMesas) {
         return {
-            SetCalendarLocale: function () {
-                moment.locale('es', {
-                    months: "Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Setiembre_Octubre_Noviembre_Diciembre".split("_"),
-                    monthsShort: "Ene._Feb._Mar_Abr._May_Jun_Jul._Ago_Sep._Oct._Nov._Dic.".split("_"),
-                    weekdays: "domingo_lunes_martes_miércoles_jueves_viernes_sábado".split("_"),
-                    weekdaysShort: "dom._lun._mar._mie._jue._vie._sab.".split("_"),
-                    weekdaysMin: "Do_Lu_Ma_Mi_Ju_Vi_Sa".split("_"),
-                });
-            },
             FormatTime: function (str_date, str_hour) {
                 var date_obj = new Date(str_date + " " + str_hour);
                 var hour = date_obj.getHours();

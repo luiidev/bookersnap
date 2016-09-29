@@ -14,7 +14,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
     //-----------------------------------------------
     // CALENDAR CONTROLLER
     //-----------------------------------------------
-    .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $modal) {
+    .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $uibModal) {
         var vm = this;
 
         var now;
@@ -48,18 +48,14 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     center: 'prev, title, next',
                     left: ''
                 },
+                locale: 'es',
                 theme: true,
                 selectable: true,
                 selectHelper: true,
-                //editable: true,
                 events: vm.events,
                 eventOrder: 'start_time',
-                select: function (start, end, allDay) {
-                    //alert(4545)
-                },
                 eventClick: function (calEvent, jsEvent, view) {
                     OpenDay(calEvent.date);
-                    //console.log(calEvent.date);
                 },
                 dayClick: function (date, jsEvent, view) {
                     var $date = date.format('YYYY-MM-DD');
@@ -87,7 +83,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 return false;
             }
 
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'addEvent.html',
                 controller: 'DayShiftController',
                 controllerAs: 'vm',
@@ -124,7 +120,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
     })
 
-    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService, $modal) {
+    .controller('DayShiftController', function (data, $uibModalInstance, CalendarService, bsLoadingOverlayService, $uibModal, $state) {
         var vm = this;
         vm.date = data.date;
         vm.flags = {isLoading: false};
@@ -132,11 +128,18 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         vm.shifts = [];
 
         vm.dismiss = function () {
-            $modalInstance.dismiss();
+            $uibModalInstance.dismiss();
         };
 
         vm.AddSchedule = function (type_shift_id, $name) {
             openDialogShedule(type_shift_id, $name);
+        };
+
+        vm.moduleEdit = function(turn) {
+            $state.go('mesas.turn-edit', {
+                turn: turn
+            });
+            vm.dismiss();
         };
 
         vm.removeSchedule = function (id) {
@@ -189,7 +192,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     vm.flags.isLoading = false;
                     try {
                         var $type_shift = {id: type_shift_id, name: $name};
-                        var modalInstance = $modal.open({
+                        var modalInstance = $uibModal.open({
                             templateUrl: 'schedule.html',
                             controller: 'ScheduleShiftController',
                             controllerAs: 'vm',
@@ -198,7 +201,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                             resolve: {
                                 data: function () {
                                     return {
-                                        modalInstance: $modalInstance,
+                                        modalInstance: $uibModalInstance,
                                         typeShift: $type_shift,
                                         date: vm.date,
                                         shifts: Response.data.data,
@@ -240,7 +243,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     vm.flags.isLoading = false;
                     try {
                         var $type_shift = {id: type_shift_id, name: $name};
-                        var modalInstance = $modal.open({
+                        var modalInstance = $uibModal.open({
                             templateUrl: 'changeSchedule.html',
                             controller: 'ScheduleChangeController',
                             controllerAs: 'vm',
@@ -249,7 +252,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                             resolve: {
                                 data: function () {
                                     return {
-                                        modalInstance: $modalInstance,
+                                        modalInstance: $uibModalInstance,
                                         turn_id: turn_id,
                                         typeShift: $type_shift,
                                         date: vm.date,
@@ -292,7 +295,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         init();
     })
 
-    .controller('ScheduleShiftController', function (data, $modalInstance, CalendarService) {
+    .controller('ScheduleShiftController', function (data, $uibModalInstance, CalendarService) {
         var vm = this;
         vm.typeShift = data.typeShift;
         vm.shifts = data.shifts;
@@ -301,7 +304,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         var modalInstanceBefore = data.modalInstance;
 
         vm.dismiss = function () {
-            $modalInstance.dismiss();
+            $uibModalInstance.dismiss();
         };
 
         vm.am_pm = function (time) {
@@ -336,7 +339,6 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         };
 
         function init() {
-            CalendarService.SetCalendarLocale();
             var $moment = moment(vm.date);
             vm.formatted_date = $moment.format('MMMM DD');
             vm.day_name = $moment.format('dddd') + ($moment.day() == 6 || $moment.day() == 0 ? 's' : '');
@@ -345,7 +347,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         init();
     })
 
-    .controller('ScheduleChangeController', function (data, $modalInstance, CalendarService) {
+    .controller('ScheduleChangeController', function (data, $uibModalInstance, CalendarService) {
         var vm = this;
         vm.typeShift = data.typeShift;
         vm.date = data.date;
@@ -354,7 +356,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         var modalInstanceBefore = data.modalInstance;
 
         vm.dismiss = function () {
-            $modalInstance.dismiss();
+            $uibModalInstance.dismiss();
         };
 
         vm.am_pm = function (time) {
