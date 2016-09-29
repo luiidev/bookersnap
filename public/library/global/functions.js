@@ -110,11 +110,55 @@ var addHourByMin = function(hour) {
 
 };
 
+
+var roundByUp = function(numero, factor) {
+
+    while (numero % factor !== 0) {
+        numero++;
+    }
+
+    if (numero % 60 === 0) {
+        return "00";
+    } else {
+        return numero;
+    }
+
+};
+
+
+var roundByDown = function(numero, factor) {
+
+    while (numero % factor !== 0) {
+        numero--;
+    }
+
+    if (numero % 60 === 0) {
+        return "00";
+    } else {
+        return numero;
+    }
+
+};
+
 /*
     Se recibe un rango de horas (12:00:00 - 16:00:00) y se devuelve un array con las horas seleccionadas en el mismo formato
     con un lapso de 15 minutos cada uno 
 */
 var getRangoHours = function(horaInicial, horaFinal) {
+
+    var arrayInicial = horaInicial.split(":");
+    var arrayFinal = horaFinal.split(":");
+
+    if (!arrayInicial[1] % 15) {
+        console.log(arrayInicial[1] + " es multiplo de 15");
+    }
+
+    /** 
+    Se aplica un redondeo hace arriba cuando se obtienen horas distorcionadas ejemplo: 05:13:00  esto se redondea ya
+    que la bd soporta rangos de 15 en 15 
+    **/
+    horaFinal = (arrayFinal[1] % 15 === 0) ? horaFinal : (arrayFinal[0] + ":" + roundByUp(arrayFinal[1], 15) + ":" + arrayFinal[2]);
+    horaInicial = (arrayInicial[1] % 15 === 0) ? horaInicial : (arrayInicial[0] + ":" + roundByDown(arrayInicial[1], 15) + ":" + arrayInicial[2]);
 
     var newHoursIni = horaInicial;
     var arrayHoras = [];
@@ -169,6 +213,10 @@ var defineTimeSytem = function(time) {
     return newTime;
 };
 
+var setearJsonError = function(jsonError) {
+    var energy = jsonError.join("\n");
+    return energy;
+};
 var convertDateTo24Hour = function(timeStr) {
     if (timeStr === undefined) {
         return null;
@@ -227,6 +275,7 @@ var messageAlert = function(title, text, type, time = 2000) {
     });
 };
 
+
 var messageErrorApi = function(data, title, type) {
     var jsonResponse = JSON.stringify(data);
     var body = null;
@@ -255,10 +304,72 @@ var messageErrorApi = function(data, title, type) {
     } else {
         body = "Ocurrió un error en el servidor";
     }
-
-    messageAlert(title, body, type);
-
 };
+
+var message = {};
+
+message.show = function(title, text, type, options) {
+    var config = {
+        title: title,
+        text: text,
+        type: type,
+    };
+
+    if (options !== undefined) {
+        if (typeof options == "object") {
+            config = Object.assign(config, options);
+        }
+    }
+    swal(config);
+};
+
+message.success = function(title, text, time) {
+    return this.short(title, text, time, "success");
+};
+
+message.error = function(title, text, time) {
+    return this.short(title, text, time, "error");
+};
+
+message.short = function(title, text, time, icon) {
+    if (typeof text == "number") {
+        return this.show(title, "", icon, {
+            timer: text
+        });
+    } else if (typeof time == "number") {
+        return this.show(title, text, icon, {
+            timer: time
+        });
+    }
+    return this.show(title, text, icon);
+};
+
+message.alert = function(title, text, icon, time) {
+    return this.show(title, text, icon, time);
+};
+
+message.apiError = function(response, title, icon, options) {
+    var body;
+    title = title || "Error";
+    icon = icon || "error";
+
+    if (response.data !== null) {
+        if (response.data.error !== null) {
+            body = response.data.error.user_msg;
+        } else {
+            if (response.status == 401 || response.status == 403) {
+                body = "No tiene permisos para realizar esta acción";
+            } else {
+                body = "Ocurrió un error en el servidor";
+            }
+        }
+    } else {
+        body = "Ocurrió un error en el servidor";
+    }
+
+    return this.show(title, body, icon, options);
+};
+
 
 var historyBack = function() {
     window.history.back();

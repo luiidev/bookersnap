@@ -1,41 +1,50 @@
 angular.module('turn.service', [])
-	.factory('TurnDataFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
-		return {
-			getTurns: function(vOptions) {
-				return $http.get(ApiUrlMesas + "/turns?" + vOptions);
-			},
-			getTurn: function(vTurn, vOptions) {
-				return $http.get(ApiUrlMesas + "/turns/" + vTurn + "?" + vOptions);
-			},
-			createTurn: function(vData) {
-				return $http.post(ApiUrlMesas + "/turns", vData);
-			},
-			updateTurn: function(vData) {
-				return $http.put(ApiUrlMesas + "/turns/" + vData.id, vData);
-			},
-			getTurnsAvailables: function(vDate) {
-				return $http.get(ApiUrlMesas + "/turns/" + vDate + "/availables");
-			},
-			searchTurn: function(vData) {
-				return $http.get(ApiUrlMesas + "/turns/search?" + vData);
-			},
-			getTurnZoneTables: function(vZone, vTurn) {
-				return $http.get(ApiUrlMesas + "/turns/" + vTurn + "/zones/" + vZone + "/tables");
-			}
-		};
-	})
-	.factory('TypeTurnFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
 
-		return {
-			getTypeTurns: function() {
-				return $http.get(ApiUrlRoot + "/type-turn");
-			},
-			getDaysTypeTurn: function(vTypeTurn) {
-				return $http.get(ApiUrlMesas + "/type-turn/" + vTypeTurn + "/days");
-			}
+.factory('TurnDataFactory',function($http,ApiUrlMesas,ApiUrlRoot){
+	return {
+		getTurns: function(vOptions){
+			return $http.get(ApiUrlMesas+"/turns?"+vOptions);
+		},
+		getTurn : function(vTurn,vOptions){
+			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"?"+vOptions);
+		},
+		createTurn : function(vData){
+			return $http.post(ApiUrlMesas+"/turns",vData);
+		},
+		updateTurn : function(vData){
+			return $http.put(ApiUrlMesas+"/turns/"+vData.id,vData);
+		},
+		getTurnsAvailables: function(vDate){
+			return $http.get(ApiUrlMesas+"/turns/"+vDate+"/availables");
+		},
+		searchTurn : function(vData){
+			return $http.get(ApiUrlMesas+"/turns/search?"+vData);
+		},
+		getTurnZoneTables : function(vZone,vTurn){
+			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"/zones/"+vZone+"/tables");
+		}
+	};
+})
+.factory('TypeTurnFactory',function($http,ApiUrlMesas,ApiUrlRoot){
 
-		};
-	})
+	return {
+		getTypeTurns : function(){
+			return $http.get(ApiUrlMesas+"/type-turn");
+		},
+		getDaysTypeTurn : function(vTypeTurn){
+			return $http.get(ApiUrlMesas+"/type-turn/"+vTypeTurn+"/days");
+		}
+
+	};
+})
+.factory('DateFactory',function($http,$filter){
+
+	return {
+		timeFormat : function(time){
+			return $filter('date')(time,'HH:mm:ss');
+		}
+	}
+})
 	.factory('DateFactory', function($http, $filter) {
 
 		return {

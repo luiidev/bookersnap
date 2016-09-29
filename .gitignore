@@ -6,3 +6,4 @@ Homestead.json
 .env
 gulpfile-reservation.js
 /nbproject/private/
+/public/app

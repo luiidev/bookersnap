@@ -1,120 +1,72 @@
-<div class="col-sm-12 m-b-20">
-    <button class="btn btn-success">New Server</button>
-    <p class="f-500 m-b-20 c-black">Servers register</p>
+<style type="text/css">
+.ServerColor-previewContainer {
+    margin: -5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.ServerColor-preview {
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 0 0 1px #eee;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.u-visuallyHidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.ServerColor-preview.is-selected {
+    box-shadow: 0 0 0 3px #3a99d8;
+}
+</style>
+<div class="col-sm-12 m-t-20" ng-show="!sm.showForm">
+    <p class="f-500 m-b-20 c-black">Servers register &nbsp&nbsp&nbsp
+        <button class="btn bt-xs btn-success" ng-click="sm.showForm = true"><i class="zmdi zmdi-plus-circle"></i> Server</button>
+    </p>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="server in sm.servers">
-            <span class="badge" style="background-color:{{server.color}} !important "> &nbsp</span>
-            {{server.name}}
+        <li ui-sref="floor.server.edit({server_id: {{server.id}}})" class="list-group-item" ng-repeat="server in servers" ng-click="sm.editServer(server)" style="cursor: pointer">
+            <span class="badge" style="background-color:{{server.color}} !important "> &nbsp</span> {{server.name}}
         </li>
     </ul>
 </div>
-
-<div class="col-sm-12 m-b-20" id="form_new_server">
-    <h3>New Server</h3>
+<div class="col-sm-12 m-b-20" id="form_new_server" ng-show="sm.showForm">
+    <h3 ng-show="sm.flagServer == false">New Server</h3>
+    <h3 ng-show="sm.flagServer == true">Update Server</h3>
     <div class="input-group">
         <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
         <div class="fg-line">
-            <input type="text" class="form-control" placeholder="Server">
+            <input type="text" class="form-control" ng-model="sm.name" placeholder="Server">
         </div>
     </div>
-
-    <div class="js-available-color-group">
-    <div class="Form-nestedLabel">Available Colors</div>
-    <div class="Form-field Form-field--smallSpacing">
-    <div class="js-available-color-group">
-    <div class="Form-nestedLabel">Available Colors</div>
-    <div class="Form-field Form-field--smallSpacing">
-        <div class="ServerColor-previewContainer">
-            <label class="ServerColor-preview" for="color_hex_9f7421" style="background-color: rgb(159, 116, 33);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="9f7421" id="color_hex_9f7421">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_82d1d3" style="background-color: rgb(130, 209, 211);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="82d1d3" id="color_hex_82d1d3">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_7c004c" style="background-color: rgb(124, 0, 76);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="7c004c" id="color_hex_7c004c">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_e176ce" style="background-color: rgb(225, 118, 206);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="e176ce" id="color_hex_e176ce">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_7e3c91" style="background-color: rgb(126, 60, 145);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="7e3c91" id="color_hex_7e3c91">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_b30011" style="background-color: rgb(179, 0, 17);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="b30011" id="color_hex_b30011">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_1e9084" style="background-color: rgb(30, 144, 132);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="1e9084" id="color_hex_1e9084">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ffffe8" style="background-color: rgb(255, 255, 232);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ffffe8" id="color_hex_ffffe8">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_eead00" style="background-color: rgb(238, 173, 0);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="eead00" id="color_hex_eead00">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ff6138" style="background-color: rgb(255, 97, 56);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ff6138" id="color_hex_ff6138">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_007fff" style="background-color: rgb(0, 127, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="007fff" id="color_hex_007fff">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ffc4b5" style="background-color: rgb(255, 196, 181);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ffc4b5" id="color_hex_ffc4b5">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_a9d4ff" style="background-color: rgb(169, 212, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="a9d4ff" id="color_hex_a9d4ff">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_30c6bd" style="background-color: rgb(48, 198, 189);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="30c6bd" id="color_hex_30c6bd">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_5fefe7" style="background-color: rgb(95, 239, 231);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="5fefe7" id="color_hex_5fefe7">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ffc26b" style="background-color: rgb(255, 194, 107);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ffc26b" id="color_hex_ffc26b">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_00aeef" style="background-color: rgb(0, 174, 239);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="00aeef" id="color_hex_00aeef">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_cdc3ff" style="background-color: rgb(205, 195, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="cdc3ff" id="color_hex_cdc3ff">
-            </label><label class="ServerColor-preview" for="color_hex_9be4ff" style="background-color: rgb(155, 228, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="9be4ff" id="color_hex_9be4ff">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_aa0d71" style="background-color: rgb(170, 13, 113);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="aa0d71" id="color_hex_aa0d71">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_e891d7" style="background-color: rgb(232, 145, 215);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="e891d7" id="color_hex_e891d7">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_fc00ff" style="background-color: rgb(252, 0, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="fc00ff" id="color_hex_fc00ff">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_901eac" style="background-color: rgb(144, 30, 172);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="901eac" id="color_hex_901eac">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_c41200" style="background-color: rgb(196, 18, 0);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="c41200" id="color_hex_c41200">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ffffff" style="background-color: rgb(255, 255, 255);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ffffff" id="color_hex_ffffff">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_2c3e50" style="background-color: rgb(44, 62, 80);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="2c3e50" id="color_hex_2c3e50">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_ab7714" style="background-color: rgb(171, 119, 20);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="ab7714" id="color_hex_ab7714">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_755e33" style="background-color: rgb(117, 94, 51);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="755e33" id="color_hex_755e33">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_83ff5a" style="background-color: rgb(131, 255, 90);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="83ff5a" id="color_hex_83ff5a">
-            </label>
-            <label class="ServerColor-preview" for="color_hex_2085d8" style="background-color: rgb(32, 133, 216);">
-                <input type="radio" name="color_hex" class="u-visuallyHidden" value="2085d8" id="color_hex_2085d8">
-            </label>
+    <div class="js-available-color-group m-t-20 m-b-20">
+        <div class="Form-nestedLabel">Available Colors</div>
+        <div class="Form-field Form-field--smallSpacing">
+            <div class="ServerColor-previewContainer">
+                <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
+                </label>
+            </div>
         </div>
     </div>
-</div>
+    <div class="input-group">
+        <button class="btn btn-success" ng-click="sm.saveOrUpdateServer()">Guardar</button>
+        &nbsp;
+        <button class="btn btn-warning" ng-click="sm.cancelEditServer()">Cancelar</button>
+        &nbsp;
+        <button class="btn btn-error" ng-click="sm.deleteServer()" ng-show="sm.flagServer == true">Delete</button>
+    </div>
+    <div class="input-group">
+        <p>{{se.mesasSeleccionadas}}</p>
+    </div>
 </div>

@@ -4,9 +4,7 @@
 
 angular.module('calendar.service', [])
 
-    .service('CalendarService', function ($http) {
-        //var url_api_mesas = 'http://api-mesas.vh/v1/es';
-        var url_api_mesas = 'http://localhost:3004/v1/es';
+    .service('CalendarService', function ($http, ApiUrlMesas) {
         return {
             SetCalendarLocale: function () {
                 moment.locale('es', {
@@ -37,13 +35,13 @@ angular.module('calendar.service', [])
                 return moment(dateCalendar).isBefore(now);
             },
             GetShiftsByMonth: function ($month, $listener) {
-                $http.get(url_api_mesas + '/microsites/1/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
             },
             GetShiftByDate: function ($date, $listener) {
-                $http.get(url_api_mesas + '/microsites/1/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
             },
             GetShiftsByType: function (id, $listener) {
-                $http.get(url_api_mesas + '/microsites/1/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);
+                $http.get(ApiUrlMesas + '/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);
                 //var $res = {};
                 //var $response = [
                 //    {id: 1, name: 'Turno D1', hours_ini: '07:00:00', hours_end: '10:00:00'},
@@ -92,7 +90,7 @@ angular.module('calendar.service', [])
                 };
             },
             ScheduleShift: function (id, date, $listener) {
-                $http.post(url_api_mesas + '/microsites/1/calendar', {
+                $http.post(ApiUrlMesas + '/calendar', {
                     res_turn_id: id,
                     date: date
                 }).then($listener.OnSuccess, $listener.OnError);
@@ -100,12 +98,12 @@ angular.module('calendar.service', [])
             },
 
             DeleteShift: function (id, date, $listener) {
-                $http.delete(url_api_mesas + '/microsites/1/calendar/' + id , { params: {date: date}}).
+                $http.delete(ApiUrlMesas + '/calendar/' + id , { params: {date: date}}).
                 then($listener.OnSuccess, $listener.OnError);
             },
 
             ChangeSchedule: function (turn_id, shift_id, date, $listener) {
-                $http.put(url_api_mesas + '/microsites/1/calendar/change', {
+                $http.put(ApiUrlMesas + '/calendar/change', {
                     turn_id: turn_id,
                     shift_id: shift_id,
                     date: date

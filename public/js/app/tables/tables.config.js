@@ -10,10 +10,8 @@ angular.module('tables.app', [
         'floor.app'
     ])
     .constant("IdMicroSitio", idMicrositio)
-    //.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas')
     .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
-    //.constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en')
 
 .run(function($http) {
     //setAuthHeaders($http);

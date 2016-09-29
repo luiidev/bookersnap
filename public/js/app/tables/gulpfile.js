@@ -38,6 +38,9 @@ gulp.task('app-library-tables-js', function() {
             '../../../library/bower_components/angular-chosen-localytics/chosen.js',
             '../../../library/bower_components/jquery-ui/jquery-ui.js',
             '../../../library/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
+            '../../../library/sparklines/jquery.sparkline.min.js',
+            '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+            '../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.tables.min.js'))
@@ -64,7 +67,8 @@ gulp.task('stylus-app', function() {
 gulp.task('app-library-tables-css', function() {
     gulp.src([
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
-            '../../../library/bower_components/chosen/chosen.css'
+            '../../../library/bower_components/chosen/chosen.css',
+            '../../../library/bower_components/fullcalendar/dist/fullcalendar.css'
         ])
         .pipe(minifyCss())
         .pipe(concat('app.bookersnap.library.tables.min.css'))
@@ -77,7 +81,9 @@ gulp.task('watch', function() {
     gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
-        '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css'
+        '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+        '../../../library/bower_components/chosen/chosen.css',
+        '../../../library/bower_components/fullcalendar/dist/fullcalendar.css'
     ], ['app-library-tables-css']);
 });
 
