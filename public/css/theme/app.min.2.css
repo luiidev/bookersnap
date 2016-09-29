@@ -2905,6 +2905,11 @@ body.login-content:before {
   color: #fff;
 }
 
+.fc-today-button {
+  width: 50px !important;
+  border-radius: 0 !important;
+}
+
 .fc-toolbar .ui-button:hover {
   background: #fff;
   color: #009688;

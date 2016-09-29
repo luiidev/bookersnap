@@ -2,34 +2,22 @@
  * Created by BS on 25/08/2016.
  */
 
-angular.module('calendar.controller', ['bsLoadingOverlay'])
-    .run(function (bsLoadingOverlayService) {
-        bsLoadingOverlayService.setGlobalConfig({
-            delay: 0, // Minimal delay to hide loading overlay in ms.
-            activeClass: undefined, // Class that is added to the element where bs-loading-overlay is applied when the overlay is active.
-            templateUrl: 'overlay-template.html', // Template url for overlay element. If not specified - no overlay element is created.
-            templateOptions: undefined // Options that are passed to overlay template (specified by templateUrl option above).
-        });
-    })
-    //-----------------------------------------------
-    // CALENDAR CONTROLLER
-    //-----------------------------------------------
-    .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $uibModal) {
+angular.module('calendar.controller', [])
+    .controller('CalendarIndexController', function (CalendarService, $uibModal) {
         var vm = this;
-
         var now;
 
         function GetEvents() {
             var month = vm.calendar.fullCalendar('getDate').format('YYYY-MM');
-            bsLoadingOverlayService.start();
+            vm.loading = true;
             CalendarService.GetShiftsByMonth(month, {
                 OnSuccess: function (Response) {
-                    bsLoadingOverlayService.stop();
                     vm.events = Response.data.data;
                     updateCalendar();
+                    vm.loading = false;
                 },
                 OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
+                    vm.loading = false;
                 }
             });
         }
@@ -46,7 +34,10 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 header: {
                     right: '',
                     center: 'prev, title, next',
-                    left: ''
+                    left: 'today'
+                },
+                buttonText: {
+                     today: "Hoy"
                 },
                 locale: 'es',
                 theme: true,
@@ -76,6 +67,9 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     element.html($text);
                 }
             });
+
+            // console.log(vm.calendar);
+            // console.log(vm.calendar.contents());
         }
 
         function OpenDay($date) {
@@ -120,7 +114,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
     })
 
-    .controller('DayShiftController', function (data, $uibModalInstance, CalendarService, bsLoadingOverlayService, $uibModal, $state) {
+    .controller('DayShiftController', function (data, $uibModalInstance, CalendarService, $uibModal, $state) {
         var vm = this;
         vm.date = data.date;
         vm.flags = {isLoading: false};
@@ -136,7 +130,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         };
 
         vm.moduleEdit = function(turn) {
-            $state.go('mesas.turn-edit', {
+            $state.go('turn-edit', {
                 turn: turn
             });
             vm.dismiss();
@@ -155,16 +149,16 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 closeOnCancel: true
             }, function (isConfirm) {
                 if (isConfirm) {
-                    bsLoadingOverlayService.start();
+                    vm.loading = true;
                     CalendarService.DeleteShift(id, vm.date, {
                         OnSuccess: function (Response) {
-                            bsLoadingOverlayService.stop();
                             GetData();
                             data.GetEvents();
                             vm.dismiss();
+                            vm.loading = false;
                         },
                         OnError: function (Response) {
-                            bsLoadingOverlayService.stop();
+                            vm.loading = false;
                             message.apiError(Response);
                         }
                     });
@@ -173,14 +167,15 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         };
         
         function GetData() {
-            bsLoadingOverlayService.start();
+            vm.loading = true;
             CalendarService.GetShiftByDate(vm.date, {
                 OnSuccess: function (Response) {
-                    bsLoadingOverlayService.stop();
                     vm.shifts = Response.data.data;
+                    vm.loading = false;
                 },
                 OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
+                    vm.loading = false;
+                    message.apiError(Response);
                 }
             });
         }
@@ -351,7 +346,6 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         var vm = this;
         vm.typeShift = data.typeShift;
         vm.date = data.date;
-        vm.flags = {isLoading: false};
         var turn_id = data.turn_id;
         var modalInstanceBefore = data.modalInstance;
 
@@ -364,10 +358,10 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         };
 
         vm.changeCheduless = function (shift_id) {
-            vm.flags.isLoading = true;
+            vm.loading = true;
             CalendarService.ChangeSchedule(turn_id, shift_id, vm.date, {
                 OnSuccess: function (Response) {
-                    vm.flags.isLoading = false;
+                    vm.loading = false;
                     try {
                         if (Response.data.statuscode == 201) {
                             data.updateShifts();
@@ -380,7 +374,7 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     }
                 },
                 OnError: function (Response) {
-                    vm.flags.isLoading = false;
+                    vm.loading = false;
                     message.apiError(Response);
                 }
             });

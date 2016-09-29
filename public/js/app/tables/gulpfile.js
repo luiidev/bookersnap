@@ -18,6 +18,7 @@ gulp.task('app-bookersnap-tables-js', function() {
     gulp.src([
             '**/*.js',
             '../app.config.js',
+            '../app.directive.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.tables.min.js'))
@@ -73,7 +74,7 @@ gulp.task('app-library-tables-css', function() {
 
 //Automatizamos esta tarea
 gulp.task('watch', function() {
-    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-tables-js']);
+    gulp.watch(['**/*.js', '../app.config.js', '../app.directive.js'], ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
     gulp.watch([
