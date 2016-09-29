@@ -17,6 +17,7 @@ var obtenerIdMicrositio = function() {
 };
 
 var getDaysWeek = function() {
+<<<<<<< HEAD
     var days = [
         { id: 0, label: 'Domingo' },
         { id: 1, label: 'Lunes' },
@@ -26,6 +27,30 @@ var getDaysWeek = function() {
         { id: 5, label: 'Viernes' },
         { id: 6, label: 'Sabado' },
     ];
+=======
+    var days = [{
+        id: 0,
+        label: 'Domingo'
+    }, {
+        id: 1,
+        label: 'Lunes'
+    }, {
+        id: 2,
+        label: 'Martes'
+    }, {
+        id: 3,
+        label: 'Miercoles'
+    }, {
+        id: 4,
+        label: 'Jueves'
+    }, {
+        id: 5,
+        label: 'Viernes'
+    }, {
+        id: 6,
+        label: 'Sabado'
+    }, ];
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
 
     return days;
 };
@@ -50,9 +75,19 @@ var uniqueArray = function(origArr) {
 }
 
 var getGender = function() {
+<<<<<<< HEAD
     var gender = [
         { id: 'M', label: 'Masculino' },
         { id: 'F', label: 'Femenino' },
+=======
+    var gender = [{
+            id: 'M',
+            label: 'Masculino'
+        }, {
+            id: 'F',
+            label: 'Femenino'
+        },
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
 
     ];
 
@@ -197,7 +232,11 @@ Date javascript
 --------*/
 
 var convertTextToDate = function(language, options, date = null) {
+<<<<<<< HEAD
     if (date != null) {
+=======
+    if (date !== null) {
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
         return new Date(date).toLocaleDateString(language, options);
     } else {
         return new Date().toLocaleDateString(language, options);
@@ -218,10 +257,16 @@ var defineTimeSytem = function(time) {
 var setearJsonError = function(jsonError) {
     var energy = jsonError.join("\n");
     return energy;
+<<<<<<< HEAD
 }
 
 var convertDateTo24Hour = function(timeStr) {
     if (timeStr == undefined) {
+=======
+};
+var convertDateTo24Hour = function(timeStr) {
+    if (timeStr === undefined) {
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
         return null;
     } else {
 
@@ -254,7 +299,7 @@ var getAsUriParameters = function(data) {
         url += encodeURIComponent(prop) + '=' +
             encodeURIComponent(data[prop]) + '&';
     }
-    return url.substring(0, url.length - 1)
+    return url.substring(0, url.length - 1);
 };
 
 var getDayText = function(index, option) {
@@ -266,6 +311,7 @@ var getDayText = function(index, option) {
     }
 
     return dayText;
+<<<<<<< HEAD
 };
 
 var messageAlert = function(title, text, type, time = 2000) {
@@ -276,6 +322,49 @@ var messageAlert = function(title, text, type, time = 2000) {
         timer: time,
         showConfirmButton: false
     });
+=======
+};
+
+var messageAlert = function(title, text, type, time = 2000) {
+    swal({
+        title: title,
+        text: text,
+        type: type,
+        timer: time,
+        showConfirmButton: false
+    });
+};
+
+
+var messageErrorApi = function(data, title, type) {
+    var jsonResponse = JSON.stringify(data);
+    var body = null;
+
+    if (data !== null && data !== undefined) {
+
+        if (data.error !== null) {
+
+            console.log("error " + angular.toJson(data, true));
+
+            if (jsonResponse.indexOf("name") != -1) {
+                body = data.name;
+            }
+
+            if (jsonResponse.indexOf("user_msg") != -1) {
+                body = data.error.user_msg;
+            }
+
+        } else {
+            if (data.status == 401 || data.status == 403) {
+                body = "No tiene permisos para realizar esta acción";
+            } else {
+                body = "Ocurrió un error en el servidor";
+            }
+        }
+    } else {
+        body = "Ocurrió un error en el servidor";
+    }
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
 };
 
 var message = {};
@@ -305,9 +394,19 @@ message.error = function(title, text, time) {
 
 message.short = function(title, text, time, icon) {
     if (typeof text == "number") {
+<<<<<<< HEAD
         return this.show(title, "", icon, { timer: text });
     } else if (typeof time == "number") {
         return this.show(title, text, icon, { timer: time });
+=======
+        return this.show(title, "", icon, {
+            timer: text
+        });
+    } else if (typeof time == "number") {
+        return this.show(title, text, icon, {
+            timer: time
+        });
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
     }
     return this.show(title, text, icon);
 };
@@ -338,6 +437,7 @@ message.apiError = function(response, title, icon, options) {
     return this.show(title, body, icon, options);
 };
 
+<<<<<<< HEAD
 var messageErrorApi = function(data, title, type) {
     var errorJson = JSON.stringify(data);
 
@@ -347,6 +447,8 @@ var messageErrorApi = function(data, title, type) {
         messageAlert(title, data, type);
     }
 };
+=======
+>>>>>>> 89a93e49552dbed4afc3ad056b574309fd651bc9
 
 var historyBack = function() {
     window.history.back();
