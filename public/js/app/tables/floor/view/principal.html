@@ -5,9 +5,9 @@
         <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'2'">PISO 02</label>
         <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'3'">PISO 03</label>
     </div>
-    <small class="c-gray">
-        {{radioModel || ''}}
-    </small>
+    <div ng-if="radioModel">
+        ver
+    </div>
 
     <tabset justified="true">
         <tab active="tab.active" heading="{{tab.name}}" ng-repeat="tab in vm.zonas">
