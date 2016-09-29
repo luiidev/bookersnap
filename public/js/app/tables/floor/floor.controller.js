@@ -3,6 +3,8 @@ angular.module('floor.controller', [])
 .controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
         var vm = this;
         vm.titulo = "Floor";
+        vm.colorsSelect = [];
+
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
@@ -15,6 +17,17 @@ angular.module('floor.controller', [])
 
         ServerFactory.getAllTablesFromServer().then(function(response) {
             $rootScope.servers = response.data.data;
+            return $rootScope.servers;
+        }).then(function(servers) {
+            var colors = [];
+            /* Se cargan los colores que ya fueron asignados  */
+            angular.forEach(servers, function(server, m) {
+
+                colors.push(server.color);
+
+            });
+            vm.colorsSelect = uniqueArray(colors); // Se colocan solo los colores ya asigandos a los servidores
+
         });
 
         vm.mostrarDetail = function(index, data) {
@@ -76,8 +89,7 @@ angular.module('floor.controller', [])
 
 controller('waitlistController', function($scope) {
     var wm = this;
-}).
-controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
+}).controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
 
     var server_id = $stateParams.server_id;
     var se = this;
@@ -102,7 +114,7 @@ controller('serverTablesController', function($scope, $stateParams, $rootScope, 
 
     /* Logica para seleccionar las mesas */
     se.selectTable = function(item) {
-
+        console.log("item:", item);
         var element = angular.element('#el' + item.table_id);
         if (element.hasClass("is-selected") === true) { // Si ya fue seleccionado se remueve la clase
 
@@ -117,14 +129,9 @@ controller('serverTablesController', function($scope, $stateParams, $rootScope, 
             element.addClass("is-selected");
         }
 
-        console.log($rootScope.mesasSeleccionadas);
-
     };
 
-
-
-}).
-controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ColorFactory, FloorFactory) {
+}).controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ColorFactory, FloorFactory) {
 
     var sm = this;
     // Se trae la informacion de las zonas independientemente para poder realizar un trato especial a la variable
@@ -147,7 +154,6 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
     };
 
     sm.editServer = function(server) {
-        console.log(server);
 
         sm.flagServer = true;
         sm.showForm = true;
@@ -165,7 +171,16 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
 
     };
 
-     sm.newServer = function(server) {
+    sm.removeTable = function(item) {
+
+        var element = angular.element('#el' + item.table_id);
+        var index = $rootScope.mesasSeleccionadas.indexOf(item);
+        $rootScope.mesasSeleccionadas.splice(index, 1);
+        element.removeClass("is-selected");
+
+    };
+
+    sm.newServer = function(server) {
         console.log(server);
 
         sm.flagServer = true;
@@ -195,15 +210,15 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
 
     sm.saveOrUpdateServer = function() {
 
-        console.log($rootScope.mesasSeleccionadas);
-
         /* Se construye la estructura de las mesas seleccionadas */
         angular.forEach($rootScope.mesasSeleccionadas, function(mesa, i) {
             sm.tables.push({
                 id: mesa.table_id
             });
         });
+                                        
 
+        
         if (sm.flagServer === false) { // Se Crea un server
 
             sm.data = {
@@ -230,8 +245,8 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
 
             });
 
-        } else if (sm.flagServer === true) {
-
+        } else if (sm.flagServer === true) { // Se actualiza la data
+            
             sm.data = {
                 id: sm.server.id,
                 name: sm.name,
@@ -263,6 +278,7 @@ controller('serverController', function($scope, $rootScope, $stateParams, $state
             });
 
         }
+
     };
 
     sm.cancelEditServer = function(server) {

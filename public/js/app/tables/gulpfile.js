@@ -37,6 +37,8 @@ gulp.task('app-library-tables-js', function() {
             '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
             '../../../library/bower_components/chosen/chosen.jquery.js',
             '../../../library/bower_components/angular-chosen-localytics/chosen.js',
+            '../../../library/bower_components/jquery-ui/jquery-ui.js',
+            '../../../library/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
             '../../../library/sparklines/jquery.sparkline.min.js',
             '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
             '../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
@@ -49,7 +51,9 @@ gulp.task('app-library-tables-js', function() {
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
 gulp.task('stylus-app', function() {
-    gulp.src('../../../css/app/tables/*.styl')
+    gulp.src([
+            '../../../css/app/tables/*.styl'
+        ])
         .pipe(stylus({
             use: nib()
         }))

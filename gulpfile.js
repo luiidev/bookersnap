@@ -1,4 +1,3 @@
-
 var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     stylus = require('gulp-stylus'),
@@ -74,11 +73,11 @@ gulp.task('library-bower-js', function () {
 
 gulp.task('min-css-vendor', function() {
     gulp.src([
-        'public/library/bower_components/animate.css/animate.min.css',
-        'public/library/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css',
-        'public/library/bower_components/bootstrap-sweetalert/lib/sweet-alert.css',
-        'public/library/bower_components/angular-loading-bar/src/loading-bar.css',
-        'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'
+            'public/library/bower_components/animate.css/animate.min.css',
+            'public/library/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css',
+            'public/library/bower_components/bootstrap-sweetalert/lib/sweet-alert.css',
+            'public/library/bower_components/angular-loading-bar/src/loading-bar.css',
+            'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'
         ])
         .pipe(minifyCss())
         .pipe(concat('vendor.min.css'))
@@ -87,23 +86,35 @@ gulp.task('min-css-vendor', function() {
 
 gulp.task('min-css-theme', function() {
     gulp.src([
-        'public/css/theme/app.min.1.css',
-        'public/css/theme/app.min.2.css',
-        'public/css/theme/demo.css'
+            'public/css/theme/app.min.1.css',
+            'public/css/theme/app.min.2.css',
+            'public/css/theme/demo.css',
+            'public/css/app/main.min.css'
         ])
         .pipe(minifyCss())
         .pipe(concat('theme.min.css'))
         .pipe(gulp.dest('public/css/theme/dist'));
 });
 
+gulp.task('css-main-app', function() {
+    gulp.src([
+            'public/css/app/main.styl'
+        ])
+        .pipe(stylus({
+            use: nib()
+        }))
+        .pipe(minifyCss())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('public/css/app'));
+});
+
+//Automatizamos esta tarea
 gulp.task('watch', function() {
-  gulp.watch(['./www/css/app/main.tablet.styl'], ['stylus-tablet']);
-  gulp.watch([
-    './www/css/theme/app.min.1.css',
-    './www/css/theme/app.min.2.css',
-    './www/css/theme/demo.css'
-  ], ['min-css-theme']);
+    gulp.watch(['public/css/app/main.styl'], ['css-main-app']);
+    gulp.watch(['public/css/app/main.min.css'], ['min-css-theme']);
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-level-js','template-modules-js','library-bower-js','min-css-vendor','min-css-theme']);
+gulp.task('default', ['watch', 'app-level-js', 'template-modules-js', 'library-bower-js', 'min-css-vendor', 'min-css-theme', 'css-main-app']);
