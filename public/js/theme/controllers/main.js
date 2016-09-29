@@ -50,9 +50,10 @@
     this.wallLink = false;
 
     //Skin Switch
-    this.currentSkin = 'bluegray';
+    this.currentSkin = 'gray-win';
 
     this.skinList = [
+        'gray-win',
         'lightblue',
         'bluegray',
         'cyan',

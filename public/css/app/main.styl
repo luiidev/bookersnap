@@ -1,2 +1,34 @@
+$color_principal = #424242
+$color_secundario = #616161;
+
 .block-header
 	padding-bottom 25px
+#main 
+	padding-top 0
+.menu-section
+	padding-top 70px
+	margin-bottom 15px
+	background-color $color_secundario
+	border-bottom 1px solid $color_principal
+	& .tab-nav 
+		& li 
+			&.active
+				border-color #fff 
+				& a 
+					color #fff
+			& a
+				color #dbdbdb
+	& .tab-nav:not(.tn-vertical)
+		box-shadow none
+		&:not([data-tab-color])>li>a:after
+			background #fff
+	& .tab-content
+		display none
+		
+
+[data-current-skin="gray-win"] 
+	background-color $color_principal
+	& .ss-icon 
+		color $color_principal
+.bgm-gray-win
+	background-color $color_principal
