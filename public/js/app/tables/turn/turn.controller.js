@@ -101,6 +101,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			}
 
 			listDays();
+			angular.element("#box-tables div ").addClass("fadeOut");
 		};
 
 		var listDays = function() {
@@ -214,7 +215,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		};
 
 		$scope.activeDay = function() {
-			if ($scope.dayHide == true) {
+			if ($scope.dayHide === true) {
 				$scope.dayHide = false;
 			} else {
 				$scope.dayHide = true;
@@ -312,6 +313,13 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 			$scope.zoneSelected.id = zone.id;
 			$scope.zoneSelected.name = zone.name;
+
+			angular.element("#box-zones .table").addClass("fadeOut");
+
+			$timeout(function() {
+				angular.element("#box-zones").css("display", "none");
+				angular.element("#box-tables").css("display", "block");
+			}, 1000);
 
 			if (option == "edit") {
 				$scope.zoneSelected.rule = zone.rule.id;

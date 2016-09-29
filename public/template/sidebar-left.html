@@ -1,60 +1,107 @@
-<div class="sidebar-inner c-overflow">    
+<div class="sidebar-inner c-overflow">
     <div class="profile-menu">
-        <a href="" toggle-submenu>
+        <a href="" toggle-submenu="">
             <div class="profile-pic">
-                <img src="/img/profile-pics/1.jpg" alt="">
+                <img alt="" src="/img/profile-pics/1.jpg">
+                </img>
             </div>
-
             <div class="profile-info">
                 Josue Diaz
-                <i class="zmdi zmdi-caret-down"></i>
+                <i class="zmdi zmdi-caret-down">
+                </i>
             </div>
         </a>
-
         <ul class="main-menu">
             <li>
-                <a data-ui-sref="pages.profile.profile-about" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-account"></i> Ver Perfil</a>
+                <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="pages.profile.profile-about">
+                    <i class="zmdi zmdi-account">
+                    </i>
+                    Ver Perfil
+                </a>
             </li>
             <li>
-                <a href=""><i class="zmdi zmdi-input-antenna"></i> Seguridad</a>
+                <a href="">
+                    <i class="zmdi zmdi-input-antenna">
+                    </i>
+                    Seguridad
+                </a>
             </li>
             <li>
-                <a href=""><i class="zmdi zmdi-settings"></i> Configuración</a>
+                <a href="">
+                    <i class="zmdi zmdi-settings">
+                    </i>
+                    Configuración
+                </a>
             </li>
             <li>
-                <a href=""><i class="zmdi zmdi-time-restore"></i> Salir</a>
+                <a href="">
+                    <i class="zmdi zmdi-time-restore">
+                    </i>
+                    Salir
+                </a>
             </li>
         </ul>
     </div>
-
     <ul class="main-menu">
-        
         <li data-ui-sref-active="active">
-            <a data-ui-sref="home" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-home"></i> Home</a>
+            <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="home">
+                <i class="zmdi zmdi-home">
+                </i>
+                Home
+            </a>
         </li>
-
         <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
-            <a href="" toggle-submenu><i class="zmdi zmdi-labels zmdi-hc-fw"></i> Mesas</a>
-             <ul>
-                <li> <a data-ui-sref="guest" data-ng-click="mactrl.sidebarStat($event)"> Huesped</a>
-                </li>
-                <li> <a data-ui-sref="turn" data-ng-click="mactrl.sidebarStat($event)"> Turno</a>
-                </li>
-                <li><a data-ui-sref="zone.active" data-ng-click="mactrl.sidebarStat($event)"> Zonas</a>
-                </li>
-                <li> <a data-ui-sref="book" data-ng-click="mactrl.sidebarStat($event)"> Book</a>
-                </li>
-                <li> <a data-ui-sref="floor.reservation" data-ng-click="mactrl.sidebarStat($event)"> Floor</a>
-                </li>
-            </ul> 
-        </li>
-     
-        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
-            <a href="" toggle-submenu><i class="zmdi zmdi-view-compact"></i> Reservaciones</a>
+            <a href="" toggle-submenu="">
+                <i class="zmdi zmdi-labels zmdi-hc-fw">
+                </i>
+                Mesas
+            </a>
             <ul>
-                <li><a data-ui-sref-active="active" data-ui-sref="promotion" data-ng-click="mactrl.sidebarStat($event)">Promociones</a></li>
+                <li>
+                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="calendar-index">
+                        Configuración
+                    </a>
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="guest">
+                            Huesped
+                        </a>
+                    </li>
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="turn">
+                            Turno
+                        </a>
+                    </li>
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="zone.active">
+                            Zonas
+                        </a>
+                    </li>
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="book">
+                            Book
+                        </a>
+                    </li>
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="floor.reservation">
+                            Floor
+                        </a>
+                    </li>
+                </li>
             </ul>
         </li>
-       
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+            <a href="" toggle-submenu="">
+                <i class="zmdi zmdi-view-compact">
+                </i>
+                Reservaciones
+            </a>
+            <ul>
+                <li>
+                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="promotion" data-ui-sref-active="active">
+                        Promociones
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
 </div>
