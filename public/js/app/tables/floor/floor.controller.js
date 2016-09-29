@@ -171,8 +171,7 @@ controller('waitlistController', function($scope) {
 
     };
 
-<<<<<<< HEAD
-=======
+
     sm.removeTable = function(item) {
 
         var element = angular.element('#el' + item.table_id);
@@ -182,7 +181,6 @@ controller('waitlistController', function($scope) {
 
     };
 
->>>>>>> 97820d82871a4836bb9df7ba9be0894a8ac4b4a9
     sm.newServer = function(server) {
         console.log(server);
 
@@ -219,9 +217,9 @@ controller('waitlistController', function($scope) {
                 id: mesa.table_id
             });
         });
-                                        
 
-        
+
+
         if (sm.flagServer === false) { // Se Crea un server
 
             sm.data = {
@@ -249,7 +247,7 @@ controller('waitlistController', function($scope) {
             });
 
         } else if (sm.flagServer === true) { // Se actualiza la data
-            
+
             sm.data = {
                 id: sm.server.id,
                 name: sm.name,
