@@ -5,12 +5,20 @@ angular.module('floor.directive', [])
 
             var left = attr.x;
             var top = attr.y;
+            var borde = "";
+            var color = (attr.color) ? attr.color : 'none';
+            if (color == 'none') {
+                borde = '';
+            } else {
+                borde = '2px solid ' + attr.color;
+            }
 
             element.css({
                 position: 'absolute',
                 cursor: 'pointer',
                 top: top + 'px',
                 left: left + 'px',
+                border: borde,
                 none: 'none',
             });
 

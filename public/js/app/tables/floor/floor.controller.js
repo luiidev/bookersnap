@@ -8,7 +8,7 @@ angular.module('floor.controller', [])
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                //console.log('Formateado: ' + angular.toJson(data, true));
+                console.log('Formateado: ' + angular.toJson(data, true));
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -171,6 +171,7 @@ controller('waitlistController', function($scope) {
 
     };
 
+
     sm.removeTable = function(item) {
 
         var element = angular.element('#el' + item.table_id);
@@ -216,9 +217,9 @@ controller('waitlistController', function($scope) {
                 id: mesa.table_id
             });
         });
-                                        
 
-        
+
+
         if (sm.flagServer === false) { // Se Crea un server
 
             sm.data = {
@@ -246,7 +247,7 @@ controller('waitlistController', function($scope) {
             });
 
         } else if (sm.flagServer === true) { // Se actualiza la data
-            
+
             sm.data = {
                 id: sm.server.id,
                 name: sm.name,

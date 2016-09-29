@@ -4,20 +4,8 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
     <section id="content">
         <div class="container">
-            <div class="block-header" style="padding-top: 15px">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" data-ui-sref="floor">Cancelar</button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" ng-click="">Create reservation</button>
-                    </li>
-                </ul>
-            </div>
             <div class="card" id="turno-main">
-                <div class="card-header">
-                    <h2>{{vm.titulo}} <small></small></h2>
-                </div>
+                
                 <div>
                     <section>
                         <div ui-view="principal"></div>
