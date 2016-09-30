@@ -2,32 +2,22 @@
  * Created by BS on 25/08/2016.
  */
 
-angular.module('calendar.controller', ['bsLoadingOverlay'])
-    .run(function (bsLoadingOverlayService) {
-        bsLoadingOverlayService.setGlobalConfig({
-            delay: 0, // Minimal delay to hide loading overlay in ms.
-            activeClass: undefined, // Class that is added to the element where bs-loading-overlay is applied when the overlay is active.
-            templateUrl: 'overlay-template.html', // Template url for overlay element. If not specified - no overlay element is created.
-            templateOptions: undefined // Options that are passed to overlay template (specified by templateUrl option above).
-        });
-    })
-    //-----------------------------------------------
-    // CALENDAR CONTROLLER
-    //-----------------------------------------------
-    .controller('CalendarIndexController', function (CalendarService, bsLoadingOverlayService, $modal) {
+angular.module('calendar.controller', [])
+    .controller('CalendarIndexController', function (CalendarService, $uibModal) {
         var vm = this;
+        var now;
 
         function GetEvents() {
             var month = vm.calendar.fullCalendar('getDate').format('YYYY-MM');
-            bsLoadingOverlayService.start();
-            CalendarService.GetShifts(month, {
+            vm.loading = true;
+            CalendarService.GetShiftsByMonth(month, {
                 OnSuccess: function (Response) {
-                    bsLoadingOverlayService.stop();
                     vm.events = Response.data.data;
                     updateCalendar();
+                    vm.loading = false;
                 },
                 OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
+                    vm.loading = false;
                 }
             });
         }
@@ -44,39 +34,32 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 header: {
                     right: '',
                     center: 'prev, title, next',
-                    left: ''
+                    left: 'today'
                 },
+                buttonText: {
+                     today: "Hoy"
+                },
+                locale: 'es',
                 theme: true,
                 selectable: true,
                 selectHelper: true,
-                //editable: true,
                 events: vm.events,
                 eventOrder: 'start_time',
-                select: function (start, end, allDay) {
-                    //alert(4545)
-                },
                 eventClick: function (calEvent, jsEvent, view) {
                     OpenDay(calEvent.date);
-                    //console.log(calEvent.date);
                 },
                 dayClick: function (date, jsEvent, view) {
                     var $date = date.format('YYYY-MM-DD');
                     OpenDay($date);
-                    //console.log();
-
-                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                    //alert('Current view: ' + view.name);
-
-                    // change the day's background color just for fun
-                    //$(this).css('background-color', 'red');
-
                 },
                 viewRender: function (view, element) {
                     GetEvents();
                 },
-
                 eventRender: function (event, element) {
+                    if (CalendarService.isBefore(event.date, now)) {
+                        $(element).addClass('event-disabled');
+                    }
+
                     var $text = '<div class="fc-content" >';
                     $text += '<h5 class="text-center" style="color:white;margin: 2px;white-space: pre-line">' + event.title + '</h5>';
                     $text += '<div class="fc-title text-center">' + CalendarService.FormatTime(event.date, event.start_time) + ' - ' + CalendarService.FormatTime(event.date, event.end_time) + '</div>';
@@ -84,10 +67,17 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                     element.html($text);
                 }
             });
+
+            // console.log(vm.calendar);
+            // console.log(vm.calendar.contents());
         }
 
         function OpenDay($date) {
-            var modalInstance = $modal.open({
+            if (CalendarService.isBefore($date, now)) {
+                return false;
+            }
+
+            var modalInstance = $uibModal.open({
                 templateUrl: 'addEvent.html',
                 controller: 'DayShiftController',
                 controllerAs: 'vm',
@@ -96,14 +86,27 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
                 resolve: {
                     data: function () {
                         return {
-                            date: $date
+                            date: $date,
+                            GetEvents: function () {
+                                GetEvents();
+                            }
                         };
                     }
                 }
             });
         }
 
+        function DateNow() {
+            now = moment();
+            now.set({ 'hour': 0,
+                'minute': 0,
+                'second': 0,
+                'millisecond': 0
+            });
+        }
+
         function init() {
+            DateNow();
             initCalendar();
         }
 
@@ -111,78 +114,169 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
 
     })
 
-    .controller('DayShiftController', function (data, $modalInstance, CalendarService, bsLoadingOverlayService) {
+    .controller('DayShiftController', function (data, $uibModalInstance, CalendarService, $uibModal, $state) {
         var vm = this;
         vm.date = data.date;
+        vm.flags = {isLoading: false};
 
-        vm.shifts = {
-            breakfast: {id: 1, data: null},
-            brunch: {id: 2, data: null},
-            lunch: {id: 3, data: null},
-            dinner: {id: 4, data: null}
-        };
+        vm.shifts = [];
 
         vm.dismiss = function () {
-            $modalInstance.dismiss();
+            $uibModalInstance.dismiss();
         };
 
-        vm.shceduleBreakfast = function () {
-
+        vm.AddSchedule = function (type_shift_id, $name) {
+            openDialogShedule(type_shift_id, $name);
         };
 
-        vm.shceduleBrunch = function () {
-
+        vm.moduleEdit = function(turn) {
+            $state.go('turn-edit', {
+                turn: turn
+            });
+            vm.dismiss();
         };
 
-        vm.shceduleLunch = function () {
-
-        };
-
-        vm.shceduleDinner = function () {
-
-        };
-
-        function GetData() {
-            bsLoadingOverlayService.start();
-            CalendarService.GetShiftByDate(vm.date, {
-                OnSuccess: function (Response) {
-                    bsLoadingOverlayService.stop();
-                    var data = Response.data.data;
-                    angular.forEach(data, function (item) {
-                        var shift = {
-                            title: item.title,
-                            start: CalendarService.FormatTime(item.date, item.start_time),
-                            end: CalendarService.FormatTime(item.date, item.end_time)
-                        };
-                        switch (item.turn.type_turn.id) {
-                            case 1:
-                                vm.shifts.breakfast.data = shift;
-                                break;
-                            case 2:
-                                vm.shifts.brunch.data = shift;
-                                break;
-                            case 3:
-                                vm.shifts.lunch.data = shift;
-                                break;
-                            case 4:
-                                vm.shifts.dinner.data = shift;
-                                break;
+        vm.removeSchedule = function (id) {
+            swal({
+                title: "Confimar",
+                text: "Se va eliminar el turno",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Sí, borrar ahora",
+                cancelButtonText: "No, cancelar",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    vm.loading = true;
+                    CalendarService.DeleteShift(id, vm.date, {
+                        OnSuccess: function (Response) {
+                            GetData();
+                            data.GetEvents();
+                            vm.dismiss();
+                            vm.loading = false;
+                        },
+                        OnError: function (Response) {
+                            vm.loading = false;
+                            message.apiError(Response);
                         }
                     });
+                }
+            });
+        };
+        
+        function GetData() {
+            vm.loading = true;
+            CalendarService.GetShiftByDate(vm.date, {
+                OnSuccess: function (Response) {
+                    vm.shifts = Response.data.data;
+                    vm.loading = false;
                 },
                 OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
+                    vm.loading = false;
+                    message.apiError(Response);
                 }
             });
         }
 
-        function getMonthNames() {
-            return [
-                "Enero", "Febrero", "Marzo",
-                "Abril", "Mayo", "Junio", "Julio",
-                "Agosto", "Setiembre", "Octubre",
-                "Noviembre", "Diciembre"
-            ];
+        function openDialogShedule(type_shift_id, $name) {
+            vm.flags.isLoading = true;
+            CalendarService.GetShiftsByType(type_shift_id, {
+                OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        var $type_shift = {id: type_shift_id, name: $name};
+                        var modalInstance = $uibModal.open({
+                            templateUrl: 'schedule.html',
+                            controller: 'ScheduleShiftController',
+                            controllerAs: 'vm',
+                            backdrop: 'static',
+                            keyboard: false,
+                            resolve: {
+                                data: function () {
+                                    return {
+                                        modalInstance: $uibModalInstance,
+                                        typeShift: $type_shift,
+                                        date: vm.date,
+                                        shifts: Response.data.data,
+                                        updateShifts: function () {
+                                            GetData();
+                                            data.GetEvents();
+                                        }
+                                    };
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        if (Response.status == 401 || Response.status == 403) {
+                            swal("Error", "No tiene permisos para realizar esta acción", "error");
+                        } else {
+                            swal("Error", "Ocurrió un error en el servidor", "error");
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                }
+            });
+        }
+
+        vm.changeSchedule = function (type_shift_id, $name, turn_id) {
+            openDialogChangeShedule(type_shift_id, $name, turn_id);
+        };
+
+        function openDialogChangeShedule(type_shift_id, $name, turn_id) {
+            vm.flags.isLoading = true;
+            CalendarService.GetShiftsByType(type_shift_id, {
+                OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        var $type_shift = {id: type_shift_id, name: $name};
+                        var modalInstance = $uibModal.open({
+                            templateUrl: 'changeSchedule.html',
+                            controller: 'ScheduleChangeController',
+                            controllerAs: 'vm',
+                            backdrop: 'static',
+                            keyboard: false,
+                            resolve: {
+                                data: function () {
+                                    return {
+                                        modalInstance: $uibModalInstance,
+                                        turn_id: turn_id,
+                                        typeShift: $type_shift,
+                                        date: vm.date,
+                                        shifts: Response.data.data,
+                                        updateShifts: function () {
+                                            GetData();
+                                            data.GetEvents();
+                                        }
+                                    };
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        if (Response.status == 401 || Response.status == 403) {
+                            swal("Error", "No tiene permisos para realizar esta acción", "error");
+                        } else {
+                            swal("Error", "Ocurrió un error en el servidor", "error");
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                }
+            });
         }
 
         function init() {
@@ -194,5 +288,112 @@ angular.module('calendar.controller', ['bsLoadingOverlay'])
         }
 
         init();
+    })
+
+    .controller('ScheduleShiftController', function (data, $uibModalInstance, CalendarService) {
+        var vm = this;
+        vm.typeShift = data.typeShift;
+        vm.shifts = data.shifts;
+        vm.date = data.date;
+        vm.flags = {isLoading: false};
+        var modalInstanceBefore = data.modalInstance;
+
+        vm.dismiss = function () {
+            $uibModalInstance.dismiss();
+        };
+
+        vm.am_pm = function (time) {
+            return CalendarService.FormatTime(vm.date, time);
+        };
+
+        vm.schedule = function (shift_id) {
+            vm.flags.isLoading = true;
+            CalendarService.ScheduleShift(shift_id, vm.date, {
+                OnSuccess: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        if (Response.data.statuscode == 201) {
+                            data.updateShifts();
+                            messageAlert('Turno Programado', '', 'success');
+                            vm.dismiss();
+                            modalInstanceBefore.dismiss();
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.flags.isLoading = false;
+                    try {
+                        swal("Error", Response.data.error.user_msg, "error");
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                }
+            });
+        };
+
+        function init() {
+            var $moment = moment(vm.date);
+            vm.formatted_date = $moment.format('MMMM DD');
+            vm.day_name = $moment.format('dddd') + ($moment.day() == 6 || $moment.day() == 0 ? 's' : '');
+        }
+
+        init();
+    })
+
+    .controller('ScheduleChangeController', function (data, $uibModalInstance, CalendarService) {
+        var vm = this;
+        vm.typeShift = data.typeShift;
+        vm.date = data.date;
+        var turn_id = data.turn_id;
+        var modalInstanceBefore = data.modalInstance;
+
+        vm.dismiss = function () {
+            $uibModalInstance.dismiss();
+        };
+
+        vm.am_pm = function (time) {
+            return CalendarService.FormatTime(vm.date, time);
+        };
+
+        vm.changeCheduless = function (shift_id) {
+            vm.loading = true;
+            CalendarService.ChangeSchedule(turn_id, shift_id, vm.date, {
+                OnSuccess: function (Response) {
+                    vm.loading = false;
+                    try {
+                        if (Response.data.statuscode == 201) {
+                            data.updateShifts();
+                            message.success('Turno Reprogramado');
+                            vm.dismiss();
+                            modalInstanceBefore.dismiss();
+                        }
+                    } catch (e) {
+                        swal("Error", "Ocurrió un error en el servidor", "error");
+                    }
+                },
+                OnError: function (Response) {
+                    vm.loading = false;
+                    message.apiError(Response);
+                }
+            });
+        };
+
+        function removeShift(shifts){
+               for (var i = shifts.length - 1; i >= 0; i--) {
+                    if (shifts[i].id == turn_id) {
+                        shifts.splice(i, 1);
+                        break;
+                    }
+               }
+
+               return shifts;
+        }
+
+        function init() {
+            vm.shifts =  removeShift(data.shifts);
+        }
+
+        init();
     });
-;

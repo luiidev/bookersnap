@@ -1,0 +1,52 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+    <section id="content">
+        <div class="container w-100 p-l-0 p-r-0">
+
+                <div>
+                    <section>
+                        <div ui-view="principal"></div>
+                    </section>
+                    <section>
+                        <div ui-view="tabReservaciones"></div>
+                    </section>
+                </div>
+
+        </div>
+    </section>
+</section>
+<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<script type="text/ng-template" id="myModalContentDetail.html">
+    <div class="modal-header">
+        <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="listview lv-bordered lv-lg">
+            <div class="lv-header-alt clearfix">
+                <h2 class="f-14">Proximas reservas y bloqueos</h2>
+            </div>
+            <div class="lv-body">
+                <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'">
+                    <div class="media-body">
+                        <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                        <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
+                        <ul class="lv-attrs">
+                            <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                            <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="not-information" ng-if="vmd.itemReservations==''">
+                    No existe mesas reservadas o bloqueadas
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+        </div>
+    </div>
+</script>

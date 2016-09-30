@@ -38,7 +38,7 @@ class AuthController extends Controller
     {
         try {
             $request = request();
-            $userData = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'));
+            $userData = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
             $user = $userData['user'];
             $userlogin = $userData['userlogin'];
             $extras = [

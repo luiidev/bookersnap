@@ -72,7 +72,8 @@
 
         <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
         <script type="text/javascript" src="/js/dist.app/reservation/app.bookersnap.library.reservation.min.js"></script>
-       
+         <script type="text/javascript" src="/js/dist.app/reservation/app.bookersnap.tables.services.min.js"></script>
+
         <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
         <script type="text/javascript" src="/js/dist.app/reservation/app.bookersnap.reservation.min.js"></script>
 

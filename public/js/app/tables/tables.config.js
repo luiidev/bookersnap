@@ -1,14 +1,18 @@
 var idMicrositio = obtenerIdMicrositio();
 
-angular.module('tables.app',
-    [
+angular.module('tables.app', [
         'turn.app',
         'zone.app',
         'book.app',
+        'block.app',
         'guest.app',
-        'calendar.app'
+        'calendar.app',
+        'floor.app'
     ])
     .constant("IdMicroSitio", idMicrositio)
-    //.constant("ApiUrl", 'http://web.aplication.bookersnap/v1/en/admin/ms/'+idMicrositio+'/mesas')
-    .constant("ApiUrl", 'http://api-mesas.vh/v1/en/microsites/' + idMicrositio)
-    .constant("ApiUrlRoot", 'http://web.aplication.bookersnap/v1/en');
+    .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
+    .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
+
+.run(function($http) {
+    //setAuthHeaders($http);
+});

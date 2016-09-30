@@ -30,9 +30,11 @@
 <script src="/js/theme/dist/template.modules.min.js"></script>
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
+<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js?v=<?php echo rand(0, 45)?>"></script>
 <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js"></script>
+<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js?v=<?php echo rand(0, 45)?>"></script>
+
+
 <script type="text/ng-template" id="overlay-template.html">
     <div style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.7);z-index: 10;">
         <div id="floatingCirclesG">

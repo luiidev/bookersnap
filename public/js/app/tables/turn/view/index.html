@@ -1,63 +1,90 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
 <section id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
     <section id="content">
         <div class="container">
-
-            <div class="block-header" style="padding-bottom: 15px">
+            <div class="block-header">
                 <ul class="actions">
                     <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
+                        <button class="btn btn-default waves-effect" onclick="historyBack()">
+                            <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw">
+                            </i>
+                            Cancelar
+                        </button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">Create New Turn</button>
+                        <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">
+                            <i class="zmdi zmdi-floppy zmdi-hc-fw">
+                            </i>
+                            Crear nuevo turno
+                        </button>
                     </li>
                 </ul>
             </div>
-
-      		<div class="card" id="turno-main">
-      			  <div class="card-header">
-                	<h2>List Turns<small></small></h2>
-            	</div>
-
-              <div class="pm-body clearfix list-table">
-
-                <div class="card-body table-responsive">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Tipo turno</th>
-                        <th>Hora</th>
-                        <th>Zonas</th>
-                        <th>Estado</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="item in turns">
-                       <td>{{item.name}}</td>
-                       <td>{{item.type_turn.name}}</td>
-                       <td>{{item.hours_ini}} - {{item.hours_end}}</td>
-                       <td> {{ item.zones}}</td>
-                       <td>
-                        <label class="label label-success f-12" ng-if="item.status == 1">Active</label>
-                        <label class="label label-danger f-12" ng-if="item.status == 0">Inactive</label>
-                      </td>
-                      <td>
-                        <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="turn-edit({turn : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit turn</button> </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="card" id="turno-main">
+                <div class="pm-body clearfix list-table">
+                    <div class="card-body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        Tipo turno
+                                    </th>
+                                    <th>
+                                        Hora
+                                    </th>
+                                    <th>
+                                        Zonas
+                                    </th>
+                                    <th>
+                                        Estado
+                                    </th>
+                                    <th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in turns">
+                                    <td>
+                                        {{item.name}}
+                                    </td>
+                                    <td>
+                                        {{item.type_turn.name}}
+                                    </td>
+                                    <td>
+                                        {{item.hours_ini}} - {{item.hours_end}}
+                                    </td>
+                                    <td>
+                                        {{ item.zones}}
+                                    </td>
+                                    <td>
+                                        <label class="label bgm-gray f-12" ng-if="item.status == 1">
+                                            Activo
+                                        </label>
+                                        <label class="label label-danger f-12" ng-if="item.status == 0">
+                                            Inactivo
+                                        </label>
+                                    </td>
+                                    <td class="text-right">
+                                        <button class="btn bgm-lightblue btn-icon-text waves-effect" data-ui-sref="turn-edit({turn : '{{item.id}}'})">
+                                            <i class="zmdi zmdi-edit zmdi-hc-fw">
+                                            </i>
+                                            Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-              </div>
-      	</div>
+            </div>
         </div>
     </section>
 </section>
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>

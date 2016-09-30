@@ -1,56 +1,47 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
 <section id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
     <section id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
         <div class="container" ng-controller="ZoneCtrl">
-            <script type="text/ng-template" id="myModalDeleteZone.html">
-
+            <script id="myModalDeleteZone.html" type="text/ng-template">
                 <div class="modal-header">
-                    <h3 class="modal-title">Are you sure want to delete this zone?</h3>
+                    <h3 class="modal-title">¿Estas seguro de eliminar esta zona?</h3>
                 </div>
 
                 <div class="modal-body">
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="deleteZone()">Yes</button>
-                    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
+                    <button class="btn btn-primary" type="button" ng-click="deleteZone()">Si</button>
                 </div>
-
             </script>
-
-            <div class="block-header" style="padding-bottom: 15px">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancel</button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">Create Zone</button>
-                    </li>
-                </ul>
+            <div class="card">
+                <div class="pm-body clearfix list-table">
+                    <ul class="tab-nav">
+                        <li class="btn-wave" data-ui-sref-active="active">
+                            <a data-ui-sref="zone.active">
+                                Activo
+                            </a>
+                        </li>
+                        <li class="btn-wave" data-ui-sref-active="active">
+                            <a data-ui-sref="zone.inactive">
+                                Inactivo
+                            </a>
+                        </li>
+                    </ul>
+                    <data ui-view="">
+                    </data>
+                </div>
             </div>
-           <div class="card">
-            <div class="card-header">
-                <h2>List zone <small></small></h2>
-  
-            </div>
-
-            <div class="pm-body clearfix list-table">
-                <ul class="tab-nav">
-                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.active">Active</a></li>
-                    <li class="btn-wave" data-ui-sref-active="active"><a data-ui-sref="zone.inactive">Inactive</a></li>
-                </ul>
-                <data ui-view></data>
-            </div>
-
-            </div>
-
         </div>
     </section>
 </section>
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>

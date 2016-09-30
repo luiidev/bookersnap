@@ -1,28 +1,59 @@
-  <div class="card-body table-responsive">
+<div class="card-body table-responsive">
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Tables</th>
-                <th>Created</th>
-                <th>Status</th>
-                <th></th>
+                <th>
+                    #
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Mesas
+                </th>
+                <th>
+                    Creación
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th class="text-right">
+                    <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">
+                        Crear Zona
+                    </button>
+                </th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="item in zonesActive">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.tables_count }}</td>
-                <td>{{ item.date_add }}</td>
-                <td>{{ item.status }}</td>
                 <td>
-                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})"><i class="zmdi zmdi-collection-item-1 zmdi-hc-fw"></i> Clone zone</button> <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})"><i class="zmdi zmdi-edit zmdi-hc-fw"></i> Edit zone</button>
-                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-assign-turn({id : '{{item.id}}'})"><i class="zmdi zmdi-hourglass-outline zmdi-hc-fw"></i> Turn</button>
+                    {{ item.id }}
+                </td>
+                <td>
+                    {{ item.name }}
+                </td>
+                <td>
+                    {{ item.tables_count }}
+                </td>
+                <td>
+                    {{ item.date_add }}
+                </td>
+                <td>
+                    {{ item.status }}
+                </td>
+                <td class="text-right">
+                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})">
+                        <i class="zmdi zmdi-collection-item-1 zmdi-hc-fw">
+                        </i>
+                        Clonar
+                    </button>
+                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
+                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+                        </i>
+                        Editar
+                    </button>
                 </td>
             </tr>
-
         </tbody>
     </table>
-  </div>
+</div>

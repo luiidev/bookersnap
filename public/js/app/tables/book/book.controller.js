@@ -166,5 +166,4 @@ angular.module('book.controller', [])
    	$scope.moreDetails = function(){
    		$uibModalInstance.dismiss('cancel');
    	};
-})
-;
+});

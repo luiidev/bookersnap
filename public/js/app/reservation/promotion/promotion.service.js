@@ -8,7 +8,7 @@ angular.module('promotion.service', [])
       return $http.get(AppBookersnap+"/promotion/"+pId); 
     },
     getHorario : function(){
-      return $http.get(AppBookersnap+"/promotion/gethorario"); 
+      return $http.get(ApiUrlReservation+"/shifts"); 
     },
     updatePromotion : function(pData){
       return $http.put(AppBookersnap + '/promotion/'+pData.event_id,pData); 
@@ -43,7 +43,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory,UrlRepository){
+.factory('PromotionFactory',function(ZonasDataFactory,TiposDataFactory,TableFactory,PromotionDataFactory,$q,TurnosPromotionDataFactory,ZonesActiveFactory,UrlRepository,$filter){
   return {
     listZones: function(){
       var defered=$q.defer();
@@ -100,7 +100,6 @@ angular.module('promotion.service', [])
     listSchedules: function(){
       var defered=$q.defer();
       PromotionDataFactory.getHorario().success(function(data){
-       //var vSchedules=[];
         var schedules = data.data;
         var vSchedules=TurnosPromotionDataFactory.generatedTimeTable(schedules);
         defered.resolve(vSchedules);     
@@ -109,6 +108,7 @@ angular.module('promotion.service', [])
       });     
       return defered.promise;
     },
+    /*Formatear datos de promocion a editar*/
     onlyPromotion: function(pId){
       var defered=$q.defer();
       PromotionDataFactory.getPromotion(pId).success(function(data){
@@ -118,7 +118,7 @@ angular.module('promotion.service', [])
           title:promotion.title,
           description:promotion.description,
           status_expire:TableFactory.getEvalua(promotion.status_expire),
-          date_expire:promotion.date_expire,
+          date_expire:TableFactory.getFormatofecha(promotion.date_expire),
           publication:TableFactory.getEvalua(promotion.publication),
           tipoSelected:{type_event_id : promotion.type_event},
           status:[{name:'Vigente',value:1},{name:'Deshabilitado',value:2}],
@@ -131,6 +131,7 @@ angular.module('promotion.service', [])
         vPromotion.push(dataPromotion);
 
         var turnos=promotion.turn
+        
         angular.forEach(turnos, function(turn) {
           TurnosPromotionDataFactory.setTurnosItems(turn);
         });
@@ -146,10 +147,11 @@ angular.module('promotion.service', [])
       PromotionDataFactory.getTablesPayment(pId).success(function(data){
         defered.resolve(data.data);
       }).error(function(data, status, headers){
-        defered.reject(data);
+        defered.reject(data.data);
       });     
       return defered.promise;
     },
+    /*Formatear zonas y zonas pagadas*/
     listZonesEdit:function(pId){
       var me=this;
       var defered=$q.defer();
@@ -169,7 +171,6 @@ angular.module('promotion.service', [])
               angular.forEach(tableData, function(table) {
                 vTables.push(table);
               });
-
              });
            return vTables;
           },
@@ -179,7 +180,7 @@ angular.module('promotion.service', [])
         ).then(
           function success(tablesPay){
            var vZonas=[];
-           //console.log(tablesPay);
+           
             angular.forEach(zones, function(zone) {
               var vTable={
                 zone_id : zone.zone_id,
@@ -188,9 +189,7 @@ angular.module('promotion.service', [])
               }
               angular.forEach(zone.table, function(table) {
 
-
                 if(tablesPay){
-
                   angular.forEach(tablesPay, function(tableData) {                    
                       if(tableData.table_id==table.table_id && tableData.price!=''){
                         ZonesActiveFactory.setZonesItems(table);
@@ -207,7 +206,6 @@ angular.module('promotion.service', [])
             defered.resolve(vZonas);
           },
           function error(response){
-            //console.log('deverias03');
             defered.reject(response);
           }
         );
@@ -219,7 +217,7 @@ angular.module('promotion.service', [])
   }
 })
 
-.factory('TurnosPromotionDataFactory',function(TableFactory){
+.factory('TurnosPromotionDataFactory',function($http,TableFactory,$filter,ApiUrlReservation){
   var turnoColection =[];
   var interfazTurnos = {
     nombre: "turnos",
@@ -236,24 +234,26 @@ angular.module('promotion.service', [])
       turnoColection=[];
     },
     createTurnPromotion : function(pId,tData){
-      //return $http.post(AppBookersnap + '/promotion',pData); 
+      return $http.post(ApiUrlReservation + '/promotions/'+pId+'/shifts',tData); 
     },
     deleteTurnPromotion: function(pId,tId){
-      //return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/table/payments/"+tId);
+      return $http.delete(ApiUrlReservation+"/promotions/"+pId+"/shifts/"+tId);
     },
     generatedTimeTable : function(turnData){
       var times = TableFactory.rangeDateAvailable(60,turnData);
       var timesFinal = [];
 
       angular.forEach(times, function(value, key){
+
         var hourIndex = value.indexOf(":");
         var min = value.substr(hourIndex);
 
         hourIndex = value.substr(0,hourIndex);
         
-        min = min.replace(":","");
-        min = min.replace("AM","");
-        min = min.replace("PM","");
+        
+        //min = min.replace(":","");
+        //min = min.replace("AM","");
+        //min = min.replace("PM","");
 
         var index = hourIndex * 4;
 
@@ -265,8 +265,13 @@ angular.module('promotion.service', [])
           index +=3;
         }
 
+        var d = new Date(0,0,0,hourIndex,0,0);
+        var formato = moment(d).valueOf();123546465
+        var hora = $filter('date')(formato,'h:mm a');
+
         timesFinal.push({
-          time : value,
+          time : hora,
+          time_ori:value,
           index : index
         });
   
@@ -278,6 +283,7 @@ angular.module('promotion.service', [])
   return interfazTurnos;
 
 })
+/*Ir guardando zonas con precio asignado*/
 .factory('ZonesActiveFactory',function(){
   var zoneColection =[];
   var interfazZones = {
@@ -301,7 +307,7 @@ angular.module('promotion.service', [])
   return interfazZones;
 
 })
-.factory('TableFactory',function(){
+.factory('TableFactory',function($filter){
   return {
     getLabelShape : function(id){
       var label = "";
@@ -357,38 +363,91 @@ angular.module('promotion.service', [])
       }
       return evalua;
     },
+    getFormatofecha : function(valor){
+      if(valor=="0000-00-00"){
+        return "";
+      }else{
+        return valor;
+      }
+      
+    },
     rangeDateAvailable: function(minSteep,turn){
 
-      var iniHour = turn.hours_ini.substr(0,2);
-      var iniMin = turn.hours_ini.substr(3,2);
+      var iniHour = turn.hours_ini_min.substr(0,2);
+      var iniMin = turn.hours_ini_min.substr(3,2);
 
-      var endHour = parseInt(turn.hours_end.substr(0,2));
-      var endMin = parseInt(turn.hours_end.substr(3,2));
+      var endHour = parseInt(turn.hours_end_max.substr(0,2));
+      var endMin = parseInt(turn.hours_end_max.substr(3,2));
 
       var hour = parseInt(iniHour);
       var min = parseInt(iniMin);
 
       var time = [];
   
-      while(hour <= endHour){
+      if(hour <= endHour){
+        while(hour <= endHour){
 
-        var sHorario = (hour <=12) ? "AM":"PM";
-
-        var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
-        time.push(hora);
-        
-        if(min == (60 - minSteep) ){
-          hour += 1;
-          min = 0;
-        }else{
-          if(hour == endHour && min == endMin){
-            hour = 45;
-          }
-          min += minSteep;  
-        }
+          //var sHorario = (hour <=11) ? "AM":"PM";
+          //var hora = hour +":"+ ((min == 0) ? "00" : min) + " " + sHorario
+          var hora = hour +":"+ ((min == 0) ? "00" : min) + ":00";
+          time.push(hora);
           
-      }
+          if(min == (60 - minSteep) ){
+            hour += 1;
+            min = 0;
+          }else{
+            if(hour == endHour && min == endMin){
+              hour = 45;
+            }
+            min += minSteep;  
+          }
+            
+        }
+      }else if(endHour < hour){
 
+          if(hour<=11){
+            var num01=24-hour;
+            for (a = 0; a < num01; a++) {
+
+              var hora = hour +":"+ ((min == 0) ? "00" : min);
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                hour += 1;
+                min = 0;
+              }
+            }
+
+          }else{
+            var num01=24-hour;
+             for (i = 0; i < num01; i++) {
+              var hora = hour +":"+ ((min == 0) ? "00" : min);
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                hour += 1;
+                min = 0;
+              }
+            }
+          }
+
+          if(endHour>11){
+            //var num02=24-endHour;
+          }else{
+            var num02=endHour-0;
+            for (h = 0; h <= num02; h++) {
+
+              var hora = h +":"+ ((min == 0) ? "00" : min);
+              time.push(hora);
+
+              if(min == (60 - minSteep) ){
+                endHour += 1;
+                min = 0;
+              }
+            }
+          }
+
+      }
       return time;
     },
   }

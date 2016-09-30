@@ -1,59 +1,20 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'"
-        data-ng-controller="headerCtrl as hctrl"></header>
-
-<section id="main" bs-loading-overlay>
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'"
-           data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'"
-           data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<section id="main">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <div data-ng-include="'/template/config-menu-tables.html'">
+    </div>
     <section id="content">
-        <div class="container c-alt">
-            <div class="block-header">
-                <h2>Calendar</h2>
-
-                <ul class="actions">
-                    <li>
-                        <a href="">
-                            <i class="zmdi zmdi-trending-up"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="zmdi zmdi-check-all"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown" uib-dropdown>
-                        <a href="" uib-dropdown-toggle>
-                            <i class="zmdi zmdi-more-vert"></i>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="">Refresh</a>
-                            </li>
-                            <li>
-                                <a href="">Manage Widgets</a>
-                            </li>
-                            <li>
-                                <a href="">Widgets Settings</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+        <div class="container">
+            <loading-box size="xxl" time="5000" wait="vm.loading">
+            </loading-box>
+            <div id="calendar">
             </div>
-
-            <button ng-click="vm.addEvent()">add events</button>
-            <button ng-click="vm.updateEvents()">update events</button>
-            <!--<turn-calendar id="calendar" events="vm.events" on-month-change="vm.changeMonth(view, date)"-->
-            <!--on-select-event="vm.selectEvent(calEvent, jsEvent, view)"-->
-            <!--set-update-data="vm.setFnUpdateData(fn)"></turn-calendar>-->
-
-            <div id="calendar"></div>
-
             <!-- Add event -->
-            <script type="text/ng-template" id="addEvent.html">
+            <script id="addEvent.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">{{vm.fulldate}}</h4>
                 </div>
@@ -62,98 +23,30 @@
                         <table class="table table-condensed table-striped">
                             <thead>
                             <tr>
-                                <th width="30%">Turnos</th>
-                                <th width="30%">Horario</th>
+                                <th width="20%">Turno</th>
+                                <th width="20%">Nombre</th>
+                                <th width="20%">Horario</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>{{vm.shifts.breakfast.data.title || "-"}}</td>
-                                <td>{{vm.shifts.breakfast.data.start}} - {{vm.shifts.breakfast.data.end}}</td>
+                            <tr ng-repeat="item in vm.shifts">
+                                <td>{{item.name}}</td>
+                                <td>{{item.turn.name || "-"}}</td>
+                                <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
                                 <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.breakfast.data==null"
-                                       ng-click="vm.shceduleBreakfast()">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.breakfast.data">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.brunch.data.title || "-"}}</td>
-                                <td>{{vm.shifts.brunch.data.start}} - {{vm.shifts.brunch.data.end}}</td>
-                                <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.brunch.data==null"
-                                       ng-click="vm.shceduleBrunch()">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.brunch.data">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.lunch.data.title || "-"}}</td>
-                                <td>{{vm.shifts.lunch.data.start}} - {{vm.shifts.lunch.data.end}}</td>
-                                <td class="text-right">
-                                    <a href="javascript:" ng-if="vm.shifts.lunch.data==null"
-                                       ng-click="vm.shceduleLunch()">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="vm.shifts.lunch.data">
-                                        Borrar
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{vm.shifts.dinner.data.title || "-"}}</td>
-                                <td>{{vm.shifts.dinner.data.start}} - {{vm.shifts.dinner.data.end}}</td>
-                                <td class="text-right">
-                                        <a href="javascript:" ng-if="vm.shifts.dinner.data==null"
-                                           ng-click="vm.shceduleDinner()">Añadir turno</a>
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
-                                            Editar
-                                        </a>
+                                    <a href="javascript:" ng-if="item.turn==null" ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
+                                    <div ng-if="item.turn">
+                                        <a href="javascript:" ng-click="vm.moduleEdit(item.turn.id)" ng-disabled="vm.flags.isLoading">Editar</a>
                                         &nbsp;&nbsp;
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
+                                        <a href="javascript:" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)" ng-disabled="vm.flags.isLoading">
                                             Reemplazar
                                         </a>
                                         &nbsp;&nbsp;
-                                        <a href="javascript:"
-                                           ng-if="vm.shifts.dinner.data">
+                                        <a href="javascript:" ng-click="vm.removeSchedule(item.turn.id)" ng-disabled="vm.flags.isLoading">
                                             Borrar
                                         </a>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -161,25 +54,90 @@
                     </div>
                 </div>
 
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link" data-ng-click="addEvent()">Add Event</button>
-                    <button type="button" class="btn btn-link" data-ng-click="vm.dismiss()">Close</button>
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
                 </div>
             </script>
-
             <!-- Add event -->
-            <script type="ng-template">
+            <script id="schedule.html" type="text/ng-template">
+                <div class="modal-header">
+                    <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
 
+                    <div class="listview lv-bordered lv-lg">
+
+                        <div class="lv-body">
+                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                <div class="media-body">
+                                    <div class="lv-title">
+                                        <span style="font-weight: bold;">{{shift.name}}</span>
+                                        <span class="m-l-30">
+                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                        </span>
+                                    </div>
+                                    <div class="lv-actions">
+                                        <button class="btn btn-primary" ng-disabled="vm.flags.isLoading"
+                                                ng-click="vm.schedule(shift.id)">
+                                            Programar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
+                </div>
             </script>
+            <!-- Add event -->
+            <script id="changeSchedule.html" type="text/ng-template">
+                <div class="modal-header">
+                    <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
 
+                    <div class="listview lv-bordered lv-lg">
 
-            <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
-            <!--data-select="clctrl.onSelect(start, end)"></div>-->
+                        <div class="lv-body">
+                            <div class="lv-item media" ng-repeat="shift in vm.shifts">
+                                <div class="media-body">
+                                    <div class="lv-title">
+                                        <span style="font-weight: bold;">{{shift.name}}</span>
+                                        <span class="m-l-30">
+                                            {{vm.am_pm(shift.hours_ini)}} - {{vm.am_pm(shift.hours_end)}}
+                                        </span>
+                                    </div>
+                                    <div class="lv-actions">
+                                        <button class="btn btn-primary"   ng-disabled="vm.flags.isLoading"
+                                                ng-click="vm.changeCheduless(shift.id)">
+                                            Programar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
+                            data-ng-click="vm.dismiss()">Cerrar
+                    </button>
+                </div>
+            </script>
         </div>
     </section>
 </section>
-
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>
