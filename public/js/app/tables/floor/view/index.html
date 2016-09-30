@@ -3,9 +3,8 @@
     <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
     <section id="content">
-        <div class="container">
-            <div class="card" id="turno-main">
-                
+        <div class="container w-100 p-l-0 p-r-0">
+
                 <div>
                     <section>
                         <div ui-view="principal"></div>
@@ -14,7 +13,7 @@
                         <div ui-view="tabReservaciones"></div>
                     </section>
                 </div>
-            </div>
+
         </div>
     </section>
 </section>
