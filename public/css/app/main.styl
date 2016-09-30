@@ -1,16 +1,17 @@
 $color_principal = #424242
-$color_secundario = #616161;
-@media (min-width: 1200px)
-	.container
-		width: 100%
+$color_secundario = #616161 
 
 .block-header
 	padding-bottom 25px
 #main 
-	padding-top 72px
-	padding-bottom: 0px;
-.menu-section
 	padding-top 70px
+#content 
+	//padding 0
+.container 
+	//width 100%
+	//padding 0
+.menu-section
+	//padding-top 70px
 	margin-bottom 15px
 	background-color $color_secundario
 	border-bottom 1px solid $color_principal
@@ -28,8 +29,30 @@ $color_secundario = #616161;
 			background #fff
 	& .tab-content
 		display none
+/*.btn-primary
+	background-color #757575
+	&:hover:hover
+		background-color #757575*/
+.btn-warning
+	background-color #FB8C00
+	&:hover:hover
+		background-color #F57C00
+.btn-danger
+	background-color #D32F2F
+	&:hover:hover
+		background-color #C62828
+	&:focus:focus
+		background-color #E53935
 		
-
+		
+.table>tbody>tr>td:last-child, 
+.table>tbody>tr>th:last-child, 
+.table>tfoot>tr>td:last-child, 
+.table>tfoot>tr>th:last-child, 
+.table>thead>tr>td:last-child, 
+.table>thead>tr>th:last-child
+	padding-right 2px
+		
 [data-current-skin="gray-win"] 
 	background-color $color_principal
 	& .ss-icon 
