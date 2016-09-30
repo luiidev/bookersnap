@@ -12,6 +12,45 @@
         <tabset justified="true">
             <tab heading="Pendientes" active="tab.active" class="f-11">
 
+                <table class="table table-listado">
+                <thead>
+                <tr>
+                  <th>Hora</th>
+                  <th>Pax</th>
+                  <th>Nombre</th>
+                  <th>Salon</th>
+                  <th>Mesas</th>
+                  <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>08.30</td>
+                    <td>10</td>
+                    <td>Charly Parra</td>
+                    <td>General</td>
+                    <td>A15</td>
+                    <td>Espera</td>
+                    </tr>
+                    <tr><td colspan="5">
+                        <ul class="actions">
+                            <li class="dropdown" uib-dropdown="" style="">
+                                <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="">Change Date Range</a></li>
+                                <li><a href="">Change Graph Type</a></li>
+                                <li><a href="">Other Settings</a></li>
+                                </ul>
+                            </li>
+                            <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
+                            <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
+                            <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
+                            </ul>
+                    </td><td>estados</td></tr> 
+                </tbody>
+                </table>
+                
+                <!--
                 <div class="listado-table">
                     <div class="listado-row-header">
                         <div class="listado-column">Hora</div>
@@ -48,6 +87,7 @@
                     </div>
                     
                 </div>
+                -->
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusCondicion">
                         <div class="pull-right">
