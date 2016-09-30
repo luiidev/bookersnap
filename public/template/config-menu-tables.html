@@ -1,37 +1,28 @@
 <section class="bgm-gray-win menu-section" id="content">
     <div class="container">
         <nav class="ha-menu ng-scope">
-            <ul>
-                <li class="waves-effect active">
-                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="home" href="#/home">
+            <ul id="menu-config">
+                <li class="waves-effect">
+                    <a data-ui-sref="zone.active" href="">
                         Zonas
                     </a>
                 </li>
-                <li class="dropdown" uib-dropdown="">
-                    <div aria-expanded="false" aria-haspopup="true" class="waves-effect">
+                <li class="waves-effect">
+                    <div class="waves-effect" data-ui-sref="turn">
                         Turnos
                     </div>
                 </li>
-                <li class="waves-effect" data-ui-sref-active="active">
-                    <a data-ui-sref="typography" href="#/typography">
+                <li class="waves-effect">
+                    <a data-ui-sref="calendar">
                         Calendario
                     </a>
                 </li>
-                <li class="dropdown" uib-dropdown="">
+                <li class="waves-effect">
                     <div aria-expanded="false" aria-haspopup="true" class="waves-effect">
                         Widgets
                     </div>
                 </li>
             </ul>
         </nav>
-        <!--
-        <tabset active="activeJustified">
-            <tab data-ui-sref="zone.active" heading="Zonas" index="0">
-            </tab>
-            <tab data-ui-sref="turn" heading="Turno" index="1">
-            </tab>
-            <tab data-ui-sref="calendar" heading="Calendario" index="2">
-            </tab>
-        </tabset>-->
     </div>
 </section>

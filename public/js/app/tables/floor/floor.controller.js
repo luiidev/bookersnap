@@ -4,11 +4,12 @@ angular.module('floor.controller', [])
         var vm = this;
         vm.titulo = "Floor";
         vm.colorsSelect = [];
+        vm.flagSelectedZone = 0;
 
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                console.log('Formateado: ' + angular.toJson(data, true));
+                //console.log('Formateado: ' + angular.toJson(data, true));
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -47,6 +48,13 @@ angular.module('floor.controller', [])
                 }
             });
         }
+
+        vm.tabSelectedZone = function(value) {
+            console.log(value);
+            vm.flagSelectedZone = value;
+
+        };
+
 
     })
     .controller('DetailInstanceCtrl', function($scope, $modalInstance, content, FloorFactory) {

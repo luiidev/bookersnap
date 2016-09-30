@@ -415,7 +415,7 @@ $background-tables-head = #eee
 			& .txtmoneda
 				color #242424
 	& .bg-white
-		background #fff;
+		background #fff
 .box-status
 	width 32px
 	height 32px
@@ -464,6 +464,59 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
+	
+.listado-table
+	display table
+	width 100%
+	text-align center
+	margin 0 auto
+	font-size 0.8em
+	& .listado-row-header
+		display table-row
+		background #005581
+		color #fff
+		& .listado-column
+			display table-cell
+			border 1px solid #e9e9e9
+			vertical-align middle
+			padding 2px 2px 2px 0px
+			text-transform uppercase
+	& .listado-row
+		display table-row
+		& .listado-column
+			display table-cell
+			border-bottom 1px solid #e9e9e9
+			vertical-align middle
+			padding 2px 2px 2px 0px
+			width 18%
+			&.fill:after
+				width 100%
+				display inline
+li.divider
+	width 2px
+	background #575757
+	height 50px
+.people-information
+	margin 0
+	padding 0
+	li
+		list-style none
+		display inline-block
+		height 48px
+		padding 15px 10px
+		background #575757
+		color #edecec
+		i
+			font-size 1.8em
+		& .rounded
+			font-size 0.8em
+			width 10px
+			height 10px
+			background #424242
+			padding 4px
+			border-radius 48%
+			margin-left -4px
+
 	
 .load-parent
 	background #FFF

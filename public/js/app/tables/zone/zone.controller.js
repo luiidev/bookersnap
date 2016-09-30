@@ -1,12 +1,17 @@
 angular.module('zone.controller', ['ngDraggable'])
 
-.controller('ZoneCtrl', function($scope, ZoneFactory, $uibModal) {
+.controller('ZoneCtrl', function($scope, ZoneFactory, MenuConfigFactory, $uibModal) {
 
         $scope.zonesActive = {};
         $scope.zonesInactive = {};
 
         $scope.idZoneDelete = 0;
         $scope.indexRow = 0;
+
+        var init = function() {
+            $scope.getZones();
+            MenuConfigFactory.menuActive(0);
+        };
 
         $scope.getZones = function() {
 
@@ -80,9 +85,10 @@ angular.module('zone.controller', ['ngDraggable'])
             return zones;
         };
 
-        $scope.getZones();
+        init();
     })
-    .controller('ZoneCreateCtrl', function($scope, $state, $stateParams, $document, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
+    .controller('ZoneCreateCtrl', function($scope, $state, $stateParams, $document, ZoneFactory, ZoneLienzoFactory, TableFactory,
+        $uibModal, IdMicroSitio, MenuConfigFactory) {
 
         $scope.sizeTableList = {
             data: [{
@@ -130,6 +136,15 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.typeForm = "create"; // or edit
 
         $scope.saveClick = false; //valida click en guardar - no doble click
+
+        var init = function() {
+            detectedForm();
+
+            listCovers("min");
+            listCovers("max");
+
+            MenuConfigFactory.menuActive(0);
+        };
 
         $scope.onDragComplete = function(data, evt, type) {
             $scope.typeDrag = type;
@@ -460,10 +475,7 @@ angular.module('zone.controller', ['ngDraggable'])
             updateHeaderZone();
         };
 
-        detectedForm();
-
-        listCovers("min");
-        listCovers("max");
+        init();
     })
     .controller('ModalTableDeteleCtrl', function($scope, $uibModalInstance, itemTables, itemTablesDeleted, indexTable, boxTables, headerZone, typeForm, ZoneLienzoFactory) {
 

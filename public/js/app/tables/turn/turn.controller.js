@@ -1,10 +1,11 @@
 angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
-.controller('TurnCtrl', function($scope, $stateParams, TurnFactory) {
+.controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
 
 		$scope.turns = {};
 
 		var init = function() {
+			MenuConfigFactory.menuActive(1);
 			getTurns({
 				with: "zones|type_turn"
 			});
@@ -23,7 +24,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 		init();
 	})
-	.controller('TurnCreateCtrl', function($scope, $stateParams, $state, $filter, $uibModal, TurnFactory, TypeTurnFactory, DateFactory) {
+	.controller('TurnCreateCtrl', function($scope, $stateParams, $state, $filter, $uibModal, TurnFactory, TypeTurnFactory,
+		DateFactory, MenuConfigFactory, $timeout) {
 
 		$scope.turnData = {
 			id: '',
@@ -102,6 +104,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 			listDays();
 			angular.element("#box-tables div ").addClass("fadeOut");
+			MenuConfigFactory.menuActive(1);
 		};
 
 		var listDays = function() {
