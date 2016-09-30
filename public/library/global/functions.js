@@ -47,7 +47,7 @@ var uniqueArray = function(origArr) {
         }
     }
     return newArr;
-}
+};
 
 var getGender = function() {
     var gender = [

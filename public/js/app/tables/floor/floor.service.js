@@ -245,7 +245,7 @@ angular.module('floor.service', [])
 								vTables.push(dataTable);
 							});
 							var dataZone = {
-								zone_id: zone.zone_id,
+								zone_id: zone.id,
 								name: zone.name,
 								table: vTables,
 							};
