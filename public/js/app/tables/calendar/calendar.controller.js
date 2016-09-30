@@ -3,7 +3,7 @@
  */
 
 angular.module('calendar.controller', [])
-    .controller('CalendarIndexController', function (CalendarService, $uibModal) {
+    .controller('CalendarIndexController', function (CalendarService, $uibModal, $scope,$compile) {
         var vm = this;
         var now;
 
@@ -68,8 +68,11 @@ angular.module('calendar.controller', [])
                 }
             });
 
-            // console.log(vm.calendar);
-            // console.log(vm.calendar.contents());
+            var loadingBoxElement = angular.element('<loading-box wait="vm.loading" time="5000" size="xxl"></loading-box>');
+            var loadingBox = $compile(loadingBoxElement)($scope);
+            var content = vm.calendar.contents().get(1);
+            angular.element(content).addClass("pos-r");
+            angular.element(content).append(loadingBox);
         }
 
         function OpenDay($date) {

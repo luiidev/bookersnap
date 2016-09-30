@@ -2848,6 +2848,10 @@ body.login-content:before {
   position: relative;
 }
 
+#calendar .fc-toolbar .fc-center h2{
+  width: 250px;
+}
+
 #calendar .fc-day-header {
   color: #ADADAD;
   text-align: left;
@@ -2906,8 +2910,17 @@ body.login-content:before {
 }
 
 .fc-today-button {
-  width: 50px !important;
-  border-radius: 0 !important;
+  width: 70px!important;
+  border-radius: 0!important;
+  border: 1px #EEE solid !important;
+  font-weight: 600;
+}
+
+.fc-today-button[disabled=disabled],
+.fc-today-button.ui-state-disabled,
+.fc-today-button.ui-state-disabled:disabled {
+    pointer-events: none;
+    color: #EEE;
 }
 
 .fc-toolbar .ui-button:hover {

@@ -451,14 +451,14 @@ $background-tables-head = #eee
 	z-index 2
 
 .load-child
-	position inherit
+	position absolute
 	top 0
 	bottom 0
 	left 0
 	right 0
 	height 0
 	margin auto
-	width 40
+	width 40px
 
 .pos-r
 	position relative
@@ -466,14 +466,14 @@ $background-tables-head = #eee
 .container
 	position relative
 	
+.size-default
+	width 40px !important
+	
 .xs
 	width 20px !important
 
 .sm
 	width 30px !important
-
-.size-default
-	width 40px !important
 
 .lg
 	width 50px !important
@@ -483,6 +483,21 @@ $background-tables-head = #eee
 
 .xxl
 	width 100px !important
+	
+.xs .pl-xs
+	top -10px
+
+.sm .sm
+	top -15px
+
+.lg .pl-lg
+	top -25px
+
+.xl .pl-xl
+	top -40px
+
+.xxl .pl-xxl
+	top -50px
 
 .fc-past
 	background: rgba(228, 228, 228, 0.5);
