@@ -5,26 +5,10 @@
     </aside>
     <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
     </aside>
-    <section id="content">
+    <section class="w-100 p-0" id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
         <div class="container">
-            <div class="block-header">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">
-                            <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw">
-                            </i>
-                            Cancelar
-                        </button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">
-                            <i class="zmdi zmdi-floppy zmdi-hc-fw">
-                            </i>
-                            Crear nuevo turno
-                        </button>
-                    </li>
-                </ul>
-            </div>
             <div class="card" id="turno-main">
                 <div class="pm-body clearfix list-table">
                     <div class="card-body table-responsive">
@@ -46,7 +30,12 @@
                                     <th>
                                         Estado
                                     </th>
-                                    <th>
+                                    <th class="text-right">
+                                        <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">
+                                            <i class="zmdi zmdi-floppy zmdi-hc-fw">
+                                            </i>
+                                            Nuevo turno
+                                        </button>
                                     </th>
                                 </tr>
                             </thead>
