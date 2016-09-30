@@ -1,6 +1,6 @@
 
     <section class="bgm-gray-win menu-section" id="content">
-    <div class="container w-100 p-0">
+    <div class="w-100 p-0">
         <nav class="ha-menu ng-scope p-section-right">
             <ul>
                 <li class="waves-effect {{vm.flagSelectedZone==$index ? 'active': ''}}" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
@@ -15,9 +15,25 @@
                         <a data-ng-click="vm.tabSelectedZone($index)">{{tab.name}}</a></li>
                     </ul>
                 </li>
-                <li class="pull-right">
-                    <a href="">texto</a>
+                <li class="divider"></li>
+                <li>
+                    <ul class="people-information">
+                        <li><i class="zmdi zmdi-male-alt"></i> <span class="rounded">18</span></li>
+                        <li><i class="zmdi zmdi-female"></i> <span class="rounded">20</span></li>
+                        <li><i class="zmdi zmdi-face"></i> <span class="rounded">10</span></li>
+                    </ul>
                 </li>
+                <li class="dropdown open pull-right" uib-dropdown="">
+                    <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true"><i class="zmdi zmdi-time"></i> Tiempo</div>
+                    <ul class="dropdown-menu">
+                        <li><a>Ocultar tiempo</a></li>
+                        <li><a>Tiempo sentado</a></li>
+                        <li><a>Tiempo restante</a></li>
+                        <li><a>Siguiente reservacion</a></li>
+                        <li><a>Siguiente segunda reservacion</a></li>
+                    </ul>
+                </li>
+                
             </ul>
         </nav>
     </div>

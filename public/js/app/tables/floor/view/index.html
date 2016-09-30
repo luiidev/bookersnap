@@ -4,12 +4,14 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
     <section id="content">
         <div class="container w-100 p-l-0 p-r-0">
-            <div ui-view="principal" class="box-lienzo-zone p-l-0 p-r-0 p-section-right" ></div>
-            
+            <div ui-view="principal" class="box-lienzo-zone p-l-0 p-r-0 p-section-right" ></div>            
         </div>
     </section>
 </section>
-<div ui-view="tabReservaciones" class="w-section-right"></div>
+<section class="section-right-floor">
+    <div ui-view="tabReservaciones"></div>
+</section>
+
 
 <script type="text/ng-template" id="myModalContentDetail.html">
     <div class="modal-header">
