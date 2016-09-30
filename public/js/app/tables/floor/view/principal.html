@@ -1,45 +1,46 @@
-<div class="col-xs-9 box-lienzo-zone p-l-0 p-r-0">
+
     <section class="bgm-gray-win menu-section" id="content">
-    <div class="container w-100 p-0">
-        <nav class="ha-menu ng-scope">
+    <div class="w-100 p-0">
+        <nav class="ha-menu ng-scope p-section-right">
             <ul>
-                <li class="waves-effect active">
-                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="home" href="#/home">
-                        Zonas
+                <li class="waves-effect {{vm.flagSelectedZone==$index ? 'active': ''}}" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
+                    <a data-ng-click="vm.tabSelectedZone($index)">
+                        {{tab.name}}
                     </a>
                 </li>
-                <li class="dropdown" uib-dropdown="">
-                    <div aria-expanded="false" aria-haspopup="true" class="waves-effect">
-                        Turnos
-                    </div>
+                <li class="dropdown open {{ vm.flagSelectedZone > 4 ? 'active': ''}}" uib-dropdown=""  >
+                    <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true">+</div>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="tab in vm.zonas" ng-if="$index >= 4">
+                        <a data-ng-click="vm.tabSelectedZone($index)">{{tab.name}}</a></li>
+                    </ul>
                 </li>
-                <li class="waves-effect" data-ui-sref-active="active">
-                    <a data-ui-sref="typography" href="#/typography">
-                        Calendario
-                    </a>
+                <li class="divider"></li>
+                <li>
+                    <ul class="people-information">
+                        <li><i class="zmdi zmdi-male-alt"></i> <span class="rounded">18</span></li>
+                        <li><i class="zmdi zmdi-female"></i> <span class="rounded">20</span></li>
+                        <li><i class="zmdi zmdi-face"></i> <span class="rounded">10</span></li>
+                    </ul>
                 </li>
-                <li class="dropdown" uib-dropdown="">
-                    <div aria-expanded="false" aria-haspopup="true" class="waves-effect">
-                        Widgets
-                    </div>
+                <li class="dropdown open pull-right" uib-dropdown="">
+                    <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true"><i class="zmdi zmdi-time"></i> Tiempo</div>
+                    <ul class="dropdown-menu">
+                        <li><a>Ocultar tiempo</a></li>
+                        <li><a>Tiempo sentado</a></li>
+                        <li><a>Tiempo restante</a></li>
+                        <li><a>Siguiente reservacion</a></li>
+                        <li><a>Siguiente segunda reservacion</a></li>
+                    </ul>
                 </li>
+                
             </ul>
         </nav>
-        <!--
-        <tabset active="activeJustified">
-            <tab data-ui-sref="zone.active" heading="Zonas" index="0">
-            </tab>
-            <tab data-ui-sref="turn" heading="Turno" index="1">
-            </tab>
-            <tab data-ui-sref="calendar" heading="Calendario" index="2">
-            </tab>
-        </tabset>-->
     </div>
-</section>
-    <tabset justified="true">
-        <tab active="tab.active" heading="{{tab.name}}" ng-repeat="tab in vm.zonas">
+    </section>
+    <div ng-repeat="tab in vm.zonas" ng-if="vm.flagSelectedZone==$index" >
             <div style=" background: #eee; width: 100%; text-align: center;">
-            <div class="zoneArea minheight" style="position:relative;">
+            <div class="zoneArea" style="position:relative; ">
                 <div class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}} bg-white" color="{{obj.color}}" id="el{{obj.id}}" ng-detail-table="" ng-repeat="obj in tab.table" on-click-fn="vm.mostrarDetail($index,obj)" x="{{obj.left}}" y="{{obj.top}}">
                     <div class="txtcenter">
                         <div class="name-table">
@@ -51,6 +52,6 @@
                 </div>
             </div>
             </div>
-        </tab>
-    </tabset>
-</div>
+        </div>
+
+
