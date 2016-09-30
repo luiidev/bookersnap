@@ -1,50 +1,50 @@
 angular.module('turn.service', [])
 
-.factory('TurnDataFactory',function($http,ApiUrlMesas,ApiUrlRoot){
-	return {
-		getTurns: function(vOptions){
-			return $http.get(ApiUrlMesas+"/turns?"+vOptions);
-		},
-		getTurn : function(vTurn,vOptions){
-			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"?"+vOptions);
-		},
-		createTurn : function(vData){
-			return $http.post(ApiUrlMesas+"/turns",vData);
-		},
-		updateTurn : function(vData){
-			return $http.put(ApiUrlMesas+"/turns/"+vData.id,vData);
-		},
-		getTurnsAvailables: function(vDate){
-			return $http.get(ApiUrlMesas+"/turns/"+vDate+"/availables");
-		},
-		searchTurn : function(vData){
-			return $http.get(ApiUrlMesas+"/turns/search?"+vData);
-		},
-		getTurnZoneTables : function(vZone,vTurn){
-			return $http.get(ApiUrlMesas+"/turns/"+vTurn+"/zones/"+vZone+"/tables");
-		}
-	};
-})
-.factory('TypeTurnFactory',function($http,ApiUrlMesas,ApiUrlRoot){
+.factory('TurnDataFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
+		return {
+			getTurns: function(vOptions) {
+				return $http.get(ApiUrlMesas + "/turns?" + vOptions);
+			},
+			getTurn: function(vTurn, vOptions) {
+				return $http.get(ApiUrlMesas + "/turns/" + vTurn + "?" + vOptions);
+			},
+			createTurn: function(vData) {
+				return $http.post(ApiUrlMesas + "/turns", vData);
+			},
+			updateTurn: function(vData) {
+				return $http.put(ApiUrlMesas + "/turns/" + vData.id, vData);
+			},
+			getTurnsAvailables: function(vDate) {
+				return $http.get(ApiUrlMesas + "/turns/" + vDate + "/availables");
+			},
+			searchTurn: function(vData) {
+				return $http.get(ApiUrlMesas + "/turns/search?" + vData);
+			},
+			getTurnZoneTables: function(vZone, vTurn) {
+				return $http.get(ApiUrlMesas + "/turns/" + vTurn + "/zones/" + vZone + "/tables");
+			}
+		};
+	})
+	.factory('TypeTurnFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
 
-	return {
-		getTypeTurns : function(){
-			return $http.get(ApiUrlMesas+"/type-turn");
-		},
-		getDaysTypeTurn : function(vTypeTurn){
-			return $http.get(ApiUrlMesas+"/type-turn/"+vTypeTurn+"/days");
-		}
+		return {
+			getTypeTurns: function() {
+				return $http.get(ApiUrlRoot + "/type-turns");
+			},
+			getDaysTypeTurn: function(vTypeTurn) {
+				return $http.get(ApiUrlMesas + "/type-turn/" + vTypeTurn + "/days");
+			}
 
-	};
-})
-.factory('DateFactory',function($http,$filter){
+		};
+	})
+	.factory('DateFactory', function($http, $filter) {
 
-	return {
-		timeFormat : function(time){
-			return $filter('date')(time,'HH:mm:ss');
-		}
-	}
-})
+		return {
+			timeFormat: function(time) {
+				return $filter('date')(time, 'HH:mm:ss');
+			}
+		};
+	})
 	.factory('DateFactory', function($http, $filter) {
 
 		return {
@@ -97,7 +97,7 @@ angular.module('turn.service', [])
 
 				TurnDataFactory.searchTurn(vParams).success(function(data) {
 
-					if (data.data.length == 0 || (turnDataClone.hours_ini == valTime.hours_ini && turnDataClone.hours_end == valTime.hours_end)) {
+					if (data.data.length === 0 || (turnDataClone.hours_ini === valTime.hours_ini && turnDataClone.hours_end == valTime.hours_end)) {
 						defered.resolve(false);
 					} else {
 						defered.resolve(true);
@@ -366,7 +366,7 @@ angular.module('turn.service', [])
 
 				var tablesZoneExists = self.searchZoneByZoneAdd(turnZoneAdd.zonesTables, idZone);
 
-				if (tablesZoneExists != null) {
+				if (tablesZoneExists !== null) {
 					defered.resolve(tablesZoneExists.tables);
 				} else {
 
@@ -530,7 +530,7 @@ angular.module('turn.service', [])
 			},
 			checkAllTableZone: function(tablesId, tables, option) {
 
-				if (option == true) {
+				if (option === true) {
 					tablesId.length = 0;
 				}
 
@@ -558,7 +558,7 @@ angular.module('turn.service', [])
 
 				var jsonData = angular.toJson(rulesDataTemp);
 
-				if (rulesDataTemp.length == 0 || jsonData.indexOf(indexTime) == -1) {
+				if (rulesDataTemp.length === 0 || jsonData.indexOf(indexTime) == -1) {
 					rulesDataTemp.push({
 						rule_id: rule,
 						index_time: indexTime
@@ -683,7 +683,7 @@ angular.module('turn.service', [])
 					vData.tables.push(value);
 				});
 
-				if (turnZoneAdd.zonesTables.length == 0) {
+				if (turnZoneAdd.zonesTables.length === 0) {
 					turnZoneAdd.zonesTables.push(vData);
 				} else {
 
@@ -699,7 +699,7 @@ angular.module('turn.service', [])
 						}
 					});
 
-					if (existeZone == 0) {
+					if (existeZone === 0) {
 						turnZoneAdd.zonesTables.push(vData);
 					}
 				}

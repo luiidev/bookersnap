@@ -1,18 +1,20 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'"
-        data-ng-controller="headerCtrl as hctrl"></header>
-
-<section id="main" bs-loading-overlay>
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<section id="main">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <div data-ng-include="'/template/config-menu-tables.html'">
+    </div>
     <section id="content">
-        <div class="container c-alt">
-
-            <div id="calendar"></div>
-
+        <div class="container">
+            <loading-box size="xxl" time="5000" wait="vm.loading">
+            </loading-box>
+            <div id="calendar">
+            </div>
             <!-- Add event -->
-            <script type="text/ng-template" id="addEvent.html">
+            <script id="addEvent.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">{{vm.fulldate}}</h4>
                 </div>
@@ -33,22 +35,18 @@
                                 <td>{{item.turn.name || "-"}}</td>
                                 <td>{{item.turn.hours_ini}} - {{item.turn.hours_end}}</td>
                                 <td class="text-right">
-                                    <a href="javascript:" ng-if="item.turn==null"
-                                       ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
-                                    <a href="javascript:"
-                                       ng-if="item.turn">
-                                        Editar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)">
-                                        Reemplazar
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a href="javascript:"
-                                       ng-if="item.turn" ng-click="vm.removeSchedule(item.turn.id)">
-                                        Borrar
-                                    </a>
+                                    <a href="javascript:" ng-if="item.turn==null" ng-click="vm.AddSchedule(item.id, item.name)">Añadir turno</a>
+                                    <div ng-if="item.turn">
+                                        <a href="javascript:" ng-click="vm.moduleEdit(item.turn.id)" ng-disabled="vm.flags.isLoading">Editar</a>
+                                        &nbsp;&nbsp;
+                                        <a href="javascript:" ng-click="vm.changeSchedule(item.id, item.name, item.turn.id)" ng-disabled="vm.flags.isLoading">
+                                            Reemplazar
+                                        </a>
+                                        &nbsp;&nbsp;
+                                        <a href="javascript:" ng-click="vm.removeSchedule(item.turn.id)" ng-disabled="vm.flags.isLoading">
+                                            Borrar
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -56,15 +54,16 @@
                     </div>
                 </div>
 
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
                             data-ng-click="vm.dismiss()">Cerrar
                     </button>
                 </div>
             </script>
-
             <!-- Add event -->
-            <script type="text/ng-template" id="schedule.html">
+            <script id="schedule.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
                 </div>
@@ -99,9 +98,8 @@
                     </button>
                 </div>
             </script>
-
             <!-- Add event -->
-            <script type="text/ng-template" id="changeSchedule.html">
+            <script id="changeSchedule.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
                 </div>
@@ -128,22 +126,18 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                <loading-box wait="vm.loading" time="5000" size="lg"></loading-box>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" ng-disabled="vm.flags.isLoading"
                             data-ng-click="vm.dismiss()">Cerrar
                     </button>
                 </div>
             </script>
-
-            <!--<div id="calendar" data-calendar data-action-links="clctrl.actionMenu"></div>-->
-            <!--data-select="clctrl.onSelect(start, end)"></div>-->
-
-
         </div>
     </section>
 </section>
-
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>

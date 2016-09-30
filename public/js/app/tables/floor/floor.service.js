@@ -12,8 +12,30 @@ angular.module('floor.service', [])
 		};
 	})
 
-.factory('FloorFactory', function($q, ZoneFactory, TableFactory, FloorDataFactory) {
+.factory('FloorFactory', function($q, ZoneFactory, TableFactory, FloorDataFactory, ServerFactory) {
 	return {
+		listTableServes: function() {
+			var defered = $q.defer();
+			ServerFactory.getAllTablesFromServer().success(function(data) {
+				var vTables = [];
+				angular.forEach(data.data, function(server) {
+					var tables = server.tables;
+					angular.forEach(tables, function(table) {
+						var dataTable = {
+							server_id: server.id,
+							color: server.color,
+							table_id: table.id
+						};
+						vTables.push(dataTable);
+					});
+				});
+
+				defered.resolve(vTables);
+			}).error(function(data, status, headers) {
+				defered.reject(data);
+			});
+			return defered.promise;
+		},
 		listBloqueos: function() {
 			var defered = $q.defer();
 			FloorDataFactory.getBloqueos().success(function(data) {
@@ -181,6 +203,12 @@ angular.module('floor.service', [])
 					return response;
 				}).then(function success(blocks) {
 
+					me.listTableServes().then(function success(server) {
+						return server;
+					}, function error(server) {
+						return server;
+					}).then(function success(servers) {
+
 						var vZones = [];
 						angular.forEach(zonesData.data.data, function(zone) {
 							var tables = zone.tables;
@@ -207,6 +235,13 @@ angular.module('floor.service', [])
 										dataTable.res_reservation_status_id = block.res_reservation_status_id;
 									}
 								});
+								angular.forEach(servers, function(server) {
+									//console.log(blocks);
+									if (server.table_id === table.id) {
+										dataTable.server_id = server.server_id;
+										dataTable.color = server.color;
+									}
+								});
 								vTables.push(dataTable);
 							});
 							var dataZone = {
@@ -219,11 +254,13 @@ angular.module('floor.service', [])
 
 						defered.resolve(vZones);
 
-					},
-					function error(response) {
-						defered.reject(response);
-					}
-				);
+					}, function error(server) {
+						defered.reject(server);
+					});
+
+				}, function error(response) {
+					defered.reject(response);
+				});
 
 			});
 			return defered.promise;
@@ -284,62 +321,7 @@ angular.module('floor.service', [])
 
 			});
 			return defered.promise;
-		},
-		/*
-				listZonesReservation: function() {
-					var me = this;
-					var defered = $q.defer();
-					me.listZones().then(function success(data) {
-						return data;
-					}, function error(data) {
-						return data;
-					}).then(function(zones) {
-						me.listReservation().then(function success(tables) {
-								return tables;
-							},
-							function error(response) {
-								return response;
-							}).then(function success(tablesRes) {
-								var vZonas = [];
-
-								angular.forEach(zones, function(zone) {
-									var vTable = {
-										zone_id: zone.zone_id,
-										name: zone.name,
-										table: []
-									};
-									angular.forEach(zone.table, function(table) {
-
-										if (tablesRes) {
-											angular.forEach(tablesRes, function(tableData, key) {
-												//console.log(angular.toJson(tableData, true));
-												if (tableData.table_id == table.table_id) {
-													//console.log(angular.toJson(key, true));
-													table.block_id = tableData.block_id;
-													table.reservation_id = tableData.reservation_id;
-													table.num_people = tableData.num_people;
-													table.start_time = tableData.start_time;
-													table.end_time = tableData.end_time;
-												}
-											});
-										}
-										vTable.table.push(table);
-									});
-									vZonas.push(vTable);
-								});
-
-								defered.resolve(vZonas);
-							},
-							function error(response) {
-								defered.reject(response);
-							}
-						);
-
-					});
-
-					return defered.promise;
-				}
-		*/
+		}
 	};
 
 });
