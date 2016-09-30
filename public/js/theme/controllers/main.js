@@ -21,7 +21,7 @@
 
     // By default template has a boxed layout
     //this.layoutType = localStorage.getItem('ma-layout-status');
-    this.layoutType = '1';
+    this.layoutType = '0';
     // For Mainmenu Active Class
     this.$state = $state;
 

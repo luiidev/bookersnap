@@ -6,6 +6,8 @@
     <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
     </aside>
     <section id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
         <div class="container" ng-controller="ZoneCtrl">
             <script id="myModalDeleteZone.html" type="text/ng-template">
                 <div class="modal-header">
@@ -20,28 +22,7 @@
                     <button class="btn btn-primary" type="button" ng-click="deleteZone()">Si</button>
                 </div>
             </script>
-            <div class="block-header">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">
-                            Cancelar
-                        </button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">
-                            Crear Zona
-                        </button>
-                    </li>
-                </ul>
-            </div>
             <div class="card">
-                <div class="card-header">
-                    <h2>
-                        Lista zonas
-                        <small>
-                        </small>
-                    </h2>
-                </div>
                 <div class="pm-body clearfix list-table">
                     <ul class="tab-nav">
                         <li class="btn-wave" data-ui-sref-active="active">

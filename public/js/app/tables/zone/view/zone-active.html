@@ -17,7 +17,10 @@
                 <th>
                     Estado
                 </th>
-                <th>
+                <th class="text-right">
+                    <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">
+                        Crear Zona
+                    </button>
                 </th>
             </tr>
         </thead>
@@ -38,16 +41,16 @@
                 <td>
                     {{ item.status }}
                 </td>
-                <td>
+                <td class="text-right">
                     <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-collection-item-1 zmdi-hc-fw">
                         </i>
-                        Clonar zona
+                        Clonar
                     </button>
-                    <button class="btn btn-primary btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
+                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                         </i>
-                        Editar zona
+                        Editar
                     </button>
                 </td>
             </tr>

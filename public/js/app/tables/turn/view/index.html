@@ -11,24 +11,21 @@
                 <ul class="actions">
                     <li>
                         <button class="btn btn-default waves-effect" onclick="historyBack()">
+                            <i class="zmdi zmdi-long-arrow-left zmdi-hc-fw">
+                            </i>
                             Cancelar
                         </button>
                     </li>
                     <li>
                         <button class="btn btn-primary waves-effect" data-ui-sref="turn-create">
+                            <i class="zmdi zmdi-floppy zmdi-hc-fw">
+                            </i>
                             Crear nuevo turno
                         </button>
                     </li>
                 </ul>
             </div>
             <div class="card" id="turno-main">
-                <div class="card-header">
-                    <h2>
-                        Lista Turnos
-                        <small>
-                        </small>
-                    </h2>
-                </div>
                 <div class="pm-body clearfix list-table">
                     <div class="card-body table-responsive">
                         <table class="table">
@@ -68,18 +65,18 @@
                                         {{ item.zones}}
                                     </td>
                                     <td>
-                                        <label class="label label-success f-12" ng-if="item.status == 1">
+                                        <label class="label bgm-gray f-12" ng-if="item.status == 1">
                                             Activo
                                         </label>
                                         <label class="label label-danger f-12" ng-if="item.status == 0">
                                             Inactivo
                                         </label>
                                     </td>
-                                    <td>
-                                        <button class="btn btn-default btn-icon-text waves-effect" data-ui-sref="turn-edit({turn : '{{item.id}}'})">
+                                    <td class="text-right">
+                                        <button class="btn bgm-lightblue btn-icon-text waves-effect" data-ui-sref="turn-edit({turn : '{{item.id}}'})">
                                             <i class="zmdi zmdi-edit zmdi-hc-fw">
                                             </i>
-                                            Editar turno
+                                            Editar
                                         </button>
                                     </td>
                                 </tr>
@@ -91,5 +88,3 @@
         </div>
     </section>
 </section>
-<footer data-ng-include="'/template/footer.html'" id="footer">
-</footer>
