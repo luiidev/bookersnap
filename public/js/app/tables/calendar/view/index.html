@@ -1,20 +1,19 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'"
-        data-ng-controller="headerCtrl as hctrl"></header>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
 <section id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <div data-ng-include="'/template/config-menu-tables.html'">
+    </div>
     <section id="content">
         <div class="container">
-
-            <!-- <loading-box wait="vm.loading" time="5000" size="xxl"></loading-box> -->
 
             <div id="calendar"></div>
 
             <!-- Add event -->
-            <script type="text/ng-template" id="addEvent.html">
+            <script id="addEvent.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">{{vm.fulldate}}</h4>
                 </div>
@@ -62,9 +61,8 @@
                     </button>
                 </div>
             </script>
-
             <!-- Add event -->
-            <script type="text/ng-template" id="schedule.html">
+            <script id="schedule.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">Añadir {{vm.typeShift.name}}</h4>
                 </div>
@@ -99,9 +97,8 @@
                     </button>
                 </div>
             </script>
-
             <!-- Add event -->
-            <script type="text/ng-template" id="changeSchedule.html">
+            <script id="changeSchedule.html" type="text/ng-template">
                 <div class="modal-header">
                     <h4 class="modal-title">Reemplazar {{vm.typeShift.name}}</h4>
                 </div>
@@ -138,9 +135,8 @@
                     </button>
                 </div>
             </script>
-
         </div>
     </section>
 </section>
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>
