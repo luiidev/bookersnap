@@ -6,13 +6,61 @@
             </div> 
         </div>
         <br>
+        <!--
+        <div class="btn-group">
+            <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'1'">Por llegar</label>
+            <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'2'">Sentados</label>
+            <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'3'">Todos</label>
+        </div>
+        <div ng-if="radioModel==1">
+            ver 01
+        </div>
+        -->
         <tabset justified="true">
             <tab heading="Pendientes" active="tab.active" class="f-11">
+
+                <div class="listado-table">
+                    <div class="listado-row-header">
+                        <div class="listado-column">Hora</div>
+                        <div class="listado-column">Pax</div>
+                        <div class="listado-column">Nombre</div>
+                        <div class="listado-column">Salon</div>
+                        <div class="listado-column">Mesas</div>
+                        <div class="listado-column">Estado</div>
+                    </div>
+                    <div class="listado-row">
+                        <div class="listado-column">08:30</div>
+                        <div class="listado-column">10</div>
+                        <div class="listado-column">Charly Parra</div>
+                        <div class="listado-column">General</div>
+                        <div class="listado-column">A15</div>
+                        <div class="listado-column">Espera</div>
+                    </div>
+                    <div class="listado-row">
+                        <div class="listado-column fill">
+                            <ul class="actions">
+                            <li class="dropdown" uib-dropdown="" style="">
+                                <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="">Change Date Range</a></li>
+                                <li><a href="">Change Graph Type</a></li>
+                                <li><a href="">Other Settings</a></li>
+                                </ul>
+                            </li>
+                            <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
+                            <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
+                            <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusCondicion">
                         <div class="pull-right">
                             <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
                         </div>
+                        
                         <div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
                         Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
                         <div>{{value.start_time}} - {{value.end_time}}</br>
