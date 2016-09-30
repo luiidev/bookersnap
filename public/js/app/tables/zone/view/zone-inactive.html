@@ -32,21 +32,21 @@
                 <td>
                     {{ item.date_add }}
                 </td>
-                <td>
+                <td class="text-right">
                     <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-collection-item-1 zmdi-hc-fw">
                         </i>
-                        Clonar zona
+                        Clonar
                     </button>
-                    <button class="btn btn-primary btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
+                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                         </i>
-                        Editar zona
+                        Editar
                     </button>
                     <button class="btn btn-danger btn-icon-text waves-effect" ng-click="deleteZoneConfirm(item.id,$index)">
                         <i class="zmdi zmdi-close">
                         </i>
-                        Eliminar zona
+                        Eliminar
                     </button>
                 </td>
             </tr>
