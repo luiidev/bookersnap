@@ -25,70 +25,60 @@
                 </thead>
                 <tbody>
                     <tr>
-                    <td>08.30</td>
-                    <td>10</td>
-                    <td>Charly Parra</td>
-                    <td>General</td>
-                    <td>A15</td>
-                    <td>Espera</td>
+                        <td>08.30</td>
+                        <td>10</td>
+                        <td>Charly Parra</td>
+                        <td>General</td>
+                        <td>A15</td>
+                        <td>Espera</td>
                     </tr>
-                    <tr><td colspan="5">
-                        <ul class="actions">
-                            <li class="dropdown" uib-dropdown="" style="">
-                                <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="">Change Date Range</a></li>
-                                <li><a href="">Change Graph Type</a></li>
-                                <li><a href="">Other Settings</a></li>
+                    <tr class="line-row">
+                        <td colspan="5">
+                            <ul class="actions">
+                                <li class="dropdown" uib-dropdown="" style="">
+                                    <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="">Eleccion primera</a></li>
+                                    <li><a href="">Segunda eleccion</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-mail"></i></a></li>
                                 </ul>
-                            </li>
-                            <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                            <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                            <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                            </ul>
-                    </td><td>estados</td></tr> 
+                        <td>Directo</td>
+                    </tr>
+                    <tr>
+                        <td>08.30</td>
+                        <td>10</td>
+                        <td>Charly Parra</td>
+                        <td>General</td>
+                        <td>A15</td>
+                        <td>Reservado</td>
+                    </tr>
+                    <tr class="line-row">
+                        <td colspan="5">
+                            <ul class="actions">
+                                <li class="dropdown" uib-dropdown="" style="">
+                                    <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="">Eleccion primera</a></li>
+                                    <li><a href="">Segunda eleccion</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
+                                <li><a href=""><i class="zmdi zmdi-mail"></i></a></li>
+                                </ul>
+                        <td>WEB</td>
+                    </tr>  
                 </tbody>
                 </table>
                 
-                <!--
-                <div class="listado-table">
-                    <div class="listado-row-header">
-                        <div class="listado-column">Hora</div>
-                        <div class="listado-column">Pax</div>
-                        <div class="listado-column">Nombre</div>
-                        <div class="listado-column">Salon</div>
-                        <div class="listado-column">Mesas</div>
-                        <div class="listado-column">Estado</div>
-                    </div>
-                    <div class="listado-row">
-                        <div class="listado-column">08:30</div>
-                        <div class="listado-column">10</div>
-                        <div class="listado-column">Charly Parra</div>
-                        <div class="listado-column">General</div>
-                        <div class="listado-column">A15</div>
-                        <div class="listado-column">Espera</div>
-                    </div>
-                    <div class="listado-row">
-                        <div class="listado-column fill">
-                            <ul class="actions">
-                            <li class="dropdown" uib-dropdown="" style="">
-                                <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="">Change Date Range</a></li>
-                                <li><a href="">Change Graph Type</a></li>
-                                <li><a href="">Other Settings</a></li>
-                                </ul>
-                            </li>
-                            <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                            <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                            <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                </div>
-                -->
-                <ul class="list-group">
+                
+                <!--<ul class="list-group">
                     <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusCondicion">
                         <div class="pull-right">
                             <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
@@ -100,6 +90,7 @@
                         {{value.num_people}} personas</div>
                     </li>
                 </ul>
+                -->
             </tab>
             <tab heading="En mesa" class="f-11">
                 <ul class="list-group">

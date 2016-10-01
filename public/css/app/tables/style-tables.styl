@@ -498,8 +498,21 @@ $background-tables-head = #eee
 	& thead tr th
 		background #005581
 		color #fff
-	& tbody > tr > td
+	& thead > tr > th, & tbody > tr > td
 		border-top 0
+		border-bottom 0
+		padding 4px
+	& thead > tr, & tbody > tr
+		&.line-row
+			border-bottom 1px solid #767676
+.btn-primary-nav
+	background-color #005581
+	padding-left 15px!important
+	padding-right 15px!important
+.btn-default-nav
+	background-color #575757
+	
+		
 		
 li.divider
 	width 2px
