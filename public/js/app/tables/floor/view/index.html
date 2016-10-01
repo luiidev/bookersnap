@@ -1,18 +1,18 @@
+
 <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
 <section id="main" class="h-100vh">
     <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-    <section id="content">
+    <section id="content" class="w-100 p-0">
         <div class="container w-100 p-l-0 p-r-0">
-            <div ui-view="principal" class="box-lienzo-zone p-l-0 p-r-0 p-section-right" ></div>            
+            <div ui-view="principal" class="box-lienzo-zone p-l-0 p-r-0 p-section-right"></div>
         </div>
     </section>
 </section>
 <section class="section-right-floor">
     <div ui-view="tabReservaciones"></div>
 </section>
-
-
+<footer id="footer" data-ng-include="'/template/footer-tables.html'" style=""></footer>
 <script type="text/ng-template" id="myModalContentDetail.html">
     <div class="modal-header">
         <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>

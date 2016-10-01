@@ -1,12 +1,12 @@
 
     <section class="bgm-gray-win menu-section" id="content">
     <div class="w-100 p-0">
-        <nav class="ha-menu ng-scope p-section-right">
+        <nav class="ha-menu">
             <ul>
-                <li class="waves-effect {{vm.flagSelectedZone==$index ? 'active': ''}}" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <a data-ng-click="vm.tabSelectedZone($index)">
+                <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
+                    <button  class="btn {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
                         {{tab.name}}
-                    </a>
+                    </button>
                 </li>
                 <li class="dropdown open {{ vm.flagSelectedZone > 4 ? 'active': ''}}" uib-dropdown=""  >
                     <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true">+</div>
