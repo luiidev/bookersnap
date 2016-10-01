@@ -483,7 +483,7 @@ $background-tables-head = #eee
 		color #fff
 		& .listado-column
 			display table-cell
-			border 1px solid #e9e9e9
+			border 1px solid #575757
 			vertical-align middle
 			padding 2px 2px 2px 0px
 			text-transform uppercase
@@ -491,13 +491,22 @@ $background-tables-head = #eee
 		display table-row
 		& .listado-column
 			display table-cell
-			border-bottom 1px solid #e9e9e9
+			border-bottom 1px solid #575757
 			vertical-align middle
 			padding 2px 2px 2px 0px
 			width 18%
-			&.fill:after
-				width 100%
-				display inline
+			color #fff
+.table-listado
+	font-size 0.9em
+	background transparent
+	color #fff
+	width 100%
+	& thead tr th
+		background #005581
+		color #fff
+	& tbody > tr > td
+		border-top 0
+		
 li.divider
 	width 2px
 	background #575757
