@@ -6,4 +6,13 @@ angular.module('reservation.app', ['promotion.app', 'flyer.app'])
 	.constant("UrlRepository", "http://web.aplication.bookersnap/files")
 	.constant("UrlGeneral", "http://api-promotion.vh/v1/es")
 	.constant("ApiUrlMesas", "http://api-mesas.vh/v1/es/microsites/" + idMicrositio)
-	.constant("ApiUrlReservation", "http://api-promotion.vh/v1/es/microsites/" + idMicrositio);
+	.constant("ApiUrlReservation", "http://api-promotion.vh/v1/es/microsites/" + idMicrositio)
+	.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
+		$stateProvider
+			.state('reservation', {
+				url: '/reservation',
+				templateUrl: ''
+			});
+
+	});

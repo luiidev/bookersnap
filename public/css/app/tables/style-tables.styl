@@ -1,3 +1,6 @@
+$color_principal = #424242
+$color_secundario = #616161 
+
 .modal-header
 	text-align center
 .modal-footer
@@ -284,13 +287,16 @@ $background-tables-head = #eee
 /*--------------Calendario------------------*/
 					
 .event-disabled
-	opacity: .5
+	opacity .5
 	
-#calendar a:not(.event-disabled)
-	cursor: pointer
+#calendar 
+	& a:not(.event-disabled)
+		cursor pointer
+	& a.event-disabled
+		cursor context-menu
+	& .fc-toolbar
+		background-color $color_principal
 
-#calendar a.event-disabled
-	cursor: context-menu;
 	
 /*--------------Floor------------------*/
 .border-left-green
