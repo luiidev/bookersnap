@@ -86,7 +86,7 @@
                     <div class="row">
                         <div class="col-xs-9 box-lienzo-zone">
                             <div class="lienzo" id="lienzo" ng-click="onLienzo()" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
-                                <div class="item-drag-table rt{{obj.rotate}}" id="tb-item{{$index}}" left="{{obj.left}}" ng-drag="false" ng-drag-data="obj" ng-drag-table="" ng-repeat="obj in itemTables" on-click-fn="activarTableOptions($index,this)" rotate="{{obj.rotate}}" shape="{{obj.shape}}" size="{{obj.size}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}">
+                                <div class="item-drag-table rt{{obj.rotate}} " id="tb-item{{$index}}" left="{{obj.left}}" ng-drag="false" ng-drag-data="obj" ng-drag-table="" ng-repeat="obj in itemTables" on-click-fn="activarTableOptions($index,this)" rotate="{{obj.rotate}}" shape="{{obj.shape}}" size="{{obj.size}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}">
                                     <div>
                                         {{obj.name}}
                                     </div>

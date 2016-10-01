@@ -1,38 +1,92 @@
 <header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header"></header>
 
-<section id="main">
+<section id="main" class="h-100vh">
     <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar"></aside>
     <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat"></aside>
-    <div data-ng-include="'/template/config-menu-tables.html'"></div>
 
     <section id="content">
-            <div class="container pos-r zone-containe">
+        <div class="container w-100 p-section-reservation  p-r-0">
 
-                    <div class="card">
-                        <div class="card-body card-padding box-zone-create">
-                            <div class="row">
+            <div class="box-zone-create p-t-15 p-b-15">
 
-                                <div class="col-xs-9 box-lienzo-zone">
-                                    <div class="lienzo" id="lienzo" ng-click="onLienzo()" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
-                                        <div class="item-drag-table rt{{obj.rotate}}" id="tb-item{{$index}}" left="{{obj.left}}" ng-drag="false" ng-drag-data="obj" ng-drag-table="" ng-repeat="obj in itemTables" on-click-fn="activarTableOptions($index,this)" rotate="{{obj.rotate}}" shape="{{obj.shape}}" size="{{obj.size}}" style="position: absolute;top:{{ obj.top }}px;left:{{obj.left}}px" top="{{obj.top}}">
-                                            <div>
-                                                {{obj.name}}
-                                            </div>
-                                            <div class="border shape-table {{obj.shape}} {{obj.size}}">
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="box-lienzo-zone-v2">
+                        <div style="background: #CCC" id="lienzo" class="lienzo-v2"  ng-click="onLienzo()" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}">
+                            <div ng-class="[obj.shape, obj.size]" class="item-drag-table rt{{obj.rotate}}  shape-table table-zone" id="tb-item{{$index}}" left="{{obj.left}}" ng-drag="false" ng-drag-data="obj" ng-drag-table="" ng-repeat="obj in itemTables" on-click-fn="activarTableOptions($index,this)" rotate="{{obj.rotate}}" shape="{{obj.shape}}" size="{{obj.size}}" style="position: absolute;top:{{ obj.top }}%;left:{{obj.left}}%" top="{{obj.top}}">
+<!--                                 <div class="t-20-i">
+                                    {{obj.name}}
+                                </div> -->
+                                <div class="table-label top">
+                                    {{obj.name}}
                                 </div>
-
-                                <div class="col-xs-3 box-tables">
-
-                                </div>
-
                             </div>
                         </div>
                     </div>
-                    
+
             </div>
+                    
+        </div>
     </section>
 
+</section>
+
+<section class="section-left-reservation">
+<div class="card form-drag" style="height: 100%; overflow-y:scroll;">
+    <div class="card-header" style="text-align: center; line-height: 30px; color: #FFF;">   
+            <button class="btn btn-danger pull-left">Cancelar</button>
+            Agregar reservacion
+            <button class="btn btn-primary pull-right">Guardar</button>
+    </div>
+
+    <div class="card-body card-padding">
+        <form class="row" role="form">
+
+                <div class="form-group">
+                        <div class="fg-line">
+                            <div class="select">
+                                <select class="form-control">
+                                    <option>Select an Option</option>
+                                    <option>Option 1</option>
+                                    <option>Option 2</option>
+                                    <option>Option 3</option>
+                                    <option>Option 4</option>
+                                    <option>Option 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="col-sm-12">
+                <div class="form-group fg-line">
+                    <label class="sr-only" for="exampleInputPassword2">Password</label>
+                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Password">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group fg-line">
+                    <label class="sr-only" for="exampleInputPassword2">Password</label>
+                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Password">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group fg-line">
+                    <label class="sr-only" for="exampleInputPassword2">Password</label>
+                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Password">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group fg-line">
+                    <label class="sr-only" for="exampleInputPassword2">Password</label>
+                    <input type="password" class="form-control input-sm" id="exampleInputPassword2" placeholder="Password">
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary btn-sm m-t-5">Sign in</button>
+            </div>
+        </form>
+    </div>
+</div>
 </section>

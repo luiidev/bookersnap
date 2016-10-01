@@ -2,8 +2,8 @@ angular.module('reservation.controller', [])
 .controller("reservationCtrl.Index", [function(){
 
 }])
-.controller("reservationCtrl.Store", ["$scope", "ZoneFactory", "TableFactory", "ZoneLienzoFactory",
-        function(vm, ZoneFactory, TableFactory, ZoneLienzoFactory){
+.controller("reservationCtrl.Store", ["$scope", "ZoneFactory", "TableFactory", "ZoneLienzoFactory", "$window", "screenHelper",
+        function(vm, ZoneFactory, TableFactory, ZoneLienzoFactory, $window, screenHelper){
 
     vm.itemTables = [];
 
@@ -15,6 +15,13 @@ angular.module('reservation.controller', [])
 
     var updateHeaderZone = function() {
         ZoneLienzoFactory.updateHeaderZone(vm.headerZone, vm.itemTables);
+
+        angular.forEach(vm.itemTables, function(item, i){
+            console.log(item);
+                item.left = (parseInt(item.left)  / screenHelper.minSize() ) * 100;
+                item.top = (parseInt(item.top) / screenHelper.minSize()) * 100;
+                item.size += "-relative";
+        });
     };
 
     var detectedForm = function() {
@@ -29,12 +36,12 @@ angular.module('reservation.controller', [])
             ZoneFactory.getZone(id).success(function(zone) {
                 // loadingHide($ionicLoading);
 
-                console.log(zone);
+                // console.log(zone);|
                 // angular.element("#zone_name").val(zone.data.name);
                 loadTablesEdit(zone.data.tables);
 
             }).error(function(response) {
-
+                console.log("fail");
                 // loadingHide($ionicLoading);
                 message.apiError(response);
 
@@ -71,5 +78,15 @@ angular.module('reservation.controller', [])
         updateHeaderZone();
     };
 
-    detectedForm();
+    angular.element($window).bind('resize', function(){
+        var size = screenHelper.size(vm);
+        vm.size = size;
+        vm.$digest();
+    });
+
+    (function Init(){
+        detectedForm();
+
+        vm.size = screenHelper.size();
+    })();
 }]);

@@ -59,10 +59,52 @@
 	& .round
 		border-radius 50%
 	& .rt45
-		-moz-transform rotate(45deg)
-		-ms-transform rotate(45deg)
-		-webkit-transform rotate(45deg)
 		transform rotate(45deg)
+	& .table-zone
+		display: block
+		position: absolute
+		cursor: pointer
+		z-index: 1
+		transform-style: preserve-3d
+		background: #f5f5f5
+		border: 1px #777 solid
+		border-radius: 2px
+		box-sizing: border-box
+	& .table-zone.rt45
+		& .table-label.top
+			transform: translate(-50%,-100%) rotate(-45deg)
+	& .table-zone
+		& .table-label.top
+			left 50%
+			top -11px
+			transform translate(-50%,-100%)
+	& .table-zone.round.small-relative
+		width 4.054055054054054%
+		height  4.054055054054054%
+	& .table-zone.round.medium-relative
+		width 6.756756756756757%
+		height 6.756756756756757%
+	& .table-zone.round.large-relative
+		width 10.13513513513514%
+		height 10.13513513513514%
+	& .table-zone.square.small-relative
+		width  4.054055054054054%
+		height  4.054055054054054%
+	& .table-zone.square.medium-relative
+		width 6.756756756756757%
+		height 6.756756756756757%
+	& .table-zone.square.large-relative
+		width 10.13513513513514%
+		height 10.13513513513514%
+	& .table-zone.recta.small-relative
+		width 6.081081081081081%
+		height 3.648648648648649%
+	& .table-zone.recta.medium-relative
+		width 8.108108108108108% 
+		height 4.324324324324324% 
+	& .table-zone.recta.large-relative
+		width 10.13513513513514%
+		height 6.486486486486486%
 	& .shape-table
 		background-color #fff
 	& .border
@@ -94,8 +136,7 @@
 			height 32px 
 		&.recta.large
 			width 75px
-			height 48px
-			
+			height 48px			
 	& .header-zone-create
 		padding 8px
 		border 1px solid #DEDEDE
@@ -107,6 +148,14 @@
 			background-color #eee
 			min-height 740px
 			overflow hidden
+	& .box-lienzo-zone-v2
+		padding-left 0
+		& .lienzo-v2
+			background-color #eee
+			width 740px
+			height 740px
+			overflow hidden
+			margin 0 auto
 	& .box-tables
 		padding-left 7px
 		padding-rigth 12px
@@ -578,3 +627,20 @@ li.divider
 
 .fc-past
 	background: rgba(228, 228, 228, 0.5);
+	
+.t-20-i
+	top -20px
+
+.form-drag
+	background  #454545
+	& .form-control
+		background #454545
+		color #FFF 
+	& .form-control option
+		background #FFF
+		color #454545
+	& .form-group
+		& .select:before
+			background-color: transparent
+			background-image url(../../../img/selectDrag.png)
+			

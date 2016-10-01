@@ -3,7 +3,7 @@
  */
 
 angular.module('calendar.controller', [])
-    .controller('CalendarIndexController', function(CalendarService, MenuConfigFactory, $uibModal, $scope,$compile) {
+    .controller('CalendarIndexController', function(CalendarService, MenuConfigFactory, $uibModal, $scope, $compile) {
         var vm = this;
         var now;
 
