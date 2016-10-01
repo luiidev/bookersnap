@@ -38,6 +38,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			days: []
 		};
 
+		console.log($state);
+
 		$scope.dayHide = false;
 
 		$scope.days = [];

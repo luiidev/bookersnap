@@ -12,6 +12,15 @@ angular.module('tables.app', [
     .constant("IdMicroSitio", idMicrositio)
     .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
+    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
+        $stateProvider
+            .state('mesas', {
+                url: '/mesas',
+                templateUrl: ''
+            });
+
+    })
 
 .run(function($http) {
     //setAuthHeaders($http);

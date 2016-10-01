@@ -44,14 +44,7 @@
         </ul>
     </div>-->
     <ul class="main-menu">
-        <li data-ui-sref-active="active">
-            <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="home">
-                <i class="zmdi zmdi-home">
-                </i>
-                Home
-            </a>
-        </li>
-        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('mesas') }">
             <a href="" toggle-submenu="">
                 <i class="zmdi zmdi-labels zmdi-hc-fw">
                 </i>
@@ -59,38 +52,28 @@
             </a>
             <ul>
                 <li>
-                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="calendar">
+                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.calendar" data-ui-sref-active="active">
                         Configuración
                     </a>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="guest">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.guest" data-ui-sref-active="active">
                             Huesped
                         </a>
                     </li>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="turn">
-                            Turno
-                        </a>
-                    </li>
-                    <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="zone.active">
-                            Zonas
-                        </a>
-                    </li>
-                    <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="book">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.book" data-ui-sref-active="active">
                             Book
                         </a>
                     </li>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="floor.reservation">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation" data-ui-sref-active="active">
                             Floor
                         </a>
                     </li>
                 </li>
             </ul>
         </li>
-        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('headers') }">
+        <li class="sub-menu" data-ng-class="{ 'active toggled': mactrl.$state.includes('reservation') }">
             <a href="" toggle-submenu="">
                 <i class="zmdi zmdi-view-compact">
                 </i>
@@ -98,7 +81,7 @@
             </a>
             <ul>
                 <li>
-                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="promotion" data-ui-sref-active="active">
+                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="reservation.promotion" data-ui-sref-active="active">
                         Promociones
                     </a>
                 </li>

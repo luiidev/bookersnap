@@ -20,9 +20,28 @@ $color_secundario = #616161
 .main-menu
 	&>li
 		&>a
-			font-size 1.1em
+			font-size 1em
+			color #fff
+			&:hover,&:active
+				color #000
+				&:before
+					color #000	
 			& i 
 				font-size 23px
+.sub-menu
+	&>a
+		&:before,&:after
+			color #fff
+	& ul 
+		& li 
+			& a 
+				color rgba(255,255,255,.6)
+				&.active 
+					color #fff
+				&:hover 
+					color #fff
+.sidebar-inner 
+	background-color $color_principal
 		
 /*.btn-primary
 	background-color #757575
