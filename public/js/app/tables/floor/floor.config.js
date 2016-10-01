@@ -9,10 +9,10 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controller: 'FloorCtrl',
                         controllerAs: 'vm'
                     },
-                    'principal@floor': {
+                    'principal@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/principal.html',
                     },
-                    'tabReservaciones@floor': {
+                    'tabReservaciones@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/tabReservaciones.html',
                     },
                 },
