@@ -2,33 +2,47 @@ $color_principal = #424242
 $color_secundario = #616161 
 
 .block-header
-	padding-bottom 25px
+	padding-bottom 13px
 #main 
 	padding-top 70px
 #content 
 	//padding 0
 .container 
 	//width 100%
-	//padding 0
+	//padding 0git a
 .menu-section
 	//padding-top 70px
 	margin-bottom 15px
 	background-color $color_secundario
 	border-bottom 1px solid $color_principal
-	& .tab-nav 
+.ha-menu>ul>li.active>:not(ul)
+	box-shadow: inset 0 -3px 0 0 #fff;
+.main-menu
+	&>li
+		&>a
+			font-size 1em
+			color #fff
+			&:hover,&:active
+				color #000
+				&:before
+					color #000	
+			& i 
+				font-size 23px
+.sub-menu
+	&>a
+		&:before,&:after
+			color #fff
+	& ul 
 		& li 
-			&.active
-				border-color #fff 
-				& a 
+			& a 
+				color rgba(255,255,255,.6)
+				&.active 
 					color #fff
-			& a
-				color #dbdbdb
-	& .tab-nav:not(.tn-vertical)
-		box-shadow none
-		&:not([data-tab-color])>li>a:after
-			background #fff
-	& .tab-content
-		display none
+				&:hover 
+					color #fff
+.sidebar-inner 
+	background-color $color_principal
+		
 /*.btn-primary
 	background-color #757575
 	&:hover:hover
@@ -59,3 +73,16 @@ $color_secundario = #616161
 		color $color_principal
 .bgm-gray-win
 	background-color $color_principal
+.h-100vh
+	height 100vh
+.p-section-right
+	padding-right 400px;
+.section-right-floor
+	width 400px
+	top 0
+	right 0
+	position fixed
+	height 100vh
+	background #424242
+	padding-top 70px
+	padding-bottom 85px

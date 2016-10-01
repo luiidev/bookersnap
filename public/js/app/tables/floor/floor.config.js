@@ -1,7 +1,7 @@
 angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service'])
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         $stateProvider
-            .state('floor', {
+            .state('mesas.floor', {
                 url: '/floor',
                 views: {
                     '@': {
@@ -9,33 +9,33 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controller: 'FloorCtrl',
                         controllerAs: 'vm'
                     },
-                    'principal@floor': {
+                    'principal@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/principal.html',
                     },
-                    'tabReservaciones@floor': {
+                    'tabReservaciones@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/tabReservaciones.html',
                     },
                 },
             })
-            .state('floor.reservation', {
+            .state('mesas.floor.reservation', {
                 url: '/reservation',
                 templateUrl: '/js/app/tables/floor/view/reservation.html',
                 controller: 'reservationController',
                 controllerAs: 'rm'
             })
-            .state('floor.walkin', {
+            .state('mesas.floor.walkin', {
                 url: '/walkin',
                 templateUrl: '/js/app/tables/floor/view/waitlist.html',
                 controller: 'waitlistController',
                 controllerAs: 'wm'
             })
-            .state('floor.server', {
+            .state('mesas.floor.server', {
                 url: '/server',
                 templateUrl: '/js/app/tables/floor/view/server.html',
                 controller: 'serverController',
                 controllerAs: 'sm'
             })
-            .state('floor.server.create', {
+            .state('mesas.floor.server.create', {
                 url: '/create',
                 views: {
                     'principal@floor': {
@@ -45,7 +45,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                     },
                 },
             })
-            .state('floor.server.edit', {
+            .state('mesas.floor.server.edit', {
                 url: '/edit/:server_id',
                 views: {
                     'principal@floor': {
