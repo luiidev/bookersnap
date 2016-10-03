@@ -7,9 +7,10 @@ angular.module('promotion.app', ['promotion.controller', 'promotionList.controll
                 templateUrl: '/js/app/reservation/promotion/view/index.html',
                 controller: 'PromotionCtrl',
             })
+            //CONFIG de listar promociones
             .state('reservation.promotion-list', {
                 url: '/promotion/list',
-                templateUrl: '/js/app/reservation/list-promo/promotion-list.html',
+                templateUrl: '/js/app/reservation/list-promo/view/promotion-list.html',
                 controller: 'PromotionListCtrl',
                 controllerAs: 'sm'
             })

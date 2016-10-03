@@ -1,5 +1,5 @@
 angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
-    .controller('PromotionListCtrl', function($state,Promotion, $rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
+    .controller('PromotionListCtrl', function($state,Promotion, $scope, $http, $window, $document, ApiUrlReservation) {
 
         var sm = this;
         sm.promociones = [];
@@ -136,7 +136,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
 
                         }
 
-                        Promotion.order(sm, newurl); // Se ordenan las promociones
+                        //Promotion.order(sm, newurl); // Se ordenan las promociones
 
                     }
 

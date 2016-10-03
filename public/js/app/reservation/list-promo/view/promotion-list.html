@@ -13,7 +13,7 @@
         </div>
 
         <div class="card-header">
-            <h2>promociones</h2>
+            <h2>promociones {{sm.flag}}</h2>
             <div class="card-body card-padding">
                 <div class="btn-demo">
                         <button class="btn btn-primary waves-effect" data-ui-sref="reservation.add">Agregar Promocion</button>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div id="filter" ng-include="'/js/app/reservation/list-promo/promotion-filtro.html' "></div>
+        <div id="filter" ng-include="'/js/app/reservation/list-promo/view/promotion-filtro.html' "></div>
        
           <div class="card" id="turno-main" ng-controller="PromotionListCtrl">
               <div class="pmb-block">
@@ -50,8 +50,8 @@
                                               </div> 
                                             </div>
                                           </td>
-                                          <td>{{todo.title}}</td>
                                           <td>{{todo.name}}</td>
+                                          <td>{{todo.title}}</td>
                                           <td>
                                             <span ng-if="todo.status_expire === 1">
                                               {{todo.fechadecaducidad}}
