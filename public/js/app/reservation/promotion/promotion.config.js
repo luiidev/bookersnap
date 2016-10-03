@@ -11,6 +11,7 @@ angular.module('promotion.app', ['promotion.controller', 'promotionList.controll
                 url: '/promotion/list',
                 templateUrl: '/js/app/reservation/list-promo/promotion-list.html',
                 controller: 'PromotionListCtrl',
+                controllerAs: 'sm'
             })
             .state('reservation.add', {
                 url: '/promotion/add',
