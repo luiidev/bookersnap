@@ -757,7 +757,6 @@ li.divider
 	top -20px
 
 .form-drag
-	background  #454545
 	& .form-control
 		background #454545
 		color #FFF 
@@ -768,6 +767,33 @@ li.divider
 		& .select:before
 			background-color: transparent
 			background-image url(../../../img/selectDrag.png)
+		& select
+			margin-top 12px
+		& input
+			margin-top 12px
+		& textarea
+			margin-top 12px 
+	& .card
+		background #454545
+		box-shadow none
+	& label
+		color #FFF
+	& .drag-border
+		border-left: 1px solid #fff;
+		border-right: 1px solid #fff;
+		border-bottom: 1px solid  #fff
+	& > .card-body
+		margin 10px
+	& .form-group
+		margin-left 0
+		margin-right 0
+		height 45px
+		line-height 45px
+		border-top: 1px #FFF solid;
+&.card
+	background #454545
+	box-shadow none
+		
 
 /* ----------- Footer Floor */
 
@@ -850,3 +876,9 @@ li.divider
 @media screen and (min-width 10px) and (max-width 1058px)
 	.container-non-responsive
 		width 1058px
+.reservation-content-header
+	padding 10px 10px 0 10px
+	display table
+	width 100%
+.itext-left
+	text-align left !important
