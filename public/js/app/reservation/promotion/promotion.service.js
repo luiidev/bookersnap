@@ -32,13 +32,55 @@ angular.module('promotion.service', [])
             }
         }
     })
-.factory('TiposDataFactory', function($http, UrlGeneral) {
-    return {
-        getTypes: function() {
-            return $http.get(UrlGeneral + "/promotions/types");
+    .factory('TiposDataFactory', function($http, UrlGeneral) {
+        return {
+            getTypes: function() {
+                return $http.get(UrlGeneral + "/promotions/types");
+            }
         }
-    }
-})
+    })
+    .factory('Promotion', function($http, ApiUrlReservation) {
+        return {
+            filter: function(sm) {
+                var url = ApiUrlReservation + '/promotions?filter[fecha_inicial]=' + sm.obtenerFecha(sm.filtro.fecha_inicio) + '&filter[fecha_final]=' + sm.obtenerFecha(sm.filtro.fecha_fin) + '&filter[name]=' + sm.filtro.texto;
+                $http.get(url)
+                    .then(function(items) {
+                        for (var i = 0; i < items.data.data.length; i++) {
+                            sm.promociones.push(items.data.data[i]);
+                        }
+                    });
+
+            },
+            order: function(sm, newurl) {
+
+                $http({
+                        method: 'PATCH',
+                        url: ApiUrlReservation + '/promotions/order?' + newurl,
+                    })
+                    .then(function successCallback(response) {
+                        if (response["success"] === false) {
+                            messageAlert("Error", response["msg"], "warning");
+                        }
+                    }, function errorCallback(response) {
+                        console.log(response.statusText);
+                    });
+
+            },
+            changueState: function(id, status) {
+
+                $http({
+                        method: 'PATCH',
+                        url: ApiUrlReservation + ' /promotions/' + id + '?status=' + status,
+                    })
+                    .then(function successCallback(response) {
+
+                    }, function errorCallback(response) {
+
+                    });
+
+            }
+        }
+    })
 
 .factory('PromotionFactory', function(ZonasDataFactory, TiposDataFactory, TableFactory, PromotionDataFactory, $q, TurnosPromotionDataFactory, ZonesActiveFactory, UrlRepository, $filter) {
     return {

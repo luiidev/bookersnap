@@ -1,5 +1,5 @@
 angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
-    .controller('PromotionListCtrl', function($rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
+    .controller('PromotionListCtrl', function(Promotion, $rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
 
         var sm = this;
         sm.promociones = [];
@@ -16,6 +16,20 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
             $window.location.reload();
         };
 
+        sm.obtenerFecha = function(fecha) {
+
+            if (fecha == "aN-aN-aN") {
+                fecha = "";
+            }
+            if (fecha !== "") {
+                var datefechainicio = new Date(fecha);
+                return sm.addZero(datefechainicio.getDate()) + "-" + sm.addZero(datefechainicio.getMonth() + 1) + "-" + datefechainicio.getFullYear();
+            } else {
+                return "";
+            }
+        };
+
+
         sm.filtrar = function() {
 
             sm.promociones = [];
@@ -29,33 +43,12 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
                 sm.filtro.fecha_fin = "";
             }
 
-            $http.get(
-                    ApiUrlReservation + '/promotions?filter[fecha_inicial]=' + sm.obtenerFecha(sm.filtro.fecha_inicio) + '&filter[fecha_final]=' + sm.obtenerFecha(sm.filtro.fecha_fin) + '&filter[name]=' + sm.filtro.texto)
-                .then(function(items) {
-                    $scope.fetching = items.data.success;
-                    for (var i = 0; i < items.data.data.length; i++) {
-                        sm.promociones.push(items.data.data[i]);
-                    }
-                });
-
+            Promotion.filter(sm); // Se actualiza el modelo de promociones 
         };
 
         // Antepone zeros
         sm.addZero = function(numero) {
             return ("0" + numero).slice(-2);
-        };
-
-        sm.obtenerFecha = function(fecha) {
-
-            if (fecha == "aN-aN-aN") {
-                fecha = "";
-            }
-            if (fecha !== "") {
-                var datefechainicio = new Date(fecha);
-                return sm.addZero(datefechainicio.getDate()) + "-" + sm.addZero(datefechainicio.getMonth() + 1) + "-" + datefechainicio.getFullYear();
-            } else {
-                return "";
-            }
         };
 
 
@@ -143,17 +136,8 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
 
                         }
 
-                        $http({
-                                method: 'PATCH',
-                                url: ApiUrlReservation + '/promotions/order?' + newurl,
-                            })
-                            .then(function successCallback(response) {
-                                if (response["success"] === false) {
-                                    messageAlert("Error", response["msg"], "warning");
-                                }
-                            }, function errorCallback(response) {
-                                console.log(response.statusText);
-                            });
+                        Promotion.order(sm, newurl); // Se ordenan las promociones
+
                     }
 
                 }
@@ -173,15 +157,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
                 status = 0;
             }
 
-            $http({
-                    method: 'PATCH',
-                    url: ApiUrlReservation + ' /promotions/' + id + '?status=' + status,
-                })
-                .then(function successCallback(response) {
-
-                }, function errorCallback(response) {
-
-                });
+            Promotion.changueState(id,status); // SE cambia de estado
 
         };
 
