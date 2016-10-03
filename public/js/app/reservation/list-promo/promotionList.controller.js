@@ -1,5 +1,5 @@
 angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
-    .controller('PromotionListCtrl', function(Promotion, $rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
+    .controller('PromotionListCtrl', function($state,Promotion, $rootScope, $scope, $http, $window, $document, ApiUrlReservation) {
 
         var sm = this;
         sm.promociones = [];
@@ -13,7 +13,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
         };
 
         sm.reloadRoute = function() {
-            $window.location.reload();
+             $state.go($state.current, {}, {reload: true});
         };
 
         sm.obtenerFecha = function(fecha) {
