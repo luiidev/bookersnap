@@ -105,4 +105,4 @@ gulp.task('watch', function() {
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-bookersnap-reservation-js', 'stylus-app', 'app-library-reservation-js', 'app-library-reservation-css']);
+gulp.task('default', ['watch', 'app-bookersnap-reservation-js', 'stylus-app', 'app-library-reservation-js', 'app-library-reservation-css','app-bookersnap-tables-js']);
