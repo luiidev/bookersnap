@@ -1,110 +1,70 @@
 <style type="text/css">
 
 </style>
-<div class="container-non-responsive" style="background-color: #454545;">
-    <div class="row" style="height: 75px;">
-        <div class="col-xs-5">
-            <div class="m-l-20">
-                <button type="button" class="btn btn-default-red btn-sm text-center pull-left btn-space">
-                    <i class="tm-icon zmdi zmdi-notifications zmdi-hc-2x"></i>
-                    <br>Reservación
-                </button>
-                <button type="button" class="btn btn-default-blue btn-sm text-center pull-left btn-space "><span class="zmdi zmdi-book zmdi-hc-2x"></span>
-                    <br>Notas turnos</button>
-                <button type="button" class="btn btn-default-blue btn-sm text-center pull-left btn-space "><span class="zmdi zmdi-lock-open zmdi-hc-2x"></span>
-                    <br>Bloqueos mesas
-                </button>
-            </div>
-        </div>
-        <div class="col-xs-2">
-        <!--
-            <button class="btn btn-default-blue sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-20"> HOY </label>
+<div class="w-100 p-0" style="background-color: #424242;">
+    <ul class="footer-floor">
+        <li class="logotipo-footer">
+            <img src="http://web.aplication.bookersnap/images/icon-bookersnap.png">
+        </li>
+        <li>
+            <button type="button" class="btn btn-default-red btn-sm text-center pull-left btn-space">
+                <i class="tm-icon zmdi zmdi-notifications zmdi-hc-2x"></i>
+                <br>Reservación
             </button>
-            <button class="btn btn-default-grey sin-borde button-size-pagination-date" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-20">
-                    < </label>
+            <button type="button" class="btn btn-default-blue btn-sm text-center pull-left btn-space "><span class="zmdi zmdi-book zmdi-hc-2x"></span>
+                <br>Notas turnos</button>
+            <button type="button" class="btn btn-default-blue btn-sm text-center pull-left btn-space "><span class="zmdi zmdi-lock-open zmdi-hc-2x"></span>
+                <br>Bloqueos mesas
             </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> LUN
-                    <br/> 18
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> MAR
-                    <br/> 19
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> MIE
-                    <br/> 20
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-blue sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> JUE
-                    <br/> 21
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> VIE
-                    <br/> 22
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> SAB
-                    <br/> 24
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> DOM
-                    <br/> 25
-                    <br/> ABR </label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-pagination-date" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-20"> ></label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-20"> MES</label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <i class="tm-icon zmdi zmdi-calendar-alt zmdi-hc-4x"></i>
-                <br/>
-                <label class="f-10"> Calendario</label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <i class="tm-icon zmdi zmdi-chart-donut zmdi-hc-4x"></i>
-                <br/>
-                <label class="f-10"> Zonas</label>
-            </button>
-            <button class="btn btn-default-grey sin-borde button-size-unique" style="padding-top: 25px; padding-bottom: 10px">
-                <label class="f-15"> HORA
-                    <br/> 22:30 </label>
-            </button>
-            -->
-        </div>
-        <div class="col-xs-5">
-            <div class=" pull-right">
-                <button type="button" class="btn btn-default-grey btn-sm text-center pull-left btn-space ">
+        </li>
+        <li class="dropdown dropup open" uib-dropdown="">
+            <div class="waves-effect dropdown-toggle select-todas" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true"> &nbsp; Todas <span class="caret"></span></div>
+
+            <ul class="dropdown-menu">
+                <li><a>Opcion 01</a></li>
+                <li><a>Opcion 02</a></li>
+            </ul>
+        </li>
+        <li>
+            <ul class="people-information">
+                <li><div>Pax asistencia</div><span class="numpax">120</span></li>
+                <li><div>Reservaciones</div> <span class="numpax">15</span></li>
+                <li><div>Pax esperadas</div> <span class="numpax">120</span></li>
+            </ul>
+        </li>
+        <li>
+            <ul class="people-information">
+                <li><i class="zmdi zmdi-male-alt"></i> <span class="rounded">18</span></li>
+                <li><i class="zmdi zmdi-female"></i> <span class="rounded">20</span></li>
+                <li><i class="zmdi zmdi-face"></i> <span class="rounded">10</span></li>
+            </ul>
+        </li>
+        
+        
+        <li class="num-people pull-right">
+            <div >
+                <button type="button" class="btn btn-default-grey btn-sm btn-space ">
                     <i class="tm-icon zmdi zmdi-account zmdi-hc-3x"></i>
                     <i class="tmn-counts-floor">1</i>
                 </button>
-                <button type="button" class="btn btn-default-grey btn-sm text-center pull-left btn-space ">
+                <button type="button" class="btn btn-default-grey btn-sm btn-space ">
                     <i class="zmdi zmdi-account-add zmdi-accounts zmdi-hc-3x"></i>
                     <i class="tmn-counts-floor">2</i>
                 </button>
-                <button type="button" class="btn btn-default-grey btn-sm text-center pull-left btn-space ">
+                <button type="button" class="btn btn-default-grey btn-sm btn-space ">
                     <i class="zmdi zmdi-account-add zmdi-accounts zmdi-hc-3x"></i>
                     <i class="tmn-counts-floor">3</i>
                 </button>
-                <button type="button" class="btn btn-default-grey btn-sm text-center pull-left btn-space ">
+                <button type="button" class="btn btn-default-grey btn-sm btn-space ">
                     <i class="zmdi zmdi-account-add zmdi-accounts zmdi-hc-3x"></i>
                     <i class="tmn-counts-floor">4</i>
                 </button>
-                <button type="button" class="btn btn-default-grey btn-sm text-center pull-left btn-space ">
+                <button type="button" class="btn btn-default-grey btn-sm btn-space ">
                     <i class="zmdi zmdi-account-add zmdi-accounts zmdi-hc-3x"></i>
                     <i class="tmn-counts-floor">5</i>
                 </button>
             </div>
-        </div>
-    </div>
+        </li>
+
+    </ul>
 </div>

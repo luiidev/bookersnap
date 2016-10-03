@@ -9,7 +9,7 @@ angular.module('floor.controller', [])
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                //console.log('Formateado: ' + angular.toJson(data, true));
+                console.log('Formateado: ' + angular.toJson(data, true));
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -54,6 +54,20 @@ angular.module('floor.controller', [])
             vm.flagSelectedZone = value;
 
         };
+
+        vm.menuFloor = [{
+            id: 0,
+            name: 'Reservaciones',
+            url: 'mesas.floor.reservation'
+        }, {
+            id: 1,
+            name: 'Lista de espera',
+            url: 'mesas.floor.walkin'
+        }, {
+            id: 2,
+            name: 'Servidores',
+            url: 'mesas.floor.server'
+        }];
 
 
     })

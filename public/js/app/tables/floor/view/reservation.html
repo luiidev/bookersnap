@@ -9,10 +9,11 @@
             ver 01
         </div>
         -->
+        <div class="tab-reservation-floor">
         <tabset justified="true">
-            <tab heading="Pendientes" active="tab.active" class="f-11">
+            <tab heading="Por llegar" active="tab.active">
 
-                <table class="table table-listado">
+                <table class="table-listado" cellpadding="0" cellspacing="0">
                 <thead>
                 <tr>
                   <th>Hora</th>
@@ -30,12 +31,12 @@
                         <td>Charly Parra</td>
                         <td>General</td>
                         <td>A15</td>
-                        <td>Espera</td>
+                        <td><div class="box-estado-res bg-green">Espera</div></td>
                     </tr>
                     <tr class="line-row">
                         <td colspan="5">
-                            <ul class="actions">
-                                <li class="dropdown" uib-dropdown="" style="">
+                            <ul class="actions p-0 m-0">
+                                <li class="dropdown" uib-dropdown="">
                                     <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="">Eleccion primera</a></li>
@@ -45,22 +46,22 @@
                                 <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
                                 <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
                                 <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                <li><a href=""><i class="zmdi zmdi-mail"></i></a></li>
-                                </ul>
-                        <td>Directo</td>
+                                <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
+                            </ul>
+                        <td><div class="box-estado-res">Directo</div></td>
                     </tr>
                     <tr>
-                        <td>08.30</td>
-                        <td>10</td>
-                        <td>Charly Parra</td>
+                        <td>12.30</td>
+                        <td>12</td>
+                        <td>Salma Hayek</td>
                         <td>General</td>
-                        <td>A15</td>
-                        <td>Reservado</td>
+                        <td>S/M</td>
+                        <td><div class="box-estado-res bg-orange">Reservado</div></td>
                     </tr>
                     <tr class="line-row">
                         <td colspan="5">
-                            <ul class="actions">
-                                <li class="dropdown" uib-dropdown="" style="">
+                            <ul class="actions p-0 m-0">
+                                <li class="dropdown" uib-dropdown="">
                                     <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="">Eleccion primera</a></li>
@@ -70,10 +71,11 @@
                                 <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
                                 <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
                                 <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                <li><a href=""><i class="zmdi zmdi-mail"></i></a></li>
-                                </ul>
-                        <td>WEB</td>
-                    </tr>  
+                                <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
+                            </ul>
+                        <td><div class="box-estado-res">Directo</div></td>
+                    </tr>
+                    
                 </tbody>
                 </table>
                 
@@ -92,7 +94,7 @@
                 </ul>
                 -->
             </tab>
-            <tab heading="En mesa" class="f-11">
+            <tab heading="Sentados">
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusSeated">
                         <div class="pull-right">
@@ -105,7 +107,7 @@
                     </li>
                 </ul>
             </tab>
-            <tab heading="Todos" class="f-11">
+            <tab heading="Todos">
                 <div class="listview lv-bordered lv-lg">
                  
                   <div class="lv-body">
@@ -131,3 +133,4 @@
                 </div>
             </tab>           
         </tabset>
+        </div>

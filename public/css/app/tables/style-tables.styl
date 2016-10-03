@@ -552,47 +552,144 @@ $background-tables-head = #eee
 	width 100%
 	& thead tr th
 		background #005581
-		color #fff
-	& thead > tr > th, & tbody > tr > td
+		color #fff		
+	& thead > tr > th, & tbody > tr > td, & tbody > tr:last-child >td
 		border-top 0
 		border-bottom 0
-		padding 4px
+		padding 2px 0px 2px 4px
+	& thead > tr > th
+		padding 4px 0px 4px 4px
 	& thead > tr, & tbody > tr
 		&.line-row
 			border-bottom 1px solid #767676
+			td > ul.actions > li > a
+				height 0px
+				padding 0px
+.box-estado-res
+	background #575757
+	width 90%
+	padding 1px 10px
+	text-align center
+	&.bg-green
+		background #4caf50
+	&.bg-orange
+		background #f5a600
+
+.btn-menu
+	margin-right 5px
+	border-radius 0px
 .btn-primary-nav
 	background-color #005581
 	padding-left 15px!important
 	padding-right 15px!important
 .btn-default-nav
 	background-color #575757
+.item-txt-time
+	margin-top -5px
+	& .yellow-time
+		color #e6c610
+	& .txt-time
+		margin-top -22px
+		display block
+		padding-left 22px
+.tab-menu-floor
+	li
+		background #575757
+		border-left 5px solid #424242
+		a
+			font-size 12px
+			color rgba(255,255,255,0.6)
+	//li:first-child
+	//	border-left none
+.tab-menu-floor:not(.tn-vertical) > li.active > a
+	color rgba(255,255,255,0.6)
+.tab-menu-floor:not(.tn-vertical) > li.active
+	background #005581
+	border-left 5px solid #424242
+//.tab-menu-floor:not(.tn-vertical) > li:first-child.active
+//	border-left none
+.tab-menu-floor:not(.tn-vertical):not([data-tab-color])>li>a:after
+	background none
+
+.tab-reservation-floor
+	margin-top -10px
+	& .tab-nav
+		li
+			background #575757
+			border-left 5px solid #424242
+			a
+				font-size 12px
+				color rgba(255,255,255,0.6)
+				padding 4px 0px
+	& .tab-nav:not(.tn-vertical) > li.active > a
+		color rgba(255,255,255,0.6)
+	& .tab-nav:not(.tn-vertical) > li.active
+		background #005581
+		border-left 5px solid #424242
+	& .tab-nav:not(.tn-vertical):not([data-tab-color])>li>a:after
+		background none
+	& .tab-content
+		padding-top 8px
+			
 	
-		
+ul.footer-floor
+	height 75px
+	list-style none
+	margin 0
+	padding 0
+	li
+		display inline-block
+		float left
+		padding 0
+		margin 0
+		& .people-information
+			margin 0
+			padding 0
+			li
+				list-style none
+				display inline-block
+				height 65px
+				padding 15px 10px
+				background #575757
+				color #edecec
+				margin 5px 2px
+				text-transform uppercase
+				i
+					font-size 1.8em
+				& .rounded
+					font-size 0.8em
+					width 10px
+					height 10px
+					background #424242
+					padding 4px
+					border-radius 48%
+					margin-left -4px
+		&.dropdown
+			& .select-todas
+				height 65px
+				background #575757
+				padding 15px 10px 0px 10px
+				margin 5px 2px 0px 2px
+				color #edecec
+				text-transform uppercase
+		&.num-people
+			width 400px
+			padding 0
+			margin 0
+			padding-left 10px
+		&.logotipo-footer
+			width 45px
+			height 70px
+			padding 8px 4px 4px 4px
+			margin 0px 6px
+			img
+				width 100%
 		
 li.divider
 	width 2px
 	background #575757
 	height 50px
-.people-information
-	margin 0
-	padding 0
-	li
-		list-style none
-		display inline-block
-		height 48px
-		padding 15px 10px
-		background #575757
-		color #edecec
-		i
-			font-size 1.8em
-		& .rounded
-			font-size 0.8em
-			width 10px
-			height 10px
-			background #424242
-			padding 4px
-			border-radius 48%
-			margin-left -4px
+
 
 	
 .load-parent
@@ -721,8 +818,8 @@ li.divider
 		background-color #605e5e
 
 .btn-space
-	margin-right 15px
-	margin-top 5px
+	margin-right 8px
+	margin-top 4px
 
 .tmn-counts-floor
 	position absolute
