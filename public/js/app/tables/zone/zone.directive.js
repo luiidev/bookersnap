@@ -13,6 +13,9 @@ angular.module('zone.directive', [])
 
     });
 
+    var draggableWidth = element.context.offsetWidth;
+    var parentWidth = angular.element('.lienzo').width();
+
     element.draggable({
       containment: "parent",
       grid: [10, 10],
@@ -20,12 +23,13 @@ angular.module('zone.directive', [])
         element.attr("top", ui.position.top);
         element.attr("left", ui.position.left);
 
+        console.log(parentWidth);
+
         //console.log("start " + angular.toJson(event, true));
         //element.draggable("disable");
       },
       start: function(event, ui) {
         //scope.onDragFn();
-
         angular.element('#lienzo').addClass('drag');
       },
       stop: function(event, ui) {
