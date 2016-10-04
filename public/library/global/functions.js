@@ -17,15 +17,28 @@ var obtenerIdMicrositio = function() {
 };
 
 var getDaysWeek = function() {
-    var days = [
-        { id: 0, label: 'Domingo' },
-        { id: 1, label: 'Lunes' },
-        { id: 2, label: 'Martes' },
-        { id: 3, label: 'Miercoles' },
-        { id: 4, label: 'Jueves' },
-        { id: 5, label: 'Viernes' },
-        { id: 6, label: 'Sabado' },
-    ];
+    var days = [{
+        id: 0,
+        label: 'Domingo'
+    }, {
+        id: 1,
+        label: 'Lunes'
+    }, {
+        id: 2,
+        label: 'Martes'
+    }, {
+        id: 3,
+        label: 'Miercoles'
+    }, {
+        id: 4,
+        label: 'Jueves'
+    }, {
+        id: 5,
+        label: 'Viernes'
+    }, {
+        id: 6,
+        label: 'Sabado'
+    }, ];
 
     return days;
 };
@@ -50,9 +63,13 @@ var uniqueArray = function(origArr) {
 };
 
 var getGender = function() {
-    var gender = [
-        { id: 'M', label: 'Masculino' },
-        { id: 'F', label: 'Femenino' },
+    var gender = [{
+            id: 'M',
+            label: 'Masculino'
+        }, {
+            id: 'F',
+            label: 'Femenino'
+        },
 
     ];
 
@@ -197,7 +214,7 @@ Date javascript
 --------*/
 
 var convertTextToDate = function(language, options, date = null) {
-    if (date != null) {
+    if (date !== null) {
         return new Date(date).toLocaleDateString(language, options);
     } else {
         return new Date().toLocaleDateString(language, options);
@@ -218,10 +235,10 @@ var defineTimeSytem = function(time) {
 var setearJsonError = function(jsonError) {
     var energy = jsonError.join("\n");
     return energy;
-}
+};
 
 var convertDateTo24Hour = function(timeStr) {
-    if (timeStr == undefined) {
+    if (timeStr === undefined) {
         return null;
     } else {
 
@@ -254,7 +271,7 @@ var getAsUriParameters = function(data) {
         url += encodeURIComponent(prop) + '=' +
             encodeURIComponent(data[prop]) + '&';
     }
-    return url.substring(0, url.length - 1)
+    return url.substring(0, url.length - 1);
 };
 
 var getDayText = function(index, option) {
@@ -305,9 +322,13 @@ message.error = function(title, text, time) {
 
 message.short = function(title, text, time, icon) {
     if (typeof text == "number") {
-        return this.show(title, "", icon, { timer: text });
+        return this.show(title, "", icon, {
+            timer: text
+        });
     } else if (typeof time == "number") {
-        return this.show(title, text, icon, { timer: time });
+        return this.show(title, text, icon, {
+            timer: time
+        });
     }
     return this.show(title, text, icon);
 };
@@ -371,14 +392,47 @@ var cleanString = function(cadena) {
     return cadena;
 };
 
-/*----- Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
-YYYY-MM-DD
------*/
-var convertFechaYYMMDD = function(fecha, idioma, options) {
-    var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
-    var arrayFecha = newFecha.split("/");
-
-    newFecha = arrayFecha[2] + "-" + arrayFecha[1] + "-" + arrayFecha[0];
-
-    return newFecha;
+/*-----
+Permite mostrar mensajes tipo alert, multiples.
+------*/
+var alertMultiple = function(title, text, type, icon) {
+    $.growl({
+        icon: icon,
+        title: title + " ",
+        message: text,
+        url: ''
+    }, {
+        element: 'body',
+        type: type,
+        allow_dismiss: true,
+        placement: {
+            from: 'top',
+            align: 'center'
+        },
+        offset: {
+            x: 20,
+            y: 85
+        },
+        spacing: 10,
+        z_index: 1031,
+        delay: 2500,
+        timer: 1000,
+        url_target: '_blank',
+        mouse_over: false,
+        /*animate: {
+            enter: animIn,
+            exit: animOut
+        },*/
+        icon_type: 'class',
+        template: '<div data-growl="container" class="alert" role="alert">' +
+            '<button type="button" class="close" data-growl="dismiss">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '<span class="sr-only">Close</span>' +
+            '</button>' +
+            '<span data-growl="icon"></span>' +
+            '<span data-growl="title"></span>' +
+            '<span data-growl="message"></span>' +
+            '<a href="#" data-growl="url"></a>' +
+            '</div>'
+    });
 };

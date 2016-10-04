@@ -157,6 +157,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
             data.top = position.y;
             data.left = position.x;
+            data.rotate_text = "top";
+            data.name = $scope.itemTables.length + 1;
 
             selectTableTypeDrop(data);
 
@@ -173,6 +175,10 @@ angular.module('zone.controller', ['ngDraggable'])
             $scope.selectedTable = false;
         };
 
+        $scope.rotateTextTable = function(option) {
+            ZoneLienzoFactory.changeRotationText(option, $scope.itemTables[$scope.indexTable]);
+        };
+
         $scope.changeShapeTable = function(shape) {
             $scope.itemTables[$scope.indexTable].shape = shape;
 
@@ -185,7 +191,8 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.editNameTable = function() {
-            $scope.itemTables[$scope.indexTable].name = angular.element("#name-table").val();
+            var texto = angular.element("#name-table").val();
+            ZoneLienzoFactory.changeNameTable($scope.itemTables[$scope.indexTable], $scope.itemTables, texto);
         };
 
         $scope.tableCapacity = function(option) {
