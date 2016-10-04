@@ -22,6 +22,9 @@ angular.module('reservation.service', [])
             deferred.resolve(guests);
             return deferred.promise;
         },
+        getTurns: function(date) {
+            return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
+        },
         getDurations: function() {
             var deferred = $q.defer();
 
@@ -33,7 +36,17 @@ angular.module('reservation.service', [])
                 date_ini.add(15, "minutes");
                 var duration = {};
                 duration.time = date_ini.format("HH:mm:ss");
-                duration.name = date_ini.format("H[hr] mm[min]");
+
+                if (date_ini.hour() > 0) {
+                    if (date_ini.minute() === 0) {
+                        duration.name = date_ini.format("H[hr]");
+                    } else {
+                        duration.name = date_ini.format("H[hr] mm[min]");
+                    }
+                } else {
+                    duration.name = date_ini.format("mm[min]");
+                }
+
                 durations.push(duration);
             }
 
