@@ -19,10 +19,17 @@ angular.module('zone.directive', [])
       drag: function(event, ui) {
         element.attr("top", ui.position.top);
         element.attr("left", ui.position.left);
+
+        //console.log("start " + angular.toJson(event, true));
+        //element.draggable("disable");
       },
-      start: function() {
+      start: function(event, ui) {
         //scope.onDragFn();
-        //angular.element('.item-drag-table').removeClass('selected-table');
+
+        angular.element('#lienzo').addClass('drag');
+      },
+      stop: function(event, ui) {
+        angular.element('#lienzo').removeClass('drag');
       }
     });
   }
