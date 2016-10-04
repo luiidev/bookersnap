@@ -2,9 +2,9 @@ angular.module('reservation.controller', [])
 .controller("reservationCtrl.Index", [function(){
 
 }])
-.controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "reservationScreenHelper",
-        "$stateParams", "reservationService", "reservationHelper",
-        function(vm, ZoneLienzoFactory, $window, screenHelper, $stateParams, service, helper){
+.controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams",
+    "reservationScreenHelper", "reservationService", "reservationHelper",
+        function(vm, ZoneLienzoFactory, $window, $stateParams, screenHelper, service, helper){
 
     vm.itemTables = [];
     vm.reservation = {};
@@ -53,7 +53,6 @@ angular.module('reservation.controller', [])
         service.getHours()
             .then(function(data) {
                 vm.hours = data.hours;
-                console.log(data);
                 vm.reservation.hour = data.default;
             }).catch(function(error) {
                 message.apiError(error);
@@ -69,8 +68,7 @@ angular.module('reservation.controller', [])
             }
         }
 
-        vm.itemTables = zones[zoneIndex].tables;
-        vm.zoneName = zones[zoneIndex].name;
+        setIndexZone(zoneIndex);
     };
 
     vm.prevZone = function() {
@@ -82,6 +80,10 @@ angular.module('reservation.controller', [])
             }
         }
 
+        setIndexZone(zoneIndex);
+    };
+
+    var setIndexZone = function(zoneIndex) {
         vm.itemTables = zones[zoneIndex].tables;
         vm.zoneName = zones[zoneIndex].name;
     };
@@ -91,7 +93,7 @@ angular.module('reservation.controller', [])
             var valid = moment(date , 'YYYY-MM-DD', true).isValid();
 
             if (!valid) {
-                return alert("Fecha invalida");
+                return alert("Fecha invalida no se puede cargar las zonas");
             }
 
             service.getZones(date)
@@ -100,6 +102,15 @@ angular.module('reservation.controller', [])
                 }).catch(function(error) {
                     message.apiError(error);
                 });
+
+            service.getTurns(date)
+                .then(function(response) {
+                    var turns = response.data.data;
+                    console.log(turns);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+            // listHours();
     };
 
     var loadTablesEdit = function(dataZones) {
@@ -127,7 +138,6 @@ angular.module('reservation.controller', [])
         listGuest();
         listStatuses();
         listDurations();
-        listHours();
 
         vm.size = screenHelper.size();
     })();
