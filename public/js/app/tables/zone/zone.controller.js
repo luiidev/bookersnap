@@ -225,6 +225,10 @@ angular.module('zone.controller', ['ngDraggable'])
             }
         };
 
+        $scope.draggableTable = function() {
+            console.log("draggableTable prueba");
+        };
+
         $scope.activarTableOptions = function(index, vthis) {
 
             $scope.selectedTable = true;
