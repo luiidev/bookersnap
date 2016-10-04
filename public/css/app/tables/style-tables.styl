@@ -199,6 +199,10 @@ $color_secundario = #616161
 			height 740px
 			overflow hidden
 			margin 0 auto
+			& .item-drag-cover
+				background-color #ccc
+				color black
+				font-weight bold
 	& .box-tables
 		padding-left 7px
 		padding-rigth 12px
@@ -624,6 +628,11 @@ $background-tables-head = #eee
 .btn-menu
 	margin-right 5px
 	border-radius 0px
+	padding 4px !important
+	white-space normal
+	min-height 50px
+	box-shadow none !important
+	font-weight bold
 .btn-primary-nav
 	background-color #005581
 	padding-left 15px!important
@@ -645,6 +654,7 @@ $background-tables-head = #eee
 		a
 			font-size 12px
 			color rgba(255,255,255,0.6)
+			font-weight bold
 	//li:first-child
 	//	border-left none
 .tab-menu-floor:not(.tn-vertical) > li.active > a
@@ -688,34 +698,43 @@ ul.footer-floor
 		float left
 		padding 0
 		margin 0
+		& .btn			
+			height 60px
+			margin-top 8px
+			padding 3px 5px
 		& .people-information
 			margin 0
 			padding 0
 			li
 				list-style none
 				display inline-block
-				height 65px
-				padding 15px 10px
+				height 50px
+				padding 6px 0px
+				width 120px
 				background #575757
 				color #edecec
-				margin 5px 2px
+				margin 13px 2px 0px 2px
 				text-transform uppercase
 				i
-					font-size 1.8em
+					font-size 2.6em
 				& .rounded
-					font-size 0.8em
-					width 10px
-					height 10px
+					font-size 0.9em
+					width 12px
+					height 12px
 					background #424242
 					padding 4px
 					border-radius 48%
 					margin-left -4px
+			&.info-guest
+				li
+					width 60px
 		&.dropdown
 			& .select-todas
-				height 65px
+				height 50px
+				width 80px
 				background #575757
-				padding 15px 10px 0px 10px
-				margin 5px 2px 0px 2px
+				padding 15px 0px
+				margin 13px 2px 0px 2px
 				color #edecec
 				text-transform uppercase
 		&.num-people
@@ -723,11 +742,33 @@ ul.footer-floor
 			padding 0
 			margin 0
 			padding-left 10px
+			& .btn
+				&.btn-default-grey
+					background-color #585858
+					color white
+					border-radius 10px
+					font-size 13px
+					text-transform none
+					padding-bottom 10px
+					padding-top 10px
+					padding-right 10px
+					padding-left 10px
+					&:hover
+						background-color #605e5e
+				& .tmn-counts-floor
+					position absolute
+					font-style normal
+					padding 1px 5px
+					border-radius 2px
+					right 7px
+					top 6px
+					font-size 10px
+					line-height 15px
 		&.logotipo-footer
 			width 45px
 			height 70px
 			padding 8px 4px 4px 4px
-			margin 0px 6px
+			margin 0px 25px 0px 6px
 			img
 				width 100%
 		
@@ -851,10 +892,9 @@ li.divider
 	padding-top 10px
 	padding-right 10px
 	padding-left 10px
-
-.btn-default-red
 	&:hover
 		background-color #f12929
+		color #fff
 		
 .btn-default-blue
 	background-color #01567f
@@ -866,41 +906,9 @@ li.divider
 	padding-top 10px
 	padding-right 10px
 	padding-left 10px
-
-.btn-default-blue
 	&:hover
 		background-color #0b618a
-
-		
-.btn-default-grey
-	background-color #585858
-	color white
-	border-radius 10px
-	font-size 13px
-	text-transform none
-	padding-bottom 10px
-	padding-top 10px
-	padding-right 10px
-	padding-left 10px
-
-.btn-default-grey
-	&:hover
-		background-color #605e5e
-
-.btn-space
-	margin-right 8px
-	margin-top 4px
-
-.tmn-counts-floor
-	position absolute
-	font-style normal
-	padding 1px 5px
-	border-radius 2px
-	right 7px
-	top 6px
-	font-size 10px
-	line-height 15px
-
+		color #fff
 .sin-borde
 	border-radius 0px
 
