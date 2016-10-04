@@ -33,9 +33,12 @@
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
                     <div class="lienzo-v2" id="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}" style="background: #CCC">
-                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size]" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-style="{top: obj.top, left: obj.left}" on-click-fn="func($index,this)" style="position: absolute;">
-                            <div class="table-label top">
+                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size]" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable($index, $event)" style="position: absolute;">
+                            <div class="table-label top" ng-click="$event.stopPropagation()">
                                 {{obj.name}}
+                            </div>
+                            <div class="item-drag-cover" ng-click="$event.stopPropagation()">
+                                {{ obj.minCover }}-{{ obj.maxCover }}
                             </div>
                         </div>
                     </div>
@@ -104,7 +107,7 @@
                                 <div class="col-xs-4">
                                     <div class="fg-line">
                                         <div class="select">
-                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name for hour in hours">
+                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours">
                                             </select>
                                         </div>
                                     </div>
@@ -143,9 +146,8 @@
                                 Mesas
                             </label>
                             <div class="col-xs-10">
-                                <label class="control-label" for="server">
-                                    11
-                                </label>
+                                <label class="control-label" for="server" ng-if="!tablesSelected">11</label>
+                                <label class="control-label p-r-5" for="server" ng-repeat="table in  reservation.tables">{{ table.name }}</label>
                                 <a class="a-title pull-right" href="#" style="padding-top: 7px">
                                     Sugerido
                                 </a>

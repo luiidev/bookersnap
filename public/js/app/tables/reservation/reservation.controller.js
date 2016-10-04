@@ -8,9 +8,23 @@ angular.module('reservation.controller', [])
 
     vm.itemTables = [];
     vm.reservation = {};
+    vm.reservation.tables = {};
+    vm.tablesSelected = 0;
     var zones = [];
     var zoneIndexMax = 0;
     var zoneIndex = 0;
+
+    vm.selectTable = function(i, evt) {
+        angular.element(evt.target).toggleClass("selected-table");
+
+        var exists = vm.reservation.tables.hasOwnProperty(i);
+        if ( exists ) {
+            delete vm.reservation.tables[i]; 
+        } else {
+            vm.reservation.tables[i] = {name: vm.itemTables[i].name};
+        }
+        vm.tablesSelected = Object.keys(vm.reservation.tables).length;
+    };
 
     var listServers = function() {
         service.getServers()
@@ -49,8 +63,8 @@ angular.module('reservation.controller', [])
             });
     };
 
-    var listHours = function() {
-        service.getHours()
+    var listHours = function(turns) {
+        service.getHours(turns)
             .then(function(data) {
                 vm.hours = data.hours;
                 vm.reservation.hour = data.default;
@@ -106,11 +120,11 @@ angular.module('reservation.controller', [])
             service.getTurns(date)
                 .then(function(response) {
                     var turns = response.data.data;
-                    console.log(turns);
+                    listHours(turns);
                 }).catch(function(error) {
                     message.apiError(error);
                 });
-            // listHours();
+
     };
 
     var loadTablesEdit = function(dataZones) {
