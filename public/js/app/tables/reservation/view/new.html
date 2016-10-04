@@ -7,13 +7,33 @@
     </aside>
     <section id="content">
         <div class="container w-100 p-section-reservation p-r-0">
+            <div class="reservation-content-header">
+                <div class="pull-left">
+                    <button class="btn bgm-bluegray" ng-click="prevZone()">
+                        <i class="zmdi zmdi-arrow-back">
+                        </i>
+                    </button>
+                    <button class="btn bgm-bluegray" ng-click="nextZone()">
+                        <i class="zmdi zmdi-arrow-forward">
+                        </i>
+                    </button>
+                    <label class="control-label">
+                        {{ zoneName }}
+                    </label>
+                </div>
+                <div class="pull-right">
+                    <button class="btn bgm-bluegray">
+                        Seleccionar todo
+                    </button>
+                    <button class="btn bgm-bluegray">
+                        Seleccionar niguno
+                    </button>
+                </div>
+            </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div class="lienzo-v2" id="lienzo" ng-click="onLienzo()" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}" style="background: #CCC">
-                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" left="{{obj.left}}" ng-class="[obj.shape, obj.size]" ng-drag="false" ng-drag-data="obj" ng-drag-table="" ng-repeat="obj in itemTables" on-click-fn="activarTableOptions($index,this)" rotate="{{obj.rotate}}" shape="{{obj.shape}}" size="{{obj.size}}" style="position: absolute;top:{{ obj.top }}%;left:{{obj.left}}%" top="{{obj.top}}">
-                            <!--                                 <div class="t-20-i">
-                                    {{obj.name}}
-                                </div> -->
+                    <div class="lienzo-v2" id="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}" style="background: #CCC">
+                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size]" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-style="{top: obj.top, left: obj.left}" on-click-fn="func($index,this)" style="position: absolute;">
                             <div class="table-label top">
                                 {{obj.name}}
                             </div>
@@ -35,76 +55,123 @@
                 Guardar
             </button>
         </div>
-        <div class="card-body card-padding">
-            <form class="row" role="form">
-                <div class="form-group">
-                    <div class="fg-line">
-                        <div class="select">
-                            <select class="form-control">
-                                <option>
-                                    Select an Option
-                                </option>
-                                <option>
-                                    Option 1
-                                </option>
-                                <option>
-                                    Option 2
-                                </option>
-                                <option>
-                                    Option 3
-                                </option>
-                                <option>
-                                    Option 4
-                                </option>
-                                <option>
-                                    Option 5
-                                </option>
-                            </select>
+        <div class="card-body">
+            <div class="card">
+                <form class="form-horizontal" role="form">
+                    <div class="card-body drag-border">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="status">
+                                Estado
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="status" ng-model="reservation.status_id" ng-options="status.id as status.name for status in statuses">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="covers">
+                                Invitados
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="covers" ng-model="reservation.covers" ng-options="cover.id as cover.name for cover in covers">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="date">
+                                Fecha
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <input class="form-control" id="date" ng-model="reservation.date" type="date">
+                                    </input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="border-right">
+                                <label class="col-xs-2 control-label" for="hour">
+                                    Hora
+                                </label>
+                                <div class="col-xs-4">
+                                    <div class="fg-line">
+                                        <div class="select">
+                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name for hour in hours">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="col-xs-2 control-label" for="duration">
+                                Duracion
+                            </label>
+                            <div class="col-xs-4">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="server">
+                                Mozo
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="server" ng-model="reservation.server_id" ng-options="server.id as server.name for server in servers">
+                                            <option selected="true" value="">
+                                                Ninguno
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="server">
+                                Mesas
+                            </label>
+                            <div class="col-xs-10">
+                                <label class="control-label" for="server">
+                                    11
+                                </label>
+                                <a class="a-title pull-right" href="#" style="padding-top: 7px">
+                                    Sugerido
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="fg-line">
+                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-7 control-label itext-left" for="server">
+                                Etiquetas de reservación
+                            </label>
+                            <div class="col-xs-5">
+                                <a class="pull-right" href="#" style="padding-top: 7px">
+                                    Editar Etiquetas
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-sm-12">
-            <div class="form-group fg-line">
-                <label class="sr-only" for="exampleInputPassword2">
-                    Password
-                </label>
-                <input class="form-control input-sm" id="exampleInputPassword2" placeholder="Password" type="password">
-                </input>
+                </form>
             </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="form-group fg-line">
-                <label class="sr-only" for="exampleInputPassword2">
-                    Password
-                </label>
-                <input class="form-control input-sm" id="exampleInputPassword2" placeholder="Password" type="password">
-                </input>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="form-group fg-line">
-                <label class="sr-only" for="exampleInputPassword2">
-                    Password
-                </label>
-                <input class="form-control input-sm" id="exampleInputPassword2" placeholder="Password" type="password">
-                </input>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="form-group fg-line">
-                <label class="sr-only" for="exampleInputPassword2">
-                    Password
-                </label>
-                <input class="form-control input-sm" id="exampleInputPassword2" placeholder="Password" type="password">
-                </input>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <button class="btn btn-primary btn-sm m-t-5" type="submit">
-                Sign in
-            </button>
         </div>
     </div>
 </section>

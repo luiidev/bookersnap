@@ -2,80 +2,117 @@ angular.module('reservation.controller', [])
 .controller("reservationCtrl.Index", [function(){
 
 }])
-.controller("reservationCtrl.Store", ["$scope", "ZoneFactory", "TableFactory", "ZoneLienzoFactory", "$window", "screenHelper",
-        function(vm, ZoneFactory, TableFactory, ZoneLienzoFactory, $window, screenHelper){
+.controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "reservationScreenHelper",
+        "$stateParams", "reservationService", "reservationHelper",
+        function(vm, ZoneLienzoFactory, $window, screenHelper, $stateParams, service, helper){
 
     vm.itemTables = [];
+    vm.reservation = {};
+    var zones = [];
+    var zoneIndexMax = 0;
+    var zoneIndex = 0;
 
-    vm.headerZone = {
-        tables: 0,
-        minCovers: 0,
-        maxCovers: 0
-    };
-
-    var updateHeaderZone = function() {
-        ZoneLienzoFactory.updateHeaderZone(vm.headerZone, vm.itemTables);
-
-        angular.forEach(vm.itemTables, function(item, i){
-            console.log(item);
-                item.left = (parseInt(item.left)  / screenHelper.minSize() ) * 100;
-                item.top = (parseInt(item.top) / screenHelper.minSize()) * 100;
-                item.size += "-relative";
-        });
-    };
-
-    var detectedForm = function() {
-        // if ($stateParams.id !== undefined) {
-
-            vm.typeForm = "edit";
-
-            // loadingShow($ionicLoading, "Cargando información ...");
-
-            var id = 1;
-
-            ZoneFactory.getZone(id).success(function(zone) {
-                // loadingHide($ionicLoading);
-
-                // console.log(zone);|
-                // angular.element("#zone_name").val(zone.data.name);
-                loadTablesEdit(zone.data.tables);
-
-            }).error(function(response) {
-                console.log("fail");
-                // loadingHide($ionicLoading);
-                message.apiError(response);
-
+    var listServers = function() {
+        service.getServers()
+            .then(function(response) {
+                vm.servers = response.data.data;
+            }).catch(function(error) {
+                message.apiError(error);
             });
-        // }
     };
 
-    var loadTablesEdit = function(tables) {
+    var listGuest = function() {
+        service.getGuest()
+            .then(function(guests) {
+                vm.covers = guests;
+                vm.reservation.covers = 2;
+            });
+    };
 
-        angular.forEach(tables, function(data) {
+    var listStatuses = function() {
+        service.getStatuses()
+            .then(function(response) {
+                vm.statuses = response.data.data;
+                if (vm.statuses.length) vm.reservation.status_id = vm.statuses[0].id;
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+    };
 
-            var position = data.config_position.split(",");
-            var dataTable = {
-                name: data.name,
-                minCover: data.min_cover,
-                maxCover: data.max_cover,
-                left: position[0],
-                top: position[1],
-                shape: TableFactory.getLabelShape(data.config_forme),
-                size: TableFactory.getLabelSize(data.config_size),
-                rotate: data.config_rotation,
-                id: data.id,
-                status: data.status
-            };
+    var listDurations = function() {
+        service.getDurations()
+            .then(function(durations) {
+                vm.durations = durations;
+               vm.reservation.duration = "01:30:00";
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+    };
 
-            if (data.status == 1) {
-                vm.itemTables.push(dataTable);
+    var listHours = function() {
+        service.getHours()
+            .then(function(data) {
+                vm.hours = data.hours;
+                console.log(data);
+                vm.reservation.hour = data.default;
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+    };
+
+    vm.nextZone = function() {
+        if (zoneIndexMax >= 0){
+            if (zoneIndex + 1 > zoneIndexMax) {
+                zoneIndex = 0;
             } else {
-                vm.itemTablesDeleted.push(dataTable);
+                zoneIndex++;
+            }
+        }
+
+        vm.itemTables = zones[zoneIndex].tables;
+        vm.zoneName = zones[zoneIndex].name;
+    };
+
+    vm.prevZone = function() {
+        if (zoneIndexMax >= 0){
+            if (zoneIndex - 1 >= 0) {
+                zoneIndex --;
+            } else {
+                zoneIndex = zoneIndexMax ;
+            }
+        }
+
+        vm.itemTables = zones[zoneIndex].tables;
+        vm.zoneName = zones[zoneIndex].name;
+    };
+
+    var loadZones = function() {
+            var date = $stateParams.date;
+            var valid = moment(date , 'YYYY-MM-DD', true).isValid();
+
+            if (!valid) {
+                return alert("Fecha invalida");
             }
 
-        });
+            service.getZones(date)
+                .then(function(response) {
+                    loadTablesEdit(response.data.data.zones);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+    };
 
-        updateHeaderZone();
+    var loadTablesEdit = function(dataZones) {
+        zones = helper.loadTable(dataZones);
+        zoneIndexMax =  zones.length - 1;
+        defaultView();
+    };
+
+    var defaultView = function() {
+        if (zoneIndexMax >= 0) {
+            vm.itemTables = zones[0].tables;
+            vm.zoneName = zones[0].name;
+        }
     };
 
     angular.element($window).bind('resize', function(){
@@ -85,7 +122,12 @@ angular.module('reservation.controller', [])
     });
 
     (function Init(){
-        detectedForm();
+        loadZones();
+        listServers();
+        listGuest();
+        listStatuses();
+        listDurations();
+        listHours();
 
         vm.size = screenHelper.size();
     })();

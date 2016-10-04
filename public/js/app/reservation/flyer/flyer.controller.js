@@ -1,6 +1,6 @@
 angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.directives'])
 .controller('FlyerAddCtrl', function($scope,$state,$stateParams,Upload,FlyerFactory,ApiUrlReservation, $http, AppBookersnap,UrlGeneral, UrlRepository) {
- 	
+
   $scope.titulo="Diseñar Flyer";
   $scope.textFlyer=[];
   $scope.textActive=false;
@@ -46,13 +46,12 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
       *  False = Create 
       */
       if(response.success){
-
+        console.log(response.success);
         $scope.existFlyer = response.success;
         $scope.existeFlyer=true; // Si la imagen esta cargada es TRUE
         angular.forEach(response.data.flyerlabel, function(data,index){
 
           var coordenada = data.coodinates.split(",");
-
           var texto={
           label: {
                   label_id:data.flyer_label_id,
@@ -71,8 +70,9 @@ angular.module('flyer.controller', ['ngFileUpload','farbtastic','localytics.dire
 
          /** CARGA DE IMAGEN A LA VISTA **/
         $scope.coleccion = {
-         fileimg:UrlRepository + '/flyer/' + response.data.image,
+         fileimg: UrlRepository + '/flyer/' + response.data.image,
         }
+        
 
         var handleFileSelect=function(evt) {
                var file=evt.currentTarget.files[0];
