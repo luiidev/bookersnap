@@ -4,27 +4,24 @@
         <nav class="ha-menu">
             <ul>
                 <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <button  class="btn {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
+                    <button class="btn btn-menu {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
                         {{tab.name}}
                     </button>
                 </li>
-                <li class="dropdown open {{ vm.flagSelectedZone > 4 ? 'active': ''}}" uib-dropdown=""  >
-                    <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true">+</div>
+                <li class="dropdown open" uib-dropdown="">
+                    
+                    <button type="button" class="btn btn-menu dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                            ...
+                            <span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu">
                         <li ng-repeat="tab in vm.zonas" ng-if="$index >= 4">
                         <a data-ng-click="vm.tabSelectedZone($index)">{{tab.name}}</a></li>
                     </ul>
                 </li>
-                <li class="divider"></li>
-                <li>
-                    <ul class="people-information">
-                        <li><i class="zmdi zmdi-male-alt"></i> <span class="rounded">18</span></li>
-                        <li><i class="zmdi zmdi-female"></i> <span class="rounded">20</span></li>
-                        <li><i class="zmdi zmdi-face"></i> <span class="rounded">10</span></li>
-                    </ul>
-                </li>
-                <li class="dropdown open pull-right" uib-dropdown="">
-                    <div class="waves-effect dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true"><i class="zmdi zmdi-time"></i> Tiempo</div>
+
+                <li class="dropdown open pull-right p-section-right p-t-0" uib-dropdown="">
+                    <div class="waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true"><i class="zmdi zmdi-time zmdi-hc-2x yellow-time"></i><span class="txt-time">&nbsp;Tiempo <span class="caret"></span></span></div>
                     <ul class="dropdown-menu">
                         <li><a>Ocultar tiempo</a></li>
                         <li><a>Tiempo sentado</a></li>

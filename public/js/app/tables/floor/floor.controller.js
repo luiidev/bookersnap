@@ -55,6 +55,20 @@ angular.module('floor.controller', [])
 
         };
 
+        vm.menuFloor = [{
+            id: 0,
+            name: 'Reservaciones',
+            url: 'mesas.floor.reservation'
+        }, {
+            id: 1,
+            name: 'Lista de espera',
+            url: 'mesas.floor.walkin'
+        }, {
+            id: 2,
+            name: 'Servidores',
+            url: 'mesas.floor.server'
+        }];
+
 
     })
     .controller('DetailInstanceCtrl', function($scope, $modalInstance, content, FloorFactory) {

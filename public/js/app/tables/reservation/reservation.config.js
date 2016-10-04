@@ -1,5 +1,6 @@
 angular.module('reservation.app', ['reservation.controller', 'reservation.service'])
-.constant("screenSize", {minSize: 740, header: 70, menu: 400})
+.constant("screenSize", {minSize: 740, header: 110, menu: 400})
+.constant("quantityGuest", 100)
 .config(function($stateProvider) {
 
     $stateProvider
