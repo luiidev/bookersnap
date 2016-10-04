@@ -117,7 +117,8 @@ angular.module('reservation.service', [])
                     size: size,
                     rotate: data.config_rotation,
                     id: data.id,
-                    status: data.status
+                    status: data.status,
+                    suggested: false
                 };
 
                 if (data.status == 1) {
