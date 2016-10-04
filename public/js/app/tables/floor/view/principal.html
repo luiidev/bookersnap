@@ -4,13 +4,14 @@
         <nav class="ha-menu">
             <ul>
                 <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <button class="btn btn-menu {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
+                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
                         {{tab.name}}
                     </button>
                 </li>
-                <li class="dropdown open" uib-dropdown="">
-                    
-                    <button type="button" class="btn btn-menu dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+
+
+                <li class="dropdown" uib-dropdown="" > 
+                    <button type="button" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
                             ...
                             <span class="caret"></span>
                     </button>
