@@ -38,8 +38,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			days: []
 		};
 
-		console.log($state);
-
 		$scope.dayHide = false;
 
 		$scope.days = [];
@@ -162,8 +160,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		var getTypeTurns = function() {
 			TypeTurnFactory.getTypeTurns().success(function(data) {
 
-				$scope.typeTurns.data = data;
-				$scope.turnForm.type_turn = data[0];
+				$scope.typeTurns.data = data.data;
+				$scope.turnForm.type_turn = data.data[0];
 
 			}).error(function(data, status, headers) {
 				messageErrorApi(data, "Error", "warning");

@@ -18,25 +18,25 @@ var obtenerIdMicrositio = function() {
 
 var getDaysWeek = function() {
     var days = [{
-        id: 0,
+        id: 1,
         label: 'Domingo'
     }, {
-        id: 1,
+        id: 2,
         label: 'Lunes'
     }, {
-        id: 2,
+        id: 3,
         label: 'Martes'
     }, {
-        id: 3,
+        id: 4,
         label: 'Miercoles'
     }, {
-        id: 4,
+        id: 5,
         label: 'Jueves'
     }, {
-        id: 5,
+        id: 6,
         label: 'Viernes'
     }, {
-        id: 6,
+        id: 7,
         label: 'Sabado'
     }, ];
 

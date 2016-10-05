@@ -348,7 +348,7 @@ angular.module('turn.service', [])
 			activeCheckDays: function(days) {
 				var daysData = [];
 
-				for (var i = 0; i <= 6; i++) {
+				for (var i = 1; i <= 7; i++) {
 					var checked = (days.indexOf(i) != -1) ? true : false;
 					daysData.push({
 						id: i,

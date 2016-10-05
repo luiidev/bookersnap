@@ -10,17 +10,17 @@
                 </th>
                 <th class="text-center">
                     Mesas
-                    <span class="f-10" ng-bind="zones.numTablesActive">
+                    <span class="f-10" ng-bind="zones.numTablesInactive">
                     </span>
                 </th>
                 <th class="text-center">
                     Min covers
-                    <span class="f-10" ng-bind="zones.minCoversActive">
+                    <span class="f-10" ng-bind="zones.minCoversInactive">
                     </span>
                 </th>
                 <th class="text-center">
                     Max covers
-                    <span class="f-10" ng-bind="zones.maxCoversActive">
+                    <span class="f-10" ng-bind="zones.maxCoversInactive">
                     </span>
                 </th>
                 <th>
@@ -41,13 +41,13 @@
                 <td>
                     {{ item.name }}
                 </td>
-                <td>
+                <td class="text-center">
                     {{ item.tables_count }}
                 </td>
-                <td>
+                <td class="text-center">
                     {{ item.min_covers }}
                 </td>
-                <td>
+                <td class="text-center">
                     {{ item.max_covers }}
                 </td>
                 <td>
