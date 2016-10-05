@@ -1,68 +1,65 @@
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
 <section id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
-    <section id="content">
-        <div class="container">
-
-            <div class="block-header" style="padding-bottom: 15px">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <section class="w-100 p-0" id="content">
+        <div class="container m-t-15">
+            <div class="block-header">
                 <ul class="actions">
                     <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">Cancelar</button>
+                        <button class="btn btn-default waves-effect" onclick="historyBack()">
+                            Cancelar
+                        </button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="guest.create">Agregar Huésped</button>
-                        
+                        <button class="btn btn-primary waves-effect" data-ui-sref="mesas.guest.create">
+                            Agregar Huésped
+                        </button>
                     </li>
                 </ul>
             </div>
-
-      		<div class="card m-b-0" id="messages-main">
-
+            <div class="card m-b-0" id="messages-main">
                 <div class="ms-menu" data-ng-class="{ 'toggled': mactrl.lvMenuStat }">
-            
                     <div class="ms-block">
-                 
                         <div class="fg-line">
-                            <input type="text" class="form-control" ng-model="vm.name" placeholder="Nombre">
+                            <input class="form-control" ng-model="vm.name" placeholder="Nombre" type="text">
+                            </input>
                         </div>
-                    
                     </div>
-
                     <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
-                  
                         <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
-                            <a href="" ui-sref="guest.view({ guest : '{{item.id}}'})">
-                                <div class="lv-avatar bgm-orange pull-left">m</div>
+                            <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
+                                <div class="lv-avatar bgm-orange pull-left">
+                                    m
+                                </div>
                                 <div class="media-body">
-                                    <div class="lv-title">{{ item.first_name }}</div>
-                                    <div class="lv-small">{{ item.contact }}</div>
+                                    <div class="lv-title">
+                                        {{ item.first_name }}
+                                    </div>
+                                    <div class="lv-small">
+                                        {{ item.contact }}
+                                    </div>
                                 </div>
                             </a>
-                        
                         </div>
-
                     </div>
                 </div>
- 
                 <div class="ms-body">
-
                     <div class="listview lv-message">
-                      
                         <div class="lv-body" style="min-height: 600px">
-                             <data ui-view></data>
+                            <data ui-view="">
+                            </data>
                         </div>
-                        
-                        <div class="clearfix"></div>
-
+                        <div class="clearfix">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </section>
-
-<footer id="footer" data-ng-include="'/template/footer.html'"></footer>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>

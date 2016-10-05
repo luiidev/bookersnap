@@ -34,7 +34,6 @@ angular.module('zone.directive', [])
         var eLabel = angular.element(element.context);
         var eTextRotate = eLabel.context.lastElementChild.classList[1];
 
-        console.log(draggableRight);
         //Left
 
         if (draggableRight >= parentWidth && eRotate == "0") {

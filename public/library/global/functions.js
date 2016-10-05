@@ -18,25 +18,25 @@ var obtenerIdMicrositio = function() {
 
 var getDaysWeek = function() {
     var days = [{
-        id: 0,
+        id: 1,
         label: 'Domingo'
     }, {
-        id: 1,
+        id: 2,
         label: 'Lunes'
     }, {
-        id: 2,
+        id: 3,
         label: 'Martes'
     }, {
-        id: 3,
+        id: 4,
         label: 'Miercoles'
     }, {
-        id: 4,
+        id: 5,
         label: 'Jueves'
     }, {
-        id: 5,
+        id: 6,
         label: 'Viernes'
     }, {
-        id: 6,
+        id: 7,
         label: 'Sabado'
     }, ];
 
@@ -440,4 +440,22 @@ var alertMultiple = function(title, text, type, icon) {
             '<a href="#" data-growl="url"></a>' +
             '</div>'
     });
+};
+
+/*
+Recibe los parametros de angular cuando devuelve un error de api, con esta funcion devolvemos en un objeto al controlador con la promesa
+usarlo para todas las funciones que devuelven : error api
+ */
+var jsonErrorData = function(data, status, headers) {
+    var response = {
+        data: data,
+        status: status,
+        headers: headers
+    };
+    return response;
+};
+
+var convertFechaToDate = function(date) {
+    var fecha = new Date(date + " 00:00:00");
+    return fecha;
 };
