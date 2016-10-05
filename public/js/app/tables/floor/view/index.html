@@ -9,7 +9,7 @@
         </div>
     </section>
 </section>
-<footer id="footer" data-ng-include="'/template/footer-tables.html'"></footer>
+<footer id="footer" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'"></footer>
 <section class="section-right-floor">
     <div ui-view="tabReservaciones"></div>
 </section>
@@ -43,6 +43,17 @@
     <div class="modal-footer">
         <div class="text-center">
             <button class="btn btn-warning" ng-click="cancel()">Cerrar</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="modalConfiguration.html">
+    <div class="modal-body">
+        <div>No preguntar de nuevo por configuracion</div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-warning" ng-click="vmc.cancel()">Cerrar</button>
         </div>
     </div>
 </script>
