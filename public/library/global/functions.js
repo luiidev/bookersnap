@@ -441,3 +441,21 @@ var alertMultiple = function(title, text, type, icon) {
             '</div>'
     });
 };
+
+/*
+Recibe los parametros de angular cuando devuelve un error de api, con esta funcion devolvemos en un objeto al controlador con la promesa
+usarlo para todas las funciones que devuelven : error api
+ */
+var jsonErrorData = function(data, status, headers) {
+    var response = {
+        data: data,
+        status: status,
+        headers: headers
+    };
+    return response;
+};
+
+var convertFechaToDate = function(date) {
+    var fecha = new Date(date + " 00:00:00");
+    return fecha;
+};

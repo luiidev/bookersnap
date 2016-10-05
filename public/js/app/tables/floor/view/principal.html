@@ -41,7 +41,7 @@
     <div ng-repeat="tab in vm.zonas" ng-if="vm.flagSelectedZone==$index" >
             <div style=" background: #eee; width: 100%; text-align: center;">
             <div class="zoneArea" style="position:relative; ">
-                <div class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}} bg-white" color="{{obj.color}}" id="el{{obj.id}}" ng-detail-table="" ng-repeat="obj in tab.table" on-click-fn="vm.mostrarDetail($index,obj)" x="{{obj.left}}" y="{{obj.top}}">
+                <div class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}} bg-white" color="{{obj.color}}" id="el{{obj.id}}" ng-detail-table="" ng-repeat="obj in tab.table" on-click-fn="vm.mostrarDetail($index,obj)" x="{{obj.left}}" y="{{obj.top}}" on-dropped-fn="vm.handConfiguration()">
                     <div class="txtcenter">
                         <div class="name-table">
                             {{obj.name}}

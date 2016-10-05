@@ -22,19 +22,24 @@ angular.module('floor.directive', [])
                 none: 'none',
             });
 
+            element.droppable({
+                accept: ".listado-column",
+                drop: function(event, ui) {
+                    scope.onDroppedFn();
+                }
+            });
 
             element.on('click', function(event) {
-
                 event.preventDefault();
                 scope.onClickFn();
-
             });
         }
 
         return {
             link: makeSelectTable,
             scope: {
-                onClickFn: '&'
+                onClickFn: '&',
+                onDroppedFn: '&'
             }
         };
 
@@ -68,6 +73,22 @@ angular.module('floor.directive', [])
             scope: {
                 onClickFn: '&'
             }
+        };
+
+    })
+    .directive('ngDragNumPeople', function() {
+
+        function makeDraggable(scope, element, attr) {
+            element.draggable({
+                helper: "clone",
+                drag: function(event, ui) {
+                    //console.log(ui.position.left);
+                }
+            });
+        }
+
+        return {
+            link: makeDraggable,
         };
 
     });

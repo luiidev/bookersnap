@@ -55,20 +55,26 @@ angular.module('floor.controller', [])
 
         };
 
-        vm.menuFloor = [{
-            id: 0,
-            name: 'Reservaciones',
-            url: 'mesas.floor.reservation'
-        }, {
-            id: 1,
-            name: 'Lista de espera',
-            url: 'mesas.floor.walkin'
-        }, {
-            id: 2,
-            name: 'Servidores',
-            url: 'mesas.floor.server'
-        }];
+        vm.handConfiguration = function() {
+            //alert('Added from controller');
+            modalInstancesConfiguration();
+        };
 
+        function modalInstancesConfiguration() {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'modalConfiguration.html',
+                controller: 'ConfigurationInstanceCtrl',
+                controllerAs: 'vmc',
+                size: 'lg',
+            });
+        }
+
+    })
+    .controller('ConfigurationInstanceCtrl', function($modalInstance) {
+        var vmc = this;
+        vmc.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
 
     })
     .controller('DetailInstanceCtrl', function($scope, $modalInstance, content, FloorFactory) {
