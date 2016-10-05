@@ -45,14 +45,6 @@ angular.module('turn.service', [])
 			}
 		};
 	})
-	.factory('DateFactory', function($http, $filter) {
-
-		return {
-			timeFormat: function(time) {
-				return $filter('date')(time, 'HH:mm:ss');
-			}
-		};
-	})
 	.factory('TurnFactory', function(TurnDataFactory, DateFactory, ZoneFactory, BookDateFactory, $q) {
 
 		return {
@@ -79,7 +71,12 @@ angular.module('turn.service', [])
 					defered.resolve(vTurns);
 
 				}).error(function(data, status, headers) {
-					defered.reject(data);
+					var response = {
+						data: data,
+						status: status,
+						headers: headers
+					};
+					defered.reject(response);
 				});
 
 				return defered.promise;

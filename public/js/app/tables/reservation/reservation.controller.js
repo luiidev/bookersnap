@@ -6,11 +6,78 @@ angular.module('reservation.controller', [])
     "reservationScreenHelper", "reservationService", "reservationHelper",
         function(vm, ZoneLienzoFactory, $window, $stateParams, screenHelper, service, helper){
 
-    vm.itemTables = [];
     vm.reservation = {};
-    var zones = [];
+    vm.reservation.tables = {};
+    vm.tablesSelected = 0;
+    vm.conflicts = [];
+    vm.zones = [];
+    vm.zoneIndex = 0;
+    vm.tableSuggested = "";
     var zoneIndexMax = 0;
-    var zoneIndex = 0;
+
+    vm.selectTableAllOrNone = function(indicator) {
+        vm.reservation.tables = {};
+        if (indicator == "all") {
+            angular.element($( '.item-drag-table' )).addClass("selected-table");
+            angular.forEach(vm.zones, function(zone) {
+                angular.forEach(zone.tables, function(table) {
+                    var access = {};
+                    access.name = table.name;
+                    access.min = table.minCover;
+                    access.max = table.maxCover;
+                    vm.reservation.tables[table.id] = access;
+                });
+            });
+            alertConflicts();
+            vm.tablesSelected = Object.keys(vm.reservation.tables).length;
+        } else if (indicator == "none") {
+            angular.element($( '.item-drag-table' )).removeClass("selected-table");
+            alertConflicts();
+        }
+    };
+
+    var alertConflicts = function() {
+        vm.conflicts = [];
+        angular.forEach(vm.reservation.tables, function(table, i) {
+            if (vm.reservation.covers < table.min) {
+                vm.conflicts.push(angular.copy(table));
+            }
+        });
+    };
+
+    vm.selectTable = function(table, index, evt) {
+        angular.element(evt.target).toggleClass("selected-table");
+
+        var exists = vm.reservation.tables.hasOwnProperty(table.id);
+        if ( exists ) {
+            delete vm.reservation.tables[table.id];
+        } else {
+            var access = {};
+            access.name = table.name;
+            access.min = table.minCover;
+            access.max = table.maxCover;
+            vm.reservation.tables[table.id] = access;
+        }
+        alertConflicts();
+        vm.tablesSelected = Object.keys(vm.reservation.tables).length;
+    };
+
+    vm.tablesSuggested = function(cant){
+        var SuggestedEstablished = false;
+        angular.forEach(vm.zones, function(zone) {
+            angular.forEach(zone.tables, function(table) {
+                if (cant >= table.minCover && cant <= table.maxCover) {
+                    if (!SuggestedEstablished) {
+                        vm.tableSuggested = table.name;
+                        SuggestedEstablished = true;
+                    }
+                    table.suggested = true;
+                } else {
+                    table.suggested = false;
+                }
+            });
+        });
+    };
 
     var listServers = function() {
         service.getServers()
@@ -26,6 +93,7 @@ angular.module('reservation.controller', [])
             .then(function(guests) {
                 vm.covers = guests;
                 vm.reservation.covers = 2;
+                vm.tablesSuggested(vm.reservation.covers);
             });
     };
 
@@ -49,8 +117,8 @@ angular.module('reservation.controller', [])
             });
     };
 
-    var listHours = function() {
-        service.getHours()
+    var listHours = function(turns) {
+        service.getHours(turns)
             .then(function(data) {
                 vm.hours = data.hours;
                 vm.reservation.hour = data.default;
@@ -61,31 +129,22 @@ angular.module('reservation.controller', [])
 
     vm.nextZone = function() {
         if (zoneIndexMax >= 0){
-            if (zoneIndex + 1 > zoneIndexMax) {
-                zoneIndex = 0;
+            if (vm.zoneIndex + 1 > zoneIndexMax) {
+                vm.zoneIndex = 0;
             } else {
-                zoneIndex++;
+                vm.zoneIndex++;
             }
         }
-
-        setIndexZone(zoneIndex);
     };
 
     vm.prevZone = function() {
         if (zoneIndexMax >= 0){
-            if (zoneIndex - 1 >= 0) {
-                zoneIndex --;
+            if (vm.zoneIndex - 1 >= 0) {
+                vm.zoneIndex --;
             } else {
-                zoneIndex = zoneIndexMax ;
+                vm.zoneIndex = zoneIndexMax ;
             }
         }
-
-        setIndexZone(zoneIndex);
-    };
-
-    var setIndexZone = function(zoneIndex) {
-        vm.itemTables = zones[zoneIndex].tables;
-        vm.zoneName = zones[zoneIndex].name;
     };
 
     var loadZones = function() {
@@ -101,28 +160,33 @@ angular.module('reservation.controller', [])
                     loadTablesEdit(response.data.data.zones);
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    listGuest();
+                    listServers();
+                    listStatuses();
                 });
 
             service.getTurns(date)
                 .then(function(response) {
                     var turns = response.data.data;
-                    console.log(turns);
+                    listHours(turns);
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    listDurations();
                 });
-            // listHours();
+
     };
 
     var loadTablesEdit = function(dataZones) {
-        zones = helper.loadTable(dataZones);
-        zoneIndexMax =  zones.length - 1;
+        vm.zones = helper.loadTable(dataZones);
         defaultView();
     };
 
     var defaultView = function() {
+        zoneIndexMax =  vm.zones.length - 1;
         if (zoneIndexMax >= 0) {
-            vm.itemTables = zones[0].tables;
-            vm.zoneName = zones[0].name;
+            vm.zoneName = vm.zones[0].name;
         }
     };
 
@@ -132,12 +196,8 @@ angular.module('reservation.controller', [])
         vm.$digest();
     });
 
-    (function Init(){
+    (function Init() {
         loadZones();
-        listServers();
-        listGuest();
-        listStatuses();
-        listDurations();
 
         vm.size = screenHelper.size();
     })();

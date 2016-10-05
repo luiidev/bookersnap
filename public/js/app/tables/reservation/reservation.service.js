@@ -2,14 +2,17 @@ angular.module('reservation.service', [])
 .factory("reservationService", ["$http", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
      function(http, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
     return {
-        getZones: function(date, options) {
-            return http.get(ApiUrlMesas + "/calendar/" + date + "/zones?" + options);
+        getZones: function(date) {
+            return http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
         },
         getServers: function() {
             return http.get(ApiUrlMesas + "/servers");
         },
         getStatuses: function() {
             return http.get(ApiUrlRoot + "/reservation/status");
+        },
+        getTurns: function(date) {
+            return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
         },
         getGuest: function() {
             var deferred = $q.defer();
@@ -21,9 +24,6 @@ angular.module('reservation.service', [])
             }
             deferred.resolve(guests);
             return deferred.promise;
-        },
-        getTurns: function(date) {
-            return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
         },
         getDurations: function() {
             var deferred = $q.defer();
@@ -53,27 +53,40 @@ angular.module('reservation.service', [])
             deferred.resolve(durations);
             return deferred.promise;
         },
-        getHours: function() {
+        getHours: function(turns) {
             var deferred = $q.defer();
 
             var hours = [];
             var timeDefault  = "";
             var data = {};
 
-            var date_ini = moment("2000-01-01 07:00:00");
+            var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0);
+            var timeDefaultIsEstablished = false;
 
-            var now = moment();
-            var addMinute = 15 - (parseInt(now.format("mm")) % 15);
-            now.add(addMinute, "minutes");
-            timeDefault = now.format("HH:mm:00");
+            angular.forEach(turns, function(item){
+                    if (item.turn !== null) {
+                        var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
+                        var date_end = moment(item.turn.hours_end, "HH:mm:ss");
+                        for (var i = 1; i < 96; i++) {
+                               date_ini.add(15, "minutes");
+                               var hour = {};
 
-            for (var i = 1; i < 53; i++) {
-                date_ini.add(15, "minutes");
-                var hour = {};
-                hour.time = date_ini.format("HH:mm:ss");
-                hour.name = date_ini.format("H:mmA");
-                hours.push(hour);
-            }
+                               hour.turn = item.name;
+                               hour.time = date_ini.format("HH:mm:ss");
+                               hour.name = date_ini.format("H:mmA");
+                               hours.push(hour);
+
+                               if (!timeDefaultIsEstablished) {
+                                    if (date_ini.isAfter(now)) {
+                                        timeDefault = hour.time;
+                                        timeDefaultIsEstablished = true;
+                                    }
+                               }
+
+                               if (date_ini.isSame(date_end)) break;
+                        }
+                    }
+            });
 
             data.hours = hours;
             data.default = timeDefault;
@@ -104,7 +117,8 @@ angular.module('reservation.service', [])
                     size: size,
                     rotate: data.config_rotation,
                     id: data.id,
-                    status: data.status
+                    status: data.status,
+                    suggested: false
                 };
 
                 if (data.status == 1) {
