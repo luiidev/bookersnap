@@ -22,7 +22,7 @@
                 <div class="box-lienzo-zone-v2">
                     <div id="lienzo" class="lienzo-v2" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}"
                         ng-repeat="zone in zones" ng-show="$index == zoneIndex">
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
                                 <div class="table-label top" ng-click="$event.stopPropagation()">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-click="$event.stopPropagation()" ng-hide="obj.suggested">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="item-suggested" ng-click="$event.stopPropagation()" ng-show="obj.suggested"></div>
@@ -92,7 +92,7 @@
                                 <div class="col-xs-4">
                                     <div class="fg-line">
                                         <div class="select">
-                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours">
+                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours" ng-change="tablesBlockValid()">
                                             </select>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                             <div class="col-xs-4">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations">
+                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations" ng-change="tablesBlockValid()">
                                         </select>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" style="display: table;">
+                        <div class="form-group" style="display: table; width: 100%;">
                             <label class="col-xs-2 control-label" for="server">
                                 Mesas
                             </label>
@@ -141,8 +141,7 @@
                         <div class="form-group">
                             <div class="col-xs-12">
                                 <div class="fg-line">
-                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí">
-                                    </textarea>
+                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí"></textarea>
                                 </div>
                             </div>
                         </div>

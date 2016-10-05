@@ -207,25 +207,29 @@ $color_secundario = #616161
 			user-select none
 			& .item-drag-table
 				position absolute
-			& .item-drag-cover
-				background-color #ccc
-				color black
-				font-weight bold
-			& .item-suggested
-				background-image: url(../../../img/table-suggested.svg)
-				width 75%
-				height 75%
-				min-width 16px
-				min-height 16px
-				max-width 36px
-				max-height 36px
-				top 0
-				bottom 0
-				left 0
-				right 0
-				margin auto auto
-				position absolute
-	& .box-tables
+				& .item-drag-cover
+					background-color #ccc
+					color black
+					font-weight bold
+				& .item-suggested
+					background-image url(../../../img/table-suggested.svg)
+					width 75%
+					height 75%
+					min-width 16px
+					min-height 16px
+					max-width 36px
+					max-height 36px
+					top 0
+					bottom 0
+					left 0
+					right 0
+					margin auto auto
+					position absolute
+				&.block-table
+					background #424242 !important
+					& .item-suggested
+						background-image none
+		& .box-tables
 		padding-left 7px
 		padding-rigth 12px
 		& .descripcion 

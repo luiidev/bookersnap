@@ -14,6 +14,7 @@ angular.module('reservation.controller', [])
     vm.zoneIndex = 0;
     vm.tableSuggested = "";
     var zoneIndexMax = 0;
+    var blocks = [];
 
     vm.selectTableAllOrNone = function(indicator) {
         if (indicator == "all") {
@@ -38,18 +39,16 @@ angular.module('reservation.controller', [])
     };
 
     var listTableSelected = function() {
-        angular.forEach(vm.zones, function(zone) {
-            angular.forEach(zone.tables, function(table) {
-                if (table.selected) {
-                    var access = {};
-                    access.name = table.name;
-                    access.min = table.minCover;
-                    access.max = table.maxCover;
-                    vm.reservation.tables[table.id] = access;
-                } else {
-                    delete vm.reservation.tables[table.id];
-                }
-            });
+        tablesForEach(function(table) {
+            if (table.selected) {
+                var access = {};
+                access.name = table.name;
+                access.min = table.minCover;
+                access.max = table.maxCover;
+                vm.reservation.tables[table.id] = access;
+            } else {
+                delete vm.reservation.tables[table.id];
+            }
         });
         vm.tablesSelected = Object.keys(vm.reservation.tables).length;
 
@@ -61,20 +60,48 @@ angular.module('reservation.controller', [])
         listTableSelected();
     };
 
+    vm.tablesBlockValid = function() {
+        var start_time =  moment(vm.reservation.hour, "HH:mm:ss");
+        // console.log(vm.reservation.duration);
+        var auxiliar =  moment(vm.reservation.duration, "HH:mm:ss");
+        // console.log(auxiliar.format(), auxiliar.hour(),auxiliar.minute());
+        var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+        // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+        angular.forEach(blocks, function(block){
+            var start_block =  moment(block.start_time, "HH:mm:ss");
+            var end_block =  moment(block.end_time, "HH:mm:ss");
+            tablesForEach(function(table) {
+                if (table.id == block.res_table_id) {
+                    if (start_time.isBetween(start_block, end_block,  null, "()")) {
+                        table.block = true;
+                    } else if (end_time.isBetween(start_block, end_block, null, "()")) {
+                        table.block = true;
+                    } else if (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block)) {
+                        table.block = true;
+                    } else {
+                        table.block = false;
+                    }
+                }
+            });
+        });
+    };
+
     vm.tablesSuggested = function(cant){
         vm.tableSuggested = "";
-        var SuggestedEstablished = false;
+        tablesForEach(function(table) {
+            if (cant >= table.minCover && cant <= table.maxCover) {
+                if (vm.tableSuggested  === "") vm.tableSuggested = table.name;
+                table.suggested = true;
+            } else {
+                table.suggested = false;
+            }
+        });
+    };
+
+    var tablesForEach = function(callback){
         angular.forEach(vm.zones, function(zone) {
             angular.forEach(zone.tables, function(table) {
-                if (cant >= table.minCover && cant <= table.maxCover) {
-                    if (!SuggestedEstablished) {
-                        vm.tableSuggested = table.name;
-                        SuggestedEstablished = true;
-                    }
-                    table.suggested = true;
-                } else {
-                    table.suggested = false;
-                }
+                callback(table);
             });
         });
     };
@@ -111,9 +138,11 @@ angular.module('reservation.controller', [])
         service.getDurations()
             .then(function(durations) {
                 vm.durations = durations;
-               vm.reservation.duration = "01:30:00";
+                vm.reservation.duration = "01:30:00";
             }).catch(function(error) {
                 message.apiError(error);
+            }).finally(function() {
+                vm.tablesBlockValid();
             });
     };
 
@@ -124,6 +153,8 @@ angular.module('reservation.controller', [])
                 vm.reservation.hour = data.default;
             }).catch(function(error) {
                 message.apiError(error);
+            }).finally(function() {
+                listDurations();
             });
     };
 
@@ -178,14 +209,11 @@ angular.module('reservation.controller', [])
                     listHours(turns);
                 }).catch(function(error) {
                     message.apiError(error);
-                }).finally(function() {
-                    listDurations();
                 });
 
             service.getBlocks(date)
                 .then(function(response) {
-                    var blocks = response.data.data;
-                    console.log(blocks);
+                    blocks = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
                 });
