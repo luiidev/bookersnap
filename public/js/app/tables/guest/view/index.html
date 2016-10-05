@@ -6,7 +6,7 @@
     <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
     </aside>
     <section class="w-100 p-0" id="content">
-        <div class="container">
+        <div class="container m-t-15">
             <div class="block-header">
                 <ul class="actions">
                     <li>
@@ -15,7 +15,7 @@
                         </button>
                     </li>
                     <li>
-                        <button class="btn btn-primary waves-effect" data-ui-sref="guest.create">
+                        <button class="btn btn-primary waves-effect" data-ui-sref="mesas.guest.create">
                             Agregar Huésped
                         </button>
                     </li>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="listview lv-user m-t-20 pm-overview c-overflow" style="min-height: 520px">
                         <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
-                            <a href="" ui-sref="guest.view({ guest : '{{item.id}}'})">
+                            <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
                                 <div class="lv-avatar bgm-orange pull-left">
                                     m
                                 </div>
