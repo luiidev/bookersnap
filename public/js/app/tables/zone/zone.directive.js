@@ -34,36 +34,52 @@ angular.module('zone.directive', [])
         var eLabel = angular.element(element.context);
         var eTextRotate = eLabel.context.lastElementChild.classList[1];
 
-        console.log(eTextRotate);
-
-        scope.onDragFn();
-
         //Left
 
-        if (draggableRight >= parentWidth) {
+        if (draggableRight >= parentWidth && eRotate == "0") {
           if (eTextRotate == "right") {
             angular.element(eLabel.context.lastElementChild).removeClass("right");
             angular.element(eLabel.context.lastElementChild).addClass("left");
           }
+        } else {
+          if (eTextRotate == "top" && eRotate == "45" && draggableRight >= (parentWidth - draggableWidth * 0.35)) {
+            angular.element(eLabel.context.lastElementChild).removeClass("top");
+            angular.element(eLabel.context.lastElementChild).addClass("left");
+          }
+          if (eTextRotate == "right" && eRotate == "45" && draggableRight >= (parentWidth - draggableWidth * 0.35)) {
+            angular.element(eLabel.context.lastElementChild).removeClass("right");
+            angular.element(eLabel.context.lastElementChild).addClass("bottom");
+          }
         }
 
-        if (draggableLeft <= 0) {
+        if (draggableLeft <= 0 && eRotate == "0") {
           if (eTextRotate == "left") {
             angular.element(eLabel.context.lastElementChild).removeClass("left");
+            angular.element(eLabel.context.lastElementChild).addClass("right");
+          }
+
+        } else {
+          if (eTextRotate == "left" && eRotate == "45" && (draggableLeft - draggableWidth * 0.35) <= 0) {
+            console.log("45 left");
+            angular.element(eLabel.context.lastElementChild).removeClass("left");
+            angular.element(eLabel.context.lastElementChild).addClass("top");
+          }
+          if (eTextRotate == "bottom" && eRotate == "45" && (draggableLeft - draggableWidth * 0.35) <= 0) {
+            angular.element(eLabel.context.lastElementChild).removeClass("bottom");
             angular.element(eLabel.context.lastElementChild).addClass("right");
           }
         }
 
         //Top
-        console.log("draggableTop ", draggableTop);
-        if (draggableTop <= 0) {
+
+        if (draggableTop <= 0 && eRotate == "0") {
           if (eTextRotate == "top") {
             angular.element(eLabel.context.lastElementChild).removeClass("top");
             angular.element(eLabel.context.lastElementChild).addClass("bottom");
           }
         }
 
-        if ((draggableTop + draggableHeight) >= parentHeight) {
+        if ((draggableTop + draggableHeight) >= parentHeight && eRotate == "0") {
           if (eTextRotate == "bottom") {
             angular.element(eLabel.context.lastElementChild).removeClass("bottom");
             angular.element(eLabel.context.lastElementChild).addClass("top");

@@ -18,25 +18,25 @@ var obtenerIdMicrositio = function() {
 
 var getDaysWeek = function() {
     var days = [{
-        id: 0,
+        id: 1,
         label: 'Domingo'
     }, {
-        id: 1,
+        id: 2,
         label: 'Lunes'
     }, {
-        id: 2,
+        id: 3,
         label: 'Martes'
     }, {
-        id: 3,
+        id: 4,
         label: 'Miercoles'
     }, {
-        id: 4,
+        id: 5,
         label: 'Jueves'
     }, {
-        id: 5,
+        id: 6,
         label: 'Viernes'
     }, {
-        id: 6,
+        id: 7,
         label: 'Sabado'
     }, ];
 
@@ -285,13 +285,14 @@ var getDayText = function(index, option) {
     return dayText;
 };
 
-var messageAlert = function(title, text, type, time = 2000) {
+var messageAlert = function(title, text, type, time = 2000, confirmButton = false) {
     swal({
         title: title,
         text: text,
         type: type,
         timer: time,
-        showConfirmButton: false
+        showConfirmButton: confirmButton
+            //imageUrl: imageUrl
     });
 };
 
@@ -359,14 +360,18 @@ message.apiError = function(response, title, icon, options) {
     return this.show(title, body, icon, options);
 };
 
-var messageErrorApi = function(data, title, type) {
-    var errorJson = JSON.stringify(data);
+var messageErrorApi = function(response, title, type, time, confirmButton, status = 1) {
+    var errorJson = JSON.stringify(response);
 
-    if (errorJson.indexOf("error") > 0) {
-        messageAlert(title, data.error.user_msg, type);
-    } else {
-        messageAlert(title, data, type);
+    if (status == "-1") {
+        title = "Error de conexión a internet";
     }
+    if (errorJson.indexOf("error") > 0) {
+        messageAlert(title, response.error.user_msg, type, time, confirmButton);
+    } else {
+        messageAlert(title, response, type, time, confirmButton);
+    }
+
 };
 
 var historyBack = function() {

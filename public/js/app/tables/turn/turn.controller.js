@@ -18,7 +18,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			TurnFactory.listTurns(options).then(function success(response) {
 				$scope.turns = response;
 			}, function error(response) {
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
 			});
 		};
 
@@ -37,8 +37,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			turn_zone: [],
 			days: []
 		};
-
-		console.log($state);
 
 		$scope.dayHide = false;
 
@@ -162,8 +160,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		var getTypeTurns = function() {
 			TypeTurnFactory.getTypeTurns().success(function(data) {
 
-				$scope.typeTurns.data = data;
-				$scope.turnForm.type_turn = data[0];
+				$scope.typeTurns.data = data.data;
+				$scope.turnForm.type_turn = data.data[0];
 
 			}).error(function(data, status, headers) {
 				messageErrorApi(data, "Error", "warning");

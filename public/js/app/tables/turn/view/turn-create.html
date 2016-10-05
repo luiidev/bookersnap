@@ -49,7 +49,7 @@
                                         Hora inicio
                                     </label>
                                     <div class="select">
-                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(true)" ng-model="turnForm.hours_ini" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index">
+                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(true,'create')" ng-model="turnForm.hours_ini" ng-options="item as item.time for item in formDataDefault.hours_ini track by item.index">
                                             <option value="">
                                             </option>
                                         </select>
@@ -67,7 +67,7 @@
                                         Hora cierre
                                     </label>
                                     <div class="select">
-                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(false)" ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
+                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
                                             <option value="">
                                             </option>
                                         </select>
@@ -90,10 +90,14 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <p class="c-black f-500 m-b-20">
-                                    Seleccionar dias
+                                    <button class="btn btn-default btn-icon-text waves-effect" ng-click="activeDay()" type="button">
+                                        <i class="zmdi zmdi-calendar zmdi-hc-fw">
+                                        </i>
+                                        Seleccionar dias
+                                    </button>
                                 </p>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" ng-hide="dayHide">
                                 <label class="checkbox checkbox-inline m-r-20" ng-repeat="dayItem in days">
                                     <!--<input type="checkbox" value="{{dayItem.id}}" ng-model="turnForm.days[$index]" ng-disabled="dayItem.disabled">-->
                                     <input ng-click="checkDay(dayItem.id)" type="checkbox" value="{{dayItem.id}}">

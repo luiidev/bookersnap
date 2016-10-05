@@ -89,11 +89,14 @@ angular.module('zone.service', [])
 
 			return position;
 		},
-		changeRotationText: function(option, element) {
+		changeRotationText: function(option, element, index) {
 			console.log("changeRotationText ", angular.toJson(element, true));
 
 			var rotate = "";
-			var rotate_actual = element.rotate_text;
+			//var rotate_actual = element.rotate_text;
+
+			var table = angular.element("#tb-item" + index);
+			var rotate_actual = table[0].firstElementChild.classList[1];
 
 			switch (rotate_actual) {
 				case 'top':
@@ -109,6 +112,10 @@ angular.module('zone.service', [])
 					rotate = (option == "right") ? "bottom" : "top";
 					break;
 			}
+
+			angular.element(table[0].firstElementChild).removeClass(rotate_actual);
+
+			angular.element(table[0].firstElementChild).addClass(rotate);
 
 			element.rotate_text = rotate;
 		},
