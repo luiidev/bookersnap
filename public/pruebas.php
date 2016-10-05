@@ -1,5 +1,3 @@
 <?php
 
-echo "mi hora 15";
-
-?>
+echo "mi hora 16";

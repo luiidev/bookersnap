@@ -18,7 +18,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			TurnFactory.listTurns(options).then(function success(response) {
 				$scope.turns = response;
 			}, function error(response) {
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
 			});
 		};
 
