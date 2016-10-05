@@ -14,6 +14,9 @@ angular.module('reservation.service', [])
         getTurns: function(date) {
             return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
         },
+        getBlocks: function(date) {
+            return http.get(ApiUrlMesas + "/blocks/tables", {params: {date: date}});
+        },
         getGuest: function() {
             var deferred = $q.defer();
 

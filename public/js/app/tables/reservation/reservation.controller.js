@@ -47,7 +47,7 @@ angular.module('reservation.controller', [])
                     access.max = table.maxCover;
                     vm.reservation.tables[table.id] = access;
                 } else {
-                    delete vm.reservation.tables[table.id];;
+                    delete vm.reservation.tables[table.id];
                 }
             });
         });
@@ -62,6 +62,7 @@ angular.module('reservation.controller', [])
     };
 
     vm.tablesSuggested = function(cant){
+        vm.tableSuggested = "";
         var SuggestedEstablished = false;
         angular.forEach(vm.zones, function(zone) {
             angular.forEach(zone.tables, function(table) {
@@ -134,6 +135,7 @@ angular.module('reservation.controller', [])
                 vm.zoneIndex++;
             }
         }
+        setZoneName(vm.zoneIndex);
     };
 
     vm.prevZone = function() {
@@ -144,6 +146,11 @@ angular.module('reservation.controller', [])
                 vm.zoneIndex = zoneIndexMax ;
             }
         }
+        setZoneName(vm.zoneIndex);
+    };
+
+    var setZoneName = function(i) {
+        vm.zoneName = vm.zones[i].name;
     };
 
     var loadZones = function() {
@@ -175,6 +182,13 @@ angular.module('reservation.controller', [])
                     listDurations();
                 });
 
+            service.getBlocks(date)
+                .then(function(response) {
+                    var blocks = response.data.data;
+                    console.log(blocks);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
     };
 
     var loadTablesEdit = function(dataZones) {
@@ -185,7 +199,7 @@ angular.module('reservation.controller', [])
     var defaultView = function() {
         zoneIndexMax =  vm.zones.length - 1;
         if (zoneIndexMax >= 0) {
-            vm.zoneName = vm.zones[0].name;
+            setZoneName(0);
         }
     };
 
