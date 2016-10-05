@@ -560,31 +560,6 @@ $background-tables-head = #eee
 .p-t-main
 	padding-top 72px
 	
-.listado-table
-	display table
-	width 100%
-	text-align center
-	margin 0 auto
-	font-size 0.8em
-	& .listado-row-header
-		display table-row
-		background #005581
-		color #fff
-		& .listado-column
-			display table-cell
-			border 1px solid #575757
-			vertical-align middle
-			padding 2px 2px 2px 0px
-			text-transform uppercase
-	& .listado-row
-		display table-row
-		& .listado-column
-			display table-cell
-			border-bottom 1px solid #575757
-			vertical-align middle
-			padding 2px 2px 2px 0px
-			width 18%
-			color #fff
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -603,7 +578,7 @@ $background-tables-head = #eee
 		&.line-row
 			border-bottom 1px solid #767676
 			td > ul.actions > li
-				width 48px
+				width 38px
 				a
 				height 0px
 				padding 0px
@@ -635,14 +610,28 @@ $background-tables-head = #eee
 	padding-right 15px!important
 .btn-default-nav
 	background-color #575757
+.tab-tiempo
+	background #575757
+	//width 130px
+.tab-rp
+	background #575757
+	margin-right 5px
+	margin-top -0.5em
+	width 130px
+	span
+		margin-left 10px
 .item-txt-time
-	margin-top -5px
+	margin-top -0.2em
 	& .yellow-time
 		color #e6c610
 	& .txt-time
 		margin-top -22px
 		display block
 		padding-left 22px
+.num-orden-zona
+	position absolute
+	top 0
+	left 0
 .tab-menu-floor
 	li
 		background #575757
@@ -682,8 +671,49 @@ $background-tables-head = #eee
 		background none
 	& .tab-content
 		padding-top 8px
+	& .input-group
+		padding 10px
+		& .form-control
+			background #424242
+			padding 10px
+		& .input-group-addon
+			color #fff
+
+ul.listado-filtros
+	position fixed
+	bottom 0px
+	padding 0px 0px 0px 18px
+	height 75px
+	width 100%
+	list-style none
+	margin 0 auto
+	> li
+		display inline-block
+		vertical-align top
+		& .btn
+			height 60px		
+			margin-top 8px
+			padding 3px 5px
+			width 120px
+			background #575757
+			color #fefefe
+			& .rounded
+				width 24px
+				height 24px
+				background #424242
+				border-radius 14px
+				padding 4px 5px
+		& .dropdown-menu
+			margin-bottom 6px
+			min-width 120px
+			background #575757
+			li
+				border-bottom 1px solid #727272
+				a
+					text-transform uppercase
+					color #fefefe
+					padding 6px 10px
 			
-	
 ul.footer-floor
 	height 75px
 	list-style none
@@ -698,68 +728,33 @@ ul.footer-floor
 			height 60px
 			margin-top 8px
 			padding 3px 5px
-		& .people-information
-			margin 0
-			padding 0
-			li
-				list-style none
-				display inline-block
-				height 50px
-				padding 6px 0px
-				width 120px
-				background #575757
-				color #edecec
-				margin 13px 2px 0px 2px
-				text-transform uppercase
-				i
-					font-size 2.6em
-				& .rounded
-					font-size 0.9em
-					width 12px
-					height 12px
-					background #424242
-					padding 4px
-					border-radius 48%
-					margin-left -4px
-			&.info-guest
-				li
-					width 60px
-		&.dropdown
-			& .select-todas
-				height 50px
-				width 80px
-				background #575757
-				padding 15px 0px
-				margin 13px 2px 0px 2px
-				color #edecec
-				text-transform uppercase
-		&.num-people
-			width 400px
-			padding 0
-			margin 0
-			padding-left 10px
+		&.ultimo-btn-right
+			padding-right 410px
+			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
+				margin-right 410px
+				background #f12929
+				& .listado-table
+					display table
+					width 100%
+					text-align center
+					margin 0 auto
+					& .listado-row
+						display table-row
+						& .listado-column
+							display table-cell
+							vertical-align middle
+							padding 4px 0px
+							color #fff
+							cursor pointer
+							font-weight bold
+							font-size 1.9em
+			& .dropdown-menu
+				margin-bottom 6px
+				min-width 130px
 			& .btn
-				&.btn-default-grey
-					background-color #585858
-					color white
-					border-radius 10px
-					font-size 13px
-					text-transform none
-					padding-bottom 10px
-					padding-top 10px
-					padding-right 10px
-					padding-left 10px
-					&:hover
-						background-color #605e5e
-				& .tmn-counts-floor
-					position absolute
-					font-style normal
-					padding 1px 5px
-					border-radius 2px
-					right 7px
-					top 6px
-					font-size 10px
-					line-height 15px
+				width 130px
+				font-weight bold
+				border-radius 2px
 		&.logotipo-footer
 			width 45px
 			height 70px
