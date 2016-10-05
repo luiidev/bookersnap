@@ -123,7 +123,8 @@ angular.module('reservation.service', [])
                     status: data.status,
                     suggested: false,
                     selected: false,
-                    block: false
+                    block: false,
+                    occupied: false, 
                 };
 
                 if (data.status == 1) {

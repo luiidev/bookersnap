@@ -16,6 +16,12 @@ angular.module('reservation.controller', [])
     var zoneIndexMax = 0;
     var blocks = [];
 
+    vm.testJsonCreate = function() {
+        var object = angular.copy(vm.reservation);
+        object.tables = Object.keys(object.tables);
+        console.log(object);
+    };
+
     vm.selectTableAllOrNone = function(indicator) {
         if (indicator == "all") {
             angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
@@ -62,11 +68,9 @@ angular.module('reservation.controller', [])
 
     vm.tablesBlockValid = function() {
         var start_time =  moment(vm.reservation.hour, "HH:mm:ss");
-        // console.log(vm.reservation.duration);
         var auxiliar =  moment(vm.reservation.duration, "HH:mm:ss");
-        // console.log(auxiliar.format(), auxiliar.hour(),auxiliar.minute());
         var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
-        // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+
         angular.forEach(blocks, function(block){
             var start_block =  moment(block.start_time, "HH:mm:ss");
             var end_block =  moment(block.end_time, "HH:mm:ss");
@@ -95,6 +99,22 @@ angular.module('reservation.controller', [])
             } else {
                 table.suggested = false;
             }
+        });
+    };
+
+    var tablesOccupied = function() {
+        // console.log("=)",blocks);
+        angular.forEach(blocks, function(block){
+            tablesForEach(function(table) {
+                if (table.id == block.res_table_id) {
+                    // console.log(table.id);
+                    if (block.res_reservation_id !== null) {
+                        table.occupied = true;
+                        table.suggested = false;
+                        // console.log("=)", table);
+                    } 
+                }
+            });
         });
     };
 
@@ -216,6 +236,8 @@ angular.module('reservation.controller', [])
                     blocks = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    tablesOccupied();
                 });
     };
 
