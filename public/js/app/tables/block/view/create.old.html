@@ -1,0 +1,155 @@
+
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container zone-container">
+            <div class="card">
+                <div class="card-body card-padding box-zone-create">
+                    <div class="row header-zone-create">
+                        <div class="col-md-12">
+                            <div class="col-xs-2 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <select  ng-model="zone" ng-options="item.name for item in zones" ng-change="selectZone(zone)">
+                                        <option value="" disabled="disabled" selected="true">Select Zone</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 padding-left-none">
+                                <div class="input-group fg-float">
+                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
+                                    &nbsp;&nbsp;&nbsp;  
+                                    <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-9 box-lienzo-zone">
+                            <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
+                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-select-table  on-selected-fn="activarTableOptions($index,obj)"  on-deselect-fn="desactivarTable($index,obj)" on-click-fn='activarTableOptions($index,this)' class="item-drag-table  {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top}}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit">
+                                    <div>{{obj.name}}</div>
+                                    <div class="border shape-table {{obj.shape}} {{obj.size}}"></div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="section-left-reservation">
+    <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
+        <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
+            <button class="btn btn-danger pull-left">
+                Cancelar
+            </button>
+            Crear Bloqueo
+            <button class="btn btn-primary pull-right" ng-click="saveZone('create')">
+                Guardar
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="card m-b-5">
+                <form class="form-horizontal" role="form">
+                    <div class="card-body drag-border">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="date">
+                                Fecha
+                            </label>
+                            <div class="col-xs-10 date-picker" ng-class="{ 'is-opened': opened == true }">
+                                <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
+                                    <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="shift">
+                                Turno
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="shift" ng-options=" shift.name for shift in shifts" ng-change="changueRange(shift)">
+                                            <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="startTime">
+                                Inicia
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes">
+                                                <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="endTime" >
+                                Termina
+                            </label>
+                            <div class="col-xs-10">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes">
+                                            <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">
+                                Mesas
+                            </label>
+                            <div class="col-xs-10 control-label">
+                                    <div data-ng-bind-html="someSafeContent"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            
+         
+            <!--       
+                        <div class="card">
+                            <div class="card-header bgm-amber" style="margin-bottom: 5px;" ng-repeat="conflict in conflicts">
+                                <h5>Conflicto en mesa - {{ conflict.name }}</h5><span>mesa  demasiado grande</span>
+                            </div>
+                        </div>
+            -->
+            <div class="popover-demo">
+                <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
+                     style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title" style="padding: 5px; background: transparent;">Conflicto en mesa - {{ conflict.name}}</h3>
+                    <div class="popover-content" style="padding: 0 0 5px 5px;">
+                        <p>mesa  demasiado grande.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--<footer id="footer" data-ng-include="'/template/footer.html'"></footer>-->
