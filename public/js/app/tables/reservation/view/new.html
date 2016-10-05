@@ -22,7 +22,7 @@
                 <div class="box-lienzo-zone-v2">
                     <div id="lienzo" class="lienzo-v2" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}"
                         ng-repeat="zone in zones" ng-show="$index == zoneIndex">
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj, $index, $event)" ng-repeat="obj in zone.tables">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
                                 <div class="table-label top" ng-click="$event.stopPropagation()">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-click="$event.stopPropagation()" ng-hide="obj.suggested">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="item-suggested" ng-click="$event.stopPropagation()" ng-show="obj.suggested"></div>

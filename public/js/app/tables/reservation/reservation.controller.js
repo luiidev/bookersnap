@@ -16,24 +16,16 @@ angular.module('reservation.controller', [])
     var zoneIndexMax = 0;
 
     vm.selectTableAllOrNone = function(indicator) {
-        vm.reservation.tables = {};
         if (indicator == "all") {
-            angular.element($( '.item-drag-table' )).addClass("selected-table");
-            angular.forEach(vm.zones, function(zone) {
-                angular.forEach(zone.tables, function(table) {
-                    var access = {};
-                    access.name = table.name;
-                    access.min = table.minCover;
-                    access.max = table.maxCover;
-                    vm.reservation.tables[table.id] = access;
-                });
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = true;
             });
-            alertConflicts();
-            vm.tablesSelected = Object.keys(vm.reservation.tables).length;
         } else if (indicator == "none") {
-            angular.element($( '.item-drag-table' )).removeClass("selected-table");
-            alertConflicts();
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = false;
+            });
         }
+        listTableSelected();
     };
 
     var alertConflicts = function() {
@@ -45,21 +37,28 @@ angular.module('reservation.controller', [])
         });
     };
 
-    vm.selectTable = function(table, index, evt) {
-        angular.element(evt.target).toggleClass("selected-table");
-
-        var exists = vm.reservation.tables.hasOwnProperty(table.id);
-        if ( exists ) {
-            delete vm.reservation.tables[table.id];
-        } else {
-            var access = {};
-            access.name = table.name;
-            access.min = table.minCover;
-            access.max = table.maxCover;
-            vm.reservation.tables[table.id] = access;
-        }
-        alertConflicts();
+    var listTableSelected = function() {
+        angular.forEach(vm.zones, function(zone) {
+            angular.forEach(zone.tables, function(table) {
+                if (table.selected) {
+                    var access = {};
+                    access.name = table.name;
+                    access.min = table.minCover;
+                    access.max = table.maxCover;
+                    vm.reservation.tables[table.id] = access;
+                } else {
+                    delete vm.reservation.tables[table.id];;
+                }
+            });
+        });
         vm.tablesSelected = Object.keys(vm.reservation.tables).length;
+
+        alertConflicts();
+    };
+
+    vm.selectTable = function(table) {
+        table.selected = !table.selected;
+        listTableSelected();
     };
 
     vm.tablesSuggested = function(cant){
