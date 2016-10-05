@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bookersnap</title>
+    <title data-ng-bind="($title || 'Home') + ' - Bookersnap'"></title>
 
     <!-- Vendor CSS -->
     <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
@@ -30,9 +30,9 @@
 <script src="/js/theme/dist/template.modules.min.js"></script>
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js?v=<?php echo rand(0, 45)?>"></script>
+<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js?v=<?php echo rand(0, 45) ?>"></script>
 <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js?v=<?php echo rand(0, 45)?>"></script>
+<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js?v=<?php echo rand(0, 45) ?>"></script>
 
 
 <script type="text/ng-template" id="overlay-template.html">

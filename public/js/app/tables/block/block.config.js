@@ -1,13 +1,17 @@
 angular.module('block.app', ['block.controller','block.service','block.directive'])
 .config(function ($stateProvider, $urlRouterProvider){
 	$stateProvider
-		.state ('block', {
+		.state ('mesas.block', {
 			url: '/block/:date',
-			templateUrl: '/js/app/tables/block/view/create.html'
+			templateUrl: '/js/app/tables/block/view/create.old.html',
+                        controller: "blockCtr",
+                        cache: false
 		})
-		.state ('blockEdit', {
+		.state ('mesas.blockEdit', {
 			url: '/block/:date/:block_id',
-			templateUrl: '/js/app/tables/block/view/edit.html'
+			templateUrl: '/js/app/tables/block/view/edit.html',
+                        controller: "blockCtrEdit",                        
+                        cache: false
 		})
     
 });
