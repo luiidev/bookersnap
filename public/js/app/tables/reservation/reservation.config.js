@@ -4,13 +4,13 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
 .config(function($stateProvider) {
 
     $stateProvider
-        .state('reservation', {
+        .state('mesas.reservation', {
             url: '/reservation',
             templateUrl: '/js/app/tables/reservation/view/index.html',
             controller: "reservationCtrl.Index",
             // controllerAs: 'vm',
         })
-        .state('reservation-new', {
+        .state('mesas.reservation-new', {
             url: '/reservation/:date/new',
             templateUrl: '/js/app/tables/reservation/view/new.html',
             controller: "reservationCtrl.Store",

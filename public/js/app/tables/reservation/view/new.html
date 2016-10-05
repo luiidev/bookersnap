@@ -9,38 +9,24 @@
         <div class="container w-100 p-section-reservation p-r-0">
             <div class="reservation-content-header">
                 <div class="pull-left">
-                    <button class="btn bgm-bluegray" ng-click="prevZone()">
-                        <i class="zmdi zmdi-arrow-back">
-                        </i>
-                    </button>
-                    <button class="btn bgm-bluegray" ng-click="nextZone()">
-                        <i class="zmdi zmdi-arrow-forward">
-                        </i>
-                    </button>
-                    <label class="control-label">
-                        {{ zoneName }}
-                    </label>
+                    <button class="btn bgm-bluegray" ng-click="prevZone()"><i class="zmdi zmdi-arrow-back"></i></button>
+                    <button class="btn bgm-bluegray" ng-click="nextZone()"><i class="zmdi zmdi-arrow-forward"></i></button>
+                    <label class="control-label">{{ zoneName }}</label>
                 </div>
                 <div class="pull-right">
-                    <button class="btn bgm-bluegray">
-                        Seleccionar todo
-                    </button>
-                    <button class="btn bgm-bluegray">
-                        Seleccionar niguno
-                    </button>
+                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('all')">Seleccionar todo</button>
+                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('none')">Seleccionar niguno</button>
                 </div>
             </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div class="lienzo-v2" id="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}" style="background: #CCC">
-                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size]" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable($index, $event)" style="position: absolute;">
-                            <div class="table-label top" ng-click="$event.stopPropagation()">
-                                {{obj.name}}
+                    <div id="lienzo" class="lienzo-v2" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}"
+                        ng-repeat="zone in zones" ng-show="$index == zoneIndex">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj, $index, $event)" ng-repeat="obj in zone.tables">
+                                <div class="table-label top" ng-click="$event.stopPropagation()">{{obj.name}}</div>
+                                <div class="item-drag-cover" ng-click="$event.stopPropagation()" ng-hide="obj.suggested">{{ obj.minCover }}-{{ obj.maxCover }}</div>
+                                <div class="item-suggested" ng-click="$event.stopPropagation()" ng-show="obj.suggested"></div>
                             </div>
-                            <div class="item-drag-cover" ng-click="$event.stopPropagation()">
-                                {{ obj.minCover }}-{{ obj.maxCover }}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -59,7 +45,7 @@
             </button>
         </div>
         <div class="card-body">
-            <div class="card">
+            <div class="card m-b-5">
                 <form class="form-horizontal" role="form">
                     <div class="card-body drag-border">
                         <div class="form-group">
@@ -82,7 +68,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="covers" ng-model="reservation.covers" ng-options="cover.id as cover.name for cover in covers">
+                                        <select class="form-control" id="covers" ng-model="reservation.covers" ng-options="cover.id as cover.name for cover in covers" ng-change="tablesSuggested(reservation.covers)">
                                         </select>
                                     </div>
                                 </div>
@@ -94,8 +80,7 @@
                             </label>
                             <div class="col-xs-10">
                                 <div class="fg-line">
-                                    <input class="form-control" id="date" ng-model="reservation.date" type="date">
-                                    </input>
+                                    <input class="form-control" id="date" ng-model="reservation.date" type="date"/>
                                 </div>
                             </div>
                         </div>
@@ -141,13 +126,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: table;">
                             <label class="col-xs-2 control-label" for="server">
                                 Mesas
                             </label>
                             <div class="col-xs-10">
-                                <label class="control-label" for="server" ng-if="!tablesSelected">11</label>
-                                <label class="control-label p-r-5" for="server" ng-repeat="table in  reservation.tables">{{ table.name }}</label>
+                                <label class="control-label" for="server" ng-if="!tablesSelected" style="color: #8c8c8c;">{{ tableSuggested }}</label>
+                                <label class="control-label p-r-5" for="server" ng-repeat="table in  reservation.tables track by $index">{{ table.name }}</label>
                                 <a class="a-title pull-right" href="#" style="padding-top: 7px">
                                     Sugerido
                                 </a>
@@ -174,6 +159,25 @@
                     </div>
                 </form>
             </div>
+
+<!--       
+            <div class="card">
+                <div class="card-header bgm-amber" style="margin-bottom: 5px;" ng-repeat="conflict in conflicts">
+                    <h5>Conflicto en mesa - {{ conflict.name }}</h5><span>mesa  demasiado grande</span>
+                </div>
+            </div>
+ -->
+            <div class="popover-demo">
+                <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
+                    style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title" style="padding: 5px; background: transparent;">Conflicto en mesa - {{ conflict.name }}</h3>
+                    <div class="popover-content" style="padding: 0 0 5px 5px;">
+                        <p>mesa  demasiado grande.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
