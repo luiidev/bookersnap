@@ -14,26 +14,25 @@ angular.module('reservation.controller', [])
     vm.zoneIndex = 0;
     vm.tableSuggested = "";
     var zoneIndexMax = 0;
+    var blocks = [];
+
+    vm.testJsonCreate = function() {
+        var object = angular.copy(vm.reservation);
+        object.tables = Object.keys(object.tables);
+        console.log(object);
+    };
 
     vm.selectTableAllOrNone = function(indicator) {
-        vm.reservation.tables = {};
         if (indicator == "all") {
-            angular.element($( '.item-drag-table' )).addClass("selected-table");
-            angular.forEach(vm.zones, function(zone) {
-                angular.forEach(zone.tables, function(table) {
-                    var access = {};
-                    access.name = table.name;
-                    access.min = table.minCover;
-                    access.max = table.maxCover;
-                    vm.reservation.tables[table.id] = access;
-                });
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = true;
             });
-            alertConflicts();
-            vm.tablesSelected = Object.keys(vm.reservation.tables).length;
         } else if (indicator == "none") {
-            angular.element($( '.item-drag-table' )).removeClass("selected-table");
-            alertConflicts();
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = false;
+            });
         }
+        listTableSelected();
     };
 
     var alertConflicts = function() {
@@ -45,36 +44,81 @@ angular.module('reservation.controller', [])
         });
     };
 
-    vm.selectTable = function(table, index, evt) {
-        angular.element(evt.target).toggleClass("selected-table");
-
-        var exists = vm.reservation.tables.hasOwnProperty(table.id);
-        if ( exists ) {
-            delete vm.reservation.tables[table.id];
-        } else {
-            var access = {};
-            access.name = table.name;
-            access.min = table.minCover;
-            access.max = table.maxCover;
-            vm.reservation.tables[table.id] = access;
-        }
-        alertConflicts();
+    var listTableSelected = function() {
+        tablesForEach(function(table) {
+            if (table.selected) {
+                var access = {};
+                access.name = table.name;
+                access.min = table.minCover;
+                access.max = table.maxCover;
+                vm.reservation.tables[table.id] = access;
+            } else {
+                delete vm.reservation.tables[table.id];
+            }
+        });
         vm.tablesSelected = Object.keys(vm.reservation.tables).length;
+
+        alertConflicts();
+    };
+
+    vm.selectTable = function(table) {
+        table.selected = !table.selected;
+        listTableSelected();
+    };
+
+    vm.tablesBlockValid = function() {
+        var start_time =  moment(vm.reservation.hour, "HH:mm:ss");
+        var auxiliar =  moment(vm.reservation.duration, "HH:mm:ss");
+        var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+
+        angular.forEach(blocks, function(block){
+            var start_block =  moment(block.start_time, "HH:mm:ss");
+            var end_block =  moment(block.end_time, "HH:mm:ss");
+            tablesForEach(function(table) {
+                if (table.id == block.res_table_id) {
+                    if (start_time.isBetween(start_block, end_block,  null, "()")) {
+                        table.block = true;
+                    } else if (end_time.isBetween(start_block, end_block, null, "()")) {
+                        table.block = true;
+                    } else if (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block)) {
+                        table.block = true;
+                    } else {
+                        table.block = false;
+                    }
+                }
+            });
+        });
     };
 
     vm.tablesSuggested = function(cant){
-        var SuggestedEstablished = false;
+        vm.tableSuggested = "";
+        tablesForEach(function(table) {
+            if (cant >= table.minCover && cant <= table.maxCover) {
+                if (vm.tableSuggested  === "") vm.tableSuggested = table.name;
+                table.suggested = true;
+            } else {
+                table.suggested = false;
+            }
+        });
+    };
+
+    var tablesOccupied = function() {
+        angular.forEach(blocks, function(block){
+            tablesForEach(function(table) {
+                if (table.id == block.res_table_id) {
+                    if (block.res_reservation_id !== null) {
+                        table.occupied = true;
+                        table.suggested = false;
+                    } 
+                }
+            });
+        });
+    };
+
+    var tablesForEach = function(callback){
         angular.forEach(vm.zones, function(zone) {
             angular.forEach(zone.tables, function(table) {
-                if (cant >= table.minCover && cant <= table.maxCover) {
-                    if (!SuggestedEstablished) {
-                        vm.tableSuggested = table.name;
-                        SuggestedEstablished = true;
-                    }
-                    table.suggested = true;
-                } else {
-                    table.suggested = false;
-                }
+                callback(table);
             });
         });
     };
@@ -111,9 +155,11 @@ angular.module('reservation.controller', [])
         service.getDurations()
             .then(function(durations) {
                 vm.durations = durations;
-               vm.reservation.duration = "01:30:00";
+                vm.reservation.duration = "01:30:00";
             }).catch(function(error) {
                 message.apiError(error);
+            }).finally(function() {
+                vm.tablesBlockValid();
             });
     };
 
@@ -124,6 +170,8 @@ angular.module('reservation.controller', [])
                 vm.reservation.hour = data.default;
             }).catch(function(error) {
                 message.apiError(error);
+            }).finally(function() {
+                listDurations();
             });
     };
 
@@ -135,6 +183,7 @@ angular.module('reservation.controller', [])
                 vm.zoneIndex++;
             }
         }
+        setZoneName(vm.zoneIndex);
     };
 
     vm.prevZone = function() {
@@ -145,6 +194,11 @@ angular.module('reservation.controller', [])
                 vm.zoneIndex = zoneIndexMax ;
             }
         }
+        setZoneName(vm.zoneIndex);
+    };
+
+    var setZoneName = function(i) {
+        vm.zoneName = vm.zones[i].name;
     };
 
     var loadZones = function() {
@@ -172,10 +226,16 @@ angular.module('reservation.controller', [])
                     listHours(turns);
                 }).catch(function(error) {
                     message.apiError(error);
-                }).finally(function() {
-                    listDurations();
                 });
 
+            service.getBlocks(date)
+                .then(function(response) {
+                    blocks = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    tablesOccupied();
+                });
     };
 
     var loadTablesEdit = function(dataZones) {
@@ -186,7 +246,7 @@ angular.module('reservation.controller', [])
     var defaultView = function() {
         zoneIndexMax =  vm.zones.length - 1;
         if (zoneIndexMax >= 0) {
-            vm.zoneName = vm.zones[0].name;
+            setZoneName(0);
         }
     };
 

@@ -14,6 +14,9 @@ angular.module('reservation.service', [])
         getTurns: function(date) {
             return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
         },
+        getBlocks: function(date) {
+            return http.get(ApiUrlMesas + "/blocks/tables", {params: {date: date}});
+        },
         getGuest: function() {
             var deferred = $q.defer();
 
@@ -118,7 +121,10 @@ angular.module('reservation.service', [])
                     rotate: data.config_rotation,
                     id: data.id,
                     status: data.status,
-                    suggested: false
+                    suggested: false,
+                    selected: false,
+                    block: false,
+                    occupied: false, 
                 };
 
                 if (data.status == 1) {
