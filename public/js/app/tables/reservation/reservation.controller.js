@@ -103,15 +103,12 @@ angular.module('reservation.controller', [])
     };
 
     var tablesOccupied = function() {
-        // console.log("=)",blocks);
         angular.forEach(blocks, function(block){
             tablesForEach(function(table) {
                 if (table.id == block.res_table_id) {
-                    // console.log(table.id);
                     if (block.res_reservation_id !== null) {
                         table.occupied = true;
                         table.suggested = false;
-                        // console.log("=)", table);
                     } 
                 }
             });
