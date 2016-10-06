@@ -76,6 +76,10 @@ angular.module('reservation.controller', [])
             var end_block =  moment(block.end_time, "HH:mm:ss");
             tablesForEach(function(table) {
                 if (table.id == block.res_table_id) {
+                    if (block.res_reservation_id !== null) {
+                        table.occupied = true;
+                        table.suggested = false;
+                    } 
                     if (start_time.isBetween(start_block, end_block,  null, "()")) {
                         table.block = true;
                     } else if (end_time.isBetween(start_block, end_block, null, "()")) {
@@ -84,6 +88,7 @@ angular.module('reservation.controller', [])
                         table.block = true;
                     } else {
                         table.block = false;
+                        table.occupied = false;
                     }
                 }
             });
@@ -99,19 +104,6 @@ angular.module('reservation.controller', [])
             } else {
                 table.suggested = false;
             }
-        });
-    };
-
-    var tablesOccupied = function() {
-        angular.forEach(blocks, function(block){
-            tablesForEach(function(table) {
-                if (table.id == block.res_table_id) {
-                    if (block.res_reservation_id !== null) {
-                        table.occupied = true;
-                        table.suggested = false;
-                    } 
-                }
-            });
         });
     };
 
@@ -233,8 +225,6 @@ angular.module('reservation.controller', [])
                     blocks = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
-                }).finally(function() {
-                    tablesOccupied();
                 });
     };
 
