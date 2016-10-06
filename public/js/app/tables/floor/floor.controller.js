@@ -57,6 +57,7 @@ angular.module('floor.controller', [])
 
         vm.handConfiguration = function() {
             //alert('Added from controller');
+            //http://jsfiddle.net/maxisam/QrCXh/
             modalInstancesConfiguration();
         };
 
