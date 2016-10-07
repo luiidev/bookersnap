@@ -243,6 +243,8 @@
                 theme: theme,
                 scrollInertia: 100,
                 axis:'yx',
+                //setWidth: '100',
+                //setLeft: "-10px",
                 mouseWheel: {
                     enable: true,
                     axis: mousewheelaxis,

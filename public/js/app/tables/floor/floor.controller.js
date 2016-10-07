@@ -118,7 +118,9 @@ angular.module('floor.controller', [])
 
 controller('waitlistController', function($scope) {
     var wm = this;
-}).controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
+})
+
+.controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
 
     var server_id = $stateParams.server_id;
     var se = this;

@@ -949,10 +949,10 @@ li.divider
 	border-radius 10px
 	font-size 13px
 	text-transform none
-	padding-bottom 10px
+	/*padding-bottom 10px
 	padding-top 10px
 	padding-right 10px
-	padding-left 10px
+	padding-left 10px*/
 	&:hover
 		background-color #0b618a
 		color #fff
@@ -981,3 +981,14 @@ li.divider
 	width 100%
 .itext-left
 	text-align left !important
+	
+.scrolltablef
+	overflow-y auto
+	overflow-x hidden
+	height 70%
+	width 100%
+	position absolute
+	
+@media only screen and (max-height: 700px)
+	.scrolltablef
+		height 60%
