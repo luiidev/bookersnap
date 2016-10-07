@@ -62,7 +62,7 @@ angular.module('reservation.controller', [])
         vm.conflicts = [];
         angular.forEach(vm.tablesSelected, function(table, i) {
             var conflict = {};
-            console.log(vm.reservation.covers, table.minCover);
+
             if ( vm.reservation.covers < table.minCover ) {
                 conflict.name = table.name;
                 conflict.desc = "Mesa  demasiado grande";
