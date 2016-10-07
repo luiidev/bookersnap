@@ -4,7 +4,13 @@ angular.module('zone.app', ['zone.controller', 'zone.service', 'zone.directive']
 		$stateProvider
 			.state('mesas.zone', {
 				url: '/config/zone',
-				templateUrl: '/js/app/tables/zone/view/index.html',
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/zone/view/index.html',
+						controller: 'ZoneCtrl',
+					}
+
+				},
 				resolve: {
 					$title: function() {
 						return 'Lista de zonas';
@@ -29,33 +35,50 @@ angular.module('zone.app', ['zone.controller', 'zone.service', 'zone.directive']
 					}
 				}
 			})
-			.state('mesas.zone-create', {
-				url: '/config/zone/new',
-				templateUrl: '/js/app/tables/zone/view/zone-create.html',
+			.state('mesas.zone.create', {
+				url: '/new',
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/zone/view/zone-create.html',
+						controller: 'ZoneCreateCtrl',
+					}
+
+				},
 				resolve: {
 					$title: function() {
 						return 'Crear zona';
 					}
 				}
 			})
-			.state('mesas.zone-edit', {
-				url: '/config/zone/:id',
-				templateUrl: '/js/app/tables/zone/view/zone-edit.html',
+			.state('mesas.zone.edit', {
+				url: '/:id',
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/zone/view/zone-edit.html',
+						controller: 'ZoneCreateCtrl',
+					}
+
+				},
 				resolve: {
 					$title: function() {
 						return 'Editar zona';
 					}
 				}
 			})
-			.state('mesas.zone-clone', {
-				url: '/config/zone/:id/clone',
-				templateUrl: '/js/app/tables/zone/view/zone-clone.html',
+			.state('mesas.zone.clone', {
+				url: '/:id/clone',
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/zone/view/zone-clone.html',
+						controller: 'ZoneCreateCtrl',
+					}
+
+				},
 				resolve: {
 					$title: function() {
 						return 'Clonar zona';
 					}
 				}
 			});
-
 
 	});

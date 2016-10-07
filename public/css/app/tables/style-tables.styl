@@ -70,6 +70,10 @@ $color_secundario = #616161
 			
 	& .rt90 
 		transform rotate(90deg)
+		&.recta 
+			transform none
+			width 48px!important
+			height 75px!important
 	& .rt135
 		-moz-transform rotate(135deg)
 		-ms-transform rotate(135deg)
@@ -81,6 +85,8 @@ $color_secundario = #616161
 			-ms-transform translateY(-23.43146px) rotate(45deg)
 			-webkit-transform translateY(-23.43146px) rotate(45deg)
 			transform translateY(-23.43146px) rotate(45deg)
+			width 48px!important
+			height 75px!important
 		
 	& .table-zone
 		display block
@@ -123,9 +129,37 @@ $color_secundario = #616161
 			& .item-suggested
 			& .item-occupied
 				transform: translate(0%,0%) rotate(-45deg);
+		&.rt135 
+			& .table-label.top
+				-moz-transform translate(-50%,-100%) rotate(-45deg)
+				-ms-transform translate(-50%,-100%) rotate(-45deg)
+				-webkit-transform translate(-50%,-100%) rotate(-45deg)
+				transform translate(-50%,-100%) rotate(-45deg)
+			& .table-label.left
+				-moz-transform translate(-100%,-50%) rotate(-45deg)
+				-ms-transform translate(-100%,-50%) rotate(-45deg)
+				-webkit-transform translate(-100%,-50%) rotate(-45deg)
+				transform translate(-100%,-50%) rotate(-45deg)
+			& .table-label.bottom
+				-moz-transform translate(-50%,100%) rotate(-45deg)
+				-ms-transform translate(-50%,100%) rotate(-45deg)
+				-webkit-transform translate(-50%,100%) rotate(-45deg)
+				transform translate(-50%,100%) rotate(-45deg)
+			& .table-label.right
+				-moz-transform translate(100%,-50%) rotate(-45deg)
+				-ms-transform translate(100%,-50%) rotate(-45deg)
+				-webkit-transform translate(100%,-50%) rotate(-45deg)
+				transform translate(100%,-50%) rotate(-45deg)
+				
 		& .table-label
 			position absolute
 			font-weight bold
+			text-decoration none
+			text-transform none
+			-moz-user-select -moz-none
+			-ms-user-select none
+			-webkit-user-select none
+			
 			//width 100% 
 			//text-align center
 			&.top
@@ -215,7 +249,7 @@ $color_secundario = #616161
 		//width 675px !important
 		& .lienzo 
 			background-color #eee
-			min-height 740px
+			min-height 675px
 			overflow hidden
 			&.drag 
 				background-image url("../../../img/cuadro.png")
