@@ -1,4 +1,9 @@
 angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service'])
+    .constant("screenSizeFloor", {
+        minSize: 675,
+        header: 185,
+        menu: 400
+    })
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         $stateProvider
             .state('mesas.floor', {

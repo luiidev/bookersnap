@@ -49,6 +49,8 @@ $color_secundario = #616161
 					&.recta-btn-shape
 						width 35px
 						height 20px
+	&.drag-dispel
+		background #aaaaaa
 				
 	& .selected-table
 		border 2px solid #2196f3!important
@@ -257,10 +259,11 @@ $color_secundario = #616161
 		padding-left 0
 		& .lienzo-v2
 			background-color #CCC
-			width 740px
-			height 740px
+			min-width 675px
+			min-height 675px
 			overflow hidden
 			margin 0 auto
+			position relative
 			-webkit-user-select none
 			-khtml-user-select none
 			-moz-user-select none
@@ -549,7 +552,7 @@ $background-tables-head = #eee
 			& .name-table
 				margin-top -44px
 			& .icon-status-table
-				margin-top 18px
+				margin-top 10px
 				margin-left 8px
 		& .txtmoneda
 			text-align center
@@ -708,11 +711,12 @@ $background-tables-head = #eee
 		background #ff76cb
 
 .btn-menu
+	font-size .9em !important
 	margin-right 5px
 	border-radius 0px
 	padding 4px !important
 	white-space normal
-	min-height 50px
+	min-height 60px
 	box-shadow none !important
 	font-weight bold
 .btn-primary-nav
@@ -722,8 +726,7 @@ $background-tables-head = #eee
 .btn-default-nav
 	background-color #575757
 .tab-tiempo
-	background #575757
-	padding-right 430px	
+	background #575757	
 .tab-rp
 	width 130px
 	background #575757
@@ -735,25 +738,27 @@ $background-tables-head = #eee
 		display inline-block
 		margin-left 4px
 .item-txt-time
-	margin-top -0.2em
+	/*margin-top -0.2em*/
 	& .yellow-time
 		color #e6c610
 	& .txt-time
-		margin-top -22px
+		/*margin-top -22px
 		display block
-		padding-left 22px
+		padding-left 22px*/
 .num-orden-zona
 	position absolute
-	top 0
-	left 0
+	top 2px
+	left 2px
 .tab-menu-floor
 	li
 		background #575757
 		border-left 5px solid #424242
 		a
-			font-size 12px
+			font-size .9em
 			color rgba(255,255,255,0.6)
 			font-weight bold
+			height 60px
+			line-height 30px
 	//li:first-child
 	//	border-left none
 .tab-menu-floor:not(.tn-vertical) > li.active > a
@@ -858,8 +863,8 @@ ul.modal-listado-num-people
 ul.listado-filtros
 	position fixed
 	bottom 0px
-	padding 0px 0px 0px 18px
-	height 75px
+	padding 0px 0px 0px 5px
+	height 60px
 	width 100%
 	list-style none
 	margin 0 auto
@@ -869,9 +874,9 @@ ul.listado-filtros
 		vertical-align top
 		& .btn
 			height 60px		
-			margin-top 8px
+			/*margin-top 8px*/
 			padding 3px 5px
-			width 120px
+			width 130px
 			background #575757
 			color #fefefe
 			& .rounded
@@ -903,7 +908,7 @@ ul.footer-floor
 		margin 0
 		& .btn			
 			height 60px
-			margin-top 8px
+			/*margin-top 8px*/
 			padding 3px 5px
 			width 100px
 		&.ultimo-btn-right
@@ -938,9 +943,9 @@ ul.footer-floor
 				font-weight bold
 				border-radius 2px
 		&.logotipo-footer
-			width 45px
+			width 40px
 			height 70px
-			padding 8px 4px 4px 4px
+			padding 0px 0px 4px 4px
 			margin 0px 25px 0px 6px
 			img
 				width 100%
@@ -1068,13 +1073,14 @@ li.divider
 .btn-default-red
 	background-color #d32f2f
 	color white
-	border-radius 10px
+	/*border-radius 10px*/
 	font-size 13px
 	text-transform none
 	padding-bottom 10px
 	padding-top 10px
 	padding-right 10px
 	padding-left 10px
+	font-size .9em
 	&:hover
 		background-color #f12929
 		color #fff
@@ -1082,7 +1088,7 @@ li.divider
 .btn-default-blue
 	background-color #01567f
 	color white
-	border-radius 10px
+	/*border-radius 10px*/
 	font-size 13px
 	text-transform none
 	/*padding-bottom 10px
@@ -1158,3 +1164,10 @@ li.divider
 @media only screen and (max-height: 700px)
 	.scrolltablef
 		height 60%
+
+.footer-custom-res
+	position fixed !important
+	z-index 8
+	height 95px !important
+	padding-bottom 0px;
+	
