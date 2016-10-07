@@ -58,13 +58,13 @@ angular.module('floor.controller', [])
 
         };
 
-        vm.handConfiguration = function() {
+        vm.handConfiguration = function(obj) {
             var res = vm.numpeople;
             var num = res.substring(3);
-            modalInstancesConfiguration(num);
+            modalInstancesConfiguration(num, obj);
         };
 
-        function modalInstancesConfiguration(num) {
+        function modalInstancesConfiguration(num, obj) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -73,6 +73,9 @@ angular.module('floor.controller', [])
                 resolve: {
                     num: function() {
                         return num;
+                    },
+                    table: function() {
+                        return obj;
                     }
                 }
             });
@@ -92,10 +95,11 @@ angular.module('floor.controller', [])
         })();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($modalInstance, num, OperationFactory) {
+    .controller('ConfigurationInstanceCtrl', function($modalInstance, num, table, OperationFactory) {
         var vmc = this;
         vmc.numpeople = num;
         vmc.resultado = num;
+        vmc.table = table;
 
         //Creando numero de casillas
         var vNumpeople = [];
@@ -164,6 +168,7 @@ angular.module('floor.controller', [])
                 vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
                 vmc.flagSelectedNumMen = 0;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                //console.log('Datos ' + angular.toJson(vmc.numperson));
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 

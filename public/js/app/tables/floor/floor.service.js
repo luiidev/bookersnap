@@ -298,7 +298,7 @@ angular.module('floor.service', [])
 				}
 			},
 			getTotalPerson: function(numperson) {
-				var total = numperson.men + numperson.women + numperson.children;
+				var total = parseInt(numperson.men) + parseInt(numperson.women) + parseInt(numperson.children);
 				return total;
 			}
 		};
