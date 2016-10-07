@@ -3,8 +3,8 @@ angular.module('reservation.controller', [])
     console.log("=)");
 }])
 .controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
-    "reservationScreenHelper", "reservationService", "reservationHelper",
-        function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper){
+    "screenHelper", "reservationService", "reservationHelper", "screenSize", 
+        function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize){
 
     vm.reservation = {};
     vm.tablesSelected = {};
@@ -32,13 +32,15 @@ angular.module('reservation.controller', [])
             } else {
                 return alert("Debe elegir mesas para la reservacion");
             }
-        } 
+        }
         // end
 
-        //  paser guest
+        //  parse guest
         if (!vm.reservation.guest_id) {
             vm.reservation.guest = vm.newGuest || {};
             delete vm.reservation.guest_id;
+        } else {
+            delete vm.reservation.guest;
         }
         //  end
 
@@ -62,7 +64,7 @@ angular.module('reservation.controller', [])
         vm.conflicts = [];
         angular.forEach(vm.tablesSelected, function(table, i) {
             var conflict = {};
-            console.log(vm.reservation.covers, table.minCover);
+
             if ( vm.reservation.covers < table.minCover ) {
                 conflict.name = table.name;
                 conflict.desc = "Mesa  demasiado grande";
@@ -285,9 +287,9 @@ angular.module('reservation.controller', [])
 
 
     angular.element($window).bind('resize', function(){
-        var size = screenHelper.size(vm);
+        var size = screenHelper.size(screenSize);
         vm.size = size;
-        vm.fontSize = 14 *  size / screenHelper.minSize() + "px";
+        vm.fontSize = 14 *  size / screenSize.minSize + "px";
         vm.$digest();
     });
 
@@ -329,7 +331,7 @@ angular.module('reservation.controller', [])
     (function Init() {
         loadZones();
 
-        vm.size = screenHelper.size();
-        vm.fontSize = 14 *  vm.size / screenHelper.minSize()+ "px";
+        vm.size = screenHelper.size(screenSize);
+        vm.fontSize = 14 *  vm.size / screenSize.minSize+ "px";
     })();
 }]);

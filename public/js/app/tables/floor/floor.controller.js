@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, $window, reservationScreenHelper) {
+.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, $window, screenHelper, screenSizeFloor) {
         var vm = this;
         var fecha_actual = getFechaActual();
 
@@ -79,17 +79,16 @@ angular.module('floor.controller', [])
         }
 
         angular.element($window).bind('resize', function() {
-            console.log('hi');
-            var size = reservationScreenHelper.size(vm);
+            var size = screenHelper.size(screenSizeFloor);
             vm.size = size;
-            vm.fontSize = 14 * size / reservationScreenHelper.minSize() + "px";
+            vm.fontSize = 14 * vm.size / screenSizeFloor.minSize + "px";
             $scope.$digest();
 
         });
 
         (function Init() {
-            vm.size = reservationScreenHelper.size();
-            vm.fontSize = 14 * vm.size / reservationScreenHelper.minSize() + "px";
+            vm.size = screenHelper.size(screenSizeFloor);
+            vm.fontSize = 14 * vm.size / screenSizeFloor.minSize + "px";
         })();
 
     })

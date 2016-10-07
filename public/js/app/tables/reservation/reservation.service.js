@@ -84,26 +84,31 @@ angular.module('reservation.service', [])
                     var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0);
                     var timeDefaultIsEstablished = false;
 
+                    var addHour = function(date_ini, item, minutes) {
+                        date_ini.add(minutes, "minutes");
+                        var hour = {};
+
+                        hour.turn = item.name;
+                        hour.time = date_ini.format("HH:mm:ss");
+                        hour.name = date_ini.format("H:mmA");
+                        hours.push(hour);
+
+                        if (!timeDefaultIsEstablished) {
+                            if (date_ini.isAfter(now)) {
+                                timeDefault = hour.time;
+                                timeDefaultIsEstablished = true;
+                            }
+                        }
+                    };
+
                     angular.forEach(turns, function(item) {
                         if (item.turn !== null) {
                             var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
                             var date_end = moment(item.turn.hours_end, "HH:mm:ss");
-                            for (var i = 1; i < 96; i++) {
-                                date_ini.add(15, "minutes");
-                                var hour = {};
+                            addHour(date_ini, item, 0);
 
-                                hour.turn = item.name;
-                                hour.time = date_ini.format("HH:mm:ss");
-                                hour.name = date_ini.format("H:mmA");
-                                hours.push(hour);
-
-                                if (!timeDefaultIsEstablished) {
-                                    if (date_ini.isAfter(now)) {
-                                        timeDefault = hour.time;
-                                        timeDefaultIsEstablished = true;
-                                    }
-                                }
-
+                            for (var i = 1; i < 95; i++) {
+                                addHour(date_ini, item, 15);
                                 if (date_ini.isSame(date_end)) break;
                             }
                         }
@@ -117,7 +122,7 @@ angular.module('reservation.service', [])
             };
         }
     ])
-    .factory("reservationHelper", ["TableFactory", "reservationScreenHelper", function(TableFactory, screenHelper) {
+    .factory("reservationHelper", ["TableFactory", "screenSize", function(TableFactory, screenSize) {
         var loadTable = function(zones) {
             var itemZones = [];
 
@@ -126,8 +131,8 @@ angular.module('reservation.service', [])
                 var tables = [];
                 angular.forEach(zone.tables, function(data) {
                     var position = data.config_position.split(",");
-                    var left = (parseInt(position[0]) / screenHelper.minSize()) * 100 + "%";
-                    var top = (parseInt(position[1]) / screenHelper.minSize()) * 100 + "%";
+                    var left = (parseInt(position[0]) / screenSize.minSize) * 100 + "%";
+                    var top = (parseInt(position[1]) / screenSize.minSize) * 100 + "%";
                     var size = TableFactory.getLabelSize(data.config_size) + "-relative";
                     var dataTable = {
                         name: data.name,
@@ -162,8 +167,8 @@ angular.module('reservation.service', [])
             loadTable: loadTable
         };
     }])
-    .factory("reservationScreenHelper", ["$window", "screenSize", function($window, screenSize) {
-        var size = function() {
+    .factory("screenHelper", ["$window", function($window) {
+        var size = function(screenSize) {
 
             var width = $window.innerWidth;
             var height = $window.innerHeight;
@@ -188,12 +193,7 @@ angular.module('reservation.service', [])
             return size - 30;
         };
 
-        var minSize = function() {
-            return screenSize.minSize;
-        };
-
         return {
             size: size,
-            minSize: minSize
         };
     }]);
