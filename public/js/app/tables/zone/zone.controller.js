@@ -645,6 +645,4 @@ angular.module('zone.controller', ['ngDraggable'])
 
         getTurns();
         getTypeTurns();
-    })
-
-;
+    });
