@@ -409,6 +409,7 @@ angular.module('zone.controller', ['ngDraggable'])
                 config_position: table.left + "," + table.top, //x,y
                 config_size: TableFactory.getIdSize(table.size),
                 config_rotation: table.rotate,
+                config_rotation_text: table.rotate_text,
                 config_forme: TableFactory.getIdShape(table.shape),
                 id: table.id,
                 status: table.status
@@ -506,6 +507,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     shape: TableFactory.getLabelShape(data.config_forme),
                     size: TableFactory.getLabelSize(data.config_size),
                     rotate: data.config_rotation,
+                    rotate_text: TableFactory.getRotationText(data.config_rotation_text),
                     id: data.id,
                     status: data.status
                 };
@@ -517,6 +519,13 @@ angular.module('zone.controller', ['ngDraggable'])
                 }
 
             });
+
+            /* setTimeout(function() {
+                TableFactory.setRotationText($scope.itemTables);
+            }, 500);
+*/
+
+            console.log("loadTablesEdit " + angular.toJson($scope.itemTables, true));
 
             updateHeaderZone();
         };

@@ -30,9 +30,11 @@ angular.module('zone.service', [])
 
 		}
 	}*/
+
+	//config_rotate_text : 1 = top , 2 = rigth , 3 = bottom , 4 = left
 })
 
-.factory('ZoneLienzoFactory', function($document) {
+.factory('ZoneLienzoFactory', function($document, TableFactory) {
 	return {
 		activarTablesItems: function(boxTables) {
 			boxTables.item = false;
@@ -90,13 +92,12 @@ angular.module('zone.service', [])
 			return position;
 		},
 		changeRotationText: function(option, element, index) {
-			console.log("changeRotationText ", angular.toJson(element, true));
 
-			var rotate = "";
 			//var rotate_actual = element.rotate_text;
 
 			var table = angular.element("#tb-item" + index);
 			var rotate_actual = table[0].firstElementChild.classList[1];
+			var rotate = rotate_actual || "top";
 
 			switch (rotate_actual) {
 				case 'top':
@@ -114,10 +115,11 @@ angular.module('zone.service', [])
 			}
 
 			angular.element(table[0].firstElementChild).removeClass(rotate_actual);
-
 			angular.element(table[0].firstElementChild).addClass(rotate);
 
-			element.rotate_text = rotate;
+			element.rotate_text = TableFactory.getIdRotationText(rotate);
+
+			console.log("changeRotationText ", angular.toJson(element, true));
 		},
 		changeNameTable: function(element, itemTables, texto) {
 			var valida = false;
@@ -203,6 +205,57 @@ angular.module('zone.service', [])
 			}
 
 			return label;
+		},
+		getRotationText: function(id) {
+			var label = "top";
+			switch (id) {
+				case 1:
+					label = "top";
+					break;
+				case 2:
+					label = "right";
+					break;
+				case 3:
+					label = "bottom";
+					break;
+				case 4:
+					label = "left";
+					break;
+			}
+			return label;
+		},
+		getIdRotationText: function(label) {
+			var id = 1;
+			switch (label) {
+				case 'top':
+					id = 1;
+					break;
+				case 'right':
+					id = 2;
+					break;
+				case 'bottom':
+					id = 3;
+					break;
+				case 'left':
+					id = 4;
+					break;
+			}
+			return id;
+		},
+		setRotationText: function(tables) {
+			var self = this;
+
+			angular.forEach(tables, function(value, key) {
+
+				var table = angular.element("#tb-item" + key + " .table-label");
+				var rotate = self.getRotationText(value.rotate_text);
+
+				table.removeClass("top");
+				angular.element(table).addClass(rotate);
+
+				console.log(rotate);
+
+			});
 		}
 	};
 })

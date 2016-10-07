@@ -1,64 +1,110 @@
 <div class="w-100 p-0" style="background-color: #424242;">
     <ul class="footer-floor">
         <li class="logotipo-footer">
+<<<<<<< HEAD
+            <img src="/images/icon-bookersnap.png">
+            </img>
+=======
             <img class="img-responsive" src="/images/icon-bookersnap.png">
+>>>>>>> 747f77856bc14483a73ab0ec48f9facc40405d46
         </li>
         <li>
-            <button type="button" class="btn btn-default-red btn-sm text-center pull-left" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
-                <i class="tm-icon zmdi zmdi-notifications zmdi-hc-2x"></i>
-                <div class="f-12">Reservación</div>
+            <button class="btn btn-default-red btn-sm text-center pull-left" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
+                <i class="tm-icon zmdi zmdi-notifications zmdi-hc-2x">
+                </i>
+                <div class="f-12">
+                    Reservación
+                </div>
             </button>
             <ul class="f-btn-notas">
                 <li class="dropdown dropup" uib-dropdown="">
-                    <button type="button" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
-                        <span class="zmdi zmdi-book zmdi-hc-2x"></span>
-                        <div class="f-12">Notas turnos</div>
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" type="button" uib-dropdown-toggle="">
+                        <span class="zmdi zmdi-book zmdi-hc-2x">
+                        </span>
+                        <div class="f-12">
+                            Notas turnos
+                        </div>
                     </button>
                     <ul class="dropdown-menu">
-                        <li class="box-tab-notas">Diseñar Tab para notas</li>
+                        <li class="box-tab-notas">
+                            Diseñar Tab para notas
+                        </li>
                     </ul>
                 </li>
             </ul>
-            <button type="button" class="btn btn-default-blue btn-sm text-center" ui-sref="mesas.block({date : '{{vm.fecha_actual}}'})"><span class="zmdi zmdi-lock-open zmdi-hc-2x"></span>
-                <div class="f-12">Bloqueos  mesas</div>
+            <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.block({date : '{{vm.fecha_actual}}'})">
+                <span class="zmdi zmdi-lock-open zmdi-hc-2x">
+                </span>
+                <div class="f-12">
+                    Bloqueos  mesas
+                </div>
             </button>
         </li>
-               
         <li class="dropdown dropup ultimo-btn-right pull-right" uib-dropdown="">
-            <button type="button" class="btn btn-default-red btn-sm text-center dropdown-toggle waves-effect" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">
                 MESA RAPIDA
-                <span class="caret"></span>
+                <span class="caret">
+                </span>
             </button>
             <ul class="dropdown-menu">
                 <li class="listado-table">
                     <div class="listado-row">
-                        <div class="listado-column" id="num1" ng-drag-num-people>1</div>
-                        <div class="listado-column" id="num2" ng-drag-num-people>2</div>
-                        <div class="listado-column" id="num3" ng-drag-num-people>3</div>
+                        <div class="listado-column" id="num1" ng-drag-num-people="">
+                            1
+                        </div>
+                        <div class="listado-column" id="num2" ng-drag-num-people="">
+                            2
+                        </div>
+                        <div class="listado-column" id="num3" ng-drag-num-people="">
+                            3
+                        </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num4" ng-drag-num-people>4</div>
-                        <div class="listado-column" id="num5" ng-drag-num-people>5</div>
-                        <div class="listado-column" id="num6" ng-drag-num-people>6</div>
+                        <div class="listado-column" id="num4" ng-drag-num-people="">
+                            4
+                        </div>
+                        <div class="listado-column" id="num5" ng-drag-num-people="">
+                            5
+                        </div>
+                        <div class="listado-column" id="num6" ng-drag-num-people="">
+                            6
+                        </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num7" ng-drag-num-people>7</div>
-                        <div class="listado-column" id="num8" ng-drag-num-people>8</div>
-                        <div class="listado-column" id="num9" ng-drag-num-people>9</div>
+                        <div class="listado-column" id="num7" ng-drag-num-people="">
+                            7
+                        </div>
+                        <div class="listado-column" id="num8" ng-drag-num-people="">
+                            8
+                        </div>
+                        <div class="listado-column" id="num9" ng-drag-num-people="">
+                            9
+                        </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num10" ng-drag-num-people>10</div>
-                        <div class="listado-column" id="num11" ng-drag-num-people>11</div>
-                        <div class="listado-column" id="num12" ng-drag-num-people>12</div>
+                        <div class="listado-column" id="num10" ng-drag-num-people="">
+                            10
+                        </div>
+                        <div class="listado-column" id="num11" ng-drag-num-people="">
+                            11
+                        </div>
+                        <div class="listado-column" id="num12" ng-drag-num-people="">
+                            12
+                        </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num13" ng-drag-num-people>13</div>
-                        <div class="listado-column" id="num14" ng-drag-num-people>14</div>
-                        <div class="listado-column" id="num15" ng-drag-num-people>15</div>
+                        <div class="listado-column" id="num13" ng-drag-num-people="">
+                            13
+                        </div>
+                        <div class="listado-column" id="num14" ng-drag-num-people="">
+                            14
+                        </div>
+                        <div class="listado-column" id="num15" ng-drag-num-people="">
+                            15
+                        </div>
                     </div>
                 </li>
             </ul>
         </li>
-
     </ul>
 </div>

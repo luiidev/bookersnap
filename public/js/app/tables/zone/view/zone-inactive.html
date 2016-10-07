@@ -27,7 +27,7 @@
                     Creación
                 </th>
                 <th class="text-right">
-                    <button class="btn btn-primary waves-effect" data-ui-sref="mesas.zone-create">
+                    <button class="btn btn-primary waves-effect" data-ui-sref="mesas.zone.create">
                         Crear Zona
                     </button>
                 </th>
@@ -54,12 +54,12 @@
                     {{ item.date_add }}
                 </td>
                 <td class="text-right">
-                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="mesas.zone-clone({id : '{{item.id}}'})">
+                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="mesas.zone.clone({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-collection-item-1 zmdi-hc-fw">
                         </i>
                         Clonar
                     </button>
-                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="mesas.zone-edit({id : '{{item.id}}'})">
+                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="mesas.zone.edit({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                         </i>
                         Editar

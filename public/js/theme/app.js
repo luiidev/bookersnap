@@ -4,7 +4,7 @@ var materialAdmin = angular.module('materialAdmin', [
 	'ui.router',
 	'ui.bootstrap',
 	'angular-loading-bar',
-	'oc.lazyLoad',
+	//'oc.lazyLoad',
 	'nouislider',
 	'ngScrollbars',
 	'ngTable',
