@@ -93,7 +93,13 @@ $color_secundario = #616161
 				-ms-transform translate(-50%,100%) rotate(-45deg)
 				-webkit-transform translate(-50%,100%) rotate(-45deg)
 				transform translate(-50%,100%) rotate(-45deg)
-				
+			& .item-drag-cover
+				transform: translate(-50%,-100%) rotate(-45deg);
+				left: 50%;
+				margin-top: 6px !important;
+			& .item-suggested
+			& .item-occupied
+				transform: translate(0%,0%) rotate(-45deg);
 		& .table-label
 			position absolute
 			font-weight bold
@@ -207,17 +213,36 @@ $color_secundario = #616161
 			user-select none
 			& .item-drag-table
 				position absolute
+				& .table-label
+					font-weight normal
+					font-size 0.9em
+					&.top
+						top -5px	
+					&.right 
+						right -5px
+					&.left
+						left -5px
+					&.bottom 
+						bottom -5px 
 				& .item-drag-cover
 					background-color #ccc
-					color black
-					font-weight bold
+					color #000
+					font-weight 500
+					width 100%
+					font-size .9em
+					border 0.5px solid #6b6a6a
+					top 50%
+					margin-top -9px
+					height 16px
+					line-height 16px
+					border-radius 4px
 				& .item-suggested
 					background-image url(../../../img/table-suggested.svg)
 					background-repeat no-repeat
 					background-position-x 50%
 					background-position-y 50%
-					width 75%
-					height 75%
+					width 90%
+					height 90%
 					min-width 16px
 					min-height 16px
 					max-width 36px
@@ -235,8 +260,8 @@ $color_secundario = #616161
 					background-repeat no-repeat
 					background-position-x 50%
 					background-position-y 50%
-					width 75%
-					height 75%
+					width 90%
+					height 90%
 					min-width 16px
 					min-height 16px
 					max-width 36px
@@ -981,3 +1006,34 @@ li.divider
 	width 100%
 .itext-left
 	text-align left !important
+.card
+	&.reservation-guest-selected
+	&.reservation-guest
+		margin-bottom  5px
+		border 1px solid #fff
+	&.reservation-guest-selected
+		& .card-header
+			cursor pointer
+			& .remove-guest
+				display block
+				color #bbbbbb
+				text-transform uppercase
+		& span
+			margin-right 10px
+	&.reservation-guest
+		& .card-header
+			cursor pointer
+	&.reservation-guest-form
+		margin-bottom  5px
+		& .card-header
+			padding 15px 15px
+			cursor pointer
+		& .guest-search-list
+			position absolute
+			width 100%
+			top 61px
+			z-index 1
+			& .card-header
+				margin-bottom 0
+				padding 10px 15px
+				cursor pointer

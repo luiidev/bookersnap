@@ -8,7 +8,7 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
             url: '/reservation',
             templateUrl: '/js/app/tables/reservation/view/index.html',
             controller: "reservationCtrl.Index",
-            // controllerAs: 'vm',
+            //controllerAs: 'vm',
         })
         .state('mesas.reservation-new', {
             url: '/reservation/:date/new',

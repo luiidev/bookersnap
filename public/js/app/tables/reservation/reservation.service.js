@@ -17,6 +17,9 @@ angular.module('reservation.service', [])
         getBlocks: function(date) {
             return http.get(ApiUrlMesas + "/blocks/tables", {params: {date: date}});
         },
+        getGuestList: function(name) {
+            return http.get(ApiUrlMesas + "/guests", {params: {name: name, page_size: 8}});
+        },
         getGuest: function() {
             var deferred = $q.defer();
 
