@@ -25,8 +25,10 @@ angular.module('floor.directive', [])
             element.droppable({
                 accept: ".listado-column",
                 drop: function(event, ui) {
-                    console.log(ui.draggable[0].id);
-                    //scope.num = 18;
+                    //console.log(ui.draggable[0].id);
+                    scope.$apply(function() {
+                        scope.num = ui.draggable[0].id;
+                    });
                     scope.onDroppedFn();
                 }
             });
@@ -40,7 +42,7 @@ angular.module('floor.directive', [])
         return {
             link: makeSelectTable,
             scope: {
-                num: "@",
+                num: "=",
                 onClickFn: '&',
                 onDroppedFn: '&'
             }

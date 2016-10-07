@@ -481,3 +481,12 @@ var optionsScrollBarPLugin = function(axis, theme, height) {
 
     return options;
 };
+var getFechaActual = function() {
+    var fecha = new Date();
+    var dia = (fecha.getDate() < 10 ? '0' : '') + fecha.getDate();
+    var mes = ((fecha.getMonth() + 1) < 10 ? '0' : '') + (fecha.getMonth() + 1);
+    var anio = fecha.getFullYear();
+    var fecha_actual = String(anio + "-" + mes + "-" + dia);
+    return fecha_actual;
+
+};

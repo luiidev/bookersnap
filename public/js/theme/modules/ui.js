@@ -11,7 +11,7 @@
             link: function(scope, element) {
 
                 if (!$('html').hasClass('ismobile')) {
-                    scrollService.malihuScroll(element, 'minimal-dark', 'y');
+                scrollService.malihuScroll(element, 'minimal-dark', 'y');
                 }
             }
         }
