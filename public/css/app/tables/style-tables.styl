@@ -563,6 +563,13 @@ $background-tables-head = #eee
 	width 32px
 	height 32px
 	display block
+	background-repeat no-repeat
+	&.icon-status-table
+		position absolute
+		top 31px
+		left -3px
+	&.size20px
+		background-size 20px 20px
 	&.not-confirmed
 		background-image url('../../../img/status/not-confirmed.svg')
 	&.confirmed
@@ -730,7 +737,68 @@ $background-tables-head = #eee
 			color #fff
 		& .input-group-addon
 			color #fff
-
+ul.modal-listado-num-people
+	list-style none
+	li
+		display block
+		border 1px solid #e4e4e4
+		margin-bottom 8px
+		& .btn
+			box-shadow none
+			background #575757
+			color rgba(255,255,255,0.6)
+			border-radius 0
+			font-size 2em
+			margin-left 2px
+			padding 12px 0px
+			width 42px
+			&.btn-active
+				background #005581
+		&.lst-women, &.lst-men, &.lst-children
+			& .box-gender
+				color #575757
+				width 42px
+				height 61px
+				text-align center
+				float left
+				i
+					font-size 3em
+					line-height 1.5em
+			& .box-count
+				height 61px
+				//border 1px solid #e4e4e4
+				text-align center
+				padding-right 10px
+				& .btn
+					display inline-block
+					height 40px
+					padding 0px
+					margin 10px 2px 0px 2px
+					float left
+				& .box-count-value
+					background #575757
+					width 46px
+					height 40px
+					font-size 2em
+					line-height 1.5em
+					float left
+					margin-top 10px
+					color rgba(255,255,255,0.6)
+					text-align center
+					&.btn-active
+						background #005581
+.box-result
+	text-align center
+	color #005581
+	font-size 2em
+	& .box-total
+		background #575757
+		padding 0px 32px
+		color rgba(255,255,255,0.6)
+		line-height 1.5em
+		
+					
+				
 ul.listado-filtros
 	position fixed
 	bottom 0px
@@ -780,6 +848,7 @@ ul.footer-floor
 			height 60px
 			margin-top 8px
 			padding 3px 5px
+			width 100px
 		&.ultimo-btn-right
 			padding-right 410px
 			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
@@ -818,6 +887,14 @@ ul.footer-floor
 			margin 0px 25px 0px 6px
 			img
 				width 100%
+	.f-btn-notas
+		list-style none
+		margin 0
+		padding 0
+		display inline
+		.box-tab-notas
+			width 340px
+			min-height 200PX
 		
 li.divider
 	width 2px

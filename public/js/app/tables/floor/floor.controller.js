@@ -2,9 +2,13 @@ angular.module('floor.controller', [])
 
 .controller('FloorCtrl', function($uibModal, $rootScope, FloorFactory, ServerFactory) {
         var vm = this;
+        var fecha_actual = getFechaActual();
+
         vm.titulo = "Floor";
         vm.colorsSelect = [];
         vm.flagSelectedZone = 0;
+
+        vm.fecha_actual = fecha_actual;
 
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
@@ -50,29 +54,127 @@ angular.module('floor.controller', [])
         }
 
         vm.tabSelectedZone = function(value) {
-            console.log(value);
             vm.flagSelectedZone = value;
 
         };
 
         vm.handConfiguration = function() {
-            //alert('Added from controller');
-            //http://jsfiddle.net/maxisam/QrCXh/
-            modalInstancesConfiguration();
+            var res = vm.numpeople;
+            var num = res.substring(3);
+            modalInstancesConfiguration(num);
         };
 
-        function modalInstancesConfiguration() {
+        function modalInstancesConfiguration(num) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
                 controllerAs: 'vmc',
                 size: 'lg',
+                resolve: {
+                    num: function() {
+                        return num;
+                    }
+                }
             });
         }
 
     })
-    .controller('ConfigurationInstanceCtrl', function($modalInstance) {
+    .controller('ConfigurationInstanceCtrl', function($modalInstance, num) {
         var vmc = this;
+        vmc.numpeople = num;
+        vmc.resultado = num;
+
+        //Creando numero de casillas
+        var vNumpeople = [];
+        for (i = 1; i <= 12; i++) {
+            vNumpeople.push({
+                num: i
+            });
+        }
+        vmc.colectionNum = vNumpeople;
+
+        //Definiendo valores por defecto
+        vmc.flagSelectedNumMen = num;
+        vmc.flagSelectedNumWomen = 0;
+        vmc.flagSelectedNumChildren = 0;
+
+        vmc.btnSelectedNumMen = function(value) {
+            vmc.flagSelectedNumMen = value;
+            vmc.flagSelectedCountNumMen = 0;
+            vmc.numdinamicoMen = 13;
+        };
+        vmc.btnSelectedNumWomen = function(value) {
+            vmc.flagSelectedNumWomen = value;
+            vmc.flagSelectedCountNumWomen = 0;
+            vmc.numdinamicoWomen = 13;
+        };
+        vmc.btnSelectedNumChildren = function(value) {
+            vmc.flagSelectedNumChildren = value;
+            vmc.flagSelectedCountNumChildren = 0;
+            vmc.numdinamicoChildren = 13;
+        };
+
+        //vmc.resultado = vmc.flagSelectedNumMen + vmc.flagSelectedNumWomen + vmc.flagSelectedNumChildren;
+
+        if (num > 12) {
+            vmc.numdinamicoMen = num;
+            vmc.flagSelectedCountNumMen = num;
+
+            vmc.numdinamicoWomen = 13;
+            vmc.flagSelectedCountNumWomen = 0;
+
+            vmc.numdinamicoChildren = 13;
+            vmc.flagSelectedCountNumChildren = 0;
+
+        } else {
+            vmc.numdinamicoMen = 13;
+            vmc.numdinamicoWomen = 13;
+            vmc.numdinamicoChildren = 13;
+        }
+
+        vmc.sumar = function(person) {
+            if (person == 'men') {
+                vmc.numdinamicoMen++;
+                vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
+                vmc.flagSelectedNumMen = 0;
+            }
+
+            if (person == 'women') {
+                vmc.numdinamicoWomen++;
+                vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
+                vmc.flagSelectedNumWomen = 0;
+            }
+
+            if (person == 'children') {
+                vmc.numdinamicoChildren++;
+                vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
+                vmc.flagSelectedNumChildren = 0;
+            }
+        };
+        vmc.restar = function(person) {
+            if (person == 'men') {
+                if (vmc.numdinamicoMen > 13) {
+                    vmc.numdinamicoMen--;
+                    vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
+                    vmc.flagSelectedNumMen = 0;
+                }
+            }
+            if (person == 'women') {
+                if (vmc.numdinamicoWomen > 13) {
+                    vmc.numdinamicoWomen--;
+                    vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
+                    vmc.flagSelectedNumWomen = 0;
+                }
+            }
+            if (person == 'children') {
+                if (vmc.numdinamicoChildren > 13) {
+                    vmc.numdinamicoChildren--;
+                    vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
+                    vmc.flagSelectedNumChildren = 0;
+                }
+            }
+        };
+
         vmc.cancel = function() {
             $modalInstance.dismiss('cancel');
         };
