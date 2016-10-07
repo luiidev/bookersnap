@@ -106,7 +106,7 @@ angular.module('reservation.service', [])
         }
     };
 }])
-.factory("reservationHelper", ["TableFactory", "reservationScreenHelper", function(TableFactory, screenHelper){
+.factory("reservationHelper", ["TableFactory", "screenSize", function(TableFactory, screenSize){
     var loadTable = function(zones) {
         var itemZones = [];
 
@@ -115,8 +115,8 @@ angular.module('reservation.service', [])
             var tables = [];
             angular.forEach(zone.tables, function(data) {
                 var position = data.config_position.split(",");
-                var left = (parseInt(position[0])  / screenHelper.minSize() ) * 100 + "%";
-                var top = (parseInt(position[1]) / screenHelper.minSize()) * 100 + "%";
+                var left = (parseInt(position[0])  / screenSize.minSize ) * 100 + "%";
+                var top = (parseInt(position[1]) / screenSize.minSize ) * 100 + "%";
                 var size = TableFactory.getLabelSize(data.config_size) + "-relative";
                 var dataTable = {
                     name: data.name,
@@ -151,8 +151,8 @@ angular.module('reservation.service', [])
         loadTable: loadTable
     };
 }])
-.factory("reservationScreenHelper", ["$window", "screenSize", function($window, screenSize) {
-    var size = function() {
+.factory("screenHelper", ["$window", function($window) {
+    var size = function(screenSize) {
 
         var width = $window.innerWidth;
         var height = $window.innerHeight;
@@ -177,12 +177,7 @@ angular.module('reservation.service', [])
         return size - 30;
     };
 
-    var minSize = function(){
-        return screenSize.minSize;
-    };
-
     return {
         size: size,
-        minSize: minSize
     };
 }]);
