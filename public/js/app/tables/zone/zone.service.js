@@ -2,7 +2,9 @@ angular.module('zone.service', [])
 	.factory('ZoneFactory', function($http, ApiUrlMesas) {
 		return {
 			getZones: function(vOptions) {
-				return $http.get(ApiUrlMesas + "/zones?" + vOptions);
+				return $http.get(ApiUrlMesas + "/zones?" + vOptions, {
+					ignoreLoadingBar: true
+				});
 			},
 			getZone: function(vId) {
 				return $http.get(ApiUrlMesas + "/zones/" + vId);
@@ -115,10 +117,10 @@ angular.module('zone.service', [])
 			}
 
 			angular.element(table[0].firstElementChild).removeClass(rotate_actual);
-			angular.element(table[0].firstElementChild).addClass(rotate);
+			//angular.element(table[0].firstElementChild).addClass(rotate);
 
-			element.rotate_text = TableFactory.getIdRotationText(rotate);
-
+			//element.rotate_text = TableFactory.getIdRotationText(rotate);
+			element.rotate_text = rotate;
 			console.log("changeRotationText ", angular.toJson(element, true));
 		},
 		changeNameTable: function(element, itemTables, texto) {
@@ -241,21 +243,6 @@ angular.module('zone.service', [])
 					break;
 			}
 			return id;
-		},
-		setRotationText: function(tables) {
-			var self = this;
-
-			angular.forEach(tables, function(value, key) {
-
-				var table = angular.element("#tb-item" + key + " .table-label");
-				var rotate = self.getRotationText(value.rotate_text);
-
-				table.removeClass("top");
-				angular.element(table).addClass(rotate);
-
-				console.log(rotate);
-
-			});
 		}
 	};
 })

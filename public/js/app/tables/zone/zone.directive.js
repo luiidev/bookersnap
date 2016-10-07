@@ -24,7 +24,7 @@ angular.module('zone.directive', [])
         angular.element(eLabel.context.lastElementChild).addClass("left");
       }
     } else {
-      if (eTextRotate == "top" && eRotate == "45" && draggableRight >= (parentWidth - draggableWidth * 0.35) || eRotate == "135") {
+      if ((eTextRotate == "top" && (eRotate == "45" || eRotate == "135")) && draggableRight >= (parentWidth - draggableWidth * 0.35)) {
         angular.element(eLabel.context.lastElementChild).removeClass("top");
         angular.element(eLabel.context.lastElementChild).addClass("left");
       }
@@ -42,7 +42,6 @@ angular.module('zone.directive', [])
 
     } else {
       if (eTextRotate == "left" && eRotate == "45" && (draggableLeft - draggableWidth * 0.35) <= 0) {
-        console.log("45 left");
         angular.element(eLabel.context.lastElementChild).removeClass("left");
         angular.element(eLabel.context.lastElementChild).addClass("top");
       }
