@@ -69,27 +69,32 @@ angular.module('reservation.service', [])
             var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0);
             var timeDefaultIsEstablished = false;
 
+            var addHour = function(date_ini, item,minutes) {
+                date_ini.add(minutes, "minutes");
+                var hour = {};
+
+                hour.turn = item.name;
+                hour.time = date_ini.format("HH:mm:ss");
+                hour.name = date_ini.format("H:mmA");
+                hours.push(hour);
+
+                if (!timeDefaultIsEstablished) {
+                    if (date_ini.isAfter(now)) {
+                        timeDefault = hour.time;
+                        timeDefaultIsEstablished = true;
+                    }
+                }
+            };
+
             angular.forEach(turns, function(item){
                     if (item.turn !== null) {
                         var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
                         var date_end = moment(item.turn.hours_end, "HH:mm:ss");
-                        for (var i = 1; i < 96; i++) {
-                               date_ini.add(15, "minutes");
-                               var hour = {};
+                        addHour(date_ini, item, 0);
 
-                               hour.turn = item.name;
-                               hour.time = date_ini.format("HH:mm:ss");
-                               hour.name = date_ini.format("H:mmA");
-                               hours.push(hour);
-
-                               if (!timeDefaultIsEstablished) {
-                                    if (date_ini.isAfter(now)) {
-                                        timeDefault = hour.time;
-                                        timeDefaultIsEstablished = true;
-                                    }
-                               }
-
-                               if (date_ini.isSame(date_end)) break;
+                        for (var i = 1; i < 95; i++) {
+                                addHour(date_ini, item, 15);
+                                if (date_ini.isSame(date_end)) break;
                         }
                     }
             });

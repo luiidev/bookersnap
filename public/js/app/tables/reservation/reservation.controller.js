@@ -32,13 +32,15 @@ angular.module('reservation.controller', [])
             } else {
                 return alert("Debe elegir mesas para la reservacion");
             }
-        } 
+        }
         // end
 
-        //  paser guest
+        //  parse guest
         if (!vm.reservation.guest_id) {
             vm.reservation.guest = vm.newGuest || {};
             delete vm.reservation.guest_id;
+        } else {
+            delete vm.reservation.guest;
         }
         //  end
 
