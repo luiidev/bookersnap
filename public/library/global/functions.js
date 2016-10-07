@@ -459,3 +459,34 @@ var convertFechaToDate = function(date) {
     var fecha = new Date(date + " 00:00:00");
     return fecha;
 };
+
+/*----------Scroll bar plugin options -----
+Devuelve un objeto configuracion
+axis = orientacion del scroll
+theme = estilo del scroll
+height = alto del scroll
+*/
+
+var optionsScrollBarPLugin = function(axis, theme, height) {
+    var options = {
+        autoHideScrollbar: false,
+        theme: theme,
+        advanced: {
+            updateOnContentResize: true
+        },
+        setHeight: height,
+        scrollInertia: 0,
+        axis: axis
+    };
+
+    return options;
+};
+var getFechaActual = function() {
+    var fecha = new Date();
+    var dia = (fecha.getDate() < 10 ? '0' : '') + fecha.getDate();
+    var mes = ((fecha.getMonth() + 1) < 10 ? '0' : '') + (fecha.getMonth() + 1);
+    var anio = fecha.getFullYear();
+    var fecha_actual = String(anio + "-" + mes + "-" + dia);
+    return fecha_actual;
+
+};

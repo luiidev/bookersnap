@@ -240,10 +240,23 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.rotateShapeTable = function() {
 
             console.log("rotateShapeTable ", $scope.itemTables[$scope.indexTable].rotate);
-            if ($scope.itemTables[$scope.indexTable].rotate == "0") {
+
+            console.log(angular.toJson($scope.itemTables[$scope.indexTable], true));
+
+            var rotateTable = $scope.itemTables[$scope.indexTable].rotate;
+            var shapeTable = $scope.itemTables[$scope.indexTable].shape;
+
+            if (rotateTable == "0") {
                 $scope.itemTables[$scope.indexTable].rotate = "45";
             } else {
-                $scope.itemTables[$scope.indexTable].rotate = "0";
+                if (rotateTable == "45" && shapeTable == "recta") {
+                    $scope.itemTables[$scope.indexTable].rotate = "90";
+                } else if (rotateTable == "90" && shapeTable == "recta") {
+                    $scope.itemTables[$scope.indexTable].rotate = "135";
+                } else {
+                    $scope.itemTables[$scope.indexTable].rotate = "0";
+                }
+
             }
         };
 
@@ -632,6 +645,4 @@ angular.module('zone.controller', ['ngDraggable'])
 
         getTurns();
         getTypeTurns();
-    })
-
-;
+    });

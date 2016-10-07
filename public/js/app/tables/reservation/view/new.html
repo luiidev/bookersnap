@@ -12,6 +12,7 @@
                     <button class="btn bgm-bluegray" ng-click="prevZone()"><i class="zmdi zmdi-arrow-back"></i></button>
                     <button class="btn bgm-bluegray" ng-click="nextZone()"><i class="zmdi zmdi-arrow-forward"></i></button>
                     <label class="control-label">{{ zoneName }}</label>
+                    <button class="btn bgm-green" ng-click="testJsonCreate()">Test Json Output</button>
                 </div>
                 <div class="pull-right">
                     <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('all')">Seleccionar todo</button>
@@ -20,20 +21,13 @@
             </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div    id="lienzo" class="lienzo-v2" ng-drop="true" 
-                            ng-drop-success="onDropComplete($data,$event)" 
-                            ng-style="{width: size, height: size}"
-                            ng-repeat="zone in zones" ng-show="$index == zoneIndex">
-                            
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" 
-                                 ng-class="[obj.shape, obj.size]" 
-                                 ng-style="{top: obj.top, left: obj.left}" 
-                                 ng-click="selectTable(obj, $index, $event)" 
-                                 ng-repeat="obj in zone.tables"
-                                 >
-                                <div class="table-label top" ng-click="$event.stopPropagation()">{{obj.name}}</div>
-                                <div class="item-drag-cover" ng-click="$event.stopPropagation()" ng-hide="obj.suggested">{{ obj.minCover }}-{{ obj.maxCover }}</div>
-                                <div class="item-suggested" ng-click="$event.stopPropagation()" ng-show="obj.suggested"></div>
+                    <div id="lienzo" class="lienzo-v2" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size, 'font-size': fontSize}"
+                        ng-repeat="zone in zones" ng-show="$index == zoneIndex">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block,'occupied-table': obj.occupied}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
+                                <div class="table-label top">{{obj.name}}</div>
+                                <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
+                                <div class="item-suggested" ng-show="obj.suggested"></div>
+                                <div class="item-occupied" ng-show="obj.occupied"></div>
                             </div>
                     </div>
                 </div>
@@ -53,6 +47,85 @@
             </button>
         </div>
         <div class="card-body">
+            <div class="card reservation-guest-form" ng-show="addGuest">
+                <div class="card-body drag-border">
+                    <form class="form-horizontal" role="form">
+                        <div class="reservation-new-guest" >
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="name">
+                                    Nombres
+                                </label>
+                                <div class="col-xs-10">
+                                    <div class="fg-line">
+                                            <input type="text" class="form-control input" id="name" ng-model="newGuest.first_name" ng-change="searchGuest(newGuest.first_name)"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="last_name">
+                                    Apellidos
+                                </label>
+                                <div class="col-xs-10">
+                                    <div class="fg-line">
+                                            <input type="text" class="form-control input" id="last_name" ng-model="newGuest.last_name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="phone">
+                                    Telefono
+                                </label>
+                                <div class="col-xs-10">
+                                    <div class="fg-line">
+                                            <input type="text" class="form-control input" id="phone" ng-model="newGuest.phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="email">
+                                    Email
+                                </label>
+                                <div class="col-xs-10">
+                                    <div class="fg-line">
+                                            <input type="text" class="form-control input" id="email" ng-model="newGuest.email"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <a href="#" class="a-tittle" ng-click="addGuest=!addGuest">cancelar</a>
+                                </div>
+                            </div>
+
+                            <div class="guest-search-list">
+                                <div class="card m-0">
+                                    <div class="card-header bgm-amber" ng-repeat="guest in guestList" ng-click="selectGuest(guest)">
+                                        <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
+                                        <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                                        <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+           </div>
+
+            <div class="card reservation-guest" ng-hide="addGuest || reservation.guest_id">
+                <div class="card-header bgm-blue"  ng-click="addGuest=!addGuest">
+                    <h2>Agregar Invitado</h2>
+                </div>
+           </div> 
+
+           <div class="card reservation-guest-selected" ng-show="reservation.guest_id">
+               <div class="card-header bgm-indigo" ng-click="removeGuest()">
+                   <h2>{{ guest.first_name + ", " + guest.last_name}}</h2>
+                   <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                   <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                   <span class="remove-guest">click para elejir nuevo invitado</span>
+               </div>
+          </div> 
+
             <div class="card m-b-5">
                 <form class="form-horizontal" role="form">
                     <div class="card-body drag-border">
@@ -100,7 +173,7 @@
                                 <div class="col-xs-4">
                                     <div class="fg-line">
                                         <div class="select">
-                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours">
+                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours" ng-change="tablesBlockValid()">
                                             </select>
                                         </div>
                                     </div>
@@ -112,7 +185,7 @@
                             <div class="col-xs-4">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations">
+                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations" ng-change="tablesBlockValid()">
                                         </select>
                                     </div>
                                 </div>
@@ -134,23 +207,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" style="display: table;">
+                        <div class="form-group" style="display: table; width: 100%;">
                             <label class="col-xs-2 control-label" for="server">
                                 Mesas
                             </label>
                             <div class="col-xs-10">
-                                <label class="control-label" for="server" ng-if="!tablesSelected" style="color: #8c8c8c;">{{ tableSuggested }}</label>
-                                <label class="control-label p-r-5" for="server" ng-repeat="table in  reservation.tables track by $index">{{ table.name }}</label>
-                                <a class="a-title pull-right" href="#" style="padding-top: 7px">
-                                    Sugerido
-                                </a>
+                                <div ng-if="!isTablesSelected">
+                                    <label class="control-label" for="server" style="color: #8c8c8c;">{{ tableSuggested.name || "Sin mesas" }}</label>
+                                    <a class="a-title pull-right" ng-show="tableSuggested.name" style="padding-top: 7px">Sugerido</a>
+                                </div>
+
+                                <label class="control-label p-r-5" for="server" ng-repeat="table in  tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
+
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">
                                 <div class="fg-line">
-                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí">
-                                    </textarea>
+                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="reservation.note"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -168,14 +242,14 @@
                 </form>
             </div>
 
-<!--       
+      
             <div class="card">
                 <div class="card-header bgm-amber" style="margin-bottom: 5px;" ng-repeat="conflict in conflicts">
-                    <h5>Conflicto en mesa - {{ conflict.name }}</h5><span>mesa  demasiado grande</span>
+                    <h5>Conflicto en mesa - {{ conflict.name }}</h5><span>{{ conflict.desc }}</span>
                 </div>
             </div>
- -->
-            <div class="popover-demo">
+
+<!--             <div class="popover-demo">
                 <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
                     style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
                     <div class="arrow"></div>
@@ -184,7 +258,7 @@
                         <p>mesa  demasiado grande.</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>

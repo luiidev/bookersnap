@@ -61,6 +61,27 @@ $color_secundario = #616161
 		border-radius 50%
 	& .rt45
 		transform rotate(45deg)
+		&.recta
+			transform-origin bottom left
+			-moz-transform translateY(-14.64466px) rotate(45deg)
+			-ms-transform translateY(-14.64466px) rotate(45deg)
+			-webkit-transform translateY(-14.64466px) rotate(45deg)
+			transform translateY(-14.64466px) rotate(45deg)
+			
+	& .rt90 
+		transform rotate(90deg)
+	& .rt135
+		-moz-transform rotate(135deg)
+		-ms-transform rotate(135deg)
+		-webkit-transform rotate(135deg)
+		transform rotate(135deg)
+		&.recta
+			transform-origin bottom left
+			-moz-transform translateY(-23.43146px) rotate(45deg)
+			-ms-transform translateY(-23.43146px) rotate(45deg)
+			-webkit-transform translateY(-23.43146px) rotate(45deg)
+			transform translateY(-23.43146px) rotate(45deg)
+		
 	& .table-zone
 		display block
 		position absolute
@@ -95,7 +116,13 @@ $color_secundario = #616161
 				-ms-transform translate(-50%,100%) rotate(-45deg)
 				-webkit-transform translate(-50%,100%) rotate(-45deg)
 				transform translate(-50%,100%) rotate(-45deg)
-				
+			& .item-drag-cover
+				transform: translate(-50%,-100%) rotate(-45deg);
+				left: 50%;
+				margin-top: 6px !important;
+			& .item-suggested
+			& .item-occupied
+				transform: translate(0%,0%) rotate(-45deg);
 		& .table-label
 			position absolute
 			font-weight bold
@@ -193,6 +220,39 @@ $color_secundario = #616161
 			&.drag 
 				background-image url("../../../img/cuadro.png")
 				background-repeat repeat
+	& .box-tables
+			padding-left 7px
+			padding-rigth 12px
+			& .descripcion 
+				padding 0 14px
+				& h3 
+					font-size 1.5em
+			& .item
+				border-bottom 1px solid #ccc
+				&.title
+					padding 4px 10px
+					font-size 1.1em
+					background-color #eee
+					font-weight bold
+					&.no-background
+						background-color transparent
+			& .item-table-box
+				padding-top 7px
+				text-align center
+				padding-bottom 8px
+				border-bottom 1px solid #ccc
+				& .box-buttons-item-table
+					margin-top 25px
+					float left
+				&.last
+					border-bottom 0
+				& .col-md-4
+					padding-left 0
+				& .title-table
+					font-size 1em
+				& .table-box
+					text-align center
+					display inline-block
 	& .box-lienzo-zone-v2
 		padding-left 0
 		& .lienzo-v2
@@ -209,58 +269,66 @@ $color_secundario = #616161
 			user-select none
 			& .item-drag-table
 				position absolute
-			& .item-drag-cover
-				background-color #ccc
-				color black
-				font-weight bold
-			& .item-suggested
-				background-image: url(../../../img/table-suggested.svg)
-				width 75%
-				height 75%
-				min-width 16px
-				min-height 16px
-				max-width 36px
-				max-height 36px
-				top 0
-				bottom 0
-				left 0
-				right 0
-				margin auto auto
-				position absolute
-	& .box-tables
-		padding-left 7px
-		padding-rigth 12px
-		& .descripcion 
-			padding 0 14px
-			& h3 
-				font-size 1.5em
-		& .item
-			border-bottom 1px solid #ccc
-			&.title
-				padding 4px 10px
-				font-size 1.1em
-				background-color #eee
-				font-weight bold
-				&.no-background
-					background-color transparent
-		& .item-table-box
-			padding-top 7px
-			text-align center
-			padding-bottom 8px
-			border-bottom 1px solid #ccc
-			& .box-buttons-item-table
-				margin-top 25px
-				float left
-			&.last
-				border-bottom 0
-			& .col-md-4
-				padding-left 0
-			& .title-table
-				font-size 1em
-			& .table-box
-				text-align center
-				display inline-block
-					
+				& .table-label
+					font-weight normal
+					font-size 0.9em
+					&.top
+						top -5px	
+					&.right 
+						right -5px
+					&.left
+						left -5px
+					&.bottom 
+						bottom -5px 
+				& .item-drag-cover
+					background-color #ccc
+					color #000
+					font-weight 500
+					width 100%
+					font-size .9em
+					border 0.5px solid #6b6a6a
+					top 50%
+					margin-top -9px
+					height 16px
+					line-height 16px
+					border-radius 4px
+				& .item-suggested
+					background-image url(../../../img/table-suggested.svg)
+					background-repeat no-repeat
+					background-position-x 50%
+					background-position-y 50%
+					width 90%
+					height 90%
+					min-width 16px
+					min-height 16px
+					max-width 36px
+					max-height 36px
+					top 0
+					bottom 0
+					left 0
+					right 0
+					margin auto auto
+					position absolute
+				&.block-table
+					background #424242 !important
+				& .item-occupied
+					background-image url(../../../img/alert.svg)
+					background-repeat no-repeat
+					background-position-x 50%
+					background-position-y 50%
+					width 90%
+					height 90%
+					min-width 16px
+					min-height 16px
+					max-width 36px
+					max-height 36px
+					top 0
+					bottom 0
+					left 0
+					right 0
+					margin auto auto
+					position absolute
+				
 
 /*Create zone drag and drop*/
 [ng-drag]
@@ -338,8 +406,14 @@ $color_secundario = #616161
 
 /*--------------GUEST------------------*/
 
-#profile-main
+.p-section-guest 
+	padding-left 400px
+.profile-main , #profile-main
 	min-height 800px
+	& .txt-search
+		background-color transparent
+		padding 25px 
+		color #fff
 	& hr 
 		border-top 1px dashed #ccc
 	& .box-tags 
@@ -358,7 +432,9 @@ $color_secundario = #616161
 	& .listview
 		& .lv-item
 			& .media-body
-				border-bottom 1px solid #E5E5E5
+				//border-bottom 1px solid #E5E5E5
+				& .lv-title
+					color #fff!important
 			& .notes 
 				padding 10px 15px
 			&:not(:last-child)
@@ -543,6 +619,13 @@ $background-tables-head = #eee
 	width 32px
 	height 32px
 	display block
+	background-repeat no-repeat
+	&.icon-status-table
+		position absolute
+		top 31px
+		left -3px
+	&.size20px
+		background-size 20px 20px
 	&.not-confirmed
 		background-image url('../../../img/status/not-confirmed.svg')
 	&.confirmed
@@ -710,7 +793,68 @@ $background-tables-head = #eee
 			color #fff
 		& .input-group-addon
 			color #fff
-
+ul.modal-listado-num-people
+	list-style none
+	li
+		display block
+		border 1px solid #e4e4e4
+		margin-bottom 8px
+		& .btn
+			box-shadow none
+			background #575757
+			color rgba(255,255,255,0.6)
+			border-radius 0
+			font-size 2em
+			margin-left 2px
+			padding 12px 0px
+			width 42px
+			&.btn-active
+				background #005581
+		&.lst-women, &.lst-men, &.lst-children
+			& .box-gender
+				color #575757
+				width 42px
+				height 61px
+				text-align center
+				float left
+				i
+					font-size 3em
+					line-height 1.5em
+			& .box-count
+				height 61px
+				//border 1px solid #e4e4e4
+				text-align center
+				padding-right 10px
+				& .btn
+					display inline-block
+					height 40px
+					padding 0px
+					margin 10px 2px 0px 2px
+					float left
+				& .box-count-value
+					background #575757
+					width 46px
+					height 40px
+					font-size 2em
+					line-height 1.5em
+					float left
+					margin-top 10px
+					color rgba(255,255,255,0.6)
+					text-align center
+					&.btn-active
+						background #005581
+.box-result
+	text-align center
+	color #005581
+	font-size 2em
+	& .box-total
+		background #575757
+		padding 0px 32px
+		color rgba(255,255,255,0.6)
+		line-height 1.5em
+		
+					
+				
 ul.listado-filtros
 	position fixed
 	bottom 0px
@@ -719,6 +863,7 @@ ul.listado-filtros
 	width 100%
 	list-style none
 	margin 0 auto
+	background: #424242;
 	> li
 		display inline-block
 		vertical-align top
@@ -760,6 +905,7 @@ ul.footer-floor
 			height 60px
 			margin-top 8px
 			padding 3px 5px
+			width 100px
 		&.ultimo-btn-right
 			padding-right 410px
 			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
@@ -798,6 +944,14 @@ ul.footer-floor
 			margin 0px 25px 0px 6px
 			img
 				width 100%
+	.f-btn-notas
+		list-style none
+		margin 0
+		padding 0
+		display inline
+		.box-tab-notas
+			width 340px
+			min-height 200PX
 		
 li.divider
 	width 2px
@@ -931,10 +1085,10 @@ li.divider
 	border-radius 10px
 	font-size 13px
 	text-transform none
-	padding-bottom 10px
+	/*padding-bottom 10px
 	padding-top 10px
 	padding-right 10px
-	padding-left 10px
+	padding-left 10px*/
 	&:hover
 		background-color #0b618a
 		color #fff
@@ -963,3 +1117,44 @@ li.divider
 	width 100%
 .itext-left
 	text-align left !important
+.card
+	&.reservation-guest-selected
+	&.reservation-guest
+		margin-bottom  5px
+		border 1px solid #fff
+	&.reservation-guest-selected
+		& .card-header
+			cursor pointer
+			& .remove-guest
+				display block
+				color #bbbbbb
+				text-transform uppercase
+		& span
+			margin-right 10px
+	&.reservation-guest
+		& .card-header
+			cursor pointer
+	&.reservation-guest-form
+		margin-bottom  5px
+		& .card-header
+			padding 15px 15px
+			cursor pointer
+		& .guest-search-list
+			position absolute
+			width 100%
+			top 61px
+			z-index 1
+			& .card-header
+				margin-bottom 0
+				padding 10px 15px
+				cursor pointer
+.scrolltablef
+	overflow-y auto
+	overflow-x hidden
+	height 70%
+	width 100%
+	position absolute
+	
+@media only screen and (max-height: 700px)
+	.scrolltablef
+		height 60%

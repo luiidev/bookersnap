@@ -53,6 +53,7 @@ gulp.task('library-bower-js', function() {
             'public/library/bower_components/oclazyload/dist/ocLazyLoad.min.js',
             'public/library/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
             'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
+            'public/library/bower_components/ng-scrollbars/dist/scrollbars.min.js',
             'public/library/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js',
             'public/library/bower_components/Waves/dist/waves.min.js',
             'public/library/bootstrap-growl/bootstrap-growl.min.js',
@@ -80,7 +81,7 @@ gulp.task('min-css-vendor', function() {
             'public/library/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css',
             'public/library/bower_components/bootstrap-sweetalert/lib/sweet-alert.css',
             'public/library/bower_components/angular-loading-bar/src/loading-bar.css',
-            'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css'
+            'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
         ])
         .pipe(minifyCss())
         .pipe(concat('vendor.min.css'))

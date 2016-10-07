@@ -50,6 +50,7 @@
     "Waves": "waves#~0.7.4",
     "angular": "1.4.7",
     "jquery-ui": "^1.12.1",
-    "jqueryui-touch-punch": "*"
+    "jqueryui-touch-punch": "*",
+    "ng-scrollbars": "^0.0.11"
   }
 }
