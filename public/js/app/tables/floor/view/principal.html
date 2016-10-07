@@ -1,4 +1,4 @@
-    <section class="bgm-gray-win menu-section" id="content">
+   <section class="bgm-gray-win menu-section" id="content">
     <div class="w-100 p-0">
         <nav class="ha-menu">
             <ul>
@@ -40,27 +40,25 @@
     </div>
     </section>
 
-    <div ng-repeat="tab in vm.zonas" ng-if="vm.flagSelectedZone==$index" class="box-zone-create" style="position: relative;">
-            <div class="box-lienzo-zone">
-            <div class="lienzo">
-            <!--<div class="zoneArea" style="position:relative; ">-->
-                <div class="border {{obj.shape}} {{obj.size}} rt{{obj.rotate}} bg-white table-zone" color="{{obj.color}}" id="el{{obj.id}}" ng-detail-table ng-repeat="obj in tab.table" on-click-fn="vm.mostrarDetail($index,obj)" x="{{obj.left}}" y="{{obj.top}}" on-dropped-fn="vm.handConfiguration()" num=vm.numpeople>
+    <div ng-repeat="tab in vm.zonas" ng-if="vm.flagSelectedZone==$index" class="box-zone-create" id="bg-window-floor" >
+        <div class="box-lienzo-zone-v2 p-t-10" >
+            <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}">
+                <div class="item-drag-table {{obj.shape}} {{obj.size + '-relative'}} rt{{obj.rotate}} shape-table table-zone" 
+                color="{{obj.color}}" 
+                id="el{{obj.id}}" 
+                ng-detail-table 
+                ng-repeat="obj in tab.table" 
+                on-click-fn="vm.mostrarDetail($index,obj)" 
+                ng-style="{top: (obj.top/675)*100 + '%', left: (obj.left/675)*100 + '%'}"
+                on-dropped-fn="vm.handConfiguration()" 
+                num=vm.numpeople >
                     <div class="table-label top">
                         <span ng-bind="obj.name"></span>
                         <span class="box-status {{obj.res_reservation_status_id | statusOnlySeated}} icon-status-table size20px"></span>
                      </div>
-                    <!--<div class="txtcenter">
-                        <div class="name-table">
-                            {{obj.name}}
-                        </div>
-                        <div class="box-status {{obj.res_reservation_status_id | statusOnlySeated}} icon-status-table">
-                        </div>
-                    </div>-->
                 </div>
-            <!--</div>-->
             </div>
-            </div>
-            
+        </div>
     </div>
 
 
