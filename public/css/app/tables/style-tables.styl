@@ -92,7 +92,9 @@ $color_secundario = #616161
 		border 1px #777 solid
 		/*border-radius 2px
 		box-sizing border-box*/
-			
+		&.block
+			background #8a8a8a
+			border solid 2px #797979
 		&.rt45
 			& .table-label.top
 				-moz-transform translate(-50%,-100%) rotate(-45deg)
@@ -861,6 +863,7 @@ ul.listado-filtros
 	width 100%
 	list-style none
 	margin 0 auto
+	background: #424242;
 	> li
 		display inline-block
 		vertical-align top
@@ -1056,6 +1059,8 @@ li.divider
 		height 45px
 		line-height 45px
 		border-top: 1px #FFF solid;
+	& [uib-datepicker-popup-wrap]
+		left -40px
 		
 
 /* ----------- Footer Floor */

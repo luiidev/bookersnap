@@ -7,7 +7,7 @@
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
     <section id="content">
-        <div class="container zone-container" ng-controller="blockCtrEdit">
+        <div class="container zone-container" >
             <div class="card">
                 <div class="card-body card-padding box-zone-create">
                     <div class="row header-zone-create">
@@ -21,7 +21,7 @@
                             </div>
                             <div class="col-xs-4 padding-left-none">
                                 <div class="input-group fg-float">
-                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
+                                    <button class="btn btn-primary" ng-click="selectAllTables()">Select todas</button>
                                     &nbsp;&nbsp;&nbsp;  
                                     <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
                                 </div>
