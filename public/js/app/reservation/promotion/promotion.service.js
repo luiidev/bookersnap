@@ -159,9 +159,19 @@ angular.module('promotion.service', [])
                     status_expire: TableFactory.getEvalua(promotion.status_expire),
                     date_expire: TableFactory.getFormatofecha(promotion.date_expire),
                     publication: TableFactory.getEvalua(promotion.publication),
-                    tipoSelected: { type_event_id: promotion.type_event },
-                    status: [{ name: 'Vigente', value: 1 }, { name: 'Deshabilitado', value: 2 }],
-                    statusSelected: { value: promotion.status },
+                    tipoSelected: {
+                        type_event_id: promotion.type_event
+                    },
+                    status: [{
+                        name: 'Vigente',
+                        value: 1
+                    }, {
+                        name: 'Deshabilitado',
+                        value: 2
+                    }],
+                    statusSelected: {
+                        value: promotion.status
+                    },
                     myImage: UrlRepository + '/promotions/' + promotion.image,
                     imagenOriginal: promotion.image,
                     turn: promotion.turn,
@@ -306,7 +316,7 @@ angular.module('promotion.service', [])
 
                     var d = new Date(0, 0, 0, hourIndex, 0, 0);
                     var formato = moment(d).valueOf();
-                    123546465
+                    //123546465
                     var hora = $filter('date')(formato, 'h:mm a');
 
                     timesFinal.push({
@@ -319,7 +329,7 @@ angular.module('promotion.service', [])
                 return timesFinal;
             },
 
-        }
+        };
         return interfazTurnos;
 
     })
