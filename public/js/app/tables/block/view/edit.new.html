@@ -55,10 +55,10 @@
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
         <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
-            <button class="btn btn-danger pull-left">
+            <button class="btn btn-default pull-left">
                 Cancelar
             </button>
-            Crear Bloqueo
+            Editar Bloqueo
             <button class="btn btn-primary pull-right" ng-click="saveZone('create')">
                 Guardar
             </button>
@@ -137,17 +137,7 @@
                 </form>
             </div>
 
-            <div class="popover-demo">
-                <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
-                     style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
-                    <div class="arrow"></div>
-                    <h3 class="popover-title" style="padding: 5px; background: transparent;">Conflicto en mesa - {{ conflict.name}}</h3>
-                    <div class="popover-content" style="padding: 0 0 5px 5px;">
-                        <p>mesa  demasiado grande.</p>
-                    </div>
-                </div>
-            </div>
-
+             <button class="btn btn-danger waves-effect col-xs-12 m-t-20" ng-click="deleteBlock()">Eliminar Block</button>
         </div>
     </div>
 </section>

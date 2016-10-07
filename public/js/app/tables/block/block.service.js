@@ -158,7 +158,7 @@ angular.module('block.service', [])
                     id : data.id,
                     status : data.status
                 }
-
+                console.log(dataTable);
                 if(data.status == 1){
                     scope.itemTables.push(dataTable);
                 }else{
@@ -171,4 +171,47 @@ angular.module('block.service', [])
 
 	};
 
-});
+})
+.factory("blockHelper", ["BlockFactory", "reservationScreenHelper", function(BlockFactory, screenHelper){
+    var loadTable = function(zones) {
+        var itemZones = [];
+        itemZones = zones;
+//
+//        angular.forEach(zones, function(zone) {
+//            var item = {};
+//            var tables = [];
+//            angular.forEach(zone.tables, function(data) {
+//                var position = data.config_position.split(",");
+//                var left = (parseInt(position[0])  / screenHelper.minSize() ) * 100 + "%";
+//                var top = (parseInt(position[1]) / screenHelper.minSize()) * 100 + "%";
+//                var size = TableFactory.getLabelSize(data.config_size) + "-relative";
+//                var dataTable = {
+//                    name: data.name,
+//                    minCover: data.min_cover,
+//                    maxCover: data.max_cover,
+//                    left: left,
+//                    top: top,
+//                    shape: TableFactory.getLabelShape(data.config_forme),
+//                    size: size,
+//                    rotate: data.config_rotation,
+//                    id: data.id,
+//                    status: data.status,
+//                    suggested: false
+//                };
+//
+//                if (data.status == 1) {
+//                    tables.push(dataTable);
+//                }
+//            });
+//            item.name = zone.name;
+//            item.tables = tables;
+//            itemZones.push(item);
+//        });
+//
+        return itemZones;
+    };
+    
+    return {
+        loadTable: loadTable
+    };
+}]);

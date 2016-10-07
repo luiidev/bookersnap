@@ -88,6 +88,12 @@ angular.module('floor.directive', [])
                 helper: "clone",
                 drag: function(event, ui) {
                     //console.log(ui.position.left);
+                },
+                start: function(event, ui) {
+                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                },
+                stop: function(event, ui) {
+                    angular.element('#bg-window-floor').removeClass('drag-dispel');
                 }
             });
         }

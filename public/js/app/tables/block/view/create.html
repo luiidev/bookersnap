@@ -32,7 +32,18 @@
                     <div class="row">
                         <div class="col-xs-9 box-lienzo-zone">
                             <div class="lienzo" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-click="onLienzo()">
-                                <div ng-repeat="obj in itemTables" ng-drag="false" ng-drag-data="obj" ng-select-table  on-selected-fn="activarTableOptions($index,obj)"  on-deselect-fn="desactivarTable($index,obj)" on-click-fn='activarTableOptions($index,this)' class="item-drag-table  {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}}" id="tb-item{{$index}}" style="position: absolute;top:{{ obj.top}}px;left:{{obj.left}}px" top="{{obj.top}}" left="{{obj.left}}" option="edit">
+                                <div ng-repeat="obj in itemTables" 
+                                     ng-drag="false" 
+                                     ng-drag-data="obj" 
+                                     ng-select-table  
+                                     on-selected-fn="activarTableOptions($index,obj)"  
+                                     on-deselect-fn="desactivarTable($index,obj)" 
+                                     on-click-fn='activarTableOptions($index,this)' 
+                                     class="item-drag-table  {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}}" 
+                                     id="tb-item{{$index}}" 
+                                     style="position: absolute;top:{{ obj.top}}px;left:{{obj.left}}px" 
+                                     top="{{obj.top}}" 
+                                     left="{{obj.left}}" option="edit">
                                     <div>{{obj.name}}</div>
                                     <div class="border shape-table {{obj.shape}} {{obj.size}}"></div> 
                                 </div>

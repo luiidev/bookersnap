@@ -1,5 +1,5 @@
 angular.module('block.controller', [])
-    .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
+    .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, reservationScreenHelper, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
 
         $scope.date = $stateParams.date;
 
@@ -8,7 +8,6 @@ angular.module('block.controller', [])
             $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
             return $scope.zones;
         }).then(function(zonas) {
-
             // Se obtiene de array de las mesas que estan en ese rango de fecha
             BlockFactory.getAllBlock("date=" + $scope.date).then(function(response) {
                 var mesasFuturasBloqueadas = response.data.data;
@@ -194,20 +193,28 @@ angular.module('block.controller', [])
         $scope.unselectAllTables = function() {
             BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
         }
-
-
+        
+        angular.element($window).bind('resize', function(){
+            var size = reservationScreenHelper.size($scope);
+            $scope.size = size;
+            $scope.$digest();
+        });
+        
+        (function Init() {
+            $scope.size = reservationScreenHelper.size();
+        })();
+    
         listCovers("min");
         listCovers("max");
     })
 
-.controller('blockCtrEdit', function($scope, $http, $sce, $state, $stateParams, $document, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
+.controller('blockCtrEdit', function($scope, $http, $sce, $state, $stateParams, $document, $window, reservationScreenHelper, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
 
     $scope.date = $stateParams.date;
     var block_id = $stateParams.block_id;
-
     // Se trae la informacion del bloqueo para poder mostrar las tablas y editar
     BlockFactory.getBlock(block_id).then(function(response) {
-
+        
         $scope.tableBlock = response.data.data;
         angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
             $scope.mesasBloqueadas.push(mesa.id);
@@ -217,10 +224,9 @@ angular.module('block.controller', [])
 
         return $scope.mesasBloqueadas;
 
-    }).then(function(mesasBloqueadas) {
-
+    }).then(function(mesasBloqueadas) {                
         // Listado array de zonas incluyendo sus zonas 
-        ZoneFactory.getZones().then(function(response) {
+        return ZoneFactory.getZones().then(function(response) {
 
             $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
 
@@ -233,41 +239,41 @@ angular.module('block.controller', [])
 
                     // Iteracion para identificar las mesas bloqueadas 
                     for (var p = 0; p < mesasBloqueadas.length; p++) {
-
-                        if (mesa.id == mesasBloqueadas[p]) {
-                            $scope.zones[key].tables[i].class = "selected-table";
+                        if (mesa.id === mesasBloqueadas[p]) {                            
+                            $scope.zones[key].tables[i].class = "selected-table";                            
                         }
 
                     }
                     // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
                 });
             });
+
+            return $scope.zones;
             //////////////////////////////////////////////////////////////////////////////////////
         });
-    }).then(function() {
 
+    }).then(function(zones) {
+        $scope.zones = zones;
         // Se obtiene de array de las mesas que estan en ese rango de fecha
         BlockFactory.getAllBlock("date=" + $scope.date).then(function(response) {
-
+                        
             var mesasFuturasBloqueadas = [];
             angular.forEach(response.data.data, function(mesaFuturaBloqueada, i) {
-                if (mesaFuturaBloqueada.res_block_id != block_id) {
+                if (mesaFuturaBloqueada.res_block_id != block_id && mesaFuturaBloqueada.res_reservation_id === null) {
                     mesasFuturasBloqueadas.push(mesaFuturaBloqueada);
                 }
-
             });
-
             /////////////////////////////////////////////////////////////////////////////////////// 
             //Se agrega la clase para identificar los bloqueos futuros dentro del array principal  
             ///////////////////////////////////////////////////////////////////////////////////////
+            
             angular.forEach($scope.zones, function(zona, key) {
                 angular.forEach(zona.tables, function(mesa, i) {
                     // Iteracion para identificar las mesas bloqueadas 
                     for (var p = 0; p < mesasFuturasBloqueadas.length; p++) {
-                        if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {
-                            $scope.zones[key].tables[i].classBloqueado = "selected-table-2";
+                        if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {          
+                            $scope.zones[key].tables[i].classBloqueado = "block";                      
                         }
-
                     }
                     // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
                 });
@@ -281,6 +287,7 @@ angular.module('block.controller', [])
     $scope.startTimes = [];
     $scope.endTimes = [];
     $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
+        //console.log(response);
         angular.forEach(response.data, function(item, i) {
             if (item.turn != null) { // Se obtienes los Shifts que contienen datos
 
@@ -489,6 +496,15 @@ angular.module('block.controller', [])
         BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
     }
 
+    angular.element($window).bind('resize', function(){
+            var size = reservationScreenHelper.size($scope);
+            $scope.size = size;
+            $scope.$digest();
+    });
+    
+    (function Init() {
+        $scope.size = reservationScreenHelper.size();
+    })();
 
     listCovers("min");
     listCovers("max");
