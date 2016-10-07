@@ -61,6 +61,27 @@ $color_secundario = #616161
 		border-radius 50%
 	& .rt45
 		transform rotate(45deg)
+		&.recta
+			transform-origin bottom left
+			-moz-transform translateY(-14.64466px) rotate(45deg)
+			-ms-transform translateY(-14.64466px) rotate(45deg)
+			-webkit-transform translateY(-14.64466px) rotate(45deg)
+			transform translateY(-14.64466px) rotate(45deg)
+			
+	& .rt90 
+		transform rotate(90deg)
+	& .rt135
+		-moz-transform rotate(135deg)
+		-ms-transform rotate(135deg)
+		-webkit-transform rotate(135deg)
+		transform rotate(135deg)
+		&.recta
+			transform-origin bottom left
+			-moz-transform translateY(-23.43146px) rotate(45deg)
+			-ms-transform translateY(-23.43146px) rotate(45deg)
+			-webkit-transform translateY(-23.43146px) rotate(45deg)
+			transform translateY(-23.43146px) rotate(45deg)
+		
 	& .table-zone
 		display block
 		position absolute
@@ -358,8 +379,14 @@ $color_secundario = #616161
 
 /*--------------GUEST------------------*/
 
-#profile-main
+.p-section-guest 
+	padding-left 400px
+.profile-main , #profile-main
 	min-height 800px
+	& .txt-search
+		background-color transparent
+		padding 25px 
+		color #fff
 	& hr 
 		border-top 1px dashed #ccc
 	& .box-tags 
@@ -378,7 +405,9 @@ $color_secundario = #616161
 	& .listview
 		& .lv-item
 			& .media-body
-				border-bottom 1px solid #E5E5E5
+				//border-bottom 1px solid #E5E5E5
+				& .lv-title
+					color #fff!important
 			& .notes 
 				padding 10px 15px
 			&:not(:last-child)

@@ -1,5 +1,5 @@
 angular.module('guest.controller', [])
-	.controller('GuestCtrl', function(GuestFactory) {
+	.controller('GuestCtrl', function(GuestFactory, $state) {
 
 		var vm = this;
 
@@ -9,11 +9,23 @@ angular.module('guest.controller', [])
 			vm.guestAll();
 		};
 
+		vm.configScrollBar = optionsScrollBarPLugin('y', 'light', '100%');
+
 		vm.guestAll = function() {
 			GuestFactory.guestList().then(function success(response) {
+
 				vm.guestList = response;
+
+				vm.showGuest(vm.guestList);
+
 			}, function error(response) {
 				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+			});
+		};
+
+		vm.showGuest = function(guestData) {
+			$state.go("mesas.guest.view", {
+				'guest': guestData[0].id
 			});
 		};
 

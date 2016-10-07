@@ -459,3 +459,25 @@ var convertFechaToDate = function(date) {
     var fecha = new Date(date + " 00:00:00");
     return fecha;
 };
+
+/*----------Scroll bar plugin options -----
+Devuelve un objeto configuracion
+axis = orientacion del scroll
+theme = estilo del scroll
+height = alto del scroll
+*/
+
+var optionsScrollBarPLugin = function(axis, theme, height) {
+    var options = {
+        autoHideScrollbar: false,
+        theme: theme,
+        advanced: {
+            updateOnContentResize: true
+        },
+        setHeight: height,
+        scrollInertia: 0,
+        axis: axis
+    };
+
+    return options;
+};
