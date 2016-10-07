@@ -49,6 +49,8 @@ $color_secundario = #616161
 					&.recta-btn-shape
 						width 35px
 						height 20px
+	&.drag-dispel
+		background #aaaaaa
 				
 	& .selected-table
 		border 2px solid #2196f3!important
@@ -257,10 +259,11 @@ $color_secundario = #616161
 		padding-left 0
 		& .lienzo-v2
 			background-color #CCC
-			width 740px
-			height 740px
+			min-width 740px
+			min-height 740px
 			overflow hidden
 			margin 0 auto
+			position relative
 			-webkit-user-select none
 			-khtml-user-select none
 			-moz-user-select none
@@ -722,8 +725,7 @@ $background-tables-head = #eee
 .btn-default-nav
 	background-color #575757
 .tab-tiempo
-	background #575757
-	padding-right 430px	
+	background #575757	
 .tab-rp
 	width 130px
 	background #575757

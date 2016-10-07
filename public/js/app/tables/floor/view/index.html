@@ -4,9 +4,8 @@
     <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
     <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
     <section id="content" class="w-100 p-0">
-        <div class="container w-100 p-l-0 p-r-0">
-            
-            <div ui-view="principal" class="box-lienzo-zone p-l-0 p-r-0 p-section-right"></div>
+        <div class="container w-100 p-l-0 p-l-0 p-section-right" ui-view="principal">
+            <!--<div ui-view="principal" class="box-lienzo-zone p-l-0 p-section-right"></div>-->
         </div>
     </section>
 </section>
