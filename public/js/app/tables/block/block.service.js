@@ -1,6 +1,9 @@
 angular.module('block.service', [])
 .factory('BlockFactory',function($http,ApiUrlMesas){
 	return {
+        getZonesCalendar: function(date) {
+            return $http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
+        },
 		getAllBlock: function(vDate){
 				return $http.get(ApiUrlMesas+"/blocks/tables?"+vDate); 
 		},
@@ -172,7 +175,7 @@ angular.module('block.service', [])
 	};
 
 })
-.factory("blockHelper", ["BlockFactory", "reservationScreenHelper", function(BlockFactory, screenHelper){
+.factory("blockHelper", ["TableFactory", "reservationScreenHelper", function(TableFactory, screenHelper){
     var loadTable = function(zones) {
         var itemZones = [];
         itemZones = zones;

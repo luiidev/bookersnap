@@ -199,8 +199,43 @@ angular.module('block.controller', [])
             $scope.size = size;
             $scope.$digest();
         });
+
+
+        var loadZones = function() {
+            var date = $stateParams.date;
+            var valid = moment(date , 'YYYY-MM-DD', true).isValid();
+
+            if (!valid) {
+                return alert("Fecha invalida no se puede cargar las zonas");
+            }
+
+            BlockFactory.getZonesCalendar(date)
+                .then(function(response) {
+                    console.log(response);
+                    //loadTablesEdit(response.data.data.zones);
+                });
+                /*.catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    loadBlocks(date);
+                    listGuest();
+                    listServers();
+                    listStatuses();
+                });*/
+        };
+
+        var loadTablesEdit = function(dataZones) {
+            vm.zones = helper.loadTable(dataZones);
+            defaultView();
+        };
+
+        var setZoneName = function(i) {
+            if(vm.zones.length) vm.zoneName = vm.zones[i].name;
+        };
+
         
         (function Init() {
+            loadZones();
             $scope.size = reservationScreenHelper.size();
         })();
     
