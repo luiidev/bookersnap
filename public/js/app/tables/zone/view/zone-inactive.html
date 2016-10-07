@@ -8,14 +8,26 @@
                 <th>
                     Nombre
                 </th>
-                <th>
+                <th class="text-center">
                     Mesas
+                    <span class="f-10" ng-bind="zones.numTablesInactive">
+                    </span>
+                </th>
+                <th class="text-center">
+                    Min covers
+                    <span class="f-10" ng-bind="zones.minCoversInactive">
+                    </span>
+                </th>
+                <th class="text-center">
+                    Max covers
+                    <span class="f-10" ng-bind="zones.maxCoversInactive">
+                    </span>
                 </th>
                 <th>
                     Creación
                 </th>
                 <th class="text-right">
-                    <button class="btn btn-primary waves-effect" data-ui-sref="zone-create">
+                    <button class="btn btn-primary waves-effect" data-ui-sref="mesas.zone-create">
                         Crear Zona
                     </button>
                 </th>
@@ -29,24 +41,30 @@
                 <td>
                     {{ item.name }}
                 </td>
-                <td>
+                <td class="text-center">
                     {{ item.tables_count }}
+                </td>
+                <td class="text-center">
+                    {{ item.min_covers }}
+                </td>
+                <td class="text-center">
+                    {{ item.max_covers }}
                 </td>
                 <td>
                     {{ item.date_add }}
                 </td>
                 <td class="text-right">
-                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="zone-clone({id : '{{item.id}}'})">
+                    <button class="btn btn-default btn-icon-text waves-effect" ui-sref="mesas.zone-clone({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-collection-item-1 zmdi-hc-fw">
                         </i>
                         Clonar
                     </button>
-                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="zone-edit({id : '{{item.id}}'})">
+                    <button class="btn btn-info btn-icon-text waves-effect" ui-sref="mesas.zone-edit({id : '{{item.id}}'})">
                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                         </i>
                         Editar
                     </button>
-                    <button class="btn btn-danger btn-icon-text waves-effect" ng-click="deleteZoneConfirm(item.id,$index)">
+                    <button class="btn btn-danger btn-icon-text waves-effect" ng-click="mesas.deleteZoneConfirm(item.id,$index)">
                         <i class="zmdi zmdi-close">
                         </i>
                         Eliminar

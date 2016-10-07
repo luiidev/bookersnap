@@ -18,6 +18,7 @@ Route::get('/admin/ms/{id}/reservation', function () {
 });
 
 Route::get('/', function () {
+    echo "hola";
 })->middleware('checkCountry');
 
 Route::group(['prefix' => 'test'], function () {

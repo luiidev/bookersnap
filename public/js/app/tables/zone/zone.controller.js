@@ -8,6 +8,15 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.idZoneDelete = 0;
         $scope.indexRow = 0;
 
+        $scope.zones = {
+            numTablesActive: 0,
+            numTablesInactive: 0,
+            minCoversActive: 0,
+            maxCoversActive: 0,
+            minCoversInactive: 0,
+            maxCoversInactive: 0
+        };
+
         var init = function() {
             $scope.getZones();
             MenuConfigFactory.menuActive(0);
@@ -30,8 +39,14 @@ angular.module('zone.controller', ['ngDraggable'])
                     console.log("getZones " + angular.toJson(zones.turns, true));
 
                     if (zones.status == "0" || zones.status == "2" || zonesTurn.length === 0) {
+                        $scope.zones.numTablesInactive += zonesTables.tables_count;
+                        $scope.zones.minCoversInactive += zonesTables.min_covers;
+                        $scope.zones.maxCoversInactive += zonesTables.max_covers;
                         vZonesInactive.push(zonesTables);
                     } else {
+                        $scope.zones.numTablesActive += zonesTables.tables_count;
+                        $scope.zones.minCoversActive += zonesTables.min_covers;
+                        $scope.zones.maxCoversActive += zonesTables.max_covers;
                         vZonesActive.push(zonesTables);
                     }
 
@@ -41,7 +56,8 @@ angular.module('zone.controller', ['ngDraggable'])
                 $scope.zonesInactive = vZonesInactive;
 
             }).error(function(data, status, headers) {
-                messageErrorApi(data, "Error", "warning");
+
+                messageErrorApi(data, "Error", "warning", 0, true, status);
             });
         };
 
@@ -73,14 +89,20 @@ angular.module('zone.controller', ['ngDraggable'])
 
         var getTablesCount = function(zones) {
             var vTables = 0;
+            var vMinCovers = 0;
+            var vMaxCovers = 0;
 
             angular.forEach(zones.tables, function(tables) {
                 if (tables.status == 1) {
                     vTables += 1;
+                    vMinCovers += tables.min_cover;
+                    vMaxCovers += tables.max_cover;
                 }
             });
 
             zones.tables_count = vTables;
+            zones.min_covers = vMinCovers;
+            zones.max_covers = vMaxCovers;
 
             return zones;
         };
@@ -157,6 +179,8 @@ angular.module('zone.controller', ['ngDraggable'])
 
             data.top = position.y;
             data.left = position.x;
+            data.rotate_text = "top";
+            data.name = $scope.itemTables.length + 1;
 
             selectTableTypeDrop(data);
 
@@ -173,6 +197,10 @@ angular.module('zone.controller', ['ngDraggable'])
             $scope.selectedTable = false;
         };
 
+        $scope.rotateTextTable = function(option) {
+            ZoneLienzoFactory.changeRotationText(option, $scope.itemTables[$scope.indexTable], $scope.indexTable);
+        };
+
         $scope.changeShapeTable = function(shape) {
             $scope.itemTables[$scope.indexTable].shape = shape;
 
@@ -185,7 +213,8 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.editNameTable = function() {
-            $scope.itemTables[$scope.indexTable].name = angular.element("#name-table").val();
+            var texto = angular.element("#name-table").val();
+            ZoneLienzoFactory.changeNameTable($scope.itemTables[$scope.indexTable], $scope.itemTables, texto);
         };
 
         $scope.tableCapacity = function(option) {
@@ -211,11 +240,28 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.rotateShapeTable = function() {
 
             console.log("rotateShapeTable ", $scope.itemTables[$scope.indexTable].rotate);
-            if ($scope.itemTables[$scope.indexTable].rotate == "0") {
+
+            console.log(angular.toJson($scope.itemTables[$scope.indexTable], true));
+
+            var rotateTable = $scope.itemTables[$scope.indexTable].rotate;
+            var shapeTable = $scope.itemTables[$scope.indexTable].shape;
+
+            if (rotateTable == "0") {
                 $scope.itemTables[$scope.indexTable].rotate = "45";
             } else {
-                $scope.itemTables[$scope.indexTable].rotate = "0";
+                if (rotateTable == "45" && shapeTable == "recta") {
+                    $scope.itemTables[$scope.indexTable].rotate = "90";
+                } else if (rotateTable == "90" && shapeTable == "recta") {
+                    $scope.itemTables[$scope.indexTable].rotate = "135";
+                } else {
+                    $scope.itemTables[$scope.indexTable].rotate = "0";
+                }
+
             }
+        };
+
+        $scope.draggableTable = function() {
+            console.log("draggableTable prueba");
         };
 
         $scope.activarTableOptions = function(index, vthis) {
@@ -411,21 +457,21 @@ angular.module('zone.controller', ['ngDraggable'])
             if (option == "create") {
 
                 ZoneFactory.createZone(dataZone).success(function(response) {
-                    messageAlert("Success", "Zone create complete", "success");
+                    messageAlert("Success", "Zona creada correctamente", "success", 0, true);
                     $state.reload();
                 }).error(function(data, status, headers) {
                     $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning");
+                    messageErrorApi(data, "Error", "warning", 0, true);
                 });
 
             } else {
                 dataZone.id = $stateParams.id;
                 ZoneFactory.editZone(dataZone).success(function(response) {
-                    messageAlert("Success", "Zone edit complete", "success");
-                    $state.go('zone.active');
+                    messageAlert("Success", "Zona actualizada correctamente", "success", 0, true);
+                    $state.go('mesas.zone.active');
                 }).error(function(data, status, headers) {
                     $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning");
+                    messageErrorApi(data, "Error", "warning", 0, true);
                 });
             }
 
@@ -599,6 +645,4 @@ angular.module('zone.controller', ['ngDraggable'])
 
         getTurns();
         getTypeTurns();
-    })
-
-;
+    });

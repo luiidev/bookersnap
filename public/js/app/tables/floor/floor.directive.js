@@ -22,19 +22,29 @@ angular.module('floor.directive', [])
                 none: 'none',
             });
 
+            element.droppable({
+                accept: ".listado-column",
+                drop: function(event, ui) {
+                    //console.log(ui.draggable[0].id);
+                    scope.$apply(function() {
+                        scope.num = ui.draggable[0].id;
+                    });
+                    scope.onDroppedFn();
+                }
+            });
 
             element.on('click', function(event) {
-
                 event.preventDefault();
                 scope.onClickFn();
-
             });
         }
 
         return {
             link: makeSelectTable,
             scope: {
-                onClickFn: '&'
+                num: "=",
+                onClickFn: '&',
+                onDroppedFn: '&'
             }
         };
 
@@ -68,6 +78,28 @@ angular.module('floor.directive', [])
             scope: {
                 onClickFn: '&'
             }
+        };
+
+    })
+    .directive('ngDragNumPeople', function() {
+
+        function makeDraggable(scope, element, attr) {
+            element.draggable({
+                helper: "clone",
+                drag: function(event, ui) {
+                    //console.log(ui.position.left);
+                },
+                start: function(event, ui) {
+                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                },
+                stop: function(event, ui) {
+                    angular.element('#bg-window-floor').removeClass('drag-dispel');
+                }
+            });
+        }
+
+        return {
+            link: makeDraggable,
         };
 
     });

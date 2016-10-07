@@ -75,7 +75,12 @@ angular.module('zone.service', [])
 			var SizeObjectDrag = 75;
 
 			var x = divPos.left - (SizeObjectDrag * 0.5) + (SizeObjectDrag / 2 - evt.element.centerX);
-			var y = divPos.top - (SizeObjectDrag * 0.75) + (SizeObjectDrag / 2 - evt.element.centerX);
+			var y = divPos.top - (SizeObjectDrag * 0.5) + (SizeObjectDrag / 2 - evt.element.centerX);
+			console.log(x + " " + y);
+			x = x - x % 10;
+			y = y - y % 10;
+
+			console.log(x + " " + y);
 
 			var position = {
 				x: x,
@@ -83,6 +88,50 @@ angular.module('zone.service', [])
 			};
 
 			return position;
+		},
+		changeRotationText: function(option, element, index) {
+			console.log("changeRotationText ", angular.toJson(element, true));
+
+			var rotate = "";
+			//var rotate_actual = element.rotate_text;
+
+			var table = angular.element("#tb-item" + index);
+			var rotate_actual = table[0].firstElementChild.classList[1];
+
+			switch (rotate_actual) {
+				case 'top':
+					rotate = (option == "right") ? "right" : "left";
+					break;
+				case 'left':
+					rotate = (option == "right") ? "top" : "bottom";
+					break;
+				case 'bottom':
+					rotate = (option == "right") ? "left" : "right";
+					break;
+				case 'right':
+					rotate = (option == "right") ? "bottom" : "top";
+					break;
+			}
+
+			angular.element(table[0].firstElementChild).removeClass(rotate_actual);
+
+			angular.element(table[0].firstElementChild).addClass(rotate);
+
+			element.rotate_text = rotate;
+		},
+		changeNameTable: function(element, itemTables, texto) {
+			var valida = false;
+			angular.forEach(itemTables, function(value, key) {
+
+				if (value.name == texto && value.name !== "") {
+					valida = true;
+					alertMultiple("Alerta:", "Ya existe este nombre", "danger", "fa fa-comments");
+				}
+			});
+
+			if (valida === false) {
+				element.name = texto;
+			}
 		}
 	};
 })

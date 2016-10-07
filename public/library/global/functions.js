@@ -17,15 +17,28 @@ var obtenerIdMicrositio = function() {
 };
 
 var getDaysWeek = function() {
-    var days = [
-        { id: 0, label: 'Domingo' },
-        { id: 1, label: 'Lunes' },
-        { id: 2, label: 'Martes' },
-        { id: 3, label: 'Miercoles' },
-        { id: 4, label: 'Jueves' },
-        { id: 5, label: 'Viernes' },
-        { id: 6, label: 'Sabado' },
-    ];
+    var days = [{
+        id: 1,
+        label: 'Domingo'
+    }, {
+        id: 2,
+        label: 'Lunes'
+    }, {
+        id: 3,
+        label: 'Martes'
+    }, {
+        id: 4,
+        label: 'Miercoles'
+    }, {
+        id: 5,
+        label: 'Jueves'
+    }, {
+        id: 6,
+        label: 'Viernes'
+    }, {
+        id: 7,
+        label: 'Sabado'
+    }, ];
 
     return days;
 };
@@ -50,9 +63,13 @@ var uniqueArray = function(origArr) {
 };
 
 var getGender = function() {
-    var gender = [
-        { id: 'M', label: 'Masculino' },
-        { id: 'F', label: 'Femenino' },
+    var gender = [{
+            id: 'M',
+            label: 'Masculino'
+        }, {
+            id: 'F',
+            label: 'Femenino'
+        },
 
     ];
 
@@ -197,7 +214,7 @@ Date javascript
 --------*/
 
 var convertTextToDate = function(language, options, date = null) {
-    if (date != null) {
+    if (date !== null) {
         return new Date(date).toLocaleDateString(language, options);
     } else {
         return new Date().toLocaleDateString(language, options);
@@ -218,10 +235,10 @@ var defineTimeSytem = function(time) {
 var setearJsonError = function(jsonError) {
     var energy = jsonError.join("\n");
     return energy;
-}
+};
 
 var convertDateTo24Hour = function(timeStr) {
-    if (timeStr == undefined) {
+    if (timeStr === undefined) {
         return null;
     } else {
 
@@ -254,7 +271,7 @@ var getAsUriParameters = function(data) {
         url += encodeURIComponent(prop) + '=' +
             encodeURIComponent(data[prop]) + '&';
     }
-    return url.substring(0, url.length - 1)
+    return url.substring(0, url.length - 1);
 };
 
 var getDayText = function(index, option) {
@@ -268,13 +285,14 @@ var getDayText = function(index, option) {
     return dayText;
 };
 
-var messageAlert = function(title, text, type, time = 2000) {
+var messageAlert = function(title, text, type, time = 2000, confirmButton = false) {
     swal({
         title: title,
         text: text,
         type: type,
         timer: time,
-        showConfirmButton: false
+        showConfirmButton: confirmButton
+            //imageUrl: imageUrl
     });
 };
 
@@ -305,9 +323,13 @@ message.error = function(title, text, time) {
 
 message.short = function(title, text, time, icon) {
     if (typeof text == "number") {
-        return this.show(title, "", icon, { timer: text });
+        return this.show(title, "", icon, {
+            timer: text
+        });
     } else if (typeof time == "number") {
-        return this.show(title, text, icon, { timer: time });
+        return this.show(title, text, icon, {
+            timer: time
+        });
     }
     return this.show(title, text, icon);
 };
@@ -338,14 +360,18 @@ message.apiError = function(response, title, icon, options) {
     return this.show(title, body, icon, options);
 };
 
-var messageErrorApi = function(data, title, type) {
-    var errorJson = JSON.stringify(data);
+var messageErrorApi = function(response, title, type, time, confirmButton, status = 1) {
+    var errorJson = JSON.stringify(response);
 
-    if (errorJson.indexOf("error") > 0) {
-        messageAlert(title, data.error.user_msg, type);
-    } else {
-        messageAlert(title, data, type);
+    if (status == "-1") {
+        title = "Error de conexión a internet";
     }
+    if (errorJson.indexOf("error") > 0) {
+        messageAlert(title, response.error.user_msg, type, time, confirmButton);
+    } else {
+        messageAlert(title, response, type, time, confirmButton);
+    }
+
 };
 
 var historyBack = function() {
@@ -371,14 +397,96 @@ var cleanString = function(cadena) {
     return cadena;
 };
 
-/*----- Las fechas de datepicker u otro elemento muestra un formato extenso, con esta funcion la convertiremos a
-YYYY-MM-DD
------*/
-var convertFechaYYMMDD = function(fecha, idioma, options) {
-    var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
-    var arrayFecha = newFecha.split("/");
+/*-----
+Permite mostrar mensajes tipo alert, multiples.
+------*/
+var alertMultiple = function(title, text, type, icon) {
+    $.growl({
+        icon: icon,
+        title: title + " ",
+        message: text,
+        url: ''
+    }, {
+        element: 'body',
+        type: type,
+        allow_dismiss: true,
+        placement: {
+            from: 'top',
+            align: 'center'
+        },
+        offset: {
+            x: 20,
+            y: 85
+        },
+        spacing: 10,
+        z_index: 1031,
+        delay: 2500,
+        timer: 1000,
+        url_target: '_blank',
+        mouse_over: false,
+        /*animate: {
+            enter: animIn,
+            exit: animOut
+        },*/
+        icon_type: 'class',
+        template: '<div data-growl="container" class="alert" role="alert">' +
+            '<button type="button" class="close" data-growl="dismiss">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '<span class="sr-only">Close</span>' +
+            '</button>' +
+            '<span data-growl="icon"></span>' +
+            '<span data-growl="title"></span>' +
+            '<span data-growl="message"></span>' +
+            '<a href="#" data-growl="url"></a>' +
+            '</div>'
+    });
+};
 
-    newFecha = arrayFecha[2] + "-" + arrayFecha[1] + "-" + arrayFecha[0];
+/*
+Recibe los parametros de angular cuando devuelve un error de api, con esta funcion devolvemos en un objeto al controlador con la promesa
+usarlo para todas las funciones que devuelven : error api
+ */
+var jsonErrorData = function(data, status, headers) {
+    var response = {
+        data: data,
+        status: status,
+        headers: headers
+    };
+    return response;
+};
 
-    return newFecha;
+var convertFechaToDate = function(date) {
+    var fecha = new Date(date + " 00:00:00");
+    return fecha;
+};
+
+/*----------Scroll bar plugin options -----
+Devuelve un objeto configuracion
+axis = orientacion del scroll
+theme = estilo del scroll
+height = alto del scroll
+*/
+
+var optionsScrollBarPLugin = function(axis, theme, height) {
+    var options = {
+        autoHideScrollbar: false,
+        theme: theme,
+        advanced: {
+            updateOnContentResize: true
+        },
+        setHeight: height,
+        scrollInertia: 0,
+        axis: axis
+    };
+
+    return options;
+};
+var getFechaActual = function() {
+    var fecha = new Date();
+    var dia = (fecha.getDate() < 10 ? '0' : '') + fecha.getDate();
+    var mes = ((fecha.getMonth() + 1) < 10 ? '0' : '') + (fecha.getMonth() + 1);
+    var anio = fecha.getFullYear();
+    var fecha_actual = String(anio + "-" + mes + "-" + dia);
+    return fecha_actual;
+
 };

@@ -1,253 +1,274 @@
 angular.module('guest.controller', [])
-.controller('GuestCtrl', function(GuestFactory) {
+	.controller('GuestCtrl', function(GuestFactory, $state) {
 
-	var vm = this;
+		var vm = this;
 
-	vm.guestList = [];
+		vm.guestList = [];
 
-	vm.init = function(){
-		vm.guestAll();
-	};
+		vm.init = function() {
+			vm.guestAll();
+		};
 
-	vm.guestAll = function(){
-		GuestFactory.guestList().then(function success(response){
-			vm.guestList = response;
-		},function error(response){
-			messageErrorApi(response,"Error","warning");
-		});
-	};
+		vm.configScrollBar = optionsScrollBarPLugin('y', 'light', '100%');
 
-	vm.init();
+		vm.guestAll = function() {
+			GuestFactory.guestList().then(function success(response) {
 
-})
-.controller('GuestViewCtrl', function(GuestFactory,GuestDataFactory,$stateParams) {
-	var vm = this;
-	var dateNow = convertFechaYYMMDD(new Date(),"es-ES",{});
+				vm.guestList = response;
 
-	vm.guestId = $stateParams.guest;
+				vm.showGuest(vm.guestList);
 
-	vm.guestData = {
-		name : '',
-		contact : '',
-		reservations : {
-			resumen : {},
-			past : [],
-			last : []
-		}
-	};
-
-	vm.paginationReservation = {
-		totalItems : 0,
-		currentPage : 1,
-		maxSize : 10,
-		itemsPage :1
-	};
-
-	vm.init = function(){
-		vm.getGuest();
-
-		vm.getReservations({
-			page : vm.paginationReservation.currentPage,
-			page_size : vm.paginationReservation.itemsPage,
-			end_date : dateNow
-		},"past");
-
-		vm.getReservations({
-			start_date : dateNow
-		},"last");
-
-		vm.getResumenReservation();
-	};
-
-	vm.getGuest = function(){
-		if ($stateParams.guest != undefined) {
-			
-			GuestDataFactory.getGuest($stateParams.guest).then(function success(response){
-				var data = response.data.data;
-				vm.guestData.name = data.first_name +" "+ data.last_name;
-				vm.guestData.contact = GuestFactory.parserContactData(data);
-				
-			},function error(response){
-				messageErrorApi(response,"Error","warning");
+			}, function error(response) {
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
 			});
-		}
-	};
+		};
 
-	vm.getReservations = function(options,type){
+		vm.showGuest = function(guestData) {
+			$state.go("mesas.guest.view", {
+				'guest': guestData[0].id
+			});
+		};
 
-		options = getAsUriParameters(options);
+		vm.init();
 
-		angular.element("#item-reserva").addClass("hide");
+	})
+	.controller('GuestViewCtrl', function(GuestFactory, GuestDataFactory, $stateParams) {
+		var vm = this;
+		var dateNow = convertFechaYYMMDD(new Date(), "es-ES", {});
 
-		GuestFactory.reservationsList(vm.guestId,options).then(function success(response){
-			
-			if(type == "last"){
-				vm.guestData.reservations.last = response.data;
-			}else{
-				vm.guestData.reservations.past = response.data;
-				vm.paginationReservation.totalItems = response.pagination.total;
+		vm.guestId = $stateParams.guest;
+
+		vm.guestData = {
+			name: '',
+			contact: '',
+			reservations: {
+				resumen: {},
+				past: [],
+				last: []
 			}
+		};
 
-			setTimeout(function(){
-				angular.element("#item-reserva").removeClass("hide");
-			},500);
-			
-		},function error(response){
-			messageErrorApi(response,"Error","warning");
-		});
-	};
+		vm.paginationReservation = {
+			totalItems: 0,
+			currentPage: 1,
+			maxSize: 10,
+			itemsPage: 1
+		};
 
-	vm.pageReservationChanged = function(page){
-		vm.getReservations({
-			page : page,
-			page_size : vm.paginationReservation.itemsPage,
-			end_date : dateNow
-		},"past");
-	};
+		vm.init = function() {
+			vm.getGuest();
 
-	vm.getResumenReservation = function(){
-		GuestFactory.getResumenReservation(vm.guestId).then(function success(response){
-			console.log(angular.toJson(response,true));
-			vm.guestData.reservations.resumen = response;
-		},function error(response){
-			messageErrorApi(response,"Error","warning");
-		});
-	}
+			vm.getReservations({
+				page: vm.paginationReservation.currentPage,
+				page_size: vm.paginationReservation.itemsPage,
+				end_date: dateNow
+			}, "past");
 
-	vm.init();
-})
-.controller('GuestCreateCtrl', function(GuestFactory,GuestDataFactory,$compile,$scope,$state,$stateParams) {
-	var vm = this;
+			vm.getReservations({
+				start_date: dateNow
+			}, "last");
 
-	vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-	vm.format = vm.formats[1];
+			vm.getResumenReservation();
+		};
 
-	vm.contentTab = {
-		active : "datos.html",
-		tab1 : 'active',
-		tab2 : ''
-	};
+		vm.getGuest = function() {
+			if ($stateParams.guest !== undefined) {
 
-	vm.guestData = {
-		first_name : '',
-		last_name : '',
-		birthdate : '',
-		gender : '',
-		phones : [],
-		emails : [],
-		tags : []
-	};
+				GuestDataFactory.getGuest($stateParams.guest).then(function success(response) {
+					var data = response.data.data;
+					vm.guestData.name = data.first_name + " " + data.last_name;
+					vm.guestData.contact = GuestFactory.parserContactData(data);
 
-	vm.tagsList = [];
-	vm.tagsListAdd = [];
+				}, function error(response) {
+					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+				});
+			}
+		};
 
-	vm.phone = "";
-	vm.email = "";
+		vm.getReservations = function(options, type) {
 
-	vm.genderData = null;
+			options = getAsUriParameters(options);
 
-	vm.init = function(){
-		vm.listGender();
-		
-		GuestFactory.getTags().then(function success(response){
-			vm.tagsList = response.tagsList;
-			vm.tagsListAdd = response.tagsListAdd;
-			vm.loadDataGuestEdit();
-		},function error(response){
-			console.log("getTags error " , angular.toJson(response, true));
-		});	
-	};
+			angular.element("#item-reserva").addClass("hide");
 
-	vm.listGender = function(){
-		vm.genderData = getGender();
-		vm.guestData.gender = vm.genderData[0];
-	};
+			GuestFactory.reservationsList(vm.guestId, options).then(function success(response) {
 
-	vm.selectTab = function(tabItem){
-		vm.contentTab = GuestFactory.getTabSelected(tabItem);	
-	};
+				if (type == "last") {
+					vm.guestData.reservations.last = response.data;
+				} else {
+					vm.guestData.reservations.past = response.data;
+					vm.paginationReservation.totalItems = response.pagination.total;
+				}
+				setTimeout(function() {
+					angular.element("#item-reserva").removeClass("hide");
+				}, 500);
 
-	vm.validaSaveGuest = function(frmGuest){
-		if (frmGuest.$valid) {
-			vm.saveGuest();
-		}
-	};
-
-	vm.saveGuest = function(){
-
-		console.log("saveGuest " + angular.toJson(vm.guestData,true));
-
-		vm.guestData.birthdate = convertFechaYYMMDD(vm.guestData.birthdate,"es-ES", {});
-		vm.guestData.gender = vm.guestData.gender.id;
-
-		var option = ($stateParams.guest != undefined) ? "edit" : "create";
-	
-		GuestFactory.saveGuest(vm.guestData,option).then(function success(response){
-			$state.reload();
-			messageAlert("Success","Huesped registrado","success");
-		},function error(response){
-			messageErrorApi(response,"Error","warning");
-		});
-	};
-
-	vm.insertPhone = function(){
-		vm.guestData.phones = GuestFactory.insertDataContact(vm.guestData.phones,vm.phone,'telefono');
-		vm.phone = "";
-	};
-
-	vm.deletePhone = function(index){
-		vm.guestData.phones.splice(index, 1);
-	};
-
-	vm.insertEmail = function(){
-		vm.guestData.emails = GuestFactory.insertDataContact(vm.guestData.emails,vm.email,'email');
-		vm.email = "";
-	};
-
-	vm.deleteEmail = function(index){
-		vm.guestData.emails.splice(index, 1);
-	};
-
-	vm.openCalendar = function($event, opened) {
-		$event.preventDefault();
-		$event.stopPropagation();
-		vm.opened = true;
-		console.log("abrir");
-	};
-
-	vm.addTag = function(tag,category){
-
-		var index = GuestFactory.existsTag(vm.tagsListAdd[category].data,tag.id);
-
-		var tagsData = {
-			id : tag.id,
-			name : tag.name,
-			res_guest_tag_category_id : tag.res_guest_tag_gategory_id
-		}
-
-		if(index == null){
-			vm.tagsListAdd[category].data.push(tagsData);
-			vm.guestData.tags.push({id : tagsData.id});
-		}else{
-			vm.tagsListAdd[category].data.splice(index, 1);
-			var indexTag = GuestFactory.existsTag(vm.guestData.tags,tag.id);
-			vm.guestData.tags.splice(indexTag, 1);
-		}
-	};
-
-	vm.loadDataGuestEdit = function(){
-		if ($stateParams.guest != undefined) {
-			
-			GuestFactory.getGuest($stateParams.guest).then(function success(response){
-				vm.guestData = response.guest;
-				GuestFactory.showTags(response.guest.tags,vm.tagsListAdd);
-
-			},function error(response){
-				messageErrorApi(response,"Error","warning");
+			}, function error(response) {
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
 			});
-		}
-	};
+		};
 
-	vm.init();
-})
-;
+		vm.pageReservationChanged = function(page) {
+			vm.getReservations({
+				page: page,
+				page_size: vm.paginationReservation.itemsPage,
+				end_date: dateNow
+			}, "past");
+		};
+
+		vm.getResumenReservation = function() {
+			GuestFactory.getResumenReservation(vm.guestId).then(function success(response) {
+				console.log(angular.toJson(response, true));
+				vm.guestData.reservations.resumen = response;
+			}, function error(response) {
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+			});
+		};
+
+		vm.init();
+	})
+	.controller('GuestCreateCtrl', function(GuestFactory, GuestDataFactory, $compile, $scope, $state, $stateParams) {
+		var vm = this;
+
+		vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+		vm.format = vm.formats[1];
+
+		vm.contentTab = {
+			active: "datos.html",
+			tab1: 'active',
+			tab2: ''
+		};
+
+		vm.guestData = {
+			first_name: '',
+			last_name: '',
+			birthdate: '',
+			gender: '',
+			phones: [],
+			emails: [],
+			tags: []
+		};
+
+		vm.guestFormData = {
+			gender: '',
+			birthdate: ''
+		};
+
+		vm.tagsList = [];
+		vm.tagsListAdd = [];
+
+		vm.phone = "";
+		vm.email = "";
+
+		vm.genderData = null;
+
+		vm.init = function() {
+			vm.listGender();
+
+			GuestFactory.getTags().then(function success(response) {
+				vm.tagsList = response.tagsList;
+				vm.tagsListAdd = response.tagsListAdd;
+				vm.loadDataGuestEdit();
+			}, function error(response) {
+				console.log("getTags error ", angular.toJson(response, true));
+			});
+		};
+
+		vm.listGender = function() {
+			vm.genderData = getGender();
+			vm.guestFormData.gender = vm.genderData[0];
+		};
+
+		vm.selectTab = function(tabItem) {
+			vm.contentTab = GuestFactory.getTabSelected(tabItem);
+		};
+
+		vm.validaSaveGuest = function(frmGuest) {
+			if (frmGuest.$valid) {
+				vm.saveGuest();
+			}
+		};
+
+		vm.saveGuest = function() {
+
+			console.log("saveGuest " + angular.toJson(vm.guestData, true));
+
+			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestFormData.birthdate, "es-ES", {});
+			vm.guestData.gender = vm.guestFormData.gender.id;
+
+			var option = ($stateParams.guest !== undefined) ? "edit" : "create";
+
+			GuestFactory.saveGuest(vm.guestData, option).then(function success(response) {
+				$state.reload();
+				messageAlert("Success", "Huesped registrado", "success", 0, true);
+			}, function error(response) {
+				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+			});
+		};
+
+		vm.insertPhone = function() {
+			vm.guestData.phones = GuestFactory.insertDataContact(vm.guestData.phones, vm.phone, 'telefono');
+			vm.phone = "";
+		};
+
+		vm.deletePhone = function(index) {
+			vm.guestData.phones.splice(index, 1);
+		};
+
+		vm.insertEmail = function() {
+			vm.guestData.emails = GuestFactory.insertDataContact(vm.guestData.emails, vm.email, 'email');
+			vm.email = "";
+		};
+
+		vm.deleteEmail = function(index) {
+			vm.guestData.emails.splice(index, 1);
+		};
+
+		vm.openCalendar = function($event, opened) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			vm.opened = true;
+			console.log("abrir");
+		};
+
+		vm.addTag = function(tag, category) {
+
+			var index = GuestFactory.existsTag(vm.tagsListAdd[category].data, tag.id);
+
+			var tagsData = {
+				id: tag.id,
+				name: tag.name,
+				res_guest_tag_category_id: tag.res_guest_tag_gategory_id
+			};
+
+			if (index === null) {
+				vm.tagsListAdd[category].data.push(tagsData);
+				vm.guestData.tags.push({
+					id: tagsData.id
+				});
+			} else {
+				vm.tagsListAdd[category].data.splice(index, 1);
+				var indexTag = GuestFactory.existsTag(vm.guestData.tags, tag.id);
+				vm.guestData.tags.splice(indexTag, 1);
+			}
+		};
+
+		vm.loadDataGuestEdit = function() {
+			if ($stateParams.guest !== undefined) {
+
+				GuestFactory.getGuest($stateParams.guest).then(function success(response) {
+					vm.guestData = response.guest;
+
+					vm.guestFormData.birthdate = convertFechaToDate(vm.guestData.birthdate);
+					vm.guestFormData.gender = vm.guestData.gender;
+
+					GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
+
+				}, function error(response) {
+					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+				});
+			}
+		};
+
+		vm.init();
+	});
