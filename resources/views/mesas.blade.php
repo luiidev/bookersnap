@@ -20,7 +20,7 @@
     <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
 
 </head>
-<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
+<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}" class="scroll-x-hidden">
 
 <data ui-view></data>
 
