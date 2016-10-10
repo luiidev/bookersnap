@@ -3,9 +3,13 @@ angular.module('guest.app', ['guest.controller', 'guest.service', 'guest.directi
 		$stateProvider
 			.state('mesas.guest', {
 				url: '/config/guest',
-				templateUrl: '/js/app/tables/guest/view/index.html',
-				controller: 'GuestCtrl',
-				controllerAs: 'vm',
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/guest/view/index.html',
+						controller: 'GuestCtrl',
+						controllerAs: 'vm'
+					}
+				},
 				resolve: {
 					$title: function() {
 						return 'Lista de invitados';

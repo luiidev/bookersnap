@@ -50,7 +50,7 @@ gulp.task('library-bower-js', function() {
             'public/library/bower_components/angular-resource/angular-resource.min.js',
             'public/library/bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'public/library/bower_components/angular-loading-bar/src/loading-bar.min.js', //--
-            'public/library/bower_components/oclazyload/dist/ocLazyLoad.min.js',
+            //'public/library/bower_components/oclazyload/dist/ocLazyLoad.min.js',
             'public/library/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
             'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
             'public/library/bower_components/ng-scrollbars/dist/scrollbars.min.js',
