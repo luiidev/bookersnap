@@ -1,64 +1,85 @@
 angular.module('block.controller', [])
-    .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, reservationScreenHelper, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
+    .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, screenHelper, screenSizeBlock, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
 
         $scope.date = $stateParams.date;
+        $scope.zoneIndexShow = 0;
 
-        /* Listado array de zonas incluyendo sus zonas */
-        ZoneFactory.getZones().then(function(response) {
-            $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
-            return $scope.zones;
-        }).then(function(zonas) {
-            // Se obtiene de array de las mesas que estan en ese rango de fecha
-            BlockFactory.getAllBlock("date=" + $scope.date).then(function(response) {
-                var mesasFuturasBloqueadas = response.data.data;
+        $scope.coversList = BlockFactory.coverList();
+        $scope.boxTables = BlockFactory.boxTables();
 
-                /////////////////////////////////////////////////////////////////////////////////////// 
-                //Se agrega la clase para identificar los bloqueos futuros dentro del array principal  
-                ///////////////////////////////////////////////////////////////////////////////////////
-                angular.forEach(zonas, function(zona, key) {
-                    angular.forEach(zona.tables, function(mesa, i) {
-                        // Iteracion para identificar las mesas bloqueadas 
-                        for (var p = 0; p < mesasFuturasBloqueadas.length; p++) {
-                            if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {
-                                $scope.zones[key].tables[i].classBloqueado = "selected-table-2";
-                            }
-                        }
-                        // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
-                    });
-                });
-                //////////////////////////////////////////////////////////////////////////////////////
-            });
-
-        });
+        $scope.object = [];
+        $scope.zones = [];
 
         /** Carga la informacion de la pantalla add Block **/
         $scope.shifts = [];
         $scope.startTimes = [];
         $scope.endTimes = [];
-        $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
-            angular.forEach(response.data, function(item, i) {
-                if (item.turn != null) { // Se obtienes los Shifts que contienen datos
 
-                    $scope.shifts.push({
-                        id: item.id,
-                        name: item.name,
-                        startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
-                        endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end),
+        /***************Funcion ejecutado para agregar  o retirar una mesa bloqueada ****************/
+        $scope.mesasBloqueadas = [];
+
+        var listZones = function() {
+
+            /* Listado array de zonas incluyendo sus zonas */
+            ZoneFactory.getZones().then(function(response) {
+                $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
+                return $scope.zones;
+            }).then(function(zonas) {
+
+                //console.log("list zones " + angular.toJson(zonas, true));
+                $scope.selectZone(zonas[0]);
+                // Se obtiene de array de las mesas que estan en ese rango de fecha
+                BlockFactory.getAllBlock("date=" + $scope.date).then(function(response) {
+                    var mesasFuturasBloqueadas = response.data.data;
+
+                    /////////////////////////////////////////////////////////////////////////////////////// 
+                    //Se agrega la clase para identificar los bloqueos futuros dentro del array principal  
+                    ///////////////////////////////////////////////////////////////////////////////////////
+                    angular.forEach(zonas, function(zona, key) {
+                        angular.forEach(zona.tables, function(mesa, i) {
+                            // Iteracion para identificar las mesas bloqueadas 
+                            for (var p = 0; p < mesasFuturasBloqueadas.length; p++) {
+                                if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {
+                                    $scope.zones[key].tables[i].classBloqueado = "selected-table-2";
+                                }
+                            }
+                            // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
+                        });
                     });
+                });
 
-                    // Se muestra el primer array para cuando se esta creando el bloqueo
-                    $scope.shift = $scope.shifts[0];
-                    $scope.startTimes = $scope.shifts[0].startTimes;
-                    $scope.endTimes = $scope.shifts[0].endTimes;
-                }
             });
-        });
+        };
 
+        var listFormData = function() {
+            $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
+
+                console.log("calendar " + angular.toJson(response.data, true));
+
+                angular.forEach(response.data, function(item, i) {
+                    if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
+
+                        $scope.shifts.push({
+                            id: item.id,
+                            name: item.name,
+                            startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
+                            endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end),
+                        });
+
+                        // Se muestra el primer array para cuando se esta creando el bloqueo
+                        $scope.shift = $scope.shifts[0];
+                        $scope.startTimes = $scope.shifts[0].startTimes;
+                        $scope.endTimes = $scope.shifts[0].endTimes;
+                    }
+                });
+            });
+        };
 
         // Se muestran las mesas de la zona seleccionada   
         $scope.selectZone = function(item) {
             angular.forEach($scope.zones, function(value, key) {
                 if (value.id == item.id) {
+                    $scope.zoneIndexShow = key;
                     $scope.itemTables = []; // Variable donde se cargan las mesas a mostrar
                     loadTablesEdit(value.tables);
                 }
@@ -70,9 +91,6 @@ angular.module('block.controller', [])
             $scope.startTimes = item.startTimes;
             $scope.endTimes = item.endTimes;
         };
-
-        $scope.coversList = BlockFactory.coverList();
-        $scope.boxTables = BlockFactory.boxTables();
 
         var listCovers = function(option) {
 
@@ -88,7 +106,7 @@ angular.module('block.controller', [])
                 var data = {
                     label: i + " covers",
                     id: i
-                }
+                };
 
                 coverList.push(data);
             }
@@ -100,9 +118,6 @@ angular.module('block.controller', [])
             }
         };
 
-
-        /***************Funcion ejecutado para agregar  o retirar una mesa bloqueada ****************/
-        $scope.mesasBloqueadas = [];
         $scope.activarTableOptions = function(index, data) {
             BlockFactory.checkTable($scope, $sce, index, data);
         };
@@ -143,11 +158,10 @@ angular.module('block.controller', [])
             $scope.opened = true;
         };
 
-        $scope.object = [];
         $scope.saveZone = function(option) {
 
 
-            if ($scope.startTime == undefined || $scope.endTime == undefined || $scope.date == undefined) {
+            if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
 
                 messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
 
@@ -159,7 +173,7 @@ angular.module('block.controller', [])
                     start_time: $scope.startTime.hour24,
                     end_time: $scope.endTime.hour24,
                     tables: [],
-                }
+                };
 
                 //Se crea el array de mesas bloqueadas          
                 for (var i = 0; i < $scope.mesasBloqueadas.length; i++) {
@@ -171,15 +185,13 @@ angular.module('block.controller', [])
                 BlockFactory.addNewBlock($scope.object).then(function(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000);
-                    } else if (response.data.response == false) {
+                    } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 2000);
                     }
                 });
 
             }
-
         };
-
 
         /* Esta clase recorre las mesas listadas y crea un nuevo objeto dataTable que se iterara en la vista para imprimir las mesas * */
         var loadTablesEdit = function(tables) {
@@ -188,33 +200,75 @@ angular.module('block.controller', [])
 
         $scope.selectAllTables = function() {
             BlockFactory.selectAllTables($scope, $sce, loadTablesEdit);
-        }
+        };
 
         $scope.unselectAllTables = function() {
             BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
-        }
-        
-        angular.element($window).bind('resize', function(){
-            var size = reservationScreenHelper.size($scope);
+        };
+
+        angular.element($window).bind('resize', function() {
+            var size = screenHelper.size(screenSizeBlock);
             $scope.size = size;
             $scope.$digest();
         });
-        
+
+
+        var loadZones = function() {
+            var date = $stateParams.date;
+            var valid = moment(date, 'YYYY-MM-DD', true).isValid();
+
+            if (!valid) {
+                return alert("Fecha invalida no se puede cargar las zonas");
+            }
+
+            BlockFactory.getZonesCalendar(date)
+                .then(function(response) {
+                    console.log(response);
+                    //loadTablesEdit(response.data.data.zones);
+                });
+            /*.catch(function(error) {
+             message.apiError(error);
+             }).finally(function() {
+             loadBlocks(date);
+             listGuest();
+             listServers();
+             listStatuses();
+             });*/
+        };
+
+        /*var loadTablesEdit = function(dataZones) {
+         vm.zones = helper.loadTable(dataZones);
+         defaultView();
+         };*/
+
+        var setZoneName = function(i) {
+            if (vm.zones.length)
+                vm.zoneName = vm.zones[i].name;
+        };
+
+
         (function Init() {
-            $scope.size = reservationScreenHelper.size();
+            //loadZones();
+
+            listZones();
+            listFormData();
+            $scope.size = screenHelper.size(screenSizeBlock);
         })();
-    
+
         listCovers("min");
         listCovers("max");
     })
 
-.controller('blockCtrEdit', function($scope, $http, $sce, $state, $stateParams, $document, $window, reservationScreenHelper, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
+
+.controller('blockCtrEdit', function($scope, $http, $sce, $state, $stateParams, $document, $window, screenHelper, screenSizeBlock, ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, $uibModal, IdMicroSitio) {
 
     $scope.date = $stateParams.date;
     var block_id = $stateParams.block_id;
+
+    $scope.zoneIndexShow = 0;
     // Se trae la informacion del bloqueo para poder mostrar las tablas y editar
     BlockFactory.getBlock(block_id).then(function(response) {
-        
+
         $scope.tableBlock = response.data.data;
         angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
             $scope.mesasBloqueadas.push(mesa.id);
@@ -224,7 +278,7 @@ angular.module('block.controller', [])
 
         return $scope.mesasBloqueadas;
 
-    }).then(function(mesasBloqueadas) {                
+    }).then(function(mesasBloqueadas) {
         // Listado array de zonas incluyendo sus zonas 
         return ZoneFactory.getZones().then(function(response) {
 
@@ -239,8 +293,8 @@ angular.module('block.controller', [])
 
                     // Iteracion para identificar las mesas bloqueadas 
                     for (var p = 0; p < mesasBloqueadas.length; p++) {
-                        if (mesa.id === mesasBloqueadas[p]) {                            
-                            $scope.zones[key].tables[i].class = "selected-table";                            
+                        if (mesa.id === mesasBloqueadas[p]) {
+                            $scope.zones[key].tables[i].class = "selected-table";
                         }
 
                     }
@@ -256,7 +310,7 @@ angular.module('block.controller', [])
         $scope.zones = zones;
         // Se obtiene de array de las mesas que estan en ese rango de fecha
         BlockFactory.getAllBlock("date=" + $scope.date).then(function(response) {
-                        
+
             var mesasFuturasBloqueadas = [];
             angular.forEach(response.data.data, function(mesaFuturaBloqueada, i) {
                 if (mesaFuturaBloqueada.res_block_id != block_id && mesaFuturaBloqueada.res_reservation_id === null) {
@@ -266,13 +320,13 @@ angular.module('block.controller', [])
             /////////////////////////////////////////////////////////////////////////////////////// 
             //Se agrega la clase para identificar los bloqueos futuros dentro del array principal  
             ///////////////////////////////////////////////////////////////////////////////////////
-            
+
             angular.forEach($scope.zones, function(zona, key) {
                 angular.forEach(zona.tables, function(mesa, i) {
                     // Iteracion para identificar las mesas bloqueadas 
                     for (var p = 0; p < mesasFuturasBloqueadas.length; p++) {
-                        if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {          
-                            $scope.zones[key].tables[i].classBloqueado = "block";                      
+                        if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {
+                            $scope.zones[key].tables[i].classBloqueado = "block";
                         }
                     }
                     // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
@@ -289,7 +343,7 @@ angular.module('block.controller', [])
     $http.get(ApiUrlMesas + '/calendar/' + $stateParams.date + '/shifts').success(function(response) {
         //console.log(response);
         angular.forEach(response.data, function(item, i) {
-            if (item.turn != null) { // Se obtienes los Shifts que contienen datos
+            if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
 
                 $scope.shifts.push({
                     id: item.id,
@@ -330,10 +384,10 @@ angular.module('block.controller', [])
                 }
 
                 /*
-                $scope.shift = $scope.shifts[0];
-                $scope.startTimes = $scope.shifts[0].startTimes;
-                $scope.endTimes = $scope.shifts[0].endTimes;
-                */
+                 $scope.shift = $scope.shifts[0];
+                 $scope.startTimes = $scope.shifts[0].startTimes;
+                 $scope.endTimes = $scope.shifts[0].endTimes;
+                 */
             }
         });
 
@@ -349,6 +403,7 @@ angular.module('block.controller', [])
     $scope.selectZone = function(item) {
         angular.forEach($scope.zones, function(value, key) {
             if (value.id == item.id) {
+                $scope.zoneIndexShow = key;
                 $scope.itemTables = []; // Variable donde se cargan las mesas a mostrar
                 loadTablesEdit(value.tables);
             }
@@ -379,7 +434,7 @@ angular.module('block.controller', [])
             var data = {
                 label: i + " covers",
                 id: i
-            }            
+            };
             coverList.push(data);
         }
 
@@ -390,7 +445,6 @@ angular.module('block.controller', [])
         }
     };
 
-
     /***************Funcion ejecutado para agregar  o retirar una mesa bloqueada ****************/
     $scope.mesasBloqueadas = [];
     $scope.activarTableOptions = function(index, data) {
@@ -399,7 +453,7 @@ angular.module('block.controller', [])
 
     $scope.desactivarTable = function(index, data) {
         BlockFactory.uncheckTable($scope, $sce, index, data);
-    }
+    };
 
     var getDataTableSelected = function(index) {
 
@@ -433,14 +487,13 @@ angular.module('block.controller', [])
         $scope.opened = true;
     };
 
-
     $scope.deleteBlock = function() {
 
         // Se obtiene de array de las mesas que estan en ese rango de fecha
         BlockFactory.deleteBlock(block_id).then(function(response) {
-            if (response.data.success == true) {
+            if (response.data.success === true) {
                 messageAlert("Success", response.data.msg, "success", 3000);
-            } else if (response.data.success == false) {
+            } else if (response.data.success === false) {
                 messageAlert("Warning", response.data.msg, "warning", 3000);
             }
         });
@@ -450,7 +503,7 @@ angular.module('block.controller', [])
     $scope.object = [];
     $scope.saveZone = function(option) {
 
-        if ($scope.startTime == undefined || $scope.endTime == undefined || $scope.date == undefined) {
+        if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
 
             messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
 
@@ -462,7 +515,7 @@ angular.module('block.controller', [])
                 start_time: $scope.startTime.hour24,
                 end_time: $scope.endTime.hour24,
                 tables: [],
-            }
+            };
 
             //Se crea el array de mesas bloqueadas          
             for (var i = 0; i < $scope.mesasBloqueadas.length; i++) {
@@ -474,7 +527,7 @@ angular.module('block.controller', [])
             BlockFactory.editBlock("/" + block_id, $scope.object).then(function(response) {
                 if (response.data.success === true) {
                     messageAlert("Success", response.data.msg, "success", 3000);
-                } else if (response.data.success == false) {
+                } else if (response.data.success === false) {
                     messageAlert("Warning", response.data.msg, "warning", 3000);
                 }
             });
@@ -490,20 +543,20 @@ angular.module('block.controller', [])
 
     $scope.selectAllTables = function() {
         BlockFactory.selectAllTables($scope, $sce, loadTablesEdit);
-    }
+    };
 
     $scope.unselectAllTables = function() {
         BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
-    }
+    };
 
-    angular.element($window).bind('resize', function(){
-            var size = reservationScreenHelper.size($scope);
-            $scope.size = size;
-            $scope.$digest();
+    angular.element($window).bind('resize', function() {
+        var size = screenHelper.size(screenSizeBlock);
+        $scope.size = size;
+        $scope.$digest();
     });
-    
+
     (function Init() {
-        $scope.size = reservationScreenHelper.size();
+        $scope.size = screenHelper.size(screenSizeBlock);
     })();
 
     listCovers("min");
