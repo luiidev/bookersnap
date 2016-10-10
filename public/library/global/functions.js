@@ -335,7 +335,7 @@ message.short = function(title, text, time, icon) {
 };
 
 message.alert = function(title, text, icon, time) {
-    return this.show(title, text, icon, time);
+    return this.show(title, text, "warning", time);
 };
 
 message.apiError = function(response, title, icon, options) {

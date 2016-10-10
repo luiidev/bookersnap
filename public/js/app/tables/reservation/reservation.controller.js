@@ -3,7 +3,7 @@ angular.module('reservation.controller', [])
     console.log("=)");
 }])
 .controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
-    "screenHelper", "reservationService", "reservationHelper", "screenSize", 
+    "screenHelper", "reservationService", "reservationHelper", "screenSize",
         function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize){
 
     vm.reservation = {};
@@ -13,14 +13,19 @@ angular.module('reservation.controller', [])
     vm.zones = [];
     vm.zoneIndex = 0;
     vm.tableSuggested = {};
+    vm.date = "";
+    vm.tags = [];
+    vm.selectTags = {};
     var zoneIndexMax = 0;
     var blocks = [];
 
     vm.guest = {};
     vm.guestList = [];
 
-    vm.testJsonCreate = function() {
+    vm.save = function() {
+        ///////////////////////////////////////////////////////////////
         // parse reservation.tables ids
+        ///////////////////////////////////////////////////////////////
         vm.reservation.tables = [];
         vm.reservation.tables = Object.keys(vm.tablesSelected).reduce(function(result, value) {
                 result.push(parseInt(value));
@@ -30,22 +35,43 @@ angular.module('reservation.controller', [])
             if (vm.tableSuggested) {
                 vm.reservation.tables.push(vm.tableSuggested.id);
             } else {
-                return alert("Debe elegir mesas para la reservacion");
+                return message.alert("Debe elegir mesas para la reservacion");
             }
         }
-        // end
 
+        ///////////////////////////////////////////////////////////////
         //  parse guest
+        ///////////////////////////////////////////////////////////////
         if (!vm.reservation.guest_id) {
             vm.reservation.guest = vm.newGuest || {};
             delete vm.reservation.guest_id;
         } else {
             delete vm.reservation.guest;
         }
-        //  end
+
+        ///////////////////////////////////////////////////////////////
+        //  parse date
+        ///////////////////////////////////////////////////////////////
+        vm.reservation.date = moment(vm.date).format("YYYY-MM-DD");
+        
+        vm.waitingResponse = true;
+        service.save(vm.reservation)
+            .then(function(response) {
+                message.success(response.data.msg);
+                vm.waitingResponse = false;
+                vm.cancel();
+            }).catch(function(error) {
+                message.apiError(error);
+                vm.waitingResponse = false;
+            });
 
         console.log(vm.reservation);
         console.log(JSON.stringify(vm.reservation));
+    };
+
+    vm.cancel = function() {
+        vm.reservation = {};
+        loadZones();
     };
 
     vm.selectTableAllOrNone = function(indicator) {
@@ -183,6 +209,18 @@ angular.module('reservation.controller', [])
             });
     };
 
+    var listReservationTags = function() {
+        vm.tags = service.getReservationTags();
+
+        // service.getReservationTags()
+        //     .then(function(response) {
+        //         vm.tags = response.data.data;
+        //         console.log(tags, response.data);
+        //     }).finally(function(error) {
+        //         message.apiError(error);
+        //     });
+    };
+
     var loadBlocks = function(date) {
         service.getBlocks(date)
             .then(function(response) {
@@ -204,6 +242,7 @@ angular.module('reservation.controller', [])
                 message.apiError(error);
             }).finally(function() {
                 vm.tablesBlockValid();
+                vm.waitingResponse = false;
             });
     };
 
@@ -232,9 +271,12 @@ angular.module('reservation.controller', [])
             var valid = moment(date , 'YYYY-MM-DD', true).isValid();
 
             if (!valid) {
-                return alert("Fecha invalida no se puede cargar las zonas");
+                return message.error("Fecha invalida no se puede cargar las zonas");
             }
 
+            vm.date = new Date(date);
+
+            vm.waitingResponse = true;
             service.getZones(date)
                 .then(function(response) {
                     loadTablesEdit(response.data.data.zones);
@@ -245,6 +287,7 @@ angular.module('reservation.controller', [])
                     listGuest();
                     listServers();
                     listStatuses();
+                    listReservationTags();
                 });
     };
 
@@ -290,15 +333,17 @@ angular.module('reservation.controller', [])
     angular.element($window).bind('resize', function(){
         var size = screenHelper.size(screenSize);
         vm.size = size;
-        vm.fontSize = 14 *  size / screenSize.minSize + "px";
+        vm.fontSize = (14 *  size / screenSize.minSize + "px");
         vm.$digest();
     });
 
+    ///////////////////////////////////////////////////////////////
     // Search guest list
+    ///////////////////////////////////////////////////////////////
     var auxiliar;
     vm.searchGuest = function(name) {
         if (auxiliar)$timeout.cancel( auxiliar );
-        if (name == "") {
+        if (name === "") {
             vm.guestList = [];
             return;
         }
@@ -326,13 +371,35 @@ angular.module('reservation.controller', [])
         vm.guestList = [];
         vm.addGuest = false;
     };
-
+    ///////////////////////////////////////////////////////////////
     // End
+    ///////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////
+    // Select tags
+    ///////////////////////////////////////////////////////////////
+    vm.addTag = function(tag) {
+        tag.checked = !tag.checked;
+        listTagsSelected();
+    };
+
+    var listTagsSelected = function() {
+        angular.forEach(vm.tags, function(tag) {
+            if (tag.checked) {
+                vm.selectTags[tag.id] = angular.copy(tag);
+            } else {
+                delete vm.selectTags[tag.id];
+            }
+        });
+    };
+    ///////////////////////////////////////////////////////////////
+    // End
+    ///////////////////////////////////////////////////////////////
 
     (function Init() {
         loadZones();
 
         vm.size = screenHelper.size(screenSize);
-        vm.fontSize = 14 *  vm.size / screenSize.minSize+ "px";
+        vm.fontSize = (14 *  vm.size / screenSize.minSize+ "px");
     })();
 }]);
