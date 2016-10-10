@@ -165,13 +165,15 @@ angular.module('reservation.service', [])
             } else {
                 size = height ;
             }
-        } else {
+        } else if (height - screenSize.header >= width){
             width -= screenSize.menu;
             if (width  < screenSize.minSize) {
                 size =  screenSize.minSize;
             } else {
                 size = width;
             }
+        } else {
+            size = screenSize.minSize;
         }
 
         return size - 30;
