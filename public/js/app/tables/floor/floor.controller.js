@@ -58,13 +58,13 @@ angular.module('floor.controller', [])
 
         };
 
-        vm.handConfiguration = function() {
+        vm.handConfiguration = function(obj) {
             var res = vm.numpeople;
             var num = res.substring(3);
-            modalInstancesConfiguration(num);
+            modalInstancesConfiguration(num, obj);
         };
 
-        function modalInstancesConfiguration(num) {
+        function modalInstancesConfiguration(num, obj) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -73,6 +73,9 @@ angular.module('floor.controller', [])
                 resolve: {
                     num: function() {
                         return num;
+                    },
+                    table: function() {
+                        return obj;
                     }
                 }
             });
@@ -92,10 +95,11 @@ angular.module('floor.controller', [])
         })();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($modalInstance, num) {
+    .controller('ConfigurationInstanceCtrl', function($modalInstance, num, table, OperationFactory) {
         var vmc = this;
         vmc.numpeople = num;
         vmc.resultado = num;
+        vmc.table = table;
 
         //Creando numero de casillas
         var vNumpeople = [];
@@ -111,23 +115,36 @@ angular.module('floor.controller', [])
         vmc.flagSelectedNumWomen = 0;
         vmc.flagSelectedNumChildren = 0;
 
-        vmc.btnSelectedNumMen = function(value) {
-            vmc.flagSelectedNumMen = value;
-            vmc.flagSelectedCountNumMen = 0;
-            vmc.numdinamicoMen = 13;
-        };
-        vmc.btnSelectedNumWomen = function(value) {
-            vmc.flagSelectedNumWomen = value;
-            vmc.flagSelectedCountNumWomen = 0;
-            vmc.numdinamicoWomen = 13;
-        };
-        vmc.btnSelectedNumChildren = function(value) {
-            vmc.flagSelectedNumChildren = value;
-            vmc.flagSelectedCountNumChildren = 0;
-            vmc.numdinamicoChildren = 13;
+        vmc.numperson = {
+            men: num,
+            women: 0,
+            children: 0
         };
 
-        //vmc.resultado = vmc.flagSelectedNumMen + vmc.flagSelectedNumWomen + vmc.flagSelectedNumChildren;
+        vmc.btnSelectedNum = function(value, person) {
+            if (person == 'men') {
+                vmc.flagSelectedNumMen = value;
+                vmc.flagSelectedCountNumMen = 0;
+                vmc.numdinamicoMen = 13;
+                OperationFactory.setNumPerson(vmc.numperson, person, value);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
+            if (person == 'women') {
+                vmc.flagSelectedNumWomen = value;
+                vmc.flagSelectedCountNumWomen = 0;
+                vmc.numdinamicoWomen = 13;
+                OperationFactory.setNumPerson(vmc.numperson, person, value);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
+            if (person == 'children') {
+                vmc.flagSelectedNumChildren = value;
+                vmc.flagSelectedCountNumChildren = 0;
+                vmc.numdinamicoChildren = 13;
+                OperationFactory.setNumPerson(vmc.numperson, person, value);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
+        };
+
 
         if (num > 12) {
             vmc.numdinamicoMen = num;
@@ -150,18 +167,25 @@ angular.module('floor.controller', [])
                 vmc.numdinamicoMen++;
                 vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
                 vmc.flagSelectedNumMen = 0;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                //console.log('Datos ' + angular.toJson(vmc.numperson));
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'women') {
                 vmc.numdinamicoWomen++;
                 vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
                 vmc.flagSelectedNumWomen = 0;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'children') {
                 vmc.numdinamicoChildren++;
                 vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
                 vmc.flagSelectedNumChildren = 0;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
         };
         vmc.restar = function(person) {
@@ -170,6 +194,8 @@ angular.module('floor.controller', [])
                     vmc.numdinamicoMen--;
                     vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
                     vmc.flagSelectedNumMen = 0;
+                    OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                    vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
             if (person == 'women') {
@@ -177,6 +203,8 @@ angular.module('floor.controller', [])
                     vmc.numdinamicoWomen--;
                     vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
                     vmc.flagSelectedNumWomen = 0;
+                    OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+                    vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
             if (person == 'children') {
@@ -184,6 +212,8 @@ angular.module('floor.controller', [])
                     vmc.numdinamicoChildren--;
                     vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
                     vmc.flagSelectedNumChildren = 0;
+                    OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                    vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
         };

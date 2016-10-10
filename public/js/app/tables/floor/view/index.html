@@ -9,8 +9,8 @@
         </div>
     </section>
 </section>
-<footer id="footer" style="position: fixed; z-index: 10" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'"></footer>
-<section class="section-right-floor" style="z-index: 10">
+<footer id="footer" class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'"></footer>
+<section class="section-right-floor" style="z-index: 8">
     <div ui-view="tabReservaciones"></div>
 </section>
 
@@ -51,14 +51,14 @@
     <div class="modal-body">
         <div class="card">
             <div class="card-header">
-                <h2 class="text-right"><small>No preguntar de nuevo por configuracion</small></h2>
+                <h2 class="text-right">{{vmc.table.name_zona}} - Mesa {{vmc.table.name}} <small >No preguntar de nuevo por configuracion</small></h2>
             </div>
             <div class="card-body card-padding">
                 <ul class="modal-listado-num-people">
                     <li class="lst-men">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
                         <div style="float: left">
-                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNumMen(value.num)">
+                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'men')">
                             {{value.num}}
                             </button>
                         </div>
@@ -72,7 +72,7 @@
                     <li class="lst-women">
                         <div class="box-gender"><i class="zmdi zmdi-female"></i></div>
                         <div style="float: left">
-                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNumWomen(value.num)">
+                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'women')">
                             {{value.num}}
                             </button>
                         </div>
@@ -86,7 +86,7 @@
                     <li class="lst-children">
                         <div class="box-gender"><i class="zmdi zmdi-face"></i></div>
                         <div style="float: left">
-                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNumChildren(value.num)">
+                            <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'children')">
                             {{value.num}}
                             </button>
                         </div>
