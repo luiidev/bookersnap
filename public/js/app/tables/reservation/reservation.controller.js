@@ -45,6 +45,7 @@ angular.module('reservation.controller', [])
         //  end
 
         console.log(vm.reservation);
+        console.log(JSON.stringify(vm.reservation));
     };
 
     vm.selectTableAllOrNone = function(indicator) {
