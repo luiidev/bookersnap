@@ -1,42 +1,41 @@
 angular.module('block.directive', [])
-.directive('ngSelectTable', function(){
+  .directive('ngSelectTable', function() {
 
-  function makeSelectTable(scope, element, attr) {
-    
-    var left = attr.x;
-    var top = attr.y;
+    function makeSelectTable(scope, element, attr) {
 
-    element.css({
-      position: 'absolute',
-      cursor: 'pointer',
-      top: top + 'px',
-      left: left + 'px',
-    });
+      var left = attr.x;
+      var top = attr.y;
 
-    element.on('click',function(event){
+      element.css({
+        position: 'absolute',
+        cursor: 'pointer',
+        top: top + 'px',
+        left: left + 'px',
+      });
+      element.on('click', function(event) {
 
-      event.preventDefault();
-      if(this.classList.contains('selected-table') === true){
-        this.classList.remove('selected-table');
-        scope.onDeselectFn();
-      }else{
-        if (this.classList.contains('selected-table')) {
+        event.preventDefault();
+        if (this.classList.contains('selected-table') === true) {
           this.classList.remove('selected-table');
+          scope.onDeselectFn();
         } else {
-          this.classList.add('selected-table');
+          if (this.classList.contains('selected-table')) {
+            this.classList.remove('selected-table');
+          } else {
+            this.classList.add('selected-table');
+          }
+          scope.onSelectedFn();
         }
-        scope.onSelectedFn();
-      }
 
-    });
-  }
-
-  return {
-    link: makeSelectTable,
-    scope: {
-      onSelectedFn : '&',
-      onDeselectFn : '&'
+      });
     }
-  };
 
-});
+    return {
+      link: makeSelectTable,
+      scope: {
+        onSelectedFn: '&',
+        onDeselectFn: '&'
+      }
+    };
+
+  });

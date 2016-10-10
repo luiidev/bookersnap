@@ -826,12 +826,17 @@ $background-tables-head = #eee
 		padding-top 8px
 	& .input-group
 		padding 10px
+		& .fg-line:not([class*=has-]):after
+			background none;
 		& .form-control
 			background #424242
 			padding 10px
 			color #fff
+			position absolute
+			top -5px
+			left 0px
 		& .input-group-addon
-			color #fff
+			padding 0
 ul.modal-listado-num-people
 	list-style none
 	li
@@ -882,18 +887,23 @@ ul.modal-listado-num-people
 					text-align center
 					&.btn-active
 						background #005581
-.box-result
-	text-align center
-	color #005581
-	font-size 2em
-	& .box-total
-		background #575757
-		padding 0px 32px
-		color rgba(255,255,255,0.6)
-		line-height 1.5em
-		
+.modal-configuration
+	&.modal-body
+		padding 0px 26px 0px 0px
+	& .card
+		margin 0px
+		& .box-result
+			text-align center
+			color #005581
+			font-size 2em
+			& .box-total
+				background #575757
+				padding 0px 32px
+				color rgba(255,255,255,0.6)
+				line-height 1.5em
+.modal-content
+	border 4px solid #333
 					
-				
 ul.listado-filtros
 	position fixed
 	bottom 0px
@@ -1081,6 +1091,10 @@ li.divider
 			margin-top 12px
 		& textarea
 			margin-top 12px 
+		&.tables-selected
+			height initial
+			& .tags
+				text-align left
 	& .card
 		background #454545
 		box-shadow none
