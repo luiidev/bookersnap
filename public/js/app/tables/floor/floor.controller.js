@@ -248,7 +248,12 @@ angular.module('floor.controller', [])
 
 .controller('reservationController', function(FloorFactory) {
     var rm = this;
-
+    rm.search = {
+        show: true
+    };
+    rm.searchReservation = function() {
+        rm.search.show = !rm.search.show;
+    };
 
     var getlistZonesBloqueosReservas = function() {
         FloorFactory.listZonesBloqueosReservas().then(function success(data) {
@@ -263,6 +268,12 @@ angular.module('floor.controller', [])
 
 controller('waitlistController', function($scope) {
     var wm = this;
+    wm.search = {
+        show: true
+    };
+    wm.searchReservation = function() {
+        wm.search.show = !wm.search.show;
+    };
 })
 
 .controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {

@@ -1,17 +1,21 @@
 </br>
 <div class="tab-reservation-floor">
 	<div class="input-group">
-	    <div class="fg-line">
-	        <input type="text" class="form-control" placeholder="Buscar por nombre u horario">
-	    </div>
-	    <span class="input-group-addon last"><i class="zmdi zmdi-search"></i></span>
-	</div>
-	<div class="p-r-10 p-l-10 m-b-10">
-		<button type="button" class="btn btn-default-blue btn-block text-center  waves-effect">
-			<i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg"></i>
-			<span>AGREGAR ESPERA</span>
-        </button>
-	</div>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!wm.search.show">
+                    <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-show="wm.search.show">
+                        <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg"></i>
+                        <span>AGREGAR ESPERA</span>
+                    </button>
+                </div>
+                <span class="input-group-addon last" >
+                    <button type="button" class="btn waves-effect" ng-click="wm.searchReservation()">
+                        <i class="zmdi zmdi-search" ng-show="wm.search.show"></i>
+                        <i class="zmdi zmdi-close" ng-show="!wm.search.show"></i>
+                    </button>
+                </span>
+    </div>
+
 	<div class="scrolltablef">
 		<div style="height: auto;">
 			<table class="table-listado" cellpadding="0" cellspacing="0">

@@ -831,7 +831,7 @@ $background-tables-head = #eee
 			padding 10px
 			color #fff
 		& .input-group-addon
-			color #fff
+			padding 0
 ul.modal-listado-num-people
 	list-style none
 	li
@@ -882,18 +882,23 @@ ul.modal-listado-num-people
 					text-align center
 					&.btn-active
 						background #005581
-.box-result
-	text-align center
-	color #005581
-	font-size 2em
-	& .box-total
-		background #575757
-		padding 0px 32px
-		color rgba(255,255,255,0.6)
-		line-height 1.5em
-		
+.modal-configuration
+	&.modal-body
+		padding 0px 26px 0px 0px
+	& .card
+		margin 0px
+		& .box-result
+			text-align center
+			color #005581
+			font-size 2em
+			& .box-total
+				background #575757
+				padding 0px 32px
+				color rgba(255,255,255,0.6)
+				line-height 1.5em
+.modal-content
+	border 4px solid #333
 					
-				
 ul.listado-filtros
 	position fixed
 	bottom 0px
