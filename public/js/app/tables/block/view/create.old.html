@@ -37,7 +37,7 @@
                                 class="item-drag-table  {{obj.classBloqueado}} {{obj.class}}  rt{{obj.rotate}} 
                                 shape-table table-zone" 
                                 ng-class="[obj.shape, obj.size+ '-relative']"
-                                ng-style="{top: (obj.top/740)*100 + '%', left: (obj.left/740)*100 + '%'}"
+                                ng-style="{top: (obj.top/675)*100 + '%', left: (obj.left/675)*100 + '%'}"
                                 id="tb-item{{$index}}"
                                 ng-repeat="obj in itemTables"                            
                                 option="edit" >
@@ -55,7 +55,7 @@
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
         <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
-            <button class="btn btn-danger pull-left">
+            <button class="btn btn-default pull-left">
                 Cancelar
             </button>
             Crear Bloqueo
@@ -124,12 +124,12 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="form-group tables-selected">
                             <label class="col-xs-2 control-label">
                                 Mesas
                             </label>
                             <div class="col-xs-10 control-label">
-                                <div data-ng-bind-html="someSafeContent"></div>
+                                <div data-ng-bind-html="someSafeContent" class="tags"></div>
                             </div>
                         </div>
 
