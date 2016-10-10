@@ -1,9 +1,9 @@
 angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
-    .controller('PromotionListCtrl', function($state,Promotion, $scope, $http, $window, $document, ApiUrlReservation) {
+    .controller('PromotionListCtrl', function($state,Promotion, $rootScope,$scope, $http, $window, $document, ApiUrlReservation) {
 
         var sm = this;
         sm.promociones = [];
-        sm.flag = false;
+        $rootScope.flag = false;
 
         // VARIABLES DE FILTRO
         sm.filtro = {
@@ -33,7 +33,8 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
         sm.filtrar = function() {
 
             sm.promociones = [];
-            sm.flag = true;
+            $rootScope.flag = true;
+
 
             if (sm.filtro.fecha_inicio === undefined) {
                 sm.filtro.fecha_inicio = "";
@@ -42,6 +43,12 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
             if (sm.filtro.fecha_fin === undefined) {
                 sm.filtro.fecha_fin = "";
             }
+
+            if(sm.filtro.fecha_fin.length === 0 && sm.filtro.fecha_inicio.length===0 && sm.filtro.texto.length===0){
+              $rootScope.flag = false;              
+            }
+            console.log($rootScope.flag);
+            //console.log(sm.filtro.fecha_fin.length + "-" + sm.filtro.fecha_inicio.length + "-" +sm.filtro.texto.length);
 
             Promotion.filter(sm); // Se actualiza el modelo de promociones 
         };
@@ -57,7 +64,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
 
             sm.promociones = [];
             sm.filtro.texto = "";
-            sm.flag = false;
+            $rootScope.flag = false;
             $http.get(ApiUrlReservation + "/promotions")
                 .success(function(response) {
                     sm.promociones = response.data;
@@ -84,14 +91,14 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
                     })
                     .success(function(response) {
 
-                        if (response["success"] === true) {
+                        if (response.success === true) {
 
                             var index = sm.promociones.indexOf(item);
                             sm.promociones.splice(index, 1);
 
-                        } else if (response["success"] === false) {
+                        } else if (response.success === false) {
 
-                            messageAlert("Error", response["msg"], "warning");
+                            messageAlert("Error", response.msg, "warning");
 
                         }
 
@@ -119,9 +126,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
 
                     /* Estado para poder inhabilitar el ordenamiento mediante drag and drop cuando 
                        se hace una busqueda ó filtro */
-                    if (sm.flag === false) {
-
-
+                    if ($rootScope.flag === false) {
                         /* Se genera la estructura del array a enviar al webservices */
                         var newurl = "";
                         for (i = 0; i < newVal.length; i++) {
@@ -135,8 +140,7 @@ angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
                             }
 
                         }
-
-                        //Promotion.order(sm, newurl); // Se ordenan las promociones
+                        Promotion.order(sm, newurl); // Se ordenan las promociones
 
                     }
 

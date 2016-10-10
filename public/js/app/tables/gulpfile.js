@@ -30,7 +30,7 @@ gulp.task('app-bookersnap-tables-js', function() {
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
 gulp.task('app-library-tables-js', function() {
     gulp.src([
-            '../../../library/angular-loading-overlay/angular-loading-overlay.js',
+            //'../../../library/angular-loading-overlay/angular-loading-overlay.js',
             '../../../library/ngDraggable/ngDraggable.js',
             '../../../library/global/functions.js',
             '../../../library/global/form.directive.js',
@@ -40,9 +40,9 @@ gulp.task('app-library-tables-js', function() {
             '../../../library/bower_components/angular-chosen-localytics/chosen.js',
             '../../../library/bower_components/jquery-ui/jquery-ui.js',
             '../../../library/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
-            '../../../library/sparklines/jquery.sparkline.min.js',
-            '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
-            '../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
+            //'../../../library/sparklines/jquery.sparkline.min.js',
+            // '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+            //'../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.tables.min.js'))

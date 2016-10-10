@@ -202,7 +202,13 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.changeShapeTable = function(shape) {
+
             $scope.itemTables[$scope.indexTable].shape = shape;
+            var rotateTable = $scope.itemTables[$scope.indexTable].rotate;
+
+            if (shape == "square" && (rotateTable == 90 || rotateTable == 135)) {
+                $scope.itemTables[$scope.indexTable].rotate = 0;
+            }
 
             /*angular.element(".text-rotate .btn-group .shape").removeClass("active");
             angular.element(".shape." + shape + "s").addClass("active");*/
@@ -409,6 +415,7 @@ angular.module('zone.controller', ['ngDraggable'])
                 config_position: table.left + "," + table.top, //x,y
                 config_size: TableFactory.getIdSize(table.size),
                 config_rotation: table.rotate,
+                config_rotation_text: TableFactory.getIdRotationText(table.rotate_text),
                 config_forme: TableFactory.getIdShape(table.shape),
                 id: table.id,
                 status: table.status
@@ -506,6 +513,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     shape: TableFactory.getLabelShape(data.config_forme),
                     size: TableFactory.getLabelSize(data.config_size),
                     rotate: data.config_rotation,
+                    rotate_text: TableFactory.getRotationText(data.config_rotation_text),
                     id: data.id,
                     status: data.status
                 };
@@ -517,6 +525,8 @@ angular.module('zone.controller', ['ngDraggable'])
                 }
 
             });
+
+            console.log("loadTablesEdit " + angular.toJson($scope.itemTables, true));
 
             updateHeaderZone();
         };
