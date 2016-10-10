@@ -48,12 +48,12 @@
 </script>
 
 <script type="text/ng-template" id="modalConfiguration.html">
-    <div class="modal-body">
+    <div class="modal-body modal-configuration">
         <div class="card">
             <div class="card-header">
                 <h2 class="text-right">{{vmc.table.name_zona}} - Mesa {{vmc.table.name}} <small >No preguntar de nuevo por configuracion</small></h2>
             </div>
-            <div class="card-body card-padding">
+            <div class="card-body">
                 <ul class="modal-listado-num-people">
                     <li class="lst-men">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
@@ -108,7 +108,7 @@
     </div>
     <div class="modal-footer">
         <div class="text-center">
-            <button class="btn btn-warning" ng-click="vmc.cancel()">Guardar</button>
+            <button class="btn btn-default-blue btn-block text-center waves-effect" ng-click="vmc.cancel()">GUARDAR</button>
         </div>
     </div>
 </script>

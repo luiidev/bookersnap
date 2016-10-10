@@ -2,9 +2,18 @@
         <div class="tab-reservation-floor">
             <div class="input-group">
                 <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!rm.search.show">
+                    <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-show="rm.search.show" id="fadeingEntrances">
+                        <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
+                        <span>CREAR RESERVACIÓN</span>
+                    </button>
                 </div>
-                <span class="input-group-addon last"><i class="zmdi zmdi-search"></i></span>
+                <span class="input-group-addon last" >
+                    <button type="button" class="btn waves-effect" ng-click="rm.searchReservation()">
+                        <i class="zmdi zmdi-search" ng-show="rm.search.show"></i>
+                        <i class="zmdi zmdi-close" ng-show="!rm.search.show"></i>
+                    </button>
+                </span>
             </div>
             <tabset justified="true">
                 <tab heading="Por llegar" active="tab.active">
