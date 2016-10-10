@@ -74,34 +74,6 @@ angular.module('reservation.controller', [])
         loadZones();
     };
 
-    vm.testJsonCreate = function() {
-        // parse reservation.tables ids
-        vm.reservation.tables = [];
-        vm.reservation.tables = Object.keys(vm.tablesSelected).reduce(function(result, value) {
-            result.push(parseInt(value));
-            return result;
-        }, []);
-        if (vm.reservation.tables.length === 0) {
-            if (vm.tableSuggested) {
-                vm.reservation.tables.push(vm.tableSuggested.id);
-            } else {
-                return alert("Debe elegir mesas para la reservacion");
-            }
-        }
-        // end
-
-        //  parse guest
-        if (!vm.reservation.guest_id) {
-            vm.reservation.guest = vm.newGuest || {};
-            delete vm.reservation.guest_id;
-        } else {
-            delete vm.reservation.guest;
-        }
-        //  end
-
-        console.log(vm.reservation);
-    };
-
     vm.selectTableAllOrNone = function(indicator) {
         if (indicator == "all") {
             angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
@@ -120,7 +92,7 @@ angular.module('reservation.controller', [])
         angular.forEach(vm.tablesSelected, function(table, i) {
             var conflict = {};
 
-            if (vm.reservation.covers < table.minCover) {
+            if ( vm.reservation.covers < table.minCover ) {
                 conflict.name = table.name;
                 conflict.desc = "Mesa  demasiado grande";
                 vm.conflicts.push(conflict);
@@ -156,24 +128,24 @@ angular.module('reservation.controller', [])
 
     vm.tablesBlockValid = function() {
         // console.log("------------------------------------------------");
-        var start_time = moment(vm.reservation.hour, "HH:mm:ss");
-        var auxiliar = moment(vm.reservation.duration, "HH:mm:ss");
+        var start_time =  moment(vm.reservation.hour, "HH:mm:ss");
+        var auxiliar =  moment(vm.reservation.duration, "HH:mm:ss");
         var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
         // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
         // console.log(blocks);
-        angular.forEach(blocks, function(block) {
-            var start_block = moment(block.start_time, "HH:mm:ss");
-            var end_block = moment(block.end_time, "HH:mm:ss");
+        angular.forEach(blocks, function(block){
+            var start_block =  moment(block.start_time, "HH:mm:ss");
+            var end_block =  moment(block.end_time, "HH:mm:ss");
             // console.log(start_block.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
             tablesForEach(function(table) {
                 if (table.id == block.res_table_id) {
                     if (block.res_reservation_id !== null) {
                         table.occupied = true;
                         table.suggested = false;
-                    }
-                    if ((start_time.isBetween(start_block, end_block, null, "()")) ||
-                        (end_time.isBetween(start_block, end_block, null, "()")) ||
-                        (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                    } 
+                    if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
+                            (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
                         table.block = true;
                         table.suggested = false;
                     } else {
@@ -184,6 +156,47 @@ angular.module('reservation.controller', [])
             });
         });
         vm.tablesSuggested(vm.reservation.covers);
+    };
+
+    vm.tablesSuggested = function(cant){
+        vm.tableSuggested = null;
+        tablesForEach(function(table) {
+            if (cant >= table.minCover && cant <= table.maxCover) {
+                if (!table.occupied && !table.block) {
+                    if (!vm.tableSuggested) vm.tableSuggested = table;
+                    table.suggested = true;
+                }
+            } else {
+                table.suggested = false;
+            }
+        });
+        listTableSelected();
+    };
+
+    var tablesForEach = function(callback){
+        angular.forEach(vm.zones, function(zone) {
+            angular.forEach(zone.tables, function(table) {
+                callback(table);
+            });
+        });
+    };
+
+    var listServers = function() {
+        service.getServers()
+            .then(function(response) {
+                vm.servers = response.data.data;
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+    };
+
+    var listGuest = function() {
+        service.getGuest()
+            .then(function(guests) {
+                vm.covers = guests;
+                vm.reservation.covers = 2;
+                vm.tablesSuggested(vm.reservation.covers);
+            });
     };
 
     var listStatuses = function() {
@@ -334,140 +347,22 @@ angular.module('reservation.controller', [])
             vm.guestList = [];
             return;
         }
-    var search = function() {
-        service.getGuestList(name)
-            .then(function(response) {
-                vm.guestList = response.data.data.data;
-            }).catch(function(error) {
-                message.apiError(error);
-            });
+        var search = function() {
+            service.getGuestList(name)
+                .then(function(response) {
+                    vm.guestList = response.data.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
         };
 
-    var listServers = function() {
-        service.getServers()
-            .then(function(response) {
-                vm.servers = response.data.data;
-            }).catch(function(error) {
-                message.apiError(error);
-            });
+        auxiliar = $timeout(search, 500);
     };
 
-    var listGuest = function() {
-        service.getGuest()
-            .then(function(guests) {
-                vm.covers = guests;
-                vm.reservation.covers = 2;
-                vm.tablesSuggested(vm.reservation.covers);
-            });
-    };
-
-    var listStatuses = function() {
-        service.getStatuses()
-            .then(function(response) {
-                vm.statuses = response.data.data;
-                if (vm.statuses.length) vm.reservation.status_id = vm.statuses[0].id;
-            }).catch(function(error) {
-                message.apiError(error);
-            });
-    };
-
-    var loadBlocks = function(date) {
-        service.getBlocks(date)
-            .then(function(response) {
-                blocks = response.data.data;
-            }).catch(function(error) {
-                message.apiError(error);
-            }).finally(function() {
-                loadTurns(date);
-            });
-    };
-
-    var loadTurns = function(date) {
-        service.getTurns(date)
-            .then(function(response) {
-                var turns = response.data.data;
-                listHours(turns);
-                listDurations();
-            }).catch(function(error) {
-                message.apiError(error);
-            }).finally(function() {
-                vm.tablesBlockValid();
-            });
-    };
-
-    var listHours = function(turns) {
-        service.getHours(turns)
-            .then(function(data) {
-                vm.hours = data.hours;
-                vm.reservation.hour = data.default;
-            }).catch(function(error) {
-                message.apiError(error);
-            });
-    };
-
-    var listDurations = function() {
-        service.getDurations()
-            .then(function(durations) {
-                vm.durations = durations;
-                vm.reservation.duration = "01:30:00";
-            }).catch(function(error) {
-                message.apiError(error);
-            });
-    };
-
-    var loadZones = function() {
-        var date = $stateParams.date;
-        var valid = moment(date, 'YYYY-MM-DD', true).isValid();
-
-        if (!valid) {
-            return alert("Fecha invalida no se puede cargar las zonas");
-        }
-
-        service.getZones(date)
-            .then(function(response) {
-                loadTablesEdit(response.data.data.zones);
-            }).catch(function(error) {
-                message.apiError(error);
-            }).finally(function() {
-                loadBlocks(date);
-                listGuest();
-                listServers();
-                listStatuses();
-            });
-    };
-
-    var loadTablesEdit = function(dataZones) {
-        vm.zones = helper.loadTable(dataZones);
-        defaultView();
-    };
-
-    var defaultView = function() {
-        zoneIndexMax = vm.zones.length - 1;
-        if (zoneIndexMax >= 0) {
-            setZoneName(0);
-        }
-    };
-
-    vm.nextZone = function() {
-        if (zoneIndexMax >= 0) {
-            if (vm.zoneIndex + 1 > zoneIndexMax) {
-                vm.zoneIndex = 0;
-            } else {
-                vm.zoneIndex++;
-            }
-        }
-        setZoneName(vm.zoneIndex);
-    };
-
-    vm.prevZone = function() {
-        if (zoneIndexMax >= 0) {
-            if (vm.zoneIndex - 1 >= 0) {
-                vm.zoneIndex--;
-            } else {
-                vm.zoneIndex = zoneIndexMax;
-            }
-        }
-        setZoneName(vm.zoneIndex);
+    vm.selectGuest = function(guest) {
+        vm.reservation.guest_id = guest.id;
+        vm.guest = guest;
+        vm.addGuest = false;
     };
 
     vm.removeGuest = function() {
@@ -501,18 +396,10 @@ angular.module('reservation.controller', [])
     // End
     ///////////////////////////////////////////////////////////////
 
-    angular.element($window).bind('resize', function() {
-        var size = screenHelper.size(screenSize);
-        vm.size = size;
-        vm.fontSize = 14 * size / screenSize.minSize + "px";
-        vm.$digest();
-    });
-
     (function Init() {
         loadZones();
 
         vm.size = screenHelper.size(screenSize);
-        vm.fontSize = 14 * vm.size / screenSize.minSize + "px";
+        vm.fontSize = (14 *  vm.size / screenSize.minSize+ "px");
     })();
-
 }]);
