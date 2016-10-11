@@ -1,26 +1,43 @@
 angular.module('customtag.service', [])
-	.service('CustomTagDataService', function($http, ApiUrlMesas) {
+	.service('CustomTagGuestDataService', function($http, ApiUrlMesas) {
 		return {
-			getListTagCustom: function() {
+			getListTagGuestCustom: function() {
 				return $http.get(ApiUrlMesas + "/guest-tags");
 			},
-			createTagCustom: function(name) {
+			createTagGuestCustom: function(name) {
 				return $http.put(ApiUrlMesas + "/guest-tags", {}, {
 					params: {
 						name: name
 					}
 				});
 			},
-			deleteTagCustom: function(idTag) {
+			deleteTagGuestCustom: function(idTag) {
 				return $http.delete(ApiUrlMesas + "/guest-tags/" + idTag);
 			},
 		};
 	})
-	.service('CustomTagService', function($q, CustomTagDataService) {
+	.service('CustomTagReservationDataService', function($http, ApiUrlMesas) {
+		return {
+			getListTagReservationCustom: function() {
+				return $http(ApiUrlMesas + "/reservation/tag");
+			},
+			createTagReservationCustom: function(name) {
+				return $http(ApiUrlMesas + "/reservation/tag", {}, {
+					params: {
+						name: name
+					}
+				});
+			},
+			deleteTagReservationCustom: function(idTag) {
+				return $http(ApiUrlMesas + "reservation/tag/" + idTag);
+			},
+		};
+	})
+	.service('CustomTagGuestService', function($q, CustomTagGuestDataService) {
 		return {
 			getAllTag: function() {
 				var defered = $q.defer();
-				CustomTagDataService.getListTagCustom().success(function(data) {
+				CustomTagGuestDataService.getListTagGuestCustom().success(function(data) {
 					data = data.data;
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
@@ -31,7 +48,7 @@ angular.module('customtag.service', [])
 			},
 			createTag: function(name) {
 				var defered = $q.defer();
-				CustomTagDataService.createTagCustom(name).success(function(data) {
+				CustomTagGuestDataService.createTagGuestCustom(name).success(function(data) {
 					data = data.data;
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
@@ -44,7 +61,7 @@ angular.module('customtag.service', [])
 			deleteTag: function(idTag) {
 				var defered = $q.defer();
 				var promise = defered.promise;
-				CustomTagDataService.deleteTagCustom(idTag).success(function(data) {
+				CustomTagGuestDataService.deleteTagGuestCustom(idTag).success(function(data) {
 					data = data.data;
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
@@ -61,6 +78,47 @@ angular.module('customtag.service', [])
 					}
 				}
 				return -1;
+			},
+
+		};
+	}).service('CustomTagReservationService', function($q, CustomTagReservationDataService) {
+		return {
+			getAllTag: function() {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.getListTagReservationCustom().success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
+			createTag: function(name) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.createTagReservationCustom(name).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+
+			},
+			deleteTag: function(id) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.deleteTagReservationCustom(id).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
 			},
 
 		};
