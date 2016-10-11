@@ -24,14 +24,7 @@ angular.module('reservation.service', [])
             return http.get(ApiUrlMesas + "/guests", {params: {name: name, page_size: 8}});
         },
         getReservationTags: function() {
-            return [
-                {id: 1, name: "CUMPLEAÑOS"},
-                {id: 2, name: "ANIVERSARIO"},
-                {id: 3, name: "CUMPLEAÑOS"},
-                {id: 4, name: "ANIVERSARIO"},
-                {id: 5, name: "CUMPLEAÑOS"},
-                {id: 6, name: "ANIVERSARIO"},
-            ];
+            return http.get(ApiUrlMesas + "/reservation/tags");
         },
         getGuest: function() {
             var deferred = $q.defer();

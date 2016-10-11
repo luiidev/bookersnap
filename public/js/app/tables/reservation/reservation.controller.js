@@ -112,6 +112,15 @@ angular.module('reservation.controller', [])
         }
 
         ///////////////////////////////////////////////////////////////
+        // parse reservation.tags
+        ///////////////////////////////////////////////////////////////
+        vm.reservation.tags = [];
+        vm.reservation.tags = Object.keys(vm.selectTags).reduce(function(result, value) {
+                result.push(parseInt(value));
+                return result;
+            }, []);
+
+        ///////////////////////////////////////////////////////////////
         //  parse guest
         ///////////////////////////////////////////////////////////////
         if (!vm.reservation.guest_id) {
@@ -143,6 +152,7 @@ angular.module('reservation.controller', [])
 
     vm.cancel = function() {
         vm.reservation = {};
+        vm.selectTags = {};
         loadZones();
     };
 
@@ -282,15 +292,12 @@ angular.module('reservation.controller', [])
     };
 
     var listReservationTags = function() {
-        vm.tags = service.getReservationTags();
-
-        // service.getReservationTags()
-        //     .then(function(response) {
-        //         vm.tags = response.data.data;
-        //         console.log(tags, response.data);
-        //     }).finally(function(error) {
-        //         message.apiError(error);
-        //     });
+        service.getReservationTags()
+            .then(function(response) {
+                vm.tags = response.data.data;
+            }).finally(function(error) {
+                message.apiError(error);
+            });
     };
 
     var loadBlocks = function(date) {
