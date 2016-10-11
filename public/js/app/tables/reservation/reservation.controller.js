@@ -153,6 +153,9 @@ angular.module('reservation.controller', [])
     vm.cancel = function() {
         vm.reservation = {};
         vm.selectTags = {};
+        vm.guest = {};
+        vm.guestList = [];
+        vm.addGuest = false;
         loadZones();
     };
 
@@ -358,7 +361,7 @@ angular.module('reservation.controller', [])
             vm.waitingResponse = true;
             service.getZones(date)
                 .then(function(response) {
-                    loadTablesEdit(response.data.data.zones);
+                    loadTablesEdit(response.data.data);
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {

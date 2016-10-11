@@ -137,7 +137,7 @@ angular.module('calendar.controller', [])
     };
 
     vm.moduleEdit = function(turn) {
-        $state.go('turn-edit', {
+        $state.go('mesas.turn.edit', {
             turn: turn
         });
         vm.dismiss();
