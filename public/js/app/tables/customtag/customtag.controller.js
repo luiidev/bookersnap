@@ -12,8 +12,6 @@ angular.module('customtag.controller', [])
 			});
 		};
 
-		vm.guestTagAll();
-
 		vm.guestCreateTag = function(name) {
 			vm.loading = true;
 			CustomTagGuestService.createTag(name).then(function success(response) {
@@ -51,8 +49,6 @@ angular.module('customtag.controller', [])
 			});
 		};
 
-		vm.reservationTagAll();
-
 		vm.reservationCreateTag = function(name) {
 			vm.loading = true;
 			CustomTagReservationService.createTag(name).then(function(response) {
@@ -82,4 +78,7 @@ angular.module('customtag.controller', [])
 				vm.loading = false;
 			});
 		};
+
+		vm.guestTagAll();
+		vm.reservationTagAll();
 	});

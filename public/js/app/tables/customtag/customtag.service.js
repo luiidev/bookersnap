@@ -5,7 +5,7 @@ angular.module('customtag.service', [])
 				return $http.get(ApiUrlMesas + "/guest-tags");
 			},
 			createTagGuestCustom: function(name) {
-				return $http.put(ApiUrlMesas + "/guest-tags", {}, {
+				return $http.post(ApiUrlMesas + "/guest-tags", {}, {
 					params: {
 						name: name
 					}
@@ -19,17 +19,17 @@ angular.module('customtag.service', [])
 	.service('CustomTagReservationDataService', function($http, ApiUrlMesas) {
 		return {
 			getListTagReservationCustom: function() {
-				return $http(ApiUrlMesas + "/reservation/tag");
+				return $http.get(ApiUrlMesas + "/reservation/tag");
 			},
 			createTagReservationCustom: function(name) {
-				return $http(ApiUrlMesas + "/reservation/tag", {}, {
+				return $http.post(ApiUrlMesas + "/reservation/tag", {}, {
 					params: {
 						name: name
 					}
 				});
 			},
 			deleteTagReservationCustom: function(idTag) {
-				return $http(ApiUrlMesas + "reservation/tag/" + idTag);
+				return $http.delete(ApiUrlMesas + "reservation/tag/" + idTag);
 			},
 		};
 	})
@@ -116,6 +116,7 @@ angular.module('customtag.service', [])
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
 					var response = jsonErrorData(data, status, headers);
+					console.log(response);
 					defered.reject(response);
 				});
 				return promise;
