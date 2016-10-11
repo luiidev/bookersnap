@@ -3,7 +3,7 @@
         <nav class="ha-menu">
             <ul>
                 <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)">
+                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones my-num-tab="$index">
                         {{tab.name}} <span class="num-orden-zona">{{$index+1}}</span>
                     </button>
                 </li>
@@ -56,10 +56,13 @@
                 ng-style="{top: (obj.top/675)*100 + '%', left: (obj.left/675)*100 + '%'}"
                 on-dropped-fn="vm.handConfiguration(obj)" 
                 num=vm.numpeople >
+                    <div class="icon-available"></div>
                     <div class="table-label top">
                         <span ng-bind="obj.name"></span>
-                        <span class="box-status {{obj.res_reservation_status_id | statusOnlySeated}} icon-status-table size20px"></span>
-                     </div>
+                        <!--<span class="box-status {{obj.res_reservation_status_id | statusOnlySeated}} icon-status-table size20px"></span>-->
+                        
+                    </div>
+
                 </div>
             </div>
         </div>
