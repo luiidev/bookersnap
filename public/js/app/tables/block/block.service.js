@@ -86,6 +86,7 @@ angular.module('block.service', [])
                  **************************************************************************************/
                 //Se carga la clase a la mesa para poder mostrar en el sistema
                 var zoneSelect = scope.zone;
+                console.log(scope.zone);
                 angular.forEach(scope.zones, function(value, key) {
 
                     if (value.id == zoneSelect.id) {

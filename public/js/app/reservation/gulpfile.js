@@ -21,7 +21,7 @@ gulp.task('app-bookersnap-reservation-js', function() {
         ])
         .pipe(concat('app.bookersnap.reservation.min.js'))
         //.pipe(jsmin())
-        .pipe(gulp.dest('../../dist.app/reservation'))
+        .pipe(gulp.dest('../../dist.app/reservation'));
 });
 
 gulp.task('app-bookersnap-tables-js', function() {
@@ -30,7 +30,7 @@ gulp.task('app-bookersnap-tables-js', function() {
         ])
         .pipe(concat('app.bookersnap.tables.services.min.js'))
         .pipe(jsmin())
-        .pipe(gulp.dest('../../dist.app/reservation'))
+        .pipe(gulp.dest('../../dist.app/reservation'));
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
@@ -60,7 +60,7 @@ gulp.task('app-library-reservation-js', function() {
         ])
         .pipe(concat('app.bookersnap.library.reservation.min.js'))
         //.pipe(jsmin())
-        .pipe(gulp.dest('../../dist.app/reservation'))
+        .pipe(gulp.dest('../../dist.app/reservation'));
 });
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
@@ -73,7 +73,7 @@ gulp.task('stylus-app', function() {
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('../../../css/app/reservation'))
+        .pipe(gulp.dest('../../../css/app/reservation'));
 
 });
 
@@ -105,4 +105,4 @@ gulp.task('watch', function() {
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-bookersnap-reservation-js', 'stylus-app', 'app-library-reservation-js', 'app-library-reservation-css','app-bookersnap-tables-js']);
+gulp.task('default', ['watch', 'app-bookersnap-reservation-js', 'stylus-app', 'app-library-reservation-js', 'app-library-reservation-css', 'app-bookersnap-tables-js']);

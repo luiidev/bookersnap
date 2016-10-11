@@ -8,7 +8,8 @@ angular.module('tables.app', [
         'calendar.app',
         'floor.app',
         'reservation.app',
-        'bookersnap.services'
+        'bookersnap.services',
+        'customtag.app'
     ])
     .constant("IdMicroSitio", idMicrositio)
     // .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
@@ -26,7 +27,7 @@ angular.module('tables.app', [
                 templateUrl: ''
             });
     })
-.run(function($http) {
-    //console.log($http);
-    //setAuthHeaders($http);
-});
+    .run(function($http) {
+        //console.log($http);
+        //setAuthHeaders($http);
+    });

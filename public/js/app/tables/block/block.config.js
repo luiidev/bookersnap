@@ -24,7 +24,7 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
 			.state('mesas.blockEdit', {
 				url: '/block/:date/:block_id',
 				templateUrl: '/js/app/tables/block/view/edit.new.html',
-				controller: "blockCtrEdit",
+				controller: "blockCtr",
 				cache: false,
 				resolve: {
 					$title: function() {
