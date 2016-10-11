@@ -31,7 +31,7 @@ angular.module('book.controller', [])
 
 	$scope.$watch("calendarBtn.dateCalendar", function(newValue, oldValue) {
 
-    	if($scope.calendarBtn.clickArrow == false){
+    	if($scope.calendarBtn.clickArrow === false){
 
     		var date = BookDateFactory.getDate("es-ES", {},$scope.calendarBtn.dateCalendar);
 

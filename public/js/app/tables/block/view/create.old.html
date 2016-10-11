@@ -25,10 +25,10 @@
                     </button>
                 </div>
                 <div class="pull-right">
-                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('all')">
+                    <button class="btn bgm-bluegray" ng-click="selectAllTables()">
                         Seleccionar todo
                     </button>
-                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('none')">
+                    <button class="btn bgm-bluegray" ng-click="unselectAllTables()">
                         Seleccionar niguno
                     </button>
                 </div>
@@ -82,7 +82,7 @@
                             </label>
                             <div class="col-xs-10 date-picker" ng-class="{ 'is-opened': opened == true }">
                                 <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
-                                    <input class="form-control" close-text="Close" datepicker-options="dateOptions" is-open="opened" min-date="minDate" ng-click="openCalendar($event, 'opened')" ng-model="date" ng-required="true" placeholder="Select Date" show-weeks="false" type="text" uib-datepicker-popup="{{format}}"/>
+                                    <input class="form-control" close-text="Close" is-open="opened" min-date="minDate" ng-click="openCalendar($event, 'opened')" ng-model="date" ng-required="true" placeholder="Select Date" show-weeks="false" type="text" uib-datepicker-popup="{{format}}"/>
                                 </div>
                             </div>
                         </div>

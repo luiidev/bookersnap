@@ -1,57 +1,51 @@
-
-<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
 <section class="h-100vh" id="main">
-    <aside id="sidebar" data-ng-include="'/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
     <section id="content">
         <div class="container w-100 p-section-reservation p-r-0">
             <div class="reservation-content-header">
                 <div class="pull-left">
-                    <select  ng-model="zone" ng-options="item.name for item in zones" ng-change="selectZone(zone)">
-                        <option value="" disabled="disabled" selected="true">Select Zone</option>
-                    </select>
+                    <button class="btn bgm-bluegray" ng-click="prevZone()">
+                        <i class="zmdi zmdi-arrow-back">
+                        </i>
+                    </button>
+                    <button class="btn bgm-bluegray" ng-click="nextZone()">
+                        <i class="zmdi zmdi-arrow-forward">
+                        </i>
+                    </button>
+                    <label class="control-label">
+                        {{ zoneName }}
+                    </label>
+                    <button class="btn bgm-green" ng-click="testJsonCreate()">
+                        Test Json Output
+                    </button>
                 </div>
                 <div class="pull-right">
-                    <div class="input-group fg-float">
-                        <button class="btn btn-primary" ng-click="selectAllTables()">Select All</button>
-                        &nbsp;&nbsp;&nbsp;  
-                        <button class="btn btn-primary" ng-click="unselectAllTables()">Select None</button>
-                    </div>
+                    <button class="btn bgm-bluegray" ng-click="selectAllTables()">
+                        Seleccionar todo
+                    </button>
+                    <button class="btn bgm-bluegray" ng-click="unselectAllTables()">
+                        Seleccionar niguno
+                    </button>
                 </div>
             </div>
-
             <div class="box-zone-create p-t-15 p-b-15">
-                <div class="box-lienzo-zone-v2"  >
-                    <div id="lienzo" class="lienzo-v2" ng-drop="false" ng-drop-success="onDropComplete($data,$event)"  ng-click="onLienzo()" ng-style="{width: size, height: size}">
-
-                        <div 
-                                ng-drag="false" 
-                                ng-drag-data="obj" 
-                                ng-select-table  
-                                on-selected-fn="activarTableOptions($index,obj)"  
-                                on-deselect-fn="desactivarTable($index,obj)" 
-                                on-click-fn='activarTableOptions($index,this)' 
-                                class="item-drag-table  {{obj.classBloqueado}} {{obj.class}}  rt{{obj.rotate}} 
-                                shape-table table-zone" 
-                                ng-class="[obj.shape, obj.size+ '-relative']"
-                                ng-style="{top: (obj.top/740)*100 + '%', left: (obj.left/740)*100 + '%'}"
-                                id="tb-item{{$index}}"
-                                ng-repeat="obj in itemTables"                            
-                                option="edit" >
-
-                            <div class="table-label top" ng-click="$event.stopPropagation()" ng-bind="obj.name"></div>
+                <div class="box-lienzo-zone-v2">
+                    <div class="lienzo-v2" id="lienzo" ng-click="onLienzo()" ng-drop="false" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}">
+                        <div class="item-drag-table {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size+ '-relative']" ng-drag="false" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-select-table="" ng-style="{top: (obj.top/740)*100 + '%', left: (obj.left/740)*100 + '%'}" on-click-fn="activarTableOptions($index,this)" on-deselect-fn="desactivarTable($index,obj)" on-selected-fn="activarTableOptions($index,obj)" option="edit">
+                            <div class="table-label top" ng-bind="obj.name" ng-click="$event.stopPropagation()">
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </section>
-
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
         <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
@@ -73,11 +67,10 @@
                             </label>
                             <div class="col-xs-10 date-picker" ng-class="{ 'is-opened': opened == true }">
                                 <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
-                                    <input ng-click="openCalendar($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
+                                    <input class="form-control" close-text="Close" datepicker-options="dateOptions" is-open="opened" min-date="minDate" ng-click="openCalendar($event, 'opened')" ng-model="date" ng-required="true" placeholder="Select Date" show-weeks="false" type="text" uib-datepicker-popup="{{format}}"/>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-xs-2 control-label" for="shift">
                                 Turno
@@ -85,14 +78,15 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-model="shift" ng-options=" shift.name for shift in shifts" ng-change="changueRange(shift)">
-                                            <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                        <select class="form-control" ng-change="changueRange(shift)" ng-model="shift" ng-options=" shift.name for shift in shifts">
+                                            <option disabled="disabled" selected="true" value="">
+                                                Seleccione
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-xs-2 control-label" for="startTime">
                                 Inicia
@@ -101,43 +95,45 @@
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes">
-                                            <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                            <option disabled="disabled" selected="true" value="">
+                                                Seleccione
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="endTime" >
+                            <label class="col-xs-2 control-label" for="endTime">
                                 Termina
                             </label>
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes">
-                                            <option value="" disabled="disabled" selected="true">Seleccione</option>
+                                            <option disabled="disabled" selected="true" value="">
+                                                Seleccione
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="form-group tables-selected">
                             <label class="col-xs-2 control-label">
                                 Mesas
                             </label>
                             <div class="col-xs-10 control-label">
-                                <div data-ng-bind-html="someSafeContent" class="tags"></div>
+                                <div class="tags" data-ng-bind-html="someSafeContent">
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </form>
             </div>
-
-             <button class="btn btn-danger waves-effect col-xs-12 m-t-20" ng-click="deleteBlock()">Eliminar Block</button>
+            <button class="btn btn-danger waves-effect col-xs-12 m-t-20" ng-click="deleteBlock()">
+                Eliminar Block
+            </button>
         </div>
     </div>
 </section>
