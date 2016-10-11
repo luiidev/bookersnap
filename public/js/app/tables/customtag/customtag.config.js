@@ -7,10 +7,9 @@ angular.module('customtag.app', ['customtag.controller', 'customtag.service'])
 					'@': {
 						templateUrl: '/js/app/tables/customtag/view/index.html',
 						controller: 'CustomTagCtrl',
-						controllerAs: 'vm'
+						controllerAs: 'vm',
+						cache: false
 					}
 				}
-				// templateUrl: '/js/app/tables/customtag/view/index.html'
-
 			});
 	});
