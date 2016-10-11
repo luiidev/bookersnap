@@ -2,6 +2,9 @@ angular.module('reservation.service', [])
 .factory("reservationService", ["$http", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
      function(http, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
     return {
+        save: function(data) {
+            return http.post(ApiUrlMesas + "/table/reservation", data);
+        },
         getZones: function(date) {
             return http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
         },
@@ -19,6 +22,16 @@ angular.module('reservation.service', [])
         },
         getGuestList: function(name) {
             return http.get(ApiUrlMesas + "/guests", {params: {name: name, page_size: 8}});
+        },
+        getReservationTags: function() {
+            return [
+                {id: 1, name: "CUMPLEAÑOS"},
+                {id: 2, name: "ANIVERSARIO"},
+                {id: 3, name: "CUMPLEAÑOS"},
+                {id: 4, name: "ANIVERSARIO"},
+                {id: 5, name: "CUMPLEAÑOS"},
+                {id: 6, name: "ANIVERSARIO"},
+            ];
         },
         getGuest: function() {
             var deferred = $q.defer();
@@ -100,7 +113,11 @@ angular.module('reservation.service', [])
             });
 
             data.hours = hours;
-            data.default = timeDefault;
+            if (!timeDefault) {
+                if (hours.length) data.default = hours[hours.length -1].time;
+            } else {
+                data.default = timeDefault;
+            }
             deferred.resolve(data);
             return deferred.promise;
         }
@@ -165,13 +182,15 @@ angular.module('reservation.service', [])
             } else {
                 size = height ;
             }
-        } else {
+        } else if (height - screenSize.header >= width){
             width -= screenSize.menu;
             if (width  < screenSize.minSize) {
                 size =  screenSize.minSize;
             } else {
                 size = width;
             }
+        } else {
+            size = screenSize.minSize;
         }
 
         return size - 30;

@@ -707,7 +707,7 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
-	
+
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -730,6 +730,12 @@ $background-tables-head = #eee
 				a
 				height 0px
 				padding 0px
+		&.listado-column
+			border-bottom 1px solid #767676
+			background rgba(66,66,66,0.5)
+			cursor pointer
+			width 400px
+				
 .box-estado-res
 	background #575757
 	width 90%
@@ -826,10 +832,15 @@ $background-tables-head = #eee
 		padding-top 8px
 	& .input-group
 		padding 10px
+		& .fg-line:not([class*=has-]):after
+			background none;
 		& .form-control
 			background #424242
 			padding 10px
 			color #fff
+			position absolute
+			top -5px
+			left 0px
 		& .input-group-addon
 			padding 0
 ul.modal-listado-num-people
@@ -1002,8 +1013,6 @@ li.divider
 	background #575757
 	height 50px
 
-
-	
 .load-parent
 	background #FFF
 	position absolute
@@ -1197,7 +1206,7 @@ li.divider
 				margin-bottom 0
 				padding 10px 15px
 				cursor pointer
-.scrolltablef
+/*.scrolltablef
 	overflow-y auto
 	overflow-x hidden
 	height 70%
@@ -1207,7 +1216,7 @@ li.divider
 @media only screen and (max-height 700px)
 	.scrolltablef
 		height 60%
-
+*/
 .footer-custom-res
 	position fixed !important
 	z-index 8
