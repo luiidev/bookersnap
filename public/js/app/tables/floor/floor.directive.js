@@ -147,8 +147,9 @@ angular.module('floor.directive', [])
             element.droppable({
                 //accept: ".listado-column",
                 drop: function(event, ui) {
+                    scope.onDroppeddFn();
                     //scope.$apply(function() {
-                    console.log('selected');
+                    //console.log('selected');
                     //vm.flagSelectedZone = scope.myNumTab;
                     //});
                 }
@@ -157,7 +158,7 @@ angular.module('floor.directive', [])
         return {
             link: makeDroppable,
             scope: {
-                myNumTab: "=",
+                onDroppeddFn: '&'
             }
         };
     });

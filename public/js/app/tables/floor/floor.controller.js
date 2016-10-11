@@ -54,6 +54,7 @@ angular.module('floor.controller', [])
         }
 
         vm.tabSelectedZone = function(value) {
+            console.log('dropeado');
             vm.flagSelectedZone = value;
 
         };
@@ -472,7 +473,7 @@ controller('waitlistController', function($scope) {
     sm.cancelEditServer = function(server) {
         sm.flagServer = false;
         limpiarData();
-        $state.go('floor.server.create', {}, {
+        $state.go('mesas.floor.server.create', {}, {
             reload: true
         });
     };
