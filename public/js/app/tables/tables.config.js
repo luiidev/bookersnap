@@ -9,12 +9,14 @@ angular.module('tables.app', [
         'calendar.app',
         'floor.app',
         'reservation.app',
-        'bookersnap.services'
+        'bookersnap.services',
+        'customtag.app'
     ])
     .constant("IdMicroSitio", idMicrositio)
-    .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
+    // .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
+    .constant("ApiUrlMesas", 'http://api.mesas.bookersnap.vm/v1/es/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
-    //    .constant("ApiUrlMesas", 'http://192.168.0.105/v1/es/microsites/' + idMicrositio)
+    // .constant("ApiUrlMesas", 'http://192.168.0.105/v1/es/microsites/' + idMicrositio)
     //    .constant("ApiUrlRoot", 'http://192.168.0.105/v1/es')
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         //console.log($httpProvider);

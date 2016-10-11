@@ -1204,7 +1204,7 @@ li.divider
 	width 100%
 	position absolute
 	
-@media only screen and (max-height: 700px)
+@media only screen and (max-height 700px)
 	.scrolltablef
 		height 60%
 
@@ -1212,5 +1212,21 @@ li.divider
 	position fixed !important
 	z-index 8
 	height 95px !important
-	padding-bottom 0px;
+	padding-bottom 0px
+
+// CUSTOM GUEST TAG
+.guest-tags-form	
+	.tag-item
+		display inline-block
+		padding  2px 15px
+		color #fff
+		font-size 17px
+		font-weight 400
+		line-height 37px
+		margin  0 12px 0 12px
+		border-radius 4px
+		&.guest
+			background-color #f56462
+			margin 15px 0 15px 0
+	
 	

@@ -1,0 +1,45 @@
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<section id="main">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <section class="w-100 p-0" id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="pm-body clearfix list-table">
+                    <div class="guest-tags-form">
+                        <!--                         <p class="card-header">
+                            <label for="tag">
+                                CUSTOM TAGS
+                            </label>
+                        </p> -->
+                        <form class="form-inline" name="customTag">
+                            <label class="m-b-25 m-t-25 c-black f-500">
+                                CUSTOM TAGS
+                            </label>
+                            <div>
+                                <input class="form-control" id="tag" placeholder="Guest Tag" type="text"/>
+                                <button class="btn btn-primary waves-effect" ng-click="vm.guestTagAll()">
+                                    Add New Tag
+                                </button>
+                            </div>
+                        </form>
+                        <div class="tags-list">
+                            <div class="tag-item guest">
+                                VIP
+                                <div class="glyphicon glyphicon-remove">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>
