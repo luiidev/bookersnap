@@ -826,10 +826,15 @@ $background-tables-head = #eee
 		padding-top 8px
 	& .input-group
 		padding 10px
+		& .fg-line:not([class*=has-]):after
+			background none;
 		& .form-control
 			background #424242
 			padding 10px
 			color #fff
+			position absolute
+			top -5px
+			left 0px
 		& .input-group-addon
 			padding 0
 ul.modal-listado-num-people

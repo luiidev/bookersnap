@@ -12,7 +12,6 @@
                     <button class="btn bgm-bluegray" ng-click="prevZone()"><i class="zmdi zmdi-arrow-back"></i></button>
                     <button class="btn bgm-bluegray" ng-click="nextZone()"><i class="zmdi zmdi-arrow-forward"></i></button>
                     <label class="control-label">{{ zoneName }}</label>
-                    <button class="btn bgm-green" ng-click="testJsonCreate()">Test Json Output</button>
                 </div>
                 <div class="pull-right">
                     <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('all')">Seleccionar todo</button>
@@ -38,13 +37,9 @@
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y: auto;">
         <div class="card-header" style="text-align: center; line-height: 30px; color: #FFF;">
-            <button class="btn btn-danger pull-left">
-                Cancelar
-            </button>
+            <button class="btn btn-danger pull-left" ng-click="cancel()">Cancelar</button>
             Agregar reservacion
-            <button class="btn btn-primary pull-right">
-                Guardar
-            </button>
+            <button class="btn btn-primary pull-right" ng-click="save()" ng-disabled="waitingResponse">Guardar</button>
         </div>
         <div class="card-body">
             <div class="card reservation-guest-form" ng-show="addGuest">
@@ -93,7 +88,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    <a href="#" class="a-tittle" ng-click="addGuest=!addGuest">cancelar</a>
+                                    <a href="javascript:void(0);" class="a-tittle" ng-click="addGuest=!addGuest">cancelar</a>
                                 </div>
                             </div>
 
@@ -161,7 +156,7 @@
                             </label>
                             <div class="col-xs-10">
                                 <div class="fg-line">
-                                    <input class="form-control" id="date" ng-model="reservation.date" type="date"/>
+                                    <input class="form-control" id="date" type="date" ng-model="date" ng-value="date" />
                                 </div>
                             </div>
                         </div>
@@ -233,9 +228,22 @@
                                 Etiquetas de reservación
                             </label>
                             <div class="col-xs-5">
-                                <a class="pull-right" href="#" style="padding-top: 7px">
-                                    Editar Etiquetas
-                                </a>
+                                <!-- <a class="pull-right" href="javascript:void(0);" style="padding-top: 7px">Editar Etiquetas</a> -->
+
+                                <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px">
+                                    <div class="dropdown dropup" uib-dropdown>
+                                        <!-- <button class="dropdown-toggle btn btn-default" uib-dropdown-toggle> Editar Etiquetas</button> -->
+                                        <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0);" >Editar Etiquetas</a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li data-ng-repeat="tag in tags">
+                                                <a href="" ng-click="addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in selectTags">{{ tag.name }}</button>
                             </div>
                         </div>
                     </div>
@@ -249,7 +257,7 @@
                 </div>
             </div>
 
-<!--             <div class="popover-demo">
+<!--       <div class="popover-demo">
                 <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
                     style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
                     <div class="arrow"></div>

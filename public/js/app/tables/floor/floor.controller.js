@@ -246,7 +246,7 @@ angular.module('floor.controller', [])
     })
 
 
-.controller('reservationController', function(FloorFactory) {
+.controller('reservationController', function(FloorFactory, $timeout) {
     var rm = this;
     rm.search = {
         show: true

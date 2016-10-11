@@ -8,8 +8,18 @@ angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
 	$stateProvider
 		.state('mesas.calendar', {
 			url: '/calendar',
-			templateUrl: '/js/app/tables/calendar/view/index.html',
-			controller: 'CalendarIndexController',
-			controllerAs: 'vm'
+                                    views: {
+                                        '@': {
+                                            templateUrl: '/js/app/tables/calendar/view/index.html',
+                                            controller: 'CalendarIndexController',
+                                            controllerAs: 'vm'
+                                        }
+
+                                    },
+                                    resolve: {
+                                        $title: function() {
+                                            return 'Calendario';
+                                        }
+                                    }
 		});
 });
