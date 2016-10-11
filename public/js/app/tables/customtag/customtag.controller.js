@@ -1,10 +1,10 @@
 angular.module('customtag.controller', [])
-	.controller('CustomTagCtrl', function(CustomTagService) {
+	.controller('CustomTagCtrl', function(CustomTagGuestService) {
 		var vm = this;
 		vm.name = "";
 
 		vm.guestTagAll = function() {
-			CustomTagService.getAllTag().then(function success(response) {
+			CustomTagGuestService.getAllTag().then(function success(response) {
 				vm.guestTagList = response;
 			}, function error(response) {
 				messageErrorApi(response, "Error", "warning");
@@ -15,7 +15,7 @@ angular.module('customtag.controller', [])
 
 		vm.guestCreateTag = function(name) {
 			vm.loading = true;
-			CustomTagService.createTag(name).then(function success(response) {
+			CustomTagGuestService.createTag(name).then(function success(response) {
 				vm.loading = false;
 				data = response;
 				if (data != null) {
@@ -32,9 +32,9 @@ angular.module('customtag.controller', [])
 
 		vm.guestDeleteTag = function(id) {
 			vm.loading = true;
-			CustomTagService.deleteTag(id).then(function success(response) {
+			CustomTagGuestService.deleteTag(id).then(function success(response) {
 				vm.loading = false;
-				var index = CustomTagService.findWithAttr(vm.guestTagList, "id", id);
+				var index = CustomTagGuestService.findWithAttr(vm.guestTagList, "id", id);
 				vm.guestTagList.splice(index, 1);
 			}, function(response) {
 				vm.loading = false;
