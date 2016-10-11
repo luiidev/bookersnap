@@ -25,7 +25,6 @@ angular.module('customtag.controller', [])
 				} else {
 					messageErrorApi(response, "Este Tag ya se encuentra regitrado", "warning");
 				}
-
 			}, function error(response) {
 				messageErrorApi(response, "Error", "warning");
 			});
@@ -33,7 +32,6 @@ angular.module('customtag.controller', [])
 
 		vm.guestDeleteTag = function(id) {
 			vm.loading = true;
-			console.log(id);
 			CustomTagService.deleteTag(id).then(function success(response) {
 				vm.loading = false;
 				var index = CustomTagService.findWithAttr(vm.guestTagList, "id", id);
