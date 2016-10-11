@@ -24,7 +24,7 @@ angular.module('reservation.service', [])
             return http.get(ApiUrlMesas + "/guests", {params: {name: name, page_size: 8}});
         },
         getReservationTags: function() {
-            return http.get(ApiUrlMesas + "/reservation/tags");
+            return http.get(ApiUrlMesas + "/reservation/tag");
         },
         getGuest: function() {
             var deferred = $q.defer();
