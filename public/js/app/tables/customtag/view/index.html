@@ -14,25 +14,25 @@
                     <div class="guest-tags-form">
                         <!--                         <p class="card-header">
                             <label for="tag">
-                                CUSTOM TAGS
+                                CUSTOM TAGS2
                             </label>
                         </p> -->
-                        <form class="form-inline" name="customTag">
+                        <form class="form-inline" name="customTag" novalidate>
                             <label class="m-b-25 m-t-25 c-black f-500">
                                 CUSTOM TAGS
                             </label>
                             <div>
-                                <input class="form-control" id="tag" placeholder="Guest Tag" type="text"/>
-                                <button class="btn btn-primary waves-effect" ng-click="vm.guestTagAll()">
-                                    Add New Tag
+                                <input class="form-control" id="tag" ng-model="vm.name" placeholder="Guest Tag" type="text" required/>
+                                <button class="btn btn-primary waves-effect" ng-click="vm.guestCreateTag(vm.name)" ng-disabled="!customTag.$valid || vm.loading">
+                                    Add New Tags
                                 </button>
                             </div>
                         </form>
-                        <div class="tags-list">
-                            <div class="tag-item guest">
-                                VIP
-                                <div class="glyphicon glyphicon-remove">
-                                </div>
+                        <div class="tags-list" >
+                            <div class="tag-item guest" ng-repeat="tag in vm.guestTagList">
+                                {{tag.name | lowercase}}
+                                <a class="icon glyphicon glyphicon-remove" ng-click="vm.guestDeleteTag(tag.id)">
+                                </a>
                             </div>
                         </div>
                     </div>
