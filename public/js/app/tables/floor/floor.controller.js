@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $uibModal, $rootScope, RootVariableFactory, FloorFactory, ServerFactory, $window, screenHelper, screenSizeFloor) {
         var vm = this;
         var fecha_actual = getFechaActual();
 
@@ -54,7 +54,6 @@ angular.module('floor.controller', [])
         }
 
         vm.tabSelectedZone = function(value) {
-            console.log('dropeado');
             vm.flagSelectedZone = value;
 
         };
@@ -81,6 +80,9 @@ angular.module('floor.controller', [])
                 }
             });
         }
+
+        vm.pantalla = RootVariableFactory.getPantalla();
+        console.log(vm.pantalla);
 
         angular.element($window).bind('resize', function() {
             var size = screenHelper.size(screenSizeFloor);
@@ -267,7 +269,7 @@ angular.module('floor.controller', [])
 
 }).
 
-controller('waitlistController', function($scope) {
+controller('waitlistController', function(RootVariableFactory) {
     var wm = this;
     wm.search = {
         show: true
@@ -275,6 +277,10 @@ controller('waitlistController', function($scope) {
     wm.searchReservation = function() {
         wm.search.show = !wm.search.show;
     };
+
+    RootVariableFactory.setPantalla(2);
+    wm.pantalla = RootVariableFactory.getPantalla();
+    console.log(wm.pantalla);
 })
 
 .controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
@@ -473,9 +479,8 @@ controller('waitlistController', function($scope) {
     sm.cancelEditServer = function(server) {
         sm.flagServer = false;
         limpiarData();
-        $state.go('mesas.floor.server.create', {}, {
-            reload: true
-        });
+        sm.showForm = false;
+        $state.go('mesas.floor.server');
     };
 
     sm.deleteServer = function() {

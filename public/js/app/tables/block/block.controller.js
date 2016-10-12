@@ -2,7 +2,7 @@ angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, screenHelper, screenSizeBlock,
         ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, $uibModal, IdMicroSitio) {
 
-        // $scope.date = $stateParams.date;
+        $scope.date = null;
         $scope.zoneIndexShow = 0;
 
         $scope.coversList = BlockFactory.coverList();
@@ -29,9 +29,11 @@ angular.module('block.controller', [])
 
         $scope.$watch("date", function(newValue, oldValue) {
             var fecha = convertFechaYYMMDD(newValue, "es-ES", {});
-            listFormData(fecha);
+            var fechaOld = convertFechaYYMMDD(oldValue, "es-ES", {});
 
-            console.log("date ", fecha);
+            if (fecha !== fechaOld) {
+                listFormData(fecha);
+            }
         });
 
         var listZones = function() {
@@ -70,7 +72,6 @@ angular.module('block.controller', [])
         };
 
         var listFormData = function(fecha) {
-            clearForm();
             CalendarService.GetShiftByDate(fecha, {
                 OnSuccess: function(Response) {
                     var data = Response.data;
@@ -98,13 +99,12 @@ angular.module('block.controller', [])
         };
 
         var clearForm = function() {
-            $scope.shifts.length = 0;
+            $scope.shifts = [];
         };
 
         var listTablesBlock = function() {
             BlockFactory.getBlock(block_id).then(function(response) {
 
-                console.log("bloqueados " + angular.toJson(response, true));
                 $scope.tableBlock = response.data.data;
                 angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
                     $scope.mesasBloqueadas.push(mesa.id);
@@ -115,6 +115,7 @@ angular.module('block.controller', [])
                 return $scope.mesasBloqueadas;
 
             }).then(function(mesasBloqueadas) {
+
                 // Listado array de zonas incluyendo sus zonas 
                 return ZoneFactory.getZones().then(function(response) {
 
@@ -139,7 +140,6 @@ angular.module('block.controller', [])
                     });
 
                     return $scope.zones;
-                    //////////////////////////////////////////////////////////////////////////////////////
                 });
 
             }).then(function(zones) {
@@ -168,10 +168,12 @@ angular.module('block.controller', [])
                             // Iteracion para mostrar mesas bloqueadas en el mismo rango de fechas bloqueadas 
                         });
                     });
-                    //////////////////////////////////////////////////////////////////////////////////////
 
                     // console.log("selecciona ", angular.toJson($scope.zones, true));
                     // loadTablesEdit(zones[0]);
+
+                    console.log("bloqueados " + angular.toJson($scope.tableBlock, true));
+
                 });
             });
         };
@@ -389,6 +391,7 @@ angular.module('block.controller', [])
                 listTablesBlock();
 
             }
+
         })();
 
         listCovers("min");

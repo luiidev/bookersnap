@@ -6,20 +6,92 @@ angular.module('reservation.controller', [])
     "screenHelper", "reservationService", "reservationHelper", "screenSize",
         function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize){
 
+    /**
+     * Entidad de reservacion
+     * @type {Object}
+     */
     vm.reservation = {};
+
+    /**
+     * Mesas seleccionadas en el lienzo
+     * @type {Object}
+     */
     vm.tablesSelected = {};
-    vm.isTablesSelected = 0;
+
+    /**
+     * Saber si se a seleccionado al menos un mesa
+     * @type {Boolean}
+     */
+    vm.isTablesSelected = false;
+
+    /**
+     * Conflictos encontrados con mesas | bloqueado, reservado, muy grande
+     * @type {Array}
+     */
     vm.conflicts = [];
+
+    /**
+     * Zonas con sus mesas para los turnos encontrados en la fecha seleccionada
+     * @type {Array}
+     */
     vm.zones = [];
+
+    /**
+     * Indice de zona para la zona que se va a mostrar
+     * @type {Number}
+     */
     vm.zoneIndex = 0;
+
+    /**
+     * Mesa sugeria
+     * @type {Object}
+     */
     vm.tableSuggested = {};
+
+    /**
+     * Fecha de apoyo para input datetime
+     * @type {String}
+     */
     vm.date = "";
+
+    /**
+     * Tags de reservacion
+     * @type {Array}
+     */
     vm.tags = [];
+
+    /**
+     * Tags de reservacion seleccionados
+     * @type {Object}
+     */
     vm.selectTags = {};
+
+    /**
+     * Entidad para nuevo invitado
+     * @type {Object}
+     */
+    vm.guest = {};
+
+    ///////////////////////////////////////////////////////////////
+    //  Variables internas de apoyo
+    ///////////////////////////////////////////////////////////////
+    
+    /**
+     * Indice maximo de zona que se puede acceder y mostrar
+     * @type {Number}
+     */
     var zoneIndexMax = 0;
+
+    /**
+     * Mesas bloquedas
+     * @type {Array}
+     */
     var blocks = [];
 
-    vm.guest = {};
+    /**
+     * Listado de invitados encontrados por filtro de busqueda
+     * @type {Array}
+     */
     vm.guestList = [];
 
     vm.save = function() {
@@ -38,6 +110,15 @@ angular.module('reservation.controller', [])
                 return message.alert("Debe elegir mesas para la reservacion");
             }
         }
+
+        ///////////////////////////////////////////////////////////////
+        // parse reservation.tags
+        ///////////////////////////////////////////////////////////////
+        vm.reservation.tags = [];
+        vm.reservation.tags = Object.keys(vm.selectTags).reduce(function(result, value) {
+                result.push(parseInt(value));
+                return result;
+            }, []);
 
         ///////////////////////////////////////////////////////////////
         //  parse guest
@@ -71,6 +152,11 @@ angular.module('reservation.controller', [])
 
     vm.cancel = function() {
         vm.reservation = {};
+        vm.selectTags = {};
+        vm.guest = {};
+        vm.guestList = [];
+        vm.addGuest = false;
+        defaultView();
         loadZones();
     };
 
@@ -116,7 +202,7 @@ angular.module('reservation.controller', [])
                 delete vm.tablesSelected[table.id];
             }
         });
-        vm.isTablesSelected = Object.keys(vm.tablesSelected).length;
+        vm.isTablesSelected = Object.keys(vm.tablesSelected).length > 0;
 
         alertConflicts();
     };
@@ -210,15 +296,12 @@ angular.module('reservation.controller', [])
     };
 
     var listReservationTags = function() {
-        vm.tags = service.getReservationTags();
-
-        // service.getReservationTags()
-        //     .then(function(response) {
-        //         vm.tags = response.data.data;
-        //         console.log(tags, response.data);
-        //     }).finally(function(error) {
-        //         message.apiError(error);
-        //     });
+        service.getReservationTags()
+            .then(function(response) {
+                vm.tags = response.data.data;
+            }).finally(function(error) {
+                message.apiError(error);
+            });
     };
 
     var loadBlocks = function(date) {
@@ -279,7 +362,7 @@ angular.module('reservation.controller', [])
             vm.waitingResponse = true;
             service.getZones(date)
                 .then(function(response) {
-                    loadTablesEdit(response.data.data.zones);
+                    loadTablesEdit(response.data.data);
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {

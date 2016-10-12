@@ -16,6 +16,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                     },
                     'principal@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/principal.html',
+
                     },
                     'tabReservaciones@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/tabReservaciones.html',
@@ -26,19 +27,19 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 url: '/reservation',
                 templateUrl: '/js/app/tables/floor/view/reservation.html',
                 controller: 'reservationController',
-                controllerAs: 'rm'
+                controllerAs: 'rm',
             })
             .state('mesas.floor.walkin', {
                 url: '/walkin',
                 templateUrl: '/js/app/tables/floor/view/waitlist.html',
                 controller: 'waitlistController',
-                controllerAs: 'wm'
+                controllerAs: 'wm',
             })
             .state('mesas.floor.server', {
                 url: '/server',
                 templateUrl: '/js/app/tables/floor/view/server.html',
                 controller: 'serverController',
-                controllerAs: 'sm'
+                controllerAs: 'sm',
             })
             .state('mesas.floor.server.create', {
                 url: '/create',

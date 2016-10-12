@@ -124,7 +124,9 @@ angular.module('floor.directive', [])
                     left: 190
                 },
                 drag: function(event, ui) {
-                    //console.log(ui.position.left);
+                    //console.log('x: ' + ui.offset.left + ', ' + 'y: ' + ui.offset.top);
+                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.icon-available').addClass('item-suggested');
                 },
                 start: function(event, ui) {
                     angular.element('#bg-window-floor').addClass('drag-dispel');
@@ -146,13 +148,11 @@ angular.module('floor.directive', [])
         function makeDroppable(scope, element, attr) {
             element.droppable({
                 //accept: ".listado-column",
-                drop: function(event, ui) {
-                    scope.onDroppeddFn();
-                    //scope.$apply(function() {
-                    //console.log('selected');
-                    //vm.flagSelectedZone = scope.myNumTab;
-                    //});
-                }
+            over: function(event, ui) {
+                    scope.$apply(function() {
+                        scope.onDroppeddFn();
+                    });
+                },
             });
         }
         return {

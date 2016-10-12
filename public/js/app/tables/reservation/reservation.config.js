@@ -8,17 +8,22 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
     .config(function($stateProvider) {
 
         $stateProvider
+            .state('mesas.reservation-new', {
+                url: '/reservation/:date/new',
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/new.html',
+                        controller: "reservationCtrl.Store",
+                        // controllerAs: 'vm',
+                    }
+                },
+            })
             .state('mesas.reservation', {
                 url: '/reservation',
                 templateUrl: '/js/app/tables/reservation/view/index.html',
                 controller: "reservationCtrl.Index",
                 //controllerAs: 'vm',
-            })
-            .state('mesas.reservation-new', {
-                url: '/reservation/:date/new',
-                templateUrl: '/js/app/tables/reservation/view/new.html',
-                controller: "reservationCtrl.Store",
-                // controllerAs: 'vm',
+
             });
 
     });
