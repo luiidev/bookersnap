@@ -1,6 +1,7 @@
 angular.module('reservation.service', [])
 .factory("reservationService", ["$http", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
      function(http, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
+        var zones, servers, resStatus, turns, blocks, tags;
     return {
         save: function(data) {
             return http.post(ApiUrlMesas + "/table/reservation", data);
