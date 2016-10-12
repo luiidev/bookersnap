@@ -168,7 +168,7 @@ angular.module('floor.service', [])
 				}).error(function(data) {
 					defered.reject(data);
 				}).then(function(zonesData) {
-					//console.log('Datos ' + angular.toJson(zonesData.data.data.zones, true));
+
 					me.listBloqueos().then(function success(response) {
 						return response;
 					}, function error(response) {
@@ -182,7 +182,7 @@ angular.module('floor.service', [])
 						}).then(function success(servers) {
 
 							var vZones = [];
-							angular.forEach(zonesData.data.data.zones, function(zone) {
+							angular.forEach(zonesData.data.data, function(zone) {
 								var tables = zone.tables;
 								var vTables = [];
 								angular.forEach(tables, function(table) {
@@ -253,7 +253,7 @@ angular.module('floor.service', [])
 						return response;
 					}).then(function success(blocks) {
 							var vTables = [];
-							angular.forEach(zonesData.data.data.zones, function(zone) {
+							angular.forEach(zonesData.data.data, function(zone) {
 								var tables = zone.tables;
 
 								angular.forEach(tables, function(table) {
