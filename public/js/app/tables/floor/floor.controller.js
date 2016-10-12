@@ -36,7 +36,11 @@ angular.module('floor.controller', [])
         });
 
         vm.mostrarDetail = function(index, data) {
-            modalInstancesDetail(index, data);
+            var estado = FloorFactory.isEditServer();
+            if (estado === false) {
+                modalInstancesDetail(index, data);
+            }
+
         };
 
         function modalInstancesDetail(index, data) {
@@ -80,10 +84,6 @@ angular.module('floor.controller', [])
                 }
             });
         }
-
-        vm.navMouseZone = function(obj) {
-            console.log('evento');
-        };
 
         angular.element($window).bind('resize', function() {
             var size = screenHelper.size(screenSizeFloor);
@@ -266,11 +266,9 @@ angular.module('floor.controller', [])
         });
     };
     getlistZonesBloqueosReservas();
-
-
 }).
 
-controller('waitlistController', function($scope) {
+controller('waitlistController', function() {
     var wm = this;
     wm.search = {
         show: true
@@ -278,6 +276,7 @@ controller('waitlistController', function($scope) {
     wm.searchReservation = function() {
         wm.search.show = !wm.search.show;
     };
+
 })
 
 .controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
@@ -359,6 +358,9 @@ controller('waitlistController', function($scope) {
                 sm.colors[i].classSelect = "is-selected";
             }
         }
+        //FloorFactory.flag.editServer = !FloorFactory.flag.editServer;
+        FloorFactory.isEditServer(true);
+        console.log('Datos' + angular.toJson(FloorFactory.isEditServer(), true));
 
     };
 
@@ -477,6 +479,8 @@ controller('waitlistController', function($scope) {
         sm.flagServer = false;
         limpiarData();
         sm.showForm = false;
+        FloorFactory.isEditServer(false);
+        console.log('Datos' + angular.toJson(FloorFactory.isEditServer(), true));
         $state.go('mesas.floor.server');
     };
 

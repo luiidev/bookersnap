@@ -8,8 +8,7 @@ angular.module('tables.app', [
         'calendar.app',
         'floor.app',
         'reservation.app',
-        'bookersnap.services',
-        'customtag.app'
+        'bookersnap.services'
     ])
     .constant("IdMicroSitio", idMicrositio)
     .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)

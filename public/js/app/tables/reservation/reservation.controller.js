@@ -156,6 +156,7 @@ angular.module('reservation.controller', [])
         vm.guest = {};
         vm.guestList = [];
         vm.addGuest = false;
+        defaultView();
         loadZones();
     };
 
