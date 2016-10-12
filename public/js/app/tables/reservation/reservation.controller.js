@@ -357,7 +357,7 @@ angular.module('reservation.controller', [])
                 return message.error("Fecha invalida no se puede cargar las zonas");
             }
 
-            vm.date = new Date(date);
+            vm.date = new Date(date.replace(/-/g, '\/'));
 
             vm.waitingResponse = true;
             service.getZones(date)
