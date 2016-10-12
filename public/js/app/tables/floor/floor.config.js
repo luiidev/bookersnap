@@ -45,7 +45,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 url: '/create',
                 views: {
                     'principal@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/serverCreate.html',
+                        templateUrl: '/js/app/tables/floor/view/principal.html',
                         controller: 'serverTablesController',
                         controllerAs: 'se'
                     },
@@ -55,7 +55,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 url: '/edit/:server_id',
                 views: {
                     'principal@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/serverEdit.html',
+                        templateUrl: '/js/app/tables/floor/view/principal.html',
                         controller: 'serverTablesController',
                         controllerAs: 'se'
                     },
