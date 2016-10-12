@@ -1,12 +1,18 @@
 angular.module('floor.service', [])
 	.factory('FloorDataFactory', function($http, ApiUrlMesas) {
+		var reservations;
 		return {
 			getBloqueos: function() {
 				//return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
 				return $http.get(ApiUrlMesas + "/blocks/tables");
 			},
 			getReservas: function() {
-				return $http.get(ApiUrlMesas + "/reservations");
+				if (reservations) return reservations;
+
+				console.log("entre al api reservations");
+
+				reservations = $http.get(ApiUrlMesas + "/reservations");
+				return reservations;
 			},
 
 		};
@@ -304,4 +310,16 @@ angular.module('floor.service', [])
 				return total;
 			}
 		};
+	})
+	.factory('RootVariableFactory', function() {
+		var navegacion = 1;
+		var pantallaFloor = {
+			getPantalla: function() {
+				return navegacion;
+			},
+			setPantalla: function(value) {
+				navegacion = value;
+			}
+		};
+		return pantallaFloor;
 	});
