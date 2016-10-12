@@ -1,31 +1,37 @@
 angular.module('reservation.service', [])
-.factory("reservationService", ["$http", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
-     function(http, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
+.factory("reservationService", ["HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
+     function(HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
         var zones, servers, resStatus, turns, blocks, tags;
     return {
         save: function(data) {
             return http.post(ApiUrlMesas + "/table/reservation", data);
         },
-        getZones: function(date) {
-            return http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
+        getZones: function(date, reload) {
+            zones = HttpFactory.get(ApiUrlMesas + "/calendar/" + date + "/zones", null, zones, reload);
+            return  zones;
         },
-        getServers: function() {
-            return http.get(ApiUrlMesas + "/servers");
+        getServers: function(reload) {
+            servers = HttpFactory.get(ApiUrlMesas + "/servers",  null, servers, reload);
+            return servers;
         },
-        getStatuses: function() {
-            return http.get(ApiUrlRoot + "/reservation/status");
+        getStatuses: function(reload) {
+            resStatus = HttpFactory.get(ApiUrlRoot + "/reservation/status", null , resStatus, reload);
+            return  resStatus;
         },
-        getTurns: function(date) {
-            return http.get(ApiUrlMesas + "/calendar/" + date + "/shifts");
+        getTurns: function(date, reload) {
+            turns  = HttpFactory.get(ApiUrlMesas + "/calendar/" + date + "/shifts", null, turns, reload);
+            return turns;
         },
-        getBlocks: function(date) {
-            return http.get(ApiUrlMesas + "/blocks/tables", {params: {date: date}});
+        getBlocks: function(date, reload) {
+            blocks = HttpFactory.get(ApiUrlMesas + "/blocks/tables", {params: {date: date}}, blocks, reload);
+            return blocks;
         },
         getGuestList: function(name) {
             return http.get(ApiUrlMesas + "/guests", {params: {name: name, page_size: 8}});
         },
-        getReservationTags: function() {
-            return http.get(ApiUrlMesas + "/reservation/tag");
+        getReservationTags: function(reload) {
+            tags = HttpFactory.get(ApiUrlMesas + "/reservation/tag", null, tags, reload);
+            return tags;
         },
         getGuest: function() {
             var deferred = $q.defer();
