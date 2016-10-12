@@ -83,8 +83,8 @@ angular.module('floor.service', [])
 						var dataReservation = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
-							first_name: reserva.guest.first_name,
-							last_name: reserva.guest.last_name
+							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
+							last_name: reserva.guest ? reserva.guest.last_name: ""
 						};
 						vReservation.push(dataReservation);
 					});
@@ -115,7 +115,6 @@ angular.module('floor.service', [])
 								//angular.forEach(zone.table, function(table) {
 								if (itemRes) {
 									angular.forEach(reservations, function(resData, key) {
-										//console.log(angular.toJson(tableData, true));
 										if (resData.reservation_id == itemRes) {
 											//console.log(angular.toJson(key, true));
 											block.res_reservation_status_id = resData.res_reservation_status_id;
