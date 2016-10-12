@@ -1,0 +1,285 @@
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<section id="main">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <section class="w-100 p-0" id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="pm-body clearfix list-table">
+                    <div class="configuration-reservation-form">	
+	                    <label class="m-b-25 m-t-25 c-black f-500">
+	                        Reservation Settings
+	                    </label>
+                    	<div class="row">	                    	
+	                        <form  name="customGuestTag" novalidate>	                        	
+								<div class="col-sm-6 m-b-20">
+									<div class="col-sm-6 form-group fg-line">
+										<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-time"></span>
+											<label>Time Tolerance (min)</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<!-- <span class="zmdi zmdi-check form-control-feedback"></span> -->
+										</div>											
+										<!-- <small class="help-block">Todo Ok</small> -->
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-time"></span>
+											<label>Time Restriction (min)</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-user"></span>
+											<label>Max. People</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-folder-close"></span>
+											<label>Max. Table</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+<!-- 									<div class="col-sm-12 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto String</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-font"></span>
+											<label>String</label>
+										</div>
+										<div class="fg-line">												
+											<input id="input1" type="text" class="form-control input-mask" placeholder="cadena">
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div> -->
+<!-- 									<div class="col-sm-6 form-group fg-line has-warning">
+										<label for="input1" class="control-label">Correcto Lista</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-th"></span>
+											<label>Lista</label>
+										</div>
+										<div class="fg-line">												
+											<select class="form-control">
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+											</select>
+											<span class="zmdi zmdi-alert-triangle form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-error">
+										<label for="input1" class="control-label">Correcto DateTime</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-time"></span>
+											<label>DateTime</label>
+										</div>
+										<div class="fg-line">	
+											<input type="date" class="form-control" placeholder="date time">
+											<span class="zmdi zmdi-close form-control-feedback"></span>
+										</div>
+										<small class="help-block">Todo Ok</small>
+									</div> -->
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto String</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-font"></span>
+											<label>Name People 1</label>
+										</div>
+										<div class="fg-line">												
+											<input id="input1" type="text" class="form-control input-mask" placeholder="cadena">
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<label>Status People 1</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto String</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-font"></span>
+											<label>Name People 3</label>
+										</div>
+										<div class="fg-line">												
+											<input id="input1" type="text" class="form-control input-mask" placeholder="cadena">
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<label>Status People 3</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-12 form-group">
+										<button class="btn btn-primary btn-sm m-t-10 waves-effect">Submit</button>
+									</div>																
+								</div>
+								<div class="col-sm-6 m-b-20">
+									<div class="col-sm-6 form-group fg-line has-warning">
+										<label for="input1" class="control-label">Correcto Lista</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-th"></span>
+											<label>Res. Code Status</label>
+										</div>
+										<div class="fg-line">												
+											<select class="form-control">
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+											</select>
+											<span class="zmdi zmdi-alert-triangle form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto String</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<label>Res. Privilege Status</label>
+										</div>
+										<div class="fg-line">												
+											<input id="input1" type="text" class="form-control input-mask" placeholder="cadena">
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-12 form-group fg-line has-success">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<label>Messenger Status</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-check form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-warning">
+										<label for="input1" class="control-label">Correcto Lista</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-th"></span>
+											<label>Reserve Portal</label>
+										</div>
+										<div class="fg-line">												
+											<select class="form-control">
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+											</select>
+											<span class="zmdi zmdi-alert-triangle form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-warning">
+										<label for="input1" class="control-label">Correcto Lista</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-th"></span>
+											<label>Res. Percentage ID</label>
+										</div>
+										<div class="fg-line">												
+											<select class="form-control">
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+											</select>
+											<span class="zmdi zmdi-alert-triangle form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-error">
+										<label for="input1" class="control-label">Correcto String</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-font"></span>
+											<label>Name People 2</label>
+										</div>
+										<div class="fg-line">												
+											<input id="input1" type="text" class="form-control input-mask" placeholder="cadena">
+											<span class="zmdi zmdi-close form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+									<div class="col-sm-6 form-group fg-line has-error">
+										<label for="input1" class="control-label">Correcto Integer</label>
+										<div class="fg-line">
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<label>Status People 2</label>
+										</div>
+										<div class="fg-line">
+											<div class="dtp-container">
+												<input id="input1" type="number" class="form-control input-mask date-time-picker" placeholder="number">
+											</div>										
+											<span class="zmdi zmdi-close form-control-feedback"></span>
+										</div>											
+										<small class="help-block">Todo Ok</small>
+									</div>
+
+								</div>									
+	                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>
