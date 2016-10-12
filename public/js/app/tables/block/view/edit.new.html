@@ -94,7 +94,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes">
+                                        <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes track by startTime.index">
                                             <option disabled="disabled" selected="true" value="">
                                                 Seleccione
                                             </option>
@@ -110,7 +110,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes">
+                                        <select class="form-control" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes track by endTime.index">
                                             <option disabled="disabled" selected="true" value="">
                                                 Seleccione
                                             </option>

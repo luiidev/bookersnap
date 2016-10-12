@@ -183,13 +183,15 @@ var getRangoHours = function(horaInicial, horaFinal) {
     var arrayHoras = [];
     arrayHoras.push({
         hour24: horaInicial,
-        hour12: defineTimeSytem(horaInicial)
+        hour12: defineTimeSytem(horaInicial),
+        index: getIndexHour(horaInicial, 0)
     });
     while (newHoursIni != horaFinal) {
         newHoursIni = addHourByMin(newHoursIni);
         arrayHoras.push({
             hour24: newHoursIni,
-            hour12: defineTimeSytem(newHoursIni)
+            hour12: defineTimeSytem(newHoursIni),
+            index: getIndexHour(newHoursIni, 0)
         });
     }
     return arrayHoras;
@@ -489,4 +491,63 @@ var getFechaActual = function() {
     var fecha_actual = String(anio + "-" + mes + "-" + dia);
     return fecha_actual;
 
+};
+
+/**/
+
+var initAvailability = function() {
+    var times = [];
+
+    for (i = 0; i < 120; i++) {
+        var time = i * 60 * 15;
+        var nextday = (i < 96) ? 0 : 1;
+
+        var time_original = moment.utc(time * 1000).format('HH:mm');
+
+        if (i >= 52 && i < 96) {
+            var a = (i - 48) * 60 * 15;
+            time = moment.utc(a * 1000).format('HH:mm') + " PM";
+        } else if (i < 52) {
+            time = moment.utc(time * 1000).format('HH:mm') + " AM";
+        } else {
+            time = moment.utc(time * 1000).format('HH:mm') + " AM";
+        }
+
+        times.push({
+            time: time,
+            time_original: time_original,
+            rule_id: "-1",
+            nextday: nextday,
+            index: i
+        });
+    }
+
+    return times;
+};
+
+var getIndexHour = function(value, nextDay) {
+    nextDay = (nextDay) ? 0 : nextDay;
+
+    var hourIndex = value.indexOf(":");
+    var min = value.substr(hourIndex);
+
+    hourIndex = parseInt(value.substr(0, hourIndex));
+
+    min = min.replace(":", "");
+    min = min.replace("AM", "");
+    min = min.replace("PM", "");
+    min = parseInt(min);
+
+    var index = hourIndex * 4;
+
+    if (min == 15) {
+        index += 1;
+    } else if (min == 30) {
+        index += 2;
+    } else if (min == 45) {
+        index += 3;
+    }
+
+    index = index + 96 * nextDay;
+    return index;
 };

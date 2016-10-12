@@ -169,10 +169,18 @@ angular.module('block.controller', [])
                         });
                     });
 
-                    // console.log("selecciona ", angular.toJson($scope.zones, true));
-                    // loadTablesEdit(zones[0]);
+                    var indexStartTime = getIndexHour($scope.tableBlock.start_time, 0);
+                    var indexEndTime = getIndexHour($scope.tableBlock.end_time, 0);
 
-                    console.log("bloqueados " + angular.toJson($scope.tableBlock, true));
+                    $scope.startTime = {
+                        index: indexStartTime,
+                        hour24: $scope.tableBlock.start_time
+                    };
+
+                    $scope.endTime = {
+                        index: indexEndTime,
+                        hour24: $scope.tableBlock.end_time
+                    };
 
                 });
             });
@@ -291,6 +299,9 @@ angular.module('block.controller', [])
 
         $scope.saveZone = function(option) {
 
+            console.log("saveZone " + angular.toJson($scope.object, true));
+            console.log("saveZone 2" + angular.toJson($scope.startTime, true));
+
             if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
 
                 messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
@@ -387,11 +398,8 @@ angular.module('block.controller', [])
 
             if ($stateParams.block_id !== null) {
                 block_id = $stateParams.block_id;
-
                 listTablesBlock();
-
             }
-
         })();
 
         listCovers("min");
