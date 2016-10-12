@@ -17,6 +17,7 @@ angular.module('tables.app', [
     //.constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + idMicrositio)
     //.constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
         //console.log($httpProvider);
         /*$httpProvider.defaults.paramSerializer = {
             ignoreLoadingBar: true
