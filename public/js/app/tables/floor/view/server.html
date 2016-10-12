@@ -33,11 +33,11 @@
 </style>
 <div class="col-sm-12 m-t-20 p-0" ng-show="!sm.showForm">
     <p class="f-500 m-b-10 c-black">
-        <button class="btn bt-xs btn-success btn-block" ng-click="sm.showForm = true"><i class="zmdi zmdi-plus-circle"></i> Add Server</button>
+        <button class="btn bt-xs btn-success btn-block" ng-click="sm.showForm=true"><i class="zmdi zmdi-plus-circle"></i> Add Server</button>
     </p>
     <small>Active servers</small>
     <ul class="list-group ">
-        <li style="cursor: pointer;" ui-sref="floor.server.edit({server_id: {{server.id}}})" class="list-group-item col-xs-12 no-padding" ng-repeat="server in servers" ng-click="sm.editServer(server)">
+        <li style="cursor: pointer;" ui-sref="mesas.floor.server.edit({server_id: {{server.id}}})" class="list-group-item col-xs-12 no-padding" ng-repeat="server in servers" ng-click="sm.editServer(server)">
             <div class="col-xs-2 p-0 center">
                 <span class="badge" style="background-color:{{server.color}} !important ">&nbsp</span>
             </div>
@@ -84,7 +84,7 @@
         <div class="ServerColor-previewContainer m-t-10 m-b-10 ">
                 <p ng-repeat="table in mesasSeleccionadas " class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
                     <label>{{table.name}}</label>
-                    <button class="btn btn-primary btn-xs waves-effect " ng-click="sm.removeTable(table) ">X</button>
+                    <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable(table) ">X</button>
                 </p>
             </div>
     </div>

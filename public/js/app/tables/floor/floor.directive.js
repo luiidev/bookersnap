@@ -23,7 +23,7 @@ angular.module('floor.directive', [])
             });
 
             element.droppable({
-                accept: ".listado-column",
+                //accept: ".listado-column",
                 drop: function(event, ui) {
                     //console.log(ui.draggable[0].id);
                     scope.$apply(function() {
@@ -32,6 +32,18 @@ angular.module('floor.directive', [])
                     scope.onDroppedFn();
                 }
             });
+            /*element.droppable({
+                accept: ".line-bottom",
+                drop: function(event, ui) {
+                    //console.log(ui.draggable[0].id);
+                    scope.$apply(function() {
+                        scope.num = ui.draggable[0].id;
+                    });
+                    scope.onDroppedFn();
+                }
+            });*/
+
+
 
             element.on('click', function(event) {
                 event.preventDefault();
@@ -102,4 +114,51 @@ angular.module('floor.directive', [])
             link: makeDraggable,
         };
 
+    })
+    .directive('ngDragUpComing', function() {
+
+        function makeDraggable(scope, element, attr) {
+            element.draggable({
+                helper: "clone",
+                cursorAt: {
+                    left: 190
+                },
+                drag: function(event, ui) {
+                    //console.log('x: ' + ui.offset.left + ', ' + 'y: ' + ui.offset.top);
+                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.icon-available').addClass('item-suggested');
+                },
+                start: function(event, ui) {
+                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.icon-available').addClass('item-suggested');
+                },
+                stop: function(event, ui) {
+                    angular.element('#bg-window-floor').removeClass('drag-dispel');
+                    angular.element('.icon-available').removeClass('item-suggested');
+                }
+            });
+        }
+
+        return {
+            link: makeDraggable,
+        };
+
+    })
+    .directive('ngDropTabZones', function() {
+        function makeDroppable(scope, element, attr) {
+            element.droppable({
+                //accept: ".listado-column",
+                over: function(event, ui) {
+                    scope.$apply(function() {
+                        scope.onDroppeddFn();
+                    });
+                },
+            });
+        }
+        return {
+            link: makeDroppable,
+            scope: {
+                onDroppeddFn: '&'
+            }
+        };
     });

@@ -8,13 +8,20 @@ angular.module('tables.app', [
         'calendar.app',
         'floor.app',
         'reservation.app',
-        'bookersnap.services'
+        'bookersnap.services',
+        'customtag.app'
     ])
     .constant("IdMicroSitio", idMicrositio)
     .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
+<<<<<<< HEAD
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+=======
+    //.constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + idMicrositio)
+    //.constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
+    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+>>>>>>> 213522cf902a2943e97995c73b4d9ae1240e0878
         //console.log($httpProvider);
         /*$httpProvider.defaults.paramSerializer = {
             ignoreLoadingBar: true

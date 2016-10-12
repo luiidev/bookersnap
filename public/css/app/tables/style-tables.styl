@@ -707,7 +707,7 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
-	
+
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -730,6 +730,12 @@ $background-tables-head = #eee
 				a
 				height 0px
 				padding 0px
+		&.listado-column
+			border-bottom 1px solid #767676
+			background rgba(66,66,66,0.5)
+			cursor pointer
+			width 400px
+				
 .box-estado-res
 	background #575757
 	width 90%
@@ -1007,8 +1013,6 @@ li.divider
 	background #575757
 	height 50px
 
-
-	
 .load-parent
 	background #FFF
 	position absolute
@@ -1202,20 +1206,49 @@ li.divider
 				margin-bottom 0
 				padding 10px 15px
 				cursor pointer
-.scrolltablef
+/*.scrolltablef
 	overflow-y auto
 	overflow-x hidden
 	height 70%
 	width 100%
 	position absolute
 	
-@media only screen and (max-height: 700px)
+@media only screen and (max-height 700px)
 	.scrolltablef
 		height 60%
-
+*/
 .footer-custom-res
 	position fixed !important
 	z-index 8
 	height 95px !important
-	padding-bottom 0px;
+	padding-bottom 0px
+
+// CUSTOM GUEST TAG
+.guest-tags-form
+	label
+		font-size 17px
+	button
+		margin 0 0 0 12px
+	.form-control
+		width 200px
+		
+	.tag-item
+		display inline-block
+		padding  2px 15px
+		color #fff
+		font-size 15px
+		font-weight 400
+		line-height 30px
+		margin  0 12px 0 12px
+		border-radius 4px
+		&.guest
+			background-color #f56462
+			margin 15px 4px 15px 4px			
+		&.reservation
+			background-color #36b8c8
+			margin 15px 4px 15px 4px
+		& .icon
+			color white
+			&:hover
+				color gray
 	

@@ -1,0 +1,67 @@
+<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<section id="main">
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+    </aside>
+    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+    </aside>
+    <section class="w-100 p-0" id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="pm-body clearfix list-table">
+                    <div class="guest-tags-form">
+                        <form class="form-inline" name="customGuestTag" novalidate>
+                            <label class="m-b-25 m-t-25 c-black f-500">
+                                Guest Tags
+                            </label>
+                            <div>
+                                <input class="form-control" id="tag" ng-model="vm.nameG" placeholder="Guest Tag (e.g. Celebrity)" type="text" required/>
+                                <button class="btn btn-primary waves-effect" ng-click="vm.guestCreateTag(vm.nameG)" ng-disabled="!customGuestTag.$valid || vm.loading">
+                                    Add New Tag
+                                </button>
+                            </div>
+                        </form>
+                        <div class="tags-list" >
+                            <div class="tag-item guest" ng-repeat="tag in vm.guestTagList">
+                                {{tag.name | lowercase}}
+                                <a class="icon glyphicon glyphicon-remove" ng-click="vm.guestDeleteTag(tag.id)">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="guest-tags-form">
+                        <form class="form-inline" name="customReservationTag" novalidate>
+                            <label class="m-b-25 m-t-25 c-black f-500">
+                                Reservation Tag
+                            </label>
+                            <div>
+                                <input class="form-control" id="tag" ng-model="vm.nameR" placeholder="Reservation Tag (e.g. Birthday)" type="text" required/>
+                                <button class="btn btn-primary waves-effect" ng-click="vm.reservationCreateTag(vm.nameR)" ng-disabled="!customReservationTag.$valid || vm.loading">
+                                    Add New Tags
+                                </button>
+                            </div>
+                        </form>
+                        <div class="tags-list" >
+                            <div class="tag-item reservation" ng-repeat="tag in vm.reservationTagList">
+                                {{tag.name | lowercase}}
+                                <a class="icon glyphicon glyphicon-remove" ng-click="vm.reservationDeleteTag(tag.id)">
+                                </a>
+                            </div>
+                        </div>
+       <!--                  <div class="tags-list" >
+                            <div class="tag-item reservation">
+                                Test
+                                <a class="icon glyphicon glyphicon-remove">
+                                </a>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>
