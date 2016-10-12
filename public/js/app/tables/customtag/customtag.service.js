@@ -1,35 +1,125 @@
 angular.module('customtag.service', [])
-	.service('CustomTagDataService', function($http, ApiUrlMesas) {
+	.service('CustomTagGuestDataService', function($http, ApiUrlMesas) {
 		return {
-			getListTagCustom: function() {
-
+			getListTagGuestCustom: function() {
 				return $http.get(ApiUrlMesas + "/guest-tags");
 			},
-			createTagCustom: function(name) {
-				return $http.post(ApiUrlMesas + "/guest-tags/");
+			createTagGuestCustom: function(name) {
+				return $http.post(ApiUrlMesas + "/guest-tags", {}, {
+					params: {
+						name: name
+					}
+				});
 			},
-			deleteTagCustom: function(idTag) {
+			deleteTagGuestCustom: function(idTag) {
 				return $http.delete(ApiUrlMesas + "/guest-tags/" + idTag);
 			},
 		};
 	})
-	.service('CustomTagService', function($q, CustomTagDataService) {
+	.service('CustomTagReservationDataService', function($http, ApiUrlMesas) {
+		return {
+			getListTagReservationCustom: function() {
+				return $http.get(ApiUrlMesas + "/reservation/tag");
+			},
+			createTagReservationCustom: function(name) {
+				return $http.post(ApiUrlMesas + "/reservation/tag", {}, {
+					params: {
+						name: name
+					}
+				});
+			},
+			deleteTagReservationCustom: function(idTag) {
+				return $http.delete(ApiUrlMesas + "reservation/tag/" + idTag);
+			},
+		};
+	})
+	.service('CustomTagGuestService', function($q, CustomTagGuestDataService) {
 		return {
 			getAllTag: function() {
 				var defered = $q.defer();
-				CustomTagDataService.getListTagCustom().success(function(data) {
+				CustomTagGuestDataService.getListTagGuestCustom().success(function(data) {
 					data = data.data;
 					defered.resolve(data);
-				}).error(function(response) {
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
 					defered.reject(response);
 				});
 				return defered.promise;
 			},
-			createTag: function() {
+			createTag: function(name) {
+				var defered = $q.defer();
+				CustomTagGuestDataService.createTagGuestCustom(name).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+
+				return defered.promise;
+			},
+			deleteTag: function(idTag) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagGuestDataService.deleteTagGuestCustom(idTag).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
+
+			findWithAttr: function(array, attr, value) {
+				for (var i = 0; i < array.length; i += 1) {
+					if (array[i][attr] === value) {
+						return i;
+					}
+				}
+				return -1;
+			},
+
+		};
+	}).service('CustomTagReservationService', function($q, CustomTagReservationDataService) {
+		return {
+			getAllTag: function() {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.getListTagReservationCustom().success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
+			createTag: function(name) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.createTagReservationCustom(name).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
 
 			},
-			deleteTag: function() {
-
+			deleteTag: function(id) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				CustomTagReservationDataService.deleteTagReservationCustom(id).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					console.log(response);
+					defered.reject(response);
+				});
+				return promise;
 			},
 
 		};
