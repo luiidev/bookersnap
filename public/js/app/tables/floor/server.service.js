@@ -1,8 +1,10 @@
 angular.module('server.service', [])
-    .factory('ServerFactory', function($http, ApiUrlMesas, $q) {
+    .factory('ServerFactory', function($http, HttpFactory, ApiUrlMesas, $q) {
+        var servers;
         return {
-            getAllTablesFromServer: function() {
-                return $http.get(ApiUrlMesas + "/servers");
+            getAllTablesFromServer: function(reload) {
+                servers = HttpFactory.get(ApiUrlMesas + "/servers", null, servers, reload);
+                return servers;
             },
             addServer: function(data) {
                 return $http({
@@ -43,7 +45,7 @@ angular.module('server.service', [])
 
                 var zonas = [];
 
-            FloorFactory.listZonesReservas().then(function(data) { // Lista de zonas y mesas predefinidas del piso del servidor
+                FloorFactory.listZonesReservas().then(function(data) { // Lista de zonas y mesas predefinidas del piso del servidor
                     zonas = data;
 
                     ServerFactory.getAllTablesFromServer().then(function success(response) { // Zonas y mesas seleccionadas por el cliente

@@ -1,12 +1,14 @@
 angular.module('floor.service', [])
-	.factory('FloorDataFactory', function($http, ApiUrlMesas) {
+	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas) {
+		var reservations, tables;
 		return {
-			getBloqueos: function() {
-				//return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
-				return $http.get(ApiUrlMesas + "/blocks/tables");
+			getBloqueos: function(reload) {
+				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
+				return tables;
 			},
-			getReservas: function() {
-				return $http.get(ApiUrlMesas + "/reservations");
+			getReservas: function(reload) {
+				reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
+				return reservations;
 			},
 
 		};
@@ -304,4 +306,16 @@ angular.module('floor.service', [])
 				return total;
 			}
 		};
+	})
+	.factory('RootVariableFactory', function() {
+		var navegacion = 1;
+		var pantallaFloor = {
+			getPantalla: function() {
+				return navegacion;
+			},
+			setPantalla: function(value) {
+				navegacion = value;
+			}
+		};
+		return pantallaFloor;
 	});
