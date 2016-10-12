@@ -1,17 +1,13 @@
 angular.module('floor.service', [])
-	.factory('FloorDataFactory', function($http, ApiUrlMesas) {
-		var reservations;
+	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas) {
+		var reservations, tables;
 		return {
-			getBloqueos: function() {
-				//return $http.get(ApiUrlRoot + "/admin/ms/1/mesas/reservation/getreservas");
-				return $http.get(ApiUrlMesas + "/blocks/tables");
+			getBloqueos: function(reload) {
+				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
+				return tables;
 			},
-			getReservas: function() {
-				if (reservations) return reservations;
-
-				console.log("entre al api reservations");
-
-				reservations = $http.get(ApiUrlMesas + "/reservations");
+			getReservas: function(reload) {
+				reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
 				return reservations;
 			},
 
