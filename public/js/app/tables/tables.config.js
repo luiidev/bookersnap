@@ -28,7 +28,7 @@ angular.module('tables.app', [
                 templateUrl: ''
             });
     })
-.run(function($http) {
-    //console.log($http);
-    //setAuthHeaders($http);
-});
+    .run(function($http) {
+        //console.log($http);
+        //setAuthHeaders($http);
+    });

@@ -15,7 +15,17 @@ angular.module('floor.service', [])
 	})
 
 .factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
+		var zonasMap = [];
+		var flag = {
+			editServer: false
+		};
 		return {
+			isEditServer: function(value) {
+				if (value || value === false) {
+					flag.editServer = value;
+				}
+				return flag.editServer;
+			},
 			listTableServes: function() {
 				var defered = $q.defer();
 				ServerFactory.getAllTablesFromServer().success(function(data) {
@@ -307,15 +317,3 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('RootVariableFactory', function() {
-		var navegacion = 1;
-		var pantallaFloor = {
-			getPantalla: function() {
-				return navegacion;
-			},
-			setPantalla: function(value) {
-				navegacion = value;
-			}
-		};
-		return pantallaFloor;
-	});

@@ -148,7 +148,7 @@ angular.module('floor.directive', [])
         function makeDroppable(scope, element, attr) {
             element.droppable({
                 //accept: ".listado-column",
-            over: function(event, ui) {
+                over: function(event, ui) {
                     scope.$apply(function() {
                         scope.onDroppeddFn();
                     });
