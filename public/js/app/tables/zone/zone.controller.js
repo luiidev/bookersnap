@@ -18,15 +18,15 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         var init = function() {
-            $scope.getZones();
+            $scope.getZones(false);
             MenuConfigFactory.menuActive(0);
         };
 
-        $scope.getZones = function() {
+        $scope.getZones = function(reload) {
 
-            ZoneFactory.getZones("with=turns").success(function(data) {
+            ZoneFactory.getZones("with=turns", reload).success(function(data) {
 
-                console.log("zones " + angular.toJson(data, true));
+                // console.log("zones " + angular.toJson(data, true));
 
                 var vZonesActive = [];
                 var vZonesInactive = [];
@@ -36,7 +36,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     var zonesTables = getTablesCount(zones);
                     var zonesTurn = zones.turns;
 
-                    console.log("getZones " + angular.toJson(zones.turns, true));
+                    // console.log("getZones " + angular.toJson(zones.turns, true));
 
                     if (zones.status == "0" || zones.status == "2" || zonesTurn.length === 0) {
                         $scope.zones.numTablesInactive += zonesTables.tables_count;

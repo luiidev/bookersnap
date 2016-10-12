@@ -12,4 +12,19 @@ angular.module("bookersnap.services", [])
 		}
 	};
 
-});
+})
+
+.factory('HttpFactory', function($http) {
+	return {
+		get: function(httpUrl, config, objectData, reload) {
+
+			if (reload === true) objectData = null;
+			if (objectData) return objectData;
+
+			return $http.get(httpUrl, config);
+
+		}
+	};
+})
+
+;

@@ -1,5 +1,6 @@
 angular.module('block.service', [])
-    .factory('BlockFactory', function($http, ApiUrlMesas) {
+    .factory('BlockFactory', function($http, ApiUrlMesas, HttpFactory) {
+        var zonesCalendar;
         return {
             getZonesCalendar: function(date) {
                 return $http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
