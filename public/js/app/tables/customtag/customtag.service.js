@@ -29,7 +29,7 @@ angular.module('customtag.service', [])
 				});
 			},
 			deleteTagReservationCustom: function(idTag) {
-				return $http.delete(ApiUrlMesas + "reservation/tag/" + idTag);
+				return $http.delete(ApiUrlMesas + "/reservation/tag/" + idTag);
 			},
 		};
 	})
