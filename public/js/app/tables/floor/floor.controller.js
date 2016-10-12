@@ -54,7 +54,6 @@ angular.module('floor.controller', [])
         }
 
         vm.tabSelectedZone = function(value) {
-            console.log('dropeado');
             vm.flagSelectedZone = value;
 
         };
@@ -81,6 +80,10 @@ angular.module('floor.controller', [])
                 }
             });
         }
+
+        vm.navMouseZone = function(obj) {
+            console.log('evento');
+        };
 
         angular.element($window).bind('resize', function() {
             var size = screenHelper.size(screenSizeFloor);
@@ -473,9 +476,8 @@ controller('waitlistController', function($scope) {
     sm.cancelEditServer = function(server) {
         sm.flagServer = false;
         limpiarData();
-        $state.go('mesas.floor.server.create', {}, {
-            reload: true
-        });
+        sm.showForm = false;
+        $state.go('mesas.floor.server');
     };
 
     sm.deleteServer = function() {

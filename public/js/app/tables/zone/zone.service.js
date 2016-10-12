@@ -1,10 +1,11 @@
 angular.module('zone.service', [])
-	.factory('ZoneFactory', function($http, ApiUrlMesas) {
+	.factory('ZoneFactory', function($http, ApiUrlMesas, HttpFactory) {
+		var zones;
 		return {
-			getZones: function(vOptions) {
-				return $http.get(ApiUrlMesas + "/zones?" + vOptions, {
-					ignoreLoadingBar: true
-				});
+			getZones: function(vOptions, reload) {
+				var url = ApiUrlMesas + "/zones?" + vOptions;
+				zones = HttpFactory.get(url, {}, zones, false);
+				return zones;
 			},
 			getZone: function(vId) {
 				return $http.get(ApiUrlMesas + "/zones/" + vId);

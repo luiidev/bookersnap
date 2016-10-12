@@ -12,7 +12,7 @@ angular.module('floor.service', [])
 		};
 	})
 
-.factory('FloorFactory', function($q, ZoneFactory, TableFactory, FloorDataFactory, ServerFactory) {
+.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
 		return {
 			listTableServes: function() {
 				var defered = $q.defer();
@@ -150,12 +150,13 @@ angular.module('floor.service', [])
 			listZonesReservas: function() {
 				var me = this;
 				var defered = $q.defer();
-				ZoneFactory.getZones().success(function(data) {
+				var fecha_actual = getFechaActual();
+				reservationService.getZones(fecha_actual).success(function(data) {
 					return data;
 				}).error(function(data) {
 					defered.reject(data);
 				}).then(function(zonesData) {
-
+					//console.log('Datos ' + angular.toJson(zonesData.data.data.zones, true));
 					me.listBloqueos().then(function success(response) {
 						return response;
 					}, function error(response) {
@@ -169,7 +170,7 @@ angular.module('floor.service', [])
 						}).then(function success(servers) {
 
 							var vZones = [];
-							angular.forEach(zonesData.data.data, function(zone) {
+							angular.forEach(zonesData.data.data.zones, function(zone) {
 								var tables = zone.tables;
 								var vTables = [];
 								angular.forEach(tables, function(table) {
@@ -227,7 +228,8 @@ angular.module('floor.service', [])
 			listZonesBloqueosReservas: function() {
 				var me = this;
 				var defered = $q.defer();
-				ZoneFactory.getZones().success(function(data) {
+				var fecha_actual = getFechaActual();
+				reservationService.getZones(fecha_actual).success(function(data) {
 					return data;
 				}).error(function(data) {
 					defered.reject(data);
@@ -239,7 +241,7 @@ angular.module('floor.service', [])
 						return response;
 					}).then(function success(blocks) {
 							var vTables = [];
-							angular.forEach(zonesData.data.data, function(zone) {
+							angular.forEach(zonesData.data.data.zones, function(zone) {
 								var tables = zone.tables;
 
 								angular.forEach(tables, function(table) {
