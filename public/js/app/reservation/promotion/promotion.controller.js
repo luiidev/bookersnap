@@ -38,7 +38,12 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
     /*Parametros iniciales para recorte de imagen*/
     $scope.croppedDataUrl = '';
     $scope.imageCropStep = 1;
-    $scope.cropped = { cropWidth: 100, cropHeight: 100, cropTop: 0, cropLeft: 10 };
+    $scope.cropped = {
+        cropWidth: 100,
+        cropHeight: 100,
+        cropTop: 0,
+        cropLeft: 10
+    };
 
     if (promotionId) {
         $scope.titulo = "Actualizar promoción";
@@ -79,8 +84,16 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
             status_expire: false,
             date_expire: "",
             publication: false,
-            status: [{ name: 'Vigente', value: 1 }, { name: 'Deshabilitado', value: 2 }],
-            statusSelected: { value: 1 },
+            status: [{
+                name: 'Vigente',
+                value: 1
+            }, {
+                name: 'Deshabilitado',
+                value: 2
+            }],
+            statusSelected: {
+                value: 1
+            },
             myImage: ""
                 //myImage:'notifications.png'
         };
@@ -98,7 +111,9 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
         }
         Upload.upload({
             url: AppBookersnap + '/promotion/uploadFile',
-            data: { file: file }
+            data: {
+                file: file
+            }
         }).then(function(resp) {
             $scope.imagetmp = resp.data;
         }, function(resp) {
@@ -148,11 +163,17 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
                     var dataTable = {
                         zone_id: zone.zone_id,
                         name: zone.name,
-                        table: [{ table_id: zone.table_id, price: zone.price }]
+                        table: [{
+                            table_id: zone.table_id,
+                            price: zone.price
+                        }]
                     };
                     vZones.push(dataTable);
                 } else {
-                    vZones[indexZone].table.push({ table_id: zone.table_id, price: zone.price });
+                    vZones[indexZone].table.push({
+                        table_id: zone.table_id,
+                        price: zone.price
+                    });
                 }
 
             });
@@ -323,7 +344,9 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
         var daysData = [];
         angular.forEach(days, function(data, key) {
             if (data) {
-                daysData.push({ day: key });
+                daysData.push({
+                    day: key
+                });
                 //daysData.push(key);
             }
         });
@@ -362,26 +385,65 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
     }
 
     $scope.turnos = {
-        semana: [
-            { id: 0, label: 'Domingo', disabled: false, checked: false },
-            { id: 1, label: 'Lunes', disabled: false, checked: false },
-            { id: 2, label: 'Martes', disabled: false, checked: false },
-            { id: 3, label: 'Miercoles', disabled: false, checked: false },
-            { id: 4, label: 'Jueves', disabled: false, checked: false },
-            { id: 5, label: 'Viernes', disabled: false, checked: false },
-            { id: 6, label: 'Sabado', disabled: false, checked: false },
-        ],
+        semana: [{
+            id: 0,
+            label: 'Domingo',
+            disabled: false,
+            checked: false
+        }, {
+            id: 1,
+            label: 'Lunes',
+            disabled: false,
+            checked: false
+        }, {
+            id: 2,
+            label: 'Martes',
+            disabled: false,
+            checked: false
+        }, {
+            id: 3,
+            label: 'Miercoles',
+            disabled: false,
+            checked: false
+        }, {
+            id: 4,
+            label: 'Jueves',
+            disabled: false,
+            checked: false
+        }, {
+            id: 5,
+            label: 'Viernes',
+            disabled: false,
+            checked: false
+        }, {
+            id: 6,
+            label: 'Sabado',
+            disabled: false,
+            checked: false
+        }, ],
         turnoSelected: [],
         hours_ini: '',
         hours_end: '',
-        disposiciones: [{ id: 1, name: 'Aplicar siempre' }, { id: 2, name: 'Añadir turno a la promocion' }],
+        disposiciones: [{
+            id: 1,
+            name: 'Aplicar siempre'
+        }, {
+            id: 2,
+            name: 'Añadir turno a la promocion'
+        }],
     };
 
     /*Manejar la visualizacion opciones de Turno*/
     if ($scope.listTurnos !== '') {
-        $scope.turnos.disposicionSelected = { id: 2, name: 'Añadir turno a la promocion' };
+        $scope.turnos.disposicionSelected = {
+            id: 2,
+            name: 'Añadir turno a la promocion'
+        };
     } else {
-        $scope.turnos.disposicionSelected = { id: 1, name: 'Aplicar siempre' };
+        $scope.turnos.disposicionSelected = {
+            id: 1,
+            name: 'Aplicar siempre'
+        };
     }
 
     /*Funcion para obtener los horarios de un micrositio*/
@@ -588,7 +650,11 @@ angular.module('promotion.controller', ['ngFileUpload', 'ngImgCrop', 'textAngula
             };
 
             angular.forEach($scope.itemTables, function(table) {
-                vTable.tables_pay.push({ table_id: table.table_id, price: $scope.precioDefault, zone_id: table.zone_id });
+                vTable.tables_pay.push({
+                    table_id: table.table_id,
+                    price: $scope.precioDefault,
+                    zone_id: table.zone_id
+                });
             });
 
 

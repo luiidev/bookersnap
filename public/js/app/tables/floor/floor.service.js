@@ -15,16 +15,35 @@ angular.module('floor.service', [])
 	})
 
 .factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
-		var zonasMap = [];
 		var flag = {
 			editServer: false
 		};
+		var serverColection = [];
 		return {
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
 				}
 				return flag.editServer;
+			},
+			getServerItems: function() {
+				return serverColection;
+			},
+			setServerItems: function(serverItem) {
+				serverColection.push(serverItem);
+			},
+			delServerItem: function(serverItem) {
+				angular.forEach(serverColection, function(value, key) {
+					if (value.table_id == serverItem.table_id) {
+						serverColection.splice(key, 1);
+					}
+				});
+			},
+			delServerItemIndex: function(index) {
+				serverColection.splice(index, 1);
+			},
+			cleanServerItems: function() {
+				serverColection = [];
 			},
 			listTableServes: function() {
 				var defered = $q.defer();
@@ -83,8 +102,8 @@ angular.module('floor.service', [])
 						var dataReservation = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
-							first_name: reserva.guest.first_name,
-							last_name: reserva.guest.last_name
+							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
+							last_name: reserva.guest ? reserva.guest.last_name: ""
 						};
 						vReservation.push(dataReservation);
 					});
@@ -115,7 +134,6 @@ angular.module('floor.service', [])
 								//angular.forEach(zone.table, function(table) {
 								if (itemRes) {
 									angular.forEach(reservations, function(resData, key) {
-										//console.log(angular.toJson(tableData, true));
 										if (resData.reservation_id == itemRes) {
 											//console.log(angular.toJson(key, true));
 											block.res_reservation_status_id = resData.res_reservation_status_id;
@@ -317,3 +335,25 @@ angular.module('floor.service', [])
 			}
 		};
 	})
+	.factory('ServerDataFactory', function() {
+		var serverColection = [];
+		var interfazServer = {
+			getServerItems: function() {
+				return serverColection;
+			},
+			setServerItems: function(serverItem) {
+				serverColection.push(serverItem);
+			},
+			delServerItem: function(serverItem) {
+				angular.forEach(serverColection, function(value, key) {
+					if (value.table_id == serverItem.table_id) {
+						serverColection.splice(key, 1);
+					}
+				});
+			},
+			cleanServerItems: function() {
+				serverColection = [];
+			}
+		};
+		return interfazServer;
+	});

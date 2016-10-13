@@ -102,10 +102,10 @@ angular.module('floor.directive', [])
                     //console.log(ui.position.left);
                 },
                 start: function(event, ui) {
-                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.bg-window-floor').addClass('drag-dispel');
                 },
                 stop: function(event, ui) {
-                    angular.element('#bg-window-floor').removeClass('drag-dispel');
+                    angular.element('.bg-window-floor').removeClass('drag-dispel');
                 }
             });
         }
@@ -147,7 +147,7 @@ angular.module('floor.directive', [])
     .directive('ngDropTabZones', function() {
         function makeDroppable(scope, element, attr) {
             element.droppable({
-                //accept: ".listado-column",
+                accept: ".listado-column",
                 over: function(event, ui) {
                     scope.$apply(function() {
                         scope.onDroppeddFn();
