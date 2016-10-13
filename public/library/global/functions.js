@@ -493,38 +493,12 @@ var getFechaActual = function() {
 
 };
 
-/**/
+/*
+Cuando usamos un listado de horas de un rango de 15 en 15 minutos y trabajamos con indexes del 0 a 119,el servidor nos devuelve la hora en
+este formato : 08:00:00 y con esta funcion obtenemos su indice = 32
 
-var initAvailability = function() {
-    var times = [];
-
-    for (i = 0; i < 120; i++) {
-        var time = i * 60 * 15;
-        var nextday = (i < 96) ? 0 : 1;
-
-        var time_original = moment.utc(time * 1000).format('HH:mm');
-
-        if (i >= 52 && i < 96) {
-            var a = (i - 48) * 60 * 15;
-            time = moment.utc(a * 1000).format('HH:mm') + " PM";
-        } else if (i < 52) {
-            time = moment.utc(time * 1000).format('HH:mm') + " AM";
-        } else {
-            time = moment.utc(time * 1000).format('HH:mm') + " AM";
-        }
-
-        times.push({
-            time: time,
-            time_original: time_original,
-            rule_id: "-1",
-            nextday: nextday,
-            index: i
-        });
-    }
-
-    return times;
-};
-
+esta funcio usamos para cuando queremos marcar algun elemento por defecto en un select(hora con rango)
+*/
 var getIndexHour = function(value, nextDay) {
     nextDay = (nextDay) ? 0 : nextDay;
 

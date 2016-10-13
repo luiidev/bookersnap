@@ -36,7 +36,7 @@
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
                     <div class="lienzo-v2" id="lienzo" ng-click="onLienzo()" ng-drop="false" ng-drop-success="onDropComplete($data,$event)" ng-style="{width: size, height: size}">
-                        <div class="item-drag-table {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}} shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size+ '-relative']" ng-drag="false" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-select-table="" ng-style="{top: (obj.top/740)*100 + '%', left: (obj.left/740)*100 + '%'}" on-click-fn="activarTableOptions($index,this)" on-deselect-fn="desactivarTable($index,obj)" on-selected-fn="activarTableOptions($index,obj)" option="edit">
+                        <div class="item-drag-table {{obj.classBloqueado}} {{obj.class}} rt{{obj.rotate}} {{obj.shape}} {{obj.size}}-relative shape-table table-zone" id="tb-item{{$index}}" ng-class="[obj.shape, obj.size+ '-relative']" ng-drag="false" ng-drag-data="obj" ng-repeat="obj in itemTables" ng-select-table="" ng-style="{top: (obj.top/740)*100 + '%', left: (obj.left/740)*100 + '%'}" on-click-fn="activarTableOptions($index,this)" on-deselect-fn="desactivarTable($index,obj)" on-selected-fn="activarTableOptions($index,obj)" option="edit">
                             <div class="table-label top" ng-bind="obj.name" ng-click="$event.stopPropagation()">
                             </div>
                         </div>
