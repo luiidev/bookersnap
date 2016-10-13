@@ -26,25 +26,6 @@ angular.module('floor.service', [])
 				}
 				return flag.editServer;
 			},
-			getServerItems: function() {
-				return serverColection;
-			},
-			setServerItems: function(serverItem) {
-				serverColection.push(serverItem);
-			},
-			delServerItem: function(serverItem) {
-				angular.forEach(serverColection, function(value, key) {
-					if (value.table_id == serverItem.table_id) {
-						serverColection.splice(key, 1);
-					}
-				});
-			},
-			delServerItemIndex: function(index) {
-				serverColection.splice(index, 1);
-			},
-			cleanServerItems: function() {
-				serverColection = [];
-			},
 			listTableServes: function() {
 				var defered = $q.defer();
 				ServerFactory.getAllTablesFromServer().success(function(data) {
@@ -103,7 +84,7 @@ angular.module('floor.service', [])
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-							last_name: reserva.guest ? reserva.guest.last_name: ""
+							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};
 						vReservation.push(dataReservation);
 					});
@@ -223,6 +204,7 @@ angular.module('floor.service', [])
 										//console.log(blocks);
 										if (block.table_id === table.id) {
 											dataTable.res_reservation_status_id = block.res_reservation_status_id;
+											dataTable.reservation_id = block.reservation_id;
 										}
 									});
 									angular.forEach(servers, function(server) {
@@ -335,24 +317,72 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('ServerDataFactory', function() {
+	.factory('ServerDataFactory', function($q, ServerFactory) {
+		var tableColection = [];
 		var serverColection = [];
+		var colorColection = [];
 		var interfazServer = {
+			getTableServerItems: function() {
+				return tableColection;
+			},
+			setTableServerItems: function(tableItem) {
+				tableColection.push(tableItem);
+			},
+			setTableServerItemsEdit: function(tableItem) {
+				tableColection = tableItem;
+			},
+			delTableServerItem: function(tableItem) {
+				angular.forEach(tableColection, function(value, key) {
+					if (value.table_id == tableItem.table_id) {
+						tableColection.splice(key, 1);
+					}
+				});
+			},
+			delTableServerItemIndex: function(index) {
+				tableColection.splice(index, 1);
+			},
+			cleanTableServerItems: function() {
+				tableColection = [];
+			},
 			getServerItems: function() {
 				return serverColection;
 			},
 			setServerItems: function(serverItem) {
+				serverColection = serverItem;
+			},
+			addServerItems: function(serverItem) {
 				serverColection.push(serverItem);
 			},
 			delServerItem: function(serverItem) {
 				angular.forEach(serverColection, function(value, key) {
-					if (value.table_id == serverItem.table_id) {
+					if (value.id == serverItem.id) {
 						serverColection.splice(key, 1);
 					}
 				});
 			},
-			cleanServerItems: function() {
-				serverColection = [];
+			updateServerItems: function(serverItem) {
+				angular.forEach(serverColection, function(value, key) {
+					if (value.id == serverItem.id) {
+						value.name = serverItem.name;
+						value.color = serverItem.color;
+						value.tables = serverItem.tables;
+					}
+				});
+			},
+			getColorItems: function() {
+				return colorColection;
+			},
+			setColorItems: function(colorItem) {
+				colorColection.push(colorItem);
+			},
+			listadoServers: function() {
+				var defered = $q.defer();
+				ServerFactory.getAllTablesFromServer().success(function(data) {
+					defered.resolve(data.data);
+				}).error(function(data, status, headers) {
+					defered.reject(data);
+				});
+				return defered.promise;
 			}
 		};
 		return interfazServer;
