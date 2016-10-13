@@ -261,7 +261,8 @@ angular.module('floor.controller', [])
         vmd.reservationEdit = function(data) {
             console.log(data);
             listResource();
-            vmd.reservation = data;
+            vmd.info = parseInfo(data);
+            vmd.reservation = parseData(data);
             vmd.EditContent = true;
         };
 
@@ -269,6 +270,21 @@ angular.module('floor.controller', [])
             listGuest();
             listStatuses();
             listServers();
+        }
+
+        function parseData(data) {
+            return {
+                covers: data.num_people,
+                status_id: data.res_reservation_status_id,
+                server_id: data.res_server_id,
+                note: data.note
+            };
+        }
+
+        function parseInfo() {
+            return {
+
+            };
         }
 
         var listGuest = function() {
@@ -298,7 +314,7 @@ angular.module('floor.controller', [])
 
         vmd.cancelEdit = function() {
             vmd.EditContent = false;
-            vmd.reservation = {}
+            vmd.reservation = {};
         };
 
         $scope.cancel = function() {
@@ -395,7 +411,7 @@ controller('waitlistController', function() {
 
     //sm.listadoServer = FloorFactory.getServerItems();
     var callListadoTable = function() {
-        sm.listadoServer = FloorFactory.getServerItems();
+        sm.listadoServer = ServerDataFactory.getServerItems();
         //console.log('Listado: ' + angular.toJson(sm.listadoServer, true));
         $timeout(callListadoTable, 500);
     };
