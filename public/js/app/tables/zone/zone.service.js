@@ -3,8 +3,7 @@ angular.module('zone.service', [])
 		var zones;
 		return {
 			getZones: function(vOptions, reload) {
-				var url = ApiUrlMesas + "/zones?" + vOptions;
-				zones = HttpFactory.get(url, {}, zones, false);
+				zones = HttpFactory.get(ApiUrlMesas + "/zones?" + vOptions, {}, zones, false);
 				return zones;
 			},
 			getZone: function(vId) {
@@ -26,16 +25,7 @@ angular.module('zone.service', [])
 
 	})
 
-.factory('ZoneTurnFactory', function($http, ApiUrl) {
-
-	/*return {
-		create : function(vData){
-
-		}
-	}*/
-
-	//config_rotate_text : 1 = top , 2 = rigth , 3 = bottom , 4 = left
-})
+.factory('ZoneTurnFactory', function($http, ApiUrl) {})
 
 .factory('ZoneLienzoFactory', function($document, TableFactory) {
 	return {
