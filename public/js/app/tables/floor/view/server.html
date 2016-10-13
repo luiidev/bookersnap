@@ -33,7 +33,7 @@
 </style>
 <div class="col-sm-12 m-t-20 p-0" ng-show="!sm.showForm">
     <p class="f-500 m-b-10 c-black">
-        <button class="btn bt-xs btn-success btn-block" ng-click="sm.showForm=true"><i class="zmdi zmdi-plus-circle"></i> Add Server</button>
+        <button class="btn bt-xs btn-success btn-block" ng-click="sm.visibleServer()"><i class="zmdi zmdi-plus-circle"></i> Add Server</button>
     </p>
     <small>Active servers</small>
     <ul class="list-group ">
@@ -81,12 +81,17 @@
     </div>
      <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
         <small>Tables</small>
+        <!--<div ng-repeat="server in sm.listadoServer">{{server.name}}</div>-->
         <div class="ServerColor-previewContainer m-t-10 m-b-10 ">
-                <p ng-repeat="table in mesasSeleccionadas " class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
+                <!--<p ng-repeat="table in mesasSeleccionadas " class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
                     <label>{{table.name}}</label>
                     <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable(table) ">X</button>
+                </p>-->
+                <p ng-repeat="table in sm.listadoServer" class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
+                    <label>{{table.name}}</label>
+                    <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable($index,table) ">X</button>
                 </p>
-            </div>
+        </div>
     </div>
      <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
         <button class="btn btn-error btn-block " ng-click="sm.deleteServer() " ng-show="sm.flagServer==true ">Delete</button>

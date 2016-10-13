@@ -3,7 +3,7 @@
         <nav class="ha-menu">
             <ul>
                 <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones on-droppedd-fn="vm.tabSelectedZone($index)" ng-mouseover="vm.navMouseZone()">
+                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones on-droppedd-fn="vm.tabSelectedZone($index)">
                         {{tab.name}} <span class="num-orden-zona">{{$index+1}}</span>
                     </button>
                 </li>
@@ -44,12 +44,12 @@
     </div>
     </section>
 
-    <div ng-repeat="tab in vm.zonas" ng-if="vm.flagSelectedZone==$index" class="box-zone-create" id="bg-window-floor" >
+    <div ng-repeat="tab in vm.zonas" ng-show="vm.flagSelectedZone==$index" class="box-zone-create bg-window-floor">
         <div class="box-lienzo-zone-v2 p-t-10" >
             <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}">
-                <div class="item-drag-table {{obj.shape}} {{obj.size + '-relative'}} rt{{obj.rotate}} shape-table table-zone" 
+                <div class="item-drag-table {{obj.selected}} {{obj.shape}} {{obj.size + '-relative'}} rt{{obj.rotate}} shape-table table-zone" 
                 color="{{obj.color}}" 
-                id="el{{obj.id}}" 
+                id="el{{obj.table_id}}" 
                 ng-detail-table 
                 ng-repeat="obj in tab.table" 
                 on-click-fn="vm.mostrarDetail($index,obj)"
