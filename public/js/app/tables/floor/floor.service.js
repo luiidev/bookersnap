@@ -349,6 +349,9 @@ angular.module('floor.service', [])
 			setServerItems: function(serverItem) {
 				serverColection = serverItem;
 			},
+			addServerItems: function(serverItem) {
+				serverColection.push(serverItem);
+			},
 			delServerItem: function(serverItem) {
 				angular.forEach(serverColection, function(value, key) {
 					if (value.id == serverItem.id) {
@@ -361,7 +364,7 @@ angular.module('floor.service', [])
 					if (value.id == serverItem.id) {
 						value.name = serverItem.name;
 						value.color = serverItem.color;
-						//value.tables = serverItem.tables;
+						value.tables = serverItem.tables;
 					}
 				});
 			},

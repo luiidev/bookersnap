@@ -36,17 +36,6 @@ angular.module('floor.directive', [])
                     scope.onDroppedFn();
                 }
             });
-            /*element.droppable({
-                accept: ".line-bottom",
-                drop: function(event, ui) {
-                    //console.log(ui.draggable[0].id);
-                    scope.$apply(function() {
-                        scope.num = ui.draggable[0].id;
-                    });
-                    scope.onDroppedFn();
-                }
-            });*/
-
 
 
             element.on('click', function(event) {

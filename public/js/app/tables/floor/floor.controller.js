@@ -22,36 +22,19 @@ angular.module('floor.controller', [])
 
         var getServers = function() {
             ServerDataFactory.listadoServers().then(function success(data) {
-                //vm.servers = data;
                 ServerDataFactory.setServerItems(data);
                 //console.log(angular.toJson(data, true));
                 /* Se cargan los colores que ya fueron asignados  */
                 angular.forEach(data, function(server, m) {
                     ServerDataFactory.setColorItems(server.color);
-                    //console.log(server.color);
-                    //colors.push(server.color);
                 });
-                //vm.colorsSelect = uniqueArray(colors);
+
 
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
         };
         getServers();
-
-        /*ServerFactory.getAllTablesFromServer().then(function(response) {
-            $rootScope.servers = response.data.data;
-            console.log('Listado servers' + angular.toJson(response.data.data, true));
-            return $rootScope.servers;
-        }).then(function(servers) {
-            var colors = [];
-            //Se cargan los colores que ya fueron asignados
-            angular.forEach(servers, function(server, m) {
-                colors.push(server.color);
-            });
-            vm.colorsSelect = uniqueArray(colors); // Se colocan solo los colores ya asigandos a los servidores
-
-        });*/
 
         vm.mostrarDetail = function(index, data) {
             var estado = FloorFactory.isEditServer();
@@ -416,49 +399,7 @@ controller('waitlistController', function() {
 
 })
 
-.controller('serverTablesController', function($scope, $stateParams, $rootScope, FloorFactory, ServerFactory) {
-
-    var server_id = $stateParams.server_id;
-    var se = this;
-    var arrayTables = [];
-    se.zonas = [];
-    $rootScope.mesasSeleccionadas = []; // Array donde se agregan las mesas seleccionadas
-
-    ServerFactory.getServerSelect(FloorFactory, ServerFactory, server_id).then(function(response) {
-        // Entregan las zonas con sus mesas adicionalmente se agregan las clases y bordes de acuerdo a lo elegido por el cliente
-        se.zonas = response;
-
-        /* Se agregan insertan en el array de mesasSeleccionadas las mesas que ya han sido elegidas para ese server */
-        angular.forEach(se.zonas, function(zonas, i) {
-            angular.forEach(zonas.table, function(mesa, m) {
-                if (typeof mesa.tableSelectedByServer === "string") {
-                    $rootScope.mesasSeleccionadas.push(se.zonas[i].table[m]);
-                }
-            });
-        });
-
-    });
-
-    /* Logica para seleccionar las mesas */
-    se.selectTable = function(item) {
-        console.log("item:", item);
-        var element = angular.element('#el' + item.table_id);
-        if (element.hasClass("is-selected") === true) { // Si ya fue seleccionado se remueve la clase
-
-            element.removeClass("is-selected");
-
-            // Se retira el index del array cuando se selecciona 
-            var index = $rootScope.mesasSeleccionadas.indexOf(item);
-            $rootScope.mesasSeleccionadas.splice(index, 1);
-
-        } else { // Si aun no se selecciona la mesa se agrega la clase
-            $rootScope.mesasSeleccionadas.push(item);
-            element.addClass("is-selected");
-        }
-
-    };
-
-}).controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
+.controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
     var sm = this;
     //Variable para manejo de panatalla nuevo y crear
@@ -505,12 +446,11 @@ controller('waitlistController', function() {
 
         ServerDataFactory.setTableServerItemsEdit(vTable);
         sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
-        //console.log('info' + angular.toJson(vTable, true));
+        //console.log('info' + angular.toJson(server, true));
 
         FloorFactory.isEditServer(true);
         angular.element('.bg-window-floor').addClass('drag-dispel');
-        //var position = $rootScope.servers.indexOf(server);
-        //sm.server = $rootScope.servers[position];
+
         sm.name = server.name;
         sm.id = server.id;
 
@@ -523,7 +463,7 @@ controller('waitlistController', function() {
         }
     };
 
-    //Reinicar variables utilizadas en pestaña server
+    //Reiniciar variables utilizadas en pestaña server
     sm.btnCancelEditServer = function(server) {
 
         sm.flagServer = false;
@@ -549,46 +489,22 @@ controller('waitlistController', function() {
             sm.colors[i].classSelect = "";
         }
         sm.colors[position].classSelect = "is-selected";
+        console.log(sm.color);
 
     };
 
-
+    //Botoncito X 
     sm.removeTable = function(item, data) {
 
-        /*var element = angular.element('#el' + item.table_id);
-        var index = $rootScope.mesasSeleccionadas.indexOf(item);
-        $rootScope.mesasSeleccionadas.splice(index, 1);
-        element.removeClass("is-selected");
-        */
         var element = angular.element('#el' + data.table_id);
         element.removeClass("selected-table");
         ServerDataFactory.delTableServerItemIndex(item);
 
     };
 
-    /*sm.newServer = function(server) {
-        console.log(server);
-
-        sm.flagServer = true;
-        var position = $rootScope.servers.indexOf(server);
-        sm.server = $rootScope.servers[position];
-        sm.name = sm.server.name;
-
-        for (var i = 0; i < sm.colors.length; i++) {
-            sm.colors[i].classSelect = "";
-            if (sm.colors[i].colorHexadecimal === $rootScope.servers[position].color) {
-                sm.color = $rootScope.servers[position].color;
-                sm.colors[i].classSelect = "is-selected";
-            }
-        }
-
-    };*/
-
     var limpiarData = function() {
-
         sm.name = "";
         sm.color = "";
-
         for (var i = 0; i < sm.colors.length; i++) {
             sm.colors[i].classSelect = "";
         }
@@ -601,11 +517,10 @@ controller('waitlistController', function() {
         //console.log('tables sel', angular.toJson(sm.listadoTablaServer, true));
         angular.forEach(sm.listadoTablaServer, function(mesa, i) {
             sm.tables.push({
-                id: mesa.table_id
+                id: mesa.table_id,
+                name: mesa.name
             });
         });
-
-
 
         if (sm.flagServer === false) { // Se Crea un server
 
@@ -626,11 +541,15 @@ controller('waitlistController', function() {
 
                     mensaje = response.data.msg;
                     messageAlert("success", mensaje, "success", 3000);
+
+                    //Actualizar elemento en array de servicio pasando id y data
+                    ServerDataFactory.addServerItems(sm.data);
+                    sm.servers = ServerDataFactory.getServerItems();
+
                     $state.go($state.current, {}, {
                         reload: true
                     });
 
-                    //$rootScope.servers.push(response.data.data);
                     limpiarData();
                     ServerDataFactory.cleanTableServerItems();
 
@@ -655,17 +574,18 @@ controller('waitlistController', function() {
                     messageAlert("Warning", mensaje, "warning", 3000);
                 } else if (response.data.success === true) {
                     mensaje = response.data.msg;
-                    //sm.name = sm.name;
-                    //sm.color = sm.color;
+
                     //Actualizar elemento en array de servicio pasando id y data
                     ServerDataFactory.updateServerItems(sm.data);
                     sm.servers = ServerDataFactory.getServerItems();
-                    console.log('refrescado' + angular.toJson(sm.servers, true));
+
+                    //console.log('refrescado' + angular.toJson(sm.servers, true));
                     messageAlert("success", mensaje, "success", 3000);
                     $state.go('mesas.floor.server', {}, {
                         reload: true
                     });
                     sm.flagServer = false;
+                    FloorFactory.isEditServer(false);
                     limpiarData();
                 } else if (response.data.success === false) {
                     mensaje = response.data.msg;
@@ -687,13 +607,6 @@ controller('waitlistController', function() {
                 messageAlert("Warning", mensaje, "warning", 2000);
             } else if (response.data.success === true) {
                 mensaje = response.data.msg;
-
-                /* Se filtra el item y se elimina del array*/
-                /*for (var i = 0; i < $rootScope.servers.length; i++) {
-                    if ($rootScope.servers[i].id === sm.server.id) {
-                        $rootScope.servers.splice(i, 1);
-                    }
-                }*/
 
                 ServerDataFactory.delServerItem({
                     id: sm.id
