@@ -6,6 +6,9 @@ angular.module('reservation.service', [])
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
+                getReservation: function(id) {
+                    return http.get(ApiUrlMesas + "/table/reservation/" + id + "/edit");
+                },
                 getZones: function(date, reload) {
                     zones = HttpFactory.get(ApiUrlMesas + "/calendar/" + date + "/zones", null, zones, reload);
                     return  zones;

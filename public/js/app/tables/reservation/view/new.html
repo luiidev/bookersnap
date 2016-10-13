@@ -254,16 +254,14 @@
                 </div>
             </div>
 
-<!--       <div class="popover-demo">
-                <div class="popover right bgm-amber" ng-repeat="conflict in conflicts track by $index"
-                    style="display: block; margin: 0 0 5px 0 !important;  /*max-width: 100%;*/">
-                    <div class="arrow"></div>
-                    <h3 class="popover-title" style="padding: 5px; background: transparent;">Conflicto en mesa - {{ conflict.name }}</h3>
-                    <div class="popover-content" style="padding: 0 0 5px 5px;">
-                        <p>mesa  demasiado grande.</p>
-                    </div>
-                </div>
-            </div> -->
+             <div class="card" ng-show="isEdit">
+                 <div class="card-header bgm-red"  ng-click="cancelReservation()" style="
+                    cursor: pointer;
+                    padding: 15px 25px;
+                 ">
+                     <h2>Cancelar Reservacion</h2>
+                 </div>
+            </div> 
 
         </div>
     </div>

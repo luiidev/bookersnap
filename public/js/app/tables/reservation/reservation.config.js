@@ -18,12 +18,15 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                     }
                 },
             })
-            .state('mesas.reservation', {
-                url: '/reservation',
-                templateUrl: '/js/app/tables/reservation/view/index.html',
-                controller: "reservationCtrl.Index",
-                //controllerAs: 'vm',
-
+            .state('mesas.reservation-edit', {
+                url: '/reservation/:date/edit/:id',
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/new.html',
+                        controller: "reservationCtrl.Store",
+                        // controllerAs: 'vm',
+                    }
+                },
             });
 
     });
