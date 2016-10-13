@@ -20,18 +20,38 @@ angular.module('floor.controller', [])
         };
         getZones();
 
-        ServerFactory.getAllTablesFromServer().then(function(response) {
+        var getServers = function() {
+            ServerDataFactory.listadoServers().then(function success(data) {
+                //vm.servers = data;
+                ServerDataFactory.setServerItems(data);
+                //console.log(angular.toJson(data, true));
+                /* Se cargan los colores que ya fueron asignados  */
+                angular.forEach(data, function(server, m) {
+                    ServerDataFactory.setColorItems(server.color);
+                    //console.log(server.color);
+                    //colors.push(server.color);
+                });
+                //vm.colorsSelect = uniqueArray(colors);
+
+            }, function error(data) {
+                messageErrorApi(data, "Error", "warning");
+            });
+        };
+        getServers();
+
+        /*ServerFactory.getAllTablesFromServer().then(function(response) {
             $rootScope.servers = response.data.data;
+            console.log('Listado servers' + angular.toJson(response.data.data, true));
             return $rootScope.servers;
         }).then(function(servers) {
             var colors = [];
-            /* Se cargan los colores que ya fueron asignados  */
+            //Se cargan los colores que ya fueron asignados
             angular.forEach(servers, function(server, m) {
                 colors.push(server.color);
             });
             vm.colorsSelect = uniqueArray(colors); // Se colocan solo los colores ya asigandos a los servidores
 
-        });
+        });*/
 
         vm.mostrarDetail = function(index, data) {
             var estado = FloorFactory.isEditServer();
@@ -63,12 +83,24 @@ angular.module('floor.controller', [])
         };
 
         vm.handConfiguration = function(obj) {
-            var res = vm.numpeople;
-            var num = res.substring(3);
-            modalInstancesConfiguration(num, obj);
+            var res_men = vm.numpeople.num_men;
+            var res_women = vm.numpeople.num_women;
+            var res_children = vm.numpeople.num_children;
+            //console.log(angular.toJson(res));
+            var num_men = parseInt(res_men.substring(3));
+            var num_women = parseInt(res_women.substring(3));
+            var num_children = parseInt(res_children.substring(3));
+
+            var cantidades = {
+                men: num_men,
+                women: num_women,
+                children: num_children
+            };
+
+            modalInstancesConfiguration(cantidades, obj);
         };
 
-        function modalInstancesConfiguration(num, obj) {
+        function modalInstancesConfiguration(cantidades, obj) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -76,7 +108,7 @@ angular.module('floor.controller', [])
                 size: 'lg',
                 resolve: {
                     num: function() {
-                        return num;
+                        return cantidades;
                     },
                     table: function() {
                         return obj;
@@ -91,11 +123,12 @@ angular.module('floor.controller', [])
             if (element.hasClass("selected-table") === true) { // Si ya fue seleccionado se remueve la clase
 
                 element.removeClass("selected-table");
-                ServerDataFactory.delServerItem(data);
+                ServerDataFactory.delTableServerItem(data);
 
             } else { // Si aun no se selecciona la mesa se agrega la clase
-                ServerDataFactory.setServerItems(data);
+                ServerDataFactory.setTableServerItems(data);
                 element.addClass("selected-table");
+                //console.log(angular.toJson(data, true))
             }
         }
 
@@ -115,30 +148,52 @@ angular.module('floor.controller', [])
     })
     .controller('ConfigurationInstanceCtrl', function($modalInstance, num, table, OperationFactory) {
         var vmc = this;
-        vmc.numpeople = num;
-        vmc.resultado = num;
+
+        //Datos pasados al modal
+        vmc.numperson = num;
         vmc.table = table;
+
+        //Definiendo valores por defecto
+        vmc.flagSelectedNumMen = num.men;
+        vmc.flagSelectedNumWomen = num.women;
+        vmc.flagSelectedNumChildren = num.children;
+        vmc.resultado = num.men + num.women + num.children;
 
         //Creando numero de casillas
         var vNumpeople = [];
-        for (i = 1; i <= 12; i++) {
+        for (i = 0; i <= 12; i++) {
             vNumpeople.push({
                 num: i
             });
         }
         vmc.colectionNum = vNumpeople;
 
-        //Definiendo valores por defecto
-        vmc.flagSelectedNumMen = num;
-        vmc.flagSelectedNumWomen = 0;
-        vmc.flagSelectedNumChildren = 0;
-
-        vmc.numperson = {
-            men: num,
-            women: 0,
-            children: 0
+        //Al pulsar numero 13 o mayor
+        vmc.numThirteen = function(value, person) {
+            if (person == 'men') {
+                vmc.flagSelectedNumMen = value;
+                vmc.flagSelectedCountNumMen = value;
+                vmc.numdinamicoMen = value;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
+            if (person == 'women') {
+                vmc.flagSelectedNumWomen = value;
+                vmc.flagSelectedCountNumWomen = value;
+                vmc.numdinamicoWomen = value;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
+            if (person == 'children') {
+                vmc.flagSelectedNumChildren = value;
+                vmc.flagSelectedCountNumChildren = value;
+                vmc.numdinamicoChildren = value;
+                OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+            }
         };
 
+        //Al pulsar numero menor a 13
         vmc.btnSelectedNum = function(value, person) {
             if (person == 'men') {
                 vmc.flagSelectedNumMen = value;
@@ -163,28 +218,35 @@ angular.module('floor.controller', [])
             }
         };
 
-
-        if (num > 12) {
-            vmc.numdinamicoMen = num;
-            vmc.flagSelectedCountNumMen = num;
-
-            vmc.numdinamicoWomen = 13;
-            vmc.flagSelectedCountNumWomen = 0;
-
-            vmc.numdinamicoChildren = 13;
-            vmc.flagSelectedCountNumChildren = 0;
-
+        //Automarcar mayores que 13 segun datos traidos por defecto
+        if (num.men > 12) {
+            vmc.numdinamicoMen = num.men;
+            vmc.flagSelectedCountNumMen = num.men;
         } else {
             vmc.numdinamicoMen = 13;
+        }
+
+        if (num.women > 12) {
+            vmc.numdinamicoWomen = num.women;
+            vmc.flagSelectedCountNumWomen = num.women;
+        } else {
             vmc.numdinamicoWomen = 13;
+        }
+
+        if (num.children > 12) {
+            vmc.numdinamicoChildren = num.children;
+            vmc.flagSelectedCountNumChildren = num.children;
+
+        } else {
             vmc.numdinamicoChildren = 13;
         }
 
+        //Al pulsar boton plus
         vmc.sumar = function(person) {
             if (person == 'men') {
                 vmc.numdinamicoMen++;
                 vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                vmc.flagSelectedNumMen = 0;
+                vmc.flagSelectedNumMen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
                 //console.log('Datos ' + angular.toJson(vmc.numperson));
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
@@ -193,7 +255,7 @@ angular.module('floor.controller', [])
             if (person == 'women') {
                 vmc.numdinamicoWomen++;
                 vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                vmc.flagSelectedNumWomen = 0;
+                vmc.flagSelectedNumWomen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
@@ -201,17 +263,18 @@ angular.module('floor.controller', [])
             if (person == 'children') {
                 vmc.numdinamicoChildren++;
                 vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                vmc.flagSelectedNumChildren = 0;
+                vmc.flagSelectedNumChildren = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
         };
+        //Al pulsar boton minus
         vmc.restar = function(person) {
             if (person == 'men') {
                 if (vmc.numdinamicoMen > 13) {
                     vmc.numdinamicoMen--;
                     vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                    vmc.flagSelectedNumMen = 0;
+                    vmc.flagSelectedNumMen = -1;
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
@@ -220,7 +283,7 @@ angular.module('floor.controller', [])
                 if (vmc.numdinamicoWomen > 13) {
                     vmc.numdinamicoWomen--;
                     vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                    vmc.flagSelectedNumWomen = 0;
+                    vmc.flagSelectedNumWomen = -1;
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
@@ -229,7 +292,7 @@ angular.module('floor.controller', [])
                 if (vmc.numdinamicoChildren > 13) {
                     vmc.numdinamicoChildren--;
                     vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                    vmc.flagSelectedNumChildren = 0;
+                    vmc.flagSelectedNumChildren = -1;
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
@@ -398,27 +461,86 @@ controller('waitlistController', function() {
 }).controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
     var sm = this;
-    // Se trae la informacion de las zonas independientemente para poder realizar un trato especial a la variable
+    //Variable para manejo de panatalla nuevo y crear
     sm.flagServer = false;
+    sm.id = "";
     sm.data = [];
     sm.tables = [];
 
-    sm.visibleServer = function() {
+    //Cargando data desde servicios: servidores, colores ocupados y todos los colores permitidos
+    sm.servers = ServerDataFactory.getServerItems();
+    sm.colorsSelect = uniqueArray(ServerDataFactory.getColorItems());
+    sm.colors = ColorFactory.getColor();
+
+    sm.btnAddServer = function() {
         sm.showForm = true;
         FloorFactory.isEditServer(true);
         angular.element('.bg-window-floor').addClass('drag-dispel');
     };
 
-    //sm.listadoServer = FloorFactory.getServerItems();
+    //Obtener tablas seleccionadas del lienzo
     var callListadoTable = function() {
-        sm.listadoServer = ServerDataFactory.getServerItems();
-        //console.log('Listado: ' + angular.toJson(sm.listadoServer, true));
+        sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
+        //console.log('Listado: ' + angular.toJson(sm.listadoTablaServer, true));
         $timeout(callListadoTable, 500);
     };
     callListadoTable();
 
-    sm.colors = ColorFactory.getColor();
+    sm.btnEditServer = function(index, server) {
 
+        sm.flagServer = true;
+        sm.showForm = true;
+
+        vTable = [];
+        angular.forEach(server.tables, function(table) {
+            var dataTable = {
+                color: server.color,
+                name: table.name,
+                table_id: table.id,
+            };
+            var element = angular.element('#el' + table.id);
+            element.addClass("selected-table");
+            vTable.push(dataTable);
+        });
+
+        ServerDataFactory.setTableServerItemsEdit(vTable);
+        sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
+        //console.log('info' + angular.toJson(vTable, true));
+
+        FloorFactory.isEditServer(true);
+        angular.element('.bg-window-floor').addClass('drag-dispel');
+        //var position = $rootScope.servers.indexOf(server);
+        //sm.server = $rootScope.servers[position];
+        sm.name = server.name;
+        sm.id = server.id;
+
+        for (var i = 0; i < sm.colors.length; i++) {
+            sm.colors[i].classSelect = "";
+            if (sm.colors[i].colorHexadecimal === server.color) {
+                sm.color = server.color;
+                sm.colors[i].classSelect = "is-selected";
+            }
+        }
+    };
+
+    //Reinicar variables utilizadas en pestaña server
+    sm.btnCancelEditServer = function(server) {
+
+        sm.flagServer = false;
+        sm.showForm = false;
+        sm.id = "";
+        FloorFactory.isEditServer(false);
+
+        limpiarData();
+
+        angular.element('.table-zone').removeClass("selected-table");
+        ServerDataFactory.cleanTableServerItems();
+
+        angular.element('.bg-window-floor').removeClass('drag-dispel');
+        $state.go('mesas.floor.server');
+    };
+
+    //Marcar color del listado de colores disponibles
     sm.selectColor = function(color) {
 
         sm.color = color.colorHexadecimal;
@@ -427,28 +549,6 @@ controller('waitlistController', function() {
             sm.colors[i].classSelect = "";
         }
         sm.colors[position].classSelect = "is-selected";
-
-    };
-
-    sm.editServer = function(server) {
-
-        sm.flagServer = true;
-        sm.showForm = true;
-
-        var position = $rootScope.servers.indexOf(server);
-        sm.server = $rootScope.servers[position];
-        sm.name = sm.server.name;
-
-        for (var i = 0; i < sm.colors.length; i++) {
-            sm.colors[i].classSelect = "";
-            if (sm.colors[i].colorHexadecimal === $rootScope.servers[position].color) {
-                sm.color = $rootScope.servers[position].color;
-                sm.colors[i].classSelect = "is-selected";
-            }
-        }
-        //FloorFactory.flag.editServer = !FloorFactory.flag.editServer;
-        FloorFactory.isEditServer(true);
-
 
     };
 
@@ -462,11 +562,11 @@ controller('waitlistController', function() {
         */
         var element = angular.element('#el' + data.table_id);
         element.removeClass("selected-table");
-        ServerDataFactory.delServerItemIndex(item);
+        ServerDataFactory.delTableServerItemIndex(item);
 
     };
 
-    sm.newServer = function(server) {
+    /*sm.newServer = function(server) {
         console.log(server);
 
         sm.flagServer = true;
@@ -482,7 +582,7 @@ controller('waitlistController', function() {
             }
         }
 
-    };
+    };*/
 
     var limpiarData = function() {
 
@@ -498,8 +598,8 @@ controller('waitlistController', function() {
     sm.saveOrUpdateServer = function() {
 
         /* Se construye la estructura de las mesas seleccionadas */
-        console.log('tables sel', angular.toJson(sm.listadoServer, true));
-        angular.forEach(sm.listadoServer, function(mesa, i) {
+        //console.log('tables sel', angular.toJson(sm.listadoTablaServer, true));
+        angular.forEach(sm.listadoTablaServer, function(mesa, i) {
             sm.tables.push({
                 id: mesa.table_id
             });
@@ -518,9 +618,12 @@ controller('waitlistController', function() {
             ServerFactory.addServer(sm.data).then(function(response) {
                 var mensaje = "";
                 if (response.data.response === false) {
+
                     mensaje = setearJsonError(response.data.jsonError);
                     messageAlert("Warning", mensaje, "warning", 3000);
+
                 } else if (response.data.success === true) {
+
                     mensaje = response.data.msg;
                     messageAlert("success", mensaje, "success", 3000);
                     $state.go($state.current, {}, {
@@ -529,7 +632,7 @@ controller('waitlistController', function() {
 
                     //$rootScope.servers.push(response.data.data);
                     limpiarData();
-                    ServerDataFactory.cleanServerItems();
+                    ServerDataFactory.cleanTableServerItems();
 
                 }
 
@@ -538,13 +641,13 @@ controller('waitlistController', function() {
         } else if (sm.flagServer === true) { // Se actualiza la data
 
             sm.data = {
-                id: sm.server.id,
+                id: sm.id,
                 name: sm.name,
                 color: sm.color,
                 tables: sm.tables
             };
 
-            ServerFactory.updateServer(sm.data, sm.server.id).then(function(response) { // Se actualiza el server
+            ServerFactory.updateServer(sm.data, sm.id).then(function(response) { // Se actualiza el server
 
                 var mensaje = "";
                 if (response.data.response === false) {
@@ -552,10 +655,14 @@ controller('waitlistController', function() {
                     messageAlert("Warning", mensaje, "warning", 3000);
                 } else if (response.data.success === true) {
                     mensaje = response.data.msg;
-                    sm.server.name = sm.name;
-                    sm.server.color = sm.color;
+                    //sm.name = sm.name;
+                    //sm.color = sm.color;
+                    //Actualizar elemento en array de servicio pasando id y data
+                    ServerDataFactory.updateServerItems(sm.data);
+                    sm.servers = ServerDataFactory.getServerItems();
+                    console.log('refrescado' + angular.toJson(sm.servers, true));
                     messageAlert("success", mensaje, "success", 3000);
-                    $state.go('floor.server.create', {}, {
+                    $state.go('mesas.floor.server', {}, {
                         reload: true
                     });
                     sm.flagServer = false;
@@ -571,20 +678,9 @@ controller('waitlistController', function() {
 
     };
 
-    sm.cancelEditServer = function(server) {
-        sm.flagServer = false;
-        limpiarData();
-        sm.showForm = false;
-        FloorFactory.isEditServer(false);
-        console.log('Datos' + angular.toJson(FloorFactory.isEditServer(), true));
-        angular.element('.table-zone').removeClass("selected-table");
-        angular.element('.bg-window-floor').removeClass('drag-dispel');
-        $state.go('mesas.floor.server');
-    };
+    sm.btnDeleteServer = function() {
 
-    sm.deleteServer = function() {
-
-        ServerFactory.deleteServer(sm.server.id).then(function(response) {
+        ServerFactory.deleteServer(sm.id).then(function(response) {
             var mensaje = "";
             if (response.data.response === false) {
                 mensaje = setearJsonError(response.data.jsonError);
@@ -593,17 +689,21 @@ controller('waitlistController', function() {
                 mensaje = response.data.msg;
 
                 /* Se filtra el item y se elimina del array*/
-                for (var i = 0; i < $rootScope.servers.length; i++) {
+                /*for (var i = 0; i < $rootScope.servers.length; i++) {
                     if ($rootScope.servers[i].id === sm.server.id) {
                         $rootScope.servers.splice(i, 1);
                     }
-                }
+                }*/
+
+                ServerDataFactory.delServerItem({
+                    id: sm.id
+                });
 
                 messageAlert("success", mensaje, "success", 1000);
 
                 sm.flagServer = false;
                 limpiarData();
-                $state.go('floor.server', {}, {
+                $state.go('mesas.floor.server', {}, {
                     reload: true
                 });
             } else if (response.data.success === false) {
@@ -613,5 +713,6 @@ controller('waitlistController', function() {
         });
 
     };
+
 
 });

@@ -165,7 +165,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('men')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumMen==vmc.numdinamicoMen ? 'btn-active': ''}}">{{vmc.numdinamicoMen}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumMen==vmc.numdinamicoMen ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoMen,'men')">{{vmc.numdinamicoMen}}</span>
                             <button class="btn" ng-click="vmc.sumar('men')">+</button>
                         </div>
                         <div class="clearfix"></div>
@@ -179,7 +179,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('women')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumWomen==vmc.numdinamicoWomen ? 'btn-active': ''}}">{{vmc.numdinamicoWomen}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumWomen==vmc.numdinamicoWomen ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoWomen,'women')">{{vmc.numdinamicoWomen}}</span>
                             <button class="btn" ng-click="vmc.sumar('women')">+</button>
                         </div>
                         <div class="clearfix"></div>
@@ -193,7 +193,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('children')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumChildren==vmc.numdinamicoChildren ? 'btn-active': ''}}">{{vmc.numdinamicoChildren}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumChildren==vmc.numdinamicoChildren ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoChildren,'children')">{{vmc.numdinamicoChildren}}</span>
                             <button class="btn" ng-click="vmc.sumar('children')">+</button>
                         </div>
                         <div class="clearfix"></div>

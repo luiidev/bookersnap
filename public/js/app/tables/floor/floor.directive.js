@@ -27,7 +27,11 @@ angular.module('floor.directive', [])
                 drop: function(event, ui) {
                     //console.log(ui.draggable[0].id);
                     scope.$apply(function() {
-                        scope.num = ui.draggable[0].id;
+                        scope.num = {
+                            num_men: ui.draggable[0].id,
+                            num_women: "num0",
+                            num_children: "num0"
+                        };
                     });
                     scope.onDroppedFn();
                 }
