@@ -228,15 +228,16 @@ angular.module('reservation.controller', [])
                     if (block.res_reservation_id !== null) {
                         table.occupied = true;
                         table.suggested = false;
-                    } 
-                    if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
-                            (end_time.isBetween(start_block, end_block, null, "()")) ||
-                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-                        table.block = true;
-                        table.suggested = false;
                     } else {
-                        table.block = false;
-                        table.occupied = false;
+                        if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
+                                (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                    (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                            table.block = true;
+                            table.suggested = false;
+                        } else {
+                            table.block = false;
+                            table.occupied = false;
+                        }
                     }
                 }
             });
@@ -357,7 +358,7 @@ angular.module('reservation.controller', [])
                 return message.error("Fecha invalida no se puede cargar las zonas");
             }
 
-            vm.date = new Date(date);
+            vm.date = new Date(date.replace(/-/g, '\/'));
 
             vm.waitingResponse = true;
             service.getZones(date)

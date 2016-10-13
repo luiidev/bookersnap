@@ -1,6 +1,6 @@
 angular.module('reservation.service', [])
-.factory("reservationService", ["HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
-     function(HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
+.factory("reservationService", ["$http","HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
+     function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
         var zones, servers, resStatus, turns, blocks, tags;
             return {
                 save: function(data) {

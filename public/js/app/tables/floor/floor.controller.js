@@ -241,28 +241,72 @@ angular.module('floor.controller', [])
         };
 
     })
-    .controller('DetailInstanceCtrl', function($scope, $modalInstance, content, FloorFactory) {
+    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance , $uibModal, content, FloorFactory, reservationService) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.name_zona,
             name: content.name
         };
 
+        vmd.reservation = {};
+
         var getTableReservation = function() {
-            FloorFactory.rowTableReservation(content.table_id).then(function success(data) {
-                vmd.itemReservations = data;
-                //console.log('PopUp: ' + angular.toJson(data, true));
-            });
+            FloorFactory.rowTableReservation(content.table_id)
+                .then(function(data) {
+                    vmd.itemReservations = data;
+                    // console.log('PopUp: ' + angular.toJson(data, true));
+                });
         };
-        getTableReservation();
+
+        vmd.reservationEdit = function(data) {
+            console.log(data);
+            listResource();
+            vmd.reservation = data;
+            vmd.EditContent = true;
+        };
+
+        function listResource() {
+            listGuest();
+            listStatuses();
+            listServers();
+        }
+
+        var listGuest = function() {
+            reservationService.getGuest()
+                .then(function(guests) {
+                    vmd.covers = guests;
+                });
+        };
+
+        var listStatuses = function() {
+            reservationService.getStatuses()
+                .then(function(response) {
+                    vmd.statuses = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+        };
+
+        var listServers = function() {
+            reservationService.getServers()
+                .then(function(response) {
+                    vmd.servers = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+        };
+
+        vmd.cancelEdit = function() {
+            vmd.EditContent = false;
+            vmd.reservation = {}
+        };
 
         $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
 
-
+        getTableReservation();
     })
-
 
 .controller('reservationController', function(FloorFactory, $timeout) {
     var rm = this;
