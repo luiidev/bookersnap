@@ -130,6 +130,7 @@ angular.module('reservation.controller', [])
                     delete vm.reservation.guest;
                 }
 
+<<<<<<< HEAD
                 ///////////////////////////////////////////////////////////////
                 //  parse date
                 ///////////////////////////////////////////////////////////////
@@ -392,6 +393,100 @@ angular.module('reservation.controller', [])
                         vm.zoneIndex = 0;
                     } else {
                         vm.zoneIndex++;
+=======
+        console.log(vm.reservation);
+        console.log(JSON.stringify(vm.reservation));
+    };
+
+    vm.cancel = function() {
+        vm.reservation = {};
+        vm.selectTags = {};
+        vm.guest = {};
+        vm.guestList = [];
+        vm.addGuest = false;
+        defaultView();
+        loadZones();
+    };
+
+    vm.selectTableAllOrNone = function(indicator) {
+        if (indicator == "all") {
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = true;
+            });
+        } else if (indicator == "none") {
+            angular.forEach(vm.zones[vm.zoneIndex].tables, function(table) {
+                table.selected = false;
+            });
+        }
+        listTableSelected();
+    };
+
+    var alertConflicts = function() {
+        vm.conflicts = [];
+        angular.forEach(vm.tablesSelected, function(table, i) {
+            var conflict = {};
+
+            if ( vm.reservation.covers < table.minCover ) {
+                conflict.name = table.name;
+                conflict.desc = "Mesa  demasiado grande";
+                vm.conflicts.push(conflict);
+            } else if (table.block) {
+                conflict.name = table.name;
+                conflict.desc = "La mesa se encuentra bloqueada en el rango de duracion de esta reservacion";
+                vm.conflicts.push(conflict);
+            } else if (table.occupied) {
+                conflict.name = table.name;
+                conflict.desc = "La mesa ya se encuentra ocupada en el rango de duracion de esta reservacion";
+                vm.conflicts.push(conflict);
+            }
+        });
+    };
+
+    var listTableSelected = function() {
+        tablesForEach(function(table) {
+            if (table.selected) {
+                vm.tablesSelected[table.id] = angular.copy(table);
+            } else {
+                delete vm.tablesSelected[table.id];
+            }
+        });
+        vm.isTablesSelected = Object.keys(vm.tablesSelected).length > 0;
+
+        alertConflicts();
+    };
+
+    vm.selectTable = function(table) {
+        table.selected = !table.selected;
+        listTableSelected();
+    };
+
+    vm.tablesBlockValid = function() {
+        // console.log("------------------------------------------------");
+        var start_time =  moment(vm.reservation.hour, "HH:mm:ss");
+        var auxiliar =  moment(vm.reservation.duration, "HH:mm:ss");
+        var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+        // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+        // console.log(blocks);
+        angular.forEach(blocks, function(block){
+            var start_block =  moment(block.start_time, "HH:mm:ss");
+            var end_block =  moment(block.end_time, "HH:mm:ss");
+            // console.log(start_block.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+            tablesForEach(function(table) {
+                if (table.id == block.res_table_id) {
+                    if (block.res_reservation_id !== null) {
+                        table.occupied = true;
+                        table.suggested = false;
+                    } else {
+                        if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
+                                (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                    (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                            table.block = true;
+                            table.suggested = false;
+                        } else {
+                            table.block = false;
+                            table.occupied = false;
+                        }
+>>>>>>> 24600c0559f8cfeb4966cd467e0d32b0409d907c
                     }
                 }
                 setZoneName(vm.zoneIndex);
@@ -419,6 +514,7 @@ angular.module('reservation.controller', [])
                 vm.fontSize = (14 * size / screenSize.minSize + "px");
                 vm.$digest();
             });
+<<<<<<< HEAD
 
             ///////////////////////////////////////////////////////////////
             // Search guest list
@@ -473,6 +569,32 @@ angular.module('reservation.controller', [])
                     } else {
                         delete vm.selectTags[tag.id];
                     }
+=======
+    };
+
+    var loadZones = function() {
+            var date = $stateParams.date;
+            var valid = moment(date , 'YYYY-MM-DD', true).isValid();
+
+            if (!valid) {
+                return message.error("Fecha invalida no se puede cargar las zonas");
+            }
+
+            vm.date = new Date(date.replace(/-/g, '\/'));
+
+            vm.waitingResponse = true;
+            service.getZones(date)
+                .then(function(response) {
+                    loadTablesEdit(response.data.data);
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    loadBlocks(date);
+                    listGuest();
+                    listServers();
+                    listStatuses();
+                    listReservationTags();
+>>>>>>> 24600c0559f8cfeb4966cd467e0d32b0409d907c
                 });
             };
             ///////////////////////////////////////////////////////////////
