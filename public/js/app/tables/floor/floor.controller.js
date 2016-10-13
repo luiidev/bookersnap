@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
         var vm = this;
         var fecha_actual = getFechaActual();
 
@@ -91,10 +91,10 @@ angular.module('floor.controller', [])
             if (element.hasClass("selected-table") === true) { // Si ya fue seleccionado se remueve la clase
 
                 element.removeClass("selected-table");
-                FloorFactory.delServerItem(data);
+                ServerDataFactory.delServerItem(data);
 
             } else { // Si aun no se selecciona la mesa se agrega la clase
-                FloorFactory.setServerItems(data);
+                ServerDataFactory.setServerItems(data);
                 element.addClass("selected-table");
             }
         }
@@ -241,7 +241,7 @@ angular.module('floor.controller', [])
         };
 
     })
-    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance , $uibModal, content, FloorFactory, reservationService) {
+    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.name_zona,
@@ -379,7 +379,7 @@ controller('waitlistController', function() {
 
     };
 
-}).controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ColorFactory, FloorFactory, $timeout) {
+}).controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
     var sm = this;
     // Se trae la informacion de las zonas independientemente para poder realizar un trato especial a la variable
@@ -400,17 +400,6 @@ controller('waitlistController', function() {
         $timeout(callListadoTable, 500);
     };
     callListadoTable();
-
-
-    //$timeout(callListadoTable, 500);
-    /*$scope.$watch("$rootScope.listadoServer", function(newValue, oldValue, scope) {
-        console.log('Listado: ' + angular.toJson(newValue, true));
-    });*/
-    /*
-    $scope.$apply(function() {
-        sm.listadoServer = ServerDataFactory.getServerItems();
-        console.log('Listado: ' + angular.toJson(sm.listadoServer, true));
-    });*/
 
     sm.colors = ColorFactory.getColor();
 
@@ -457,7 +446,7 @@ controller('waitlistController', function() {
         */
         var element = angular.element('#el' + data.table_id);
         element.removeClass("selected-table");
-        FloorFactory.delServerItemIndex(item);
+        ServerDataFactory.delServerItemIndex(item);
 
     };
 
@@ -483,6 +472,7 @@ controller('waitlistController', function() {
 
         sm.name = "";
         sm.color = "";
+
         for (var i = 0; i < sm.colors.length; i++) {
             sm.colors[i].classSelect = "";
         }
@@ -520,8 +510,10 @@ controller('waitlistController', function() {
                     $state.go($state.current, {}, {
                         reload: true
                     });
-                    $rootScope.servers.push(response.data.data);
+
+                    //$rootScope.servers.push(response.data.data);
                     limpiarData();
+                    ServerDataFactory.cleanServerItems();
 
                 }
 
@@ -595,7 +587,7 @@ controller('waitlistController', function() {
 
                 sm.flagServer = false;
                 limpiarData();
-                $state.go('floor.server.create', {}, {
+                $state.go('floor.server', {}, {
                     reload: true
                 });
             } else if (response.data.success === false) {

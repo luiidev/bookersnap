@@ -26,25 +26,6 @@ angular.module('floor.service', [])
 				}
 				return flag.editServer;
 			},
-			getServerItems: function() {
-				return serverColection;
-			},
-			setServerItems: function(serverItem) {
-				serverColection.push(serverItem);
-			},
-			delServerItem: function(serverItem) {
-				angular.forEach(serverColection, function(value, key) {
-					if (value.table_id == serverItem.table_id) {
-						serverColection.splice(key, 1);
-					}
-				});
-			},
-			delServerItemIndex: function(index) {
-				serverColection.splice(index, 1);
-			},
-			cleanServerItems: function() {
-				serverColection = [];
-			},
 			listTableServes: function() {
 				var defered = $q.defer();
 				ServerFactory.getAllTablesFromServer().success(function(data) {
@@ -103,7 +84,7 @@ angular.module('floor.service', [])
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-							last_name: reserva.guest ? reserva.guest.last_name: ""
+							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};
 						vReservation.push(dataReservation);
 					});
@@ -350,6 +331,9 @@ angular.module('floor.service', [])
 						serverColection.splice(key, 1);
 					}
 				});
+			},
+			delServerItemIndex: function(index) {
+				serverColection.splice(index, 1);
 			},
 			cleanServerItems: function() {
 				serverColection = [];
