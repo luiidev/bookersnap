@@ -50,7 +50,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controllerAs: 'se'
                     },
                 },
-            })*/
+            })
             .state('mesas.floor.server.edit', {
                 url: '/edit/:server_id',
                 views: {
@@ -60,5 +60,5 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controllerAs: 'se'
                     },
                 },
-            });
+            });*/
     });
