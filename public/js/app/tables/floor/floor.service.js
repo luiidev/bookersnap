@@ -15,16 +15,35 @@ angular.module('floor.service', [])
 	})
 
 .factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
-		var zonasMap = [];
 		var flag = {
 			editServer: false
 		};
+		var serverColection = [];
 		return {
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
 				}
 				return flag.editServer;
+			},
+			getServerItems: function() {
+				return serverColection;
+			},
+			setServerItems: function(serverItem) {
+				serverColection.push(serverItem);
+			},
+			delServerItem: function(serverItem) {
+				angular.forEach(serverColection, function(value, key) {
+					if (value.table_id == serverItem.table_id) {
+						serverColection.splice(key, 1);
+					}
+				});
+			},
+			delServerItemIndex: function(index) {
+				serverColection.splice(index, 1);
+			},
+			cleanServerItems: function() {
+				serverColection = [];
 			},
 			listTableServes: function() {
 				var defered = $q.defer();
@@ -316,3 +335,25 @@ angular.module('floor.service', [])
 			}
 		};
 	})
+	.factory('ServerDataFactory', function() {
+		var serverColection = [];
+		var interfazServer = {
+			getServerItems: function() {
+				return serverColection;
+			},
+			setServerItems: function(serverItem) {
+				serverColection.push(serverItem);
+			},
+			delServerItem: function(serverItem) {
+				angular.forEach(serverColection, function(value, key) {
+					if (value.table_id == serverItem.table_id) {
+						serverColection.splice(key, 1);
+					}
+				});
+			},
+			cleanServerItems: function() {
+				serverColection = [];
+			}
+		};
+		return interfazServer;
+	});

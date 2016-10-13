@@ -1,15 +1,23 @@
 angular.module('block.service', [])
     .factory('BlockFactory', function($http, ApiUrlMesas, HttpFactory) {
         var zonesCalendar;
+        var blocksAll;
+        var block;
         return {
-            getZonesCalendar: function(date) {
-                return $http.get(ApiUrlMesas + "/calendar/" + date + "/zones");
+            getZonesCalendar: function(date, reload) {
+                var url = ApiUrlMesas + "/calendar/" + date + "/zones";
+                zonesCalendar = HttpFactory.get(url, {}, zonesCalendar, reload);
+                return zonesCalendar;
             },
-            getAllBlock: function(vDate) {
-                return $http.get(ApiUrlMesas + "/blocks/tables?" + vDate);
+            getAllBlock: function(vDate, reload) {
+                var url = ApiUrlMesas + "/blocks/tables?" + vDate;
+                blocksAll = HttpFactory.get(url, {}, blocksAll, reload);
+                return blocksAll;
             },
-            getBlock: function(vDate) {
-                return $http.get(ApiUrlMesas + "/blocks/" + vDate);
+            getBlock: function(vId, reload) {
+                var url = ApiUrlMesas + "/blocks/" + vId;
+                block = HttpFactory.get(url, {}, block, reload);
+                return block;
             },
             addNewBlock: function(data) {
 
@@ -32,7 +40,6 @@ angular.module('block.service', [])
                 }, function errorCallback(response) {
                     return response;
                 });
-
             },
             editBlock: function(variablesUrl, data) {
                 return $http({
