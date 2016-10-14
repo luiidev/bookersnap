@@ -300,19 +300,27 @@ var messageAlert = function(title, text, type, time = 2000, confirmButton = fals
 
 var message = {};
 
-message.show = function(title, text, type, options) {
+message.show = function(title, text, type, options, action) {
     var config = {
         title: title,
         text: text,
         type: type,
     };
 
+    action = (action !== undefined) ? action : function() {};
+
     if (options !== undefined) {
         if (typeof options == "object") {
             config = Object.assign(config, options);
         }
     }
-    swal(config);
+    swal(config, function() {
+        action();
+    });
+};
+
+message.confirmButton = function(title, text, type, options, action) {
+    return this.show(title, text, type, options, action);
 };
 
 message.success = function(title, text, time) {

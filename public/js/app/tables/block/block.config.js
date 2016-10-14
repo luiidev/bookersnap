@@ -6,8 +6,8 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
 	})
 	.config(function($stateProvider, $urlRouterProvider) {
 		$stateProvider
-			.state('mesas.block', {
-				url: '/block/:date',
+			.state('mesas.floor.block', {
+				url: '/:date/block',
 				views: {
 					'@': {
 						templateUrl: '/js/app/tables/block/view/create.old.html',
@@ -21,11 +21,15 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
 					}
 				}
 			})
-			.state('mesas.blockEdit', {
-				url: '/block/:date/:block_id',
-				templateUrl: '/js/app/tables/block/view/edit.new.html',
-				controller: "blockCtr",
-				cache: false,
+			.state('mesas.floor.blockEdit', {
+				url: '/:date/block/:block_id',
+
+				views: {
+					'@': {
+						templateUrl: '/js/app/tables/block/view/edit.new.html',
+						controller: "blockCtr",
+					}
+				},
 				resolve: {
 					$title: function() {
 						return 'Editar Bloqueo';

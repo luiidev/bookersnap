@@ -396,16 +396,16 @@
         },
         {
             "name": "ixudra/curl",
-            "version": "6.4.0",
+            "version": "6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ixudra/curl.git",
-                "reference": "fab3b30c85d2824d08e043679da821db2bd20a3d"
+                "reference": "07d4555031adcd4319d345686cba80c7b38cc424"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ixudra/curl/zipball/fab3b30c85d2824d08e043679da821db2bd20a3d",
-                "reference": "fab3b30c85d2824d08e043679da821db2bd20a3d",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/07d4555031adcd4319d345686cba80c7b38cc424",
+                "reference": "07d4555031adcd4319d345686cba80c7b38cc424",
                 "shasum": ""
             },
             "require": {
@@ -435,7 +435,7 @@
                 "curl",
                 "laravel"
             ],
-            "time": "2016-09-19 20:37:29"
+            "time": "2016-10-11 22:27:40"
         },
         {
             "name": "jakub-onderka/php-console-color",

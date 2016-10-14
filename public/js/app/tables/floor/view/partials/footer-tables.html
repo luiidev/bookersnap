@@ -2,6 +2,7 @@
     <ul class="footer-floor">
         <li class="logotipo-footer">
             <img class="img-responsive" src="/images/icon-bookersnap.png">
+            </img>
         </li>
         <li>
             <button class="btn btn-default-red btn-sm text-center pull-left" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
@@ -22,17 +23,20 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li class="box-tab-notas">
-                            <p>Diseñar Tab para notas</p>
+                            <p>
+                                Diseñar Tab para notas
+                            </p>
                             <div class="form-group">
                                 <div class="fg-line">
-                                    <textarea class="form-control" rows="5" placeholder="Registrar notas de cambio"></textarea>
+                                    <textarea class="form-control" placeholder="Registrar notas de cambio" rows="5">
+                                    </textarea>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </li>
             </ul>
-            <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.block({date : '{{vm.fecha_actual}}'})">
+            <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
                 <span class="zmdi zmdi-lock-open zmdi-hc-2x">
                 </span>
                 <div class="f-12">
