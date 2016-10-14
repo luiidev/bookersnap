@@ -325,7 +325,7 @@ angular.module('floor.controller', [])
 
         vmc.save = function() {
             var reservation = parseReservation();
-            console.log(reservation);
+            //console.log(reservation);
             $modalInstance.dismiss('cancel');
         };
 
@@ -434,7 +434,7 @@ angular.module('floor.controller', [])
         };
 
         vmd.save = function() {
-            console.log(vmd.reservation);
+            //console.log(vmd.reservation);
             $uibModalInstance.dismiss('cancel');
         };
 
@@ -596,7 +596,7 @@ angular.module('floor.controller', [])
             sm.colors[i].classSelect = "";
         }
         sm.colors[position].classSelect = "is-selected";
-        console.log(sm.color);
+        //console.log(sm.color);
 
     };
 

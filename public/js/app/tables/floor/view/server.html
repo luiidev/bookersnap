@@ -61,7 +61,8 @@
     <div class="header-actions m-b-20">
 
         <button class="btn btn-default pull-left waves-effect" ng-click="sm.btnCancelEditServer() ">Cancelar</button>
-        Servidores
+        <span ng-show="sm.flagServer">Editar servidor</span>
+        <span ng-show="sm.flagServer==false">Nuevo servidor</span>
         <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()">
             <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
     
