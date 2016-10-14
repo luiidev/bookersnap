@@ -58,7 +58,7 @@ angular.module('floor.controller', [])
                     content: function() {
                         return {
                             table: data,
-                            tables: vm.zonas[index].table
+                            //tables: vm.zonas[index].table
                         };
                     }
                 }
@@ -291,10 +291,10 @@ angular.module('floor.controller', [])
             $modalInstance.dismiss('cancel');
         };
 
-        function  parseReservation() {
+        function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
-            var start_time =  now.add((15 - (parseInt(now.format("mm")) % 15)), "minutes").second(0).format("HH:mm:ss");
+            var start_time = now.add((15 - (parseInt(now.format("mm")) % 15)), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.table_id,
                 covers: {
@@ -315,7 +315,7 @@ angular.module('floor.controller', [])
         };
 
     })
-    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance , $uibModal, content, FloorFactory, reservationService, $state) {
+    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.table.name_zona,
