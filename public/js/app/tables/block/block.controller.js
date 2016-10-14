@@ -35,18 +35,18 @@ angular.module('block.controller', [])
 
             if (fecha !== fechaOld) {
                 listFormData(fecha);
+                listZones(fecha);
             }
         });
 
-        var listZones = function() {
-            var fecha = convertFechaYYMMDD($scope.date, "es-ES", {});
+        var listZones = function(fecha) {
             //Listado array de zonas incluyendo sus zonas
-            reservationService.getZones(fecha, false).then(
+            reservationService.getZones(fecha, true).then(
                 function success(response) {
                     $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
                     zoneIndexMax = $scope.zones.length;
 
-                    getAllTablesBlockFuture(fecha);
+                    getAllTablesBlockFuture(fecha, true);
 
                 },
                 function error(response) {
@@ -55,14 +55,14 @@ angular.module('block.controller', [])
             );
         };
 
-        var getAllTablesBlockFuture = function(fecha) {
+        var getAllTablesBlockFuture = function(fecha, reload) {
             // Se obtiene de array de las mesas que estan en ese rango de fecha
-            BlockFactory.getAllBlock("date=" + fecha).then(
+            BlockFactory.getAllBlock("date=" + fecha, reload).then(
                 function success(response) {
                     mesasFuturasBloqueadas = response.data.data;
                     $scope.selectZone($scope.zones[0]);
 
-                    if ($stateParams.block_id !== null) {
+                    if ($stateParams.block_id !== undefined) {
                         block_id = $stateParams.block_id;
                         listTablesBlock();
                     }
@@ -280,7 +280,7 @@ angular.module('block.controller', [])
                 function success(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000);
-                        //$state.go("mesas.floor");
+                        $state.go("mesas.floor");
                     } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 2000);
                     }
@@ -336,7 +336,6 @@ angular.module('block.controller', [])
 
                             if (((start_time.isBetween(start_block, end_block, null, "()")) || (end_time.isBetween(start_block, end_block, null, "()")) ||
                                     (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) && mesasFuturasBloqueadas[p].res_reservation_id === null) {
-                                console.log(mesasFuturasBloqueadas[p]);
                                 if ($stateParams.block_id === undefined) {
                                     $scope.zones[key].tables[i].classBloqueado = "block-table";
                                 } else if ($stateParams.block_id != mesasFuturasBloqueadas[p].res_block_id) {
@@ -462,10 +461,10 @@ angular.module('block.controller', [])
         (function Init() {
 
             $scope.date = convertFechaToDate($stateParams.date);
-
-            listZones();
-            listFormData($stateParams.date);
             $scope.size = screenHelper.size(screenSizeBlock);
+
+            listZones($stateParams.date);
+            listFormData($stateParams.date);
 
             angular.element($window).bind('resize', function() {
                 var size = screenHelper.size(screenSizeBlock);
@@ -473,8 +472,10 @@ angular.module('block.controller', [])
                 $scope.$digest();
             });
 
+            listCovers("min");
+            listCovers("max");
+
         })();
 
-        listCovers("min");
-        listCovers("max");
+
     });
