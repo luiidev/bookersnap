@@ -334,9 +334,15 @@ angular.module('block.controller', [])
 
                         if (mesa.id == mesasFuturasBloqueadas[p].res_table_id) {
 
-                            if ((start_time.isBetween(start_block, end_block, null, "()")) || (end_time.isBetween(start_block, end_block, null, "()")) ||
-                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-                                $scope.zones[key].tables[i].classBloqueado = "block-table";
+                            if (((start_time.isBetween(start_block, end_block, null, "()")) || (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                    (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) && mesasFuturasBloqueadas[p].res_reservation_id === null) {
+                                console.log(mesasFuturasBloqueadas[p]);
+                                if ($stateParams.block_id === undefined) {
+                                    $scope.zones[key].tables[i].classBloqueado = "block-table";
+                                } else if ($stateParams.block_id != mesasFuturasBloqueadas[p].res_block_id) {
+                                    $scope.zones[key].tables[i].classBloqueado = "block-table";
+                                }
+
                             } else {
                                 $scope.zones[key].tables[i].classBloqueado = "";
                             }
