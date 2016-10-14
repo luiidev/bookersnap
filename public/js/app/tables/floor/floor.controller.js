@@ -13,7 +13,9 @@ angular.module('floor.controller', [])
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                //console.log('Formateado: ' + angular.toJson(data, true));
+                //console.log('Zonas: ' + angular.toJson(data, true));
+                //Guardar data en un servicio para buscar table y conocer el index de su zona
+                FloorFactory.setDataZonesTables(data);
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -386,9 +388,9 @@ angular.module('floor.controller', [])
         });
     };
     getlistZonesBloqueosReservas();
-}).
+})
 
-controller('waitlistController', function() {
+.controller('waitlistController', function() {
     var wm = this;
     wm.search = {
         show: true
@@ -431,6 +433,28 @@ controller('waitlistController', function() {
 
         sm.flagServer = true;
         sm.showForm = true;
+
+        //Obtener tab marcado
+        var firstTableId = parseInt(server.tables[0].id);
+        var indiceZone = 0;
+
+        var lstZonas = FloorFactory.getDataZonesTables();
+        angular.forEach(lstZonas, function(zona, key) {
+            var tables = zona.table;
+            //console.log(zona);
+            angular.forEach(tables, function(table) {
+                //console.log(table);
+                if (table.table_id == firstTableId) {
+                    indiceZone = key;
+                    console.log(key);
+                }
+
+            });
+
+        });
+        //console.log(indiceZone);
+
+
 
         vTable = [];
         angular.forEach(server.tables, function(table) {

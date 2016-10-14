@@ -19,12 +19,19 @@ angular.module('floor.service', [])
 			editServer: false
 		};
 		var serverColection = [];
+		var zonesTotal = [];
 		return {
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
 				}
 				return flag.editServer;
+			},
+			setDataZonesTables: function(zones) {
+				zonesTotal = zones;
+			},
+			getDataZonesTables: function() {
+				return zonesTotal;
 			},
 			listTableServes: function() {
 				var defered = $q.defer();
