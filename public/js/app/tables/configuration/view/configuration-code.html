@@ -1,0 +1,105 @@
+<div class="configuration-reservation-form">
+	<div class="card-header p-l-0 p-r-0">
+	    <h2>
+	        Códigos de reserva
+	        <small>
+	        </small>
+	    </h2>
+	</div>
+	<div class="card-body p-l-100 p-r-50">
+        <form  name="configurationCodeForm" novalidate>	                        	
+			<div class="row">
+				<div class="col-sm-3">
+					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+					<div class="form-group fg-line">
+						<!-- <span class="glyphicon glyphicon-time"></span> -->
+    					<div class="radio m-b-15">
+                            <label>
+                                <input type="radio" name="sample" ng-model="vm.configuration.res_code_status" value="1">
+                                <i class="input-helper"></i>
+                                Activar
+                            </label>
+                        </div>	
+					</div>
+
+					<!-- <small class="help-block">Todo Ok</small> -->
+				</div>
+				<div class="col-sm-3">
+					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+					<div class="form-group fg-line">
+						<!-- <span class="glyphicon glyphicon-time"></span> -->
+						<div class="radio m-b-15">
+	                        <label>
+	                            <input type="radio" name="sample" ng-model="vm.configuration.res_code_status" value="0">
+	                            <i class="input-helper"></i>
+	                            Desactivar
+	                        </label>
+	                    </div>
+					</div>										
+					<!-- <small class="help-block">Todo Ok</small> -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+					<div class="form-group fg-line">
+						<label>
+						    Ingresar código:
+						</label>
+						<input class="form-control input-sm fg-input" ng-model="vm.code" placeholder="Ingresar código aqui" type="text">
+						</input>	
+					</div>										
+					<!-- <small class="help-block">Todo Ok</small> -->
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group fg-line">
+						<label>
+						    
+						</label>
+						<button class="form-control btn btn-primary waves-effect" ng-click="vm.setCode(vm.configuration.ms_microsite_id,vm.code)">Agregar</button>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="card-body table-responsive">
+					    <table class="table">
+					        <thead>
+					            <tr>
+					                <th>
+					                    #
+					                </th>
+					                <th>
+					                    Codigos de reserva
+					                </th>			                
+					            </tr>
+					        </thead>
+					        <tbody>
+					            <tr ng-repeat="code in vm.codList">
+					                <td>
+					                    1
+					                </td>
+					                <td>
+					                    {{code.code}}
+					                </td>
+					                <td class="text-right">
+					                    <button class="btn btn-info btn-icon-text waves-effect" ng-click="">
+					                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+					                        </i>
+					                        Editar
+					                    </button>
+					                    <button class="btn btn-danger btn-icon-text waves-effect" ng-click="vm.deleteCode(code.code)">
+					                        <i class="zmdi zmdi-delete zmdi-hc-fw">
+					                        </i>
+					                        Eliminar
+					                    </button>
+					                </td>
+					            </tr>					            
+					        </tbody>
+					    </table>
+					</div>
+				</div>
+			</div>																	
+        </form>
+    </div>
+</div>

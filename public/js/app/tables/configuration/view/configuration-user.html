@@ -1,0 +1,110 @@
+<div class="configuration-reservation-form">
+	<div class="card-header p-l-0 p-r-0">
+		<h2>
+			Usuarios provilegiados
+			<small> Aqui puedes agregar a los usuarios que tienen permitido hacer reservas online
+			</small>
+		</h2>
+	</div>
+    <div class="card-body p-l-100 p-r-50">
+    	<form  name="configurationUserForm" novalidate>	                        	
+    		<div class="row">
+    			<div class="col-sm-3">
+    				<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+    				<div class="form-group fg-line">
+    					<!-- <span class="glyphicon glyphicon-time"></span> -->
+    					<div class="checkbox">
+    						<label>
+    							<input type="checkbox" >
+    							<i class="input-helper"></i>
+    							Activar
+    						</label>
+    					</div>		
+    				</div>										
+    				<!-- <small class="help-block">Todo Ok</small> -->
+    			</div>
+    			<div class="col-sm-3">
+    				<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+    				<div class="form-group fg-line">
+    					<!-- <span class="glyphicon glyphicon-time"></span> -->
+    					<div class="checkbox">
+    						<label>
+    							<input type="checkbox" >
+    							<i class="input-helper"></i>
+    							Desactivar
+    						</label>
+    					</div>
+    				</div>										
+    				<!-- <small class="help-block">Todo Ok</small> -->
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col-sm-4">
+    				<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
+    				<div class="form-group fg-line">
+    					<label>
+    						Buscar usuario:
+    					</label>
+    					<input class="form-control input-sm fg-input" ng-model="turnData.name" placeholder="Ingresar código aqui" required="" type="text">
+    				</input>	
+    			</div>										
+    			<!-- <small class="help-block">Todo Ok</small> -->
+    		</div>
+    		<div class="col-sm-2">
+    			<div class="form-group fg-line">
+    				<label>
+
+    				</label>
+    				<button class="form-control btn btn-primary waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationUserForm$valid">Agregar</button>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    	<div class="col-sm-8">
+    			<div class="card-body table-responsive">
+    				<table class="table">
+    					<thead>
+    						<tr>
+    							<th>
+    								Codigos de reserva
+    							</th>
+    							<th>
+    								email
+    							</th>
+    							<th class="text-center">
+    								tipo de cuenta
+    							</th>					                
+    						</tr>
+    					</thead>
+    					<tbody>
+    						<tr>
+    							<td>
+    								mark cornejo bonifacio
+    							</td>
+    							<td>
+    								mark@gmail.com
+    							</td>
+    							<td>
+    								facebook
+    							</td>
+    							<td class="text-right">
+					                  <!--   <button class="btn btn-info btn-icon-text waves-effect">
+					                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+					                        </i>
+					                        Editar
+					                    </button> -->
+					                    <button class="btn btn-danger btn-icon-text waves-effect">
+					                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
+					                    	</i>
+					                    	Eliminar
+					                    </button>
+					                </td>
+					            </tr>					            
+					        </tbody>
+					    </table>
+					</div>
+				</div>
+			</div>																	
+		</form>
+	</div>
+</div>
