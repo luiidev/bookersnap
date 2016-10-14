@@ -4,10 +4,34 @@ angular.module('configuration.service', [])
 			getConfiguration: function() {
 				return $http.get(ApiUrlMesas + "/configuration/reservation");
 			},
-			updateConfiguration: function(idMicrosite) {
-				return $htpp.put(ApiUrlMesas + "/configuration/reservation/" + idMicrosite);
-			}
+			updateConfiguration: function(idMicrosite, configuration) {
+				return $http.put(ApiUrlMesas + "/configuration/reservation/" + idMicrosite, {}, {
+					params: {
+						time_tolerance: configuration.time_tolerance,
+						time_restriction: configuration.time_restriction,
+						max_people: configuration.max_people,
+						max_table: configuration.max_table,
+						res_code_status: configuration.res_code_status,
+						res_privilege_status: configuration.res_privilege_status,
+						messenger_status: configuration.messenger_status,
+						user_add: configuration.user_add,
+						user_upd: configuration.user_upd,
+						reserve_portal: configuration.reserve_portal,
+						res_percentage_id: configuration.res_percentage_id,
+						name_people_1: configuration.name_people_1,
+						name_people_2: configuration.name_people_2,
+						name_people_3: configuration.name_people_3,
+						status_people_1: configuration.status_people_1,
+						status_people_2: configuration.status_people_2,
+						status_people_3: configuration.status_people_3
+					}
+				});
+			},
+			getListPercentage: function() {
+				return $http.get(ApiUrlMesas + "/configuration/percentage");
+			},
 		};
+
 	})
 	.service('ConfigurationService', function($q, ConfigurationDataService) {
 		return {
@@ -23,10 +47,10 @@ angular.module('configuration.service', [])
 				});
 				return promise;
 			},
-			updateConfig: function(idMicrosite) {
+			updateConfig: function(idMicrosite, configuration) {
 				var defered = $q.defer();
 				var promise = defered.promise;
-				ConfigurationDataService.updateConfiguration(idMicrosite).success(function(data) {
+				ConfigurationDataService.updateConfiguration(idMicrosite, configuration).success(function(data) {
 					data = data.data;
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
@@ -34,6 +58,18 @@ angular.module('configuration.service', [])
 					defered.reject(response);
 				});
 				return promise;
-			}
+			},
+			getPercentages: function() {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataService.getListPercentage().success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
 		};
 	});

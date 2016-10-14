@@ -64,24 +64,24 @@
         <div class="modal-header" style="line-height: 30px;">
             <button class="btn bgm-white pull-left" ng-click="vmd.cancelEdit()"><i class="zmdi zmdi-arrow-back"></i></button>
             <h4 style="display: inline;">Detalle de reservacion</h4>
-            <button class="btn btn-primary pull-right" ng-click="save()" ng-disabled="waitingResponse">Guardar</button>
+            <button class="btn btn-primary pull-right" ng-click="vmd.save()" ng-disabled="vmd.waitingResponse">Guardar</button>
         </div>
         <div class="modal-body">
 
-         <div class="card reservation-guest-selected">
+         <div class="card reservation-guest-selected" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
              <div class="card-header bgm-indigo" ng-click="removeGuest()">
-                 <h2>{{ vmd.reservation.first_name }} {{ vmd.reservation.last_name }}</h2>
+                 <h2>{{ vmd.info.first_name }} {{ vmd.info.last_name }}</h2>
              </div>
         </div> 
 
         <div class="card m-b-5">
             <form class="form-horizontal" role="form">
                 <div class="card-body drag-border">
-                    <div class="form-group">
+                    <div class="form-group" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
                         <div class="col-xs-12" style="text-align: center;padding: 15px;">
-                            <label class="control-label pull-left">Lunes, 10/12</label>
-                            <label class="control-label">2:45 PM</label>
-                            <label class="control-label pull-right">32</label>
+                            <label class="control-label pull-left">{{ vmd.info.date }}</label>
+                            <label class="control-label">{{ vmd.info.time }}</label>
+                            <label class="control-label pull-right">{{ vmd.info.tables }}</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,7 +91,7 @@
                         <div class="col-xs-10">
                             <div class="fg-line">
                                 <div class="select">
-                                    <select class="form-control" id="covers" ng-model="vmd.reservation.num_people" ng-options="cover.id as cover.name for cover in vmd.covers"></select>
+                                    <select class="form-control" id="covers" ng-model="vmd.reservation.covers" ng-options="cover.id as cover.name for cover in vmd.covers"></select>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                         <div class="col-xs-10">
                             <div class="fg-line">
                                 <div class="select">
-                                    <select class="form-control" id="status" ng-model="vmd.reservation.res_reservation_status_id" ng-options="status.id as status.name for status in vmd.statuses"></select>
+                                    <select class="form-control" id="status" ng-model="vmd.reservation.status_id" ng-options="status.id as status.name for status in vmd.statuses"></select>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('men')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumMen==vmc.numdinamicoMen ? 'btn-active': ''}}">{{vmc.numdinamicoMen}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumMen==vmc.numdinamicoMen ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoMen,'men')">{{vmc.numdinamicoMen}}</span>
                             <button class="btn" ng-click="vmc.sumar('men')">+</button>
                         </div>
                         <div class="clearfix"></div>
@@ -179,7 +179,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('women')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumWomen==vmc.numdinamicoWomen ? 'btn-active': ''}}">{{vmc.numdinamicoWomen}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumWomen==vmc.numdinamicoWomen ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoWomen,'women')">{{vmc.numdinamicoWomen}}</span>
                             <button class="btn" ng-click="vmc.sumar('women')">+</button>
                         </div>
                         <div class="clearfix"></div>
@@ -193,7 +193,7 @@
                         </div>
                         <div class="box-count pull-right">
                             <button class="btn" ng-click="vmc.restar('children')">-</button>
-                            <span class="box-count-value {{vmc.flagSelectedCountNumChildren==vmc.numdinamicoChildren ? 'btn-active': ''}}">{{vmc.numdinamicoChildren}}</span>
+                            <span class="box-count-value {{vmc.flagSelectedCountNumChildren==vmc.numdinamicoChildren ? 'btn-active': ''}}" ng-click="vmc.numThirteen(vmc.numdinamicoChildren,'children')">{{vmc.numdinamicoChildren}}</span>
                             <button class="btn" ng-click="vmc.sumar('children')">+</button>
                         </div>
                         <div class="clearfix"></div>
@@ -209,7 +209,7 @@
     </div>
     <div class="modal-footer">
         <div class="text-center">
-            <button class="btn btn-default-blue btn-block text-center waves-effect" ng-click="vmc.cancel()">GUARDAR</button>
+            <button class="btn btn-default-blue btn-block text-center waves-effect" ng-click="vmc.save()" ng-disabled="vmc.waitingResponse">GUARDAR</button>
         </div>
     </div>
 </script>

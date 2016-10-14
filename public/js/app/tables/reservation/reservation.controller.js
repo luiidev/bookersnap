@@ -3,8 +3,8 @@ angular.module('reservation.controller', [])
     console.log("=)");
 }])
 .controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
-    "screenHelper", "reservationService", "reservationHelper", "screenSize",
-        function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize){
+    "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state",
+        function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state){
 
     /**
      * Entidad de reservacion
@@ -225,19 +225,19 @@ angular.module('reservation.controller', [])
             // console.log(start_block.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
             tablesForEach(function(table) {
                 if (table.id == block.res_table_id) {
-                    if (block.res_reservation_id !== null) {
-                        table.occupied = true;
-                        table.suggested = false;
-                    } else {
-                        if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
-                                (end_time.isBetween(start_block, end_block, null, "()")) ||
-                                    (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-                            table.block = true;
+                    if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
+                            (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                        if (block.res_reservation_id !== null) {
+                            table.occupied = true;
                             table.suggested = false;
                         } else {
-                            table.block = false;
-                            table.occupied = false;
+                            table.block = true;
+                            table.suggested = false;
                         }
+                    } else {
+                        table.block = false;
+                        table.occupied = false;
                     }
                 }
             });
@@ -306,7 +306,7 @@ angular.module('reservation.controller', [])
     };
 
     var loadBlocks = function(date) {
-        service.getBlocks(date)
+        service.getBlocks(date, true)
             .then(function(response) {
                 blocks = response.data.data;
             }).catch(function(error) {
@@ -326,6 +326,7 @@ angular.module('reservation.controller', [])
                 message.apiError(error);
             }).finally(function() {
                 vm.tablesBlockValid();
+                loadReservation();
                 vm.waitingResponse = false;
             });
     };
@@ -359,6 +360,11 @@ angular.module('reservation.controller', [])
             }
 
             vm.date = new Date(date.replace(/-/g, '\/'));
+
+            // vm.$watch("date", function(newDate) {
+            //     var d = moment(newDate).format("YYYY-MM-DD");
+            //     $state.go("mesas.reservation-edit", );
+            // });
 
             vm.waitingResponse = true;
             service.getZones(date)
@@ -459,6 +465,8 @@ angular.module('reservation.controller', [])
     // End
     ///////////////////////////////////////////////////////////////
 
+
+
     ///////////////////////////////////////////////////////////////
     // Select tags
     ///////////////////////////////////////////////////////////////
@@ -476,6 +484,78 @@ angular.module('reservation.controller', [])
             }
         });
     };
+    ///////////////////////////////////////////////////////////////
+    // End
+    ///////////////////////////////////////////////////////////////
+
+
+
+    ///////////////////////////////////////////////////////////////
+    // Edit Reservation Case
+    ///////////////////////////////////////////////////////////////
+    function loadReservation() {
+        if (!$state.is("mesas.reservation-edit")) return;
+        console.log($stateParams.id);
+
+        vm.isEdit = true;
+
+        var reservation_id = $stateParams.id;
+
+        service.getReservation(reservation_id)
+            .then(function(response) {
+                console.log(response.data.data);
+                vm.reservation = parseReservationEdit(response.data.data);
+            }).catch(function(error) {
+                message.apiError(error);
+            }).finally(function() {
+
+            });
+    }
+
+    function parseReservationEdit(reservation) {
+        if (reservation.res_guest_id) {
+            vm.guest = reservation.guest;
+        }
+
+        paintTables(reservation.tables);
+        paintTags(reservation.tags);
+
+        return {
+             id: reservation.id,
+             guest_id: reservation.res_guest_id,
+             status_id: reservation.res_reservation_status_id,
+             date: reservation.date_reservation,
+             hour: reservation.hours_reservation,
+             duration: reservation.hours_duration,
+             covers: reservation.num_guest,
+             note: reservation.note,
+             server_id: reservation.res_server_id
+        };
+    }
+
+    function paintTables(tables) {
+        angular.forEach(tables, function(tableInUse) {
+            tablesForEach(function(table) {
+                if (table.id == tableInUse.id) {
+                    table.selected = true;
+                }
+            });
+        });
+
+        listTableSelected();
+    }
+
+    function paintTags(tags) {
+        angular.forEach(tags, function(tagInUse) {
+            angular.forEach(vm.tags, function(tag) {
+                if (tag.id == tagInUse.id) {
+                    tag.checked = true;
+                }
+            });
+        });
+
+        listTagsSelected();
+    }
     ///////////////////////////////////////////////////////////////
     // End
     ///////////////////////////////////////////////////////////////
