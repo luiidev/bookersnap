@@ -258,29 +258,32 @@ angular.module('reservation.controller', [])
         angular.forEach(blocks, function(block){
             var start_block =  moment(block.start_time, "HH:mm:ss");
             var end_block =  moment(block.end_time, "HH:mm:ss");
-            // console.log(start_block.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
             tablesForEach(function(table) {
                 if (table.id == block.res_table_id) {
-                    if ( (start_time.isBetween(start_block, end_block,  null, "()")) || 
+                    if ( (start_time.isBetween(start_block, end_block,  null, "()") ) || 
                             (end_time.isBetween(start_block, end_block, null, "()")) ||
                                 (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+
                         if (block.res_reservation_id !== null) {
-                            if (editState) {
+                            if (!editState) {
+                                table.occupied = true;
+                                table.suggested = false;
+                            } else {
                                 if (block.res_reservation_id != $stateParams.id) {
                                     table.occupied = true;
                                     table.suggested = false;
                                 }
-                            } else {
-                                table.occupied = true;
-                                table.suggested = false;
                             }
                         } else {
                             table.block = true;
                             table.suggested = false;
                         }
                     } else {
-                        table.block = false;
-                        table.occupied = false;
+                        if (block.res_reservation_id !== null) {
+                            table.occupied = false;
+                        } else {
+                            table.block = false;
+                        }
                     }
                 }
             });
@@ -532,16 +535,18 @@ angular.module('reservation.controller', [])
     }
 
     vm.cancelReservation = function() {
-        vm.waitingResponse = true;
-        var id = vm.reservation.id;
-        service.cancel(id)
-            .then(function(response) {
-                message.success(response.data.msg);
-                redirect();
-            }).catch(function(error) {
-                message.apiError(error);
-                vm.waitingResponse = false;
-            });
+        message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion no se puede revertir", function() {
+            vm.waitingResponse = true;
+            var id = vm.reservation.id;
+            service.cancel(id)
+                .then(function(response) {
+                    message.success(response.data.msg);
+                    redirect();
+                }).catch(function(error) {
+                    message.apiError(error);
+                    vm.waitingResponse = false;
+                });
+        });
     };
 
     function parseReservationEdit(reservation) {

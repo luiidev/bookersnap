@@ -309,7 +309,7 @@ message.show = function(title, text, type, options, action) {
 
     action = (action !== undefined) ? action : function() {};
 
-    if (options !== undefined) {
+    if (options !== undefined && options !== null) {
         if (typeof options == "object") {
             config = Object.assign(config, options);
         }
@@ -320,6 +320,20 @@ message.show = function(title, text, type, options, action) {
 };
 
 message.confirmButton = function(title, text, type, options, action) {
+    return this.show(title, text, type, options, action);
+};
+
+message.confirm = function(title, text, type, action) {
+    var options = {
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "SI",
+        cancelButtonText: "CANCELAR",
+        closeOnConfirm: false
+    };
+    if (typeof type == "function"){
+        return  this.show(title, text, "warning",  options, type);
+    }
     return this.show(title, text, type, options, action);
 };
 
