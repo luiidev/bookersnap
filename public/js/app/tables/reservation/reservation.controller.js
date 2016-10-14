@@ -94,6 +94,18 @@ angular.module('reservation.controller', [])
      */
     vm.guestList = [];
 
+    /**
+     * Forzar recarga de datos
+     * @type {Boolean}
+     */
+    var reload = false;
+
+    /**
+     * El estado actual es de edicion
+     * @type {Boolean}
+     */
+    var editState = false;
+
     vm.save = function() {
         ///////////////////////////////////////////////////////////////
         // parse reservation.tables ids
@@ -135,6 +147,16 @@ angular.module('reservation.controller', [])
         ///////////////////////////////////////////////////////////////
         vm.reservation.date = moment(vm.date).format("YYYY-MM-DD");
         
+        if (editState){
+            saveEditReservation();
+        } else {
+            saveNewReservation();
+        }
+
+        console.log(vm.reservation);
+    };
+
+    var saveNewReservation = function() {
         vm.waitingResponse = true;
         service.save(vm.reservation)
             .then(function(response) {
@@ -145,15 +167,29 @@ angular.module('reservation.controller', [])
                 message.apiError(error);
                 vm.waitingResponse = false;
             });
+    };
 
-        console.log(vm.reservation);
-        console.log(JSON.stringify(vm.reservation));
+    var saveEditReservation = function() {
+        vm.waitingResponse = true;
+        var id = vm.reservation.id;
+        service.edit(id, vm.reservation)
+            .then(function(response) {
+                message.success(response.data.msg);
+                redirect();
+            }).catch(function(error) {
+                message.apiError(error);
+                vm.waitingResponse = false;
+            });
     };
 
     vm.cancel = function() {
+        if (editState) {
+            return redirect();
+        }
         vm.reservation = {};
         vm.selectTags = {};
         vm.guest = {};
+        vm.newGuest = {};
         vm.guestList = [];
         vm.addGuest = false;
         defaultView();
@@ -229,8 +265,15 @@ angular.module('reservation.controller', [])
                             (end_time.isBetween(start_block, end_block, null, "()")) ||
                                 (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
                         if (block.res_reservation_id !== null) {
-                            table.occupied = true;
-                            table.suggested = false;
+                            if (editState) {
+                                if (block.res_reservation_id != $stateParams.id) {
+                                    table.occupied = true;
+                                    table.suggested = false;
+                                }
+                            } else {
+                                table.occupied = true;
+                                table.suggested = false;
+                            }
                         } else {
                             table.block = true;
                             table.suggested = false;
@@ -317,7 +360,7 @@ angular.module('reservation.controller', [])
     };
 
     var loadTurns = function(date) {
-        service.getTurns(date)
+        service.getTurns(date, reload)
             .then(function(response) {
                 var turns = response.data.data;
                 listHours(turns);
@@ -336,8 +379,6 @@ angular.module('reservation.controller', [])
             .then(function(data) {
                 vm.hours = data.hours;
                 vm.reservation.hour = data.default;
-            }).catch(function(error) {
-                message.apiError(error);
             });
     };
 
@@ -346,39 +387,7 @@ angular.module('reservation.controller', [])
             .then(function(durations) {
                 vm.durations = durations;
                 vm.reservation.duration = "01:30:00";
-            }).catch(function(error) {
-                message.apiError(error);
             });
-    };
-
-    var loadZones = function() {
-            var date = $stateParams.date;
-            var valid = moment(date , 'YYYY-MM-DD', true).isValid();
-
-            if (!valid) {
-                return message.error("Fecha invalida no se puede cargar las zonas");
-            }
-
-            vm.date = new Date(date.replace(/-/g, '\/'));
-
-            // vm.$watch("date", function(newDate) {
-            //     var d = moment(newDate).format("YYYY-MM-DD");
-            //     $state.go("mesas.reservation-edit", );
-            // });
-
-            vm.waitingResponse = true;
-            service.getZones(date)
-                .then(function(response) {
-                    loadTablesEdit(response.data.data);
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    loadBlocks(date);
-                    listGuest();
-                    listServers();
-                    listStatuses();
-                    listReservationTags();
-                });
     };
 
     var loadTablesEdit = function(dataZones) {
@@ -419,13 +428,15 @@ angular.module('reservation.controller', [])
         if(vm.zones.length) vm.zoneName = vm.zones[i].name;
     };
 
-
     angular.element($window).bind('resize', function(){
-        var size = screenHelper.size(screenSize);
-        vm.size = size;
-        vm.fontSize = (14 *  size / screenSize.minSize + "px");
+        sizeLienzo();
         vm.$digest();
     });
+
+    var sizeLienzo = function() {
+        vm.size = screenHelper.size(screenSize);
+        vm.fontSize = (14 *   vm.size / screenSize.minSize + "px");
+    };
 
     ///////////////////////////////////////////////////////////////
     // Search guest list
@@ -494,33 +505,47 @@ angular.module('reservation.controller', [])
     // Edit Reservation Case
     ///////////////////////////////////////////////////////////////
     function loadReservation() {
-        if (!$state.is("mesas.reservation-edit")) return;
-        console.log($stateParams.id);
+        if (editState) {
+            var reservation_id = $stateParams.id;
 
-        vm.isEdit = true;
+            if (!reservation_id) {
+                message.error("La reservacion a editar no es valida");
+                return redirect();
+            }
 
-        var reservation_id = $stateParams.id;
+            vm.isEdit = true;
 
-        service.getReservation(reservation_id)
-            .then(function(response) {
-                console.log(response.data.data);
-                vm.reservation = parseReservationEdit(response.data.data);
-            }).catch(function(error) {
-                message.apiError(error);
-            }).finally(function() {
-
-            });
+            service.getReservation(reservation_id)
+                .then(function(response) {
+                    console.log(response.data.data);
+                    var data = response.data.data;
+                    if (data === null) {
+                        message.error("No se encontro la reservacion solicitada");
+                        return redirect(); 
+                    } else {
+                        parseReservationEdit(data);
+                    }
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+        }
     }
 
+    vm.cancelReservation = function() {
+        vm.waitingResponse = true;
+        var id = vm.reservation.id;
+        service.cancel(id)
+            .then(function(response) {
+                message.success(response.data.msg);
+                redirect();
+            }).catch(function(error) {
+                message.apiError(error);
+                vm.waitingResponse = false;
+            });
+    };
+
     function parseReservationEdit(reservation) {
-        if (reservation.res_guest_id) {
-            vm.guest = reservation.guest;
-        }
-
-        paintTables(reservation.tables);
-        paintTags(reservation.tags);
-
-        return {
+        vm.reservation =  {
              id: reservation.id,
              guest_id: reservation.res_guest_id,
              status_id: reservation.res_reservation_status_id,
@@ -531,6 +556,13 @@ angular.module('reservation.controller', [])
              note: reservation.note,
              server_id: reservation.res_server_id
         };
+
+        if (reservation.res_guest_id) {
+            vm.guest = reservation.guest;
+        }
+
+        paintTables(reservation.tables);
+        paintTags(reservation.tags);
     }
 
     function paintTables(tables) {
@@ -560,10 +592,57 @@ angular.module('reservation.controller', [])
     // End
     ///////////////////////////////////////////////////////////////
 
-    (function Init() {
-        loadZones();
+    var loadZones = function(date) {
+        vm.waitingResponse = true;
+        service.getZones(date, reload)
+            .then(function(response) {
+                loadTablesEdit(response.data.data);
+            }).catch(function(error) {
+                message.apiError(error);
+            }).finally(function() {
+                loadBlocks(date);
+                listGuest();
+                listServers();
+                listStatuses();
+                listReservationTags();
+            });
+    };
 
-        vm.size = screenHelper.size(screenSize);
-        vm.fontSize = (14 *  vm.size / screenSize.minSize+ "px");
+    vm.changeDate = function() {
+        var date = moment(vm.date);
+
+        if (!date.isValid()) {
+            return message.error("Fecha invalida no se puede cargar las zonas");
+        }
+
+        // forzar recarga de datos: zonas|turnos|bloqueos
+        reload = true;
+        loadZones(date.format("YYYY-MM-DD"));
+    };
+
+    var initialDate =  function() {
+        var date = moment($stateParams.date , "YYYY-MM-DD", true);
+
+        if (!date.isValid()) {
+            return message.error("Fecha invalida no se puede cargar las zonas");
+        }
+
+        vm.date = new Date(date.format("YYYY-MM-DD").replace(/-/g, '\/'));
+
+        loadZones(date.format("YYYY-MM-DD"));
+    };
+
+    var isEditSate = function() {
+        editState =  $state.is("mesas.reservation-edit");
+    };
+
+    var redirect = function() {
+        $state.go("mesas.floor.reservation");
+    };
+
+    (function Init() {
+        isEditSate();
+        initialDate();
+        sizeLienzo();
     })();
 }]);
