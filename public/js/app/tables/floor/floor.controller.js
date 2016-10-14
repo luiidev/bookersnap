@@ -1,19 +1,41 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $timeout, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
         var vm = this;
         var fecha_actual = getFechaActual();
 
         vm.titulo = "Floor";
         vm.colorsSelect = [];
-        vm.flagSelectedZone = 0;
+        vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
+
+        var selectedTabZoneByServer = function() {
+            if (FloorFactory.isEditServer()) {
+                vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
+            }
+        };
+
+
+        var listenFloor = function() {
+            selectedTabZoneByServer();
+            $timeout(listenFloor, 500);
+        };
+        listenFloor();
+
+        vm.tabSelectedZone = function(value) {
+            FloorFactory.setNavegationTabZone(value);
+            vm.flagSelectedZone = value;
+        };
+
+
 
         vm.fecha_actual = fecha_actual;
 
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
                 vm.zonas = data;
-                //console.log('Formateado: ' + angular.toJson(data, true));
+                //console.log('Zonas: ' + angular.toJson(data, true));
+                //Guardar data en un servicio para buscar table y conocer el index de su zona
+                FloorFactory.setDataZonesTables(data);
             }, function error(data) {
                 messageErrorApi(data, "Error", "warning");
             });
@@ -56,17 +78,12 @@ angular.module('floor.controller', [])
                     content: function() {
                         return {
                             table: data,
-                            tables: vm.zonas[index].table
+                            //tables: vm.zonas[index].table
                         };
                     }
                 }
             });
         }
-
-        vm.tabSelectedZone = function(value) {
-            vm.flagSelectedZone = value;
-
-        };
 
         vm.handConfiguration = function(obj) {
             var res_men = vm.numpeople.num_men;
@@ -290,7 +307,7 @@ angular.module('floor.controller', [])
             $modalInstance.dismiss('cancel');
         };
 
-        function  parseReservation() {
+        function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
             var start_time =  now.clone().add((15 - (now.minutes() % 15)), "minutes").second(0).format("HH:mm:ss");
@@ -309,12 +326,12 @@ angular.module('floor.controller', [])
 
         vmc.save = function() {
             var reservation = parseReservation();
-            console.log(reservation);
+            //console.log(reservation);
             $modalInstance.dismiss('cancel');
         };
 
     })
-    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance , $uibModal, content, FloorFactory, reservationService, $state) {
+    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.table.name_zona,
@@ -418,15 +435,22 @@ angular.module('floor.controller', [])
         };
 
         vmd.save = function() {
-            console.log(vmd.reservation);
+            //console.log(vmd.reservation);
             $uibModalInstance.dismiss('cancel');
         };
 
         getTableReservation();
     })
 
-.controller('reservationController', function(FloorFactory, $timeout) {
+.controller('reservationController', function(FloorFactory, ServerDataFactory, $timeout) {
     var rm = this;
+
+    //Limpiar data y estilos de servers
+    FloorFactory.isEditServer(false);
+    angular.element('.bg-window-floor').removeClass('drag-dispel');
+    angular.element('.table-zone').removeClass("selected-table");
+    ServerDataFactory.cleanTableServerItems();
+
     rm.search = {
         show: true
     };
@@ -441,10 +465,18 @@ angular.module('floor.controller', [])
         });
     };
     getlistZonesBloqueosReservas();
-}).
 
-controller('waitlistController', function() {
+})
+
+.controller('waitlistController', function(FloorFactory, ServerDataFactory) {
     var wm = this;
+
+    //Limpiar data y estilos de servers
+    FloorFactory.isEditServer(false);
+    angular.element('.bg-window-floor').removeClass('drag-dispel');
+    angular.element('.table-zone').removeClass("selected-table");
+    ServerDataFactory.cleanTableServerItems();
+
     wm.search = {
         show: true
     };
@@ -487,6 +519,27 @@ controller('waitlistController', function() {
         sm.flagServer = true;
         sm.showForm = true;
 
+        //Obtener tab marcado
+        var firstTableId = parseInt(server.tables[0].id);
+        var indiceZone = 0;
+
+        var lstZonas = FloorFactory.getDataZonesTables();
+        angular.forEach(lstZonas, function(zona, key) {
+            var tables = zona.table;
+            //console.log(zona);
+            angular.forEach(tables, function(table) {
+                //console.log(table);
+                if (table.table_id == firstTableId) {
+                    indiceZone = key;
+                    FloorFactory.setNavegationTabZone(indiceZone);
+                    //console.log(key);
+                }
+
+            });
+
+        });
+
+        //Obtener table de cada server
         vTable = [];
         angular.forEach(server.tables, function(table) {
             var dataTable = {
@@ -544,7 +597,7 @@ controller('waitlistController', function() {
             sm.colors[i].classSelect = "";
         }
         sm.colors[position].classSelect = "is-selected";
-        console.log(sm.color);
+        //console.log(sm.color);
 
     };
 
