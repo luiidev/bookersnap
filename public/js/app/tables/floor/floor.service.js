@@ -20,12 +20,19 @@ angular.module('floor.service', [])
 		};
 		var serverColection = [];
 		var zonesTotal = [];
+		var navegaTabZone = 0;
 		return {
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
 				}
 				return flag.editServer;
+			},
+			setNavegationTabZone: function(value) {
+				navegaTabZone = value;
+			},
+			getNavegationTabZone: function() {
+				return navegaTabZone;
 			},
 			setDataZonesTables: function(zones) {
 				zonesTotal = zones;
