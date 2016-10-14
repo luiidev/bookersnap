@@ -56,7 +56,10 @@ angular.module('floor.controller', [])
                 size: '',
                 resolve: {
                     content: function() {
-                        return data;
+                        return {
+                            table: data,
+                            tables: vm.zonas[index].table
+                        };
                     }
                 }
             });
@@ -288,26 +291,56 @@ angular.module('floor.controller', [])
             $modalInstance.dismiss('cancel');
         };
 
+        function  parseReservation() {
+            var now = moment();
+            var date = now.format("YYYY-MM-DD");
+            var start_time =  now.add((15 - (parseInt(now.format("mm")) % 15)), "minutes").second(0).format("HH:mm:ss");
+            return {
+                table_id: table.table_id,
+                covers: {
+                    total: vmc.resultado,
+                    men: vmc.flagSelectedNumMen,
+                    women: vmc.flagSelectedNumWomen,
+                    children: vmc.flagSelectedNumChildren,
+                },
+                date: date,
+                start_time: start_time
+            };
+        }
+
+        vmc.save = function() {
+            var reservation = parseReservation();
+            console.log(reservation);
+            $modalInstance.dismiss('cancel');
+        };
+
     })
-    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService) {
+    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance , $uibModal, content, FloorFactory, reservationService, $state) {
         var vmd = this;
         vmd.itemZona = {
-            name_zona: content.name_zona,
-            name: content.name
+            name_zona: content.table.name_zona,
+            name: content.table.name
         };
 
         vmd.reservation = {};
 
         var getTableReservation = function() {
-            FloorFactory.rowTableReservation(content.table_id)
+            FloorFactory.rowTableReservation(content.table.table_id)
                 .then(function(data) {
                     vmd.itemReservations = data;
                     // console.log('PopUp: ' + angular.toJson(data, true));
                 });
         };
 
+        vmd.reservationEditAll = function() {
+            $uibModalInstance.dismiss('cancel');
+            $state.go('mesas.reservation-edit', {
+                id: 1,
+                date: "2016-10-13"
+            });
+        };
+
         vmd.reservationEdit = function(data) {
-            console.log(data);
             listResource();
             vmd.info = parseInfo(data);
             vmd.reservation = parseData(data);
@@ -322,6 +355,7 @@ angular.module('floor.controller', [])
 
         function parseData(data) {
             return {
+                id: data.reservation_id,
                 covers: data.num_people,
                 status_id: data.res_reservation_status_id,
                 server_id: data.res_server_id,
@@ -329,10 +363,24 @@ angular.module('floor.controller', [])
             };
         }
 
-        function parseInfo() {
+        function parseInfo(data) {
             return {
-
+                first_name: data.first_name,
+                last_name: data.last_name,
+                date: moment(data.start_date).format("dddd, d [de] MMMM"),
+                time: moment(data.start_time, "HH:mm:ss").format("H:mm A"),
+                tables: getReservationTables(data.reservation_id)
             };
+        }
+
+        function getReservationTables(id) {
+            var reservationTables = "";
+            angular.forEach(content.tables, function(table, i) {
+                if (table.reservation_id == id) {
+                    reservationTables += table.name + ", ";
+                }
+            });
+            return reservationTables.substring(0, reservationTables.length - 2);
         }
 
         var listGuest = function() {
@@ -363,9 +411,15 @@ angular.module('floor.controller', [])
         vmd.cancelEdit = function() {
             vmd.EditContent = false;
             vmd.reservation = {};
+            vmd.info = {};
         };
 
         $scope.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        vmd.save = function() {
+            console.log(vmd.reservation);
             $uibModalInstance.dismiss('cancel');
         };
 

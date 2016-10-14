@@ -211,6 +211,7 @@ angular.module('floor.service', [])
 										//console.log(blocks);
 										if (block.table_id === table.id) {
 											dataTable.res_reservation_status_id = block.res_reservation_status_id;
+											dataTable.reservation_id = block.reservation_id;
 										}
 									});
 									angular.forEach(servers, function(server) {

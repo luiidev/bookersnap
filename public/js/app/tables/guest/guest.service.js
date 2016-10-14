@@ -56,7 +56,6 @@ angular.module('guest.service', [])
 				contentTab.active = "datos.html";
 				contentTab.tab1 = "active";
 				contentTab.tab2 = "";
-
 			}
 
 			if (tabItem == 2) {

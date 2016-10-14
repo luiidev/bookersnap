@@ -5,48 +5,25 @@ angular.module('block.service', [])
         var block;
         return {
             getZonesCalendar: function(date, reload) {
-                var url = ApiUrlMesas + "/calendar/" + date + "/zones";
-                zonesCalendar = HttpFactory.get(url, {}, zonesCalendar, reload);
+                zonesCalendar = HttpFactory.get(ApiUrlMesas + "/calendar/" + date + "/zones", {}, zonesCalendar, reload);
                 return zonesCalendar;
             },
             getAllBlock: function(vDate, reload) {
-                var url = ApiUrlMesas + "/blocks/tables?" + vDate;
-                blocksAll = HttpFactory.get(url, {}, blocksAll, reload);
+                blocksAll = HttpFactory.get(ApiUrlMesas + "/blocks/tables?" + vDate, {}, blocksAll, reload);
                 return blocksAll;
             },
             getBlock: function(vId, reload) {
-                var url = ApiUrlMesas + "/blocks/" + vId;
-                block = HttpFactory.get(url, {}, block, reload);
+                block = HttpFactory.get(ApiUrlMesas + "/blocks/" + vId, {}, block, reload);
                 return block;
             },
-            addNewBlock: function(data) {
-
-                return $http({
-                    url: ApiUrlMesas + "/blocks",
-                    method: "POST",
-                    data: data
-                }).then(function successCallback(response) {
-                    return response;
-                }, function errorCallback(response) {
-                    return response;
-                });
+            saveBlock: function(data) {
+                return $http.post(ApiUrlMesas + "/blocks", data);
             },
             deleteBlock: function(id_block) {
-                return $http({
-                    url: ApiUrlMesas + "/blocks/" + id_block,
-                    method: "DELETE"
-                }).then(function successCallback(response) {
-                    return response;
-                }, function errorCallback(response) {
-                    return response;
-                });
+                return $http.delete(ApiUrlMesas + "/blocks/" + id_block);
             },
-            editBlock: function(variablesUrl, data) {
-                return $http({
-                    url: ApiUrlMesas + "/blocks" + variablesUrl,
-                    method: "PUT",
-                    data: data
-                });
+            editBlock: function(id_block, data) {
+                return $http.put(ApiUrlMesas + "/blocks/" + id_block, data);
             },
             coverList: function() {
                 return {
@@ -63,46 +40,37 @@ angular.module('block.service', [])
                 };
             },
             updateTablesBlocked: function(scope, sce) {
-                /* Mensaje */
                 var res = scope.mesasBloqueadas.toString().replace(/,/g, ", ");
-                console.log(scope.mesasBloqueadas);
-                console.log(res);
                 scope.someSafeContent = sce.trustAsHtml("<b>" + res + "</b>");
             },
             checkTable: function(scope, sce, index, data) {
 
-                /************************************************************************************* 
-                 Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada  
-                 **************************************************************************************/
+                //Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada  
                 //Se carga la clase a la mesa para poder mostrar en el sistema
                 var zoneSelect = scope.zone;
                 angular.forEach(scope.zones, function(value, key) {
 
                     if (value.id == zoneSelect.id) {
-                        scope.zones[key].tables[index].class = "selected-table"; // Se carga una clase cuando se selecciona la mesa
+                        scope.zones[key].tables[index].class = "selected-table";
                     }
 
                 });
-                /*************************************************************************************/
+
                 scope.mesasBloqueadas.push(data.id);
-                this.updateTablesBlocked(scope, sce); // Actualizar mensaje
+                this.updateTablesBlocked(scope, sce);
             },
             uncheckTable: function(scope, sce, index, data) {
 
-                /************************************************************************************* 
-                 Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada  
-                 **************************************************************************************/
+                //Se crea crea el metodo para poder identificar cual es la clase que esta seleccionada  
                 //Se carga la clase a la mesa para poder mostrar en el sistema
                 var zoneSelect = scope.zone;
-                console.log(scope.zone);
                 angular.forEach(scope.zones, function(value, key) {
 
                     if (value.id == zoneSelect.id) {
-                        scope.zones[key].tables[index].class = ""; // Se carga una clase cuando se selecciona la mesa
+                        scope.zones[key].tables[index].class = "";
                     }
 
                 });
-                /*************************************************************************************/
 
                 var item = scope.mesasBloqueadas.indexOf(data.id);
 
@@ -111,7 +79,7 @@ angular.module('block.service', [])
                     scope.mesasBloqueadas.splice(item, 1);
                 }
 
-                this.updateTablesBlocked(scope, sce); // Actualizar mensaje
+                this.updateTablesBlocked(scope, sce);
             },
             selectAllTables: function(scope, sce, loadTablesEdit) {
 
@@ -125,7 +93,7 @@ angular.module('block.service', [])
                     }
                 });
 
-                this.updateTablesBlocked(scope, sce); // Actualizar mensaje
+                this.updateTablesBlocked(scope, sce);
 
                 var posicion = scope.zones.indexOf(scope.zone);
                 if (posicion != -1) {
@@ -152,7 +120,7 @@ angular.module('block.service', [])
                     }
                 });
 
-                this.updateTablesBlocked(scope, sce); // Actualizar mensaje
+                this.updateTablesBlocked(scope, sce);
 
                 var posicion = scope.zones.indexOf(scope.zone);
                 if (posicion != -1) {
@@ -184,7 +152,7 @@ angular.module('block.service', [])
                         id: data.id,
                         status: data.status
                     };
-                    //                        console.log(dataTable);
+
                     if (data.status == 1) {
                         scope.itemTables.push(dataTable);
                     } else {
@@ -196,47 +164,4 @@ angular.module('block.service', [])
 
         };
 
-    })
-    .factory("blockHelper", ["TableFactory", "reservationScreenHelper", function(TableFactory, screenHelper) {
-        var loadTable = function(zones) {
-            var itemZones = [];
-            itemZones = zones;
-            //
-            //        angular.forEach(zones, function(zone) {
-            //            var item = {};
-            //            var tables = [];
-            //            angular.forEach(zone.tables, function(data) {
-            //                var position = data.config_position.split(",");
-            //                var left = (parseInt(position[0])  / screenHelper.minSize() ) * 100 + "%";
-            //                var top = (parseInt(position[1]) / screenHelper.minSize()) * 100 + "%";
-            //                var size = TableFactory.getLabelSize(data.config_size) + "-relative";
-            //                var dataTable = {
-            //                    name: data.name,
-            //                    minCover: data.min_cover,
-            //                    maxCover: data.max_cover,
-            //                    left: left,
-            //                    top: top,
-            //                    shape: TableFactory.getLabelShape(data.config_forme),
-            //                    size: size,
-            //                    rotate: data.config_rotation,
-            //                    id: data.id,
-            //                    status: data.status,
-            //                    suggested: false
-            //                };
-            //
-            //                if (data.status == 1) {
-            //                    tables.push(dataTable);
-            //                }
-            //            });
-            //            item.name = zone.name;
-            //            item.tables = tables;
-            //            itemZones.push(item);
-            //        });
-            //
-            return itemZones;
-        };
-
-        return {
-            loadTable: loadTable
-        };
-    }]);
+    });
