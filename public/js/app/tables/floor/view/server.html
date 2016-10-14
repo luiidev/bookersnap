@@ -27,16 +27,20 @@
 }
 
 .ServerColor-preview.is-selected {
-    box-shadow: 0 0 0 3px #2196f3;
+    box-shadow: 0 0 5px 5px #cee9ff;
+    border: 1px solid #bbb;
 }
 </style>
 <div class="col-sm-12 m-t-20 p-0" ng-show="!sm.showForm">
-    <p class="f-500 m-b-10 c-black">
-        <button class="btn bt-xs btn-success btn-block" ng-click="sm.btnAddServer()"><i class="zmdi zmdi-plus-circle"></i> Add Server</button>
-    </p>
-    <small>Active servers</small>
-    <ul class="list-group ">
-        <li style="cursor: pointer;" class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers" ng-click="sm.btnEditServer($index,server)">
+
+    <div class="col-xs-12">
+        <button class="btn btn-default-blue btn-block" ng-click="sm.btnAddServer()"><i class="zmdi zmdi-plus-circle zmdi-hc-fw zmdi-hc-lg"></i> Add Server</button>
+    </div>
+
+
+    <ul class="list-group listado-servers">
+        <li class="list-group-item title">Servidores activos</li>
+        <li class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers" ng-click="sm.btnEditServer($index,server)">
             <div class="col-xs-2 p-0 center">
                 <span class="badge" style="background-color:{{server.color}} !important ">&nbsp</span>
             </div>
@@ -51,17 +55,32 @@
         </li>
     </ul>
 </div>
-<div class="col-xs-12" id="form_new_server" ng-show="sm.showForm">
-    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <button class="btn btn-success btn-block col-xs-6" ng-click="sm.saveOrUpdateServer() ">Guardar</button>
-        <button class="btn btn-warning btn-block col-xs-6" ng-click="sm.btnCancelEditServer() ">Cancelar</button>
+<br>
+<div class="col-xs-12 new-detail-server" id="form_new_server" ng-show="sm.showForm">
+    
+    <div class="header-actions m-b-20">
+
+        <button class="btn btn-default pull-left waves-effect" ng-click="sm.btnCancelEditServer() ">Cancelar</button>
+        <span ng-show="sm.flagServer">Editar servidor</span>
+        <span ng-show="sm.flagServer==false">Nuevo servidor</span>
+        <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()">
+            <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
+    
+        </div>
+
+        
+
+    <div class="">
+        <div class="title">Nombre de servidor</div>
+        <div class="form-group">
+            <div class="fg-line">
+                <input type="text" class="form-control input-sm" ng-model="sm.name" placeholder="Nombre de servidor">
+            </div> 
+        </div>
+
     </div>
-    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <small>Name & Color</small>
-        <input type="text" class="form-control" ng-model="sm.name" placeholder="Server">
-    </div>
-    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <small>Available Colors</small>
+    <div class="">
+        <div class="title">Seleccionar color</div>
         <div class="Form-field Form-field--smallSpacing">
             <div class="ServerColor-previewContainer">
                 <label class="ServerColor-preview {{color.classSelect}}" ng-model="sm.color" for="color_hex_{{color.colorHexadecimal}}" ng-click="sm.selectColor(color);" style="background-color: {{color.colorHexadecimal}};" ng-repeat="color in sm.colors">
@@ -70,7 +89,7 @@
         </div>
     </div>
     <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <small>Assigned Colors</small>
+        <div class="title">Colores usados</div>
         <div class="Form-field Form-field--smallSpacing">
             <div class="ServerColor-previewContainer">
                 <label class="ServerColor-preview  for="color_hex_{{color}}" style="background-color: {{color}}; " ng-repeat="color in sm.colorsSelect">
@@ -78,21 +97,22 @@
             </div>
         </div>
     </div>
-     <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
-        <small>Tables</small>
+    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
+        <div class="title">Mesas seleccionadas: {{sm.listadoTablaServer.length}}</div>
+        <span ng-if="sm.listadoTablaServer.length==0">No tiene mesas seleccionadas</span>
         <!--<div ng-repeat="server in sm.listadoServer">{{server.name}}</div>-->
         <div class="ServerColor-previewContainer m-t-10 m-b-10 ">
                 <!--<p ng-repeat="table in mesasSeleccionadas " class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
                     <label>{{table.name}}</label>
                     <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable(table) ">X</button>
                 </p>-->
-                <p ng-repeat="table in sm.listadoTablaServer" class="m-l-5 " style="border: 2px solid;border-radius: 5px; ">
+                <p ng-repeat="table in sm.listadoTablaServer" class="m-l-5 tag-table">
                     <label>{{table.name}}</label>
                     <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable($index,table) ">X</button>
                 </p>
         </div>
     </div>
      <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
-        <button class="btn btn-error btn-block " ng-click="sm.btnDeleteServer() " ng-show="sm.flagServer">Delete</button>
+        <button class="btn btn-danger btn-block" ng-click="sm.btnDeleteServer() " ng-show="sm.flagServer"><i class="zmdi zmdi-delete zmdi-hc-fw zmdi-hc-lg"></i> ELIMINAR</button>
     </div>
 </div>
