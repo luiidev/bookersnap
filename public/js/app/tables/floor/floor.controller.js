@@ -1,14 +1,30 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, $document, screenHelper,
+        screenSizeFloor, TypeTurnFactory) {
         var vm = this;
         var fecha_actual = getFechaActual();
 
         vm.titulo = "Floor";
         vm.colorsSelect = [];
         vm.flagSelectedZone = 0;
+        vm.notesBox = false;
 
         vm.fecha_actual = fecha_actual;
+        vm.typeTurns = [];
+
+        var listTypeTurns = function() {
+            TypeTurnFactory.getTypeTurns().then(
+                function success(response) {
+                    response = response.data.data;
+                    vm.typeTurns = response;
+                    console.log("typeturns " + angular.toJson(vm.typeTurns, true));
+                },
+                function error(response) {
+                    console.error("typeturns " + angular.toJson(response, true));
+                }
+            );
+        };
 
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
@@ -131,6 +147,8 @@ angular.module('floor.controller', [])
         (function Init() {
             vm.size = screenHelper.size(screenSizeFloor);
             vm.fontSize = 14 * vm.size / screenSizeFloor.minSize + "px";
+
+            listTypeTurns();
         })();
 
     })

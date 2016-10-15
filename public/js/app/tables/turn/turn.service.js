@@ -1,12 +1,14 @@
 angular.module('turn.service', [])
-
-.factory('TurnDataFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
+	.factory('TurnDataFactory', function($http, ApiUrlMesas, ApiUrlRoot) {
 		return {
 			getTurns: function(vOptions) {
 				return $http.get(ApiUrlMesas + "/turns?" + vOptions);
 			},
 			getTurn: function(vTurn, vOptions) {
 				return $http.get(ApiUrlMesas + "/turns/" + vTurn + "?" + vOptions);
+			},
+			deleteTurn: function(vId) {
+				return $http.delete(ApiUrlMesas + "/turns/" + vId);
 			},
 			createTurn: function(vData) {
 				return $http.post(ApiUrlMesas + "/turns", vData);
@@ -53,7 +55,10 @@ angular.module('turn.service', [])
 
 				TurnDataFactory.getTurns(options).success(function(data) {
 
-					var vTurns = [];
+					var turnsData = {
+						active: [],
+						inactive: []
+					};
 
 					angular.forEach(data.data, function(turns) {
 						var vZones = [];
@@ -64,11 +69,15 @@ angular.module('turn.service', [])
 
 						turns.zones = vZones.join(", ");
 
-						vTurns.push(turns);
+						if (turns.calendar.length > 0) {
+							turnsData.active.push(turns);
+						} else {
+							turnsData.inactive.push(turns);
+						}
 
 					});
 
-					defered.resolve(vTurns);
+					defered.resolve(turnsData);
 
 				}).error(function(data, status, headers) {
 					var response = {
@@ -78,6 +87,20 @@ angular.module('turn.service', [])
 					};
 					defered.reject(response);
 				});
+
+				return defered.promise;
+			},
+			deleteTurn: function(idTurn) {
+				var defered = $q.defer();
+
+				TurnDataFactory.deleteTurn(idTurn).then(
+					function success(response) {
+						defered.resolve(response.data);
+					},
+					function error(response) {
+						defered.reject(response);
+					}
+				);
 
 				return defered.promise;
 			},
@@ -160,7 +183,6 @@ angular.module('turn.service', [])
 				var defered = $q.defer();
 
 				TurnDataFactory.updateTurn(turnData).success(function(data) {
-					console.log("editTurn " + angular.toJson(data, true));
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
 					defered.reject(data);
@@ -218,14 +240,6 @@ angular.module('turn.service', [])
 				var data = {};
 				angular.forEach(zonesTables, function(value, key) {
 					if (value.zone_id == zoneId) {
-
-						/*angular.forEach(value.tables, function(tables){
-							delete tables.rules_disabled;
-							delete tables.rules_local;
-							delete tables.rules_online;
-							delete tables.res_turn_rule_id;
-						});*/
-
 						data = value.tables;
 					}
 				});
@@ -266,8 +280,6 @@ angular.module('turn.service', [])
 					if (validaDelete === 0) {
 						turnZoneAdd.zonesDeleted.push(vData);
 					}
-
-					console.log("deleteZone " + angular.toJson(turnZoneAdd, true));
 				}
 			},
 			getTurn: function(idTurn, options, listAvailability) {
@@ -307,9 +319,6 @@ angular.module('turn.service', [])
 						},
 						days: self.activeCheckDays(data.days)
 					};
-
-					//turnForm.days[0] = true;
-					//self.activeCheckDays(turnForm);
 
 					var turnDataClone = turnData;
 					var zonesId = [];
@@ -474,7 +483,6 @@ angular.module('turn.service', [])
 				angular.forEach(zonesTablesAdd, function(data, key) {
 					if (data.zone_id == idZone) {
 						tablesZone = data;
-						//console.log("searchZoneByZoneAdd " + angular.toJson(data,true));
 					}
 
 				});
@@ -575,7 +583,6 @@ angular.module('turn.service', [])
 
 							if (key == rulesTemp.index_time) {
 								rules.rule_id = rulesTemp.rule_id;
-								//console.log("saveRuleTable " + angular.toJson(rules,true));
 							}
 
 						});
@@ -688,7 +695,7 @@ angular.module('turn.service', [])
 
 					angular.forEach(turnZoneAdd.zonesTables, function(value, key) {
 						if (value.zone_id == zoneSelected.id) {
-							//value = vData;
+
 							turnZoneAdd.zonesTables.splice(key, 1);
 							turnZoneAdd.zonesTables.push(vData);
 
