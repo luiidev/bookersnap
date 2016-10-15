@@ -19,12 +19,19 @@ angular.module('floor.service', [])
 		};
 		var serverColection = [];
 		var zonesTotal = [];
+		var navegaTabZone = 0;
 		return {
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
 				}
 				return flag.editServer;
+			},
+			setNavegationTabZone: function(value) {
+				navegaTabZone = value;
+			},
+			getNavegationTabZone: function() {
+				return navegaTabZone;
 			},
 			setDataZonesTables: function(zones) {
 				zonesTotal = zones;
@@ -164,6 +171,7 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
+			//Todas las zonas con sus mesas y mas informacion
 			listZonesReservas: function() {
 				var me = this;
 				var defered = $q.defer();
@@ -243,6 +251,7 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
+			//Listado solo de mesas reservadas o bloqueadas
 			listZonesBloqueosReservas: function() {
 				var me = this;
 				var defered = $q.defer();
