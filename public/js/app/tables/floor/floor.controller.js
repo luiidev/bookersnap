@@ -27,7 +27,6 @@ angular.module('floor.controller', [])
         };
 
 
-
         vm.fecha_actual = fecha_actual;
 
         var getZones = function() {
