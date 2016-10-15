@@ -134,17 +134,18 @@ angular.module('floor.controller', [])
             }
         }
 
-        angular.element($window).bind('resize', function() {
-            var size = screenHelper.size(screenSizeFloor);
-            vm.size = size;
+        var sizeLienzo = function() {
+            vm.size = screenHelper.size(screenSizeFloor);
             vm.fontSize = 14 * vm.size / screenSizeFloor.minSize + "px";
-            $scope.$digest();
+        };
 
+        angular.element($window).bind('resize', function() {
+            sizeLienzo();
+            $scope.$digest();
         });
 
         (function Init() {
-            vm.size = screenHelper.size(screenSizeFloor);
-            vm.fontSize = 14 * vm.size / screenSizeFloor.minSize + "px";
+            sizeLienzo();
         })();
 
     })
@@ -308,7 +309,7 @@ angular.module('floor.controller', [])
         function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
-            var start_time = now.add((15 - (parseInt(now.format("mm")) % 15)), "minutes").second(0).format("HH:mm:ss");
+            var start_time =  now.clone().add((15 - (now.minutes() % 15)), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.table_id,
                 covers: {
@@ -349,8 +350,8 @@ angular.module('floor.controller', [])
         vmd.reservationEditAll = function() {
             $uibModalInstance.dismiss('cancel');
             $state.go('mesas.reservation-edit', {
-                id: 1,
-                date: "2016-10-13"
+                id: vmd.reservation.id,
+                date: getFechaActual()
             });
         };
 
