@@ -9,6 +9,7 @@
         <div data-ng-include="'/template/config-menu-tables.html'">
         </div>
         <div class="container">
+            <!--
             <div class="block-header">
                 <ul class="actions">
                     <li>
@@ -22,7 +23,7 @@
                         </button>
                     </li>
                 </ul>
-            </div>
+            </div>-->
             <div class="card box-turno-create">
                 <div class="card-header">
                     <h2>
@@ -30,6 +31,18 @@
                         <small>
                         </small>
                     </h2>
+                    <ul class="actions">
+                        <li>
+                            <button class="btn btn-default waves-effect" onclick="historyBack()">
+                                Cancelar
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create',frmTurn)" ng-disabled="turnForm.saveClick">
+                                Crear turno
+                            </button>
+                        </li>
+                    </ul>
                 </div>
                 <div class="card-body card-padding">
                     <form class="ng-pristine ng-valid" name="frmTurn" role="form">

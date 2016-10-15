@@ -15,6 +15,24 @@ angular.module('turn.app', ['turn.controller', 'turn.service', 'turn.directive']
                                         }
                                 }
                         })
+                        .state('mesas.turn.active', {
+                                url: '/turn-active',
+                                templateUrl: '/js/app/tables/turn/view/turn-active.html',
+                                resolve: {
+                                        $title: function() {
+                                                return 'Lista de turnos activos';
+                                        }
+                                }
+                        })
+                        .state('mesas.turn.inactive', {
+                                url: '/turn-inactive',
+                                templateUrl: '/js/app/tables/turn/view/turn-inactive.html',
+                                resolve: {
+                                        $title: function() {
+                                                return 'Lista de turnos inactivos';
+                                        }
+                                }
+                        })
                         .state('mesas.turn.create', {
                                 url: '/new',
                                 views: {

@@ -11,67 +11,20 @@
         <div class="container">
             <div class="card" id="turno-main">
                 <div class="pm-body clearfix list-table">
-                    <div class="card-body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Nombre
-                                    </th>
-                                    <th>
-                                        Tipo turno
-                                    </th>
-                                    <th>
-                                        Hora
-                                    </th>
-                                    <th>
-                                        Zonas
-                                    </th>
-                                    <th>
-                                        Estado
-                                    </th>
-                                    <th class="text-right">
-                                        <button class="btn btn-primary waves-effect" data-ui-sref="mesas.turn.create">
-                                            <i class="zmdi zmdi-floppy zmdi-hc-fw">
-                                            </i>
-                                            Nuevo turno
-                                        </button>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="item in turns">
-                                    <td>
-                                        {{item.name}}
-                                    </td>
-                                    <td>
-                                        {{item.type_turn.name}}
-                                    </td>
-                                    <td>
-                                        {{item.hours_ini}} - {{item.hours_end}}
-                                    </td>
-                                    <td>
-                                        {{ item.zones}}
-                                    </td>
-                                    <td>
-                                        <label class="label bgm-gray f-12" ng-if="item.status == 1">
-                                            Activo
-                                        </label>
-                                        <label class="label label-danger f-12" ng-if="item.status == 0">
-                                            Inactivo
-                                        </label>
-                                    </td>
-                                    <td class="text-right">
-                                        <button class="btn bgm-lightblue btn-icon-text waves-effect" data-ui-sref="mesas.turn.edit({turn : '{{item.id}}'})">
-                                            <i class="zmdi zmdi-edit zmdi-hc-fw">
-                                            </i>
-                                            Editar
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <ul class="tab-nav">
+                        <li class="btn-wave" data-ui-sref-active="active">
+                            <a data-ui-sref="mesas.turn.active">
+                                Activo
+                            </a>
+                        </li>
+                        <li class="btn-wave" data-ui-sref-active="active">
+                            <a data-ui-sref="mesas.turn.inactive">
+                                Inactivo
+                            </a>
+                        </li>
+                    </ul>
+                    <data ui-view="">
+                    </data>
                 </div>
             </div>
         </div>

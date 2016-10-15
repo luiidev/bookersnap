@@ -1,70 +1,92 @@
-   <section class="bgm-gray-win menu-section" id="content">
+<section class="bgm-gray-win menu-section" id="content">
     <div class="w-100 p-0">
         <nav class="ha-menu">
             <ul>
-                <li class="waves-effect" ng-repeat="tab in vm.zonas" ng-if="$index < 4">
-                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones on-droppedd-fn="vm.tabSelectedZone($index)">
-                        {{tab.name}} <span class="num-orden-zona">{{$index+1}}</span>
+                <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zonas">
+                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
+                        {{tab.name}}
+                        <span class="num-orden-zona">
+                            {{$index+1}}
+                        </span>
                     </button>
                 </li>
-
-
-                <li class="dropdown" uib-dropdown="" ng-if="vm.flagSelectedZone > 4"> 
-                    <button type="button" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
-                            <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-3x"></span>
+                <li class="dropdown" ng-if="vm.flagSelectedZone > 4" uib-dropdown="">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" type="button" uib-dropdown-toggle="">
+                        <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-3x">
+                        </span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li ng-repeat="tab in vm.zonas" ng-if="$index >= 4">
-                        <a data-ng-click="vm.tabSelectedZone($index)">{{tab.name}}</a></li>
+                        <li ng-if="$index >= 4" ng-repeat="tab in vm.zonas">
+                            <a data-ng-click="vm.tabSelectedZone($index)">
+                                {{tab.name}}
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                
                 <li class="dropdown open pull-right tab-tiempo" uib-dropdown="">
-                    <button class="btn btn-menu w-100-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="true">
-                        <i class="zmdi zmdi-time zmdi-hc-3x yellow-time"></i>
-                        <span class="txt-time">&nbsp;Tiempo <span class="caret"></span></span>
+                    <button aria-expanded="true" aria-haspopup="true" class="btn btn-menu w-100-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="">
+                        <i class="zmdi zmdi-time zmdi-hc-3x yellow-time">
+                        </i>
+                        <span class="txt-time">
+                            Tiempo
+                            <span class="caret">
+                            </span>
+                        </span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a>Ocultar tiempo</a></li>
-                        <li><a>Tiempo sentado</a></li>
-                        <li><a>Tiempo restante</a></li>
-                        <li><a>Siguiente reservacion</a></li>
-                        <li><a>Siguiente segunda reservacion</a></li>
+                        <li>
+                            <a>
+                                Ocultar tiempo
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Tiempo sentado
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Tiempo restante
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Siguiente reservacion
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                Siguiente segunda reservacion
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="waves-effect pull-right">
                     <button class="btn btn-menu w-100-px btn-default-nav">
-                        <i class="zmdi zmdi-case-check zmdi-hc-3x"></i> <span>&nbsp;&nbsp;&nbsp;R.P</span>
+                        <i class="zmdi zmdi-case-check zmdi-hc-3x">
+                        </i>
+                        <span>
+                            R.P
+                        </span>
                     </button>
                 </li>
-                <li class="clearfix"></li>
-                
+                <li class="clearfix">
+                </li>
             </ul>
         </nav>
     </div>
-    </section>
-
-    <div ng-repeat="tab in vm.zonas" ng-show="vm.flagSelectedZone==$index" class="box-zone-create bg-window-floor">
-        <div class="box-lienzo-zone-v2 p-t-10" >
-            <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}">
-                <div class="item-drag-table {{obj.selected}} {{obj.shape}} {{obj.size + '-relative'}} rt{{obj.rotate}} shape-table table-zone" 
-                color="{{obj.color}}" 
-                id="el{{obj.table_id}}" 
-                ng-detail-table 
-                ng-repeat="obj in tab.table" 
-                on-click-fn="vm.mostrarDetail($index,obj)"
-                ng-style="{top: (obj.top/675)*100 + '%', left: (obj.left/675)*100 + '%'}"
-                on-dropped-fn="vm.handConfiguration(obj)" 
-                num=vm.numpeople >
-                    <div class="icon-available"></div>
-                    <div class="table-label top">
-                        <span ng-bind="obj.name"></span>                        
-                    </div>
-
+</section>
+<div class="box-zone-create bg-window-floor" ng-repeat="tab in vm.zonas" ng-show="vm.flagSelectedZone==$index">
+    <div class="box-lienzo-zone-v2 p-t-10">
+        <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}">
+            <div class="item-drag-table {{obj.selected}} {{obj.shape}} {{obj.size + '-relative'}} rt{{obj.rotate}} shape-table table-zone" color="{{obj.color}}" id="el{{obj.table_id}}" ng-detail-table="" ng-repeat="obj in tab.table" ng-style="{top: (obj.top/675)*100 + '%', left: (obj.left/675)*100 + '%'}" num="vm.numpeople" on-click-fn="vm.mostrarDetail($index,obj)" on-dropped-fn="vm.handConfiguration(obj)">
+                <div class="icon-available">
+                </div>
+                <div class="table-label top">
+                    <span ng-bind="obj.name">
+                    </span>
                 </div>
             </div>
         </div>
     </div>
-
-
-
+</div>

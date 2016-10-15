@@ -13,8 +13,7 @@ angular.module('floor.service', [])
 
 		};
 	})
-
-.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
 		var flag = {
 			editServer: false
 		};

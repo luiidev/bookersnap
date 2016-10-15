@@ -3,7 +3,7 @@ angular.module('zone.service', [])
 		var zones;
 		return {
 			getZones: function(vOptions, reload) {
-				zones = HttpFactory.get(ApiUrlMesas + "/zones?" + vOptions, {}, zones, false);
+				zones = HttpFactory.get(ApiUrlMesas + "/zones?" + vOptions, {}, zones, reload);
 				return zones;
 			},
 			getZone: function(vId) {
@@ -25,8 +25,6 @@ angular.module('zone.service', [])
 
 	})
 
-.factory('ZoneTurnFactory', function($http, ApiUrl) {})
-
 .factory('ZoneLienzoFactory', function($document, TableFactory) {
 	return {
 		activarTablesItems: function(boxTables) {
@@ -42,10 +40,8 @@ angular.module('zone.service', [])
 			var maxCovers = 0;
 
 			angular.forEach(itemTables, function(data) {
-
 				minCovers += parseInt(data.minCover);
 				maxCovers += parseInt(data.maxCover);
-
 			});
 
 			headerZone.minCovers = minCovers;
@@ -71,11 +67,9 @@ angular.module('zone.service', [])
 
 			var x = divPos.left - (SizeObjectDrag * 0.5) + (SizeObjectDrag / 2 - evt.element.centerX);
 			var y = divPos.top - (SizeObjectDrag * 0.5) + (SizeObjectDrag / 2 - evt.element.centerX);
-			console.log(x + " " + y);
+
 			x = x - x % 10;
 			y = y - y % 10;
-
-			console.log(x + " " + y);
 
 			var position = {
 				x: x,
@@ -85,8 +79,6 @@ angular.module('zone.service', [])
 			return position;
 		},
 		changeRotationText: function(option, element, index) {
-
-			//var rotate_actual = element.rotate_text;
 
 			var table = angular.element("#tb-item" + index);
 			var rotate_actual = table[0].firstElementChild.classList[1];
@@ -108,11 +100,7 @@ angular.module('zone.service', [])
 			}
 
 			angular.element(table[0].firstElementChild).removeClass(rotate_actual);
-			//angular.element(table[0].firstElementChild).addClass(rotate);
-
-			//element.rotate_text = TableFactory.getIdRotationText(rotate);
 			element.rotate_text = rotate;
-			console.log("changeRotationText ", angular.toJson(element, true));
 		},
 		changeNameTable: function(element, itemTables, texto) {
 			var valida = false;

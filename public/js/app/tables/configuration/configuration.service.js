@@ -50,7 +50,7 @@ angular.module('configuration.service', [])
 				});
 			},
 			deleteConfigurationCode: function(idCod) {
-				return $http.delete(ApiUrlMesas + "/configuration/codes" + idCod);
+				return $http.delete(ApiUrlMesas + "/configuration/codes/" + idCod);
 			},
 
 		};
