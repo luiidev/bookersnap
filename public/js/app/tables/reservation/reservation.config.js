@@ -9,20 +9,20 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
 
         $stateProvider
             .state('mesas.reservation-new', {
-                url: '/reservation/:date/new',
+                url: '/floor/reservation/:date/add',
                 views: {
                     '@': {
-                        templateUrl: '/js/app/tables/reservation/view/new.html',
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
                         controller: "reservationCtrl.Store",
                         // controllerAs: 'vm',
                     }
                 },
             })
             .state('mesas.reservation-edit', {
-                url: '/reservation/:date/edit/:id',
+                url: '/floor/reservation/:date/edit/:id',
                 views: {
                     '@': {
-                        templateUrl: '/js/app/tables/reservation/view/new.html',
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
                         controller: "reservationCtrl.Store",
                         // controllerAs: 'vm',
                     }
