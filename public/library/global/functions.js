@@ -309,7 +309,7 @@ message.show = function(title, text, type, options, action) {
 
     action = (action !== undefined) ? action : function() {};
 
-    if (options !== undefined) {
+    if (options !== undefined && options !== null) {
         if (typeof options == "object") {
             config = Object.assign(config, options);
         }
@@ -320,6 +320,20 @@ message.show = function(title, text, type, options, action) {
 };
 
 message.confirmButton = function(title, text, type, options, action) {
+    return this.show(title, text, type, options, action);
+};
+
+message.confirm = function(title, text, type, action) {
+    var options = {
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "SI",
+        cancelButtonText: "CANCELAR",
+        closeOnConfirm: false
+    };
+    if (typeof type == "function"){
+        return  this.show(title, text, "warning",  options, type);
+    }
     return this.show(title, text, type, options, action);
 };
 
@@ -492,13 +506,7 @@ var optionsScrollBarPLugin = function(axis, theme, height) {
     return options;
 };
 var getFechaActual = function() {
-    var fecha = new Date();
-    var dia = (fecha.getDate() < 10 ? '0' : '') + fecha.getDate();
-    var mes = ((fecha.getMonth() + 1) < 10 ? '0' : '') + (fecha.getMonth() + 1);
-    var anio = fecha.getFullYear();
-    var fecha_actual = String(anio + "-" + mes + "-" + dia);
-    return fecha_actual;
-
+    return moment().format("YYYY-MM-DD");
 };
 
 /*

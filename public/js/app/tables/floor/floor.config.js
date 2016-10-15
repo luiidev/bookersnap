@@ -40,25 +40,5 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 templateUrl: '/js/app/tables/floor/view/server.html',
                 controller: 'serverController',
                 controllerAs: 'sm',
-            })
-            /*.state('mesas.floor.server.create', {
-                url: '/create',
-                views: {
-                    'principal@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/principal.html',
-                        controller: 'serverTablesController',
-                        controllerAs: 'se'
-                    },
-                },
-            })
-            .state('mesas.floor.server.edit', {
-                url: '/edit/:server_id',
-                views: {
-                    'principal@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/principal.html',
-                        controller: 'serverTablesController',
-                        controllerAs: 'se'
-                    },
-                },
-            });*/
+            });
     });
