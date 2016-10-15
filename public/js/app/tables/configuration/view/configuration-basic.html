@@ -2,14 +2,14 @@
 	<div class="card-header p-l-0 p-r-0">
 	    <h2>
 	        Configuración Básica
-	        <small>
+	        <small>				
 	        </small>
 	    </h2>
 	</div>
 	<div class="card-body">
         <form  name="configurationBasicForm" novalidate>	                        	
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-4 p-b-20">
 					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
 					<div class="form-group fg-line">
 						<!-- <span class="glyphicon glyphicon-time"></span> -->
@@ -23,7 +23,7 @@
 					</div>										
 					<!-- <small class="help-block">Todo Ok</small> -->
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-4 p-b-20">
 					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
 					<div class="form-group fg-line">
 						<!-- <span class="glyphicon glyphicon-time"></span> -->
@@ -37,7 +37,7 @@
 					</div>										
 					<!-- <small class="help-block">Todo Ok</small> -->
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-4 p-b-20">
 					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
 					<div class="form-group fg-line">
 						<!-- <span class="glyphicon glyphicon-eye-open"></span> -->
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-4 p-b-20">
 					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
 					<div class="form-group fg-line">
 						<!-- <span class="glyphicon glyphicon-user"></span> -->
@@ -67,7 +67,7 @@
 					</div>										
 					<!-- <small class="help-block">Todo Ok</small> -->
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-4 p-b-20">
 					<!-- <label for="input1" class="control-label">Correcto Integer</label> -->
 					<div class="form-group fg-line">
 						<!-- <span class="glyphicon glyphicon-folder-close"></span> -->
@@ -115,7 +115,9 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-12 m-b-20 form-group">
-					<button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationBasicForm$valid">Actualizar</button>
+					<button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationBasicForm$valid || vm.flagSaveConfiguration"><i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5" ></i>Guardar Cambios
+					<loading-box wait="vm.flagSaveConfiguration" pls="white" bg="blue" size="xs" time="5000"></loading-box>
+					</button>
 				</div>
 			</div>																		
         </form>

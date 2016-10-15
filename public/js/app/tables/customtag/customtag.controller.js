@@ -3,6 +3,12 @@ angular.module('customtag.controller', [])
 		var vm = this;
 		vm.nameG = "";
 		vm.nameR = "";
+		vm.reservationTagList = [];
+		vm.guestTagList = [];
+		vm.message = {
+			tagsGuest: "No existen Tags de invitados",
+			tagsReservation: "No existen Tags de reservación"
+		};
 
 		vm.guestTagAll = function() {
 			CustomTagGuestService.getAllTag().then(function success(response) {
