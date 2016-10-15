@@ -97,6 +97,9 @@ angular.module('floor.service', [])
 						var dataReservation = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
+							res_server_id: reserva.res_server_id,
+							note: reserva.note,
+							num_guest: reserva.num_guest,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};
@@ -132,6 +135,9 @@ angular.module('floor.service', [])
 										if (resData.reservation_id == itemRes) {
 											//console.log(angular.toJson(key, true));
 											block.res_reservation_status_id = resData.res_reservation_status_id;
+											block.res_server_id = resData.res_server_id;
+											block.note = resData.note;
+											block.num_guest = resData.num_guest;
 											block.first_name = resData.first_name;
 											block.last_name = resData.last_name;
 

@@ -4,6 +4,11 @@ angular.module('floor.controller', [])
         var vm = this;
         var fecha_actual = getFechaActual();
 
+        /**
+         * Varaible de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
+         */
+        vm.eventEstablished = 0;
+
         vm.titulo = "Floor";
         vm.colorsSelect = [];
         vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
@@ -78,7 +83,7 @@ angular.module('floor.controller', [])
                     content: function() {
                         return {
                             table: data,
-                            //tables: vm.zonas[index].table
+                            tables: vm.zonas[index].table
                         };
                     }
                 }
@@ -115,6 +120,9 @@ angular.module('floor.controller', [])
                     },
                     table: function() {
                         return obj;
+                    },
+                    eventEstablished: function(){
+                        return vm.eventEstablished;
                     }
                 }
             });
@@ -150,7 +158,7 @@ angular.module('floor.controller', [])
         })();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($modalInstance, num, table, OperationFactory) {
+    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished,  OperationFactory, reservationService) {
         var vmc = this;
 
         //Datos pasados al modal
@@ -304,7 +312,7 @@ angular.module('floor.controller', [])
         };
 
         vmc.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
 
         function parseReservation() {
@@ -314,20 +322,47 @@ angular.module('floor.controller', [])
             return {
                 table_id: table.table_id,
                 covers: {
-                    total: vmc.resultado,
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
                     children: vmc.flagSelectedNumChildren,
                 },
                 date: date,
-                start_time: start_time
+                hour: start_time
             };
         }
 
         vmc.save = function() {
+            if (eventEstablished){
+                sit();
+            } else {
+                create();
+            }
+        };
+
+        var create = function() {
             var reservation = parseReservation();
-            //console.log(reservation);
-            $modalInstance.dismiss('cancel');
+
+            reservationService.quickCreate(reservation)
+                .then(function(response) {
+                    message.success(response.data.msg);
+                    $uibModalInstance.dismiss('cancel');
+                }).catch(function(error) {
+                    message.error(error);
+                });
+        };
+
+        var sit = function() {
+            var id = 79;
+            var data = {
+                table_id: 136
+            };
+
+            reservationService.sit(id, data)
+                .then(function(response) {
+                    $uibModalInstance.dismiss('cancel');
+                }).catch(function(error) {
+                    message.error(error);
+                });
         };
 
     })
@@ -372,10 +407,10 @@ angular.module('floor.controller', [])
         function parseData(data) {
             return {
                 id: data.reservation_id,
-                covers: data.num_people,
+                covers: data.num_guest,
                 status_id: data.res_reservation_status_id,
                 server_id: data.res_server_id,
-                note: data.note
+                note: data.note || null
             };
         }
 
@@ -435,8 +470,30 @@ angular.module('floor.controller', [])
         };
 
         vmd.save = function() {
-            //console.log(vmd.reservation);
-            $uibModalInstance.dismiss('cancel');
+            var id = vmd.reservation.id;
+            reservationService.quickEdit(id, vmd.reservation)
+                .then(function(response) {
+                    message.success(response.data.msg);
+                    $uibModalInstance.dismiss('cancel');
+                }).catch(function(error) {
+                    message.error(error);
+                });
+        };
+
+        vmd.cancelReservation = function() {
+            message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
+                vmd.waitingResponse = true;
+                var id = vmd.reservation.id;
+                reservationService.cancel(id)
+                    .then(function(response) {
+                        message.success(response.data.msg);
+                        $uibModalInstance.dismiss('cancel');
+                        vmd.waitingResponse = false;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                        vmd.waitingResponse = false;
+                    });
+            });
         };
 
         getTableReservation();

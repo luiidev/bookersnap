@@ -153,7 +153,6 @@ angular.module('reservation.controller', [])
             saveNewReservation();
         }
 
-        console.log(vm.reservation);
     };
 
     var saveNewReservation = function() {
@@ -193,7 +192,7 @@ angular.module('reservation.controller', [])
         vm.guestList = [];
         vm.addGuest = false;
         defaultView();
-        loadZones();
+        initialDate();
     };
 
     vm.selectTableAllOrNone = function(indicator) {
@@ -535,7 +534,7 @@ angular.module('reservation.controller', [])
     }
 
     vm.cancelReservation = function() {
-        message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion no se puede revertir", function() {
+        message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
             vm.waitingResponse = true;
             var id = vm.reservation.id;
             service.cancel(id)
