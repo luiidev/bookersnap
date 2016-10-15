@@ -1,6 +1,6 @@
 angular.module('zone.controller', ['ngDraggable'])
 
-.controller('ZoneCtrl', function($scope, ZoneFactory, MenuConfigFactory, $uibModal) {
+.controller('ZoneCtrl', function($scope, ZoneFactory, MenuConfigFactory, TurnDataFactory, $uibModal) {
 
         $scope.zonesActive = {};
         $scope.zonesInactive = {};
@@ -22,71 +22,69 @@ angular.module('zone.controller', ['ngDraggable'])
             MenuConfigFactory.menuActive(0);
         };
 
-        $scope.getZones = function(reload) {
+        var getTurns = function(zones) {
+            var options = getAsUriParameters({
+                with: "zones|type_turn|calendar"
+            });
 
-            ZoneFactory.getZones("with=turns", reload).success(function(data) {
+            TurnDataFactory.getTurns(options).then(
+                function success(response) {
+                    response = response.data.data;
+                    zonesData(zones, response);
+                },
+                function error(response) {
+                    console.error("getTurns error " + angular.toJson(response, true));
+                }
+            );
+        };
 
-                // console.log("zones " + angular.toJson(data, true));
+        var zonesData = function(zones, turns) {
 
-                var vZonesActive = [];
-                var vZonesInactive = [];
+            var zonesActive = [];
+            var zonesInactive = [];
 
-                angular.forEach(data.data, function(zones) {
+            angular.forEach(zones, function(zone) {
+                var isActive = false;
+                angular.forEach(zone.turns, function(turnZone, key) {
 
-                    var zonesTables = getTablesCount(zones);
-                    var zonesTurn = zones.turns;
+                    isActive = activeZoneTurn(turns, turnZone.id);
 
-                    // console.log("getZones " + angular.toJson(zones.turns, true));
-
-                    if (zones.status == "0" || zones.status == "2" || zonesTurn.length === 0) {
-                        $scope.zones.numTablesInactive += zonesTables.tables_count;
-                        $scope.zones.minCoversInactive += zonesTables.min_covers;
-                        $scope.zones.maxCoversInactive += zonesTables.max_covers;
-                        vZonesInactive.push(zonesTables);
-                    } else {
-                        $scope.zones.numTablesActive += zonesTables.tables_count;
-                        $scope.zones.minCoversActive += zonesTables.min_covers;
-                        $scope.zones.maxCoversActive += zonesTables.max_covers;
-                        vZonesActive.push(zonesTables);
+                    if (isActive) {
+                        return;
                     }
-
                 });
 
-                $scope.zonesActive = vZonesActive;
-                $scope.zonesInactive = vZonesInactive;
+                if (isActive) {
 
-            }).error(function(data, status, headers) {
+                    $scope.zones.numTablesActive += zone.tables_count;
+                    $scope.zones.minCoversActive += zone.min_covers;
+                    $scope.zones.maxCoversActive += zone.max_covers;
 
-                messageErrorApi(data, "Error", "warning", 0, true, status);
-            });
-        };
+                    zonesActive.push(zone);
 
-        $scope.deleteZoneConfirm = function(idZone, indexRow) {
+                } else {
 
-            $scope.idZoneDelete = idZone;
-            $scope.indexRow = indexRow;
-
-            console.log("indexRow " + indexRow);
-
-            var modalDeleteZone = $uibModal.open({
-                animation: true,
-                templateUrl: 'myModalDeleteZone.html',
-                size: 'lg',
-                controller: 'ModalZoneDeleteCtrl',
-                resolve: {
-                    idZone: function() {
-                        return $scope.idZoneDelete;
-                    },
-                    indexRow: function() {
-                        return $scope.indexRow;
-                    },
-                    zonesInactive: function() {
-                        return $scope.zonesInactive;
-                    }
+                    $scope.zones.numTablesInactive += zone.tables_count;
+                    $scope.zones.minCoversInactive += zone.min_covers;
+                    $scope.zones.maxCoversInactive += zone.max_covers;
+                    zonesInactive.push(zone);
                 }
             });
+
+            $scope.zonesActive = zonesActive;
+            $scope.zonesInactive = zonesInactive;
         };
 
+        var activeZoneTurn = function(turns, turnId) {
+            var active = false;
+            angular.forEach(turns, function(turn, key) {
+                if (turn.id == turnId && turn.calendar.length > 0) {
+                    active = true;
+                }
+            });
+
+            return active;
+        };
         var getTablesCount = function(zones) {
             var vTables = 0;
             var vMinCovers = 0;
@@ -105,6 +103,46 @@ angular.module('zone.controller', ['ngDraggable'])
             zones.max_covers = vMaxCovers;
 
             return zones;
+        };
+
+        $scope.getZones = function(reload) {
+
+            ZoneFactory.getZones("with=turns", reload).then(
+                function success(data) {
+                    data = data.data.data;
+                    var zonesData = [];
+
+                    angular.forEach(data, function(zones) {
+
+                        var zonesTables = getTablesCount(zones);
+
+                        zonesData.push(zonesTables);
+                    });
+                    return zonesData;
+                }
+            ).then(function(zones) {
+                getTurns(zones);
+            });
+        };
+
+        $scope.deleteZoneConfirm = function(idZone) {
+            var options = {
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+            };
+
+            message.confirmButton("Eliminar zona", "¿Estas seguro que deseas eliminar la zona ?", "info", options, function() {
+                ZoneFactory.deleteZone(idZone).success(function(response) {
+
+                    messageAlert("Operación exitosa", "Zona eliminada", "success");
+                    $scope.getZones(true);
+
+                }).error(function(data, status, headers) {
+                    messageErrorApi(data, "Error", "warning");
+                });
+            });
+
         };
 
         init();
@@ -561,26 +599,6 @@ angular.module('zone.controller', ['ngDraggable'])
             itemTables.splice(indexTable, 1);
             angular.element('.item-drag-table').removeClass('selected-table');
 
-        };
-
-        $scope.cancel = function() {
-            $uibModalInstance.dismiss('cancel');
-        };
-    })
-    .controller('ModalZoneDeleteCtrl', function($scope, ZoneFactory, $uibModalInstance, idZone, indexRow, zonesInactive) {
-
-        $scope.deleteZone = function() {
-            ZoneFactory.deleteZone(idZone).success(function(response) {
-                console.log("deleteZone msg " + response);
-
-                messageAlert("Success", "Zone deleted", "success");
-
-                zonesInactive.splice(indexRow, 1);
-                $uibModalInstance.close();
-
-            }).error(function(data, status, headers) {
-                messageErrorApi(data, "Error", "warning");
-            });
         };
 
         $scope.cancel = function() {

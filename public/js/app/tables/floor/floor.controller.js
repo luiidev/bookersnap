@@ -1,6 +1,8 @@
 angular.module('floor.controller', [])
 
+
 .controller('FloorCtrl', function($scope, $timeout, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+
         var vm = this;
         var fecha_actual = getFechaActual();
 
@@ -11,6 +13,10 @@ angular.module('floor.controller', [])
 
         vm.titulo = "Floor";
         vm.colorsSelect = [];
+
+        vm.flagSelectedZone = 0;
+        vm.notesBox = false;
+
         vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
 
         var selectedTabZoneByServer = function() {
@@ -31,9 +37,21 @@ angular.module('floor.controller', [])
             vm.flagSelectedZone = value;
         };
 
-
-
         vm.fecha_actual = fecha_actual;
+        vm.typeTurns = [];
+
+        var listTypeTurns = function() {
+            TypeTurnFactory.getTypeTurns().then(
+                function success(response) {
+                    response = response.data.data;
+                    vm.typeTurns = response;
+                    console.log("typeturns " + angular.toJson(vm.typeTurns, true));
+                },
+                function error(response) {
+                    console.error("typeturns " + angular.toJson(response, true));
+                }
+            );
+        };
 
         var getZones = function() {
             FloorFactory.listZonesReservas().then(function success(data) {
@@ -154,7 +172,10 @@ angular.module('floor.controller', [])
         });
 
         (function Init() {
+
+            listTypeTurns();
             sizeLienzo();
+
         })();
 
     })
@@ -318,7 +339,7 @@ angular.module('floor.controller', [])
         function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
-            var start_time =  now.clone().add((15 - (now.minutes() % 15)), "minutes").second(0).format("HH:mm:ss");
+            var start_time = now.clone().add((15 - (now.minutes() % 15)), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.table_id,
                 covers: {

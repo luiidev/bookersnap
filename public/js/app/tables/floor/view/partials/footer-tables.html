@@ -14,13 +14,22 @@
             </button>
             <ul class="f-btn-notas">
                 <li class="dropdown dropup" uib-dropdown="">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" type="button" uib-dropdown-toggle="">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" ng-click="vm.notesBox=!vm.notesBox" type="button">
                         <span class="zmdi zmdi-book zmdi-hc-2x">
                         </span>
                         <div class="f-12">
                             Notas turnos
                         </div>
                     </button>
+                    <div class="box-tab-notas" ng-show="vm.notesBox">
+                        <tabset active="activeJustified">
+                            <tab heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
+                                <textarea class="form-control" name="notas" placeholder="Notas" rows="8">
+                                </textarea>
+                            </tab>
+                        </tabset>
+                    </div>
+                    <!--
                     <ul class="dropdown-menu">
                         <li class="box-tab-notas">
                             <p>
@@ -33,7 +42,7 @@
                                 </div>
                             </div>
                         </li>
-                    </ul>
+                    </ul>-->
                 </li>
             </ul>
             <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">

@@ -2,23 +2,54 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 .controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
 
-		$scope.turns = {};
+		$scope.turns = {
+			active: [],
+			inactive: []
+		};
 
 		var init = function() {
 			MenuConfigFactory.menuActive(1);
+
 			getTurns({
-				with: "zones|type_turn"
+				with: "zones|type_turn|calendar"
 			});
 		};
 
 		var getTurns = function(options) {
-
 			options = getAsUriParameters(options);
 
-			TurnFactory.listTurns(options).then(function success(response) {
-				$scope.turns = response;
-			}, function error(response) {
-				messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+			TurnFactory.listTurns(options).then(
+				function success(response) {
+					$scope.turns.active = response.active;
+					$scope.turns.inactive = response.inactive;
+				},
+				function error(response) {
+					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+				});
+		};
+
+		$scope.deleteTurn = function(idTurn) {
+
+			var options = {
+				showCancelButton: true,
+				confirmButtonText: "Si",
+				cancelButtonText: "No",
+			};
+
+			message.confirmButton("Eliminar turno", "¿Estas seguro que deseas eliminar el turno ?", "info", options, function() {
+
+				TurnFactory.deleteTurn(idTurn).then(
+					function success(response) {
+						messageAlert("Success", response.msg, "success", 2000, true);
+
+						getTurns({
+							with: "zones|type_turn|calendar"
+						});
+					},
+					function error(response) {
+						messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
+					}
+				);
 			});
 		};
 
@@ -187,7 +218,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		};
 
 		var loadDataTurnoEdit = function() {
-			if ($stateParams.turn != undefined) {
+			if ($stateParams.turn !== undefined) {
 
 				var params = "with=turn_zone.zone|turn_zone.rule|turn_zone.zone.tables|turn_zone.zone.turns";
 
@@ -206,9 +237,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 						if ($scope.turnData.days.length <= 0) {
 							$scope.dayHide = true;
 						}
-
-						console.log("turnData " + angular.toJson($scope.turnData, true));
-						console.log("turnData " + angular.toJson($scope.turnForm, true));
 					},
 					function error(data) {
 						messageErrorApi(data, "Error", "warning");
@@ -227,7 +255,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 		$scope.checkDay = function(dayId) {
 			TurnFactory.checkDay($scope.turnData.days, dayId);
-			console.log("checkDay " + angular.toJson($scope.turnData.days, true));
 		};
 
 		$scope.generatedTimeTable = function(hourEnd, option) {
@@ -298,8 +325,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 			TurnFactory.addRulesTable($scope.zoneSelected, $scope.turnZoneAdd);
 
-			console.log("returnBoxZones " + angular.toJson($scope.turnZoneAdd, true));
-
 			$scope.zoneSelected.tablesId.length = 0;
 			$scope.zoneSelected.rule = 1;
 		};
@@ -333,14 +358,10 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 					$scope.zoneSelected.tables = response;
 
-					//console.log("showTables " + angular.toJson($scope.zoneSelected.tables,true));
-
 					var tableRuleId = TurnFactory.getTurnRuleId($scope.turnZoneAdd.zonesTables, zone.id);
 					var oneRule = TurnFactory.ruleExitsOne($scope.zoneSelected.tables, tableRuleId, $scope.turnForm);
 
 					tableRuleId = (oneRule == 1) ? tableRuleId : '-1';
-
-					//console.log("tableRuleId -  oneRule " + tableRuleId + " "+ oneRule);
 
 					checkedRulesDefault(tableRuleId);
 				},
@@ -353,8 +374,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		$scope.selectedAllTables = function() {
 
 			TurnFactory.checkAllTableZone($scope.zoneSelected.tablesId, $scope.zoneSelected.tables, $scope.mesasCheckAll);
-
-			console.log("selectedAllTables ", angular.toJson($scope.zoneSelected.tablesId, true));
 		};
 
 		$scope.editTableAvailability = function() {
@@ -483,7 +502,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 				ruleId = table[0].availability[i].rule_id;
 
-				if (ruleId != null) {
+				if (ruleId !== null) {
 					ruleId = ruleId;
 				}
 
@@ -593,20 +612,16 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			angular.forEach($scope.timesTables, function(value, key) {
 				TurnFactory.checkRuleTable(value.index, $scope.rules.value, tableItem, $scope.rules.dataTemp);
 			});
-
-			//console.log("checkRule " + angular.toJson($scope.rules.dataTemp, true));
 		};
 
 		$scope.checkRule = function(timeIndex, value) {
 			TurnFactory.checkRuleTable(timeIndex, value, tableItem, $scope.rules.dataTemp);
-			console.log("checkRule " + angular.toJson($scope.rules.dataTemp, true));
 		};
 
 		$scope.saveRules = function() {
 			var rulesTable = TurnFactory.saveRuleTable(tableItem, $scope.rules.dataTemp);
 
 			updateTableRules(rulesTable);
-
 			$uibModalInstance.close();
 		};
 
