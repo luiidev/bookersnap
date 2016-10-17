@@ -98,19 +98,22 @@ angular.module('floor.service', [])
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							res_server_id: reserva.res_server_id,
 							note: reserva.note,
-							num_guest: reserva.num_guest,
+							//num_guest: reserva.num_guest,
+							num_people_1: reserva.num_people_1,
+							num_people_2: reserva.num_people_2,
+							num_people_3: reserva.num_people_3,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};
 						vReservation.push(dataReservation);
 					});
-
 					defered.resolve(vReservation);
 				}).error(function(data, status, headers) {
 					defered.reject(data);
 				});
 				return defered.promise;
 			},
+			//Union de bloqueados y reservados
 			listBloqueosReservas: function() {
 				var me = this;
 				var defered = $q.defer();
@@ -136,7 +139,10 @@ angular.module('floor.service', [])
 											block.res_reservation_status_id = resData.res_reservation_status_id;
 											block.res_server_id = resData.res_server_id;
 											block.note = resData.note;
-											block.num_guest = resData.num_guest;
+											//block.num_guest = resData.num_guest;
+											block.num_people_1 = resData.num_people_1;
+											block.num_people_2 = resData.num_people_2;
+											block.num_people_3 = resData.num_people_3;
 											block.first_name = resData.first_name;
 											block.last_name = resData.last_name;
 
@@ -274,15 +280,16 @@ angular.module('floor.service', [])
 						return response;
 					}).then(function success(blocks) {
 							var vTables = [];
-							angular.forEach(zonesData.data.data, function(zone) {
+							angular.forEach(zonesData.data.data, function(zone, key_zone) {
 								var tables = zone.tables;
-
+								var indice = key_zone + 1;
 								angular.forEach(tables, function(table) {
 
 									angular.forEach(blocks, function(block) {
 										//console.log(blocks);
 										if (block.table_id === table.id) {
 											var dataTable = {
+												zone_indice: indice,
 												zone_id: zone.id,
 												name_zona: zone.name,
 												table_id: table.id,
@@ -290,6 +297,9 @@ angular.module('floor.service', [])
 												block_id: block.block_id,
 												reservation_id: block.reservation_id,
 												num_people: block.num_people,
+												num_people_1: block.num_people_1,
+												num_people_2: block.num_people_2,
+												num_people_3: block.num_people_3,
 												res_reservation_status_id: block.res_reservation_status_id,
 												start_date: block.start_date,
 												start_time: block.start_time,

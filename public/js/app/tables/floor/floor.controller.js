@@ -1,7 +1,7 @@
 angular.module('floor.controller', [])
 
 
-.controller('FloorCtrl', function($scope, $timeout, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $timeout, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeTurnFactory) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -45,7 +45,7 @@ angular.module('floor.controller', [])
                 function success(response) {
                     response = response.data.data;
                     vm.typeTurns = response;
-                    console.log("typeturns " + angular.toJson(vm.typeTurns, true));
+                    //console.log("typeturns " + angular.toJson(vm.typeTurns, true));
                 },
                 function error(response) {
                     console.error("typeturns " + angular.toJson(response, true));
@@ -101,7 +101,7 @@ angular.module('floor.controller', [])
                     content: function() {
                         return {
                             table: data,
-                            tables: vm.zonas[index].table
+                            //tables: vm.zonas[index].table
                         };
                     }
                 }
@@ -139,7 +139,7 @@ angular.module('floor.controller', [])
                     table: function() {
                         return obj;
                     },
-                    eventEstablished: function(){
+                    eventEstablished: function() {
                         return vm.eventEstablished;
                     }
                 }
@@ -179,7 +179,7 @@ angular.module('floor.controller', [])
         })();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished,  OperationFactory, reservationService) {
+    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService) {
         var vmc = this;
 
         //Datos pasados al modal
@@ -353,7 +353,7 @@ angular.module('floor.controller', [])
         }
 
         vmc.save = function() {
-            if (eventEstablished){
+            if (eventEstablished) {
                 sit();
             } else {
                 create();
