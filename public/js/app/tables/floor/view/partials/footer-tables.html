@@ -14,7 +14,7 @@
             </button>
             <ul class="f-btn-notas">
                 <li class="dropdown dropup" uib-dropdown="">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" ng-click="vm.notesBox=!vm.notesBox" type="button">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" ng-click="vm.openNotes()" type="button">
                         <span class="zmdi zmdi-book zmdi-hc-2x">
                         </span>
                         <div class="f-12">
@@ -23,26 +23,12 @@
                     </button>
                     <div class="box-tab-notas" ng-show="vm.notesBox">
                         <tabset active="activeJustified">
-                            <tab heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
-                                <textarea class="form-control" name="notas" placeholder="Notas" rows="8">
+                            <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
+                                <textarea class="form-control" ng-keyup="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                                 </textarea>
                             </tab>
                         </tabset>
                     </div>
-                    <!--
-                    <ul class="dropdown-menu">
-                        <li class="box-tab-notas">
-                            <p>
-                                Diseñar Tab para notas
-                            </p>
-                            <div class="form-group">
-                                <div class="fg-line">
-                                    <textarea class="form-control" placeholder="Registrar notas de cambio" rows="5">
-                                    </textarea>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>-->
                 </li>
             </ul>
             <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
@@ -60,7 +46,7 @@
                 </span>
             </button>
             <ul class="dropdown-menu">
-                <li class="listado-table">
+                <li class="listado-table" ng-mousedown="vm.eventEstablished = 0">
                     <div class="listado-row">
                         <div class="listado-column" id="num1" ng-drag-num-people="">
                             1

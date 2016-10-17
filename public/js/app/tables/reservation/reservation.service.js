@@ -6,11 +6,20 @@ angular.module('reservation.service', [])
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
+                quickCreate: function(data) {
+                    return http.post(ApiUrlMesas + "/table/reservation/quickcreate", data);
+                },
                 edit: function(id, data) {
                     return http.put(ApiUrlMesas + "/table/reservation/" + id , data);
                 },
+                quickEdit: function(id, data) {
+                    return http.put(ApiUrlMesas + "/table/reservation/" + id + "/quickedit", data);
+                },
                 cancel: function(id) {
                     return http.put(ApiUrlMesas + "/table/reservation/" + id + "/cancel");
+                },
+                sit: function(id, data) {
+                    return http.put(ApiUrlMesas + "/table/reservation/" + id + "/sit", data);
                 },
                 getReservation: function(id) {
                     return http.get(ApiUrlMesas + "/table/reservation/" + id + "/edit");
