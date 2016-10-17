@@ -19,6 +19,10 @@ angular.module('floor.controller', [])
         //Notas turnos
         vm.notesBox = false;
         vm.notesBoxValida = false;
+        vm.notesData = {
+            texto: '',
+            res_type_turn_id: ''
+        };
 
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
@@ -180,6 +184,24 @@ angular.module('floor.controller', [])
                     vm.notesBoxValida = false;
                 }
             });
+        };
+
+        vm.saveNotes = function(turn) {
+            vm.notesData.id = turn.notes.id;
+            vm.notesData.res_type_turn_id = turn.id;
+            vm.notesData.texto = turn.notes.texto;
+            vm.notesData.date_add = turn.notes.date_add;
+
+            console.log("saveNotes " + angular.toJson(vm.notesData, true));
+
+            FloorFactory.createNotes(vm.notesData).then(
+                function success(response) {
+                    console.log("saveNotes success " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.error("saveNotes " + angular.toJson(response, true));
+                }
+            );
         };
 
         angular.element($window).bind('resize', function() {
