@@ -194,7 +194,7 @@ angular.module('floor.controller', [])
             closeNotes();
             getServers();
             getZones();
-            listenFloor();
+            //listenFloor();
 
         })();
 
@@ -538,7 +538,7 @@ angular.module('floor.controller', [])
 
         getTableReservation();
     })
-    .controller('reservationController', function(FloorFactory, ServerDataFactory, $timeout) {
+    .controller('reservationController', function(FloorFactory, ServerDataFactory) {
         var rm = this;
 
         //Limpiar data y estilos de servers
@@ -556,11 +556,38 @@ angular.module('floor.controller', [])
 
         var getlistZonesBloqueosReservas = function() {
             FloorFactory.listZonesBloqueosReservas().then(function success(data) {
-                rm.listado = data;
+                rm.res_listado = data;
+                var total = 0;
+                angular.forEach(rm.res_listado, function(people) {
+                    total += people.num_people;
+                });
+                rm.total_people = total;
                 //console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
             });
         };
         getlistZonesBloqueosReservas();
+
+        //Datos y acciones para filtrar
+        rm.categorias_people = [{
+            idcategoria: 1,
+            nombre: 'Hombres'
+        }, {
+            idcategoria: 2,
+            nombre: 'Mujeres'
+        }, {
+            idcategoria: 3,
+            nombre: 'Niños(as)'
+        }, {
+            idcategoria: 4,
+            nombre: 'Todos'
+        }];
+
+        rm.select_people = function(categoria_people) {
+            rm.filter_people = categoria_people;
+            return false;
+        };
+        //Al iniciar que este seleccionadad por defecto
+        rm.select_people(rm.categorias_people[3]);
     })
     .controller('waitlistController', function(FloorFactory, ServerDataFactory) {
         var wm = this;
