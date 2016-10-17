@@ -29,7 +29,8 @@ angular.module('calendar.service', [])
             $http.get(ApiUrlMesas + '/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
         },
         GetShiftByDate: function($date, $listener) {
-            $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
+            //$http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
+            return $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null);
         },
         GetShiftsByType: function(id, $listener) {
             $http.get(ApiUrlMesas + '/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);

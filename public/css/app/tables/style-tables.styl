@@ -1064,18 +1064,22 @@ ul.footer-floor
 				border-top-color #fff
 				border-width 10px
 				margin-left -10px
-			&:before 
-				/*border-color rgba(194, 225, 245, 0)
-				border-top-color #c2e1f5
-				border-width 36px
-				margin-left -16px*/
-				
 			& textarea
 				padding 5px
 				outline none
 				resize none
 				width 100%
 				border 0
+			& .tab-nav:not(.tn-vertical)>li
+				&>a:after 
+					background #0b618a
+				&.active>a
+					color #fff
+					background-color #0b618a
+				&.disabled>a
+					cursor not-allowed
+					opacity 0.6
+					
 					
 li.divider
 	width 2px

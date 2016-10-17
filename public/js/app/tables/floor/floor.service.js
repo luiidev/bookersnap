@@ -13,7 +13,7 @@ angular.module('floor.service', [])
 
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService) {
 		var flag = {
 			editServer: false
 		};
@@ -314,6 +314,27 @@ angular.module('floor.service', [])
 					);
 
 				});
+				return defered.promise;
+			},
+			listTurnosActivos: function(date) {
+				var defered = $q.defer();
+
+				CalendarService.GetShiftByDate(date).then(
+					function success(response) {
+						response = response.data.data;
+						var turns = [];
+
+						angular.forEach(response, function(value, key) {
+
+						});
+
+						defered.resolve(response);
+					},
+					function error(response) {
+						defered.reject(response);
+					}
+				);
+
 				return defered.promise;
 			}
 		};
