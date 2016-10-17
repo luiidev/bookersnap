@@ -175,16 +175,16 @@ angular.module('calendar.controller', [])
 
     function GetData() {
         vm.loading = true;
-        CalendarService.GetShiftByDate(vm.date, {
-            OnSuccess: function(Response) {
+        CalendarService.GetShiftByDate(vm.date).then(
+            function OnSuccess(Response) {
                 vm.shifts = Response.data.data;
                 vm.loading = false;
             },
-            OnError: function(Response) {
+            function OnError(Response) {
                 vm.loading = false;
                 message.apiError(Response);
             }
-        });
+        );
     }
 
     function openDialogShedule(type_shift_id, $name) {
