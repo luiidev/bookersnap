@@ -52,29 +52,20 @@ angular.module('configuration.service', [])
 			deleteConfigurationCode: function(idCod) {
 				return $http.delete(ApiUrlMesas + "/configuration/codes/" + idCod);
 			},
-			updateCodeStatus: function(idMicrosite, configuration) {
-				return $http.put(ApiUrlMesas + "/configuration/reservation/codes/status", {}, {
+			updateCodeStatus: function(res_code_status) {
+				return $http.patch(ApiUrlMesas + "/configuration/reservations", {}, {
 					params: {
-						time_tolerance: configuration.time_tolerance,
-						time_restriction: configuration.time_restriction,
-						max_people: configuration.max_people,
-						max_table: configuration.max_table,
-						res_code_status: configuration.res_code_status,
-						res_privilege_status: configuration.res_privilege_status,
-						messenger_status: configuration.messenger_status,
-						user_add: configuration.user_add,
-						user_upd: configuration.user_upd,
-						reserve_portal: configuration.reserve_portal,
-						res_percentage_id: configuration.res_percentage_id,
-						name_people_1: configuration.name_people_1,
-						name_people_2: configuration.name_people_2,
-						name_people_3: configuration.name_people_3,
-						status_people_1: configuration.status_people_1,
-						status_people_2: configuration.status_people_2,
-						status_people_3: configuration.status_people_3
+						res_code_status: res_code_status
 					}
 				});
 			},
+			updatePrivilegeStatus: function(res_privilege_status) {
+				return $http.patch(ApiUrlMesas + "/configuration/reservations", {}, {
+					params: {
+						res_privilege_status: res_privilege_status
+					}
+				});
+			}
 
 		};
 
@@ -165,10 +156,22 @@ angular.module('configuration.service', [])
 				});
 				return promise;
 			},
-			updateCodeStatus: function(idMicrosite, configuration) {
+			updateCodeStatus: function(res_code_status) {
 				var defered = $q.defer();
 				var promise = defered.promise;
-				ConfigurationDataService.updateCodeStatus(idMicrosite, configuration).success(function(data) {
+				ConfigurationDataService.updateCodeStatus(res_code_status).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
+			updatePrivilegeStatus: function(res_privilege_status) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataService.updatePrivilegeStatus(res_privilege_status).success(function(data) {
 					data = data.data;
 					defered.resolve(data);
 				}).error(function(data, status, headers) {

@@ -35,7 +35,7 @@ angular.module('configuration.app', ['configuration.controller', 'configuration.
 				templateUrl: '/js/app/tables/configuration/view/configuration-user.html',
 				resolve: {
 					$title: function() {
-						return '_Configuración usuario';
+						return 'Configuración usuario';
 					}
 				}
 			});
