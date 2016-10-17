@@ -13,7 +13,18 @@ angular.module('floor.service', [])
 
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService) {
+	.factory('NoteFactoryData', function($http, HttpFactory, ApiUrlMesas) {
+
+		return {
+			create: function(data) {
+				return $http.post(ApiUrlMesas + '/notes', data);
+			},
+			getAll: function(date) {
+				return $http.get(ApiUrlMesas + '/notes/' + date);
+			}
+		};
+	})
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData) {
 		var flag = {
 			editServer: false
 		};
@@ -318,17 +329,24 @@ angular.module('floor.service', [])
 			},
 			listTurnosActivos: function(date) {
 				var defered = $q.defer();
+				var self = this;
 
 				CalendarService.GetShiftByDate(date).then(
 					function success(response) {
-						response = response.data.data;
+						var typeTurnsData = response.data.data;
 						var turns = [];
 
-						angular.forEach(response, function(value, key) {
+						NoteFactoryData.getAll(date).then(
+							function success(response) {
+								response = response.data.data;
+								response = self.listNotesTypeTurn(response, typeTurnsData);
 
-						});
+								defered.resolve(response);
+							},
+							function error(response) {
+								defered.reject(response);
+							});
 
-						defered.resolve(response);
 					},
 					function error(response) {
 						defered.reject(response);
@@ -336,9 +354,32 @@ angular.module('floor.service', [])
 				);
 
 				return defered.promise;
+			},
+			listNotesTypeTurn: function(notes, turns) {
+				angular.forEach(turns, function(turn, key) {
+					angular.forEach(notes, function(note, key) {
+						if (note.res_type_turn_id == turn.id) {
+							turn.notes = note;
+						}
+					});
+				});
+				return turns;
+			},
+			createNotes: function(data) {
+				var defered = $q.defer();
+
+				NoteFactoryData.create(data).then(
+					function success(response) {
+						defered.resolve(response.data);
+					},
+					function error(response) {
+						defered.reject(response.data);
+					}
+				);
+
+				return defered.promise;
 			}
 		};
-
 	})
 	.factory('OperationFactory', function() {
 		return {

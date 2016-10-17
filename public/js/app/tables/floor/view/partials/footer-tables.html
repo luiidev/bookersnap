@@ -24,7 +24,7 @@
                     <div class="box-tab-notas" ng-show="vm.notesBox">
                         <tabset active="activeJustified">
                             <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
-                                <textarea class="form-control" placeholder="Notas" rows="8">
+                                <textarea class="form-control" ng-keyup="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                                 </textarea>
                             </tab>
                         </tabset>
