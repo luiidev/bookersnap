@@ -2,7 +2,7 @@
         <div class="tab-reservation-floor">
             <div class="input-group">
                 <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!rm.search.show" id="fadeingEntrances2">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!rm.search.show" id="fadeingEntrances2" ng-model="rm.busqueda">
                     <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-show="rm.search.show" id="fadeingEntrances">
                         <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
                         <span>CREAR RESERVACIÓN</span>
@@ -38,18 +38,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="listado-column" id="num1" ng-drag-up-coming ng-mousedown="vm.eventEstablished = 1">
+                                <tr class="listado-column" id="num1" ng-drag-up-coming ng-mousedown="vm.eventEstablished = 1" ng-repeat="value in rm.listado | filter:rm.busqueda">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
-                                                <td>08.30</td>
-                                                <td>10</td>
-                                                <td>Charly Parra</td>
-                                                <td>1</td>
-                                                <td>A15</td>
+                                                <td>{{value.start_time}}</td>
+                                                <td>{{value.num_people}}</td>
+                                                <td>{{value.first_name}} {{value.last_name}}</td>
+                                                <td>{{value.zone_indice}}</td>
+                                                <td>{{value.name}}</td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="line-row">
                                                 <td colspan="4">
                                                     <ul class="actions p-0 m-0">
                                                         <li class="dropdown" uib-dropdown="">
@@ -59,10 +59,19 @@
                                                             <li><a href="">Segunda eleccion</a></li>
                                                             </ul>
                                                         </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-male-alt"></i>
+                                                            <span class="num_people">{{value.num_people_1}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-female"></i>
+                                                            <span class="num_people">{{value.num_people_2}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-face"></i>
+                                                            <span class="num_people">{{value.num_people_3}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href=""><i class="zmdi zmdi-email"></i></a></li>
                                                     </ul>
                                                 </td>
                                                 <td><div class="box-estado-res">MENU</div></td>
@@ -71,171 +80,7 @@
                                         </table>
                                     </td> 
                                 </tr>
-                                <tr class="listado-column" id="num2" ng-drag-up-coming>
-                                    <td>
-                                        <table class="table-listado">
-                                            <tr>
-                                                <td>12:30</td>
-                                                <td>12</td>
-                                                <td>Salma Hayek</td>
-                                                <td>2</td>
-                                                <td>S/M</td>
-                                                <td><div class="box-estado-res bg-orange">Reservado</div></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <ul class="actions p-0 m-0">
-                                                        <li class="dropdown" uib-dropdown="">
-                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="">Eleccion primera</a></li>
-                                                            <li><a href="">Segunda eleccion</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
-                                                    </ul>
-                                                </td>
-                                                <td><div class="box-estado-res">BUFFET</div></td>
-                                                <td><div class="box-estado-res">Directo</div></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="listado-column" id="num3" ng-drag-up-coming>
-                                    <td>
-                                        <table class="table-listado">
-                                            <tr>
-                                                <td>02:30</td>
-                                                <td>10</td>
-                                                <td>Nicolas Cage</td>
-                                                <td>3</td>
-                                                <td>A15</td>
-                                                <td><div class="box-estado-res bg-beige">Confirmado</div></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <ul class="actions p-0 m-0">
-                                                        <li class="dropdown" uib-dropdown="">
-                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="">Eleccion primera</a></li>
-                                                            <li><a href="">Segunda eleccion</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
-                                                    </ul>
-                                                </td>
-                                                <td><div class="box-estado-res">VIP</div></td>
-                                                <td><div class="box-estado-res">RP</div></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="listado-column" id="num4" ng-drag-up-coming>
-                                    <td>
-                                        <table class="table-listado">
-                                            <tr>
-                                                <td>03:30</td>
-                                                <td>12</td>
-                                                <td>Scarlett Johansson</td>
-                                                <td>2</td>
-                                                <td>S/M</td>
-                                    <td><div class="box-estado-res bg-pink">Cancelado</div></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <ul class="actions p-0 m-0">
-                                                        <li class="dropdown" uib-dropdown="">
-                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="">Eleccion primera</a></li>
-                                                            <li><a href="">Segunda eleccion</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
-                                                    </ul>
-                                                </td>
-                                                <td><div class="box-estado-res">Directo</div></td>
-                                                <td><div class="box-estado-res">MENU</div></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="listado-column" id="num5" ng-drag-up-coming>
-                                    <td>
-                                        <table class="table-listado">
-                                            <tr>
-                                                <td>04:30</td>
-                                                <td>10</td>
-                                                <td>James Hetfield</td>
-                                                <td>3</td>
-                                                <td>A15</td>
-                                                <td><div class="box-estado-res bg-green">Espera</div></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <ul class="actions p-0 m-0">
-                                                        <li class="dropdown" uib-dropdown="">
-                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="">Eleccion primera</a></li>
-                                                            <li><a href="">Segunda eleccion</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
-                                                    </ul>
-                                                </td>
-                                                <td><div class="box-estado-res">WEB</div></td>
-                                                <td><div class="box-estado-res">MENU</div></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="listado-column" id="num6" ng-drag-up-coming>
-                                    <td>
-                                        <table class="table-listado">
-                                            <tr>
-                                                <td>12.30</td>
-                                                <td>12</td>
-                                                <td>Salma Hayek</td>
-                                                <td>1</td>
-                                                <td>S/M</td>
-                                                <td><div class="box-estado-res bg-orange">Reservado</div></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    <ul class="actions p-0 m-0">
-                                                        <li class="dropdown" uib-dropdown="">
-                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
-                                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="">Eleccion primera</a></li>
-                                                            <li><a href="">Segunda eleccion</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href=""><i class="zmdi zmdi-male-alt"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-female"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-face"></i></a></li>
-                                                        <li><a href=""><i class="zmdi zmdi-email"></i></a></li>
-                                                    </ul>
-                                                </td>
-                                                <td><div class="box-estado-res">Directo</div></td>
-                                                <td><div class="box-estado-res">MENU</div></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                         

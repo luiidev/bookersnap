@@ -1,6 +1,5 @@
 angular.module('floor.controller', [])
 
-
 .controller('FloorCtrl', function($scope, $timeout, $uibModal, $rootScope, FloorFactory, ServerFactory, ServerDataFactory, $window,
         screenHelper, screenSizeFloor) {
 
@@ -50,7 +49,6 @@ angular.module('floor.controller', [])
             FloorFactory.listTurnosActivos(vm.fecha_actual).then(
                 function success(response) {
                     vm.typeTurns = response;
-                    console.log("listTurnosActivos ", angular.toJson(response, true));
                 },
                 function error(response) {
                     console.error("typeturns " + angular.toJson(response, true));
@@ -104,7 +102,7 @@ angular.module('floor.controller', [])
                     content: function() {
                         return {
                             table: data,
-                            tables: vm.zonas[index].table
+                            //tables: vm.zonas[index].table
                         };
                     }
                 }
