@@ -23,7 +23,7 @@ angular.module('guest.service', [])
 
 	})
 
-.factory('GuestFactory', function($http, $q, GuestDataFactory) {
+.factory('GuestFactory', function($http, $q, GuestDataFactory, CustomTagGuestDataService) {
 	return {
 		guestList: function() {
 			var guestAll = [];
@@ -315,6 +315,18 @@ angular.module('guest.service', [])
 				defered.reject(response);
 			});
 
+			return defered.promise;
+		},
+		getTagsCustomGuest: function() {
+			var defered = $q.defer();
+
+			CustomTagGuestDataService.getListTagGuestCustom().then(
+				function success(response) {
+					defered.resolve(response.data);
+				},
+				function error(response) {
+					defered.reject(response.data);
+				});
 			return defered.promise;
 		}
 	};

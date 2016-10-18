@@ -33,51 +33,99 @@ angular.module('floor.service', [])
 		var navegaTabZone = 0;
 		return {
 			setBorderColorForReservation: function(zones, blocks) {
-			    hour = moment();
-			    angular.forEach(zones, function(zone) {
-			        angular.forEach(zone.tables, function(table) {
-			            angular.forEach(blocks, function(block) {
-			                if (table.id == block.res_table_id) {
-			                    if (block.res_server_id) {
-			                    	 var start_block =  moment(block.start_time, "HH:mm:ss");
-			                    	 var end_block =  moment(block.end_time, "HH:mm:ss");
-			                    	 if (hour.isBetween(start_block, end_block,  null, "()")) {
-			                    	      table.server.setReservation(block.res_server.color);
-			                    	 }
-			                    }
-			                }
-			            });
-			        });
-			    });
+				hour = moment();
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						angular.forEach(blocks, function(block) {
+							if (table.id == block.res_table_id) {
+								if (block.res_server_id) {
+									var start_block = moment(block.start_time, "HH:mm:ss");
+									var end_block = moment(block.end_time, "HH:mm:ss");
+									if (hour.isBetween(start_block, end_block, null, "()")) {
+										table.server.setReservation(block.res_server.color);
+									}
+								}
+							}
+						});
+					});
+				});
 			},
 			setColorTable: function(zones, servers) {
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						angular.forEach(servers, function(server) {
+							angular.forEach(server.tables, function(serverTable) {
+								if (table.id == serverTable.id) {
+									table.server.setDefault(server.color);
+								}
+							});
+						});
+					});
+				});
+			},
+			getReservationTables: function(zones, blocks, reservation_id) {
+				var reservationTables = "";
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						angular.forEach(content.blocks, function(block) {
+							if (table.id == block.table_id) {
+								if (block.res_reservation_id == reservation_id) {
+									reservationTables += block.name + ", ";
+								}
+							}
+						});
+					});
+				});
+
+				return reservationTables.substring(0, reservationTables.length - 2);
+			},
+			clearSelected: function(zones) {
 			    angular.forEach(zones, function(zone) {
 			        angular.forEach(zone.tables, function(table) {
-			            angular.forEach(servers, function(server) {
-			                angular.forEach(server.tables, function(serverTable) {
-			                    if (table.id == serverTable.id) {
-			                        table.server.setDefault(server.color);
-			                    }
-			                });
-			            });
+		                        table.selected = false;
 			        });
 			    });
 			},
-			getReservationTables: function(zones, blocks, reservation_id) {
-			    var reservationTables = "";
-			    angular.forEach(zones, function(zone) {
-			        angular.forEach(zone.tables, function(table) {
-			        	angular.forEach(content.blocks, function(block) {
-			       	     if (table.id == block.table_id) {
-			       	          if (block.res_reservation_id == reservation_id) {
-			       	     	    reservationTables += block.name + ", ";
-			       	     	}
-			       	     }
-			        	});
-			        });
+			getZoneIndexForTable: function(zones, serverTables) {
+			    if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
+			    	return 0;
+			    } else if (serverTables.length === 0) {
+			    	return 0;
+			    }
+			    var index = null;
+			    angular.forEach(zones, function(zone, zone_index) {
+			        if (index === null){
+			        	 angular.forEach(zone.tables, function(table) {
+	        	 	        	     if (index === null){
+ 	        		     	           angular.forEach(serverTables, function(serverTable) {
+ 	        		    	                if (index === null){
+ 	        		    	                	if (table.id == serverTable.id) {
+        		    	                		      index = zone_index;
+ 	        		    	                	}
+ 	        		    	                }
+ 	        		     	           });
+	        	 	        	     }
+			        	 });
+			        }
 			    });
 
-			    return reservationTables.substring(0, reservationTables.length - 2);
+			    return index;
+			},
+			tablesSelected: function(zones, serverTables) {
+			    if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
+			    	return;
+			    } else if (serverTables.length === 0) {
+			    	return;
+			    }
+			    angular.forEach(zones, function(zone) {
+			        	 angular.forEach(zone.tables, function(table) {
+ 	        		     	           angular.forEach(serverTables, function(serverTable) {
+ 	        		    	                	if (table.id == serverTable.id) {
+        		    	                		      table.selected = true;
+ 	        		    	                	}
+ 	        		     	           });
+			        	 });
+			    });
 			},
 			isEditServer: function(value) {
 				if (value || value === false) {
@@ -475,14 +523,14 @@ angular.module('floor.service', [])
 				return tableColection;
 			},
 			setTableServerItems: function(tableItem) {
-				tableColection.push(tableItem);
+				tableColection.push({id: tableItem.id, name: tableItem.name});
 			},
 			setTableServerItemsEdit: function(tableItem) {
 				tableColection = tableItem;
 			},
 			delTableServerItem: function(tableItem) {
 				angular.forEach(tableColection, function(value, key) {
-					if (value.table_id == tableItem.table_id) {
+					if (value.id == tableItem.id) {
 						tableColection.splice(key, 1);
 					}
 				});
