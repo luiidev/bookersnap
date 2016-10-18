@@ -10,11 +10,11 @@ angular.module('floor.controller', [])
 
         vm.zones = [];
         var blocks = [];
+        var eventEstablished = {};
 
         /**
          * Varaible de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
-        vm.eventEstablished = 0;
 
         vm.titulo = "Floor";
         vm.colorsSelect = [];
@@ -32,6 +32,11 @@ angular.module('floor.controller', [])
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
 
+        $scope.$on("eventEstablish", function(evt, eventDrop, data) {
+            eventEstablished.event = eventDrop;
+            eventEstablished.data = data;
+        });
+
         $scope.$on("clearSelected", function() {
             FloorFactory.clearSelected(vm.zones);
         });
@@ -45,9 +50,14 @@ angular.module('floor.controller', [])
             if (index !== null)vm.tabSelectedZone(index);
         });
 
+        vm.eventEstablish = function(eventDrop) {
+            eventEstablished.event = eventDrop;
+            eventEstablished.data = null;
+        };
+
         vm.findTableForServer = function(tables) {
                 var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
-                vm.tabSelectedZone(index);
+                if (index !== null ) vm.tabSelectedZone(index);
         };
 
         vm.tabSelectedZone = function(value) {
@@ -176,7 +186,7 @@ angular.module('floor.controller', [])
                         return obj;
                     },
                     eventEstablished: function() {
-                        return vm.eventEstablished;
+                        return eventEstablished;
                     }
                 }
             });
@@ -416,9 +426,9 @@ angular.module('floor.controller', [])
         }
 
         vmc.save = function() {
-            if (eventEstablished) {
+            if (eventEstablished.event == "sit") {
                 sit();
-            } else {
+            } else if (eventEstablished.event == "create"){
                 create();
             }
         };
@@ -436,9 +446,9 @@ angular.module('floor.controller', [])
         };
 
         var sit = function() {
-            var id = 79;
+            var id = eventEstablished.data.reservation_id;
             var data = {
-                table_id: 136
+                table_id: eventEstablished.data.table_id
             };
 
             reservationService.sit(id, data)
@@ -622,6 +632,13 @@ angular.module('floor.controller', [])
         };
         //Al iniciar que este seleccionadad por defecto
         rm.select_people(rm.categorias_people[3]);
+
+        //////////////////////////////////////////////////////
+        /// New events
+        //////////////////////////////////////////////////////
+        rm.selectReservation = function(reservation) {
+            $rootScope.$broadcast("eventEstablish", "sit", reservation);
+        };
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;
