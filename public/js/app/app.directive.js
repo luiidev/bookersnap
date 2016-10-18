@@ -5,11 +5,13 @@ angular.module("bookersnap.directives", [])
             restrict: 'E',
             scope: {
                 waitLoad: "=wait",
-                time: "=?"
+                time: "=?",
+                bg: "=?",
+                pls: "=?"
             },
-            template: '<div class="load-parent" ng-show="waitLoad">\
+            template: '<div class="load-parent" ng-show="waitLoad" ng-class="[bg]">\
                               <div class="load-child" ng-class="[with]">\
-                                     <div class="preloader" ng-class="[size]">\
+                                     <div class="preloader" ng-class="[size,pls]">\
                                           <svg class="pl-circular" viewBox="25 25 50 50">\
                                                 <circle class="plc-path" cx="50" cy="50" r="20"></circle>\
                                           </svg>\
@@ -18,7 +20,9 @@ angular.module("bookersnap.directives", [])
                         </div>',
             link: function(vm, element, attrs) {
                 vm.with = attrs.size || "size-default";
-                vm.size = attrs.size ? "pl-"+attrs.size: null;
+                vm.size = attrs.size ? "pl-" + attrs.size : null;
+                vm.bg = attrs.bg ? "bgm-" + attrs.bg : null;
+                vm.pls = attrs.pls ? "pls-" + attrs.pls : null;
 
                 var timeoutId;
                 vm.time = vm.time || loadTime;

@@ -25,7 +25,7 @@ angular.module('floor.directive', [])
             element.droppable({
                 //accept: ".listado-column",
                 drop: function(event, ui) {
-                    //console.log(ui.draggable[0].id);
+                    console.log(ui.draggable[0].id);
                     scope.$apply(function() {
                         scope.num = {
                             num_men: ui.draggable[0].id,

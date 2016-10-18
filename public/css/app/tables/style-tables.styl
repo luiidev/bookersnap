@@ -724,12 +724,22 @@ $background-tables-head = #eee
 		padding 4px 0px 4px 4px
 	& thead > tr, & tbody > tr
 		&.line-row
-			border-bottom 1px solid #767676
-			td > ul.actions > li
-				width 38px
-				a
-				height 0px
-				padding 0px
+			//border-bottom 1px solid #767676
+			& td > ul.actions > li.icon-people
+				width 42px
+				padding 0
+				& a
+					height 0px
+					padding 0px
+					width 100%
+					display block
+					& i
+						line-height 8px
+					& .num_people
+						color #fff
+						background #575757
+						border-radius 40px
+						padding 2px 6px
 		&.listado-column
 			border-bottom 1px solid #767676
 			background rgba(66,66,66,0.5)
@@ -1064,18 +1074,22 @@ ul.footer-floor
 				border-top-color #fff
 				border-width 10px
 				margin-left -10px
-			&:before 
-				/*border-color rgba(194, 225, 245, 0)
-				border-top-color #c2e1f5
-				border-width 36px
-				margin-left -16px*/
-				
 			& textarea
 				padding 5px
 				outline none
 				resize none
 				width 100%
 				border 0
+			& .tab-nav:not(.tn-vertical)>li
+				&>a:after 
+					background #0b618a
+				&.active>a
+					color #fff
+					background-color #0b618a
+				&.disabled>a
+					cursor not-allowed
+					opacity 0.6
+					
 					
 li.divider
 	width 2px
@@ -1296,6 +1310,7 @@ li.divider
 
 // CUSTOM GUEST TAG
 .guest-tags-form
+	width 100%
 	label
 		font-size 17px
 	button
@@ -1305,31 +1320,24 @@ li.divider
 		
 	.tag-item
 		display inline-block
-		padding  2px 15px
+		padding  0px 15px
 		color #fff
 		font-size 15px
-		font-weight 400
 		line-height 30px
 		margin  0 12px 0 12px
-		border-radius 4px
+		border-radius 5px		
 		&.guest
-			background-color #f56462
-			margin 15px 4px 15px 4px			
+			background-color #f44336
+			margin 15px 10px 15px 10px			
 		&.reservation
-			background-color #36b8c8
-			margin 15px 4px 15px 4px
+			background-color #2196f3
+			margin 15px 10px 15px 10px
 		& .icon
+			// margin-top 15px
+			line-height 30px
+			// padding 0
+			border-radius 50%
 			color white
-			&:hover
-				color gray
-	
-// CONFIGURATION RESERVATION
-.configuration-reservation-body
-	height 400px
-	& .configuration-reservation-form
-		margin-left 50px
-		margin-right 50px
-		& .form-control
-			border-radius 5px
-
+			// &:hover			
+			// 	box-shadow 0 0 2px 2px
 		
