@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService,TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -28,6 +28,8 @@ angular.module('floor.controller', [])
             texto: '',
             res_type_turn_id: ''
         };
+        var timeoutNotes;
+        var openNotesTimeOut;
 
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
@@ -84,7 +86,7 @@ angular.module('floor.controller', [])
                     blocks = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
-                }).finally(function(){
+                }).finally(function() {
                     //////////////////////////////////////////////////////////////
                     FloorFactory.setBorderColorForReservation(vm.zones, blocks);
                     //////////////////////////////////////////////////////////////
@@ -150,13 +152,6 @@ angular.module('floor.controller', [])
             modalInstancesConfiguration(cantidades, obj);
         };
 
-        vm.openNotes = function() {
-            vm.notesBox = !vm.notesBox;
-            $timeout(function() {
-                vm.notesBoxValida = true;
-            }, 700);
-        };
-
         function modalInstancesConfiguration(cantidades, obj) {
             console.log(cantidades, obj);
             var modalInstance = $uibModal.open({
@@ -197,6 +192,14 @@ angular.module('floor.controller', [])
             vm.fontSize = (14 * vm.size / screenSizeFloor.minSize + "px");
         };
 
+        vm.openNotes = function() {
+            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
+            vm.notesBox = !vm.notesBox;
+            openNotesTimeOut = $timeout(function() {
+                vm.notesBoxValida = true;
+            }, 500);
+        };
+
         var closeNotes = function() {
             angular.element($window).bind('click', function(e) {
 
@@ -208,16 +211,15 @@ angular.module('floor.controller', [])
                 }
             });
         };
-        var ejecutar;
+
         vm.saveNotes = function(turn) {
-            if (ejecutar) $timeout.cancel(ejecutar);
+            if (timeoutNotes) $timeout.cancel(timeoutNotes);
             vm.notesData.id = turn.notes.id;
             vm.notesData.res_type_turn_id = turn.id;
             vm.notesData.texto = turn.notes.texto;
             vm.notesData.date_add = turn.notes.date_add;
 
-            console.log("saveNotes " + angular.toJson(vm.notesData, true));
-            ejecutar = $timeout(function() {
+            timeoutNotes = $timeout(function() {
                 FloorFactory.createNotes(vm.notesData).then(
                     function success(response) {
                         console.log("saveNotes success " + angular.toJson(response, true));
