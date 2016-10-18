@@ -1,0 +1,107 @@
+<div class="configuration-reservation-form">
+	<div class="card-header p-l-0 p-r-0">
+		<h2>
+			Usuarios provilegiados
+			<small> Aqui puedes agregar a los usuarios que tienen permitido hacer reservas online
+			</small>
+		</h2>
+	</div>
+    <div class="card-body p-l-100 p-r-50">
+		<div class="row">
+			<div class="col-sm-3 col-sm-offset-3 p-b-20">
+				<div class="form-group fg-line">
+					<div class="radio m-b-15">
+						<label>
+							<input type="radio" value="1" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
+							<i class="input-helper"></i>
+							Activar
+						</label>
+					</div>		
+				</div>										
+			</div>
+			<div class="col-sm-3 p-b-20">
+				<div class="form-group fg-line">
+					<div class="radio m-b-15">
+						<label>
+							<input type="radio" value="0" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
+							<i class="input-helper"></i>
+							Desactivar
+						</label>
+					</div>
+				</div>										
+			</div>
+		</div>
+
+        <form  name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
+            <div class="col-sm-12">
+                <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
+                <div class="row"> 
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <div class="form-group fg-line">
+                            <input class="form-control" ng-model="turnData.name" placeholder="Buscar usuario aqui" type="text" required>
+                       <!--      <div class="select">                        
+                                    <select chosen="" class="form-control" data-placeholder="Buscar usuario aqui ..." ng-options="user.id as user.name for user in vm.userList" required>
+                                      <option value=""></option>
+                                    </select>
+                            </div> -->
+                        </div>                            
+                    </div>                                      
+                    <div class="col-sm-2">
+                        <div class="form-group fg-line">
+                            <button class="btn btn-primary waves-effect" ng-disabled="!configurationUserForm.$valid">Buscar</button>
+                        </div>
+                    </div>              
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+            			<div class="card-body table-responsive">
+            				<table class="table">
+            					<thead>
+            						<tr>
+            							<th>
+            								Nombre de usuario
+            							</th>
+            							<th>
+            								Email
+            							</th>
+            							<th class="text-center">
+            								Tipo de cuenta
+            							</th>					                
+            						</tr>
+            					</thead>
+            					<tbody>
+            						<tr ng-repeat="user in vm.userList">
+            							<td>
+            								{{user.name}}
+            							</td>
+            							<td>
+            								{{user.email}}
+            							</td>
+            							<td>
+            								{{user.type}}
+            							</td>
+            							<td class="text-right">
+        				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)">
+        				                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
+        				                    	</i>
+        				                    	Eliminar
+        				                    </button>
+        					            </td>
+        					        </tr>					            
+        					    </tbody>
+        					</table>
+        				</div>
+                    </div>
+        		</div>																	
+            </div>                         
+		</form>
+        <div class="row" ng-show="vm.configuration.res_privilege_status==0" >
+            <div class="col-sm-12 f-20 text-center min-h-200-px m-b-20 center-content">
+                <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
+                <p class="lead">
+                    Privilegios de usuarios esta desactivado
+                </p>
+            </div>
+        </div>      
+	</div>
+</div>

@@ -17,10 +17,10 @@ angular.module('floor.service', [])
 
 		return {
 			create: function(data) {
-				return $http.post(ApiUrlMesas + '/notes', data);
+				return $http.post(ApiUrlMesas + '/turns/notes', data);
 			},
-			getAll: function(date) {
-				return $http.get(ApiUrlMesas + '/notes/' + date);
+			getAll: function(params) {
+				return $http.get(ApiUrlMesas + '/turns/notes?' + params);
 			}
 		};
 	})
@@ -32,6 +32,53 @@ angular.module('floor.service', [])
 		var zonesTotal = [];
 		var navegaTabZone = 0;
 		return {
+			setBorderColorForReservation: function(zones, blocks) {
+			    hour = moment();
+			    angular.forEach(zones, function(zone) {
+			        angular.forEach(zone.tables, function(table) {
+			            angular.forEach(blocks, function(block) {
+			                if (table.id == block.res_table_id) {
+			                    if (block.res_server_id) {
+			                    	 var start_block =  moment(block.start_time, "HH:mm:ss");
+			                    	 var end_block =  moment(block.end_time, "HH:mm:ss");
+			                    	 if (hour.isBetween(start_block, end_block,  null, "()")) {
+			                    	      table.server.setReservation(block.res_server.color);
+			                    	 }
+			                    }
+			                }
+			            });
+			        });
+			    });
+			},
+			setColorTable: function(zones, servers) {
+			    angular.forEach(zones, function(zone) {
+			        angular.forEach(zone.tables, function(table) {
+			            angular.forEach(servers, function(server) {
+			                angular.forEach(server.tables, function(serverTable) {
+			                    if (table.id == serverTable.id) {
+			                        table.server.setDefault(server.color);
+			                    }
+			                });
+			            });
+			        });
+			    });
+			},
+			getReservationTables: function(zones, blocks, reservation_id) {
+			    var reservationTables = "";
+			    angular.forEach(zones, function(zone) {
+			        angular.forEach(zone.tables, function(table) {
+			        	angular.forEach(content.blocks, function(block) {
+			       	     if (table.id == block.table_id) {
+			       	          if (block.res_reservation_id == reservation_id) {
+			       	     	    reservationTables += block.name + ", ";
+			       	     	}
+			       	     }
+			        	});
+			        });
+			    });
+
+			    return reservationTables.substring(0, reservationTables.length - 2);
+			},
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
@@ -200,18 +247,24 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				var fecha_actual = getFechaActual();
 				reservationService.getZones(fecha_actual).success(function(data) {
+					console.log("zonas");
+					console.log(data.data);
 					return data;
 				}).error(function(data) {
 					defered.reject(data);
 				}).then(function(zonesData) {
 
 					me.listBloqueos().then(function success(response) {
+						console.log("blocks");
+						console.log(response);
 						return response;
 					}, function error(response) {
 						return response;
 					}).then(function success(blocks) {
 
 						me.listTableServes().then(function success(server) {
+							console.log("servers");
+							console.log(server);
 							return server;
 						}, function error(server) {
 							return server;
@@ -219,6 +272,7 @@ angular.module('floor.service', [])
 
 							var vZones = [];
 							angular.forEach(zonesData.data.data, function(zone) {
+								console.log("------------------------------------------");
 								var tables = zone.tables;
 								var vTables = [];
 								angular.forEach(tables, function(table) {
@@ -240,6 +294,7 @@ angular.module('floor.service', [])
 									angular.forEach(blocks, function(block) {
 										//console.log(blocks);
 										if (block.table_id === table.id) {
+											console.log("block", table, block);
 											dataTable.res_reservation_status_id = block.res_reservation_status_id;
 											dataTable.reservation_id = block.reservation_id;
 										}
@@ -247,6 +302,7 @@ angular.module('floor.service', [])
 									angular.forEach(servers, function(server) {
 										//console.log(blocks);
 										if (server.table_id === table.id) {
+											console.log("server", table, server);
 											dataTable.server_id = server.server_id;
 											dataTable.color = server.color;
 										}

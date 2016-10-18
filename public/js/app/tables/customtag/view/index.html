@@ -9,45 +9,69 @@
         <div data-ng-include="'/template/config-menu-tables.html'">
         </div>
         <div class="container">
-            <div class="card">
+            <div class="card p-t-20 p-b-20">
                 <div class="pm-body clearfix list-table">
-                    <div class="guest-tags-form">
+                    <div class="row guest-tags-form">
                         <form class="form-inline" name="customGuestTag" novalidate>
-                            <label class="m-b-25 m-t-25 c-black f-500">
-                                Guest Tags
-                            </label>
-                            <div>
-                                <input class="form-control" id="tag" ng-model="vm.nameG" placeholder="Guest Tag (e.g. Celebrity)" type="text" required/>
-                                <button class="btn btn-primary waves-effect" ng-click="vm.guestCreateTag(vm.nameG)" ng-disabled="!customGuestTag.$valid || vm.loading">
-                                    Add New Tag
-                                </button>
-                            </div>
+                               <div class="col-sm-12">
+                                    <label for="code">Tags para invitados</label> 
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group fg-line">
+                                        <input class="form-control input-sm fg-input" ng-model="vm.nameG" placeholder="Ingrese tag de invitado" type="text" required>  
+                                    </div>                                      
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group fg-line">
+                                        <button class="btn btn-primary waves-effect" ng-click="vm.guestCreateTag(vm.nameG)" ng-disabled="!customGuestTag.$valid || vm.loadingCreateCustomTag"><i class="zmdi zmdi-plus m-r-5"></i>Agregar tag
+                                        <loading-box wait="vm.loadingCreateCustomTag" pls="white" bg="blue" size="xs" time="5000"></loading-box>
+                                        </button>
+                                    </div>
+                                </div>
                         </form>
-                        <div class="tags-list" >
-                            <div class="tag-item guest" ng-repeat="tag in vm.guestTagList">
-                                {{tag.name | lowercase}}
-                                <a class="icon glyphicon glyphicon-remove" ng-click="vm.guestDeleteTag(tag.id)">
-                                </a>
+                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" >
+                            <loading-box wait="vm.initCT" size="lg" time="5000"></loading-box>
+                            <div class="tag-item guest center-content" ng-repeat="tag in vm.guestTagList" ng-show="!vm.initCT && vm.guestTagList.length" >
+                                    {{tag.name | uppercase}}
+                                    <a class="icon glyphicon glyphicon-remove" ng-click="tag.delete || vm.guestDeleteTag(tag.id)">
+                                        <loading-box wait="tag.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
+                                    </a>
+                            </div>
+                            <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.guestTagList.length > 0">
+                                   <p class="lead" ng-bind="vm.message.tagsGuest"></p> 
                             </div>
                         </div>
                     </div>
-                    <div class="guest-tags-form">
+                    <hr>
+                    <div class="row guest-tags-form">
                         <form class="form-inline" name="customReservationTag" novalidate>
-                            <label class="m-b-25 m-t-25 c-black f-500">
-                                Reservation Tag
-                            </label>
-                            <div>
-                                <input class="form-control" id="tag" ng-model="vm.nameR" placeholder="Reservation Tag (e.g. Birthday)" type="text" required/>
-                                <button class="btn btn-primary waves-effect" ng-click="vm.reservationCreateTag(vm.nameR)" ng-disabled="!customReservationTag.$valid || vm.loading">
-                                    Add New Tags
-                                </button>
-                            </div>
+                               <div class="col-sm-12">
+                                    <label for="code">Tags de reservacion</label> 
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group fg-line">
+                                        <input class="form-control input-sm fg-input" ng-model="vm.nameR" placeholder="Ingrese tag de reservación" type="text" required>  
+                                    </div>                                      
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group fg-line">
+                                        <button class="btn btn-primary waves-effect" ng-click="vm.reservationCreateTag(vm.nameR)" ng-disabled="!customReservationTag.$valid || vm.loadingCreateReservationTag"><i class="zmdi zmdi-plus m-r-5"></i>Agregar Tag
+                                        <loading-box wait="vm.loadingCreateReservationTag" pls="white" bg="blue" size="xs" time="5000"></loading-box>
+                                        </button>
+                                    </div>
+                                </div>
                         </form>
-                        <div class="tags-list" >
-                            <div class="tag-item reservation" ng-repeat="tag in vm.reservationTagList">
-                                {{tag.name | lowercase}}
-                                <a class="icon glyphicon glyphicon-remove" ng-click="vm.reservationDeleteTag(tag.id)">
+                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" >
+                            <loading-box wait="vm.initRT" size="lg" time="5000"></loading-box>
+                            <div class="tag-item reservation" ng-repeat="tagR in vm.reservationTagList" ng-show="!vm.initRT && vm.reservationTagList.length">
+                                {{tagR.name | uppercase}}
+                                <a class="icon glyphicon glyphicon-remove" ng-click="tagR.delete || vm.reservationDeleteTag(tagR.id)">
+                                    <loading-box wait="tagR.delete==true" pls="white" bg="blue" size="xs" time="5000"></loading-box>
                                 </a>
+
+                            </div>
+                            <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.reservationTagList.length > 0">
+                                   <p class="lead" ng-bind="vm.message.tagsReservation"></p> 
                             </div>
                         </div>
                     </div>
