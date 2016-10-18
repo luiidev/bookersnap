@@ -160,4 +160,46 @@ angular.module('floor.filter', [])
 			});
 			return salida;
 		};
+	})
+	.filter('peopleSel', function() {
+		return function(items, categoria) {
+			var salida = [];
+			var idcategoria = categoria.idcategoria;
+			switch (idcategoria) {
+				case 1:
+					angular.forEach(items, function(item) {
+						if (item.num_people_1 != 0) {
+							salida.push(item);
+						}
+					});
+					break;
+				case 2:
+					angular.forEach(items, function(item) {
+						if (item.num_people_2 != 0) {
+							salida.push(item);
+						}
+					});
+					break;
+				case 3:
+					angular.forEach(items, function(item) {
+						if (item.num_people_3 != 0) {
+							salida.push(item);
+						}
+					});
+					break;
+				case 4:
+					salida = items;
+					break;
+			}
+
+			/*console.log(categoria);
+			angular.forEach(items, function(item) {
+				//for (var i = 0; i <= items.length; i++) {
+				//if (items[i]. == categoria.Id) {
+				salida.push(item);
+				//}
+			});*/
+
+			return salida;
+		};
 	});

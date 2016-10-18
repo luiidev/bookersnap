@@ -392,11 +392,6 @@ angular.module('reservation.controller', [])
             });
     };
 
-    var loadTablesEdit = function(dataZones) {
-        vm.zones = helper.loadTable(dataZones);
-        defaultView();
-    };
-
     var defaultView = function() {
         zoneIndexMax =  vm.zones.length - 1;
         if (zoneIndexMax >= 0) {
@@ -610,6 +605,11 @@ angular.module('reservation.controller', [])
                 listStatuses();
                 listReservationTags();
             });
+    };
+
+    var loadTablesEdit = function(dataZones) {
+        vm.zones = helper.loadTable(dataZones);
+        defaultView();
     };
 
     vm.changeDate = function() {
