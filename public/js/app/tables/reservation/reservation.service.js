@@ -169,6 +169,16 @@ angular.module('reservation.service', [])
                         selected: false,
                         block: false,
                         occupied: false,
+                        server: {
+                            default: null,
+                            reservation: null,
+                            setDefault: function(color) {
+                                this.default = "2px solid " + color;
+                            },
+                            setReservation: function(color){
+                                this.reservation = "2px solid " + color;
+                            }
+                        },
                     };
 
                     if (data.status == 1) {
@@ -184,7 +194,7 @@ angular.module('reservation.service', [])
         };
 
         return {
-            loadTable: loadTable
+            loadTable: loadTable,
         };
     }])
     .factory("screenHelper", ["$window", function($window) {
