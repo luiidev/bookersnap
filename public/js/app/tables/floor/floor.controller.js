@@ -604,12 +604,20 @@ angular.module('floor.controller', [])
             nombre: 'Todos'
         }];
 
-        rm.select_people = function(categoria_people) {
-            rm.filter_people = categoria_people;
+        rm.select_people = function(categoria) {
+            rm.filter_people = categoria;
             return false;
         };
         //Al iniciar que este seleccionadad por defecto
         rm.select_people(rm.categorias_people[3]);
+
+        /*rm.esActiva = function(categoria) {
+            if (categoria.idcategoria == rm.categorias_people.idcategoria) {
+                return 'active';
+            } else {
+                return '';
+            }
+        };*/
     })
     .controller('waitlistController', function(FloorFactory, ServerDataFactory) {
         var wm = this;
