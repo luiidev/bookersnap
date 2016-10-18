@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService,TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -28,6 +28,8 @@ angular.module('floor.controller', [])
             texto: '',
             res_type_turn_id: ''
         };
+        var timeoutNotes;
+        var openNotesTimeOut;
 
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
@@ -53,6 +55,14 @@ angular.module('floor.controller', [])
         vm.eventEstablish = function(eventDrop) {
             eventEstablished.event = eventDrop;
             eventEstablished.data = null;
+        };
+
+        vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
+
+        var selectedTabZoneByServer = function() {
+            if (FloorFactory.isEditServer()) {
+                vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
+            }
         };
 
         vm.findTableForServer = function(tables) {
@@ -99,7 +109,7 @@ angular.module('floor.controller', [])
                     blocks = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
-                }).finally(function(){
+                }).finally(function() {
                     //////////////////////////////////////////////////////////////
                     FloorFactory.setBorderColorForReservation(vm.zones, blocks);
                     //////////////////////////////////////////////////////////////
@@ -111,6 +121,7 @@ angular.module('floor.controller', [])
                 .then(function(response) {
                     var zones = response.data.data;
                     vm.zones = reservationHelper.loadTable(zones);
+                    FloorFactory.setDataZonesTables(zones);
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {
@@ -137,7 +148,7 @@ angular.module('floor.controller', [])
                 resolve: {
                     content: function() {
                         return {
-                            zoneName: vm.zones[index].name,
+                            //zoneName: vm.zones[index].name,
                             table: data,
                             blocks: blocks,
                             zones: vm.zones
@@ -163,13 +174,6 @@ angular.module('floor.controller', [])
             };
 
             modalInstancesConfiguration(cantidades, obj);
-        };
-
-        vm.openNotes = function() {
-            vm.notesBox = !vm.notesBox;
-            $timeout(function() {
-                vm.notesBoxValida = true;
-            }, 700);
         };
 
         function modalInstancesConfiguration(cantidades, obj) {
@@ -209,6 +213,14 @@ angular.module('floor.controller', [])
             vm.fontSize = (14 * vm.size / screenSizeFloor.minSize + "px");
         };
 
+        vm.openNotes = function() {
+            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
+            vm.notesBox = !vm.notesBox;
+            openNotesTimeOut = $timeout(function() {
+                vm.notesBoxValida = true;
+            }, 500);
+        };
+
         var closeNotes = function() {
             angular.element($window).bind('click', function(e) {
 
@@ -222,21 +234,23 @@ angular.module('floor.controller', [])
         };
 
         vm.saveNotes = function(turn) {
+            if (timeoutNotes) $timeout.cancel(timeoutNotes);
             vm.notesData.id = turn.notes.id;
             vm.notesData.res_type_turn_id = turn.id;
             vm.notesData.texto = turn.notes.texto;
             vm.notesData.date_add = turn.notes.date_add;
 
-            console.log("saveNotes " + angular.toJson(vm.notesData, true));
+            timeoutNotes = $timeout(function() {
+                FloorFactory.createNotes(vm.notesData).then(
+                    function success(response) {
+                        console.log("saveNotes success " + angular.toJson(response, true));
+                    },
+                    function error(response) {
+                        console.error("saveNotes " + angular.toJson(response, true));
+                    }
+                );
+            }, 1000);
 
-            FloorFactory.createNotes(vm.notesData).then(
-                function success(response) {
-                    console.log("saveNotes success " + angular.toJson(response, true));
-                },
-                function error(response) {
-                    console.error("saveNotes " + angular.toJson(response, true));
-                }
-            );
         };
 
         angular.element($window).bind('resize', function() {
@@ -602,11 +616,22 @@ angular.module('floor.controller', [])
             FloorFactory.listZonesBloqueosReservas().then(function success(data) {
                 rm.res_listado = data;
                 var total = 0;
+                var men = 0;
+                var women = 0;
+                var children = 0;
                 angular.forEach(rm.res_listado, function(people) {
+                    men += people.num_people_1;
+                    women += people.num_people_2;
+                    children += people.num_people_3;
                     total += people.num_people;
                 });
+                rm.total_men = men;
+                rm.total_women = women;
+                rm.total_children = children;
                 rm.total_people = total;
-                //console.log('Listado reservaciones Total: ' + angular.toJson(data, true));
+                rm.total_visitas = total;
+
+                //console.log('Total: ' + angular.toJson(data, true));
             });
         };
         getlistZonesBloqueosReservas();
@@ -626,16 +651,36 @@ angular.module('floor.controller', [])
             nombre: 'Todos'
         }];
 
-        rm.select_people = function(categoria_people) {
-            rm.filter_people = categoria_people;
+        rm.select_people = function(categoria) {
+            rm.filter_people = categoria;
+            switch (categoria.idcategoria) {
+                case 1:
+                    rm.total_visitas = rm.total_men;
+                    break;
+                case 2:
+                    rm.total_visitas = rm.total_women;
+                    break;
+                case 3:
+                    rm.total_visitas = rm.total_children;
+                    break;
+                case 4:
+                    rm.total_visitas = rm.total_people;
+                    break;
+            }
+            //rm.total_people = 12;
             return false;
         };
         //Al iniciar que este seleccionadad por defecto
         rm.select_people(rm.categorias_people[3]);
 
-        //////////////////////////////////////////////////////
-        /// New events
-        //////////////////////////////////////////////////////
+        rm.isActivePeople = function(categoria) {
+            if (categoria.idcategoria == rm.filter_people.idcategoria) {
+                return 'sel_active';
+            } else {
+                return '';
+            }
+        };
+
         rm.selectReservation = function(reservation) {
             $rootScope.$broadcast("eventEstablish", "sit", reservation);
         };
@@ -763,7 +808,7 @@ angular.module('floor.controller', [])
         //Botoncito X 
         sm.removeTable = function(item, data) {
 
-            var element = angular.element('#el' + data.table_id);
+            var element = angular.element('#el' + data.id);
             element.removeClass("selected-table");
             ServerDataFactory.delTableServerItemIndex(item);
 
@@ -825,7 +870,6 @@ angular.module('floor.controller', [])
                 });
 
             } else if (sm.flagServer === true) { // Se actualiza la data
-
                 sm.data = {
                     id: sm.id,
                     name: sm.name,

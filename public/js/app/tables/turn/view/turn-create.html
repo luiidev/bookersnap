@@ -9,21 +9,6 @@
         <div data-ng-include="'/template/config-menu-tables.html'">
         </div>
         <div class="container">
-            <!--
-            <div class="block-header">
-                <ul class="actions">
-                    <li>
-                        <button class="btn btn-default waves-effect" onclick="historyBack()">
-                            Cancelar
-                        </button>
-                    </li>
-                    <li>
-                        <button class="btn btn-primary waves-effect" ng-click="validateSaveTurn('create',frmTurn)" ng-disabled="turnForm.saveClick">
-                            Crear turno
-                        </button>
-                    </li>
-                </ul>
-            </div>-->
             <div class="card box-turno-create">
                 <div class="card-header">
                     <h2>
@@ -333,11 +318,17 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Nombre Zona</th>
-                            <th>Mesas</th>
-                            <th>Fecha</th>
-                            <th>Turnos asignados</th>
-                            <th></th>
+                            <th style="width: 20%">Nombre Zona</th>
+                            <th style="width: 5%">Mesas</th>
+                            <th style="width: 18%">Fecha</th>
+                            <th style="width: 40%">Turnos asignados</th>
+                            <th class="text-center">    
+                                <div class="toggle-switch">
+                                    <!--<label for="ts1" class="ts-label">Todos</label>-->
+                                    <input id="ts1" type="checkbox" hidden="hidden" ng-model="chkAllZones" ng-click="assignZoneAll()">
+                                    <label for="ts1" class="ts-helper"></label>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -346,10 +337,10 @@
                             <td><label class="label bgm-lightgreen"> {{ zone.tables.length }} </label> </td>
                             <td>{{ zone.date_add }}</td>
                             <td>{{ zone.turns_asign}}</td>
-                            <td>
+                            <td class="text-center">
                                <div class="checkbox m-b-15">
                                     <label>
-                                        <input type="checkbox" value="{{zone.id}}" ng-click="assignZone(zone)" ng-checked="{{zone.checked}}">
+                                        <input type="checkbox"  ng-click="assignZone(zone)" ng-checked="zone.checked" >
                                         <i class="input-helper"></i>    
                                     </label>
                                 </div>

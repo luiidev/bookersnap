@@ -191,15 +191,6 @@ angular.module('floor.filter', [])
 					salida = items;
 					break;
 			}
-
-			/*console.log(categoria);
-			angular.forEach(items, function(item) {
-				//for (var i = 0; i <= items.length; i++) {
-				//if (items[i]. == categoria.Id) {
-				salida.push(item);
-				//}
-			});*/
-
 			return salida;
 		};
 	});
