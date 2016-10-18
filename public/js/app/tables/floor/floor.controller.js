@@ -32,17 +32,22 @@ angular.module('floor.controller', [])
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
 
-        vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
+        $scope.$on("clearSelected", function() {
+            FloorFactory.clearSelected(vm.zones);
+        });
 
-        var selectedTabZoneByServer = function() {
-            if (FloorFactory.isEditServer()) {
-                vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
-            }
-        };
+        $scope.$on("tablesSelected", function(evt, tables) {
+            FloorFactory.tablesSelected(vm.zones, tables);
+        });
 
-        var listenFloor = function() {
-            selectedTabZoneByServer();
-            $timeout(listenFloor, 500);
+        $scope.$on("zoneIndexSelected", function(evt, tables) {
+            var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
+            if (index !== null)vm.tabSelectedZone(index);
+        });
+
+        vm.findTableForServer = function(tables) {
+                var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
+                vm.tabSelectedZone(index);
         };
 
         vm.tabSelectedZone = function(value) {
@@ -56,7 +61,7 @@ angular.module('floor.controller', [])
                     vm.typeTurns = response;
                 },
                 function error(error) {
-                    message.apiError(error, "No se pudo listar los turnos.");
+                    message.apiError(error);
                 }
             );
         };
@@ -158,7 +163,6 @@ angular.module('floor.controller', [])
         };
 
         function modalInstancesConfiguration(cantidades, obj) {
-            console.log(cantidades, obj);
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -178,18 +182,16 @@ angular.module('floor.controller', [])
             });
         }
 
-        function storeTables(num, data) {
-            var element = angular.element('#el' + data.table_id);
-            if (element.hasClass("selected-table") === true) { // Si ya fue seleccionado se remueve la clase
+        function storeTables(num, table) {
+            $scope.$apply(function() {
+                table.selected = !table.selected;
 
-                element.removeClass("selected-table");
-                ServerDataFactory.delTableServerItem(data);
-
-            } else { // Si aun no se selecciona la mesa se agrega la clase
-                ServerDataFactory.setTableServerItems(data);
-                element.addClass("selected-table");
-                //console.log(angular.toJson(data, true))
-            }
+                if (!table.selected) {
+                    ServerDataFactory.delTableServerItem(table);
+                } else {
+                    ServerDataFactory.setTableServerItems(table);
+                }
+            });
         }
 
         var sizeLienzo = function() {
@@ -233,16 +235,10 @@ angular.module('floor.controller', [])
         });
 
         (function Init() {
-
-            listenFloor();
             loadZones(fecha_actual);
-            listTypeTurns();
+            // listTypeTurns();
             sizeLienzo();
             closeNotes();
-            // getServers();
-            // getZones();
-            //listenFloor();
-
         })();
 
     })
@@ -494,7 +490,7 @@ angular.module('floor.controller', [])
         function parseData(data) {
             return {
                 id: data.reservation_id,
-                covers: data.num_guest,
+                covers: data.num_people,
                 status_id: data.res_reservation_status_id,
                 server_id: data.res_server_id,
                 note: data.note || null
@@ -575,13 +571,14 @@ angular.module('floor.controller', [])
 
         getTableReservation();
     })
-    .controller('reservationController', function(FloorFactory, ServerDataFactory) {
+    .controller('reservationController', function($rootScope, FloorFactory, ServerDataFactory) {
         var rm = this;
 
         //Limpiar data y estilos de servers
         FloorFactory.isEditServer(false);
         angular.element('.bg-window-floor').removeClass('drag-dispel');
-        angular.element('.table-zone').removeClass("selected-table");
+        // angular.element('.table-zone').removeClass("selected-table");
+        $rootScope.$broadcast("clearSelected");
         ServerDataFactory.cleanTableServerItems();
 
         rm.search = {
@@ -626,13 +623,14 @@ angular.module('floor.controller', [])
         //Al iniciar que este seleccionadad por defecto
         rm.select_people(rm.categorias_people[3]);
     })
-    .controller('waitlistController', function(FloorFactory, ServerDataFactory) {
+    .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;
 
         //Limpiar data y estilos de servers
         FloorFactory.isEditServer(false);
         angular.element('.bg-window-floor').removeClass('drag-dispel');
-        angular.element('.table-zone').removeClass("selected-table");
+        // angular.element('.table-zone').removeClass("selected-table");
+        $rootScope.$broadcast("clearSelected");
         ServerDataFactory.cleanTableServerItems();
 
         wm.search = {
@@ -663,37 +661,21 @@ angular.module('floor.controller', [])
         };
 
         //Obtener tablas seleccionadas del lienzo
-        var callListadoTable = function() {
-            sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
-            //console.log('Listado: ' + angular.toJson(sm.listadoTablaServer, true));
-            $timeout(callListadoTable, 500);
-        };
-        callListadoTable();
+        // var callListadoTable = function() {
+        //     sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
+        //     // console.log(sm.listadoTablaServer);
+        //     //console.log('Listado: ' + angular.toJson(sm.listadoTablaServer, true));
+        //     $timeout(callListadoTable, 500);
+        // };
+        // callListadoTable();
 
         sm.btnEditServer = function(index, server) {
 
             sm.flagServer = true;
             sm.showForm = true;
 
-            //Obtener tab marcado
-            var firstTableId = parseInt(server.tables[0].id);
-            var indiceZone = 0;
-
-            var lstZonas = FloorFactory.getDataZonesTables();
-            angular.forEach(lstZonas, function(zona, key) {
-                var tables = zona.table;
-                //console.log(zona);
-                angular.forEach(tables, function(table) {
-                    //console.log(table);
-                    if (table.table_id == firstTableId) {
-                        indiceZone = key;
-                        FloorFactory.setNavegationTabZone(indiceZone);
-                        //console.log(key);
-                    }
-
-                });
-
-            });
+            $rootScope.$broadcast("zoneIndexSelected", server.tables);
+            $rootScope.$broadcast("tablesSelected", server.tables);
 
             //Obtener table de cada server
             vTable = [];
@@ -701,7 +683,7 @@ angular.module('floor.controller', [])
                 var dataTable = {
                     color: server.color,
                     name: table.name,
-                    table_id: table.id,
+                    id: table.id,
                 };
                 var element = angular.element('#el' + table.id);
                 element.addClass("selected-table");
@@ -713,6 +695,7 @@ angular.module('floor.controller', [])
             //console.log('info' + angular.toJson(server, true));
 
             FloorFactory.isEditServer(true);
+
             angular.element('.bg-window-floor').addClass('drag-dispel');
 
             sm.name = server.name;
@@ -737,7 +720,10 @@ angular.module('floor.controller', [])
 
             limpiarData();
 
-            angular.element('.table-zone').removeClass("selected-table");
+            // listadoTablaServer = ServerDataFactory.getTableServerItems();
+
+            $rootScope.$broadcast("clearSelected");
+
             ServerDataFactory.cleanTableServerItems();
 
             angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -781,7 +767,7 @@ angular.module('floor.controller', [])
             //console.log('tables sel', angular.toJson(sm.listadoTablaServer, true));
             angular.forEach(sm.listadoTablaServer, function(mesa, i) {
                 sm.tables.push({
-                    id: mesa.table_id,
+                    id: mesa.id,
                     name: mesa.name
                 });
             });

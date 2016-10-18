@@ -79,6 +79,54 @@ angular.module('floor.service', [])
 
 			    return reservationTables.substring(0, reservationTables.length - 2);
 			},
+			clearSelected: function(zones) {
+			    angular.forEach(zones, function(zone) {
+			        angular.forEach(zone.tables, function(table) {
+		                        table.selected = false;
+			        });
+			    });
+			},
+			getZoneIndexForTable: function(zones, serverTables) {
+			    if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
+			    	return 0;
+			    } else if (serverTables.length === 0) {
+			    	return 0;
+			    }
+			    var index = null;
+			    angular.forEach(zones, function(zone, zone_index) {
+			        if (index === null){
+			        	 angular.forEach(zone.tables, function(table) {
+	        	 	        	     if (index === null){
+ 	        		     	           angular.forEach(serverTables, function(serverTable) {
+ 	        		    	                if (index === null){
+ 	        		    	                	if (table.id == serverTable.id) {
+        		    	                		      index = zone_index;
+ 	        		    	                	}
+ 	        		    	                }
+ 	        		     	           });
+	        	 	        	     }
+			        	 });
+			        }
+			    });
+
+			    return index;
+			},
+			tablesSelected: function(zones, serverTables) {
+			    if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
+			    	return;
+			    } else if (serverTables.length === 0) {
+			    	return;
+			    }
+			    angular.forEach(zones, function(zone) {
+			        	 angular.forEach(zone.tables, function(table) {
+ 	        		     	           angular.forEach(serverTables, function(serverTable) {
+ 	        		    	                	if (table.id == serverTable.id) {
+        		    	                		      table.selected = true;
+ 	        		    	                	}
+ 	        		     	           });
+			        	 });
+			    });
+			},
 			isEditServer: function(value) {
 				if (value || value === false) {
 					flag.editServer = value;
@@ -475,14 +523,14 @@ angular.module('floor.service', [])
 				return tableColection;
 			},
 			setTableServerItems: function(tableItem) {
-				tableColection.push(tableItem);
+				tableColection.push({id: tableItem.id, name: tableItem.name});
 			},
 			setTableServerItemsEdit: function(tableItem) {
 				tableColection = tableItem;
 			},
 			delTableServerItem: function(tableItem) {
 				angular.forEach(tableColection, function(value, key) {
-					if (value.table_id == tableItem.table_id) {
+					if (value.id == tableItem.id) {
 						tableColection.splice(key, 1);
 					}
 				});
