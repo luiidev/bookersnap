@@ -185,23 +185,26 @@ angular.module('floor.controller', [])
                 }
             });
         };
-
+        var ejecutar;
         vm.saveNotes = function(turn) {
+            if (ejecutar) $timeout.cancel(ejecutar);
             vm.notesData.id = turn.notes.id;
             vm.notesData.res_type_turn_id = turn.id;
             vm.notesData.texto = turn.notes.texto;
             vm.notesData.date_add = turn.notes.date_add;
 
             console.log("saveNotes " + angular.toJson(vm.notesData, true));
+            ejecutar = $timeout(function() {
+                FloorFactory.createNotes(vm.notesData).then(
+                    function success(response) {
+                        console.log("saveNotes success " + angular.toJson(response, true));
+                    },
+                    function error(response) {
+                        console.error("saveNotes " + angular.toJson(response, true));
+                    }
+                );
+            }, 1000);
 
-            FloorFactory.createNotes(vm.notesData).then(
-                function success(response) {
-                    console.log("saveNotes success " + angular.toJson(response, true));
-                },
-                function error(response) {
-                    console.error("saveNotes " + angular.toJson(response, true));
-                }
-            );
         };
 
         angular.element($window).bind('resize', function() {

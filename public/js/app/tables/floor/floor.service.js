@@ -17,10 +17,10 @@ angular.module('floor.service', [])
 
 		return {
 			create: function(data) {
-				return $http.post(ApiUrlMesas + '/notes', data);
+				return $http.post(ApiUrlMesas + '/turns/notes', data);
 			},
-			getAll: function(date) {
-				return $http.get(ApiUrlMesas + '/notes/' + date);
+			getAll: function(params) {
+				return $http.get(ApiUrlMesas + '/turns/notes?' + params);
 			}
 		};
 	})
