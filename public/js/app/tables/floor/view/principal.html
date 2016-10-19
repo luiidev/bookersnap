@@ -80,11 +80,11 @@
 <div class="box-zone-create bg-window-floor">
     <div class="box-lienzo-zone-v2 p-t-10">
         <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones" ng-show="$index == vm.flagSelectedZone">
-            <div ng-repeat="obj in tab.tables" class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block,'occupied-table': obj.occupied}]" ng-style="{top: obj.top, left: obj.left, border: obj.server.reservation || obj.server.default}" ng-detail-table="" color="{{obj.color}}" id="el{{obj.id}}" num="vm.numpeople" on-click-fn="vm.mostrarDetail($index,obj)" on-dropped-fn="vm.handConfiguration(obj)">
+            <div ng-repeat="obj in tab.tables" class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block,'occupied-table': obj.occupied}]" ng-style="{top: obj.top, left: obj.left, border: obj.server.reservation || obj.server.default}" ng-detail-table="" color="{{obj.color}}" id="el{{obj.id}}" num="vm.numpeople" on-click-fn="vm.mostrarDetail($parent.$index,obj)" on-dropped-fn="vm.handConfiguration(obj)">
                 <div class="icon-available">
                 </div>
                 <div class="table-label top">
-                    <span ng-bind="obj.name">
+                    <span ng-bind="obj.name + ' ' + obj.id">
                     </span>
                 </div>
             </div>

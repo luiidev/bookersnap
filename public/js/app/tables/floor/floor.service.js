@@ -78,10 +78,10 @@ angular.module('floor.service', [])
 				var reservationTables = "";
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
-						angular.forEach(content.blocks, function(block) {
-							if (table.id == block.table_id) {
+						angular.forEach(blocks, function(block) {
+							if (table.id == block.res_table_id) {
 								if (block.res_reservation_id == reservation_id) {
-									reservationTables += block.name + ", ";
+									reservationTables += table.name + ", ";
 								}
 							}
 						});
@@ -334,13 +334,12 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				var fecha_actual = getFechaActual();
 				reservationService.getZones(fecha_actual).success(function(data) {
-					//console.log("zonas");
-					//console.log(data.data);
+					console.log("zonas");
+					console.log(data.data);
 					return data;
 				}).error(function(data) {
 					defered.reject(data);
 				}).then(function(zonesData) {
-
 					me.listBloqueos().then(function success(response) {
 						console.log("blocks");
 						console.log(response);
@@ -430,12 +429,12 @@ angular.module('floor.service', [])
 							function success(response) {
 								response = response.data.data;
 								response = self.listNotesTypeTurn(response, typeTurnsData);
+
 								defered.resolve(response);
 							},
 							function error(response) {
 								defered.reject(response);
 							});
-
 					},
 					function error(response) {
 						defered.reject(response);
@@ -465,7 +464,6 @@ angular.module('floor.service', [])
 						defered.reject(response.data);
 					}
 				);
-
 				return defered.promise;
 			}
 		};

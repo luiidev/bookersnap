@@ -215,7 +215,8 @@ Para las fechas que recibimos en este formato : YYYY-mm-dd y queremos procesarla
 Date javascript
 --------*/
 
-var convertTextToDate = function(language, options, date = null) {
+var convertTextToDate = function(language, options, date) {
+    date = (date) ? null : date;
     if (date !== null) {
         return new Date(date).toLocaleDateString(language, options);
     } else {
@@ -287,7 +288,9 @@ var getDayText = function(index, option) {
     return dayText;
 };
 
-var messageAlert = function(title, text, type, time = 2000, confirmButton = false) {
+var messageAlert = function(title, text, type, time, confirmButton) {
+    time = (time) ? null : 2000;
+    confirmButton = (confirmButton) ? false : confirmButton;
     swal({
         title: title,
         text: text,
@@ -331,8 +334,8 @@ message.confirm = function(title, text, type, action) {
         cancelButtonText: "CANCELAR",
         closeOnConfirm: false
     };
-    if (typeof type == "function"){
-        return  this.show(title, text, "warning",  options, type);
+    if (typeof type == "function") {
+        return this.show(title, text, "warning", options, type);
     }
     return this.show(title, text, type, options, action);
 };
@@ -384,7 +387,8 @@ message.apiError = function(response, title, icon, options) {
     return this.show(title, body, icon, options);
 };
 
-var messageErrorApi = function(response, title, type, time, confirmButton, status = 1) {
+var messageErrorApi = function(response, title, type, time, confirmButton, status) {
+    status = (status) ? 1 : status;
     var errorJson = JSON.stringify(response);
 
     if (status == "-1") {

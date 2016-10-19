@@ -118,22 +118,26 @@ angular.module('floor.directive', [])
                 },
                 drag: function(event, ui) {
                     //console.log('x: ' + ui.offset.left + ', ' + 'y: ' + ui.offset.top);
-                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.bg-window-floor').addClass('drag-dispel');
                     angular.element('.icon-available').addClass('item-suggested');
                 },
                 start: function(event, ui) {
-                    angular.element('#bg-window-floor').addClass('drag-dispel');
+                    angular.element('.bg-window-floor').addClass('drag-dispel');
                     angular.element('.icon-available').addClass('item-suggested');
                 },
                 stop: function(event, ui) {
-                    angular.element('#bg-window-floor').removeClass('drag-dispel');
+                    angular.element('.bg-window-floor').removeClass('drag-dispel');
                     angular.element('.icon-available').removeClass('item-suggested');
+                    scope.onStopFn();
                 }
             });
         }
 
         return {
             link: makeDraggable,
+            scope: {
+                onStopFn: '&'
+            }
         };
 
     })
