@@ -212,6 +212,7 @@ angular.module('guest.controller', [])
 		vm.saveGuest = function() {
 			vm.prepareCustomTagSave();
 			console.log("saveGuest " + angular.toJson(vm.guestData, true));
+
 			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestFormData.birthdate, "es-ES", {});
 			vm.guestData.gender = vm.guestFormData.gender.id;
 
@@ -255,9 +256,10 @@ angular.module('guest.controller', [])
 			angular.forEach(vm.guestData.tags, function(tag, key) {
 				var json = angular.toJson(tag);
 
-				if (json.indexOf("custom_tag") !== -1) {
+				if (json.indexOf("custom_tag") > -1) {
+
 					if (tag.custom_tag === true) {
-						vm.guestData.tags.splice(key, 1);
+						vm.guestData.tags.splice(key);
 					}
 				}
 			});
@@ -296,6 +298,10 @@ angular.module('guest.controller', [])
 					vm.guestFormData.gender = vm.guestData.gender;
 
 					GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
+
+					GuestFactory.showTags(response.guest.custom_tags, vm.tagsListAdd);
+
+					console.log("loadDataGuestEdit " + angular.toJson(vm.tagsListAdd, true));
 
 				}, function error(response) {
 					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);

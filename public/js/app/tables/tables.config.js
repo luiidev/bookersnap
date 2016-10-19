@@ -1,4 +1,3 @@
-//'use strict';
 var idMicrositio = obtenerIdMicrositio();
 angular.module('tables.app', [
         'turn.app',
@@ -14,10 +13,20 @@ angular.module('tables.app', [
         "configuration.app"
     ])
     .constant("IdMicroSitio", idMicrositio)
+<<<<<<< HEAD
     // .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
     // .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
     .constant("ApiUrlMesas", 'http://192.168.0.104/v1/es/microsites/' + idMicrositio)
     .constant("ApiUrlRoot", 'http://192.168.0.104/v1/es')
+=======
+
+.constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
+    .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
+    //.constant("ApiUrlMesas", 'http://api-mesas.vh:3004/v1/es/microsites/' + idMicrositio)
+    //.constant("ApiUrlRoot", 'http://api-mesas.vh:3004/v1/es')
+    /*.constant("ApiUrlMesas", 'http://192.168.0.104/v1/es/microsites/' + idMicrositio)
+    .constant("ApiUrlRoot", 'http://192.168.0.104/v1/es')*/
+>>>>>>> 0ef64c563a5606c03390975622dcee786e3a42fb
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         $stateProvider

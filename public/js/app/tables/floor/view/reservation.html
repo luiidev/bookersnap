@@ -36,7 +36,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+<<<<<<< HEAD
                                 <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming ng-mousedown="rm.selectReservation(value)" on-stop-fn="rm.clearSelectedForDropStop()" ng-mouseup="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+=======
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming ng-mousedown="vm.eventEstablished = 1" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | typeSel:rm.filter_type">
+
+>>>>>>> 0ef64c563a5606c03390975622dcee786e3a42fb
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -175,10 +180,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="">Desayuno</a></li>
-                <li><a href="">Comida</a></li>
-                <li><a href="">Cena</a></li>
-                <li><a href="">Bar</a></li>
+                <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
+                <a href="" ng-click="rm.select_type(categoria)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}</a>
+                </li>
             </ul>
             </li>
 
