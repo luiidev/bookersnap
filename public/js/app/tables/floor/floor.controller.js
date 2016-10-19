@@ -69,10 +69,10 @@ angular.module('floor.controller', [])
             if (index !== null) vm.tabSelectedZone(index);
         };
 
-        var listenFloor = function() {
-            selectedTabZoneByServer();
-            $timeout(listenFloor, 500);
-        };
+        /*        var listenFloor = function() {
+                    selectedTabZoneByServer();
+                    $timeout(listenFloor, 500);
+                };*/
 
         vm.tabSelectedZone = function(value) {
             FloorFactory.setNavegationTabZone(value);
@@ -84,7 +84,6 @@ angular.module('floor.controller', [])
                 function success(response) {
                     vm.typeTurns = response;
                     TypeTurnoDataFactory.setTypeTurnItems(response);
-                    //TypeTurnoDataFactory.setTypeTurnItems(vm.typeTurns);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -266,10 +265,10 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
-            listenFloor();
+            //listenFloor();
             // getServers();
             // getZones();
         })();
@@ -626,8 +625,10 @@ angular.module('floor.controller', [])
 
 
         var getlistZonesBloqueosReservas = function() {
-            FloorFactory.listZonesBloqueosReservas().then(function success(data) {
+            FloorFactory.listBloqueosReservas().then(function success(data) {
+
                 rm.res_listado = data;
+
                 var total = 0;
                 var men = 0;
                 var women = 0;
@@ -643,8 +644,8 @@ angular.module('floor.controller', [])
                 rm.total_children = children;
                 rm.total_people = total;
                 rm.total_visitas = total;
+                //console.log('Reservaciones: ' + angular.toJson(data, true));
 
-                //console.log('Total: ' + angular.toJson(data, true));
             });
         };
         getlistZonesBloqueosReservas();
@@ -663,31 +664,15 @@ angular.module('floor.controller', [])
             rm.filter_type = categoria;
             return false;
         };
-        /*
-        var listTypeTurns = function() {
-            FloorFactory.listTurnosActivos(rm.fecha_actual).then(
-                function success(response) {
-                    rm.categorias_type = response;
-                    rm.categorias_type.unshift(rowTodosType);
-                    rm.select_type(rm.categorias_type[0]);
-                    //console.log(rm.categorias_type[0]);
-                },
-                function error(error) {
-                    message.apiError(error, "No se pudo listar los turnos.");
-                }
-            );
-        };
-        listTypeTurns();
-*/
 
 
         var callListTypeTurn;
         if (callListTypeTurn) $timeout.cancel(callListTypeTurn);
         callListTypeTurn = $timeout(function() {
-            rm.categorias_type = TypeTurnoDataFactory.getTypeTurnItems();
-            rm.categorias_type.unshift(rowTodosType);
+            var turn = TypeTurnoDataFactory.getTypeTurnItems();
+            rm.categorias_type = turn;
+            //rm.categorias_type.unshift(rowTodosType);
             rm.select_type(rm.categorias_type[0]);
-
         }, 1000);
 
         rm.isActiveType = function(categoria) {
