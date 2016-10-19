@@ -270,6 +270,12 @@ angular.module('floor.controller', [])
             listenFloor();
             // getServers();
             // getZones();
+
+            var socket = io.connect('http://127.0.0.1:3000/');
+            socket.on('saludo', function(data) {
+                console.log("saludo" + data);
+
+            });
         })();
 
     })

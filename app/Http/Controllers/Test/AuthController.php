@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Test;
 
+use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use App\User;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Config;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Input;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
@@ -37,17 +35,19 @@ class AuthController extends Controller
     public function LoginBs()
     {
         try {
-            $request = request();
-            $userData = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
-            $user = $userData['user'];
+            $request   = request();
+            $userData  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
+            $user      = $userData['user'];
             $userlogin = $userData['userlogin'];
-            $extras = [
-                'api-token' => $userData['token'],
+            $extras    = [
+                'api-token'  => $userData['token'],
                 'user-login' => [
-                    $userlogin['bs_socialnetwork_id'] => $userlogin
-                ]
+                    $userlogin['bs_socialnetwork_id'] => $userlogin,
+                ],
             ];
+
             if ($this->LoginUser($user['id'], $extras)) {
+
                 $bsAuthToken = $this->generateBsAuthToken($user['id']);
                 return response()->redirectTo(route('microsite-home'))
                     ->with('message', 'Bienvenido Usuario.')
@@ -55,10 +55,10 @@ class AuthController extends Controller
             }
             $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
         } catch (HttpException $e) {
-            $msg = $e->getMessage();
+            $msg      = $e->getMessage();
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         } catch (\Exception $e) {
-            $msg = 'Ocurrió un error interno.';
+            $msg      = 'Ocurrió un error interno.';
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         }
 
@@ -67,11 +67,11 @@ class AuthController extends Controller
 
     public function RedirectSocialLogin()
     {
-        $request = request();
-        $secutiryToken = str_random(25);
-        $socialNetwork = $request->input('_sn');
+        $request             = request();
+        $secutiryToken       = str_random(25);
+        $socialNetwork       = $request->input('_sn');
         $urlSocialNetworkApi = Config::get("constants.url.api.social");
-        $redirectTo = urlencode($this->getPreviousRoute());
+        $redirectTo          = urlencode($this->getPreviousRoute());
         switch ($socialNetwork) {
             case 1:
                 $url = $urlSocialNetworkApi . '/facebook';
@@ -96,15 +96,15 @@ class AuthController extends Controller
     public function CallbackSocialLogin(Request $request)
     {
         try {
-            $response = $this->_authService->ValidateSocialResponse($request->input('response'));
-            $userData = $this->_authService->LoginSocialUserData($response->data);
-            $user = $userData['user'];
+            $response  = $this->_authService->ValidateSocialResponse($request->input('response'));
+            $userData  = $this->_authService->LoginSocialUserData($response->data);
+            $user      = $userData['user'];
             $userlogin = $userData['userlogin'];
-            $extras = [
-                'api-token' => $userData['token'],
+            $extras    = [
+                'api-token'  => $userData['token'],
                 'user-login' => [
-                    $userlogin['bs_socialnetwork_id'] => $userlogin
-                ]
+                    $userlogin['bs_socialnetwork_id'] => $userlogin,
+                ],
             ];
 
             if ($this->LoginUser($user['id'], $extras)) {
@@ -141,7 +141,7 @@ class AuthController extends Controller
 
     public function loginBySharedToken(Request $req)
     {
-        $bsAuthToken = $req->input('_authToken');
+        $bsAuthToken  = $req->input('_authToken');
         $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
         try {
             $result = $this->_authService->CheckBsAuthToken($decodedToken['id'], $decodedToken['key']);
@@ -160,7 +160,7 @@ class AuthController extends Controller
 
     public function removeSharedToken(Request $req)
     {
-        $bsAuthToken = $req->input("_authToken");
+        $bsAuthToken  = $req->input("_authToken");
         $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
         try {
             $result = $this->_authService->removeBsAuthToken($decodedToken["id"], $decodedToken["key"]);
@@ -182,8 +182,8 @@ class AuthController extends Controller
     {
         $route = \URL::previous();
 //        if ($route == route("logoutRoute")) {
-//            $route = "/";
-//        }
+        //            $route = "/";
+        //        }
         return $route;
     }
 
@@ -214,8 +214,8 @@ class AuthController extends Controller
      */
     private function generateBsAuthToken(int $bs_user_id)
     {
-        $request = request();
-        $session = $request->session();
+        $request  = request();
+        $session  = $request->session();
         $tokenKey = str_random(10);
         $this->_authService->saveSharedLoginToken($bs_user_id, $tokenKey, $request->server("HTTP_USER_AGENT"));
         $token = ['id' => $bs_user_id, 'user-login' => $session->get('user-login')
