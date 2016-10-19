@@ -36,7 +36,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming ng-mousedown="rm.selectReservation(value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming ng-mousedown="rm.selectReservation(value)" on-stop-fn="rm.clearSelectedForDropStop()" ng-mouseup="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
                                     <td>
                                         <table class="table-listado">
                                             <tr>

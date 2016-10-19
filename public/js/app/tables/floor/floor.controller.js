@@ -148,7 +148,7 @@ angular.module('floor.controller', [])
                 resolve: {
                     content: function() {
                         return {
-                            //zoneName: vm.zones[index].name,
+                            zoneName: vm.zones[index].name,
                             table: data,
                             blocks: blocks,
                             zones: vm.zones
@@ -426,7 +426,7 @@ angular.module('floor.controller', [])
         function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
-            var start_time = now.clone().add((15 - (now.minutes() % 15)), "minutes").second(0).format("HH:mm:ss");
+            var start_time = now.clone().add( - (now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.id,
                 covers: {
@@ -501,6 +501,7 @@ angular.module('floor.controller', [])
         vmd.reservationEdit = function(data) {
             listResource();
             vmd.info = parseInfo(data);
+            // console.log(vmd.info, data);
             vmd.reservation = parseData(data);
             vmd.EditContent = true;
         };
@@ -595,7 +596,7 @@ angular.module('floor.controller', [])
 
         getTableReservation();
     })
-    .controller('reservationController', function($rootScope, FloorFactory, ServerDataFactory) {
+    .controller('reservationController', function($scope, $rootScope, FloorFactory, ServerDataFactory) {
         var rm = this;
 
         //Limpiar data y estilos de servers
@@ -683,6 +684,18 @@ angular.module('floor.controller', [])
 
         rm.selectReservation = function(reservation) {
             $rootScope.$broadcast("eventEstablish", "sit", reservation);
+            reservation.tables = [{id: 2}, {id: 4}, {id: 138}];
+            $rootScope.$broadcast("tablesSelected", reservation.tables);
+        };
+
+        rm.clearSelected = function() {
+            $rootScope.$broadcast("clearSelected");
+        };
+
+        rm.clearSelectedForDropStop = function() {
+            $scope.$apply(function() {
+                $rootScope.$broadcast("clearSelected");
+            });
         };
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {

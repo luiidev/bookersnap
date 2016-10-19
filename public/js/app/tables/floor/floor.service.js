@@ -67,10 +67,10 @@ angular.module('floor.service', [])
 				var reservationTables = "";
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
-						angular.forEach(content.blocks, function(block) {
-							if (table.id == block.table_id) {
+						angular.forEach(blocks, function(block) {
+							if (table.id == block.res_table_id) {
 								if (block.res_reservation_id == reservation_id) {
-									reservationTables += block.name + ", ";
+									reservationTables += table.name + ", ";
 								}
 							}
 						});
