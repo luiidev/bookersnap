@@ -51,26 +51,18 @@ angular.module('floor.controller', [])
             if (index !== null) vm.tabSelectedZone(index);
         });
 
+        $scope.$on("reloadBlocks", function() {
+            loadBlocks(fecha_actual);
+        });
+
         vm.eventEstablish = function(eventDrop) {
             eventEstablished.event = eventDrop;
             eventEstablished.data = null;
         };
 
-        vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
-        var selectedTabZoneByServer = function() {
-            if (FloorFactory.isEditServer()) {
-                vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
-            }
-        };
-
         vm.findTableForServer = function(tables) {
             var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
             if (index !== null) vm.tabSelectedZone(index);
-        };
-
-        var listenFloor = function() {
-            selectedTabZoneByServer();
-            $timeout(listenFloor, 500);
         };
 
         vm.tabSelectedZone = function(value) {
@@ -163,6 +155,7 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
+            console.log(obj);
             var res_men = vm.numpeople.num_men;
             var res_women = vm.numpeople.num_women;
             var res_children = vm.numpeople.num_children;
@@ -264,16 +257,15 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            listTypeTurns();
+            // listTypeTurns();
             sizeLienzo();
             closeNotes();
-            listenFloor();
             // getServers();
             // getZones();
         })();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService) {
+    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
 
         //Datos pasados al modal
@@ -455,32 +447,38 @@ angular.module('floor.controller', [])
         };
 
         var create = function() {
+            vmc.waitingResponse = true;
             var reservation = parseReservation();
-
             reservationService.quickCreate(reservation)
                 .then(function(response) {
+                    $rootScope.$broadcast("reloadBlocks");
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
-                    message.error(error);
+                    message.apiError(error);
+                    vmc.waitingResponse = false;
                 });
         };
 
         var sit = function() {
+            vmc.waitingResponse = true;
+
             var id = eventEstablished.data.reservation_id;
             var data = {
-                table_id: eventEstablished.data.table_id
+                table_id: table.id
             };
 
             reservationService.sit(id, data)
                 .then(function(response) {
+                    $rootScope.$broadcast("reloadBlocks");
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
-                    message.error(error);
+                    message.apiError(error);
+                    vmc.waitingResponse = false;
                 });
         };
     })
-    .controller('DetailInstanceCtrl', function($scope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state) {
+    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.zoneName,
@@ -578,10 +576,11 @@ angular.module('floor.controller', [])
             var id = vmd.reservation.id;
             reservationService.quickEdit(id, vmd.reservation)
                 .then(function(response) {
+                    $rootScope.$broadcast("reloadBlocks");
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
-                    message.error(error);
+                    message.apiError(error);
                 });
         };
 
@@ -591,6 +590,7 @@ angular.module('floor.controller', [])
                 var id = vmd.reservation.id;
                 reservationService.cancel(id)
                     .then(function(response) {
+                        $rootScope.$broadcast("reloadBlocks");
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                         vmd.waitingResponse = false;

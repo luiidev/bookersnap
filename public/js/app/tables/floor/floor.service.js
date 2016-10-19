@@ -45,16 +45,25 @@ angular.module('floor.service', [])
 		return {
 			setBorderColorForReservation: function(zones, blocks) {
 				hour = moment();
+
+                                            angular.forEach(zones, function(zone) {
+                                                angular.forEach(zone.tables, function(table) {
+                                                    table.server.reservation = null;
+                                                    table.class.name = null;
+                                                });
+                                            });
+
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
 						angular.forEach(blocks, function(block) {
 							if (table.id == block.res_table_id) {
-								if (block.res_server_id) {
-									var start_block = moment(block.start_time, "HH:mm:ss");
-									var end_block = moment(block.end_time, "HH:mm:ss");
-									if (hour.isBetween(start_block, end_block, null, "()")) {
-										table.server.setReservation(block.res_server.color);
-									}
+								var start_block = moment(block.start_time, "HH:mm:ss");
+								var end_block = moment(block.end_time, "HH:mm:ss");
+								if (hour.isBetween(start_block, end_block, null, "()") || block.res_reservation_status_id >= 14) {
+                                                                                                   if (block.res_server_id) {
+                                                                                                         table.server.setReservation(block.res_server.color);
+                                                                                                   }
+                                                                                                   table.class.setStatusClass(block.res_reservation_status_id);
 								}
 							}
 						});
