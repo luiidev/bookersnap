@@ -179,6 +179,14 @@ angular.module('reservation.service', [])
                                 this.reservation = "2px solid " + color;
                             }
                         },
+                        class: {
+                            name: null,
+                            setStatusClass: function(status) {
+                                if (status >= 14) {
+                                    this.name = "box-icon item-status-" + status;
+                                }
+                            }
+                        }
                     };
 
                     if (data.status == 1) {
