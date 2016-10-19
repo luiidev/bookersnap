@@ -744,16 +744,14 @@ angular.module('floor.controller', [])
         };
 
         rm.selectReservation = function(reservation) {
-            $rootScope.$broadcast("eventEstablish", "sit", reservation);
-            reservation.tables = [{id: 2}, {id: 4}, {id: 138}];
-            $rootScope.$broadcast("tablesSelected", reservation.tables);
+            $scope.$apply(function() {
+                $rootScope.$broadcast("eventEstablish", "sit", reservation);
+                reservation.tables = [{id: 2}, {id: 4}, {id: 138}];
+                $rootScope.$broadcast("tablesSelected", reservation.tables);
+            });
         };
 
         rm.clearSelected = function() {
-            $rootScope.$broadcast("clearSelected");
-        };
-
-        rm.clearSelectedForDropStop = function() {
             $scope.$apply(function() {
                 $rootScope.$broadcast("clearSelected");
             });
