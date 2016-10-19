@@ -1,6 +1,5 @@
 angular.module('turn.controller', ['form.directive', 'localytics.directives'])
-
-.controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
+	.controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
 
 		$scope.turns = {
 			active: [],
@@ -119,6 +118,9 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			hours_end: [],
 			listAvailability: []
 		};
+
+		//Cambia a true cuando abrimos por primera vez el modal,asi no ejecuta el mostrar todos siempre (solo una vez)
+		$scope.validateModalZones = [];
 
 		var init = function() {
 			$scope.formDataDefault.listAvailability = TurnFactory.initAvailability();
@@ -314,9 +316,13 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 					},
 					optionForm: function() {
 						return option;
+					},
+					validateModalZones: function() {
+						return $scope.validateModalZones;
 					}
 				}
 			});
+
 		};
 
 		$scope.returnBoxZones = function() {
@@ -631,13 +637,14 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 		init();
 	})
-	.controller('ModalTurnZoneCtrl', function($scope, $uibModalInstance, TurnFactory, turnZoneAdd, optionForm) {
-
-		$scope.cancel = function() {
-			$uibModalInstance.dismiss('cancel');
-		};
+	.controller('ModalTurnZoneCtrl', function($scope, $uibModalInstance, TurnFactory, turnZoneAdd, optionForm, validateModalZones) {
 
 		$scope.zonesList = [];
+		$scope.chkAllZones = false;
+
+		var init = function() {
+			listZones();
+		};
 
 		var listZones = function() {
 			TurnFactory.listZones().then(
@@ -656,11 +663,42 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 					$scope.zonesList = vZones;
 
+					if (optionForm == "create") {
+						if (validateModalZones.length === 0) {
+							$scope.assignZoneAll();
+							$scope.chkAllZones = true;
+							validateModalZones.push(1);
+						}
+					}
+
+					if ($scope.zonesList.length == turnZoneAdd.zones_id.length) {
+						$scope.chkAllZones = true;
+					}
 				},
 				function error(response) {
 					messageErrorApi(response, "Error", "warning");
 				}
 			);
+		};
+
+		var clearTurnZones = function() {
+			turnZoneAdd.zones_id.length = 0;
+			turnZoneAdd.zones_data.length = 0;
+		};
+
+		$scope.assignZoneAll = function() {
+			console.log("chkAllZones " + $scope.chkAllZones);
+			if ($scope.chkAllZones) {
+				clearTurnZones();
+			}
+
+			angular.forEach($scope.zonesList, function(zone, key) {
+				$scope.assignZone(zone);
+			});
+		};
+
+		$scope.cancel = function() {
+			$uibModalInstance.dismiss('cancel');
 		};
 
 		$scope.assignZone = function(zone) {
@@ -669,10 +707,11 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			if (index == -1) {
 				turnZoneAdd.zones_id.push(zone.id);
 				turnZoneAdd.zones_data.push(zone);
-
+				zone.checked = true;
 			} else {
 				turnZoneAdd.zones_id.splice(index, 1);
 				turnZoneAdd.zones_data.splice(index, 1);
+				zone.checked = false;
 			}
 
 			if (optionForm == "edit") {
@@ -682,7 +721,16 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 					}
 				});
 			}
+
+			console.log("zonesId " + turnZoneAdd.zones_id.length);
+			console.log("zonesData " + $scope.zonesList.length);
+
+			if ($scope.zonesList.length != turnZoneAdd.zones_id.length) {
+				$scope.chkAllZones = false;
+			} else {
+				$scope.chkAllZones = true;
+			}
 		};
 
-		listZones();
+		init();
 	});

@@ -27,10 +27,10 @@
         <form  class="min-h-200-px row" name="configurationCodeForm" ng-show="vm.configuration.res_code_status==1" novalidate>
 	        <div class="col-sm-12">      	
 				<div class="row">
-	        		<loading-box wait="vm.loadingCode || vm.loadingCode" time="5000" size="lg"></loading-box>			
+	        		<!-- <loading-box wait="vm.loadingCode || vm.loadingCode" time="5000" size="lg"></loading-box>			 -->
+	        		<loading-box wait="vm.loadingCode" time="5000" size="lg"></loading-box>			
 					<div class="col-sm-4 col-sm-offset-3">
 						<div class="form-group fg-line">
-							<!-- <label for="code">Código de reserva</label>	 -->
 							<input class="form-control" ng-model="vm.code" placeholder="Ingresar código para reservar aqui" type="text" required>
 							</input>	
 						</div>										
