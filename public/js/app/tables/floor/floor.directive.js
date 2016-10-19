@@ -124,6 +124,7 @@ angular.module('floor.directive', [])
                 start: function(event, ui) {
                     angular.element('.bg-window-floor').addClass('drag-dispel');
                     angular.element('.icon-available').addClass('item-suggested');
+                    scope.onStartFn();
                 },
                 stop: function(event, ui) {
                     angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -136,7 +137,8 @@ angular.module('floor.directive', [])
         return {
             link: makeDraggable,
             scope: {
-                onStopFn: '&'
+                onStopFn: '&',
+                onStartFn: '&'
             }
         };
 
