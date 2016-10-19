@@ -156,7 +156,8 @@ angular.module('guest.service', [])
 						},
 						phones: [],
 						emails: [],
-						tags: []
+						tags: [],
+						custom_tags: []
 					}
 				};
 
@@ -179,6 +180,14 @@ angular.module('guest.service', [])
 						id: value.id,
 						res_guest_tag_gategory_id: value.res_guest_tag_gategory_id,
 						name: value.name
+					});
+				});
+
+				angular.forEach(data.customs_tags, function(value, key) {
+					guestData.guest.custom_tags.push({
+						id: value.id,
+						name: value.name,
+						res_guest_tag_gategory_id: 4
 					});
 				});
 

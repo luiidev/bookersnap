@@ -1,6 +1,5 @@
 angular.module('floor.controller', [])
-
-.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeTurnoDataFactory) {
+    .controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeTurnoDataFactory) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -83,8 +82,7 @@ angular.module('floor.controller', [])
             FloorFactory.listTurnosActivos(vm.fecha_actual).then(
                 function success(response) {
                     vm.typeTurns = response;
-                    TypeTurnoDataFactory.setTypeTurnItems(response);
-                    //TypeTurnoDataFactory.setTypeTurnItems(vm.typeTurns);
+                    //TypeTurnoDataFactory.setTypeTurnItems(response);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -266,7 +264,7 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
             listenFloor();
