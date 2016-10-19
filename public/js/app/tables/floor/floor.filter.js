@@ -166,30 +166,54 @@ angular.module('floor.filter', [])
 			var salida = [];
 			var idcategoria = categoria.idcategoria;
 			switch (idcategoria) {
-				case 1:
+				case 2:
 					angular.forEach(items, function(item) {
 						if (item.num_people_1 != 0) {
 							salida.push(item);
 						}
 					});
 					break;
-				case 2:
+				case 3:
 					angular.forEach(items, function(item) {
 						if (item.num_people_2 != 0) {
 							salida.push(item);
 						}
 					});
 					break;
-				case 3:
+				case 4:
 					angular.forEach(items, function(item) {
 						if (item.num_people_3 != 0) {
 							salida.push(item);
 						}
 					});
 					break;
-				case 4:
+				case 1:
 					salida = items;
 					break;
+			}
+			return salida;
+		};
+	})
+	.filter('typeSel', function() {
+		return function(items, categoria) {
+			var salida = [];
+			if (categoria) {
+				var id = categoria.id;
+				switch (id) {
+					case 0:
+						salida = items;
+						break;
+					default: //Desayuno//Almuerzo//Cena//Bar
+						angular.forEach(items, function(item) {
+							//console.log(item.start_time + ' - ' + item.end_time);
+							/*if (item.num_people_3 != 0) {
+								salida.push(item);
+							}*/
+						});
+						//console.log(categoria.turn.hours_end);
+						salida = items;
+						break;
+				}
 			}
 			return salida;
 		};

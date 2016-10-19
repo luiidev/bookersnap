@@ -1,6 +1,6 @@
 angular.module('floor.controller', [])
 
-.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor) {
+.controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeTurnoDataFactory) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -33,7 +33,6 @@ angular.module('floor.controller', [])
         vm.typeTurns = [];
 
         vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
-        console.log(vm.flagSelectedZone);
         var selectedTabZoneByServer = function() {
             if (FloorFactory.isEditServer()) {
                 vm.flagSelectedZone = FloorFactory.getNavegationTabZone();
@@ -44,7 +43,6 @@ angular.module('floor.controller', [])
             selectedTabZoneByServer();
             $timeout(listenFloor, 500);
         };
-        listenFloor();
 
         vm.tabSelectedZone = function(value) {
             FloorFactory.setNavegationTabZone(value);
@@ -55,6 +53,8 @@ angular.module('floor.controller', [])
             FloorFactory.listTurnosActivos(vm.fecha_actual).then(
                 function success(response) {
                     vm.typeTurns = response;
+                    TypeTurnoDataFactory.setTypeTurnItems(response);
+                    //TypeTurnoDataFactory.setTypeTurnItems(vm.typeTurns);
                 },
                 function error(error) {
                     message.apiError(error, "No se pudo listar los turnos.");
@@ -245,6 +245,7 @@ angular.module('floor.controller', [])
             listTypeTurns();
             sizeLienzo();
             closeNotes();
+            listenFloor();
             // getServers();
             // getZones();
 
@@ -580,8 +581,10 @@ angular.module('floor.controller', [])
 
         getTableReservation();
     })
-    .controller('reservationController', function(FloorFactory, ServerDataFactory) {
+    .controller('reservationController', function($timeout, FloorFactory, ServerDataFactory, TypeTurnoDataFactory) {
         var rm = this;
+        var fecha_actual = getFechaActual();
+        rm.fecha_actual = fecha_actual;
 
         //Limpiar data y estilos de servers
         FloorFactory.isEditServer(false);
@@ -595,6 +598,8 @@ angular.module('floor.controller', [])
         rm.searchReservation = function() {
             rm.search.show = !rm.search.show;
         };
+
+
 
         var getlistZonesBloqueosReservas = function() {
             FloorFactory.listZonesBloqueosReservas().then(function success(data) {
@@ -620,42 +625,92 @@ angular.module('floor.controller', [])
         };
         getlistZonesBloqueosReservas();
 
+        //Traer los tipo de turnos cargados
+        var rowTodosType = {
+            id: 0,
+            name: "Todos",
+            turn: [{
+                hours_ini: "00:00:00",
+                hours_end: "00:00:00"
+            }]
+        };
+
+        rm.select_type = function(categoria) {
+            rm.filter_type = categoria;
+            return false;
+        };
+        /*
+        var listTypeTurns = function() {
+            FloorFactory.listTurnosActivos(rm.fecha_actual).then(
+                function success(response) {
+                    rm.categorias_type = response;
+                    rm.categorias_type.unshift(rowTodosType);
+                    rm.select_type(rm.categorias_type[0]);
+                    //console.log(rm.categorias_type[0]);
+                },
+                function error(error) {
+                    message.apiError(error, "No se pudo listar los turnos.");
+                }
+            );
+        };
+        listTypeTurns();
+*/
+
+
+        var callListTypeTurn;
+        if (callListTypeTurn) $timeout.cancel(callListTypeTurn);
+        callListTypeTurn = $timeout(function() {
+            rm.categorias_type = TypeTurnoDataFactory.getTypeTurnItems();
+            rm.categorias_type.unshift(rowTodosType);
+            rm.select_type(rm.categorias_type[0]);
+
+        }, 1000);
+
+        rm.isActiveType = function(categoria) {
+            if (categoria.id == rm.filter_type.id) {
+                return 'sel_active';
+            } else {
+                return '';
+            }
+        };
+
+
         //Datos y acciones para filtrar
         rm.categorias_people = [{
             idcategoria: 1,
-            nombre: 'Hombres'
+            nombre: 'Todos'
         }, {
             idcategoria: 2,
-            nombre: 'Mujeres'
+            nombre: 'Hombres'
         }, {
             idcategoria: 3,
-            nombre: 'Niños(as)'
+            nombre: 'Mujeres'
         }, {
             idcategoria: 4,
-            nombre: 'Todos'
+            nombre: 'Niños(as)'
         }];
 
         rm.select_people = function(categoria) {
             rm.filter_people = categoria;
             switch (categoria.idcategoria) {
-                case 1:
+                case 2:
                     rm.total_visitas = rm.total_men;
                     break;
-                case 2:
+                case 3:
                     rm.total_visitas = rm.total_women;
                     break;
-                case 3:
+                case 4:
                     rm.total_visitas = rm.total_children;
                     break;
-                case 4:
+                case 1:
                     rm.total_visitas = rm.total_people;
                     break;
             }
             //rm.total_people = 12;
             return false;
         };
-        //Al iniciar que este seleccionadad por defecto
-        rm.select_people(rm.categorias_people[3]);
+        //Al iniciar que este seleccionadas por defecto Todos
+        rm.select_people(rm.categorias_people[0]);
         rm.isActivePeople = function(categoria) {
             if (categoria.idcategoria == rm.filter_people.idcategoria) {
                 return 'sel_active';
@@ -712,7 +767,7 @@ angular.module('floor.controller', [])
 
             sm.flagServer = true;
             sm.showForm = true;
-            console.log(server);
+
             //Obtener tab marcado
             var firstTableId = parseInt(server.tables[0].id);
             var indiceZone = 0;

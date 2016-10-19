@@ -36,7 +36,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="listado-column" id="num1" ng-drag-up-coming ng-mousedown="vm.eventEstablished = 1" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+                                <tr class="listado-column" id="num1" ng-drag-up-coming ng-mousedown="vm.eventEstablished = 1" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | typeSel:rm.filter_type">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -175,10 +175,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="">Desayuno</a></li>
-                <li><a href="">Comida</a></li>
-                <li><a href="">Cena</a></li>
-                <li><a href="">Bar</a></li>
+                <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
+                <a href="" ng-click="rm.select_type(categoria)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}</a>
+                </li>
             </ul>
             </li>
 

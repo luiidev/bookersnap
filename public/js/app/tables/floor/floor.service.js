@@ -13,6 +13,17 @@ angular.module('floor.service', [])
 
 		};
 	})
+	.factory('TypeTurnoDataFactory', function() {
+		var typeColection = [];
+		return {
+			setTypeTurnItems: function(typeItem) {
+				typeColection = typeItem;
+			},
+			getTypeTurnItems: function() {
+				return typeColection;
+			}
+		};
+	})
 	.factory('NoteFactoryData', function($http, HttpFactory, ApiUrlMesas) {
 
 		return {
@@ -24,7 +35,7 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeTurnoDataFactory) {
 		var flag = {
 			editServer: false
 		};
@@ -406,7 +417,6 @@ angular.module('floor.service', [])
 							function success(response) {
 								response = response.data.data;
 								response = self.listNotesTypeTurn(response, typeTurnsData);
-
 								defered.resolve(response);
 							},
 							function error(response) {
