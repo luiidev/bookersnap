@@ -182,17 +182,7 @@ angular.module('reservation.controller', [])
     };
 
     vm.cancel = function() {
-        if (editState) {
-            return redirect();
-        }
-        vm.reservation = {};
-        vm.selectTags = {};
-        vm.guest = {};
-        vm.newGuest = {};
-        vm.guestList = [];
-        vm.addGuest = false;
-        defaultView();
-        initialDate();
+        return redirect();
     };
 
     vm.selectTableAllOrNone = function(indicator) {

@@ -337,6 +337,17 @@ angular.module('guest.service', [])
 					defered.reject(response.data);
 				});
 			return defered.promise;
+		},
+		getIndexTag: function(tagData, idTag) {
+			var index = null;
+
+			angular.forEach(tagData.tags, function(tags, key) {
+				if (tags.id == idTag) {
+					index = key;
+				}
+			});
+
+			return index;
 		}
 	};
 })
