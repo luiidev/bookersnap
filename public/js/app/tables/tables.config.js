@@ -1,4 +1,5 @@
-//'use strict';
+'use strict';
+
 var idMicrositio = obtenerIdMicrositio();
 angular.module('tables.app', [
         'turn.app',
