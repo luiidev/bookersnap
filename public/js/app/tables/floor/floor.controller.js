@@ -257,9 +257,15 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
+
+            /*var socket = io.connect('http://127.0.0.1:3000/');
+            socket.on('saludo', function(data) {
+                console.log("saludo" + data);
+
+            });*/
 
         })();
 
@@ -279,7 +285,7 @@ angular.module('floor.controller', [])
 
         //Creando numero de casillas
         var vNumpeople = [];
-        for (i = 0; i <= 12; i++) {
+        for (var i = 0; i <= 12; i++) {
             vNumpeople.push({
                 num: i
             });

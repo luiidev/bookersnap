@@ -82,7 +82,7 @@ angular.module('server.service', [])
     .factory('ColorFactory', function() {
         return {
             getColor: function() {
-                return colors = [{
+                return [{
                     colorHexadecimal: "#9F7421"
                 }, {
                     colorHexadecimal: "#82d1d3"
