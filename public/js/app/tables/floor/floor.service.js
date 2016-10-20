@@ -326,10 +326,12 @@ angular.module('floor.service', [])
 
 					angular.forEach(reservations, function(reservation) {
 						var tables = reservation.tables;
-						console.log(reservation);
+
 						angular.forEach(tables, function(table) {
 							if (table.id === idTable) {
 								var obj = {
+									first_name: reservation.first_name,
+									last_name: reservation.last_name,
 									start_time: reservation.start_time,
 									end_time: reservation.end_time,
 									num_people: reservation.num_people,
@@ -337,7 +339,7 @@ angular.module('floor.service', [])
 									res_reservation_status_id: reservation.res_reservation_status_id
 								};
 								vTables.push(obj);
-								console.log(angular.toJson(obj, true));
+								//console.log(angular.toJson(obj, true));
 							}
 						});
 					});

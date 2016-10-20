@@ -225,7 +225,7 @@ angular.module('floor.controller', [])
 
                 if (container.has(e.target).length === 0 && vm.notesBoxValida === true) {
                     vm.notesBox = false;
-                    vm.notesBoxValida = false;
+                vm.notesBoxValida = false;
                 }
             });
         };
@@ -495,7 +495,7 @@ angular.module('floor.controller', [])
         var getTableReservation = function() {
             FloorFactory.rowTableReservation(content.table.id).then(function(data) {
                 vmd.itemReservations = data;
-                console.log('PopUp: ' + angular.toJson(data, true));
+                //console.log('PopUp: ' + angular.toJson(data, true));
             });
         };
 
