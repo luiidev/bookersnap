@@ -1,4 +1,4 @@
-angular.module('configuration.controller', [])
+angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 	.controller('ConfigurationCtrl', ['$timeout', 'ConfigurationService', 'MenuConfigFactory', 'CustomTagGuestService', function($timeout, ConfigurationService, MenuConfigFactory, CustomTagGuestService) {
 		var vm = this;
 		vm.code = "";
@@ -178,42 +178,103 @@ angular.module('configuration.controller', [])
 		};
 
 		vm.createPrivilegeUser = function(id) {
-			vm.loadingCreatePrivilegeUser = true;
-			ConfigurationService.storePrivilegeUser(id).then(function success(response) {
-				vm.listUserAll = [];
-				console.log(response);
-				data = response;
-				vm.userList.unshift(data);
-				console.log(vm.userList);
-				vm.loadingCreatePrivilegeUser = false;
-			}, function error(response) {
-				vm.listUserAll = [];
-				vm.loadingCreatePrivilegeUser = false;
-				messageAlert("Warning", "No se registro el privilegio del usuario porque ya existe", "warning");
-			});
+			if (id != null) {
+				vm.loadingCreatePrivilegeUser = true;
+				ConfigurationService.storePrivilegeUser(id).then(function success(response) {
+					data = response;
+					console.log(data);
+					vm.userList.unshift(data);
+					vm.search = null;
+					vm.userId = null;
+					vm.loadingCreatePrivilegeUser = false;
+				}, function error(response) {
+					vm.loadingCreatePrivilegeUser = false;
+					messageAlert("Warning", "No se registro el privilegio del usuario porque ya existe", "warning");
+				});
+			} else {
+				vm.search = null;
+				messageAlert("Warning", "No se registro el privilegio del usuario porque el usuario no existe", "warning");
+			}
+
 		};
 
 		var auxiliar;
+
+		// (function test() {
+		// 	$('#inputTest').jkey('esc', function() {
+		// 		console.log("clickESC");
+		// 		vm.listUserAll = [];
+		// 	});
+		// })();
+		// vm.listaUserVacia = false;
+
+		// vm.listUserAll = [];
+		// var clickClose = function() {
+		// 	angular.element($window).bind('click', function(e) {
+		// 		var container = $("#inputTest");
+		// 		if (container.has(e.target).length === 0) {
+		// 			$scope.$apply(function() {
+		// 				vm.listUserAll = [];
+		// 			});
+		// 		}
+		// 	});
+		// };
+
+		// var testPress = function() {
+		// 	$('#inputTest').jkey('esc', function() {
+		// 		console.log("clickESC2");
+		// 		vm.listaUserVacia = true;
+		// 	});
+		// };
+
 		vm.searchUser = function(search) {
-			console.log(search);
-			if (auxiliar) $timeout.cancel(auxiliar);
+			vm.loadingSearchUser = true;
+			if (vm.searchOld != search) vm.userId = null;
+			// if (auxiliar) $timeout.cancel(auxiliar);
 			if (search === "") {
 				vm.listUserAll = [];
 				return;
 			}
 			var busqueda = function() {
-				console.log(search);
-				ConfigurationService.getAllUser(search).then(function success(response) {
+				return ConfigurationService.getAllUser(search).then(function success(response) {
 					vm.listUserAll = response;
+					console.log(vm.listUserAll);
+					vm.loadingSearchUser = false;
 					// console.log(vm.listUserAll);
-				}, function error(response) {
+					return response.map(function(item) {
+						// console.log(item);
+						return item
+					}, function error(response) {
 
+					});
 				});
 			};
-
-			auxiliar = $timeout(busqueda, 500);
-
+			// auxiliar = $timeout(busqueda, 500);
+			return busqueda();
 		};
+
+		vm.initSearch = function(user) {
+			vm.search = user.firstname + ' ' + user.lastname;
+			vm.searchOld = vm.search;
+			vm.userId = user.id;
+			vm.listUserAll = [];
+		};
+
+		// $scope.ngModelOptionsSelected = function(value) {
+		// 	if (arguments.length) {
+		// 		_selected = value;
+		// 	} else {
+		// 		return _selected;
+		// 	}
+		// };
+
+		// $scope.modelOptions = {
+		// 	debounce: {
+		// 		default: 500,
+		// 		blur: 250
+		// 	},
+		// 	getterSetter: true
+		// };
 
 		//Carga Inicial
 		var init = function() {
@@ -221,6 +282,12 @@ angular.module('configuration.controller', [])
 			configurationGet();
 			percentageGet();
 		};
+
+		// (function listenClick() {
+		// 	clickClose();
+		// 	// testPress();
+		// })();
+
 
 		init();
 
