@@ -1,1 +1,4 @@
-angular.module('auth.controller', []);
+angular.module('auth.controller', [])
+	.controller('AuthCtrl', function($state) {
+
+	});
