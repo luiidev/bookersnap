@@ -3,40 +3,10 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 		var vm = this;
 		vm.code = "";
 
-		vm.timeList = [{
-			id: 1,
-			option: "10 minutos"
-		}, {
-			id: 2,
-			option: "20 minutos"
-		}, {
-
-		}, {
-			id: 3,
-			option: "30 minutos"
-		}];
-
-		vm.cantUserList = [{
-			id: 1,
-			option: "1 persona"
-		}, {
-			id: 2,
-			option: "2 personas"
-		}, {
-			id: 3,
-			option: "3 personas"
-		}, ];
-
-		vm.cantTableList = [{
-			id: 1,
-			option: "1 mesa"
-		}, {
-			id: 2,
-			option: "2 mesas"
-		}, {
-			id: 3,
-			option: "3 mesas"
-		}, ];
+		vm.cantUserList = ConfigurationService.initDataFakeList(100, "persona");
+		vm.cantTableList = ConfigurationService.initDataFakeList(20, "mesa");
+		vm.cantTableListPie = ConfigurationService.initDataFakeList(1000, "persona");
+		vm.timeList = ConfigurationService.initDataFakeHour();
 
 		//BASIC SECTION
 		//Carga de configuracion inicial

@@ -255,6 +255,60 @@ angular.module('configuration.service', [])
 				});
 				return promise;
 
+			},
+			initDataFakeList: function(cant, prefijo) {
+				//Max cant de usuarios 1 -> 1000
+				var list = [];
+				for (let i = 0; i <= cant; i++) {
+					if (i != 1) {
+						list[i] = {
+							id: i,
+							option: i + " " + prefijo + "s"
+						};
+					} else {
+						list[i] = {
+							id: i,
+							option: i + " " + prefijo
+						};
+					}
+				}
+				return list;
+			},
+			initDataFakeHour: function() {
+				var tolerancia = 0;
+				var hora = 0;
+				var timeList = [];
+				for (let i = 0; i <= 36; i++) {
+					if (i < 12) {
+						timeList[i] = {
+							id: i,
+							option: tolerancia + " minutos"
+						};
+					} else {
+						resto = i % 12;
+						if (resto == 0) {
+							multiplo = true;
+						} else {
+							multiplo = false;
+						}
+						if (multiplo) {
+							hora++;
+							timeList[i] = {
+								id: i,
+								option: hora + " horas"
+							};
+							tolerancia = 0;
+						} else {
+							timeList[i] = {
+								id: i,
+								option: hora + " horas " + tolerancia + " minutos"
+							};
+						}
+					}
+					tolerancia = tolerancia + 5;
+				}
+
+				return timeList;
 			}
 
 		};
