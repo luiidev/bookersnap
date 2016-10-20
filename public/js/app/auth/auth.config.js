@@ -1,0 +1,1 @@
+angular.module('auth.app', ['auth.controller', 'auth.service']);

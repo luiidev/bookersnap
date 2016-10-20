@@ -1,5 +1,6 @@
 var idMicrositio = obtenerIdMicrositio();
 angular.module('tables.app', [
+        //'auth.app',//proximanente
         'turn.app',
         'zone.app',
         'book.app',
