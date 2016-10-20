@@ -497,11 +497,10 @@ angular.module('floor.controller', [])
         vmd.reservation = {};
 
         var getTableReservation = function() {
-            FloorFactory.rowTableReservation(content.table.id)
-                .then(function(data) {
-                    vmd.itemReservations = data;
-                    // console.log('PopUp: ' + angular.toJson(data, true));
-                });
+            FloorFactory.rowTableReservation(content.table.id).then(function(data) {
+                vmd.itemReservations = data;
+                console.log('PopUp: ' + angular.toJson(data, true));
+            });
         };
 
         vmd.reservationEditAll = function() {
@@ -652,7 +651,7 @@ angular.module('floor.controller', [])
                 rm.total_children = children;
                 rm.total_people = total;
                 rm.total_visitas = total;
-                console.log('Reservaciones: ' + angular.toJson(data, true));
+                //console.log('Reservaciones: ' + angular.toJson(data, true));
 
             });
         };

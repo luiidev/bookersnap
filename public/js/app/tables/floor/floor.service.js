@@ -323,11 +323,23 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				me.listBloqueosReservas().then(function success(reservations) {
 					var vTables = [];
+
 					angular.forEach(reservations, function(reservation) {
-						if (reservation.table_id === idTable) {
-							vTables.push(reservation);
-							//console.log(angular.toJson(reservations, true));
-						}
+						var tables = reservation.tables;
+						console.log(reservation);
+						angular.forEach(tables, function(table) {
+							if (table.id === idTable) {
+								var obj = {
+									start_time: reservation.start_time,
+									end_time: reservation.end_time,
+									num_people: reservation.num_people,
+									reservation_id: reservation.reservation_id,
+									res_reservation_status_id: reservation.res_reservation_status_id
+								};
+								vTables.push(obj);
+								console.log(angular.toJson(obj, true));
+							}
+						});
 					});
 					//console.log(angular.toJson(vTables, true));
 					//vTables.push(vTable);
