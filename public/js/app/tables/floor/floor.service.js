@@ -285,6 +285,7 @@ angular.module('floor.service', [])
 					angular.forEach(row_tables, function(table) {
 						if (table.id == idTable) {
 							table_detail = {
+								zone_indice: indice,
 								zone_id: zone.id,
 								name_zona: zone.name,
 								id: table.id,

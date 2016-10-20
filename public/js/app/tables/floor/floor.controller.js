@@ -622,7 +622,6 @@ angular.module('floor.controller', [])
         };
 
 
-
         var getlistZonesBloqueosReservas = function() {
             FloorFactory.listBloqueosReservas().then(function success(data) {
 
@@ -643,7 +642,7 @@ angular.module('floor.controller', [])
                 rm.total_children = children;
                 rm.total_people = total;
                 rm.total_visitas = total;
-                //console.log('Reservaciones: ' + angular.toJson(data, true));
+                console.log('Reservaciones: ' + angular.toJson(data, true));
 
             });
         };
