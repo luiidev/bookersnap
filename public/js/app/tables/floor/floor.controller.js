@@ -211,8 +211,9 @@ angular.module('floor.controller', [])
         };
 
         vm.openNotes = function() {
-            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
             vm.notesBox = !vm.notesBox;
+            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
+
             openNotesTimeOut = $timeout(function() {
                 vm.notesBoxValida = true;
             }, 500);
@@ -224,8 +225,11 @@ angular.module('floor.controller', [])
                 var container = $(".box-tab-notas");
 
                 if (container.has(e.target).length === 0 && vm.notesBoxValida === true) {
-                    vm.notesBox = false;
-                    vm.notesBoxValida = false;
+
+                    $scope.$apply(function() {
+                        vm.notesBox = false;
+                        vm.notesBoxValida = false;
+                    });
                 }
             });
         };
