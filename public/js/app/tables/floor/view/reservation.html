@@ -46,7 +46,7 @@
                                                 <td>{{value.num_people}}</td>
                                                 <td>{{value.first_name}} {{value.last_name}}</td>
                                                 <td>{{value.zone_indice}}</td>
-                                                <td>{{value.name}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
                                             <tr class="line-row">
@@ -127,8 +127,8 @@
                                                 <td>{{value.start_time}}</td>
                                                 <td>{{value.num_people}}</td>
                                                 <td>{{value.first_name}} {{value.last_name}}</td>
-                                                <td>{{value.zone_indice}}</td>
-                                                <td>{{value.name}}</td>
+                                                <td>{{value.tables[0].zone_indice}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
                                             <tr class="line-row">

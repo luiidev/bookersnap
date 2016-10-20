@@ -74,7 +74,7 @@ angular.module('floor.controller', [])
             FloorFactory.listTurnosActivos(vm.fecha_actual).then(
                 function success(response) {
                     vm.typeTurns = response;
-                    //TypeTurnoDataFactory.setTypeTurnItems(response);
+                    TypeTurnoDataFactory.setTypeTurnItems(response);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -257,11 +257,16 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
-            // getServers();
-            // getZones();
+
+            /*var socket = io.connect('http://127.0.0.1:3000/');
+            socket.on('saludo', function(data) {
+                console.log("saludo" + data);
+
+            });*/
+
         })();
 
     })
@@ -280,7 +285,7 @@ angular.module('floor.controller', [])
 
         //Creando numero de casillas
         var vNumpeople = [];
-        for (i = 0; i <= 12; i++) {
+        for (var i = 0; i <= 12; i++) {
             vNumpeople.push({
                 num: i
             });
@@ -425,7 +430,7 @@ angular.module('floor.controller', [])
         function parseReservation() {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
-            var start_time = now.clone().add( - (now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
+            var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.id,
                 covers: {
@@ -488,11 +493,10 @@ angular.module('floor.controller', [])
         vmd.reservation = {};
 
         var getTableReservation = function() {
-            FloorFactory.rowTableReservation(content.table.id)
-                .then(function(data) {
-                    vmd.itemReservations = data;
-                    // console.log('PopUp: ' + angular.toJson(data, true));
-                });
+            FloorFactory.rowTableReservation(content.table.id).then(function(data) {
+                vmd.itemReservations = data;
+                console.log('PopUp: ' + angular.toJson(data, true));
+            });
         };
 
         vmd.reservationEditAll = function() {
@@ -623,10 +627,11 @@ angular.module('floor.controller', [])
         };
 
 
-
         var getlistZonesBloqueosReservas = function() {
-            FloorFactory.listZonesBloqueosReservas().then(function success(data) {
+            FloorFactory.listBloqueosReservas().then(function success(data) {
+
                 rm.res_listado = data;
+
                 var total = 0;
                 var men = 0;
                 var women = 0;
@@ -642,8 +647,8 @@ angular.module('floor.controller', [])
                 rm.total_children = children;
                 rm.total_people = total;
                 rm.total_visitas = total;
+                //console.log('Reservaciones: ' + angular.toJson(data, true));
 
-                //console.log('Total: ' + angular.toJson(data, true));
             });
         };
         getlistZonesBloqueosReservas();
@@ -662,31 +667,15 @@ angular.module('floor.controller', [])
             rm.filter_type = categoria;
             return false;
         };
-        /*
-        var listTypeTurns = function() {
-            FloorFactory.listTurnosActivos(rm.fecha_actual).then(
-                function success(response) {
-                    rm.categorias_type = response;
-                    rm.categorias_type.unshift(rowTodosType);
-                    rm.select_type(rm.categorias_type[0]);
-                    //console.log(rm.categorias_type[0]);
-                },
-                function error(error) {
-                    message.apiError(error, "No se pudo listar los turnos.");
-                }
-            );
-        };
-        listTypeTurns();
-*/
 
 
         var callListTypeTurn;
         if (callListTypeTurn) $timeout.cancel(callListTypeTurn);
         callListTypeTurn = $timeout(function() {
-            rm.categorias_type = TypeTurnoDataFactory.getTypeTurnItems();
-            rm.categorias_type.unshift(rowTodosType);
+            var turn = TypeTurnoDataFactory.getTypeTurnItems();
+            rm.categorias_type = turn;
+            //rm.categorias_type.unshift(rowTodosType);
             rm.select_type(rm.categorias_type[0]);
-
         }, 1000);
 
         rm.isActiveType = function(categoria) {
@@ -744,11 +733,19 @@ angular.module('floor.controller', [])
         };
 
         rm.selectReservation = function(reservation) {
+
             $scope.$apply(function() {
                 $rootScope.$broadcast("eventEstablish", "sit", reservation);
-                reservation.tables = [{id: 2}, {id: 4}, {id: 138}];
+                reservation.tables = [{
+                    id: 2
+                }, {
+                    id: 4
+                }, {
+                    id: 138
+                }];
                 $rootScope.$broadcast("tablesSelected", reservation.tables);
             });
+
         };
 
         rm.clearSelected = function() {
