@@ -1,17 +1,23 @@
 <?php
 
 /*
-  |--------------------------------------------------------------------------
-  | Application Routes
-  |--------------------------------------------------------------------------
-  |
-  | Here is where you can register all of the routes for an application.
-  | It's a breeze. Simply tell Laravel the URIs it should respond to
-  | and give it the controller to call when that URI is requested.
-  |
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
  */
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas', /**'middleware' => 'auth'*/]);
+//Route principal : Lista de micrositios
+
+Route::get('/admin', function () {
+    return view('dashboard.admin.index');
+});
+
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'auth'*/]);
 
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('reservation');
@@ -21,13 +27,15 @@ Route::get('/', function () {
     echo "hola";
 })->middleware('checkCountry');
 
-Route::group(['prefix' => 'test'], function () {
+//Route Auth
+
+Route::group(['prefix' => 'auth'], function () {
     Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
         Route::get('/', ['as' => 'microsite-login', 'uses' => 'Test\AuthController@Index']);
         Route::post('/', 'Test\AuthController@LoginBs');
         Route::post('/social', 'Test\AuthController@RedirectSocialLogin');
         Route::get('/social-callback', ['as' => 'social-callback',
-            'uses' => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
+            'uses'                               => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
     });
 
     Route::post('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
@@ -47,14 +55,13 @@ Route::group(['prefix' => 'test'], function () {
 
 });
 
-
 /*
-  |--------------------------------------------------------------------------
-  | Routes Example : v1/{lang}/admin/ms/{micro}/example
-  |--------------------------------------------------------------------------
-  |
-  | Seguir este patron cuando agregemos un nuevo modulo.
-  |
+|--------------------------------------------------------------------------
+| Routes Example : v1/{lang}/admin/ms/{micro}/example
+|--------------------------------------------------------------------------
+|
+| Seguir este patron cuando agregemos un nuevo modulo.
+|
  */
 Route::pattern('micro', '[0-9]+');
 
@@ -75,7 +82,6 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas', 'middleware' => 'r
     Route::put('zone', "Admin\Tables\Zone\ZoneController@update");
     Route::delete('zone/{id}', "Admin\Tables\Zone\ZoneController@delete");
 
-
     Route::get('turn', "Admin\Tables\Turn\TurnController@index");
     Route::get('turn/{turn}', "Admin\Tables\Turn\TurnController@get");
     Route::post('turn', "Admin\Tables\Turn\TurnController@create");
@@ -88,7 +94,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/mesas', 'middleware' => 'r
     Route::get('reservation/getreservas', "Admin\Reservation\Floor\FloorController@getReservas");
 
     /*
-      Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete"); */
+Route::delete('turn/{id}', "Admin\Tables\Turn\TurnController@delete"); */
 });
 
 Route::group(['prefix' => 'v1/{lang}/'], function () {
@@ -105,7 +111,6 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::post('promotion/uploadFile', "Admin\Reservation\Promotion\PromotionController@uploadfile");
     Route::get('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@showPromotion");
     Route::put('promotion/{promotion_id}', "Admin\Reservation\Promotion\PromotionController@updatePromotion");
-
 
     /* Flyer */
     Route::post('flyer/uploadFile', "Admin\Reservation\Promotion\FlyerController@uploadfile");
@@ -154,7 +159,3 @@ Route::group(['prefix' => '/auth'], function () {
 
     Route::post("/removeSharedToken", ["uses" => "Test\AuthController@removeSharedToken"]);
 });
-
-
-
-

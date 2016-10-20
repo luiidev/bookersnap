@@ -179,7 +179,7 @@
                                         <a href=""  ng-show="vm.tagsListAdd[keyCategory].data.length <= 0">Agregar</a> 
                                 
                                         <ul class="dropdown-menu" role="menu">
-                                            <li ng-repeat="tags in tagsCategory.tags" ng-click="vm.addTag(tags,keyCategory)" ng-class="{'active' : tags.active}"><a href="">{{ tags.name}}</a></li>
+                                            <li ng-repeat="tags in tagsCategory.tags" ng-click="vm.addTag(tags,keyCategory,$event)" ng-class="{'active' : tags.active}"><a href="">{{ tags.name}}</a></li>
                                         </ul>                                   
                                     </div>
                                     <a href="" ng-if="tagsCategory.tags.length <=0">Sin tags</a> 

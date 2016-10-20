@@ -3,24 +3,25 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
+
 function _logout() {
     $.ajax({
-        url: "/test/auth/logout",
+        url: "/auth/auth/logout",
         method: "post",
         type: "json",
-        beforeSend: function () {
+        beforeSend: function() {
             //para mejorar la experiencia de usuario, aqui se puede implementar
             // un overlay que indique al usuario que se esta cerrando su sesion.
             console.log("Cerrando los servicios");
         },
-        success: function (json) {
-            if (json.success) {//Si la sesion se cerro
-                if (json.redirect) {//Y el servidor indica que hay que redireccionar
-                    xdLocalStorage.getItem("_sharedSession", function (data) {
+        success: function(json) {
+            if (json.success) { //Si la sesion se cerro
+                if (json.redirect) { //Y el servidor indica que hay que redireccionar
+                    xdLocalStorage.getItem("_sharedSession", function(data) {
                         if (data.value !== null) {
                             // Si existe el token, lo eliminamos primero en el servidor
                             // y luego en el localstorage, luego redireccionamos.
-                            removeSharedToken(data.value, function () {
+                            removeSharedToken(data.value, function() {
                                 xdLocalStorage.removeItem("_sharedSession");
                                 location.href = json.url;
                             });
@@ -32,7 +33,7 @@ function _logout() {
                 }
             }
         },
-        error: function () {
+        error: function() {
             //Si ocurre algun error al cerrar la sesion mostramos un dialogo
             alert("ocurrió un error al cerrar sesión");
         }
@@ -43,8 +44,10 @@ function _logout() {
             url: "/auth/removeSharedToken",
             method: "post",
             type: "json",
-            data: {_authToken: data},
-            success: function (data) {
+            data: {
+                _authToken: data
+            },
+            success: function(data) {
                 if (data.success) {
                     callback();
                 }

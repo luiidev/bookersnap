@@ -59,7 +59,7 @@ gulp.task('stylus-app', function() {
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('../../../css/app/master'))
+        .pipe(gulp.dest('../../../css/app/master'));
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc

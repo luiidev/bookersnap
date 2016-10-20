@@ -338,16 +338,42 @@ angular.module('guest.service', [])
 				});
 			return defered.promise;
 		},
-		getIndexTag: function(tagData, idTag) {
+		getIndexTag: function(tagsList, idTag) {
+			//Obtiene el indice del tag, del listado general de tags
 			var index = null;
 
-			angular.forEach(tagData.tags, function(tags, key) {
+			angular.forEach(tagsList.tags, function(tags, key) {
 				if (tags.id == idTag) {
 					index = key;
 				}
 			});
 
 			return index;
+		},
+		checkActiveTags: function(tagsList, tagsListAdd) {
+			//Activamos los tags en la vista, solo los tags que ha agregado el guest guest
+			var self = this;
+			angular.forEach(tagsList, function(tags, keyTag) {
+
+				angular.forEach(tags.tags, function(value, key) {
+					var exists = self.isExistsTagListAdd(tagsListAdd[keyTag], value.id);
+
+					if (exists) {
+						value.active = true;
+					}
+				});
+			});
+		},
+		isExistsTagListAdd: function(tagsListAdd, idTag) {
+			//Saber si el tag esta agregado a la lista de tags del guest
+			var response = false;
+			angular.forEach(tagsListAdd.data, function(value, key) {
+				if (value.id == idTag) {
+					response = true;
+				}
+			});
+
+			return response;
 		}
 	};
 })
