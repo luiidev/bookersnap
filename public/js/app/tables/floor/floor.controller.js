@@ -155,19 +155,10 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
-            console.log(obj);
-            var res_men = vm.numpeople.num_men;
-            var res_women = vm.numpeople.num_women;
-            var res_children = vm.numpeople.num_children;
-            //console.log(angular.toJson(res));
-            var num_men = parseInt(res_men.substring(3));
-            var num_women = parseInt(res_women.substring(3));
-            var num_children = parseInt(res_children.substring(3));
-
             var cantidades = {
-                men: num_men,
-                women: num_women,
-                children: num_children
+                men: vm.numpeople.num_men,
+                women: vm.numpeople.num_women,
+                children: vm.numpeople.num_children
             };
 
             modalInstancesConfiguration(cantidades, obj);
@@ -255,9 +246,23 @@ angular.module('floor.controller', [])
             $scope.$digest();
         });
 
+        vm.tableFilter = function(num) {
+            $scope.$apply(function() {
+                vm.filter = true;
+                FloorFactory.tableFilter(vm.zones, blocks, num);
+            });
+        };
+
+        vm.tableFilterClear = function() {
+            $scope.$apply(function() {
+                vm.filter = false;
+                FloorFactory.tableFilterClear(vm.zones, blocks);
+            });
+        };
+
         (function Init() {
             loadZones(fecha_actual);
-            listTypeTurns();
+            // listTypeTurns();
             sizeLienzo();
             closeNotes();
 
@@ -495,7 +500,7 @@ angular.module('floor.controller', [])
         var getTableReservation = function() {
             FloorFactory.rowTableReservation(content.table.id).then(function(data) {
                 vmd.itemReservations = data;
-                console.log('PopUp: ' + angular.toJson(data, true));
+                // console.log('PopUp: ' + angular.toJson(data, true));
             });
         };
 
@@ -510,7 +515,6 @@ angular.module('floor.controller', [])
         vmd.reservationEdit = function(data) {
             listResource();
             vmd.info = parseInfo(data);
-            // console.log(vmd.info, data);
             vmd.reservation = parseData(data);
             vmd.EditContent = true;
         };
@@ -733,19 +737,10 @@ angular.module('floor.controller', [])
         };
 
         rm.selectReservation = function(reservation) {
-
             $scope.$apply(function() {
                 $rootScope.$broadcast("eventEstablish", "sit", reservation);
-                reservation.tables = [{
-                    id: 2
-                }, {
-                    id: 4
-                }, {
-                    id: 138
-                }];
                 $rootScope.$broadcast("tablesSelected", reservation.tables);
             });
-
         };
 
         rm.clearSelected = function() {

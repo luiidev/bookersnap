@@ -44,7 +44,7 @@ angular.module('floor.service', [])
 		var navegaTabZone = 0;
 		return {
 			setBorderColorForReservation: function(zones, blocks) {
-				hour = moment();
+				var hour = moment();
 
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
@@ -107,9 +107,7 @@ angular.module('floor.service', [])
 				});
 			},
 			getZoneIndexForTable: function(zones, serverTables) {
-				if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
-					return 0;
-				} else if (serverTables.length === 0) {
+				if (serverTables.length === 0) {
 					return 0;
 				}
 				var index = null;
@@ -132,9 +130,7 @@ angular.module('floor.service', [])
 				return index;
 			},
 			tablesSelected: function(zones, serverTables) {
-				if (Object.prototype.toString.call(serverTables) !== "[object Array]") {
-					return;
-				} else if (serverTables.length === 0) {
+				if (serverTables.length === 0) {
 					return;
 				}
 				angular.forEach(zones, function(zone) {
@@ -144,6 +140,50 @@ angular.module('floor.service', [])
 								table.selected = true;
 							}
 						});
+					});
+				});
+			},
+			tableFilter: function(zones, blocks, cant) {
+				// Manejo estatico de tiempo de reserva por cantidad  de invitados
+				var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0);
+				var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
+
+				console.log(start_time.format("HH:mm:ss"), end_time.format("HH:mm:ss"));
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						angular.forEach(blocks, function(block) {
+							if (table.id == block.res_table_id && block.res_reservation_status_id < 14) {
+								var start_block = moment(block.start_time, "HH:mm:ss");
+								var end_block = moment(block.end_time, "HH:mm:ss");
+								if ((start_time.isBetween(start_block, end_block,  null, "()") ) || 
+						                            (end_time.isBetween(start_block, end_block, null, "()")) ||
+						                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+									if (block.res_reservation_id !== null) {
+									            table.occupied = true;
+									            table.suggested = false;
+									} else {
+									    	table.block = true;
+									    	table.suggested = false;
+									}
+								}
+							}
+						});
+
+						if (cant >= table.minCover && cant <= table.maxCover && !table.class.name) {
+						    	if (!table.occupied && !table.block) {
+						    	    	table.suggested = true;
+						    	}
+						}
+
+					});
+				});
+			},
+			tableFilterClear: function(zones) {
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						table.occupied = false;
+						table.block = false;
+						table.suggested = false;
 					});
 				});
 			},
@@ -191,20 +231,20 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				var vReservation = [];
 				FloorDataFactory.getBloqueos().success(function(data) {
-
+					// console.log("***", data.data);
 					angular.forEach(data.data, function(reserva) {
 						var dataReservation = {
 							table_id: reserva.res_table_id,
 							//table_name: reserva.res_table_name,
 							block_id: reserva.res_block_id,
 							reservation_id: reserva.res_reservation_id,
-							num_people: reserva.num_people,
+							num_people: reserva.num_guest,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							start_date: reserva.start_date,
 							start_time: reserva.start_time,
 							end_time: reserva.end_time,
-							//first_name: reserva.first_name,
-							//last_name: reserva.last_name
+							first_name: reserva.first_name,
+							last_name: reserva.last_name
 						};
 						vReservation.push(dataReservation);
 					});
@@ -219,13 +259,14 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				var vReservation = [];
 				FloorDataFactory.getReservas().then(function(data) {
-
+					// console.log("****", data.data.data);
 					angular.forEach(data.data.data, function(reserva) {
 						var obj = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
-							//res_server_id: reserva.res_server_id,
-							//note: reserva.note,
+							res_server_id: reserva.res_server_id,
+							note: reserva.note,
+							num_people: reserva.num_guest,
 							num_people_1: reserva.num_people_1,
 							num_people_2: reserva.num_people_2,
 							num_people_3: reserva.num_people_3,
@@ -246,6 +287,7 @@ angular.module('floor.service', [])
 			mergeReservasBloqueo: function(reservations, blocks) {
 				var vReserva = [];
 				var me = this;
+				// console.log("**", reservations);
 				angular.forEach(reservations, function(reserva) {
 
 					var idreservacion = reserva.reservation_id;
@@ -254,8 +296,7 @@ angular.module('floor.service', [])
 					angular.forEach(blocks, function(block, key) {
 
 						if (block.reservation_id == idreservacion) {
-
-							reserva.num_people = block.num_people;
+							// reserva.num_people = block.num_people;
 							reserva.start_date = block.start_date;
 							reserva.start_time = block.start_time;
 							reserva.end_time = block.end_time;
@@ -326,18 +367,19 @@ angular.module('floor.service', [])
 
 					angular.forEach(reservations, function(reservation) {
 						var tables = reservation.tables;
-						console.log(reservation);
+						// console.log(reservation);
 						angular.forEach(tables, function(table) {
 							if (table.id === idTable) {
-								var obj = {
-									start_time: reservation.start_time,
-									end_time: reservation.end_time,
-									num_people: reservation.num_people,
-									reservation_id: reservation.reservation_id,
-									res_reservation_status_id: reservation.res_reservation_status_id
-								};
-								vTables.push(obj);
-								console.log(angular.toJson(obj, true));
+								// console.log("*", reservation);
+								// var obj = {
+								// 	start_time: reservation.start_time,
+								// 	end_time: reservation.end_time,
+								// 	num_people: reservation.num_people,
+								// 	reservation_id: reservation.reservation_id,
+								// 	res_reservation_status_id: reservation.res_reservation_status_id
+								// };
+								vTables.push(reservation);
+								// console.log(angular.toJson(obj, true));
 							}
 						});
 					});

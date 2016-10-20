@@ -504,13 +504,14 @@ angular.module('reservation.controller', [])
 
             service.getReservation(reservation_id)
                 .then(function(response) {
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
                     var data = response.data.data;
                     if (data === null) {
                         message.error("No se encontro la reservacion solicitada");
                         return redirect(); 
                     } else {
                         parseReservationEdit(data);
+                        getZoneIndexForTable(data.tables);
                     }
                 }).catch(function(error) {
                     message.apiError(error);
@@ -576,6 +577,33 @@ angular.module('reservation.controller', [])
         });
 
         listTagsSelected();
+    }
+
+    function getZoneIndexForTable(serverTables) {
+        if (serverTables.length === 0) {
+            return;
+        }
+        var index = null;
+        angular.forEach(vm.zones, function(zone, zone_index) {
+            if (index === null) {
+                angular.forEach(zone.tables, function(table) {
+                    if (index === null) {
+                        angular.forEach(serverTables, function(serverTable) {
+                            if (index === null) {
+                                if (table.id == serverTable.id) {
+                                    index = zone_index;
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        if (index !== null ) {
+            vm.zoneIndex = index;
+            setZoneName(index);
+        }
     }
     ///////////////////////////////////////////////////////////////
     // End
