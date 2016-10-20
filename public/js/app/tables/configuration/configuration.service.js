@@ -10,6 +10,7 @@ angular.module('configuration.service', [])
 						time_tolerance: configuration.time_tolerance,
 						time_restriction: configuration.time_restriction,
 						max_people: configuration.max_people,
+						max_people_standing: configuration.max_people_standing,
 						max_table: configuration.max_table,
 						res_code_status: configuration.res_code_status,
 						res_privilege_status: configuration.res_privilege_status,

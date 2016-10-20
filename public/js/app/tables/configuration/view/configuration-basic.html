@@ -13,7 +13,7 @@
 					<div class="form-group fg-line">
 						<label>Tolerancia:</label>					
 						<div class="select">						
-								<select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="vm.configuration.time_tolerance" ng-options="time.id as time.option for time in vm.timeList" required>
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.time_tolerance" ng-options="time.id as time.option for time in vm.timeList" required>
 								  <option value=""></option>
 								</select>
 						</div>	
@@ -23,7 +23,7 @@
 					<div class="form-group fg-line">
 						<label>Restricción:</label>					
 						<div class="select">						
-								<select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="vm.configuration.time_restriction" ng-options="time.id as time.option for time in vm.timeList" required>
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.time_restriction" ng-options="time.id as time.option for time in vm.timeList" required>
 								  <option value=""></option>
 								</select>
 						</div>	
@@ -33,7 +33,7 @@
 					<div class="form-group fg-line">
 						<label>Porcentaje de asistencia</label>					
 						<div class="select">						
-								<select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="vm.configuration.res_percentage_id" ng-options="list.res_percentage as list.percentage for list in vm.percentageList" required>
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.res_percentage_id" ng-options="list.res_percentage as list.percentage for list in vm.percentageList" required>
 								  <option value=""></option>
 								</select>
 						</div>	
@@ -45,7 +45,7 @@
 					<div class="form-group fg-line">
 						<label>Max. cantidad de usuarios</label>				
 						<div class="select">						
-								<select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="vm.configuration.max_people" ng-options="person.id as person.option for person in vm.cantUserList" required>
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_people" ng-options="person.id as person.option for person in vm.cantUserList" required>
 								  <option value=""></option>
 								</select>
 						</div>	
@@ -55,7 +55,17 @@
 					<div class="form-group fg-line">
 						<label>Max. cantidad de mesas por reserva</label>				
 						<div class="select">						
-								<select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="vm.configuration.max_table" ng-options="table.id as table.option for table in vm.cantTableList" required>
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_table" ng-options="table.id as table.option for table in vm.cantTableList" required>
+								  <option value=""></option>
+								</select>
+						</div>	
+					</div>										
+				</div>
+				<div class="col-sm-4 p-b-20">
+					<div class="form-group fg-line">
+						<label>Max. cantidad de personas de pie</label>				
+						<div class="select">						
+								<select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_people_standing" ng-options="person.id as person.option for person in vm.cantUserList" required>
 								  <option value=""></option>
 								</select>
 						</div>	
