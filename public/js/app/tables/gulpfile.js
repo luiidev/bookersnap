@@ -46,7 +46,7 @@ gulp.task('app-library-tables-js', function() {
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.tables.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin())
         .pipe(gulp.dest('../../dist.app/tables'));
 });
 

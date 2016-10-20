@@ -70,7 +70,31 @@ angular.module('configuration.service', [])
 		};
 
 	})
-	.service('ConfigurationService', function($q, ConfigurationDataService) {
+	.service('ConfigurationDataUser', function($http, ApiUrlMesas) {
+		return {
+			getAllUser: function(search) {
+				return $http.get(ApiUrlMesas + "/configuration/users/privileges/", {
+					params: {
+						search: search
+					}
+				});
+			},
+			getAllPrivilegeUser: function() {
+				return $http.get(ApiUrlMesas + "/configuration/users");
+			},
+			storePrivilegeUSer: function(idUser) {
+				return $http.post(ApiUrlMesas + "/configuration/users", {}, {
+					params: {
+						user_id: idUser
+					}
+				});
+			},
+			deletePrivilegeUSer: function(idUser) {
+				return $http.delete(ApiUrlMesas + "/configuration/users/" + idUser);
+			}
+		};
+	})
+	.service('ConfigurationService', function($q, ConfigurationDataService, ConfigurationDataUser) {
 		return {
 			getConfig: function() {
 				var defered = $q.defer();
@@ -180,5 +204,57 @@ angular.module('configuration.service', [])
 				});
 				return promise;
 			},
+			getAllUser: function(search) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataUser.getAllUser(search).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+			},
+			getAllPrivilegeUser: function() {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataUser.getAllPrivilegeUser().success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+
+			},
+			storePrivilegeUser: function(idUser) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataUser.storePrivilegeUSer(idUser).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+
+			},
+			deletePrivilegeUser: function(idUser) {
+				var defered = $q.defer();
+				var promise = defered.promise;
+				ConfigurationDataUser.deletePrivilegeUSer(idUser).success(function(data) {
+					data = data.data;
+					defered.resolve(data);
+				}).error(function(data, status, headers) {
+					var response = jsonErrorData(data, status, headers);
+					defered.reject(response);
+				});
+				return promise;
+
+			}
+
 		};
 	});

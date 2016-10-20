@@ -44,17 +44,19 @@ angular.module('zone.controller', ['ngDraggable'])
             var zonesInactive = [];
 
             angular.forEach(zones, function(zone) {
-                var isActive = false;
+                var isActiveZone = false;
+
                 angular.forEach(zone.turns, function(turnZone, key) {
 
-                    isActive = activeZoneTurn(turns, turnZone.id);
+                    var isActive = activeZoneTurn(turns, turnZone.id);
 
                     if (isActive) {
+                        isActiveZone = isActive;
                         return;
                     }
                 });
 
-                if (isActive) {
+                if (isActiveZone) {
 
                     $scope.zones.numTablesActive += zone.tables_count;
                     $scope.zones.minCoversActive += zone.min_covers;
@@ -67,6 +69,7 @@ angular.module('zone.controller', ['ngDraggable'])
                     $scope.zones.numTablesInactive += zone.tables_count;
                     $scope.zones.minCoversInactive += zone.min_covers;
                     $scope.zones.maxCoversInactive += zone.max_covers;
+
                     zonesInactive.push(zone);
                 }
             });
@@ -82,7 +85,6 @@ angular.module('zone.controller', ['ngDraggable'])
                     active = true;
                 }
             });
-
             return active;
         };
         var getTablesCount = function(zones) {

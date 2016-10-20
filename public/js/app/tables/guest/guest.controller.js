@@ -146,7 +146,8 @@ angular.module('guest.controller', [])
 			gender: '',
 			phones: [],
 			emails: [],
-			tags: []
+			tags: [],
+			custom_tags: []
 		};
 
 		vm.guestFormData = {
@@ -165,13 +166,32 @@ angular.module('guest.controller', [])
 		vm.init = function() {
 			vm.listGender();
 
-			GuestFactory.getTags().then(function success(response) {
-				vm.tagsList = response.tagsList;
-				vm.tagsListAdd = response.tagsListAdd;
-				vm.loadDataGuestEdit();
-			}, function error(response) {
-				console.log("getTags error ", angular.toJson(response, true));
-			});
+			GuestFactory.getTags().then(
+				function success(response) {
+					vm.tagsList = response.tagsList;
+					vm.tagsListAdd = response.tagsListAdd;
+
+					vm.listAllTagsCustom();
+					vm.loadDataGuestEdit();
+				},
+				function error(response) {
+					console.log("getTags error ", angular.toJson(response, true));
+				});
+		};
+
+		vm.listAllTagsCustom = function() {
+			GuestFactory.getTagsCustomGuest().then(
+				function success(response) {
+					response = response.data;
+					angular.forEach(vm.tagsList, function(tag, key) {
+						if (tag.id == 4) {
+							tag.tags = response;
+						}
+					});
+				},
+				function error(response) {
+					console.error("listAllTagsCustom " + angular.toJson(response, true));
+				});
 		};
 
 		vm.listGender = function() {
@@ -190,7 +210,7 @@ angular.module('guest.controller', [])
 		};
 
 		vm.saveGuest = function() {
-
+			vm.prepareCustomTagSave();
 			console.log("saveGuest " + angular.toJson(vm.guestData, true));
 
 			vm.guestData.birthdate = convertFechaYYMMDD(vm.guestFormData.birthdate, "es-ES", {});
@@ -228,7 +248,21 @@ angular.module('guest.controller', [])
 			$event.preventDefault();
 			$event.stopPropagation();
 			vm.opened = true;
-			console.log("abrir");
+		};
+
+		vm.prepareCustomTagSave = function() {
+			vm.guestData.custom_tags = vm.tagsListAdd[3].data;
+
+			angular.forEach(vm.guestData.tags, function(tag, key) {
+				var json = angular.toJson(tag);
+
+				if (json.indexOf("custom_tag") > -1) {
+
+					if (tag.custom_tag === true) {
+						vm.guestData.tags.splice(key);
+					}
+				}
+			});
 		};
 
 		vm.addTag = function(tag, category) {
@@ -244,7 +278,8 @@ angular.module('guest.controller', [])
 			if (index === null) {
 				vm.tagsListAdd[category].data.push(tagsData);
 				vm.guestData.tags.push({
-					id: tagsData.id
+					id: tagsData.id,
+					custom_tag: (category === 3) ? true : false
 				});
 			} else {
 				vm.tagsListAdd[category].data.splice(index, 1);
@@ -263,6 +298,10 @@ angular.module('guest.controller', [])
 					vm.guestFormData.gender = vm.guestData.gender;
 
 					GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
+
+					GuestFactory.showTags(response.guest.custom_tags, vm.tagsListAdd);
+
+					console.log("loadDataGuestEdit " + angular.toJson(vm.tagsListAdd, true));
 
 				}, function error(response) {
 					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);

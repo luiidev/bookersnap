@@ -59,16 +59,12 @@
 <div class="col-xs-12 new-detail-server" id="form_new_server" ng-show="sm.showForm">
     
     <div class="header-actions m-b-20">
-
         <button class="btn btn-default pull-left waves-effect" ng-click="sm.btnCancelEditServer() ">Cancelar</button>
         <span ng-show="sm.flagServer">Editar servidor</span>
         <span ng-show="sm.flagServer==false">Nuevo servidor</span>
         <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()">
             <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
-    
-        </div>
-
-        
+    </div>
 
     <div class="">
         <div class="title">Nombre de servidor</div>
@@ -77,8 +73,8 @@
                 <input type="text" class="form-control input-sm" ng-model="sm.name" placeholder="Nombre de servidor">
             </div> 
         </div>
-
     </div>
+
     <div class="">
         <div class="title">Seleccionar color</div>
         <div class="Form-field Form-field--smallSpacing">
@@ -88,6 +84,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
         <div class="title">Colores usados</div>
         <div class="Form-field Form-field--smallSpacing">
@@ -97,6 +94,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
         <div class="title">Mesas seleccionadas: {{sm.listadoTablaServer.length}}</div>
         <span ng-if="sm.listadoTablaServer.length==0">No tiene mesas seleccionadas</span>
@@ -112,6 +110,7 @@
                 </p>
         </div>
     </div>
+
      <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
         <button class="btn btn-danger btn-block" ng-click="sm.btnDeleteServer() " ng-show="sm.flagServer"><i class="zmdi zmdi-delete zmdi-hc-fw zmdi-hc-lg"></i> ELIMINAR</button>
     </div>

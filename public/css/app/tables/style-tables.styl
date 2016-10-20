@@ -127,8 +127,7 @@ $color_secundario = #616161
 				transform: translate(-50%,-100%) rotate(-45deg);
 				left: 50%;
 				margin-top: 6px !important;
-			& .item-suggested
-			& .item-occupied
+			& .box-icon
 				transform: translate(0%,0%) rotate(-45deg);
 		&.rt135 
 			& .table-label.top
@@ -329,42 +328,70 @@ $color_secundario = #616161
 					height 16px
 					line-height 16px
 					border-radius 4px
+				& .box-icon
+					background-repeat no-repeat
+					background-position-x 50%
+					background-position-y 50%
+					width 90%
+					height 90%
+					min-width 16px
+					min-height 16px
+					max-width 36px
+					max-height 36px
+					top 0
+					bottom 0
+					left 0
+					right 0
+					margin auto auto
+					position absolute
 				& .item-suggested
 					background-image url(../../../img/table-suggested.svg)
-					background-repeat no-repeat
-					background-position-x 50%
-					background-position-y 50%
-					width 90%
-					height 90%
-					min-width 16px
-					min-height 16px
-					max-width 36px
-					max-height 36px
-					top 0
-					bottom 0
-					left 0
-					right 0
-					margin auto auto
-					position absolute
-				&.block-table
-					background #424242
 				& .item-occupied
 					background-image url(../../../img/alert.svg)
-					background-repeat no-repeat
-					background-position-x 50%
-					background-position-y 50%
-					width 90%
-					height 90%
-					min-width 16px
-					min-height 16px
-					max-width 36px
-					max-height 36px
-					top 0
-					bottom 0
-					left 0
-					right 0
-					margin auto auto
-					position absolute
+				& .item-status-1
+					background-image url(../../../img/status/not-confirmed.svg)
+				& .item-status-2
+					background-image url('../../../img/status/confirmed.svg')
+				& .item-status-3
+					background-image url('../../../img/status/left-message.svg')
+				& .item-status-4
+					background-image url('../../../img/status/no-answer.svg')
+				& .item-status-5
+					background-image url('../../../img/status/wrong-number.svg')
+				& .item-status-6
+					background-image url('../../../img/status/partially-arrived.svg')
+				& .item-status-7
+					background-image url('../../../img/status/all-arrived.svg')	
+				& .item-status-8
+					background-image url('../../../img/status/paged.svg')
+				& .item-status-9
+					background-image url('../../../img/status/running-late.svg')
+				& .item-status-10
+					background-image url('../../../img/status/finished.svg')
+				& .item-status-11
+					background-image url('../../../img/status/canceled-guest.svg')
+				& .item-status-12
+					background-image url('../../../img/status/canceled-restaurant.svg')
+				& .item-status-13
+					background-image url('../../../img/status/no-show.svg')
+				& .item-status-14
+					background-image url('../../../img/status/seated.svg')
+				& .item-status-15
+					background-image url('../../../img/status/partially-seated.svg')
+				& .item-status-16
+					background-image url('../../../img/status/entree.svg')
+				& .item-status-17
+					background-image url('../../../img/status/dessert.svg')
+				& .item-status-18
+					background-image url('../../../img/status/table-cleared.svg')
+				& .item-status-19
+					background-image url('../../../img/status/appetizer.svg')
+				& .item-status-20
+					background-image url('../../../img/status/check-dropped.svg')
+				& .item-status-21
+					background-image url('../../../img/status/check-paid.svg')
+				&.block-table
+					background #424242
 				
 
 /*Create zone drag and drop*/
@@ -707,7 +734,6 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
-
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -993,6 +1019,8 @@ ul.listado-filtros
 					text-transform uppercase
 					color #fefefe
 					padding 6px 10px
+					&.sel_active
+						background #005581
 			
 ul.footer-floor
 	height 75px

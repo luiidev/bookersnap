@@ -2,7 +2,7 @@
         <div class="tab-reservation-floor">
             <div class="input-group">
                 <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!rm.search.show" id="fadeingEntrances2" ng-model="rm.busqueda">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre, mesa u horario" ng-show="!rm.search.show" id="fadeingEntrances2" ng-model="rm.busqueda">
                     <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-show="rm.search.show" id="fadeingEntrances">
                         <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
                         <span>CREAR RESERVACIÓN</span>
@@ -19,6 +19,90 @@
                 <tab heading="Por llegar" active="tab.active">
                     <div class="scrolltablef">
                         <table class="table-listado" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <table class="table-listado">
+                                           <tr>
+                                                <th>HORA</th>
+                                                <th>PAX</th>
+                                                <th>NOMBRE</th>
+                                                <th>SALON</th>
+                                                <th>MESA</th>
+                                                <th>ESTADO</th>
+                                           </tr> 
+                                        </table>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-mouseup="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | typeSel:rm.filter_type">
+
+                                    <td>
+                                        <table class="table-listado">
+                                            <tr>
+                                                <td>{{value.start_time}}</td>
+                                                <td>{{value.num_people}}</td>
+                                                <td>{{value.first_name}} {{value.last_name}}</td>
+                                                <td>{{value.zone_indice}}</td>
+                                                <td>{{value.name}}</td>
+                                                <td><div class="box-estado-res bg-green">Espera</div></td>
+                                            </tr>
+                                            <tr class="line-row">
+                                                <td colspan="4">
+                                                    <ul class="actions p-0 m-0">
+                                                        <li class="dropdown" uib-dropdown="">
+                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                            <li><a href="">Eleccion primera</a></li>
+                                                            <li><a href="">Segunda eleccion</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-male-alt"></i>
+                                                            <span class="num_people">{{value.num_people_1}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-female"></i>
+                                                            <span class="num_people">{{value.num_people_2}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-face"></i>
+                                                            <span class="num_people">{{value.num_people_3}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href=""><i class="zmdi zmdi-email"></i></a></li>
+                                                    </ul>
+                                                </td>
+                                                <td><div class="box-estado-res">MENU</div></td>
+                                                <td><div class="box-estado-res">Directo</div></td>
+                                            </tr>
+                                        </table>
+                                    </td> 
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                        
+                    </div>
+
+                </tab>
+                <tab heading="Sentados">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="value in rm.res_listado|filter:rm.busqueda|statusSeated">
+                            <div class="pull-right">
+                                <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
+                            </div>
+                            <div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
+                            Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
+                            <div>{{value.start_time}} - {{value.end_time}}</br>
+                            {{value.num_people}} personas</div>
+                        </li>
+                    </ul>
+                </tab>
+                <tab heading="Todos">
+                    <div class="scrolltablef">
+                     <table class="table-listado" cellpadding="0" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>
@@ -81,59 +165,6 @@
                                 
                             </tbody>
                         </table>
-                        
-                    </div>
-
-                    <!--<ul class="list-group">
-                        <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusCondicion">
-                            <div class="pull-right">
-                                <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
-                            </div>
-                            
-                            <div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
-                            Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
-                            <div>{{value.start_time}} - {{value.end_time}}</br>
-                            {{value.num_people}} personas</div>
-                        </li>
-                    </ul>
-                    -->
-                </tab>
-                <tab heading="Sentados">
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="value in rm.listado|filter:rm.busqueda|statusSeated">
-                            <div class="pull-right">
-                                <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
-                            </div>
-                            <div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
-                            Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
-                            <div>{{value.start_time}} - {{value.end_time}}</br>
-                            {{value.num_people}} personas</div>
-                        </li>
-                    </ul>
-                </tab>
-                <tab heading="Todos">
-                    <div class="listview lv-bordered lv-lg">
-                     
-                      <div class="lv-body">
-                      <ion-scroll zooming="true" direction="y">
-                        <div ng-repeat="item in rm.listado|filter:rm.busqueda|orderBy:item.first_name" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'" >
-                          <div class="pull-right" ng-if="item.reservation_id">
-                            <span class="box-status {{item.res_reservation_status_id | statusReservation}}"></span>
-                          </div>
-                          <div class="media-body">
-                            <div class="lv-title" ng-if="item.block_id"><i class="zmdi zmdi-block-alt"></i> Mesa {{item.name}} bloqueada</div>
-                            <div class="lv-title" ng-if="item.reservation_id"><i class="zmdi zmdi-calendar-note"></i> Mesa: {{item.name}} <br>{{item.first_name}} {{item.last_name}}</div>
-                            <ul class="lv-attrs">
-                              <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
-                              <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div class="not-information" ng-if="vmd.itemReservations==''">
-                          No existe mesas reservadas o bloqueadas
-                        </div>
-                        </ion-scroll>
-                      </div>
                     </div>
                 </tab>           
             </tabset>
@@ -146,10 +177,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="">Desayuno</a></li>
-                <li><a href="">Comida</a></li>
-                <li><a href="">Cena</a></li>
-                <li><a href="">Bar</a></li>
+                <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
+                <a href="" ng-click="rm.select_type(categoria)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}</a>
+                </li>
             </ul>
             </li>
 
@@ -171,11 +201,11 @@
             <button type="button" class="btn dropdown-toggle waves-effect" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
                 VISITAS
                 <span class="caret"></span>
-                <span class="rounded">{{rm.total_people}}</span>
+                <span class="rounded">{{rm.total_visitas}}</span>
             </button>
             <ul class="dropdown-menu">
                 <li ng-repeat="categoria in rm.categorias_people">
-                <a href="" ng-click="rm.select_people(categoria)">{{categoria.nombre}}</a>
+                <a href="" ng-click="rm.select_people(categoria)" ng-class="rm.isActivePeople(categoria)">{{categoria.nombre}}</a>
                 </li>
             </ul>
             </li>

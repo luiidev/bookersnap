@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     stylus = require('gulp-stylus'),
     nib = require('nib'),
-//gulpif = require('gulp-if');
+    //gulpif = require('gulp-if');
     jsmin = require('gulp-jsmin'),
     concat = require('gulp-concat'),
     minifyCss = require('gulp-minify-css'),
@@ -14,7 +14,7 @@ var gulp = require('gulp'),
  Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo
  ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nuestro modulo / componente
  */
-gulp.task('app-bookersnap-master-js', function () {
+gulp.task('app-bookersnap-master-js', function() {
     gulp.src([
             '**/*.js',
             '../app.config.js',
@@ -22,11 +22,11 @@ gulp.task('app-bookersnap-master-js', function () {
         ])
         .pipe(concat('app.bookersnap.master.min.js'))
         .pipe(jsmin())
-        .pipe(gulp.dest('../../dist.app/master'))
+        .pipe(gulp.dest('../../dist.app/master'));
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
-gulp.task('app-library-master-js', function () {
+gulp.task('app-library-master-js', function() {
     gulp.src([
             '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
             '../../../library/angular-loading-overlay/angular-loading-overlay.js',
@@ -46,22 +46,24 @@ gulp.task('app-library-master-js', function () {
         ])
         .pipe(concat('app.bookersnap.library.master.min.js'))
         .pipe(jsmin())
-        .pipe(gulp.dest('../../dist.app/master'))
+        .pipe(gulp.dest('../../dist.app/master'));
 });
 
 // Preprocesa archivos Stylus a CSS y recarga los cambios
-gulp.task('stylus-app', function () {
+gulp.task('stylus-app', function() {
     gulp.src('../../../css/app/master/*.styl')
         .pipe(stylus({
             use: nib()
         }))
         .pipe(minifyCss())
-        .pipe(rename({suffix: '.min'}))
+        .pipe(rename({
+            suffix: '.min'
+        }))
         .pipe(gulp.dest('../../../css/app/master'))
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
-gulp.task('app-library-master-css', function () {
+gulp.task('app-library-master-css', function() {
     gulp.src([
             '../../../library/textAngular-1.5.0/bower_components/font-awesome/css/font-awesome.min.css',
             '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.css',
@@ -75,7 +77,7 @@ gulp.task('app-library-master-css', function () {
 });
 
 //Automatizamos esta tarea
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-master-js']);
     gulp.watch([
         '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',

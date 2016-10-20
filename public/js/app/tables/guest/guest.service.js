@@ -23,7 +23,7 @@ angular.module('guest.service', [])
 
 	})
 
-.factory('GuestFactory', function($http, $q, GuestDataFactory) {
+.factory('GuestFactory', function($http, $q, GuestDataFactory, CustomTagGuestDataService) {
 	return {
 		guestList: function() {
 			var guestAll = [];
@@ -156,7 +156,8 @@ angular.module('guest.service', [])
 						},
 						phones: [],
 						emails: [],
-						tags: []
+						tags: [],
+						custom_tags: []
 					}
 				};
 
@@ -179,6 +180,14 @@ angular.module('guest.service', [])
 						id: value.id,
 						res_guest_tag_gategory_id: value.res_guest_tag_gategory_id,
 						name: value.name
+					});
+				});
+
+				angular.forEach(data.customs_tags, function(value, key) {
+					guestData.guest.custom_tags.push({
+						id: value.id,
+						name: value.name,
+						res_guest_tag_gategory_id: 4
 					});
 				});
 
@@ -315,6 +324,18 @@ angular.module('guest.service', [])
 				defered.reject(response);
 			});
 
+			return defered.promise;
+		},
+		getTagsCustomGuest: function() {
+			var defered = $q.defer();
+
+			CustomTagGuestDataService.getListTagGuestCustom().then(
+				function success(response) {
+					defered.resolve(response.data);
+				},
+				function error(response) {
+					defered.reject(response.data);
+				});
 			return defered.promise;
 		}
 	};

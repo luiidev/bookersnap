@@ -54,10 +54,10 @@ angular.module('book.service', [])
 
 				return time;
 			},
-			getDate: function(language, options, date = null) {
+			getDate: function(language, options, date) {
 				var me = this;
-
-				if (date != null) {
+				date = (date) ? null : date;
+				if (date !== null) {
 					date = me.changeformatDate(date.toString());
 					return new Date(date).toLocaleDateString(language, options);
 				} else {

@@ -34,21 +34,21 @@
 
         <form  name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
             <div class="col-sm-12">
-                <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
                 <div class="row"> 
+                    <!-- <loading-box wait="vm.loadingPrivilege || vm.loadingGetUser" time="5000" size="lg"></loading-box> -->
+                    <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
                     <div class="col-sm-4 col-sm-offset-3">
                         <div class="form-group fg-line">
-                            <input class="form-control" ng-model="turnData.name" placeholder="Buscar usuario aqui" type="text" required>
-                       <!--      <div class="select">                        
-                                    <select chosen="" class="form-control" data-placeholder="Buscar usuario aqui ..." ng-options="user.id as user.name for user in vm.userList" required>
-                                      <option value=""></option>
-                                    </select>
-                            </div> -->
-                        </div>                            
+                            <input class="form-control" ng-model="vm.search" placeholder="Buscar usuario aqui" type="text" ng-change="vm.searchUser(vm.search)" >
+                            <!-- <input class="form-control" ng-model="vm.user.id" placeholder="Buscar usuario aqui" type="text" ng-hide="true" required> -->
+                        </div>
+                        <div ng-repeat="user in vm.listUserAll" ng-click="vm.search=user.id">
+                            <p >{{user.firstname}}/{{user.lastname}}/{{user.email}}</p>
+                        </div>                          
                     </div>                                      
                     <div class="col-sm-2">
                         <div class="form-group fg-line">
-                            <button class="btn btn-primary waves-effect" ng-disabled="!configurationUserForm.$valid">Buscar</button>
+                            <button class="btn btn-primary waves-effect" ng-click="vm.createPrivilegeUser(vm.search)" ng-disabled="!configurationUserForm.$valid">Agregar</button>
                         </div>
                     </div>              
                 </div>
@@ -72,16 +72,18 @@
             					<tbody>
             						<tr ng-repeat="user in vm.userList">
             							<td>
-            								{{user.name}}
+            								{{user.firstname}} {{user.lastname}}
             							</td>
             							<td>
             								{{user.email}}
             							</td>
             							<td>
-            								{{user.type}}
+                                            <label ng-repeat="social in user.socials">{{social.name}}</label>
+            								
             							</td>
             							<td class="text-right">
-        				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)">
+        				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
+                                                <loading-box wait="user.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
         				                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
         				                    	</i>
         				                    	Eliminar
@@ -91,6 +93,9 @@
         					    </tbody>
         					</table>
         				</div>
+                    </div>
+                    <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.userList.length > 0">
+                           <p class="lead">No existe usuarios con privilegios</p> 
                     </div>
         		</div>																	
             </div>                         
