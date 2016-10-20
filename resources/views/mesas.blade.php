@@ -20,9 +20,20 @@
     <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
 
 </head>
+
 <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}" class="scroll-x-hidden">
 
+<header data-current-skin="@{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+</aside>
+<aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+</aside>
+
 <data ui-view></data>
+
+<!--<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>-->
 
 <!-- Vendor Bookersnap-->
 <script src="/js/theme/dist/library.bower.min.js"></script>
