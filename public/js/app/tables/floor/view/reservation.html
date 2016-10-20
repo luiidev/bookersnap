@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | typeSel:rm.filter_type" data-quantity="{{ value.num_people }}">
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
 
                                     <td>
                                         <table class="table-listado">
@@ -45,7 +45,7 @@
                                                 <td>{{value.start_time}}</td>
                                                 <td>{{value.num_people}}</td>
                                                 <td>{{value.first_name}} {{value.last_name}}</td>
-                                                <td>{{value.zone_indice}}</td>
+                                                <td>{{value.tables[0].zone_indice}}</td>
                                                 <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
@@ -120,7 +120,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="listado-column" id="num1" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people" data-quantity="{{ value.num_people }}">
+
+                                <tr class="listado-column" id="num1" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -205,7 +206,14 @@
             </button>
             <ul class="dropdown-menu">
                 <li ng-repeat="categoria in rm.categorias_people">
-                <a href="" ng-click="rm.select_people(categoria)" ng-class="rm.isActivePeople(categoria)">{{categoria.nombre}}</a>
+                <!--<div class="checkbox m-b-15">
+                    <label>
+                        <input type="checkbox" ng-click="assignZone(zone)" ng-checked="zone.checked" >
+                        <i class="input-helper"></i>    
+                    </label>
+                    
+                </div>-->
+                <a href="" ng-click="rm.select_people(categoria,$event)" ng-class="{'sel_active':categoria.checked}"><i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i> {{categoria.nombre}}</a>
                 </li>
             </ul>
             </li>

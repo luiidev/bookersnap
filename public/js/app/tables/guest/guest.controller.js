@@ -267,6 +267,10 @@ angular.module('guest.controller', [])
 
 		vm.addTag = function(tag, category) {
 
+			console.log("addTag " + angular.toJson(tag, true));
+			console.log("addTag " + angular.toJson(vm.tagsList[category], true));
+
+			var indexTagList = GuestFactory.getIndexTag(vm.tagsList[category], tag.id);
 			var index = GuestFactory.existsTag(vm.tagsListAdd[category].data, tag.id);
 
 			var tagsData = {
@@ -281,7 +285,12 @@ angular.module('guest.controller', [])
 					id: tagsData.id,
 					custom_tag: (category === 3) ? true : false
 				});
+
+				vm.tagsList[category].tags[indexTagList].active = true;
+
 			} else {
+				vm.tagsList[category].tags[indexTagList].active = false;
+
 				vm.tagsListAdd[category].data.splice(index, 1);
 				var indexTag = GuestFactory.existsTag(vm.guestData.tags, tag.id);
 				vm.guestData.tags.splice(indexTag, 1);

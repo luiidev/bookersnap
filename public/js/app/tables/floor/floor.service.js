@@ -13,15 +13,38 @@ angular.module('floor.service', [])
 
 		};
 	})
-	.factory('TypeTurnoDataFactory', function() {
+	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
+		var filtrosVisita = [];
 		return {
 			setTypeTurnItems: function(typeItem) {
 				typeColection = typeItem;
 			},
 			getTypeTurnItems: function() {
 				return typeColection;
-			}
+			},
+			setOpcionesFilterVisitas: function(genderItem) {
+				if (genderItem.idcategoria == 1) {
+					filtrosVisita.push(genderItem);
+				} else {
+					angular.forEach(filtrosVisita, function(value, key) {
+						if (value.idcategoria == 1) {
+							filtrosVisita.splice(key, 1);
+						}
+					});
+					filtrosVisita.push(genderItem);
+				}
+			},
+			getOpcionesFilterVisitas: function() {
+				return filtrosVisita;
+			},
+			delOpcionesFilterVisitas: function(genderItem) {
+				angular.forEach(filtrosVisita, function(value, key) {
+					if (value.idcategoria == genderItem.idcategoria) {
+						filtrosVisita.splice(key, 1);
+					}
+				});
+			},
 		};
 	})
 	.factory('NoteFactoryData', function($http, HttpFactory, ApiUrlMesas) {
@@ -35,7 +58,7 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeTurnoDataFactory) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory) {
 		var flag = {
 			editServer: false
 		};

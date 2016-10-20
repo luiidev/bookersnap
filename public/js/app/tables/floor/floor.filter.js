@@ -164,6 +164,21 @@ angular.module('floor.filter', [])
 	.filter('peopleSel', function() {
 		return function(items, categoria) {
 			var salida = [];
+			var tipo_categoria = Object.prototype.toString.call(categoria);
+
+			if (tipo_categoria == "[object Object]") {
+				salida = items;
+				return salida;
+			}
+
+			if (tipo_categoria == "[object Array]") {
+
+				//console.log("categoria es un array");
+
+			}
+
+			//console.log("[Object Array]", "Object Object]");
+			/*
 			var idcategoria = categoria.idcategoria;
 			switch (idcategoria) {
 				case 2:
@@ -190,8 +205,8 @@ angular.module('floor.filter', [])
 				case 1:
 					salida = items;
 					break;
-			}
-			return salida;
+			}*/
+
 		};
 	})
 	.filter('typeSel', function() {
