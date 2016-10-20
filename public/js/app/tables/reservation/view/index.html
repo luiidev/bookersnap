@@ -24,8 +24,8 @@
                             <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block,'occupied-table': obj.occupied}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
                                 <div class="table-label top">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
-                                <div class="item-suggested" ng-show="obj.suggested"></div>
-                                <div class="item-occupied" ng-show="obj.occupied"></div>
+                                <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
+                                <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
                             </div>
                     </div>
                 </div>

@@ -489,7 +489,8 @@ angular.module('turn.service', [])
 
 				return tablesZone;
 			},
-			getIndexHour: function(value, nextDay = 0) {
+			getIndexHour: function(value, nextDay) {
+				nextDay = (nextDay) ? 0 : nextDay;
 				var hourIndex = value.indexOf(":");
 				var min = value.substr(hourIndex);
 

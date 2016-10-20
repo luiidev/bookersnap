@@ -20,14 +20,26 @@
     <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
 
 </head>
+
 <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}" class="scroll-x-hidden">
 
+<header data-current-skin="@{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
+</header>
+<aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
+</aside>
+<aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
+</aside>
+
 <data ui-view></data>
+
+<!--<footer data-ng-include="'/template/footer.html'" id="footer">
+</footer>-->
 
 <!-- Vendor Bookersnap-->
 <script src="/js/theme/dist/library.bower.min.js"></script>
 <script src="/js/theme/dist/app.level.min.js"></script>
 <script src="/js/theme/dist/template.modules.min.js"></script>
+<!-- <script type="text/javascript" src="http://127.0.0.1:3000/socket.io/socket.io.js" > </script> -->
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
 <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>

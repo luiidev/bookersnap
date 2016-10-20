@@ -36,7 +36,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming ng-mousedown="rm.selectReservation(value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-mouseup="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | typeSel:rm.filter_type">
+
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -44,7 +46,7 @@
                                                 <td>{{value.num_people}}</td>
                                                 <td>{{value.first_name}} {{value.last_name}}</td>
                                                 <td>{{value.zone_indice}}</td>
-                                                <td>{{value.name}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
                                             <tr class="line-row">
@@ -125,8 +127,8 @@
                                                 <td>{{value.start_time}}</td>
                                                 <td>{{value.num_people}}</td>
                                                 <td>{{value.first_name}} {{value.last_name}}</td>
-                                                <td>{{value.zone_indice}}</td>
-                                                <td>{{value.name}}</td>
+                                                <td>{{value.tables[0].zone_indice}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
                                                 <td><div class="box-estado-res bg-green">Espera</div></td>
                                             </tr>
                                             <tr class="line-row">
@@ -175,10 +177,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="">Desayuno</a></li>
-                <li><a href="">Comida</a></li>
-                <li><a href="">Cena</a></li>
-                <li><a href="">Bar</a></li>
+                <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
+                <a href="" ng-click="rm.select_type(categoria)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}</a>
+                </li>
             </ul>
             </li>
 

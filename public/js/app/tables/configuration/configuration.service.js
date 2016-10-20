@@ -80,10 +80,10 @@ angular.module('configuration.service', [])
 				});
 			},
 			getAllPrivilegeUser: function() {
-				return $http.get(ApiUrlMesas + "/configuration/users/");
+				return $http.get(ApiUrlMesas + "/configuration/users");
 			},
 			storePrivilegeUSer: function(idUser) {
-				return $http.post(ApiUrlMesas + "/configuration/users/", {}, {
+				return $http.post(ApiUrlMesas + "/configuration/users", {}, {
 					params: {
 						user_id: idUser
 					}

@@ -7,19 +7,7 @@ angular.module('calendar.service', [])
 .service('CalendarService', function($http, ApiUrlMesas) {
     return {
         FormatTime: function(str_date, str_hour) {
-            var date_obj = new Date(str_date + " " + str_hour);
-            var hour = date_obj.getHours();
-            var minute = date_obj.getMinutes();
-            var amPM = (hour > 11) ? "pm" : "am";
-            if (hour > 12) {
-                hour -= 12;
-            } else if (hour == 0) {
-                hour = "12";
-            }
-            if (minute < 10) {
-                minute = "0" + minute;
-            }
-            return hour + ":" + minute + amPM;
+           return moment(str_hour, "HH:mm:ss").format("hh:mm A");
         },
         isBefore: function(date, now) {
             var dateCalendar = moment(date);
