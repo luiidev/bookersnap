@@ -11,7 +11,7 @@ class MainController extends Controller
 
     public function mesas(int $id)
     {
-        return view('dashboard.admin.mesas');
+        return view('dashboard.admin.mesas', ['acl' => 's', 'apitoken' => 'dsdsd', 'ms_id' => '1']);
         $user_id      = $this->GetUserId();
         $checkService = new CheckAdminService();
         try {
@@ -24,7 +24,7 @@ class MainController extends Controller
             $data  = ['acl' => json_encode($response), 'apitoken' => $token, 'ms_id' => $id];
             return view('dashboard.admin.mesas', $data);
         } catch (\Exception $e) {
-            return response()->redirectTo('/');
+            return response()->redirectTo('/auth/auth');
         }
     }
 
