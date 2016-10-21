@@ -11,7 +11,7 @@ class MainController extends Controller
 
     public function mesas(int $id)
     {
-        //return view('dashboard.admin.mesas');
+        return view('dashboard.admin.mesas');
         $user_id      = $this->GetUserId();
         $checkService = new CheckAdminService();
         try {
