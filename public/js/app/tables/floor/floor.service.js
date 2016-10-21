@@ -16,6 +16,7 @@ angular.module('floor.service', [])
 	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
 		var filtrosVisita = [];
+		var filtrosReserva = [];
 		return {
 			setTypeTurnItems: function(typeItem) {
 				typeColection = typeItem;
@@ -45,6 +46,28 @@ angular.module('floor.service', [])
 					}
 				});
 			},
+			setOpcionesFilterReservas: function(reservaItem) {
+				if (reservaItem.id === 0) {
+					filtrosReserva.push(reservaItem);
+				} else {
+					angular.forEach(filtrosReserva, function(value, key) {
+						if (value.id === 0) {
+							filtrosReserva.splice(key, 1);
+						}
+					});
+					filtrosReserva.push(reservaItem);
+				}
+			},
+			getOpcionesFilterReservas: function() {
+				return filtrosReserva;
+			},
+			delOpcionesFilterReservas: function(reservaItem) {
+				angular.forEach(filtrosReserva, function(value, key) {
+					if (value.id == reservaItem.id) {
+						filtrosReserva.splice(key, 1);
+					}
+				});
+			}
 		};
 	})
 	.factory('NoteFactoryData', function($http, HttpFactory, ApiUrlMesas) {
@@ -168,7 +191,7 @@ angular.module('floor.service', [])
 			},
 			tableFilter: function(zones, blocks, cant) {
 				// Manejo estatico de tiempo de reserva por cantidad  de invitados
-				var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0);
+				var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0);
 				var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
 
 				console.log(start_time.format("HH:mm:ss"), end_time.format("HH:mm:ss"));
@@ -178,24 +201,24 @@ angular.module('floor.service', [])
 							if (table.id == block.res_table_id && block.res_reservation_status_id < 14) {
 								var start_block = moment(block.start_time, "HH:mm:ss");
 								var end_block = moment(block.end_time, "HH:mm:ss");
-								if ((start_time.isBetween(start_block, end_block,  null, "()") ) || 
-						                            (end_time.isBetween(start_block, end_block, null, "()")) ||
-						                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+								if ((start_time.isBetween(start_block, end_block, null, "()")) ||
+									(end_time.isBetween(start_block, end_block, null, "()")) ||
+									(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
 									if (block.res_reservation_id !== null) {
-									            table.occupied = true;
-									            table.suggested = false;
+										table.occupied = true;
+										table.suggested = false;
 									} else {
-									    	table.block = true;
-									    	table.suggested = false;
+										table.block = true;
+										table.suggested = false;
 									}
 								}
 							}
 						});
 
 						if (cant >= table.minCover && cant <= table.maxCover && !table.class.name) {
-						    	if (!table.occupied && !table.block) {
-						    	    	table.suggested = true;
-						    	}
+							if (!table.occupied && !table.block) {
+								table.suggested = true;
+							}
 						}
 
 					});
@@ -293,6 +316,7 @@ angular.module('floor.service', [])
 							num_people_1: reserva.num_people_1,
 							num_people_2: reserva.num_people_2,
 							num_people_3: reserva.num_people_3,
+							res_source_type_id: reserva.res_source_type_id,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};

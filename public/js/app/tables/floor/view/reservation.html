@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva">
 
                                     <td>
                                         <table class="table-listado">
@@ -74,7 +74,7 @@
                                                         <li class="icon-people"><a href=""><i class="zmdi zmdi-email"></i></a></li>
                                                     </ul>
                                                 </td>
-                                                <td><div class="box-estado-res">MENU</div></td>
+                                                <td><div class="box-estado-res">{{value.res_source_type_id}}</div></td>
                                                 <td><div class="box-estado-res">Directo</div></td>
                                             </tr>
                                         </table>
@@ -178,8 +178,14 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
+                <li>
+                    <a href="" ng-click="rm.select_type(rm.itemTypeTodos,$event)">
+                    Todos
+                    </a>
+                </li>
                 <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
-                <a href="" ng-click="rm.select_type(categoria)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}</a>
+                    <a href="" ng-click="rm.select_type(categoria,$event)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}
+                    </a>
                 </li>
             </ul>
             </li>
@@ -191,10 +197,10 @@
                 <span class="rounded">20</span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="">Web</a></li>
-                <li><a href="">Telefono</a></li>
-                <li><a href="">Portal</a></li>
-                <li><a href="">Rp</a></li>
+                <li ng-repeat="categoria in rm.categorias_reserva">
+                    <a href="" ng-click="rm.select_reserva(categoria,$event)" ng-class="{'sel_active':categoria.checked}">
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>{{categoria.nombre}}</a>
+                </li>
             </ul>
             </li>
 
@@ -206,13 +212,6 @@
             </button>
             <ul class="dropdown-menu">
                 <li ng-repeat="categoria in rm.categorias_people">
-                <!--<div class="checkbox m-b-15">
-                    <label>
-                        <input type="checkbox" ng-click="assignZone(zone)" ng-checked="zone.checked" >
-                        <i class="input-helper"></i>    
-                    </label>
-                    
-                </div>-->
                 <a href="" ng-click="rm.select_people(categoria,$event)" ng-class="{'sel_active':categoria.checked}"><i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i> {{categoria.nombre}}</a>
                 </li>
             </ul>
