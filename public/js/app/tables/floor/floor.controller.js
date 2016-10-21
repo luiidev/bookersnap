@@ -637,12 +637,15 @@ angular.module('floor.controller', [])
         var getlistZonesBloqueosReservas = function() {
             FloorFactory.listBloqueosReservas().then(function success(data) {
 
-                rm.res_listado = data;
+                rm.res_listado_all = data;
+
 
                 var total = 0;
                 var men = 0;
                 var women = 0;
                 var children = 0;
+
+                rm.res_listado = rm.res_listado_all;
                 angular.forEach(rm.res_listado, function(people) {
                     men += people.num_people_1;
                     women += people.num_people_2;
@@ -675,15 +678,14 @@ angular.module('floor.controller', [])
             return false;
         };
 
-
-        var callListTypeTurn;
-        if (callListTypeTurn) $timeout.cancel(callListTypeTurn);
-        callListTypeTurn = $timeout(function() {
-            var turn = TypeFilterDataFactory.getTypeTurnItems();
-            rm.categorias_type = turn;
-            //rm.categorias_type.unshift(rowTodosType);
-            rm.select_type(rm.categorias_type[0]);
-        }, 1000);
+        //var callListTypeTurn;
+        //if (callListTypeTurn) $timeout.cancel(callListTypeTurn);
+        // callListTypeTurn = $timeout(function() {
+        var turn = TypeFilterDataFactory.getTypeTurnItems();
+        rm.categorias_type = turn;
+        //rm.categorias_type.unshift(rowTodosType);
+        //rm.select_type(rm.categorias_type[0]);
+        //}, 1000);
 
         rm.isActiveType = function(categoria) {
             if (categoria.id == rm.filter_type.id) {
@@ -718,7 +720,7 @@ angular.module('floor.controller', [])
 
         rm.select_people = function(categoria, event) {
 
-            //rm.filter_people = categoria;
+            rm.filter_people = categoria;
 
             if (event !== null) {
                 event.stopPropagation();
@@ -746,6 +748,7 @@ angular.module('floor.controller', [])
                             gender.checked = false;
                         }
                     });
+                    rm.res_listado = rm.res_listado_all;
                 };
 
                 if (categoria.checked === true) {
@@ -757,6 +760,8 @@ angular.module('floor.controller', [])
 
             }
 
+            //console.log(rm.filter_people);
+            console.log(rm.total_men);
             /*switch (categoria.idcategoria) {
                 case 2:
                     rm.total_visitas = rm.total_men;
@@ -770,8 +775,8 @@ angular.module('floor.controller', [])
                 case 1:
                     rm.total_visitas = rm.total_people;
                     break;
-            }
-            */
+            }*/
+
             //rm.total_people = 12;
             return false;
         };
@@ -782,27 +787,65 @@ angular.module('floor.controller', [])
         var filtrarVisitas = function() {
             var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
             rm.filter_people = colection_filtro_visitas;
-            //console.log(colection_filtro_visitas);
+            if (rm.filter_people.length === 0) {
+                rm.categorias_people[0].checked = true;
+            }
+
+            //Filtrado//
+            /*
+            var salida = [];
+            if (rm.filter_people.length !== 0) {
+
+                angular.forEach(rm.res_listado_all, function(item, index) {
+                    angular.forEach(rm.filter_people, function(genero) {
+                        var idgenero = genero.idcategoria;
+                        switch (idgenero) {
+                            case 2:
+                                if (item.num_people_1 !== 0) {
+                                    angular.forEach(salida, function(value, key) {
+                                        if (value.reservation_id == item.reservation_id) {
+                                            salida.splice(key, 1);
+                                        }
+                                    });
+                                    salida.push(item);
+                                }
+
+                                break;
+                            case 3:
+                                if (item.num_people_2 !== 0) {
+                                    angular.forEach(salida, function(value, key) {
+                                        if (value.reservation_id == item.reservation_id) {
+                                            salida.splice(key, 1);
+                                        }
+                                    });
+                                    salida.push(item);
+                                }
+                                break;
+                            case 4:
+
+                                if (item.num_people_3 !== 0) {
+                                    angular.forEach(salida, function(value, key) {
+                                        if (value.reservation_id == item.reservation_id) {
+                                            salida.splice(key, 1);
+                                        }
+                                    });
+                                    salida.push(item);
+                                }
+                                break;
+
+                        }
+                    });
+                });
+                rm.res_listado = salida;
+            } else {
+                angular.forEach(rm.res_listado_all, function(item, index) {
+                    salida.push(item);
+                });
+                rm.res_listado = salida;
+            }
+            */
+
         };
-
-
-        /*rm.isActivePeople = function(categoria) {
-            if (categoria.checked === true) {
-                return true;
-            } else {
-                return false;
-            }
-        };*/
-        //Al iniciar que este seleccionadas por defecto Todos
-        //
-
-        /*rm.isActivePeople = function(categoria) {
-            if (categoria.idcategoria == rm.filter_people.idcategoria) {
-                return 'sel_active';
-            } else {
-                return '';
-            }
-        };*/
 
         rm.selectReservation = function(reservation) {
             $scope.$apply(function() {
