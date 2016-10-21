@@ -48,9 +48,11 @@ class AuthController extends Controller
             if ($this->LoginUser($user['id'], $extras)) {
 
                 $bsAuthToken = $this->generateBsAuthToken($user['id']);
-                return response()->redirectTo(route('microsite-home'))
-                    ->with('message', 'Bienvenido Usuario.')
-                    ->with("bsAuthToken", $bsAuthToken);
+
+                return response()->redirectTo('/admin');
+                /* return response()->redirectTo(route('microsite-home'))
+            ->with('message', 'Bienvenido Usuario.')
+            ->with("bsAuthToken", $bsAuthToken);*/
             }
             $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
         } catch (HttpException $e) {

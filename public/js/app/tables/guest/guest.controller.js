@@ -265,10 +265,10 @@ angular.module('guest.controller', [])
 			});
 		};
 
-		vm.addTag = function(tag, category) {
+		vm.addTag = function(tag, category, event) {
 
-			console.log("addTag " + angular.toJson(tag, true));
-			console.log("addTag " + angular.toJson(vm.tagsList[category], true));
+			//evitamos que se cierre el dropdown-menu 
+			event.stopPropagation();
 
 			var indexTagList = GuestFactory.getIndexTag(vm.tagsList[category], tag.id);
 			var index = GuestFactory.existsTag(vm.tagsListAdd[category].data, tag.id);
@@ -310,7 +310,7 @@ angular.module('guest.controller', [])
 
 					GuestFactory.showTags(response.guest.custom_tags, vm.tagsListAdd);
 
-					console.log("loadDataGuestEdit " + angular.toJson(vm.tagsListAdd, true));
+					GuestFactory.checkActiveTags(vm.tagsList, vm.tagsListAdd);
 
 				}, function error(response) {
 					messageErrorApi(response.data, "Error", "warning", 0, true, response.status);

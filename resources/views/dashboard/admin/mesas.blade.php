@@ -43,6 +43,10 @@
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
 <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
+
+<!-- App Auth Bookersnap (modulo login)-->
+<script type="text/javascript" src="/js/dist.app/auth/app.bookersnap.auth.min.js"></script>
+
 <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
 <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js"></script>
 
@@ -57,6 +61,17 @@
             </div>
         </div>
     </div>
+</script>
+<script type="text/javascript">
+
+/*
+    var setAuthHeaders = function ($http) {
+
+        $http.defaults.headers.common['ms-mp-id'] = '{{$ms_id}}';
+        $http.defaults.headers.common['type-admin'] = 2;
+        $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
+    };*/
+
 </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 angular.module('microsite.app', ['microsite.controller', 'microsite.service'])
-    .config(function ($stateProvider) {
+    .config(function($stateProvider) {
         $stateProvider
-            .state ('microsite-list', {
+            .state('microsite-list', {
                 url: '/microsite',
                 views: {
                     '': {
@@ -19,20 +19,20 @@ angular.module('microsite.app', ['microsite.controller', 'microsite.service'])
                     }
                 },
                 resolve: {
-                    'acl': function ($q, AclService, AccessService) {
+                    'acl': function($q, AclService, AccessService) {
                         return AccessService.check($q, AclService, 'microsites-manage');
                     }
                 }
             })
-            .state ('microsite-add', {
+            .state('microsite-add', {
                 url: '/microsite/add',
                 templateUrl: '/js/app/master/microsite/view/microsite-create.html',
                 controller: 'MicrositeCreateController',
                 controllerAs: 'vm',
                 resolve: {
-                    'acl': function ($q, AclService, AccessService) {
+                    'acl': function($q, AclService, AccessService) {
                         return AccessService.check($q, AclService, 'microsites-manage');
                     }
                 }
-            })
+            });
     });
