@@ -39,7 +39,7 @@
 <script src="/js/theme/dist/library.bower.min.js"></script>
 <script src="/js/theme/dist/app.level.min.js"></script>
 <script src="/js/theme/dist/template.modules.min.js"></script>
-<!-- <script type="text/javascript" src="http://127.0.0.1:3000/socket.io/socket.io.js" > </script> -->
+<script type="text/javascript" src="http://127.0.0.1:1337/socket.io/socket.io.js" > </script>
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
 <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
@@ -62,6 +62,16 @@
         </div>
     </div>
 </script>
+<!--
+<script type="text/javascript">
 
+    var setAuthHeaders = function ($http) {
+
+        $http.defaults.headers.common['ms-mp-id'] = '{{$ms_id}}';
+        $http.defaults.headers.common['type-admin'] = 2;
+        $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
+    };
+
+</script>-->
 </body>
 </html>
