@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" id="num{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
+                                <tr class="listado-column"  data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people">
 
                                     <td>
                                         <table class="table-listado">
@@ -121,7 +121,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" id="num1" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
