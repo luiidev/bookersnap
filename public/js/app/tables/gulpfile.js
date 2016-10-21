@@ -10,10 +10,9 @@ var gulp = require('gulp'),
 
 
 /* ------------- Tareas de aplicacion -------------*/
-/* ------ app-bookersnap-js -------
- Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo
- ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nuestro modulo / componente
- */
+//Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo
+//ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nuestro modulo / componente
+
 gulp.task('app-bookersnap-tables-js', function() {
     gulp.src([
             '**/*.js',
@@ -25,6 +24,16 @@ gulp.task('app-bookersnap-tables-js', function() {
         .pipe(concat('app.bookersnap.tables.min.js'))
         //.pipe(jsmin()) solo cuando pasamos a produccion
         .pipe(gulp.dest('../../dist.app/tables'));
+});
+
+//Modulo de login
+gulp.task('app-bookersnap-auth-js', function() {
+    gulp.src([
+            '../auth/*.js',
+        ])
+        .pipe(concat('app.bookersnap.auth.min.js'))
+        //.pipe(jsmin()) solo cuando pasamos a produccion
+        .pipe(gulp.dest('../../dist.app/auth'));
 });
 
 // Preprocesa nuestras librerias que necesitan nuestra aplicacion , ejemplo: cache,drag and drop,etc
@@ -82,6 +91,7 @@ gulp.task('watch', function() {
     gulp.watch(['**/*.js', '../app.config.js', '../app.directive.js', '../app.service.js'], ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
+    gulp.watch('../auth/*.js', ['app-bookersnap-auth-js']);
     gulp.watch([
         '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
         '../../../library/bower_components/chosen/chosen.css',
@@ -90,4 +100,4 @@ gulp.task('watch', function() {
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-bookersnap-tables-js', 'stylus-app', 'app-library-tables-js', 'app-library-tables-css']);
+gulp.task('default', ['watch', 'app-bookersnap-auth-js', 'app-bookersnap-tables-js', 'stylus-app', 'app-library-tables-js', 'app-library-tables-css']);

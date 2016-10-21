@@ -162,9 +162,9 @@ angular.module('floor.filter', [])
 		};
 	})
 	.filter('peopleSel', function() {
-		return function(items, categoria) {
+		return function(items, categorias) {
 			var salida = [];
-			var tipo_categoria = Object.prototype.toString.call(categoria);
+			var tipo_categoria = Object.prototype.toString.call(categorias);
 
 			if (tipo_categoria == "[object Object]") {
 				salida = items;
@@ -172,64 +172,66 @@ angular.module('floor.filter', [])
 			}
 
 			if (tipo_categoria == "[object Array]") {
+				if (categorias.length != []) {
 
-				//console.log("categoria es un array");
+					var filterPeople1 = false;
+					var filterPeople2 = false;
+					var filterPeople3 = false;
+
+					angular.forEach(categorias, function(categoria) {
+						var idcategoria = categoria.idcategoria;
+						if (idcategoria === 2) {
+							filterPeople1 = true;
+						}
+						if (idcategoria === 3) {
+							filterPeople2 = true;
+						}
+						if (idcategoria === 4) {
+							filterPeople3 = true;
+						}
+					});
+
+					angular.forEach(items, function(item) {
+						var filter = (filterPeople1 && item.num_people_1 > 0) || (filterPeople2 && item.num_people_2 > 0) || (filterPeople3 && item.num_people_3 > 0);
+						if (filter) {
+							salida.push(item);
+						}
+					});
+
+					return salida;
+					//return salida;
+				} else {
+					salida = items;
+					return salida;
+				}
 
 			}
 
-			//console.log("[Object Array]", "Object Object]");
-			/*
-			var idcategoria = categoria.idcategoria;
-			switch (idcategoria) {
-				case 2:
-					angular.forEach(items, function(item) {
-						if (item.num_people_1 != 0) {
-							salida.push(item);
-						}
-					});
-					break;
-				case 3:
-					angular.forEach(items, function(item) {
-						if (item.num_people_2 != 0) {
-							salida.push(item);
-						}
-					});
-					break;
-				case 4:
-					angular.forEach(items, function(item) {
-						if (item.num_people_3 != 0) {
-							salida.push(item);
-						}
-					});
-					break;
-				case 1:
-					salida = items;
-					break;
-			}*/
 
 		};
 	})
-	.filter('typeSel', function() {
-		return function(items, categoria) {
-			var salida = [];
-			if (categoria) {
-				var id = categoria.id;
-				switch (id) {
-					case 0:
-						salida = items;
-						break;
-					default: //Desayuno//Almuerzo//Cena//Bar
-						angular.forEach(items, function(item) {
-							//console.log(item.start_time + ' - ' + item.end_time);
-							/*if (item.num_people_3 != 0) {
-								salida.push(item);
-							}*/
-						});
-						//console.log(categoria.turn.hours_end);
-						salida = items;
-						break;
-				}
+
+.filter('typeSel', function() {
+	return function(items, categoria) {
+		var salida = [];
+		if (categoria) {
+			var id = categoria.id;
+			switch (id) {
+				case 0:
+					salida = items;
+					break;
+				default: //Desayuno//Almuerzo//Cena//Bar
+					angular.forEach(items, function(item) {
+						//console.log(item.start_time + ' - ' + item.end_time);
+						/*if (item.num_people_3 != 0) {
+							salida.push(item);
+						}*/
+					});
+					//console.log(categoria.turn.hours_end);
+					salida = items;
+					break;
 			}
-			return salida;
-		};
-	});
+		}
+		return salida;
+	};
+});

@@ -160,8 +160,8 @@ angular.module('block.controller', [])
 
         var listFormData = function(fecha) {
             clearForm();
-            CalendarService.GetShiftByDate(fecha, {
-                OnSuccess: function(Response) {
+            CalendarService.GetShiftByDate(fecha).then(
+                function OnSuccess(Response) {
                     var data = Response.data;
                     angular.forEach(data.data, function(item, i) {
                         if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
@@ -184,10 +184,10 @@ angular.module('block.controller', [])
                         }
                     });
                 },
-                OnError: function(Response) {
+                function OnError(Response) {
                     console.log("error " + angular.toJson(Response, true));
                 }
-            });
+            );
         };
 
         var clearForm = function() {
@@ -471,9 +471,6 @@ angular.module('block.controller', [])
                 $scope.size = size;
                 $scope.$digest();
             });
-
-            listCovers("min");
-            listCovers("max");
 
         })();
 
