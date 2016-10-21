@@ -162,9 +162,9 @@ angular.module('floor.filter', [])
 		};
 	})
 	.filter('peopleSel', function() {
-		return function(items, categoria) {
+		return function(items, categorias) {
 			var salida = [];
-			var tipo_categoria = Object.prototype.toString.call(categoria);
+			var tipo_categoria = Object.prototype.toString.call(categorias);
 
 			if (tipo_categoria == "[object Object]") {
 				salida = items;
@@ -172,8 +172,47 @@ angular.module('floor.filter', [])
 			}
 
 			if (tipo_categoria == "[object Array]") {
+				if (categorias.length != []) {
+					var filtrados = [];
+					//var devuelveWomen = [];
+					var devuelveChildren = [];
+					angular.forEach(categorias, function(categoria) {
+						var idcategoria = categoria.idcategoria;
+						if (idcategoria == 2) {
+							angular.forEach(items, function(item) {
+								if (item.num_people_1 !== 0) {
+									filtrados.push(item);
+								}
+							});
+						}
 
+						if (idcategoria == 3) {
+							angular.forEach(items, function(item) {
+								if (item.num_people_2 !== 0) {
+									filtrados.push(item);
+								}
+							});
+						}
+
+						if (idcategoria == 4) {
+							angular.forEach(items, function(item) {
+								if (item.num_people_3 !== 0 && item.num_people_2 !== 0) {
+									filtrados.push(item);
+								}
+							});
+						}
+
+					});
+
+					//var c = devuelveMen.concat(devuelveWomen);
+
+					return filtrados;
+				} else {
+					salida = items;
+					return salida;
+				}
 				//console.log("categoria es un array");
+
 
 			}
 

@@ -32,40 +32,29 @@
 			</div>
 		</div>
 
-        <form  name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
+        <form  class="min-h-200-px row" name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
             <div class="col-sm-12">
                 <div class="row"> 
-                    <!-- <loading-box wait="vm.loadingPrivilege || vm.loadingGetUser" time="5000" size="lg"></loading-box> -->
-                    <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
+                    <!-- <loading-box wait="vm.loadingPrivilege || vm.loadingGetUser" time="8000" size="lg"></loading-box> -->
+                    <loading-box wait="vm.loadingPrivilege" time="8000" size="lg"></loading-box>
                     <div class="col-sm-4 col-sm-offset-3">
-                       <!--  <div class="row">
-                            <div class="col-sm-12 form-group fg-line">
-                                <input class="form-control" ng-model="vm.search" placeholder="Buscar usuario aqui" type="text" ng-change="vm.searchUser(vm.search)" required>
-                            </div>                                                 
-                        </div> -->
-<!--                         <div class="row">
-                            <div  id="inputTest" class="col-sm-12 search-user p-absolute" ng-hide="vm.listaUserVacia">
-                                <div class="search-user-list bg-info" ng-repeat="user in vm.listUserAll" ng-click="vm.initSearch(user)">
-                                    <div class="user-pic">
-                                        <img alt="" class="img-responsive" src="{{user.photo}}">
-                                    </div>
-                                    <div class="user-info">
-                                        <p>{{ user.firstname + ", " + user.lastname}}</p>
-                                        <small>{{ user.email | lowercase}}</small>                                            
-                                    </div>
-                                </div>                                
-                            </div>                            
-                        </div> -->
                         <div class="row">
-                            <!-- <h4>Asynchronous results</h4> -->
-                            <pre>Model: {{vm.search | json}}</pre>
+                            <!-- <pre>Model: {{vm.search | json}}</pre> -->
                             <div class="col-sm-12 form-group fg-line">
-                                <input type="text" ng-model="vm.search" placeholder="Buscar usuario aqui" uib-typeahead="user as user.firstname for user in vm.searchUser($viewValue)" typeahead-popup-template-url="customPopupTemplate.html" typeahead-wait-ms="500" class="form-control">
+                                <input ng-blur="vm.test()" type="text" ng-model="vm.search" placeholder="Buscar usuario aqui" uib-typeahead="user as user.firstname for user in vm.searchUser($viewValue)" typeahead-popup-template-url="customPopupTemplate.html" typeahead-no-results="vm.noResults" typeahead-wait-ms="500" class="form-control">
+                                <!-- Platilla de mensaje cuando no se encuentra resultado en la busqueda de usuarios -->
+                                <div ng-show="vm.noResults" class="custom-popup-wrapper" > 
+                                    <ul class="col-sm-12 dropdown-menu display-block" role="listbox">
+                                        <li class="uib-typeahead-match" role="option">
+                                            <a class="col-sm-12" >
+                                                <div class="search-user-list">
+                                                    <span class="col-sm-12 no-result">No hay resultados</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <!-- <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
-                            <div ng-show="noResults">
-                              <i class="glyphicon glyphicon-remove"></i> No hay resultados
-                            </div> -->
                         </div>
                     </div>                                      
                     <div class="col-sm-2">
@@ -76,53 +65,52 @@
                         </div>
                     </div>              
                 </div> 
+                <div class="row">
+                    <div class="col-sm-12">
+            			<div class="card-body table-responsive">
+            				<table class="table">
+            					<thead>
+            						<tr>
+            							<th>
+            								Nombre de usuario
+            							</th>
+            							<th>
+            								Email
+            							</th>
+            							<th class="text-center">
+            								Tipo de cuenta
+            							</th>					                
+            						</tr>
+            					</thead>
+            					<tbody>
+            						<tr ng-repeat="user in vm.userList">
+            							<td>
+            								{{user.firstname+' '+user.lastname}}
+            							</td>
+            							<td>
+            								{{user.email | lowercase}}
+            							</td>
+            							<td>
+                                            <label class="social-network" ng-repeat="social in user.socials">{{social.name | uppercase}}</label>            								
+            							</td>
+            							<td class="text-right">
+        				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
+                                                <loading-box wait="user.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
+        				                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
+        				                    	</i>
+        				                    	Eliminar
+        				                    </button>
+        					            </td>
+        					        </tr>					            
+        					    </tbody>
+        					</table>
+        				</div>
+                    </div>
+                    <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.userList.length > 0">
+                           <p class="lead">No existe usuarios con privilegios</p> 
+                    </div>               
+                </div>                                                                  
             </div>                         
-            <div class="row">
-                <div class="col-sm-12">
-        			<div class="card-body table-responsive">
-        				<table class="table">
-        					<thead>
-        						<tr>
-        							<th>
-        								Nombre de usuario
-        							</th>
-        							<th>
-        								Email
-        							</th>
-        							<th class="text-center">
-        								Tipo de cuenta
-        							</th>					                
-        						</tr>
-        					</thead>
-        					<tbody>
-        						<tr ng-repeat="user in vm.userList">
-        							<td>
-        								{{user.firstname+' '+user.lastname}}
-        							</td>
-        							<td>
-        								{{user.email | lowercase}}
-        							</td>
-        							<td>
-                                        <label class="social-network" ng-repeat="social in user.socials">{{social.name | uppercase}}</label>            								
-        							</td>
-        							<td class="text-right">
-    				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
-                                            <loading-box wait="user.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
-    				                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
-    				                    	</i>
-    				                    	Eliminar
-    				                    </button>
-    					            </td>
-    					        </tr>					            
-    					    </tbody>
-    					</table>
-    				</div>
-                </div>
-                <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.userList.length > 0">
-                       <p class="lead">No existe usuarios con privilegios</p> 
-                </div>
-           
-            </div>                                                                  
 		</form>
         <div class="row" ng-show="vm.configuration.res_privilege_status==0" >
             <div class="col-sm-12 f-20 text-center min-h-200-px m-b-20 center-content">
@@ -142,15 +130,22 @@
          ng-show="isOpen() && !moveInProgress"
          aria-hidden="{{!isOpen()}}">        
 
-        <ul  role="listbox">
+        <ul class="col-sm-12 dropdown-menu display-block" role="listbox">
             <li class="uib-typeahead-match" ng-repeat="m in matches track by $index" ng-class="{active: isActive($index) }"                
                 ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::m.id}}">
-                {{isActive($index)}}
-                <a>
-                      <img ng-src="{{m.model.photo}}" width="16">
-                      <span ng-bind-html="m.model.firstname | uibTypeaheadHighlight:query"></span>
-                      <span ng-bind-html="m.model.lastname | uibTypeaheadHighlight:query"></span>
-                      <span ng-bind-html="m.model.email | uibTypeaheadHighlight:query"></span>
+                <a class="col-sm-12">
+                    <div class=" search-user-list">
+                        <div class="user-pic laoder">
+                          <img ng-src="{{m.model.urlphoto}}">
+                        </div>
+                        <div class="user-info">
+                            <div class="user-info-name">
+                              <p ng-bind-html="m.model.firstname | uibTypeaheadHighlight:query"></p>
+                              <p ng-bind-html="m.model.lastname | uibTypeaheadHighlight:query"></p>                                 
+                            </div>
+                            <small ng-bind-html="m.model.email | uibTypeaheadHighlight:query"></small>
+                        </div>                    
+                    </div>
                 </a>
             </li>
         </ul>

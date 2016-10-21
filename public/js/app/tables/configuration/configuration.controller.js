@@ -2,41 +2,11 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 	.controller('ConfigurationCtrl', ['$timeout', 'ConfigurationService', 'MenuConfigFactory', 'CustomTagGuestService', function($timeout, ConfigurationService, MenuConfigFactory, CustomTagGuestService) {
 		var vm = this;
 		vm.code = "";
-		// vm.loading = true;
-		vm.timeList = [{
-			id: 1,
-			option: "10 minutos"
-		}, {
-			id: 2,
-			option: "20 minutos"
-		}, {
 
-		}, {
-			id: 3,
-			option: "30 minutos"
-		}];
-
-		vm.cantUserList = [{
-			id: 1,
-			option: "1 persona"
-		}, {
-			id: 2,
-			option: "2 personas"
-		}, {
-			id: 3,
-			option: "3 personas"
-		}, ];
-
-		vm.cantTableList = [{
-			id: 1,
-			option: "1 mesa"
-		}, {
-			id: 2,
-			option: "2 mesas"
-		}, {
-			id: 3,
-			option: "3 mesas"
-		}, ];
+		vm.cantUserList = ConfigurationService.initDataFakeList(100, "persona");
+		vm.cantTableList = ConfigurationService.initDataFakeList(20, "mesa");
+		vm.cantTableListPie = ConfigurationService.initDataFakeList(1000, "persona");
+		vm.timeList = ConfigurationService.initDataFakeHour();
 
 		//BASIC SECTION
 		//Carga de configuracion inicial
@@ -200,30 +170,14 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 
 		var auxiliar;
 
-		// (function test() {
-		// 	$('#inputTest').jkey('esc', function() {
-		// 		console.log("clickESC");
-		// 		vm.listUserAll = [];
-		// 	});
-		// })();
-		// vm.listaUserVacia = false;
-
-		// vm.listUserAll = [];
 		// var clickClose = function() {
 		// 	angular.element($window).bind('click', function(e) {
-		// 		var container = $("#inputTest");
+		// 		var container = $("#custom-popup-wrapper");
 		// 		if (container.has(e.target).length === 0) {
 		// 			$scope.$apply(function() {
-		// 				vm.listUserAll = [];
+		// 				vm.noResult = false;
 		// 			});
 		// 		}
-		// 	});
-		// };
-
-		// var testPress = function() {
-		// 	$('#inputTest').jkey('esc', function() {
-		// 		console.log("clickESC2");
-		// 		vm.listaUserVacia = true;
 		// 	});
 		// };
 
@@ -260,22 +214,6 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 			vm.listUserAll = [];
 		};
 
-		// $scope.ngModelOptionsSelected = function(value) {
-		// 	if (arguments.length) {
-		// 		_selected = value;
-		// 	} else {
-		// 		return _selected;
-		// 	}
-		// };
-
-		// $scope.modelOptions = {
-		// 	debounce: {
-		// 		default: 500,
-		// 		blur: 250
-		// 	},
-		// 	getterSetter: true
-		// };
-
 		//Carga Inicial
 		var init = function() {
 			MenuConfigFactory.menuActive(4);
@@ -283,11 +221,9 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 			percentageGet();
 		};
 
-		// (function listenClick() {
-		// 	clickClose();
-		// 	// testPress();
-		// })();
-
+		vm.test = function() {
+			vm.noResults = false;
+		};
 
 		init();
 
