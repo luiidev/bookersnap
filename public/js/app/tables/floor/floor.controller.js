@@ -270,11 +270,10 @@ angular.module('floor.controller', [])
             sizeLienzo();
             closeNotes();
 
-            /*var socket = io.connect('http://127.0.0.1:1337/');
+            var socket = io.connect('http://127.0.0.1:1337/');
             socket.on('saludo', function(data) {
                 console.log("saludo" + data);
-
-            });*/
+            });
 
         })();
 
