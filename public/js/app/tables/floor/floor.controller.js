@@ -270,10 +270,10 @@ angular.module('floor.controller', [])
             sizeLienzo();
             closeNotes();
 
-            var socket = io.connect('http://127.0.0.1:1337/');
+            /*var socket = io.connect('http://127.0.0.1:1337/');
             socket.on('saludo', function(data) {
                 console.log("saludo" + data);
-            });
+            });*/
 
         })();
 
@@ -638,14 +638,13 @@ angular.module('floor.controller', [])
 
                 rm.res_listado_all = data;
 
-
                 var total = 0;
                 var men = 0;
                 var women = 0;
                 var children = 0;
 
                 rm.res_listado = rm.res_listado_all;
-                angular.forEach(rm.res_listado, function(people) {
+                angular.forEach(rm.res_listado_all, function(people) {
                     men += people.num_people_1;
                     women += people.num_people_2;
                     children += people.num_people_3;
@@ -760,7 +759,8 @@ angular.module('floor.controller', [])
             }
 
             //console.log(rm.filter_people);
-            console.log(rm.total_men);
+            //console.log(rm.total_men);
+
             /*switch (categoria.idcategoria) {
                 case 2:
                     rm.total_visitas = rm.total_men;
@@ -786,11 +786,31 @@ angular.module('floor.controller', [])
         var filtrarVisitas = function() {
             var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
             rm.filter_people = colection_filtro_visitas;
+
             if (rm.filter_people.length === 0) {
                 rm.categorias_people[0].checked = true;
+                rm.total_visitas = rm.total_people;
+            } else {
+                var calculo = 0;
+                angular.forEach(rm.filter_people, function(genero) {
+                    var idgenero = genero.idcategoria;
+                    //console.log(idgenero);
+                    switch (idgenero) {
+                        case 2:
+                            calculo += rm.total_men;
+                            break;
+                        case 3:
+                            calculo += rm.total_women;
+                            break;
+                        case 4:
+                            calculo += rm.total_children;
+                            break;
+                    }
+                });
+                rm.total_visitas = calculo;
             }
 
-            //Filtrado//
+            //Filtrado realizado por .filter de angular//
             /*
             var salida = [];
             if (rm.filter_people.length !== 0) {
