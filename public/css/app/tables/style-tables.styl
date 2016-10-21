@@ -1371,22 +1371,36 @@ li.divider
 			// &:hover			
 			// 	box-shadow 0 0 2px 2px
 //reservation
-.search-user
-	z-index 1
-	padding 0
-	.search-user-list
-		align-items center
-		display flex
-		padding 5px
-		cursor pointer
-		.user-pic
+.dropdown-menu
+	&.display-block
+		display block				
+.search-user-list
+	display flex
+	align-items center
+	cursor pointer	
+	& .no-result
+		padding 0
+		text-align center
+
+	& .user-pic
+		& img	
 			width 50px
-		.user-info			
-			padding-left 5px
-			p
-				margin 0
-			small
-				color red
+			height 50px
+			background: #333 url('http://code.jquery.com/mobile/1.3.1/images/ajax-loader.gif') no-repeat 50% 50%;
+		    /* Ensures that the transition only runs in one direction */
+		    -webkit-transition: background-color 0;
+		    transition: background-color 0;
+			
+	& .user-info			
+		padding-left 10px
+		& .user-info-name
+			display flex			
+			& p
+				margin 0 2px 0 0
+				align-items 
+		& small
+			// display block
+			color green
 				
 .social-network
 	padding 5px
