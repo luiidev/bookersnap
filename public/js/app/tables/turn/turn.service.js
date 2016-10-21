@@ -299,7 +299,7 @@ angular.module('turn.service', [])
 
 					var nextDay = self.getHourNextDay(data.hours_ini, data.hours_end);
 
-					var hour_ini = self.getIndexHour(data.hours_ini);
+					var hour_ini = self.getIndexHour(data.hours_ini, 0);
 					var hour_end = self.getIndexHour(data.hours_end, nextDay); //esto pendiente
 
 					var turnForm = {
@@ -614,7 +614,7 @@ angular.module('turn.service', [])
 			initAvailability: function() {
 				var times = [];
 
-				for (i = 0; i < 120; i++) {
+				for (var i = 0; i < 120; i++) {
 					var time = i * 60 * 15;
 					var nextday = (i < 96) ? 0 : 1;
 
