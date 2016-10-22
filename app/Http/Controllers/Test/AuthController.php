@@ -19,6 +19,7 @@ class AuthController extends Controller
     public function __construct(AuthService $authService)
     {
         $this->_authService = $authService;
+
     }
 
     public function Index()

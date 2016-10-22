@@ -13,9 +13,9 @@
 
 //Route principal : Lista de micrositios
 
-/*Route::get('/admin', function () {
-return view('dashboard.admin.index');
-});*/
+Route::get('/admin', function () {
+    return view('dashboard.admin.index');
+});
 
 Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'auth'*/]);
 
