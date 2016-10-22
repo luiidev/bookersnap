@@ -1,7 +1,7 @@
 angular.module('floor.controller', [])
 
 .controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
-        FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
+        FloorFactory, FloorDataFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
