@@ -322,7 +322,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 					}
 				}
 			});
-
 		};
 
 		$scope.returnBoxZones = function() {
@@ -628,6 +627,9 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 			var rulesTable = TurnFactory.saveRuleTable(tableItem, $scope.rules.dataTemp);
 
 			updateTableRules(rulesTable);
+
+			console.log("saveRules turnZoneAdd" + angular.toJson(turnZoneAdd, true));
+
 			$uibModalInstance.close();
 		};
 

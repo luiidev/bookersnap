@@ -1,5 +1,6 @@
 angular.module('floor.controller', [])
-    .controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory, FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory) {
+    .controller('FloorCtrl', function($scope, $timeout, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
+        FloorFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -12,7 +13,7 @@ angular.module('floor.controller', [])
         var eventEstablished = {};
 
         /**
-         * Varaible de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
+         * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
 
         vm.titulo = "Floor";
@@ -27,8 +28,13 @@ angular.module('floor.controller', [])
             texto: '',
             res_type_turn_id: ''
         };
+        vm.notesNotify = false; //se activa cuando llega notificaciones de notas
+        vm.notesSave = false; // se activa cuando creamos notas
+
         var timeoutNotes;
         var openNotesTimeOut;
+
+        var serverSocket = ServerNotification.getConnection();
 
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
@@ -207,6 +213,7 @@ angular.module('floor.controller', [])
 
             openNotesTimeOut = $timeout(function() {
                 vm.notesBoxValida = true;
+
             }, 500);
         };
 
@@ -225,6 +232,18 @@ angular.module('floor.controller', [])
             });
         };
 
+        var onSocketNotes = function() {
+            serverSocket.on("b-mesas-floor-notes", function(data) {
+                console.log("onSocketNotes " + angular.toJson(data, true));
+                if (!vm.notesBox) {
+                    vm.notesNotify = true;
+                    vm.notesNotification = true;
+                    listTypeTurns();
+                }
+
+            });
+        };
+
         vm.saveNotes = function(turn) {
             if (timeoutNotes) $timeout.cancel(timeoutNotes);
             vm.notesData.id = turn.notes.id;
@@ -235,6 +254,7 @@ angular.module('floor.controller', [])
             timeoutNotes = $timeout(function() {
                 FloorFactory.createNotes(vm.notesData).then(
                     function success(response) {
+                        vm.notesSave = true;
                         console.log("saveNotes success " + angular.toJson(response, true));
                     },
                     function error(response) {
@@ -242,7 +262,6 @@ angular.module('floor.controller', [])
                     }
                 );
             }, 1000);
-
         };
 
         angular.element($window).bind('resize', function() {
@@ -266,14 +285,11 @@ angular.module('floor.controller', [])
 
         (function Init() {
             loadZones(fecha_actual);
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
 
-            var socket = io.connect('http://127.0.0.1:1337/');
-            socket.on('saludo', function(data) {
-                console.log("saludo" + data);
-            });
+            onSocketNotes();
 
         })();
 

@@ -8,7 +8,6 @@ use Session;
 
 class MainController extends Controller
 {
-
     public function mesas(int $id)
     {
         return view('dashboard.admin.mesas', ['acl' => 's', 'apitoken' => 'dsdsd', 'ms_id' => '1']);

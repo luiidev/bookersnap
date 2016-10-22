@@ -15,7 +15,7 @@
             <ul class="f-btn-notas">
                 <li class="dropdown dropup" uib-dropdown="">
                     <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" ng-click="vm.openNotes()" type="button">
-                        <span class="zmdi zmdi-book zmdi-hc-2x">
+                        <span class="zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}">
                         </span>
                         <div class="f-12">
                             Notas turnos
@@ -48,57 +48,57 @@
             <ul class="dropdown-menu">
                 <li class="listado-table" ng-mousedown="vm.eventEstablish('create')">
                     <div class="listado-row">
-                        <div class="listado-column" id="num1" data-quantity="1" ng-drag-num-people="" table-filter-fn="vm.tableFilter(1)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="1" id="num1" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(1)">
                             1
                         </div>
-                        <div class="listado-column" id="num2" data-quantity="2" ng-drag-num-people="" table-filter-fn="vm.tableFilter(2)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="2" id="num2" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(2)">
                             2
                         </div>
-                        <div class="listado-column" id="num3" data-quantity="3" ng-drag-num-people="" table-filter-fn="vm.tableFilter(3)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="3" id="num3" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(3)">
                             3
                         </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num4" data-quantity="4" ng-drag-num-people="" table-filter-fn="vm.tableFilter(4)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="4" id="num4" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(4)">
                             4
                         </div>
-                        <div class="listado-column" id="num5" data-quantity="5" ng-drag-num-people="" table-filter-fn="vm.tableFilter(5)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="5" id="num5" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(5)">
                             5
                         </div>
-                        <div class="listado-column" id="num6" data-quantity="6" ng-drag-num-people="" table-filter-fn="vm.tableFilter(6)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="6" id="num6" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(6)">
                             6
                         </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num7" data-quantity="7" ng-drag-num-people="" table-filter-fn="vm.tableFilter(7)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="7" id="num7" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(7)">
                             7
                         </div>
-                        <div class="listado-column" id="num8" data-quantity="8" ng-drag-num-people="" table-filter-fn="vm.tableFilter(8)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="8" id="num8" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(8)">
                             8
                         </div>
-                        <div class="listado-column" id="num9" data-quantity="9" ng-drag-num-people="" table-filter-fn="vm.tableFilter(9)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="9" id="num9" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(9)">
                             9
                         </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num10" data-quantity="10" ng-drag-num-people="" table-filter-fn="vm.tableFilter(10)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="10" id="num10" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(10)">
                             10
                         </div>
-                        <div class="listado-column" id="num11" data-quantity="11" ng-drag-num-people="" table-filter-fn="vm.tableFilter(11)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="11" id="num11" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(11)">
                             11
                         </div>
-                        <div class="listado-column" id="num12" data-quantity="12" ng-drag-num-people="" table-filter-fn="vm.tableFilter(12)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="12" id="num12" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(12)">
                             12
                         </div>
                     </div>
                     <div class="listado-row">
-                        <div class="listado-column" id="num13" data-quantity="13" ng-drag-num-people="" table-filter-fn="vm.tableFilter(13)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="13" id="num13" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(13)">
                             13
                         </div>
-                        <div class="listado-column" id="num14" data-quantity="14" ng-drag-num-people="" table-filter-fn="vm.tableFilter(14)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="14" id="num14" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(14)">
                             14
                         </div>
-                        <div class="listado-column" id="num15" data-quantity="15" ng-drag-num-people="" table-filter-fn="vm.tableFilter(15)" table-filter-clear-fn="vm.tableFilterClear()">
+                        <div class="listado-column" data-quantity="15" id="num15" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(15)">
                             15
                         </div>
                     </div>
