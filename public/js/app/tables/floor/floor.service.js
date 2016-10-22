@@ -228,10 +228,12 @@ angular.module('floor.service', [])
 					});
 				});
 			},
-			makeTimeSeated: function(zones, blocks, reservations) {
+			makeTime: function(zones, blocks, reservations, type) {
+				// console.log("---", zones, blocks, reservations);
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
-						table.timeSeated = null;
+						table.time = {};
+						table.grouptime = [];
 					});
 				});
 				angular.forEach(reservations, function(reservation) {
@@ -240,14 +242,48 @@ angular.module('floor.service', [])
 							angular.forEach(zones, function(zone) {
 								angular.forEach(zone.tables, function(table) {
 									if (table.id == block.res_table_id) {
-										console.log(table.id, block.res_table_id);
-										if (reservation.datetime_input && reservation.datetime_output) {
-											console.log("1");
-										} else if (reservation.datetime_input){
-											var now = moment();
-											var input = moment(reservation.datetime_input);
-											table.timeSeated = moment.utc(now.diff(input)).format("HH:mm");
-											console.log("2");
+										var now, start;
+										if (reservation.datetime_input && reservation.res_reservation_status_id >= 14){
+											now = moment();
+
+											if (type == "seated") {
+												var input = moment(reservation.datetime_input);
+												table.time.text = moment.utc(now.diff(input)).format("HH:mm");
+											} else if (type == "complete") {
+												var out = moment(block.end_time, "HH:mm:ss");
+												var time = out.diff(now);
+												if (time > 0) {
+													table.time.text = moment.utc(time).format("HH:mm");
+												} else {
+													var auxTime = now.diff(out);
+													table.time.text = "-" + moment.utc(auxTime).format("HH:mm");
+												}
+												table.time.color = "#e7b300";
+											}
+										} else if (type == "nextTime") {
+											now = moment();
+											start = moment(block.start_time, "HH:mm:ss");
+											var nextTime = start.diff(now);
+											console.log(reservation.id, nextTime);
+											if (!table.time.established) {
+												if  (nextTime > 0) {
+													table.time.text = moment.utc(nextTime).format("HH:mm");
+												} else {
+													var auxNextTime = now.diff(start);
+													table.time.text = "-" + moment.utc(auxNextTime).format("HH:mm");
+												}
+												table.time.color = "#ed615b";
+												table.time.established = true;
+											}
+										} else if (type == "nextTimeAll") {
+											if (table.grouptime.length < 2) {
+												now = moment();
+												start = moment(block.start_time, "HH:mm:ss");
+
+												var newTime = {}; 
+												newTime.text = start.format("HH:mmA");
+												table.grouptime.push(newTime);
+											}
 										}
 									}
 								});

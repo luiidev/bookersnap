@@ -45,17 +45,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" ng-click="vm.showTimeToComplete()">
                                 Tiempo restante
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" ng-click="vm.showTimeNextTime()">
                                 Siguiente reservacion
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" ng-click="vm.showTimeNextTimeAll()">
                                 Siguiente segunda reservacion
                             </a>
                         </li>
@@ -86,7 +86,8 @@
                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
                 <div ng-class="[obj.class.name]" ng-show="obj.class.name"></div>
-                <div class="item-drag-time" ng-if="obj.timeSeated && vm.timeSeated">{{ obj.timeSeated }}</div>
+                <div class="item-drag-time" ng-style="{background: obj.time.color}" ng-if="obj.time.text && vm.showTime">{{ obj.time.text }}</div>
+                <div class="item-drag-time" style="margin-bottom: 10px; background: #3a99d8;width: 65px;" ng-if="obj.grouptime.length && vm.showTime" ng-repeat="time in obj.grouptime">{{ time.text }}</div>
             </div>
         </div>
     </div>
