@@ -191,6 +191,9 @@ angular.module('turn.service', [])
 				return defered.promise;
 			},
 			constructStructureSave: function(turnData, turnForm, turnZoneAdd) {
+
+				console.log("constructStructureSave" + angular.toJson(turnZoneAdd, true));
+
 				turnData.hours_ini = turnForm.hours_ini.time_original;
 				turnData.hours_end = turnForm.hours_end.time_original;
 

@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "ixudra/curl": "^6.3",
         "guzzlehttp/guzzle": "^6.2",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+        "wisembly/elephant.io": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -168,6 +168,7 @@ angular.module('reservation.service', [])
                         suggested: false,
                         selected: false,
                         block: false,
+                        blockStatic: false,
                         occupied: false,
                         server: {
                             default: null,

@@ -87,6 +87,16 @@ angular.module('floor.service', [])
 										table.server.setReservation(block.res_server.color);
 									}
 									table.class.setStatusClass(block.res_reservation_status_id);
+
+									if (block.res_reservation_id === null) {
+										table.block = true;
+										table.blockStatic = true;
+									}
+								} else {
+									if (block.res_reservation_id === null) {
+										table.block = false;
+										table.blockStatic = false;
+									}
 								}
 							}
 						});
@@ -168,16 +178,15 @@ angular.module('floor.service', [])
 			},
 			tableFilter: function(zones, blocks, cant) {
 				// Manejo estatico de tiempo de reserva por cantidad  de invitados
-				var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0);
+				var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0).millisecond(0);
 				var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
 
-				console.log(start_time.format("HH:mm:ss"), end_time.format("HH:mm:ss"));
-				angular.forEach(zones, function(zone) {
-					angular.forEach(zone.tables, function(table) {
-						angular.forEach(blocks, function(block) {
+				angular.forEach(blocks, function(block) {
+					var start_block = moment(block.start_time, "HH:mm:ss");
+					var end_block = moment(block.end_time, "HH:mm:ss");
+					angular.forEach(zones, function(zone) {
+						angular.forEach(zone.tables, function(table) {
 							if (table.id == block.res_table_id && block.res_reservation_status_id < 14) {
-								var start_block = moment(block.start_time, "HH:mm:ss");
-								var end_block = moment(block.end_time, "HH:mm:ss");
 								if ((start_time.isBetween(start_block, end_block,  null, "()") ) || 
 						                            (end_time.isBetween(start_block, end_block, null, "()")) ||
 						                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
@@ -188,16 +197,25 @@ angular.module('floor.service', [])
 									    	table.block = true;
 									    	table.suggested = false;
 									}
+								}  else {
+								           if (block.res_reservation_id !== null) {
+								                      table.occupied = false;
+								           } else {
+								                      table.block = false;
+								           }
 								}
 							}
 						});
+					});
+				});
 
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
 						if (cant >= table.minCover && cant <= table.maxCover && !table.class.name) {
 						    	if (!table.occupied && !table.block) {
 						    	    	table.suggested = true;
 						    	}
 						}
-
 					});
 				});
 			},
@@ -205,8 +223,36 @@ angular.module('floor.service', [])
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
 						table.occupied = false;
-						table.block = false;
+						if(!table.blockStatic) table.block = false;
 						table.suggested = false;
+					});
+				});
+			},
+			makeTimeSeated: function(zones, blocks, reservations) {
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						table.timeSeated = null;
+					});
+				});
+				angular.forEach(reservations, function(reservation) {
+					angular.forEach(blocks, function(block) {
+						if (reservation.id == block.res_reservation_id) {
+							angular.forEach(zones, function(zone) {
+								angular.forEach(zone.tables, function(table) {
+									if (table.id == block.res_table_id) {
+										console.log(table.id, block.res_table_id);
+										if (reservation.datetime_input && reservation.datetime_output) {
+											console.log("1");
+										} else if (reservation.datetime_input){
+											var now = moment();
+											var input = moment(reservation.datetime_input);
+											table.timeSeated = moment.utc(now.diff(input)).format("HH:mm");
+											console.log("2");
+										}
+									}
+								});
+							});
+						}
 					});
 				});
 			},
@@ -293,6 +339,8 @@ angular.module('floor.service', [])
 							num_people_1: reserva.num_people_1,
 							num_people_2: reserva.num_people_2,
 							num_people_3: reserva.num_people_3,
+							datetime_input: reserva.datetime_input,
+							datetime_output: reserva.datetime_output,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};

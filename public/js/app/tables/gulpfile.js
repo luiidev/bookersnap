@@ -49,6 +49,7 @@ gulp.task('app-library-tables-js', function() {
             '../../../library/bower_components/angular-chosen-localytics/chosen.js',
             '../../../library/bower_components/jquery-ui/jquery-ui.js',
             '../../../library/bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
+            '../../../library/bower_components/kjur-jsrsasign/jsrsasign-latest-all-min.js',
             //'../../../library/sparklines/jquery.sparkline.min.js',
             // '../../../library/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
             //'../../../library/bower_components/simpleWeather/jquery.simpleWeather.min.js',
@@ -91,7 +92,7 @@ gulp.task('watch', function() {
     gulp.watch(['**/*.js', '../app.config.js', '../app.directive.js', '../app.service.js'], ['app-bookersnap-tables-js']);
     gulp.watch(['../../../library/global/functions.js', '../../../library/ngDraggable/ngDraggable.js'], ['app-library-tables-js']);
     gulp.watch('../../../css/app/tables/*.styl', ['stylus-app']);
-    gulp.watch('../auth/*.js', ['app-bookersnap-auth-js']);
+    //gulp.watch('../auth/*.js', ['app-bookersnap-auth-js']);
     gulp.watch([
         '../../../library/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
         '../../../library/bower_components/chosen/chosen.css',
@@ -100,4 +101,4 @@ gulp.task('watch', function() {
 });
 
 //ejecutamos el servidor y todos los archivos
-gulp.task('default', ['watch', 'app-bookersnap-auth-js', 'app-bookersnap-tables-js', 'stylus-app', 'app-library-tables-js', 'app-library-tables-css']);
+gulp.task('default', ['watch', 'app-bookersnap-tables-js', 'stylus-app', 'app-library-tables-js', 'app-library-tables-css']);
