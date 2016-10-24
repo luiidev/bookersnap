@@ -155,7 +155,14 @@ angular.module('floor.controller', [])
                     message.apiError(error);
                 }).finally(function() {
                     getServers();
-                    loadBlocksReservations();
+                    loadBlocksReservations().then(function() {
+                        var event = $table.lastTimeEvent();
+                        console.log(event);
+                        if (event) {
+                            showTimeCustom(event);
+                            vm.showTime = true;
+                        }
+                    });
                 });
         };
 
