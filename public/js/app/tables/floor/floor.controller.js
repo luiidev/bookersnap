@@ -1,7 +1,7 @@
 angular.module('floor.controller', [])
 
 .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
-        FloorFactory, FloorDataFactory, ServerDataFactory, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
+        FloorFactory, FloorDataFactory, ServerDataFactory, $table,$window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
         var fecha_actual = getFechaActual();
@@ -47,15 +47,15 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("floorClearSelected", function() {
-            FloorFactory.clearSelected(vm.zones);
+            $table.clearSelected(vm.zones);
         });
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
-            FloorFactory.tablesSelected(vm.zones, tables);
+            $table.tablesSelected(vm.zones, tables);
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
-            var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
+            var index = $table.getZoneIndexForTable(vm.zones, tables);
             if (index !== null) vm.tabSelectedZone(index);
         });
 
@@ -63,7 +63,8 @@ angular.module('floor.controller', [])
             loadBlocksReservations()
                 .then(function() {
                     if (vm.showTime) {
-                        lastShowTimeEvent();
+                        var event = $table.lastTimeEvent();
+                        if (event) showTimeCustom(event);
                     }
                 });
         });
@@ -74,7 +75,7 @@ angular.module('floor.controller', [])
         };
 
         vm.findTableForServer = function(tables) {
-            var index = FloorFactory.getZoneIndexForTable(vm.zones, tables);
+            var index = $table.getZoneIndexForTable(vm.zones, tables);
             if (index !== null) vm.tabSelectedZone(index);
         };
 
@@ -99,7 +100,7 @@ angular.module('floor.controller', [])
             ServerDataFactory.listadoServers()
                 .then(function success(servers) {
                     //////////////////////////////////////////////////////////////
-                    FloorFactory.setColorTable(vm.zones, servers);
+                    $table.setColorTable(vm.zones, servers);
                     //////////////////////////////////////////////////////////////
                     ServerDataFactory.setServerItems(servers);
                     //console.log(angular.toJson(servers, true));
@@ -122,7 +123,7 @@ angular.module('floor.controller', [])
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
                     //////////////////////////////////////////////////////////////
-                    FloorFactory.setBorderColorForReservation(vm.zones, blocks);
+                    $table.setBorderColorForReservation(vm.zones, blocks);
                     //////////////////////////////////////////////////////////////
                 });
             return deferred.promise;
@@ -304,14 +305,14 @@ angular.module('floor.controller', [])
         vm.tableFilter = function(num) {
             $scope.$apply(function() {
                 vm.filter = true;
-                FloorFactory.tableFilter(vm.zones, blocks, num);
+                $table.tableFilter(vm.zones, blocks, num);
             });
         };
 
         vm.tableFilterClear = function() {
             $scope.$apply(function() {
                 vm.filter = false;
-                FloorFactory.tableFilterClear(vm.zones, blocks);
+                $table.tableFilterClear(vm.zones, blocks);
             });
         };
         /////////////////////// END /////////////////////////////
@@ -320,18 +321,17 @@ angular.module('floor.controller', [])
         // Filtro y muestra de caja de tiempo
         //////////////////////////////////////////////////////////////
         var updateTime;
-        var lastShowTimeEvent;
         vm.hideTimes = function() {
             vm.showTime = false;
+            $table.lastTimeEvent("reset");
             if (updateTime) $timeout.cancel(updateTime);
         };
 
         vm.showTimeSeated = function() {
             if (updateTime) $timeout.cancel(updateTime);
 
-            FloorFactory.makeTime(vm.zones, blocks, reservations, "seated");
+            $table.makeTime(vm.zones, blocks, reservations, "seated");
             vm.showTime = true;
-            lastShowTimeEvent = vm.showTimeSeated;
 
             updateTime = $timeout(vm.showTimeSeated, 60000);
         };
@@ -339,9 +339,8 @@ angular.module('floor.controller', [])
         vm.showTimeToComplete = function() {
             if (updateTime) $timeout.cancel(updateTime);
 
-            FloorFactory.makeTime(vm.zones, blocks, reservations, "complete");
+            $table.makeTime(vm.zones, blocks, reservations, "complete");
             vm.showTime = true;
-            lastShowTimeEvent = vm.showTimeToComplete;
 
             updateTime = $timeout(vm.showTimeToComplete, 60000);
         };
@@ -349,9 +348,8 @@ angular.module('floor.controller', [])
         vm.showTimeNextTime = function() {
             if (updateTime) $timeout.cancel(updateTime);
 
-            FloorFactory.makeTime(vm.zones, blocks, reservations, "nextTime");
+            $table.makeTime(vm.zones, blocks, reservations, "nextTime");
             vm.showTime = true;
-            lastShowTimeEvent = vm.showTimeNextTime;
 
             updateTime = $timeout(vm.showTimeNextTime, 60000);
         };
@@ -359,11 +357,19 @@ angular.module('floor.controller', [])
         vm.showTimeNextTimeAll = function() {
             if (updateTime) $timeout.cancel(updateTime);
 
-            FloorFactory.makeTime(vm.zones, blocks, reservations, "nextTimeAll");
+            $table.makeTime(vm.zones, blocks, reservations, "nextTimeAll");
             vm.showTime = true;
-            lastShowTimeEvent = vm.showTimeNextTimeAll;
 
             updateTime = $timeout(vm.showTimeNextTimeAll, 60000);
+        };
+
+        var showTimeCustom = function(event) {
+            if (updateTime) $timeout.cancel(updateTime);
+
+            $table.makeTime(vm.zones, blocks, reservations, event);
+            vm.showTime = true;
+
+            updateTime = $timeout(showTimeCustom , 60000, true, event);
         };
 
         /////////////////////// END /////////////////////////////

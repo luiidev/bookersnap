@@ -81,13 +81,14 @@
     <div class="box-lienzo-zone-v2 p-t-10">
         <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones" ng-show="$index == vm.flagSelectedZone">
             <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block}]" ng-style="{top: obj.top, left: obj.left, border: obj.server.reservation || obj.server.default}" ng-detail-table="" num="vm.numpeople" on-click-fn="vm.mostrarDetail($parent.$index,obj)" on-dropped-fn="vm.handConfiguration(obj)" ng-repeat="obj in tab.tables">
-                <div class="table-label top" ng-bind="obj.name + ' ' + obj.id"></div>
+                <div class="table-label top" ng-bind="obj.name"></div>
                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied || obj.class.name || !vm.filter">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
                 <div ng-class="[obj.class.name]" ng-show="obj.class.name"></div>
                 <div class="item-drag-time" ng-style="{background: obj.time.color}" ng-if="obj.time.text && vm.showTime">{{ obj.time.text }}</div>
-                <div class="item-drag-time" style="margin-bottom: 10px; background: #3a99d8;width: 65px;" ng-if="obj.grouptime.length && vm.showTime" ng-repeat="time in obj.grouptime">{{ time.text }}</div>
+                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.grouptime.length > 1}" ng-if="obj.grouptime.length && vm.showTime" ng-repeat="time in obj.grouptime">{{ time.text }}</div>
+
             </div>
         </div>
     </div>
