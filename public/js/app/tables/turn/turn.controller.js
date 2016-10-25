@@ -180,7 +180,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 					break;
 			}
 		};
-
+                                
 		var listHourIni = function() {
 			$scope.formDataDefault.hours_ini = TurnFactory.listHour(0, 95, $scope.formDataDefault.listAvailability);
 			$scope.turnForm.hours_ini = $scope.formDataDefault.hours_ini[64];
@@ -189,9 +189,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		var listHourEnd = function(option) {
 
 			var hourIniIndex = parseInt($scope.turnForm.hours_ini.index) + 1;
-
-			$scope.formDataDefault.hours_end = TurnFactory.listHour(hourIniIndex, 120, $scope.formDataDefault.listAvailability);
-
+			$scope.formDataDefault.hours_end = TurnFactory.listHour(hourIniIndex, 120, $scope.formDataDefault.listAvailability);                        
 			if (option == "create") {
 				$scope.turnForm.hours_end = $scope.formDataDefault.hours_end[0];
 			}
@@ -212,7 +210,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 			$scope.turnData = TurnFactory.constructStructureSave($scope.turnData, $scope.turnForm, $scope.turnZoneAdd);
 			$scope.turnData.turn_time = dataTurnTime.data_final;
-			console.log("saveTurn " + angular.toJson($scope.turnData, true));
+//			console.log("saveTurn " + angular.toJson($scope.turnData, true));
 
 			TurnFactory.saveTurn($scope.turnData, option).then(
 				function success(response) {
@@ -233,7 +231,6 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 				TurnFactory.getTurn($stateParams.turn, params, $scope.formDataDefault.listAvailability).then(
 					function success(data) {
-
 						$scope.turnData = data.turnData;
 						$scope.turnForm = data.turnForm;
 						$scope.turnDataClone = data.turnDataClone;
@@ -685,7 +682,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		$scope.checkRuleAll = function(option) {
 
 			switch (option) {
-				case "1":
+				case 1:
 
 					updateCheckRuleAll($scope.rules.local, true);
 					updateCheckRuleAll($scope.rules.disabled, false);
@@ -693,7 +690,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 					$scope.rules.value = 1;
 					break;
-				case "0":
+				case 0:
 
 					updateCheckRuleAll($scope.rules.local, false);
 					updateCheckRuleAll($scope.rules.disabled, true);
@@ -701,7 +698,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
 					$scope.rules.value = 0;
 					break;
-				case "2":
+				case 2:
 
 					updateCheckRuleAll($scope.rules.local, false);
 					updateCheckRuleAll($scope.rules.disabled, false);
@@ -784,7 +781,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 		};
 
 		$scope.assignZoneAll = function() {
-			console.log("chkAllZones " + $scope.chkAllZones);
+//			console.log("chkAllZones " + $scope.chkAllZones);
 			if ($scope.chkAllZones) {
 				clearTurnZones();
 			}
@@ -819,8 +816,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 				});
 			}
 
-			console.log("zonesId " + turnZoneAdd.zones_id.length);
-			console.log("zonesData " + $scope.zonesList.length);
+//			console.log("zonesId " + turnZoneAdd.zones_id.length);
+//			console.log("zonesData " + $scope.zonesList.length);
 
 			if ($scope.zonesList.length != turnZoneAdd.zones_id.length) {
 				$scope.chkAllZones = false;
