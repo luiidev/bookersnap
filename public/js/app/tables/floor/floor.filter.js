@@ -210,57 +210,109 @@ angular.module('floor.filter', [])
 
 		};
 	})
+	.filter('reservaSel', function() {
+		return function(items, categorias) {
+			var salida = [];
+			var tipo_categoria = Object.prototype.toString.call(categorias);
 
-.filter('reservaSel', function() {
-	return function(items, categorias) {
-		var salida = [];
-		var tipo_categoria = Object.prototype.toString.call(categorias);
-
-		if (tipo_categoria == "[object Object]") {
-			salida = items;
-			return salida;
-		}
-
-		if (tipo_categoria == "[object Array]") {
-			if (categorias.length != []) {
-
-				var filterWeb = false;
-				var filterTelefono = false;
-				var filterPortal = false;
-				var filterRP = false;
-
-				angular.forEach(categorias, function(categoria) {
-					var idcategoria = categoria.id;
-					if (idcategoria === 1) {
-						filterWeb = true;
-					}
-					if (idcategoria === 2) {
-						filterTelefono = true;
-					}
-					if (idcategoria === 3) {
-						filterPortal = true;
-					}
-					if (idcategoria === 4) {
-						filterRP = true;
-					}
-				});
-
-				angular.forEach(items, function(item) {
-					var filter = (filterWeb && item.res_source_type_id == 1) || (filterTelefono && item.res_source_type_id == 2) || (filterPortal && item.res_source_type_id == 3) || (filterRP && item.res_source_type_id == 4);
-					if (filter) {
-						salida.push(item);
-					}
-				});
-
-				return salida;
-				//return salida;
-			} else {
+			if (tipo_categoria == "[object Object]") {
 				salida = items;
 				return salida;
 			}
 
-		}
+			if (tipo_categoria == "[object Array]") {
+				if (categorias.length != []) {
+
+					var filterWeb = false;
+					var filterTelefono = false;
+					var filterPortal = false;
+					var filterRP = false;
+
+					angular.forEach(categorias, function(categoria) {
+						var idcategoria = categoria.id;
+						if (idcategoria === 1) {
+							filterWeb = true;
+						}
+						if (idcategoria === 2) {
+							filterTelefono = true;
+						}
+						if (idcategoria === 3) {
+							filterPortal = true;
+						}
+						if (idcategoria === 4) {
+							filterRP = true;
+						}
+					});
+
+					angular.forEach(items, function(item) {
+						var filter = (filterWeb && item.res_source_type_id == 1) || (filterTelefono && item.res_source_type_id == 2) || (filterPortal && item.res_source_type_id == 3) || (filterRP && item.res_source_type_id == 4);
+						if (filter) {
+							salida.push(item);
+						}
+					});
+
+					return salida;
+					//return salida;
+				} else {
+					salida = items;
+					return salida;
+				}
+
+			}
 
 
-	};
-});
+		};
+	})
+	.filter('turnoSel', function() {
+		return function(items, categorias) {
+			var salida = [];
+			var tipo_categoria = Object.prototype.toString.call(categorias);
+
+			if (tipo_categoria == "[object Object]") {
+				salida = items;
+				return salida;
+			}
+
+			if (tipo_categoria == "[object Array]") {
+				if (categorias.length != []) {
+
+					var filterDesayuno = false;
+					var filterAlmuerzo = false;
+					var filterCena = false;
+					var filterBar = false;
+
+					angular.forEach(categorias, function(categoria) {
+						var idcategoria = categoria.id;
+						if (idcategoria === 1) {
+							filterDesayuno = true;
+						}
+						if (idcategoria === 2) {
+							filterAlmuerzo = true;
+						}
+						if (idcategoria === 3) {
+							filterCena = true;
+						}
+						if (idcategoria === 4) {
+							filterBar = true;
+						}
+					});
+
+					angular.forEach(items, function(item) {
+						var filter = (filterDesayuno && item.res_type_turn_id == 1) || (filterAlmuerzo && item.res_type_turn_id == 2) || (filterCena && item.res_type_turn_id == 3) || (filterBar && item.res_type_turn_id == 4);
+						if (filter) {
+							salida.push(item);
+						}
+					});
+
+					return salida;
+					//return salida;
+				} else {
+					salida = items;
+					return salida;
+				}
+
+			}
+
+
+		};
+	});
