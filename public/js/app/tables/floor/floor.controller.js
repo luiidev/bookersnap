@@ -762,50 +762,121 @@ angular.module('floor.controller', [])
                 var men = 0;
                 var women = 0;
                 var children = 0;
+                var tWeb = 0;
+                var tTel = 0;
+                var tPor = 0;
+                var tRp = 0;
 
                 rm.res_listado = rm.res_listado_all;
                 angular.forEach(rm.res_listado_all, function(people) {
+
                     men += people.num_people_1;
                     women += people.num_people_2;
                     children += people.num_people_3;
                     total += people.num_people;
+
+                    var source_type = people.res_source_type_id;
+                    switch (source_type) {
+                        case 1:
+                            tWeb += 1;
+                            break;
+                        case 2:
+                            tTel += 1;
+                            break;
+                        case 3:
+                            tPor += 1;
+                            break;
+                        case 4:
+                            tRp += 1;
+                            break;
+                    }
+
                 });
+
+
                 rm.total_men = men;
                 rm.total_women = women;
                 rm.total_children = children;
                 rm.total_people = total;
                 rm.total_visitas = total;
+
+                rm.total_tweb = tWeb;
+                rm.total_ttel = tTel;
+                rm.total_tpor = tPor;
+                rm.total_trp = tRp;
+                rm.total_reservas = rm.res_listado.length;
+
+
                 //console.log('Reservaciones: ' + angular.toJson(data, true));
 
             });
         };
         getlistZonesBloqueosReservas();
 
-        //Traer los tipo de turnos cargados
-        rm.itemTypeTodos = {
-            id: 0,
-            name: "Todos",
-            turn: [{
-                hours_ini: "00:00:00",
-                hours_end: "00:00:00"
-            }]
-        };
 
-        rm.select_type = function(categoria, event) {
-            rm.filter_type = categoria;
-            console.log(categoria);
-            if (event !== null) {
-                event.stopPropagation();
-            }
-            return false;
-        };
-
+        //Datos y acciones para filtrar por Turnos//
+        //****************************//
         $rootScope.$on("floorListadoTypeTurnos", function() {
             var turn = TypeFilterDataFactory.getTypeTurnItems();
             rm.categorias_type = turn;
-            //rm.categorias_type.unshift(rowTodosType);
-            //console.log(rm.categorias_type);
+            //console.log(angular.toJson(rm.categorias_type, true));
+            TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+            //console.log(angular.toJson(colection_filtro_turnos[0], true));
+            rm.select_type(colection_filtro_turnos[0], null);
+
         });
+
+        rm.select_type = function(categoria, event) {
+            rm.filter_type = categoria;
+
+            if (event !== null) {
+                event.stopPropagation();
+            }
+
+            if (categoria.id !== 0) {
+                //Evalua Cualquier Opcion diferente de Todos
+                if (categoria.checked === true) { //Deshabilitar
+                    TypeFilterDataFactory.delOpcionesFilterTurnos(categoria);
+                    categoria.checked = false;
+                    filtrarTurnos();
+                } else { //Habilitar y Deshabilitar todos
+                    categoria.checked = true;
+                    TypeFilterDataFactory.setOpcionesFilterTurnos(categoria);
+                    rm.categorias_type[0].checked = false;
+                    filtrarTurnos();
+                }
+            } else {
+                //Evalua Opcion TODOS
+                var deshabilitar = function() {
+                    rm.filter_type = categoria;
+                    angular.forEach(rm.categorias_type, function(type) {
+                        if (type.id !== 0) {
+                            TypeFilterDataFactory.delOpcionesFilterTurnos(type);
+                            type.checked = false;
+                        }
+                    });
+                };
+
+                if (categoria.checked === true) {
+                    deshabilitar();
+                } else {
+                    categoria.checked = true;
+                    deshabilitar();
+                }
+            }
+
+            return false;
+        };
+
+        var filtrarTurnos = function() {
+            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+            rm.filter_type = colection_filtro_turnos;
+            if (rm.filter_type.length === 0) {
+                rm.categorias_type[0].checked = true;
+            }
+            //console.log(rm.filter_type);
+        };
 
 
         //Datos y acciones para filtrar Visitas//
@@ -957,7 +1028,6 @@ angular.module('floor.controller', [])
                 rm.res_listado = salida;
             }
             */
-
         };
 
         //Datos y acciones para filtrar Reservas//
@@ -988,6 +1058,7 @@ angular.module('floor.controller', [])
         rm.select_reserva = function(categoria, event) {
 
             rm.filter_reserva = categoria;
+
             if (event !== null) {
                 event.stopPropagation();
             }
@@ -1014,6 +1085,7 @@ angular.module('floor.controller', [])
                             reserva.checked = false;
                         }
                     });
+                    //rm.res_listado = rm.res_listado_all;
                 };
 
                 if (categoria.checked === true) {
@@ -1024,7 +1096,6 @@ angular.module('floor.controller', [])
                 }
             }
             return false;
-
         };
 
         var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
@@ -1035,9 +1106,32 @@ angular.module('floor.controller', [])
             rm.filter_reserva = colection_filtro_reservas;
             if (rm.filter_reserva.length === 0) {
                 rm.categorias_reserva[0].checked = true;
+                rm.total_reservas = rm.res_listado_all.length;
+            } else {
+                var calculo = 0;
+                angular.forEach(rm.filter_reserva, function(reserva) {
+                    var idreserva = reserva.id;
+                    //console.log(idreserva);
+                    switch (idreserva) {
+                        case 1:
+                            calculo += rm.total_tweb;
+                            break;
+                        case 2:
+                            calculo += rm.total_ttel;
+                            break;
+                        case 3:
+                            calculo += rm.total_tpor;
+                            break;
+                        case 4:
+                            calculo += rm.total_trp;
+                            break;
+                    }
+                });
+                rm.total_reservas = calculo;
             }
-            //console.log(rm.filter_reserva);
+
         };
+
 
 
         rm.selectReservation = function(reservation) {

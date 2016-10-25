@@ -15,14 +15,58 @@ angular.module('floor.service', [])
 	})
 	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
+		var filtrosTurno = [];
 		var filtrosVisita = [];
 		var filtrosReserva = [];
 		return {
 			setTypeTurnItems: function(typeItem) {
-				typeColection = typeItem;
+				var vTurn = [];
+				var itemTodos = {
+					id: 0,
+					name: "Todos",
+					status: 1,
+					checked: true,
+					turn: [{
+						hours_ini: "00:00:00",
+						hours_end: "00:00:00"
+					}]
+				};
+				angular.forEach(typeItem, function(value) {
+					vTurn.push({
+						id: value.id,
+						name: value.name,
+						status: value.status,
+						checked: false,
+						turn: value.turn
+					});
+				});
+				vTurn.unshift(itemTodos);
+				typeColection = vTurn;
 			},
 			getTypeTurnItems: function() {
 				return typeColection;
+			},
+			setOpcionesFilterTurnos: function(typeItem) {
+				if (typeItem.id === 0) {
+					filtrosTurno.push(typeItem);
+				} else {
+					angular.forEach(filtrosTurno, function(value, key) {
+						if (value.id === 0) {
+							filtrosTurno.splice(key, 1);
+						}
+					});
+					filtrosTurno.push(typeItem);
+				}
+			},
+			getOpcionesFilterTurnos: function() {
+				return filtrosTurno;
+			},
+			delOpcionesFilterTurnos: function(typeItem) {
+				angular.forEach(filtrosTurno, function(value, key) {
+					if (value.id == typeItem.id) {
+						filtrosTurno.splice(key, 1);
+					}
+				});
 			},
 			setOpcionesFilterVisitas: function(genderItem) {
 				if (genderItem.idcategoria == 1) {
@@ -376,6 +420,7 @@ angular.module('floor.service', [])
 							num_people_2: reserva.num_people_2,
 							num_people_3: reserva.num_people_3,
 							res_source_type_id: reserva.res_source_type_id,
+							res_type_turn_id: reserva.res_type_turn_id,
 							datetime_input: reserva.datetime_input,
 							datetime_output: reserva.datetime_output,
 
