@@ -1,7 +1,7 @@
 angular.module('reservation.service', [])
 .factory("reservationService", ["$http","HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
      function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
-        var zones, servers, resStatus, turns, blocks, tags;
+        var zones, servers, resStatus, turns, blocks, tags, reservations;
             return {
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
@@ -50,6 +50,10 @@ angular.module('reservation.service', [])
                 getReservationTags: function(reload) {
                     tags = HttpFactory.get(ApiUrlMesas + "/reservation/tag", null, tags, reload);
                     return tags;
+                },
+                getReservations: function(reload) {
+                    reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
+                    return reservations;
                 },
                 getGuest: function() {
                     var deferred = $q.defer();
@@ -237,4 +241,371 @@ angular.module('reservation.service', [])
         return {
             size: size,
         };
-    }]);
+    }])
+    .factory("$table", function() {
+        var lastShowTimeEvent; 
+
+        return {
+            lastTimeEvent: function(action) {
+                if (action == "reset") {
+                    lastShowTimeEvent = null;
+                } else {
+                    return lastShowTimeEvent;
+                }
+            },
+            paintTables: function(zones, tables) {
+                angular.forEach(tables, function(table_use) {
+                    angular.forEach(zones, function(zone) {
+                        angular.forEach(zone.tables, function(table) {
+                            if (table.id == table_use.id) {
+                                table.selected = true;
+                            }
+                        });
+                    });
+                });
+            },
+            listTableSelected: function(zones, tablesSelected) {
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        if (table.selected) {
+                            tablesSelected[table.id] = angular.copy(table);
+                        } else {
+                            delete tablesSelected[table.id];
+                        }
+                    });
+                });
+            },
+            tablesSuggested: function(zones, cant) {
+                var tableSuggested = null;
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                         if (cant >= table.minCover && cant <= table.maxCover) {
+                            if (!table.occupied && !table.block) {
+                                if (!tableSuggested) tableSuggested = angular.copy(table);
+                                table.suggested = true;
+                            }
+                        } else {
+                            table.suggested = false;
+                        }
+                    });
+                });
+
+                return tableSuggested;
+            },
+            tablesBlockValid: function(zones, blocks, reservation) {
+                // console.log("------------------------------------------------");
+                var start_time =  moment(reservation.hour, "HH:mm:ss");
+                var auxiliar =  moment(reservation.duration, "HH:mm:ss");
+                var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+                // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+                // console.log(blocks);
+                angular.forEach(blocks, function(block){
+                    var start_block =  moment(block.start_time, "HH:mm:ss");
+                    var end_block =  moment(block.end_time, "HH:mm:ss");
+                    angular.forEach(zones, function(zone) {
+                        angular.forEach(zone.tables, function(table) {
+                            if (table.id == block.res_table_id) {
+                                if ( (start_time.isBetween(start_block, end_block,  null, "()") ) || 
+                                        (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                            (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+
+                                    if (block.res_reservation_id !== null) {
+                                        if (!editState) {
+                                            table.occupied = true;
+                                            table.suggested = false;
+                                        } else {
+                                            if (block.res_reservation_id != $stateParams.id) {
+                                                table.occupied = true;
+                                                table.suggested = false;
+                                            }
+                                        }
+                                    } else {
+                                        table.block = true;
+                                        table.suggested = false;
+                                    }
+                                } else {
+                                    if (block.res_reservation_id !== null) {
+                                        table.occupied = false;
+                                    } else {
+                                        table.block = false;
+                                    }
+                                }
+                            }
+                            });
+                    });
+                });
+            },
+            selectTableAllOrNone: function(zone, indicator) {
+                if (indicator == "all") {
+                    angular.forEach(zone.tables, function(table) {
+                        table.selected = true;
+                    });
+                } else if (indicator == "none") {
+                    angular.forEach(zone.tables, function(table) {
+                        table.selected = false;
+                    });
+                }
+            },
+            setBorderColorForReservation: function(zones, blocks) {
+                var hour = moment();
+
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        table.server.reservation = null;
+                        table.class.name = null;
+                    });
+                });
+
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        angular.forEach(blocks, function(block) {
+                            if (table.id == block.res_table_id) {
+                                var start_block = moment(block.start_time, "HH:mm:ss");
+                                var end_block = moment(block.end_time, "HH:mm:ss");
+                                if (hour.isBetween(start_block, end_block, null, "()") || block.res_reservation_status_id >= 14) {
+                                    if (block.res_server_id) {
+                                        table.server.setReservation(block.res_server.color);
+                                    }
+                                    table.class.setStatusClass(block.res_reservation_status_id);
+
+                                    if (block.res_reservation_id === null) {
+                                        table.block = true;
+                                        table.blockStatic = true;
+                                    }
+                                } else {
+                                    if (block.res_reservation_id === null) {
+                                        table.block = false;
+                                        table.blockStatic = false;
+                                    }
+                                }
+                            }
+                        });
+                    });
+                });
+            },
+            setColorTable: function(zones, servers) {
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        angular.forEach(servers, function(server) {
+                            angular.forEach(server.tables, function(serverTable) {
+                                if (table.id == serverTable.id) {
+                                    table.server.setDefault(server.color);
+                                }
+                            });
+                        });
+                    });
+                });
+            },
+            getReservationTables: function(zones, blocks, reservation_id) {
+                var reservationTables = "";
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        angular.forEach(blocks, function(block) {
+                            if (table.id == block.res_table_id) {
+                                if (block.res_reservation_id == reservation_id) {
+                                    reservationTables += table.name + ", ";
+                                }
+                            }
+                        });
+                    });
+                });
+
+                return reservationTables.substring(0, reservationTables.length - 2);
+            },
+            clearSelected: function(zones) {
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        table.selected = false;
+                    });
+                });
+            },
+            getZoneIndexForTable: function(zones, serverTables) {
+                if (serverTables.length === 0) {
+                    return 0;
+                }
+                var index = null;
+                angular.forEach(zones, function(zone, zone_index) {
+                    if (index === null) {
+                        angular.forEach(zone.tables, function(table) {
+                            if (index === null) {
+                                angular.forEach(serverTables, function(serverTable) {
+                                    if (index === null) {
+                                        if (table.id == serverTable.id) {
+                                            index = zone_index;
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+                return index;
+            },
+            tablesSelected: function(zones, serverTables) {
+                if (serverTables.length === 0) {
+                    return;
+                }
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        angular.forEach(serverTables, function(serverTable) {
+                            if (table.id == serverTable.id) {
+                                table.selected = true;
+                            }
+                        });
+                    });
+                });
+            },
+            tableFilter: function(zones, blocks, cant) {
+                // Manejo estatico de tiempo de reserva por cantidad  de invitados
+                var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0).millisecond(0);
+                var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
+
+                angular.forEach(blocks, function(block) {
+                    var start_block = moment(block.start_time, "HH:mm:ss");
+                    var end_block = moment(block.end_time, "HH:mm:ss");
+                    angular.forEach(zones, function(zone) {
+                        angular.forEach(zone.tables, function(table) {
+                            if (table.id == block.res_table_id && block.res_reservation_status_id < 14) {
+                                if ((start_time.isBetween(start_block, end_block,  null, "()") ) || 
+                                                    (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                                        (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                                    if (block.res_reservation_id !== null) {
+                                                table.occupied = true;
+                                                table.suggested = false;
+                                    } else {
+                                            table.block = true;
+                                            table.suggested = false;
+                                    }
+                                }  else {
+                                           if (block.res_reservation_id !== null) {
+                                                      table.occupied = false;
+                                           } else {
+                                                      table.block = false;
+                                           }
+                                }
+                            }
+                        });
+                    });
+                });
+
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        if (cant >= table.minCover && cant <= table.maxCover && !table.class.name) {
+                                if (!table.occupied && !table.block) {
+                                        table.suggested = true;
+                                }
+                        }
+                    });
+                });
+            },
+            tableFilterClear: function(zones) {
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        table.occupied = false;
+                        if(!table.blockStatic) table.block = false;
+                        table.suggested = false;
+                    });
+                });
+            },
+            makeTime: function(zones, blocks, reservations, type) {
+                console.log(zones, blocks, reservations, type);
+                /**
+                 * Variable de apollo para grouptime, en metodo nextTime
+                 */
+                var lastTime;
+
+                lastShowTimeEvent = type;
+
+                angular.forEach(zones, function(zone) {
+                    angular.forEach(zone.tables, function(table) {
+                        table.time = {};
+                        table.grouptime = [];
+                    });
+                });
+
+                angular.forEach(reservations, function(reservation) {
+                    angular.forEach(blocks, function(block) {
+                        if (reservation.id == block.res_reservation_id) {
+                            angular.forEach(zones, function(zone) {
+                                angular.forEach(zone.tables, function(table) {
+                                    if (table.id == block.res_table_id) {
+                                        var now, start;
+                                        if (reservation.datetime_input && reservation.res_reservation_status_id >= 14){
+                                            now = moment();
+
+                                            if (type == "seated") {
+                                                var input = moment(reservation.datetime_input);
+                                                table.time.text = moment.utc(now.diff(input)).format("HH:mm");
+                                            } else if (type == "complete") {
+                                                var out = moment(block.end_time, "HH:mm:ss");
+                                                var time = out.diff(now);
+                                                if (time > 0) {
+                                                    table.time.text = moment.utc(time).format("HH:mm");
+                                                } else {
+                                                    var auxTime = now.diff(out);
+                                                    table.time.text = "-" + moment.utc(auxTime).format("HH:mm");
+                                                }
+                                                table.time.color = "#e7b300";
+                                            }
+                                        } else if (type == "nextTime") {
+                                            now = moment();
+                                            start = moment(block.start_time, "HH:mm:ss");
+                                            // console.log(reservation.id, block.res_table_id,  start.format("HH:mm:ss"));
+                                            var nextTime = start.diff(now);
+                                            var auxNextTime;
+
+                                            if (!table.time.established) {
+                                                if  (nextTime > 0) {
+                                                    table.time.text = moment.utc(nextTime).format("HH:mm");
+                                                } else {
+                                                    auxNextTime = now.diff(start);
+                                                    table.time.text = "-" + moment.utc(auxNextTime).format("HH:mm");
+                                                }
+                                                table.time.color = "#ed615b";
+                                                table.time.established = true;
+                                            } else if (nextTime < 0){
+                                                auxNextTime = now.diff(start);
+                                                table.time.text = "-" + moment.utc(auxNextTime).format("HH:mm");
+                                            }
+                                        } else if (type == "nextTimeAll") {                             
+                                            now = moment();
+                                            start = moment(block.start_time, "HH:mm:ss");
+
+                                            if (table.grouptime.length < 2) {
+                                                var newTime = {}; 
+                                                newTime.text = start.format("HH:mmA");
+                                                newTime.time = start;
+                                                table.grouptime.push(newTime);
+                                            } else {
+                                                var replaceTime = function(table, start) {
+                                                    var established = false;
+                                                    angular.forEach(table.grouptime, function(obj) {
+                                                        if (!established) {
+                                                            if (start.isBefore(obj.time)) {
+                                                                var aux = obj.time;
+
+                                                                obj.text = start.format("HH:mmA");
+                                                                obj.time = start;
+
+                                                                established = true;
+
+                                                                return replaceTime(table, aux);
+                                                            }
+                                                        }
+                                                    
+                                                    });
+                                                };
+
+                                                replaceTime(table, start);
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        };
+    });

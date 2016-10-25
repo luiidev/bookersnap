@@ -104,6 +104,11 @@
                                                 </i>
                                                 Asignar zonas
                                             </button>
+                                            <button class="btn btn-info" ng-click="showTimeTurns('create')" type="button">
+                                                <i class="zmdi zmdi-time zmdi-hc-fw">
+                                                </i>
+                                                Tiempo turno
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-xs-12">
@@ -352,21 +357,21 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')" ng-checked="rulesAll.online">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll(2)" ng-checked="rulesAll.online">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')" ng-checked="rulesAll.local">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll(1)" ng-checked="rulesAll.local">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')" ng-checked="rulesAll.disabled">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll(0)" ng-checked="rulesAll.disabled">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
@@ -407,5 +412,47 @@
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="saveRules()">Guardar</button>
         <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
+    </div>
+</script>
+<script id="myModalTurnTime.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Tiempo turno</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <p>Adjust the desired length of reservations based upon party size. This will allow Yelp Reservations and restaurant staff to book reservations more accurately for maximum seating potential in your restaurant.</p>
+            </div>
+            <div class="col-xs-12">
+                Reestablecer la configuración , <a href="javascript:void(0)" ng-click="defineConfigDefault()">por defecto</a>
+            </div>
+            <div class="col-xs-12 box-turn-time">
+                <table class="table">
+                    
+                    <thead>
+                        <tr>
+                            <th>Party size</th>
+                            <th>Expected Time (H:MM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in turnTime">
+                            <td>{{ item.text }}</td>
+                            <td>
+                                <button class="btn btn-primary" ng-click="defineHours('prev',$index,item.indexHour)"><i class="zmdi zmdi-minus zmdi-hc-fw"></i></button>
+                                    <input type="text" name="" ng-model="item.hourText" readonly="true" class="input">
+                                <button class="btn btn-primary" ng-click="defineHours('next',$index,item.indexHour)"><i class="zmdi zmdi-plus zmdi-hc-fw"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="saveTurnTime()">Guardar</button>
     </div>
 </script>
