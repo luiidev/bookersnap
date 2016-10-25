@@ -292,6 +292,8 @@ angular.module('turn.service', [])
 				TurnDataFactory.getTurn(idTurn, options).success(function(data) {
 					data = data.data;
 
+					console.log("getTurn " + angular.toJson(data, true));
+
 					var turnData = {
 						id: data.id,
 						name: data.name,
@@ -301,7 +303,6 @@ angular.module('turn.service', [])
 					};
 
 					var nextDay = self.getHourNextDay(data.hours_ini, data.hours_end);
-
 					var hour_ini = self.getIndexHour(data.hours_ini, 0);
 					var hour_end = self.getIndexHour(data.hours_end, nextDay); //esto pendiente
 
@@ -385,6 +386,7 @@ angular.module('turn.service', [])
 						TurnDataFactory.getTurnZoneTables(idZone, idTurn).success(function(data) {
 
 							var rulesTables = self.setAvailabilityText(data.data, turnForm, listAvailability);
+
 							defered.resolve(rulesTables);
 
 						}).error(function(data, status, headers) {
@@ -536,6 +538,7 @@ angular.module('turn.service', [])
 				} else {
 					tablesId.splice(index, 1);
 				}
+
 			},
 			checkAllTableZone: function(tablesId, tables, option) {
 
@@ -690,6 +693,8 @@ angular.module('turn.service', [])
 				angular.forEach(zoneSelected.tables, function(value, key) {
 					vData.tables.push(value);
 				});
+
+				//console.log("addRulesTable " + angular.toJson(zoneSelected, true));
 
 				if (turnZoneAdd.zonesTables.length === 0) {
 					turnZoneAdd.zonesTables.push(vData);

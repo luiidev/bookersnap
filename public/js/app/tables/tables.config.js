@@ -30,7 +30,7 @@
                 });
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
-            //console.log($http);
+
             setAuthHeaders($http);
             // ServerNotification.createConnection();
             // ServerNotification.createRoom("microsites" + IdMicroSitio);
