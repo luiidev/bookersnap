@@ -211,27 +211,56 @@ angular.module('floor.filter', [])
 		};
 	})
 
-.filter('typeSel', function() {
-	return function(items, categoria) {
+.filter('reservaSel', function() {
+	return function(items, categorias) {
 		var salida = [];
-		if (categoria) {
-			var id = categoria.id;
-			switch (id) {
-				case 0:
-					salida = items;
-					break;
-				default: //Desayuno//Almuerzo//Cena//Bar
-					angular.forEach(items, function(item) {
-						//console.log(item.start_time + ' - ' + item.end_time);
-						/*if (item.num_people_3 != 0) {
-							salida.push(item);
-						}*/
-					});
-					//console.log(categoria.turn.hours_end);
-					salida = items;
-					break;
-			}
+		var tipo_categoria = Object.prototype.toString.call(categorias);
+
+		if (tipo_categoria == "[object Object]") {
+			salida = items;
+			return salida;
 		}
-		return salida;
+
+		if (tipo_categoria == "[object Array]") {
+			if (categorias.length != []) {
+
+				var filterWeb = false;
+				var filterTelefono = false;
+				var filterPortal = false;
+				var filterRP = false;
+
+				angular.forEach(categorias, function(categoria) {
+					var idcategoria = categoria.id;
+					if (idcategoria === 1) {
+						filterWeb = true;
+					}
+					if (idcategoria === 2) {
+						filterTelefono = true;
+					}
+					if (idcategoria === 3) {
+						filterPortal = true;
+					}
+					if (idcategoria === 4) {
+						filterRP = true;
+					}
+				});
+
+				angular.forEach(items, function(item) {
+					var filter = (filterWeb && item.res_source_type_id == 1) || (filterTelefono && item.res_source_type_id == 2) || (filterPortal && item.res_source_type_id == 3) || (filterRP && item.res_source_type_id == 4);
+					if (filter) {
+						salida.push(item);
+					}
+				});
+
+				return salida;
+				//return salida;
+			} else {
+				salida = items;
+				return salida;
+			}
+
+		}
+
+
 	};
 });

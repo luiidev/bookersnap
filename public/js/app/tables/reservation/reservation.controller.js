@@ -198,6 +198,10 @@ angular.module('reservation.controller', [])
      * END Save. update and cancel reservation
      */
 
+
+     /**
+      * Manejo de eventos sobre las tablas
+      */
     vm.selectTableAllOrNone = function(indicator) {
         $table.selectTableAllOrNone(vm.zones[vm.zoneIndex], indicator);
         listTableSelected();
@@ -237,7 +241,7 @@ angular.module('reservation.controller', [])
     };
 
     vm.tablesBlockValid = function() {
-        $table.tablesBlockValid(vm.zones, blocks, vm.reservation);
+        $table.tablesBlockValid(vm.zones, blocks, vm.reservation, editState, $stateParams.id);
         vm.tablesSuggested(vm.reservation.covers);
     };
 
@@ -245,14 +249,9 @@ angular.module('reservation.controller', [])
         vm.tableSuggested = $table.tablesSuggested(vm.zones, cant);
         listTableSelected();
     };
-
-    var tablesForEach = function(callback){
-        angular.forEach(vm.zones, function(zone) {
-            angular.forEach(zone.tables, function(table) {
-                callback(table);
-            });
-        });
-    };
+    /**
+     * END Manejo de eventos sobre las tablas
+     */
 
 
     /**
@@ -407,7 +406,6 @@ angular.module('reservation.controller', [])
 
         return deferred.promise;
     };
-
     /**
      * END HTTP
      */
@@ -515,7 +513,6 @@ angular.module('reservation.controller', [])
      */
 
 
-
     /**
      * Edit Reservation Case
      */
@@ -602,25 +599,7 @@ angular.module('reservation.controller', [])
     }
 
     function getZoneIndexForTable(serverTables) {
-        if (serverTables.length === 0) {
-            return;
-        }
-        var index = null;
-        angular.forEach(vm.zones, function(zone, zone_index) {
-            if (index === null) {
-                angular.forEach(zone.tables, function(table) {
-                    if (index === null) {
-                        angular.forEach(serverTables, function(serverTable) {
-                            if (index === null) {
-                                if (table.id == serverTable.id) {
-                                    index = zone_index;
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        var index = $table.getZoneIndexForTable(vm.zones, serverTables);
 
         if (index !== null ) {
             vm.zoneIndex = index;
