@@ -110,6 +110,11 @@
                                                 </i>
                                                 Asignar zonas
                                             </button>
+                                            <button class="btn btn-info" ng-click="showTimeTurns('create')" type="button">
+                                                <i class="zmdi zmdi-time zmdi-hc-fw">
+                                                </i>
+                                                Tiempo turno
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-xs-12">
@@ -420,5 +425,46 @@
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
         <button class="btn btn-primary" type="button" ng-click="saveRules()">Guardar</button>
+    </div>
+</script>
+<script id="myModalTurnTime.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Tiempo turno</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <p>Adjust the desired length of reservations based upon party size. This will allow Yelp Reservations and restaurant staff to book reservations more accurately for maximum seating potential in your restaurant.</p>
+            </div>
+            <div class="col-xs-12">
+                Reestablecer la configuración , <a href="javascript:void(0)" ng-click="defineConfigDefault()">por defecto</a>
+            </div>
+            <div class="col-xs-12 box-turn-time">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Party size</th>
+                            <th>Expected Time (H:MM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in turnTime">
+                            <td>{{ item.text }}</td>
+                            <td>
+                                <button class="btn btn-primary" ng-click="defineHours('prev',$index,item.indexHour)"><i class="zmdi zmdi-minus zmdi-hc-fw"></i></button>
+                                    <input type="text" name="" ng-model="item.hourText" readonly="true" class="input">
+                                <button class="btn btn-primary" ng-click="defineHours('next',$index,item.indexHour)"><i class="zmdi zmdi-plus zmdi-hc-fw"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="saveTurnTime()">Guardar</button>
     </div>
 </script>
