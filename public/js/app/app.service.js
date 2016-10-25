@@ -24,7 +24,7 @@ angular.module("bookersnap.services", [])
 			}
 		};
 	})
-	.factory('ServerNotification', function(UrlServerNotify, JwtKey, $http) {
+	.factory('ServerNotification', function(UrlServerNotify, $http) {
 		var serverConnection;
 		return {
 			createConnection: function() {
