@@ -292,7 +292,7 @@ angular.module('reservation.service', [])
 
                 return tableSuggested;
             },
-            tablesBlockValid: function(zones, blocks, reservation) {
+            tablesBlockValid: function(zones, blocks, reservation, editState, state_param_id) {
                 // console.log("------------------------------------------------");
                 var start_time =  moment(reservation.hour, "HH:mm:ss");
                 var auxiliar =  moment(reservation.duration, "HH:mm:ss");
@@ -314,7 +314,7 @@ angular.module('reservation.service', [])
                                             table.occupied = true;
                                             table.suggested = false;
                                         } else {
-                                            if (block.res_reservation_id != $stateParams.id) {
+                                            if (block.res_reservation_id != state_param_id) {
                                                 table.occupied = true;
                                                 table.suggested = false;
                                             }
@@ -509,7 +509,7 @@ angular.module('reservation.service', [])
                 });
             },
             makeTime: function(zones, blocks, reservations, type) {
-                console.log(zones, blocks, reservations, type);
+                // console.log(zones, blocks, reservations, type);
                 /**
                  * Variable de apollo para grouptime, en metodo nextTime
                  */
