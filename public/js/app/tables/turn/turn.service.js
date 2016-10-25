@@ -171,7 +171,7 @@ angular.module('turn.service', [])
 				var defered = $q.defer();
 
 				TurnDataFactory.createTurn(turnData).success(function(data) {
-					console.log("createTurn " + angular.toJson(data, true));
+//					console.log("createTurn " + angular.toJson(data, true));
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
 					defered.reject(data);
@@ -192,7 +192,7 @@ angular.module('turn.service', [])
 			},
 			constructStructureSave: function(turnData, turnForm, turnZoneAdd) {
 
-				console.log("constructStructureSave" + angular.toJson(turnZoneAdd, true));
+//				console.log("constructStructureSave" + angular.toJson(turnZoneAdd, true));
 
 				turnData.hours_ini = turnForm.hours_ini.time_original;
 				turnData.hours_end = turnForm.hours_end.time_original;
@@ -292,7 +292,7 @@ angular.module('turn.service', [])
 				TurnDataFactory.getTurn(idTurn, options).success(function(data) {
 					data = data.data;
 
-					console.log("getTurn " + angular.toJson(data, true));
+//					console.log("getTurn " + angular.toJson(data, true));
 
 					var turnData = {
 						id: data.id,
@@ -495,7 +495,7 @@ angular.module('turn.service', [])
 				return tablesZone;
 			},
 			getIndexHour: function(value, nextDay) {
-				nextDay = (nextDay) ? 0 : nextDay;
+				nextDay = (nextDay == undefined) ? 0 : nextDay;
 				var hourIndex = value.indexOf(":");
 				var min = value.substr(hourIndex);
 

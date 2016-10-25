@@ -459,8 +459,9 @@ angular.module('reservation.service', [])
             tableFilter: function(zones, blocks, cant) {
                 // Manejo estatico de tiempo de reserva por cantidad  de invitados
                 var start_time = moment().add( - moment().minutes() % 15, "minutes").second(0).millisecond(0);
-                var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
-
+                var aux_duration = moment("2000-01-01").add((60 + 15 * cant), "minutes");
+                var end_time = start_time.clone().add(aux_duration.hour(), "hours").add(aux_duration.minute(), "minutes");
+                // console.log(start_time.format("HH:mm:ss"), end_time.format("HH:mm:ss"));
                 angular.forEach(blocks, function(block) {
                     var start_block = moment(block.start_time, "HH:mm:ss");
                     var end_block = moment(block.end_time, "HH:mm:ss");
