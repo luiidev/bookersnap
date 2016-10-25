@@ -166,8 +166,8 @@ angular.module('floor.controller', [])
                             if (event) {
                                 showTimeCustom(event);
                                 vm.showTime = true;
-                        }
-                    });
+                            }
+                        });
                 });
         };
 
@@ -754,6 +754,11 @@ angular.module('floor.controller', [])
         };
 
         var getlistZonesBloqueosReservas = function() {
+
+            FloorFactory.listOnlyBloqueos().then(function success(data) {
+
+            });
+
             FloorFactory.listBloqueosReservas().then(function success(data) {
 
                 rm.res_listado_all = data;
@@ -804,7 +809,7 @@ angular.module('floor.controller', [])
                 rm.total_ttel = tTel;
                 rm.total_tpor = tPor;
                 rm.total_trp = tRp;
-                rm.total_reservas = rm.res_listado.length;
+                rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp; //rm.res_listado.length;
 
 
                 //console.log('Reservaciones: ' + angular.toJson(data, true));
@@ -937,10 +942,10 @@ angular.module('floor.controller', [])
                 if (categoria.checked === true) {
                     deshabilitar();
                 } else {
+                    rm.total_visitas = rm.total_people;
                     categoria.checked = true;
                     deshabilitar();
                 }
-
             }
             return false;
         };
@@ -1085,13 +1090,14 @@ angular.module('floor.controller', [])
                             reserva.checked = false;
                         }
                     });
-                    //rm.res_listado = rm.res_listado_all;
+
                 };
 
                 if (categoria.checked === true) {
                     deshabilitar();
                 } else {
                     categoria.checked = true;
+                    rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp;
                     deshabilitar();
                 }
             }
@@ -1129,7 +1135,6 @@ angular.module('floor.controller', [])
                 });
                 rm.total_reservas = calculo;
             }
-
         };
 
 

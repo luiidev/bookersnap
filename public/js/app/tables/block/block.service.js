@@ -2,6 +2,7 @@ angular.module('block.service', [])
     .factory('BlockFactory', function($http, ApiUrlMesas, HttpFactory) {
         var zonesCalendar;
         var blocksAll;
+        var blocks;
         var block;
         return {
             getZonesCalendar: function(date, reload) {
@@ -11,6 +12,10 @@ angular.module('block.service', [])
             getAllBlock: function(vDate, reload) {
                 blocksAll = HttpFactory.get(ApiUrlMesas + "/blocks/tables?" + vDate, {}, blocksAll, reload);
                 return blocksAll;
+            },
+            getBlocks: function(reload) {
+                blocks = HttpFactory.get(ApiUrlMesas + "/blocks", null, blocks, reload);
+                return blocks;
             },
             getBlock: function(vId, reload) {
                 block = HttpFactory.get(ApiUrlMesas + "/blocks/" + vId, {}, block, reload);

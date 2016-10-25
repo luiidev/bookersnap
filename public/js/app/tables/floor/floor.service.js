@@ -125,7 +125,7 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory, BlockFactory) {
 		var flag = {
 			editServer: false
 		};
@@ -511,6 +511,33 @@ angular.module('floor.service', [])
 					defered.reject(response.data);
 				});
 
+				return defered.promise;
+			},
+			listOnlyBloqueos: function() {
+				var me = this;
+				var defered = $q.defer();
+				BlockFactory.getBlocks().success(function(data) {
+					var vTables = [];
+					var vBloqueos = [];
+					angular.forEach(data.data, function(block) {
+						var tables = block.tables;
+						block.num_people = 0;
+						block.num_people_1 = 0;
+						block.num_people_2 = 0;
+						block.num_people_3 = 0;
+						block.res_source_type_id = null;
+						block.res_type_turn_id = null;
+						angular.forEach(tables, function(table, key) {
+							vTables.push(me.buscarTableReservation(table.id));
+							block.tables = vTables;
+						});
+						vBloqueos.push(block);
+					});
+					console.log(vBloqueos);
+					//defered.resolve(vBloqueos);
+				}).error(function(data, status, headers) {
+					defered.reject(data);
+				});
 				return defered.promise;
 			},
 			rowTableReservation: function(idTable) {
