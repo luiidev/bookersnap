@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column"  id="num{{ value.num_people }}" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-click="rm.editReservation(value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva">
+                                <tr class="listado-column"  id="num{{ value.num_people }}" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-click="rm.editReservation(value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type">
 
                                     <td>
                                         <table class="table-listado">
@@ -88,17 +88,70 @@
 
                 </tab>
                 <tab heading="Sentados">
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="value in rm.res_listado|filter:rm.busqueda|statusSeated">
-                            <div class="pull-right">
-                                <span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span>
-                            </div>
-                            <div class="lv-title ng-scope" ><i class="zmdi zmdi-calendar-note"></i>
-                            Mesa: {{value.name}} - {{value.first_name}} {{value.last_name}}</div>
-                            <div>{{value.start_time}} - {{value.end_time}}</br>
-                            {{value.num_people}} personas</div>
-                        </li>
-                    </ul>
+                     <div class="scrolltablef">
+                     <table class="table-listado" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <table class="table-listado">
+                                        <tr>
+                                            <th>HORA</th>
+                                            <th>PAX</th>
+                                            <th>NOMBRE</th>
+                                            <th>SALON</th>
+                                            <th>MESA</th>
+                                            <th>ESTADO</th>
+                                        </tr> 
+                                        </table>
+                                    </th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="listado-column"  data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | statusSeated">
+                                    <td>
+                                        <table class="table-listado">
+                                            <tr>
+                                                <td>{{value.start_time}}</td>
+                                                <td>{{value.num_people}}</td>
+                                                <td>{{value.first_name}} {{value.last_name}}</td>
+                                                <td>{{value.tables[0].zone_indice}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
+                                                <td class="text-center" align="center"><span class="box-status {{value.res_reservation_status_id | statusReservation}}"></span></td>
+                                            </tr>
+                                            <tr class="line-row">
+                                                <td colspan="4">
+                                                    <ul class="actions p-0 m-0">
+                                                        <li class="dropdown" uib-dropdown="">
+                                                            <a href="" uib-dropdown-toggle="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-info-outline"></i></a>
+                                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                            <li><a href="">Eleccion primera</a></li>
+                                                            <li><a href="">Segunda eleccion</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-male-alt"></i>
+                                                            <span class="num_people">{{value.num_people_1}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-female"></i>
+                                                            <span class="num_people">{{value.num_people_2}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href="">
+                                                            <i class="zmdi zmdi-face"></i>
+                                                            <span class="num_people">{{value.num_people_3}}</span>
+                                                        </a></li>
+                                                        <li class="icon-people"><a href=""><i class="zmdi zmdi-email"></i></a></li>
+                                                    </ul>
+                                                </td>
+                                                <td><div class="box-estado-res">MENU</div></td>
+                                                <td><div class="box-estado-res">Directo</div></td>
+                                            </tr>
+                                        </table>
+                                    </td> 
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
                 </tab>
                 <tab heading="Todos">
                     <div class="scrolltablef">
@@ -121,7 +174,7 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -178,13 +231,8 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li>
-                    <a href="" ng-click="rm.select_type(rm.itemTypeTodos,$event)">
-                    Todos
-                    </a>
-                </li>
                 <li ng-repeat="categoria in rm.categorias_type" ng-if="categoria.turn">
-                    <a href="" ng-click="rm.select_type(categoria,$event)" ng-class="rm.isActiveType(categoria)">{{categoria.name}}
+                    <a href="" ng-click="rm.select_type(categoria,$event)" ng-class="{'sel_active':categoria.checked}"><i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i> {{categoria.name}}
                     </a>
                 </li>
             </ul>
@@ -194,12 +242,12 @@
             <button type="button" class="btn dropdown-toggle waves-effect" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
                 RESERVAS
                 <span class="caret"></span>
-                <span class="rounded">20</span>
+                <span class="rounded">{{rm.total_reservas}}</span>
             </button>
             <ul class="dropdown-menu">
                 <li ng-repeat="categoria in rm.categorias_reserva">
                     <a href="" ng-click="rm.select_reserva(categoria,$event)" ng-class="{'sel_active':categoria.checked}">
-                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>{{categoria.nombre}}</a>
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i> {{categoria.nombre}}</a>
                 </li>
             </ul>
             </li>
