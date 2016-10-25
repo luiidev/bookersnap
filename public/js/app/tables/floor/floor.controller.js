@@ -155,12 +155,12 @@ angular.module('floor.controller', [])
                     message.apiError(error);
                 }).finally(function() {
                     getServers();
-                    loadBlocksReservations().then(function() {
-                        var event = $table.lastTimeEvent();
-                        console.log(event);
-                        if (event) {
-                            showTimeCustom(event);
-                            vm.showTime = true;
+                    loadBlocksReservations()
+                        .then(function() {
+                            var event = $table.lastTimeEvent();
+                            if (event) {
+                                showTimeCustom(event);
+                                vm.showTime = true;
                         }
                     });
                 });
@@ -606,7 +606,7 @@ angular.module('floor.controller', [])
                 });
         };
     })
-    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state) {
+    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.zoneName,
@@ -659,7 +659,7 @@ angular.module('floor.controller', [])
                 last_name: data.last_name,
                 date: moment(data.start_date).format("dddd, d [de] MMMM"),
                 time: moment(data.start_time, "HH:mm:ss").format("H:mm A"),
-                tables: FloorFactory.getReservationTables(content.zones, content.blocks, data.reservation_id)
+                tables: $table.getReservationTables(content.zones, content.blocks, data.reservation_id)
             };
         }
 
