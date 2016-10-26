@@ -1,7 +1,7 @@
 angular.module('reservation.service', [])
 .factory("reservationService", ["$http","HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
      function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
-        var zones, servers, resStatus, turns, blocks, tags, reservations;
+        var zones, servers, resStatus, turns, blocks, tags, reservations, configuration;
             return {
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
@@ -54,6 +54,10 @@ angular.module('reservation.service', [])
                 getReservations: function(reload) {
                     reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
                     return reservations;
+                },
+                getConfigurationRes: function(reload) {
+                    configuration = HttpFactory.get(ApiUrlMesas + "/configuration/reservations", null, configuration, reload);
+                    return configuration;
                 },
                 getGuest: function() {
                     var deferred = $q.defer();
