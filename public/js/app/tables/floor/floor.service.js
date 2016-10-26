@@ -450,10 +450,12 @@ angular.module('floor.service', [])
 					angular.forEach(tableBlocks, function(block, key) {
 
 						if (block.reservation_id == idreservacion) {
+							var nextDay = getHourNextDay(block.start_time, block.start_time);
 							// reserva.num_people = block.num_people;
 							reserva.start_date = block.start_date;
 							reserva.start_time = block.start_time;
 							reserva.end_time = block.end_time;
+							reserva.index_start_time = getIndexHour(block.start_time, nextDay);
 							vTables.push(me.buscarTableReservation(block.table_id));
 
 						}
@@ -507,10 +509,9 @@ angular.module('floor.service', [])
 						me.listOnlyBloqueos().then(function success(blocks) {
 							var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
 
-							console.log(lstreserva);
-
+							//console.log(lstreserva);
 							var union = lstreserva.concat(blocks);
-							console.log(union);
+							//console.log(angular.toJson(union, true));
 							defered.resolve(union);
 						}, function error(response) {
 							defered.reject(response.data);
@@ -536,6 +537,8 @@ angular.module('floor.service', [])
 					var vBloqueos = [];
 					angular.forEach(data.data, function(block) {
 						var tables = block.tables;
+						var nextDay = getHourNextDay(block.start_time, block.start_time);
+
 						block.num_people = 0;
 						block.num_people_1 = 0;
 						block.num_people_2 = 0;
@@ -543,6 +546,8 @@ angular.module('floor.service', [])
 						block.res_source_type_id = null;
 						block.res_type_turn_id = null;
 						block.block_id = block.id;
+						block.index_start_time = getIndexHour(block.start_time, nextDay);
+
 						angular.forEach(tables, function(table, key) {
 							vTables.push(me.buscarTableReservation(table.id));
 							block.tables = vTables;
