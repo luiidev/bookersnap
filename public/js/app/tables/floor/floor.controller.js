@@ -1186,6 +1186,8 @@ angular.module('floor.controller', [])
         wm.searchReservation = function() {
             wm.search.show = !wm.search.show;
         };
+
+        $rootScope.$on("floorListadoTypeTurnos");
     })
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
@@ -1441,7 +1443,7 @@ angular.module('floor.controller', [])
 
         };
     })
-    .controller("editReservationCtrl", ["$rootScope", "$uibModalInstance", "content", "reservationService",  function($rootScope, $uibModalInstance, content, service) {
+    .controller("editReservationCtrl", ["$rootScope", "$uibModalInstance", "content", "reservationService", function($rootScope, $uibModalInstance, content, service) {
 
         var er = this;
 

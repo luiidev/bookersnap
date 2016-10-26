@@ -438,7 +438,7 @@ angular.module('floor.service', [])
 				return defered.promise;
 			},
 			//Funcion para unir reservas y reservas-bloqueados
-			mergeReservasBloqueo: function(reservations, blocks) {
+			mergeReservasBloqueo: function(reservations, tableBlocks) {
 				var vReserva = [];
 				var me = this;
 				// console.log("**", reservations);
@@ -447,7 +447,7 @@ angular.module('floor.service', [])
 					var idreservacion = reserva.reservation_id;
 					var vTables = [];
 
-					angular.forEach(blocks, function(block, key) {
+					angular.forEach(tableBlocks, function(block, key) {
 
 						if (block.reservation_id == idreservacion) {
 							// reserva.num_people = block.num_people;
@@ -499,10 +499,25 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				me.listReservas().then(function success(reservations) {
 
-					me.listBloqueos().then(function success(blocks) {
-						var lstreserva = me.mergeReservasBloqueo(reservations, blocks);
+					me.listBloqueos().then(function success(tableBlocks) {
+
+
 						//console.log(angular.toJson(lstreserva, true));
-						defered.resolve(lstreserva);
+
+						me.listOnlyBloqueos().then(function success(blocks) {
+							var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
+
+							console.log(lstreserva);
+
+							var union = lstreserva.concat(blocks);
+							console.log(union);
+							defered.resolve(union);
+						}, function error(response) {
+							defered.reject(response.data);
+						});
+
+
+
 					}, function error(response) {
 						defered.reject(response.data);
 					});
@@ -527,19 +542,21 @@ angular.module('floor.service', [])
 						block.num_people_3 = 0;
 						block.res_source_type_id = null;
 						block.res_type_turn_id = null;
+						block.block_id = block.id;
 						angular.forEach(tables, function(table, key) {
 							vTables.push(me.buscarTableReservation(table.id));
 							block.tables = vTables;
 						});
 						vBloqueos.push(block);
 					});
-					console.log(vBloqueos);
-					//defered.resolve(vBloqueos);
+					//console.log(vBloqueos);
+					defered.resolve(vBloqueos);
 				}).error(function(data, status, headers) {
 					defered.reject(data);
 				});
 				return defered.promise;
 			},
+
 			rowTableReservation: function(idTable) {
 				var me = this;
 				var defered = $q.defer();
