@@ -174,9 +174,9 @@
                             </thead>
                             <tbody>
 
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'index_start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" ng-class="{'not_selector':value.block_id}">
                                     <td>
-                                        <table class="table-listado">
+                                        <table class="table-listado" ng-hide="value.block_id">
                                             <tr>
                                                 <td>{{value.start_time}}</td>
                                                 <td>{{value.num_people}}</td>
@@ -214,6 +214,15 @@
                                                 <td><div class="box-estado-res">Directo</div></td>
                                             </tr>
                                         </table>
+                                        <table class="table-listado" ng-show="value.block_id">
+                                            <tr>
+                                                <td>{{value.start_time}} - {{value.end_time}}</td>
+                                                <td>{{value.tables[0].zone_indice}}</td>
+                                                <td>{{value.tables[0].name}} <span ng-if="value.tables.length>1">+</span></td>
+                                                
+                                            </tr>
+                                        </table>
+                                        
                                     </td> 
                                 </tr>
                                 

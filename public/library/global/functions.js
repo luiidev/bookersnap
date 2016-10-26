@@ -517,7 +517,7 @@ var getFechaActual = function() {
 Cuando usamos un listado de horas de un rango de 15 en 15 minutos y trabajamos con indexes del 0 a 119,el servidor nos devuelve la hora en
 este formato : 08:00:00 y con esta funcion obtenemos su indice = 32
 
-esta funcio usamos para cuando queremos marcar algun elemento por defecto en un select(hora con rango)
+esta funcion usamos para cuando queremos marcar algun elemento por defecto en un select(hora con rango)
 */
 var getIndexHour = function(value, nextDay) {
     nextDay = (nextDay) ? 0 : nextDay;
@@ -544,4 +544,15 @@ var getIndexHour = function(value, nextDay) {
 
     index = index + 96 * nextDay;
     return index;
+};
+var getHourNextDay = function(hoursIni, hoursEnd) {
+    var nextDay = 0;
+    var xHourIni = hoursIni.split(":");
+    var xHourEnd = hoursEnd.split(":");
+
+    if (xHourEnd[0] < xHourIni[0]) {
+        nextDay = 1;
+    }
+
+    return nextDay;
 };

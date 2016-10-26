@@ -740,6 +740,7 @@ angular.module('floor.controller', [])
         var fecha_actual = getFechaActual();
         rm.fecha_actual = fecha_actual;
 
+
         //Limpiar data y estilos de servers
         FloorFactory.isEditServer(false);
         angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -756,10 +757,6 @@ angular.module('floor.controller', [])
 
         var getlistZonesBloqueosReservas = function() {
 
-            FloorFactory.listOnlyBloqueos().then(function success(data) {
-
-            });
-
             FloorFactory.listBloqueosReservas().then(function success(data) {
 
                 rm.res_listado_all = data;
@@ -774,6 +771,7 @@ angular.module('floor.controller', [])
                 var tRp = 0;
 
                 rm.res_listado = rm.res_listado_all;
+                console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
 
                     men += people.num_people_1;
@@ -814,7 +812,6 @@ angular.module('floor.controller', [])
 
 
                 //console.log('Reservaciones: ' + angular.toJson(data, true));
-
             });
         };
         getlistZonesBloqueosReservas();

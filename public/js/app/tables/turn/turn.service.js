@@ -297,9 +297,9 @@ angular.module('turn.service', [])
 						turn_time: data.turn_time
 					};
 
-					var nextDay = self.getHourNextDay(data.hours_ini, data.hours_end);
-					var hour_ini = self.getIndexHour(data.hours_ini, 0);
-					var hour_end = self.getIndexHour(data.hours_end, nextDay); //esto pendiente
+					var nextDay = getHourNextDay(data.hours_ini, data.hours_end);
+					var hour_ini = getIndexHour(data.hours_ini, 0);
+					var hour_end = getIndexHour(data.hours_end, nextDay); //esto pendiente
 
 					var turnForm = {
 						hours_ini: {
@@ -488,42 +488,6 @@ angular.module('turn.service', [])
 				});
 
 				return tablesZone;
-			},
-			getIndexHour: function(value, nextDay) {
-				nextDay = (nextDay === undefined) ? 0 : nextDay;
-				var hourIndex = value.indexOf(":");
-				var min = value.substr(hourIndex);
-
-				hourIndex = parseInt(value.substr(0, hourIndex));
-
-				min = min.replace(":", "");
-				min = min.replace("AM", "");
-				min = min.replace("PM", "");
-				min = parseInt(min);
-
-				var index = hourIndex * 4;
-
-				if (min == 15) {
-					index += 1;
-				} else if (min == 30) {
-					index += 2;
-				} else if (min == 45) {
-					index += 3;
-				}
-
-				index = index + 96 * nextDay;
-				return index;
-			},
-			getHourNextDay: function(hoursIni, hoursEnd) {
-				var nextDay = 0;
-				var xHourIni = hoursIni.split(":");
-				var xHourEnd = hoursEnd.split(":");
-
-				if (xHourEnd[0] < xHourIni[0]) {
-					nextDay = 1;
-				}
-
-				return nextDay;
 			},
 			checkTableZone: function(tablesId, idTable) {
 				var index = tablesId.indexOf(idTable);
@@ -738,7 +702,7 @@ angular.module('turn.service', [])
 				var self = this;
 
 				angular.forEach(data, function(time, key) {
-					var indexHour = self.getIndexHour(time.time);
+					var indexHour = getIndexHour(time.time, 0);
 					timeDefault.push({
 						text: (key === 0) ? "1 Invitado" : (key + 1) + " Invitados",
 						indexHour: indexHour,
