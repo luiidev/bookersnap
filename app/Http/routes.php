@@ -11,6 +11,17 @@
 |
  */
 
+Route::get('/test-mail', function () {
+    $beautymail = app()->make(Snowfire\Beautymail\Beautymail::class);
+    $beautymail->send('emails.demo', ['title' => 'prueba', 'mensaje' => 'ola'], function ($message) {
+        $message
+            ->from('postmaster@localhost')
+            ->to('joper30@gmail.com', 'JPrueba')
+            ->subject('Welcome!');
+    });
+
+});
+
 //Route principal : Lista de micrositios
 
 Route::get('/admin', function () {

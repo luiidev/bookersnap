@@ -737,22 +737,67 @@ angular.module('floor.controller', [])
     })
     .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
         var rm = this;
+
         var fecha_actual = getFechaActual();
+        var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+        var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
+
         rm.fecha_actual = fecha_actual;
-
-
-        //Limpiar data y estilos de servers
-        FloorFactory.isEditServer(false);
-        angular.element('.bg-window-floor').removeClass('drag-dispel');
-        // angular.element('.table-zone').removeClass("selected-table");
-        $rootScope.$broadcast("floorClearSelected");
-        ServerDataFactory.cleanTableServerItems();
 
         rm.search = {
             show: true
         };
+
+        $rootScope.$broadcast("floorClearSelected");
+
         rm.searchReservation = function() {
             rm.search.show = !rm.search.show;
+        };
+
+        var defaultOptionsFilters = function() {
+            //Datos y acciones para filtrar Reservas//
+            //****************************//
+            rm.categorias_reserva = [{
+                id: 0,
+                nombre: 'Todos',
+                checked: true,
+            }, {
+                id: 1,
+                nombre: 'Web',
+                checked: false,
+            }, {
+                id: 2,
+                nombre: 'Telefono',
+                checked: false,
+            }, {
+                id: 3,
+                nombre: 'Portal',
+                checked: false,
+            }, {
+                id: 4,
+                nombre: 'RP',
+                checked: false,
+            }];
+
+            //Datos y acciones para filtrar Visitas//
+            //****************************//
+            rm.categorias_people = [{
+                idcategoria: 1,
+                nombre: 'Todos',
+                checked: true,
+            }, {
+                idcategoria: 2,
+                nombre: 'Hombres',
+                checked: false,
+            }, {
+                idcategoria: 3,
+                nombre: 'Mujeres',
+                checked: false,
+            }, {
+                idcategoria: 4,
+                nombre: 'Niños(as)',
+                checked: false,
+            }];
         };
 
         var getlistZonesBloqueosReservas = function() {
@@ -814,8 +859,6 @@ angular.module('floor.controller', [])
                 //console.log('Reservaciones: ' + angular.toJson(data, true));
             });
         };
-        getlistZonesBloqueosReservas();
-
 
         //Datos y acciones para filtrar por Turnos//
         //****************************//
@@ -881,29 +924,6 @@ angular.module('floor.controller', [])
             //console.log(rm.filter_type);
         };
 
-
-        //Datos y acciones para filtrar Visitas//
-        //****************************//
-        rm.categorias_people = [{
-            idcategoria: 1,
-            nombre: 'Todos',
-            checked: true,
-        }, {
-            idcategoria: 2,
-            nombre: 'Hombres',
-            checked: false,
-        }, {
-            idcategoria: 3,
-            nombre: 'Mujeres',
-            checked: false,
-        }, {
-            idcategoria: 4,
-            nombre: 'Niños(as)',
-            checked: false,
-        }];
-        //Agregar para filtro por defecto
-        TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
-
         rm.select_people = function(categoria, event) {
 
             rm.filter_people = categoria;
@@ -947,9 +967,6 @@ angular.module('floor.controller', [])
             }
             return false;
         };
-
-        var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
-        rm.select_people(colection_filtro_visitas[0], null);
 
         var filtrarVisitas = function() {
             var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
@@ -1033,31 +1050,6 @@ angular.module('floor.controller', [])
             */
         };
 
-        //Datos y acciones para filtrar Reservas//
-        //****************************//
-        rm.categorias_reserva = [{
-            id: 0,
-            nombre: 'Todos',
-            checked: true,
-        }, {
-            id: 1,
-            nombre: 'Web',
-            checked: false,
-        }, {
-            id: 2,
-            nombre: 'Telefono',
-            checked: false,
-        }, {
-            id: 3,
-            nombre: 'Portal',
-            checked: false,
-        }, {
-            id: 4,
-            nombre: 'RP',
-            checked: false,
-        }];
-        TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
-
         rm.select_reserva = function(categoria, event) {
 
             rm.filter_reserva = categoria;
@@ -1102,9 +1094,6 @@ angular.module('floor.controller', [])
             return false;
         };
 
-        var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-        rm.select_reserva(colection_filtro_reservas[0], null);
-
         var filtrarReservas = function() {
             var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
             rm.filter_reserva = colection_filtro_reservas;
@@ -1135,8 +1124,6 @@ angular.module('floor.controller', [])
             }
         };
 
-
-
         rm.selectReservation = function(reservation) {
             $scope.$apply(function() {
                 $rootScope.$broadcast("floorEventEstablish", "sit", reservation);
@@ -1166,6 +1153,30 @@ angular.module('floor.controller', [])
                 }
             });
         };
+
+
+        var init = function() {
+            defaultOptionsFilters();
+            TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+            rm.select_reserva(colection_filtro_reservas[0], null);
+
+            //Limpiar data y estilos de servers
+            FloorFactory.isEditServer(false);
+            angular.element('.bg-window-floor').removeClass('drag-dispel');
+            // angular.element('.table-zone').removeClass("selected-table");
+
+            ServerDataFactory.cleanTableServerItems();
+
+            getlistZonesBloqueosReservas();
+            //Agregar para filtro por defecto
+            TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
+
+            rm.select_people(colection_filtro_visitas[0], null);
+
+        };
+
+        init();
+
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;
