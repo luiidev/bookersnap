@@ -1540,12 +1540,8 @@ angular.module('floor.controller', [])
 
         };
     })
-<<<<<<< HEAD
     .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
       function($rootScope, $state, $uibModalInstance, content, service, $q) {
-=======
-    .controller("editReservationCtrl", ["$rootScope", "$uibModalInstance", "content", "reservationService", function($rootScope, $uibModalInstance, content, service) {
->>>>>>> 8871aa4980796312a7fe29f191a7d6209a5aae41
 
         var er = this;
 
