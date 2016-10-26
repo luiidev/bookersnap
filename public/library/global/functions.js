@@ -545,3 +545,14 @@ var getIndexHour = function(value, nextDay) {
     index = index + 96 * nextDay;
     return index;
 };
+var getHourNextDay = function(hoursIni, hoursEnd) {
+    var nextDay = 0;
+    var xHourIni = hoursIni.split(":");
+    var xHourEnd = hoursEnd.split(":");
+
+    if (xHourEnd[0] < xHourIni[0]) {
+        nextDay = 1;
+    }
+
+    return nextDay;
+};
