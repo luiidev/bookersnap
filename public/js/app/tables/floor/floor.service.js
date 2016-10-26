@@ -125,7 +125,7 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory) {
+	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory, BlockFactory) {
 		var flag = {
 			editServer: false
 		};
@@ -438,7 +438,7 @@ angular.module('floor.service', [])
 				return defered.promise;
 			},
 			//Funcion para unir reservas y reservas-bloqueados
-			mergeReservasBloqueo: function(reservations, blocks) {
+			mergeReservasBloqueo: function(reservations, tableBlocks) {
 				var vReserva = [];
 				var me = this;
 				// console.log("**", reservations);
@@ -447,13 +447,15 @@ angular.module('floor.service', [])
 					var idreservacion = reserva.reservation_id;
 					var vTables = [];
 
-					angular.forEach(blocks, function(block, key) {
+					angular.forEach(tableBlocks, function(block, key) {
 
 						if (block.reservation_id == idreservacion) {
+							var nextDay = getHourNextDay(block.start_time, block.start_time);
 							// reserva.num_people = block.num_people;
 							reserva.start_date = block.start_date;
 							reserva.start_time = block.start_time;
 							reserva.end_time = block.end_time;
+							reserva.index_start_time = getIndexHour(block.start_time, nextDay);
 							vTables.push(me.buscarTableReservation(block.table_id));
 
 						}
@@ -499,10 +501,24 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				me.listReservas().then(function success(reservations) {
 
-					me.listBloqueos().then(function success(blocks) {
-						var lstreserva = me.mergeReservasBloqueo(reservations, blocks);
+					me.listBloqueos().then(function success(tableBlocks) {
+
+
 						//console.log(angular.toJson(lstreserva, true));
-						defered.resolve(lstreserva);
+
+						me.listOnlyBloqueos().then(function success(blocks) {
+							var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
+
+							//console.log(lstreserva);
+							var union = lstreserva.concat(blocks);
+							//console.log(angular.toJson(union, true));
+							defered.resolve(union);
+						}, function error(response) {
+							defered.reject(response.data);
+						});
+
+
+
 					}, function error(response) {
 						defered.reject(response.data);
 					});
@@ -513,6 +529,39 @@ angular.module('floor.service', [])
 
 				return defered.promise;
 			},
+			listOnlyBloqueos: function() {
+				var me = this;
+				var defered = $q.defer();
+				BlockFactory.getBlocks().success(function(data) {
+					var vTables = [];
+					var vBloqueos = [];
+					angular.forEach(data.data, function(block) {
+						var tables = block.tables;
+						var nextDay = getHourNextDay(block.start_time, block.start_time);
+
+						block.num_people = 0;
+						block.num_people_1 = 0;
+						block.num_people_2 = 0;
+						block.num_people_3 = 0;
+						block.res_source_type_id = null;
+						block.res_type_turn_id = null;
+						block.block_id = block.id;
+						block.index_start_time = getIndexHour(block.start_time, nextDay);
+
+						angular.forEach(tables, function(table, key) {
+							vTables.push(me.buscarTableReservation(table.id));
+							block.tables = vTables;
+						});
+						vBloqueos.push(block);
+					});
+					//console.log(vBloqueos);
+					defered.resolve(vBloqueos);
+				}).error(function(data, status, headers) {
+					defered.reject(data);
+				});
+				return defered.promise;
+			},
+
 			rowTableReservation: function(idTable) {
 				var me = this;
 				var defered = $q.defer();

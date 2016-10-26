@@ -17,10 +17,8 @@
         ])
         .constant("IdMicroSitio", idMicrositio)
         .constant("UrlServerNotify", "http://127.0.0.1:1337/")
-        /*.constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')*/
-        .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
+        .constant("ApiUrlMesas", 'http://192.168.0.105/v1/es/microsites/' + idMicrositio)
+        .constant("ApiUrlRoot", 'http://192.168.0.105/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
             $stateProvider

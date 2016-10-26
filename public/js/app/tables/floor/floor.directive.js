@@ -71,6 +71,7 @@ angular.module('floor.directive', [])
     .directive('ngDragNumPeople', function() {
 
         function makeDraggable(scope, element, attr) {
+
             element.draggable({
                 helper: "clone",
                 drag: function(event, ui) {
@@ -99,12 +100,14 @@ angular.module('floor.directive', [])
     .directive('ngDragUpComing', function() {
 
         function makeDraggable(scope, element, attr) {
+
             element.draggable({
                 helper: "clone",
                 cursorAt: {
                     left: 190
                 },
                 drag: function(event, ui) {
+                    angular.element(".not_selector").draggable("disable");
                     //console.log('x: ' + ui.offset.left + ', ' + 'y: ' + ui.offset.top);
                 },
                 start: function(event, ui) {
