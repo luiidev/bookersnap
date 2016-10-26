@@ -764,6 +764,11 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
+.scrollbar-inner
+	max-height 600px
+	overflow-y scroll
+	scrollbar-face-color #6685ca
+	scrollbar-highlight-color #6685ca
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -801,6 +806,11 @@ $background-tables-head = #eee
 			background rgba(66,66,66,0.5)
 			cursor pointer
 			width 400px
+			&.not_selector
+				background #636363
+				& .table-listado
+					height 40px
+				
 				
 .box-estado-res
 	background #575757

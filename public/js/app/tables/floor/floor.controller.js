@@ -1200,7 +1200,7 @@ angular.module('floor.controller', [])
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
         var sm = this;
-        //Variable para manejo de panatalla nuevo y crear
+        //Variable para manejo de pantalla nuevo y crear
         sm.flagServer = false;
         sm.id = "";
         sm.data = [];
@@ -1215,7 +1215,9 @@ angular.module('floor.controller', [])
             sm.showForm = true;
             FloorFactory.isEditServer(true);
             angular.element('.bg-window-floor').addClass('drag-dispel');
+            sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
         };
+
 
         //Obtener tablas seleccionadas del lienzo
         // var callListadoTable = function() {
@@ -1232,22 +1234,24 @@ angular.module('floor.controller', [])
             sm.showForm = true;
 
             //Obtener tab marcado
-            var firstTableId = parseInt(server.tables[0].id);
-            var indiceZone = 0;
+            if (server.tables.length !== 0) {
+                var firstTableId = parseInt(server.tables[0].id);
+                var indiceZone = 0;
 
-            var lstZonas = FloorFactory.getDataZonesTables();
-            angular.forEach(lstZonas, function(zona, key) {
-                var tables = zona.tables;
-                //console.log(zona);
-                angular.forEach(tables, function(table) {
-                    //console.log(table);
-                    if (table.id == firstTableId) {
-                        indiceZone = key;
-                        FloorFactory.setNavegationTabZone(indiceZone);
-                        //console.log(key);
-                    }
+                var lstZonas = FloorFactory.getDataZonesTables();
+                angular.forEach(lstZonas, function(zona, key) {
+                    var tables = zona.tables;
+                    //console.log(zona);
+                    angular.forEach(tables, function(table) {
+                        //console.log(table);
+                        if (table.id == firstTableId) {
+                            indiceZone = key;
+                            FloorFactory.setNavegationTabZone(indiceZone);
+                            //console.log(key);
+                        }
+                    });
                 });
-            });
+            }
 
             $rootScope.$broadcast("floorZoneIndexSelected", server.tables);
             $rootScope.$broadcast("floorTablesSelected", server.tables);
@@ -1267,7 +1271,6 @@ angular.module('floor.controller', [])
 
             ServerDataFactory.setTableServerItemsEdit(vTable);
             sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
-            //console.log('info' + angular.toJson(server, true));
 
             FloorFactory.isEditServer(true);
 
@@ -1299,6 +1302,7 @@ angular.module('floor.controller', [])
 
             $rootScope.$broadcast("floorClearSelected");
 
+            sm.listadoTablaServer = [];
             ServerDataFactory.cleanTableServerItems();
 
             angular.element('.bg-window-floor').removeClass('drag-dispel');
