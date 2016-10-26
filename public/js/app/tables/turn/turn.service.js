@@ -171,7 +171,6 @@ angular.module('turn.service', [])
 				var defered = $q.defer();
 
 				TurnDataFactory.createTurn(turnData).success(function(data) {
-//					console.log("createTurn " + angular.toJson(data, true));
 					defered.resolve(data);
 				}).error(function(data, status, headers) {
 					defered.reject(data);
@@ -191,8 +190,6 @@ angular.module('turn.service', [])
 				return defered.promise;
 			},
 			constructStructureSave: function(turnData, turnForm, turnZoneAdd) {
-
-//				console.log("constructStructureSave" + angular.toJson(turnZoneAdd, true));
 
 				turnData.hours_ini = turnForm.hours_ini.time_original;
 				turnData.hours_end = turnForm.hours_end.time_original;
@@ -291,15 +288,13 @@ angular.module('turn.service', [])
 
 				TurnDataFactory.getTurn(idTurn, options).success(function(data) {
 					data = data.data;
-
-//					console.log("getTurn " + angular.toJson(data, true));
-
 					var turnData = {
 						id: data.id,
 						name: data.name,
 						hours_ini: data.hours_ini,
 						hours_end: data.hours_end,
-						days: data.days
+						days: data.days,
+						turn_time: data.turn_time
 					};
 
 					var nextDay = self.getHourNextDay(data.hours_ini, data.hours_end);
@@ -495,7 +490,7 @@ angular.module('turn.service', [])
 				return tablesZone;
 			},
 			getIndexHour: function(value, nextDay) {
-				nextDay = (nextDay == undefined) ? 0 : nextDay;
+				nextDay = (nextDay === undefined) ? 0 : nextDay;
 				var hourIndex = value.indexOf(":");
 				var min = value.substr(hourIndex);
 
@@ -538,7 +533,6 @@ angular.module('turn.service', [])
 				} else {
 					tablesId.splice(index, 1);
 				}
-
 			},
 			checkAllTableZone: function(tablesId, tables, option) {
 
@@ -738,6 +732,47 @@ angular.module('turn.service', [])
 				} else {
 					days.splice(index, 1);
 				}
+			},
+			parseTurnTimeDefault: function(dataTurnTime, listAvailability, data) {
+				var timeDefault = [];
+				var self = this;
+
+				angular.forEach(data, function(time, key) {
+					var indexHour = self.getIndexHour(time.time);
+					timeDefault.push({
+						text: (key === 0) ? "1 Invitado" : (key + 1) + " Invitados",
+						indexHour: indexHour,
+						hourText: listAvailability[indexHour].time_original
+					});
+				});
+
+				dataTurnTime.data_temporal = timeDefault;
+
+				return dataTurnTime;
+			},
+			generatedTurnTimeDefault: function(listAvailability) {
+				var indexHourDefault = 5;
+				var turnTime = {
+					data_final: [],
+					data_temporal: []
+				};
+
+				for (var i = 0; i <= 9; i++) {
+
+					turnTime.data_temporal.push({
+						text: (i === 0) ? "1 Invitado" : (i + 1) + " Invitados",
+						indexHour: indexHourDefault,
+						hourText: listAvailability[indexHourDefault].time_original
+					});
+
+					turnTime.data_final.push({
+						num_guests: (i + 1),
+						time: listAvailability[indexHourDefault].time_original
+					});
+
+					indexHourDefault += 1;
+				}
+				return turnTime;
 			}
 
 		};
