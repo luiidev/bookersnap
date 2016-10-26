@@ -162,7 +162,6 @@ return [
         //Ixudra\Curl\CurlServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
-        Snowfire\Beautymail\BeautymailServiceProvider::class,
 
     ],
     'facades'         => array(
