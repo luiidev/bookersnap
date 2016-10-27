@@ -1347,7 +1347,7 @@ angular.module('floor.controller', [])
         var vm = this;
 
         vm.mailData = {
-            mensaje: '',
+            message: '',
             subject: ''
         };
 
@@ -1358,12 +1358,37 @@ angular.module('floor.controller', [])
         vm.sendMail = function() {
             FloorDataFactory.sendMessage(reservationId, vm.mailData).then(
                 function success(response) {
+                    response = response.data;
+
+                    messageAlert("Success", response.msg, "success", 2000, true);
+                    $uibModalInstance.dismiss('cancel');
+
                     console.log("sendMail " + angular.toJson(response, true));
                 },
                 function error(response) {
+                    message.apiError(response);
                     console.error("sendMail " + angular.toJson(response, true));
                 });
+        };
 
+        vm.validateSendMail = function() {
+            var valida = 0;
+
+            if (vm.mailData.message === "") {
+                alertMultiple("Alerta", "Ingrese un mensaje", "info", null);
+                valida = 1;
+            }
+
+            if (vm.mailData.subject === "") {
+                alertMultiple("Alerta", "Ingrese un asunto", "info", null);
+                valida = 1;
+            }
+
+            if (valida === 0) {
+                vm.sendMail();
+            } else {
+                $uibModalInstance.dismiss('cancel');
+            }
         };
 
         vm.closeModal = function() {

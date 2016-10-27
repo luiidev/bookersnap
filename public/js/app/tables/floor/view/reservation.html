@@ -537,13 +537,13 @@
        
             <div class="col-xs-12">
                 <h5>Mensaje</h5>
-                <textarea class="form-control" rows="8" ng-model="vm.mailData.mensaje"></textarea>
+                <textarea class="form-control" rows="8" ng-model="vm.mailData.message"></textarea>
             </div>
         </div>
     </div>
 
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
-        <button class="btn btn-primary" type="button" ng-click="vm.sendMail()">Enviar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>
