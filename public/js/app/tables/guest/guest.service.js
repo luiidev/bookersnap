@@ -71,7 +71,6 @@ angular.module('guest.service', [])
 			var jsonData = JSON.stringify(elements);
 
 			if (element !== undefined) {
-				console.log(jsonData);
 				if (jsonData.indexOf(element) == -1) {
 					var data = {
 						email: element
@@ -103,38 +102,14 @@ angular.module('guest.service', [])
 
 			return index;
 		},
-		createGuest: function(dataGuest) {
-			var defered = $q.defer();
-
-			GuestDataFactory.create(dataGuest).success(function(data) {
-				defered.resolve(data);
-			}).error(function(data, status, headers) {
-				var response = jsonErrorData(data, status, headers);
-				defered.reject(response);
-			});
-
-			return defered.promise;
-		},
-		updateGuest: function(dataGuest) {
-			var defered = $q.defer();
-
-			GuestDataFactory.update(dataGuest).success(function(data) {
-				defered.resolve(data);
-			}).error(function(data, status, headers) {
-				var response = jsonErrorData(data, status, headers);
-				defered.reject(response);
-			});
-
-			return defered.promise;
-		},
 		saveGuest: function(dataGuest, option) {
 			var defered = null;
 			var me = this;
 
 			if (option == "create") {
-				defered = me.createGuest(dataGuest);
+				defered = GuestDataFactory.create(dataGuest);
 			} else {
-				defered = me.updateGuest(dataGuest);
+				defered = GuestDataFactory.update(dataGuest);
 			}
 
 			return defered;

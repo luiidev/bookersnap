@@ -160,9 +160,9 @@ angular.module('turn.service', [])
 				var me = this;
 
 				if (option == "create") {
-					defered = me.createTurn(turnData);
+					defered = TurnDataFactory.createTurn(turnData);
 				} else {
-					defered = me.editTurn(turnData);
+					defered = TurnDataFactory.updateTurn(turnData);
 				}
 
 				return defered;

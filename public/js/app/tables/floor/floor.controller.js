@@ -1260,8 +1260,8 @@ angular.module('floor.controller', [])
                 controller: 'ModalMailReservationCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    email: function() {
-                        return reservation.email;
+                    reservationId: function() {
+                        return reservation.reservation_id;
                     }
                 }
             });
@@ -1294,20 +1294,27 @@ angular.module('floor.controller', [])
         init();
 
     })
-    .controller('ModalMailReservationCtrl', function($uibModalInstance, email) {
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservationId, FloorDataFactory) {
         var vm = this;
 
         vm.mailData = {
-            email: '',
-            mensaje: ''
+            mensaje: '',
+            subject: ''
         };
 
         var init = function() {
-            vm.mailData.email = (email === "" || email === undefined) ? "" : email;
+            console.log(angular.toJson(reservationId, true));
         };
 
         vm.sendMail = function() {
-            console.log("sendMail " + angular.toJson(vm.mailData, true));
+            FloorDataFactory.sendMessage(reservationId, vm.mailData).then(
+                function success(response) {
+                    console.log("sendMail " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.error("sendMail " + angular.toJson(response, true));
+                });
+
         };
 
         vm.closeModal = function() {
@@ -1315,7 +1322,7 @@ angular.module('floor.controller', [])
         };
 
         init();
-        console.log("ModalEditReservation " + email);
+
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;

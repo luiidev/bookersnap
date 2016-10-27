@@ -59,105 +59,104 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                            <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-if="value.reservation_id" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
-                                                <td>
-                                                    <table class="table-listado">
-                                                        <tr>
-                                                            <td>
-                                                                {{value.start_time}}
-                                                            </td>
-                                                            <td>
-                                                                {{value.num_people}}
-                                                            </td>
-                                                            <td>
-                                                                {{value.first_name}} {{value.last_name}}
-                                                            </td>
-                                                            <td>
-                                                                {{value.tables[0].zone_indice}}
-                                                            </td>
-                                                            <td>
-                                                                {{value.tables[0].name}}
-                                                                <span ng-if="value.tables.length>1">
-                                                                    +
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <div class="box-estado-res bg-green">
-                                                                    {{value.res_reservation_status_id | statusEstados}}
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="line-row">
-                                                            <td colspan="4">
-                                                                <ul class="actions p-0 m-0">
-                                                                    <li class="dropdown" uib-dropdown="">
-                                                                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" uib-dropdown-toggle="">
-                                                                            <i class="zmdi zmdi-info-outline">
-                                                                            </i>
-                                                                        </a>
-                                                                        <ul class="dropdown-menu dropdown-menu-right">
-                                                                            <li>
-                                                                                <a href="">
-                                                                                    Eleccion primera
-                                                                                </a>
-                                                                            </li>
-                                                                            <li>
-                                                                                <a href="">
-                                                                                    Segunda eleccion
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </li>
-                                                                    <li class="icon-people">
-                                                                        <a href="">
-                                                                            <i class="zmdi zmdi-male-alt">
-                                                                            </i>
-                                                                            <span class="num_people">
-                                                                                {{value.num_people_1}}
-                                                                            </span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="icon-people">
-                                                                        <a href="">
-                                                                            <i class="zmdi zmdi-female">
-                                                                            </i>
-                                                                            <span class="num_people">
-                                                                                {{value.num_people_2}}
-                                                                            </span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="icon-people">
-                                                                        <a href="">
-                                                                            <i class="zmdi zmdi-face">
-                                                                            </i>
-                                                                            <span class="num_people">
-                                                                                {{value.num_people_3}}
-                                                                            </span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="icon-people">
-                                                                        <a href="">
-                                                                            <i class="zmdi zmdi-email">
-                                                                            </i>
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </td>
-                                                            <td>
-                                                                <div class="box-estado-res">
-                                                                    {{value.res_type_turn_id | statusTurnos}}
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="box-estado-res">
-                                                                    {{value.res_source_type_id | statusReservas}}
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-if="value.reservation_id" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                            <td>
+                                                <table class="table-listado">
+                                                    <tr>
+                                                        <td>
+                                                            {{value.start_time}}
+                                                        </td>
+                                                        <td>
+                                                            {{value.num_people}}
+                                                        </td>
+                                                        <td>
+                                                            {{value.first_name}} {{value.last_name}}
+                                                        </td>
+                                                        <td>
+                                                            {{value.tables[0].zone_indice}}
+                                                        </td>
+                                                        <td>
+                                                            {{value.tables[0].name}}
+                                                            <span ng-if="value.tables.length>1">
+                                                                +
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="box-estado-res bg-green">
+                                                                {{value.res_reservation_status_id | statusEstados}}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="line-row">
+                                                        <td colspan="4">
+                                                            <ul class="actions p-0 m-0">
+                                                                <li class="dropdown" uib-dropdown="">
+                                                                    <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" uib-dropdown-toggle="">
+                                                                        <i class="zmdi zmdi-info-outline">
+                                                                        </i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                                        <li>
+                                                                            <a href="">
+                                                                                Eleccion primera
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="">
+                                                                                Segunda eleccion
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li class="icon-people">
+                                                                    <a href="">
+                                                                        <i class="zmdi zmdi-male-alt">
+                                                                        </i>
+                                                                        <span class="num_people">
+                                                                            {{value.num_people_1}}
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                                <li class="icon-people">
+                                                                    <a href="">
+                                                                        <i class="zmdi zmdi-female">
+                                                                        </i>
+                                                                        <span class="num_people">
+                                                                            {{value.num_people_2}}
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                                <li class="icon-people">
+                                                                    <a href="">
+                                                                        <i class="zmdi zmdi-face">
+                                                                        </i>
+                                                                        <span class="num_people">
+                                                                            {{value.num_people_3}}
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                                <li class="icon-people">
+                                                                    <a href="" ng-click="rm.mailReservationShow(value)">
+                                                                        <i class="zmdi zmdi-email">
+                                                                        </i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <div class="box-estado-res">
+                                                                {{value.res_type_turn_id | statusTurnos}}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="box-estado-res">
+                                                                {{value.res_source_type_id | statusReservas}}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -195,7 +194,6 @@
                             </tr>
                         </thead>
                     </table>
-
                     <div style="height: 100vh;padding-bottom: 310px;">
                         <div style="height: 100%;">
                             <div class="scrollbar-inner">
@@ -530,8 +528,8 @@
     <div class="modal-body">
         <div class="row">
              <div class="col-xs-12">
-                <h5>E-mail</h5>
-                <input type="email" name=""  class="form-control" ng-model="vm.mailData.email" />
+                <h5>Asunto</h5>
+                <input type="text" name=""  class="form-control" ng-model="vm.mailData.subject" />
             </div>
        
             <div class="col-xs-12">
