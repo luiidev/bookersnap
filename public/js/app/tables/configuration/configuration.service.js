@@ -279,9 +279,14 @@ angular.module('configuration.service', [])
 				var hora = 0;
 				var timeList = [];
 				for (let i = 0; i <= 36; i++) {
-					if (i < 12) {
+					if (i == 0) {
 						timeList[i] = {
 							id: i,
+							option: "ILIMITADO"
+						};
+					} else if (i < 12) {
+						timeList[i] = {
+							id: i * 5,
 							option: tolerancia + " minutos"
 						};
 					} else {
@@ -294,13 +299,13 @@ angular.module('configuration.service', [])
 						if (multiplo) {
 							hora++;
 							timeList[i] = {
-								id: i,
+								id: i * 5,
 								option: hora + " horas"
 							};
 							tolerancia = 0;
 						} else {
 							timeList[i] = {
-								id: i,
+								id: i * 5,
 								option: hora + " horas " + tolerancia + " minutos"
 							};
 						}
