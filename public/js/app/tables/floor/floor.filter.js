@@ -315,4 +315,46 @@ angular.module('floor.filter', [])
 
 
 		};
+	})
+	.filter("statusTurnos", function(TypeFilterDataFactory, $filter) {
+		return function(valor) {
+			if (valor !== null) {
+				var name_status = "";
+				var listadoTurns = TypeFilterDataFactory.getTypeTurnItems();
+				angular.forEach(listadoTurns, function(turn) {
+					if (turn.id == valor) {
+						name_status = $filter('uppercase')(turn.name);
+					}
+				});
+				return name_status;
+			}
+		};
+	})
+	.filter("statusReservas", function(TypeFilterDataFactory, $filter) {
+		return function(valor) {
+			if (valor !== null) {
+				var name_status = "";
+				var listadoReservations = TypeFilterDataFactory.getSourceTypesItems();
+				angular.forEach(listadoReservations, function(reserva) {
+					if (reserva.id == valor) {
+						name_status = $filter('uppercase')(reserva.name);
+					}
+				});
+				return name_status;
+			}
+		};
+	})
+	.filter("statusEstados", function(TypeFilterDataFactory, $filter) {
+		return function(valor) {
+			if (valor !== null) {
+				var name_status = "";
+				var listadoStatus = TypeFilterDataFactory.getStatusTypesItems();
+				angular.forEach(listadoStatus, function(statu) {
+					if (statu.id == valor) {
+						name_status = $filter('uppercase')(statu.name);
+					}
+				});
+				return name_status;
+			}
+		};
 	});

@@ -1,6 +1,6 @@
 angular.module('floor.service', [])
-	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas) {
-		var reservations, tables;
+	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas, ApiUrlRoot) {
+		var reservations, tables, sourceTypes;
 		return {
 			getBloqueos: function(reload) {
 				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
@@ -10,11 +10,17 @@ angular.module('floor.service', [])
 				reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
 				return reservations;
 			},
+			getSourceTypes: function(reload) {
+				sourceTypes = HttpFactory.get(ApiUrlRoot + "/reservation/source-types", null, sourceTypes, reload);
+				return sourceTypes;
+			},
 
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
+		var sourceColection = [];
+		var statusColection = [];
 		var filtrosTurno = [];
 		var filtrosVisita = [];
 		var filtrosReserva = [];
@@ -45,6 +51,38 @@ angular.module('floor.service', [])
 			},
 			getTypeTurnItems: function() {
 				return typeColection;
+			},
+			setSourceTypesItems: function(sourceItem) {
+				var vSource = [];
+				var itemTodos = {
+					id: 0,
+					name: "Todos",
+					status: 1,
+					checked: true,
+					turn: [{
+						hours_ini: "00:00:00",
+						hours_end: "00:00:00"
+					}]
+				};
+				angular.forEach(sourceItem, function(value) {
+					vSource.push({
+						id: value.id,
+						name: value.name,
+						description: value.description,
+						checked: false
+					});
+				});
+				vSource.unshift(itemTodos);
+				sourceColection = vSource;
+			},
+			getSourceTypesItems: function() {
+				return sourceColection;
+			},
+			setStatusTypesItems: function(statusItem) {
+				statusColection = statusItem;
+			},
+			getStatusTypesItems: function() {
+				return statusColection;
 			},
 			setOpcionesFilterTurnos: function(typeItem) {
 				if (typeItem.id === 0) {
