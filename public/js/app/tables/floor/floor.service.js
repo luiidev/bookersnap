@@ -49,7 +49,7 @@ angular.module('floor.service', [])
 				vTurn.unshift(itemTodos);
 				typeColection = vTurn;
 			},
-			getTypeTurnItems: function() {
+			getTypeTurnItems: function(FloorFactory) {
 				return typeColection;
 			},
 			setSourceTypesItems: function(sourceItem) {

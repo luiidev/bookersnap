@@ -286,12 +286,12 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                MENU
+                                                                {{value.res_type_turn_id | statusTurnos}}
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                Directo
+                                                                {{value.res_source_type_id | statusReservas}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -364,7 +364,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res bg-green">
-                                                                Espera
+                                                                {{value.res_reservation_status_id | statusEstados}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -426,12 +426,12 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                MENU
+                                                                {{value.res_type_turn_id | statusTurnos}}
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                Directo
+                                                                {{value.res_source_type_id | statusReservas}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -450,7 +450,10 @@
                                                                 +
                                                             </span>
                                                         </td>
-                                                        <td width="20">
+                                                        <td width="50">
+                                                            <div class="box-estado-res">
+                                                                BLOQUEADO
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </table>
