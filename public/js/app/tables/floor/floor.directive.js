@@ -171,9 +171,9 @@ angular.module('floor.directive', [])
                     // var st = parseInt($(element).data("startingScrollTop"));
                     // ui.position.top -= $(element).parent().scrollTop() - st;
                     // $(element).clone().css({"transform": null});
-                    console.log($(ui.helper[0]).parent().clone());
+                    // console.log($(ui.helper[0]).parent().clone());
 
-                    // $(ui.helper[0]).parent().css("transform", "translate(0,0) rotate(0deg)");
+                    $(ui.helper[0]).parent().css("transform", "translate(0,0) rotate(0deg)");
                     $(ui.helper[0]).css("transform", "translate(0,0) rotate(0deg)");
                     $(ui.helper[0]).css("background-color", "red");
                     $(ui.helper[0]).css("z-index", 100000);
