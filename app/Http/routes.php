@@ -11,6 +11,40 @@
 |
  */
 
+Route::get('/test-mail', function () {
+
+    try {
+        $mandrill = new Mandrill('gOPLZL8WNLUaeY2CsRmckQ');
+        $message  = array(
+            'html'       => 'hghg',
+            'text'       => 'Example text content',
+            'subject'    => 'example subject',
+            'from_email' => 'message.from_email@example.com',
+            'from_name'  => 'Example Name',
+            'to'         => array(
+                array(
+                    'email' => 'joper30@gmail.com',
+                    'name'  => 'Recipient Name',
+                    'type'  => 'to',
+                ),
+            ),
+
+        );
+        $async   = false;
+        $ip_pool = 'prueba';
+        $send_at = "2016-10-27 11:00:00";
+        $result  = $mandrill->messages->send($message, $async, $ip_pool, $send_at);
+        print_r($result);
+
+    } catch (Mandrill_Error $e) {
+        // Mandrill errors are thrown as exceptions
+        echo 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
+        // A mandrill error occurred: Mandrill_Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+        throw $e;
+    }
+
+});
+
 //Route principal : Lista de micrositios
 
 Route::get('/admin', function () {
