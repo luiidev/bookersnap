@@ -559,7 +559,7 @@ angular.module('floor.controller', [])
             var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.id,
-                covers: {
+                guests: {
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
                     children: vmc.flagSelectedNumChildren,
@@ -610,7 +610,7 @@ angular.module('floor.controller', [])
                 });
         };
     })
-    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table) {
+    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.zoneName,
@@ -635,61 +635,146 @@ angular.module('floor.controller', [])
         };
 
         vmd.reservationEdit = function(data) {
-            listResource();
-            vmd.info = parseInfo(data);
-            vmd.reservation = parseData(data);
+            listResource().then(function() {
+                parseInfo(data);
+                parseData(data);
+            });
+
             vmd.EditContent = true;
         };
 
         function listResource() {
-            listGuest();
-            listStatuses();
-            listServers();
+            return $q.all([
+                listGuest(),
+                listStatuses(),
+                listServers(),
+                loadConfiguration()
+            ]);
         }
 
-        function parseData(data) {
-            return {
-                id: data.reservation_id,
-                covers: data.num_people,
-                status_id: data.res_reservation_status_id,
-                server_id: data.res_server_id,
-                note: data.note || null
+        vmd.sumar = function(guest) {
+            var total = vmd.reservation.guests.total;
+            if (total + 1 <= vmd.reservation.covers) {
+                vmd.reservation.guests[guest]++;
+                totalGuests();
+            }
+        };
+
+        vmd.restar = function(guest) {
+            var quantity = vmd.reservation.guests[guest];
+            if (quantity - 1 >= 0) {
+                vmd.reservation.guests[guest]--;
+                totalGuests();
+            }
+        };
+
+        var totalGuests = function() {
+            vmd.reservation.guests.total = vmd.reservation.guests.men +  vmd.reservation.guests.women + vmd.reservation.guests.children;
+        };
+
+        function parseData(reservation) {
+            var men = 0;
+            var women = 0;
+            var children = 0;
+            if (vmd.configuration.status_people_1) {
+                men = reservation.num_people_1 || 0;
+            }
+            if (vmd.configuration.status_people_2) {
+                women = reservation.num_people_2 || 0;
+            }
+            if (vmd.configuration.status_people_3) {
+                children = reservation.num_people_3 || 0;
+            }
+            vmd.reservation = {
+                id: reservation.reservation_id,
+                covers: reservation.num_people,
+                status_id: reservation.res_reservation_status_id,
+                server_id: reservation.res_server_id,
+                note: reservation.note || null,
+                guests: {
+                   men: men,
+                   women: women,
+                   children: children
+                }
+            };
+
+            totalGuests();
+        }
+
+        function parseInfo(reservation) {
+            vmd.info = {
+                first_name: reservation.first_name,
+                last_name: reservation.last_name,
+                date: moment(reservation.start_date).format("dddd, d [de] MMMM"),
+                time: moment(reservation.start_time, "HH:mm:ss").format("H:mm A"),
+                tables: getTables(reservation.tables)
             };
         }
 
-        function parseInfo(data) {
-            return {
-                first_name: data.first_name,
-                last_name: data.last_name,
-                date: moment(data.start_date).format("dddd, d [de] MMMM"),
-                time: moment(data.start_time, "HH:mm:ss").format("H:mm A"),
-                tables: $table.getReservationTables(content.zones, content.blocks, data.reservation_id)
-            };
+        function getTables(tables) {
+            var reservationTables = "";
+            angular.forEach(tables, function(table) {
+                reservationTables += table.name + ", ";
+            });
+
+            return reservationTables.substring(0, reservationTables.length - 2);
         }
+
 
         var listGuest = function() {
+            var deferred = $q.defer();
             reservationService.getGuest()
                 .then(function(guests) {
                     vmd.covers = guests;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
         };
 
         var listStatuses = function() {
+            var deferred = $q.defer();
             reservationService.getStatuses()
                 .then(function(response) {
                     vmd.statuses = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
         };
 
         var listServers = function() {
+            var deferred = $q.defer();
             reservationService.getServers()
                 .then(function(response) {
                     vmd.servers = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
+        };
+
+        var loadConfiguration = function() {
+            var deferred = $q.defer();
+            reservationService.getConfigurationRes()
+                .then(function(response) {
+                    vmd.configuration = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
         };
 
         vmd.cancelEdit = function() {
@@ -1501,53 +1586,141 @@ angular.module('floor.controller', [])
 
         };
     })
-    .controller("editReservationCtrl", ["$rootScope", "$uibModalInstance", "content", "reservationService", function($rootScope, $uibModalInstance, content, service) {
+    .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
+      function($rootScope, $state, $uibModalInstance, content, service, $q) {
 
         var er = this;
 
+        er.sumar = function(guest) {
+            var total = er.reservation.guests.total;
+            if (total + 1 <= er.reservation.covers) {
+                er.reservation.guests[guest]++;
+                totalGuests();
+            }
+        };
+
+        er.restar = function(guest) {
+            var quantity = er.reservation.guests[guest];
+            if (quantity - 1 >= 0) {
+                er.reservation.guests[guest]--;
+                totalGuests();
+            }
+        };
+
+        var totalGuests = function() {
+            er.reservation.guests.total = er.reservation.guests.men +  er.reservation.guests.women + er.reservation.guests.children;
+        };
+
         function parseData(reservation) {
-            return {
+            var men = 0;
+            var women = 0;
+            var children = 0;
+            if (er.configuration.status_people_1) {
+                men = reservation.num_people_1 || 0;
+            }
+            if (er.configuration.status_people_2) {
+                women = reservation.num_people_2 || 0;
+            }
+            if (er.configuration.status_people_3) {
+                children = reservation.num_people_3 || 0;
+            }
+            er.reservation = {
                 id: reservation.reservation_id,
                 covers: reservation.num_people,
                 status_id: reservation.res_reservation_status_id,
                 server_id: reservation.res_server_id,
-                note: reservation.note || null
+                note: reservation.note || null,
+                guests: {
+                   men: men,
+                   women: women,
+                   children: children
+                }
             };
+
+            totalGuests();
         }
 
         function parseInfo(reservation) {
-            return {
+            er.info = {
                 first_name: reservation.first_name,
                 last_name: reservation.last_name,
                 date: moment(reservation.start_date).format("dddd, d [de] MMMM"),
                 time: moment(reservation.start_time, "HH:mm:ss").format("H:mm A"),
-                // tables: $table.getReservationTables(content.zones, content.blocks, reservation.reservation_id)
+                tables: getTables(reservation.tables)
             };
         }
 
+        function getTables(tables) {
+            var reservationTables = "";
+            angular.forEach(tables, function(table) {
+                reservationTables += table.name + ", ";
+            });
+
+            return reservationTables.substring(0, reservationTables.length - 2);
+        }
+
         var listGuest = function() {
+            var deferred = $q.defer();
             service.getGuest()
                 .then(function(guests) {
                     er.covers = guests;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
         };
 
         var listStatuses = function() {
+            var deferred = $q.defer();
             service.getStatuses()
                 .then(function(response) {
                     er.statuses = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
         };
 
         var listServers = function() {
+            var deferred = $q.defer();
             service.getServers()
                 .then(function(response) {
                     er.servers = response.data.data;
                 }).catch(function(error) {
                     message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
                 });
+
+            return deferred.promise;
+        };
+
+        var loadConfiguration = function() {
+            var deferred = $q.defer();
+            service.getConfigurationRes()
+                .then(function(response) {
+                    er.configuration = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
+        };
+
+        er.reservationEditAll = function() {
+            $uibModalInstance.dismiss('cancel');
+            $state.go('mesas.reservation-edit', {
+                id: er.reservation.id,
+                date: moment().format("YYYY-MM-DD")
+            });
         };
 
         er.cancel = function() {
@@ -1584,15 +1757,19 @@ angular.module('floor.controller', [])
         };
 
         function listResource() {
-            listGuest();
-            listStatuses();
-            listServers();
+            return $q.all([
+                listGuest(),
+                listStatuses(),
+                listServers(),
+                loadConfiguration()
+            ]);
         }
 
         (function Init() {
-            listResource();
-            er.info = parseInfo(content.reservation);
-            er.reservation = parseData(content.reservation);
+            listResource().then(function() {
+                parseInfo(content.reservation);
+                parseData(content.reservation);
+            });
         })();
 
         console.log(content.reservation);
