@@ -90,15 +90,19 @@ $color_secundario = #616161
 			width 48px!important
 			height 75px!important
 	& .table-zone
-		display block
 		position absolute
 		cursor pointer
 		z-index 1
 		transform-style preserve-3d
 		background #f5f5f5
 		border 1px #777 solid
-		/*border-radius 2px
-		box-sizing border-box*/
+		display -webkit-box
+		display -ms-flexbox
+		display -webkit-flex
+		display flex
+		justify-content: center
+		align-items: center
+		align-content: center
 		&.block
 			background #8a8a8a
 			border solid 2px #797979
@@ -355,19 +359,9 @@ $color_secundario = #616161
 					top: 16px
 				& .box-icon
 					background-repeat no-repeat
-					background-position-x 50%
-					background-position-y 50%
-					width 90%
-					height 90%
-					min-width 16px
-					min-height 16px
-					max-width 36px
-					max-height 36px
-					top 0
-					bottom 0
-					left 0
-					right 0
-					margin auto auto
+					width 30px
+					height 30px
+					background-size 30px 30px
 					position absolute
 				& .item-suggested
 					background-image url(../../../img/table-suggested.svg)
@@ -764,6 +758,15 @@ $background-tables-head = #eee
 		background-image url('../../../img/status/check-paid.svg')
 .p-t-main
 	padding-top 72px
+.scrollbar-inner
+	max-height 600px
+	overflow-y scroll
+	scrollbar-face-color #6685ca
+	scrollbar-highlight-color #6685ca
+::-webkit-scrollbar
+	width 6px
+	background #ccc
+	
 .table-listado
 	font-size 0.9em
 	background transparent
@@ -801,6 +804,11 @@ $background-tables-head = #eee
 			background rgba(66,66,66,0.5)
 			cursor pointer
 			width 400px
+			&.not_selector
+				background #636363
+				& .table-listado
+					height 40px
+				
 				
 .box-estado-res
 	background #575757

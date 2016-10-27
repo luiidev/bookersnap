@@ -1,44 +1,40 @@
 //materialAdmin
 
-    // =========================================================================
-    // MALIHU SCROLL
-    // =========================================================================
-    
-    //On Custom Class
-    .directive('cOverflow', ['scrollService', function(scrollService){
-        return {
-            restrict: 'C',
-            link: function(scope, element) {
+// =========================================================================
+// MALIHU SCROLL
+// =========================================================================
 
-                if (!$('html').hasClass('ismobile')) {
-                    scrollService.malihuScroll(element, 'light-3', 'y');
-                }
+//On Custom Class
+.directive('cOverflow', ['scrollService', function(scrollService) {
+    return {
+        restrict: 'C',
+        link: function(scope, element) {
+
+            if (!$('html').hasClass('ismobile')) {
+                scrollService.malihuScroll(element, 'light-3', 'y');
             }
         }
-    }])
+    }
+}])
 
-    // =========================================================================
-    // WAVES
-    // =========================================================================
+// =========================================================================
+// WAVES
+// =========================================================================
 
-    // For .btn classes
-    .directive('btn', function(){
-        return {
-            restrict: 'C',
-            link: function(scope, element) {
-                if(element.hasClass('btn-icon') || element.hasClass('btn-float')) {
-                    Waves.attach(element, ['waves-circle']);
-                }
-
-                else if(element.hasClass('btn-light')) {
-                    Waves.attach(element, ['waves-light']);
-                }
-
-                else {
-                    Waves.attach(element);
-                }
-
-                Waves.init();
+// For .btn classes
+.directive('btn', function() {
+    return {
+        restrict: 'C',
+        link: function(scope, element) {
+            if (element.hasClass('btn-icon') || element.hasClass('btn-float')) {
+                Waves.attach(element, ['waves-circle']);
+            } else if (element.hasClass('btn-light')) {
+                Waves.attach(element, ['waves-light']);
+            } else {
+                Waves.attach(element);
             }
+
+            Waves.init();
         }
-    })
+    }
+})

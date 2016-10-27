@@ -1,15 +1,19 @@
-<footer class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" id="footer">
-</footer>
-<section class="section-right-floor" style="z-index: 8">
-    <div ui-view="tabReservaciones">
-    </div>
-</section>
+
+
 <section class="h-100vh" id="main">
     <section class="w-100 p-0" id="content">
         <div class="container w-100 p-l-0 p-l-0 p-section-right" ui-view="principal">
         </div>
     </section>
 </section>
+<footer class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" id="footer">
+</footer>
+<section class="section-right-floor" style="z-index: 8">
+    <div ui-view="tabReservaciones">
+    </div>
+</section>
+
+
 <script id="myModalContentDetail.html" type="text/ng-template">
     <div class="reservation-list-content" ng-hide="vmd.EditContent">
         <div class="modal-header">
@@ -68,7 +72,7 @@
              </div>
         </div> 
 
-        <div class="card m-b-5">
+        <div class="card m-b-5" style="padding-bottom: 5px;">
             <form class="form-horizontal" role="form">
                 <div class="card-body drag-border">
                     <div class="form-group" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
@@ -133,9 +137,56 @@
             </form>
         </div>
         </div>
+
+        <div class="modal-body modal-configuration" style="padding: 0 26px 10px;">
+            <div class="card" style="box-shadow: none;">
+                <div class="card-body">
+                    <ul class="modal-listado-num-people" style="padding: 0;">
+                        <li class="lst-men" style="display: inline-block;" ng-if="vmd.configuration.status_people_1">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-male-alt" style="font-size: 2.5em;margin-top: 5px;"></i>
+                                </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="vmd.restar('men')">-</button>
+                                <span class="box-count-value btn-active">{{vmd.reservation.guests.men}}</span>
+                                <button class="btn" ng-click="vmd.sumar('men')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="lst-women" style="display: inline-block;" ng-if="vmd.configuration.status_people_2">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-female" style="font-size: 2.5em;margin-top: 5px;"></i>
+                            </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="vmd.restar('women')">-</button>
+                                <span class="box-count-value btn-active">{{vmd.reservation.guests.women}}</span>
+                                <button class="btn" ng-click="vmd.sumar('women')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="lst-children" style="display: inline-block;" ng-if="vmd.configuration.status_people_3">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-face" style="font-size: 2.5em;margin-top: 5px;"></i>
+                            </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="vmd.restar('children')">-</button>
+                                <span class="box-count-value btn-active">{{vmd.reservation.guests.children}}</span>
+                                <button class="btn" ng-click="vmd.sumar('children')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                    </ul>
+                    <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+                        <span class="f-700">TOTAL</span>
+                        <span class="box-total">{{vmd.reservation.guests.total}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal-footer">
             <div class="text-center">
-                <button class="btn btn-warning" ng-click="vmd.cancelReservation()" ng-disabled="vmd.waitingResponse">Cancelar Reservacion</button>
+                <button class="btn btn-warning btn-block" ng-click="vmd.cancelReservation()" ng-disabled="vmd.waitingResponse">Cancelar Reservacion</button>
             </div>
         </div>
     </div>
@@ -156,7 +207,7 @@
              </div>
         </div> 
 
-        <div class="card m-b-5">
+        <div class="card m-b-5" style="padding-bottom: 5px;">
             <form class="form-horizontal" role="form">
                 <div class="card-body drag-border">
                     <div class="form-group" style="cursor: pointer;" ng-click="er.reservationEditAll()">
@@ -221,9 +272,56 @@
             </form>
         </div>
         </div>
-        <div class="modal-footer">
+
+        <div class="modal-body modal-configuration" style="padding: 0 26px 10px;">
+            <div class="card" style="box-shadow: none;">
+                <div class="card-body">
+                    <ul class="modal-listado-num-people" style="padding: 0;">
+                        <li class="lst-men" ng-if="er.configuration.status_people_1" style="display: inline-block;">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-male-alt" style="font-size: 2.5em;margin-top: 5px;"></i>
+                                </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="er.restar('men')">-</button>
+                                <span class="box-count-value btn-active">{{er.reservation.guests.men}}</span>
+                                <button class="btn" ng-click="er.sumar('men')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="lst-women" ng-if="er.configuration.status_people_2" style="display: inline-block;">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-female" style="font-size: 2.5em;margin-top: 5px;"></i>
+                            </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="er.restar('women')">-</button>
+                                <span class="box-count-value btn-active">{{er.reservation.guests.women}}</span>
+                                <button class="btn" ng-click="er.sumar('women')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="lst-children" ng-if="er.configuration.status_people_3" style="display: inline-block;">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-face" style="font-size: 2.5em;margin-top: 5px;"></i>
+                            </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="er.restar('children')">-</button>
+                                <span class="box-count-value btn-active">{{er.reservation.guests.children}}</span>
+                                <button class="btn" ng-click="er.sumar('children')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                    </ul>
+                    <div class="box-result" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+                        <span class="f-700">TOTAL</span>
+                        <span class="box-total">{{er.reservation.guests.total}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 10px 26px;">
             <div class="text-center">
-                <button class="btn btn-warning" ng-click="er.cancelReservation()" ng-disabled="er.waitingResponse">Cancelar Reservacion</button>
+                <button class="btn btn-warning btn-block" ng-click="er.cancelReservation()" ng-disabled="er.waitingResponse">Cancelar Reservacion</button>
             </div>
         </div>
     </div>
