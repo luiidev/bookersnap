@@ -420,6 +420,7 @@ angular.module('floor.service', [])
 				FloorDataFactory.getBloqueos().success(function(data) {
 					// console.log("***", data.data);
 					angular.forEach(data.data, function(reserva) {
+
 						var dataReservation = {
 							table_id: reserva.res_table_id,
 							//table_name: reserva.res_table_name,
@@ -448,6 +449,7 @@ angular.module('floor.service', [])
 				FloorDataFactory.getReservas().then(function(data) {
 					// console.log("****", data.data.data);
 					angular.forEach(data.data.data, function(reserva) {
+
 						var obj = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
@@ -461,7 +463,7 @@ angular.module('floor.service', [])
 							res_type_turn_id: reserva.res_type_turn_id,
 							datetime_input: reserva.datetime_input,
 							datetime_output: reserva.datetime_output,
-
+							email: reserva.email,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};

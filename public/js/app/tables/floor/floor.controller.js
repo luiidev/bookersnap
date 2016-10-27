@@ -1,6 +1,5 @@
 angular.module('floor.controller', [])
-
-.controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
+    .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
@@ -423,7 +422,6 @@ angular.module('floor.controller', [])
             //onSocketNotes();
 
         })();
-
     })
     .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
@@ -859,11 +857,10 @@ angular.module('floor.controller', [])
             show: true
         };
 
-        $rootScope.$broadcast("floorClearSelected");
+        //Validar open modal Mail Reservation
+        var modalMailReservation = null;
 
-        rm.searchReservation = function() {
-            rm.search.show = !rm.search.show;
-        };
+        $rootScope.$broadcast("floorClearSelected");
 
         var defaultOptionsFilters = function() {
             //Datos y acciones para filtrar Visitas//
@@ -969,7 +966,9 @@ angular.module('floor.controller', [])
 
         });
 
-
+        rm.searchReservation = function() {
+            rm.search.show = !rm.search.show;
+        };
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1219,7 +1218,6 @@ angular.module('floor.controller', [])
             }
         };
 
-
         rm.selectReservation = function(reservation) {
             $scope.$apply(function() {
                 $rootScope.$broadcast("floorEventEstablish", "sit", reservation);
@@ -1235,21 +1233,43 @@ angular.module('floor.controller', [])
         };
 
         rm.editReservation = function(reservation) {
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalEditReservation.html',
-                controller: 'editReservationCtrl',
-                controllerAs: 'er',
-                size: '',
+            if (modalMailReservation === null) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'ModalEditReservation.html',
+                    controller: 'editReservationCtrl',
+                    controllerAs: 'er',
+                    size: '',
+                    resolve: {
+                        content: function() {
+                            return {
+                                reservation: reservation
+                            };
+                        }
+                    }
+                });
+            }
+        };
+
+        rm.mailReservationShow = function(reservation) {
+            //console.log("mailReservationShow " + angular.toJson(reservation, true));
+            modalMailReservation = $uibModal.open({
+                animation: true,
+                templateUrl: 'myModalMailReservation.html',
+                size: 'md',
+                //keyboard: false,
+                controller: 'ModalMailReservationCtrl',
+                controllerAs: 'vm',
                 resolve: {
-                    content: function() {
-                        return {
-                            reservation: reservation
-                        };
+                    email: function() {
+                        return reservation.email;
                     }
                 }
             });
-        };
 
+            $timeout(function() {
+                modalMailReservation = null;
+            }, 500);
+        };
 
         var init = function() {
 
@@ -1273,6 +1293,29 @@ angular.module('floor.controller', [])
 
         init();
 
+    })
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, email) {
+        var vm = this;
+
+        vm.mailData = {
+            email: '',
+            mensaje: ''
+        };
+
+        var init = function() {
+            vm.mailData.email = (email === "" || email === undefined) ? "" : email;
+        };
+
+        vm.sendMail = function() {
+            console.log("sendMail " + angular.toJson(vm.mailData, true));
+        };
+
+        vm.closeModal = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        init();
+        console.log("ModalEditReservation " + email);
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;

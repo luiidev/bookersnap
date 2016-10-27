@@ -25,34 +25,34 @@
             <tabset justified="true">
                 <tab active="tab.active" heading="Por llegar">
                     <table cellpadding="0" cellspacing="0" class="table-listado">
-                    <thead>
-                        <tr>
-                            <th>
-                                <table class="table-listado">
-                                    <tr>
-                                        <th>
-                                            HORA
-                                        </th>
-                                        <th>
-                                            PAX
-                                        </th>
-                                        <th>
-                                            NOMBRE
-                                        </th>
-                                        <th>
-                                            SALON
-                                        </th>
-                                        <th>
-                                            MESA
-                                        </th>
-                                        <th>
-                                            ESTADO
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <table class="table-listado">
+                                        <tr>
+                                            <th>
+                                                HORA
+                                            </th>
+                                            <th>
+                                                PAX
+                                            </th>
+                                            <th>
+                                                NOMBRE
+                                            </th>
+                                            <th>
+                                                SALON
+                                            </th>
+                                            <th>
+                                                MESA
+                                            </th>
+                                            <th>
+                                                ESTADO
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </th>
+                            </tr>
+                        </thead>
                     </table>
                     <div style="height: 100vh;padding-bottom: 310px;">
                         <div style="height: 100%;">
@@ -157,43 +157,43 @@
                                                     </table>
                                                 </td>
                                             </tr>
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    
                 </tab>
                 <tab heading="Sentados">
                     <table cellpadding="0" cellspacing="0" class="table-listado">
-                    <thead>
-                        <tr>
-                            <th>
-                                <table class="table-listado">
-                                    <tr>
-                                        <th>
-                                            HORA
-                                        </th>
-                                        <th>
-                                            PAX
-                                        </th>
-                                        <th>
-                                            NOMBRE
-                                        </th>
-                                        <th>
-                                            SALON
-                                        </th>
-                                        <th>
-                                            MESA
-                                        </th>
-                                        <th>
-                                            ESTADO
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <table class="table-listado">
+                                        <tr>
+                                            <th>
+                                                HORA
+                                            </th>
+                                            <th>
+                                                PAX
+                                            </th>
+                                            <th>
+                                                NOMBRE
+                                            </th>
+                                            <th>
+                                                SALON
+                                            </th>
+                                            <th>
+                                                MESA
+                                            </th>
+                                            <th>
+                                                ESTADO
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </th>
+                            </tr>
+                        </thead>
                     </table>
 
                     <div style="height: 100vh;padding-bottom: 310px;">
@@ -306,40 +306,39 @@
                 </tab>
                 <tab heading="Todos">
                     <table cellpadding="0" cellspacing="0" class="table-listado">
-                    <thead>
-                        <tr>
-                            <th>
-                                <table class="table-listado">
-                                    <tr>
-                                        <th>
-                                            HORA
-                                        </th>
-                                        <th>
-                                            PAX
-                                        </th>
-                                        <th>
-                                            NOMBRE
-                                        </th>
-                                        <th>
-                                            SALON
-                                        </th>
-                                        <th>
-                                            MESA
-                                        </th>
-                                        <th>
-                                            ESTADO
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <table class="table-listado">
+                                        <tr>
+                                            <th>
+                                                HORA
+                                            </th>
+                                            <th>
+                                                PAX
+                                            </th>
+                                            <th>
+                                                NOMBRE
+                                            </th>
+                                            <th>
+                                                SALON
+                                            </th>
+                                            <th>
+                                                MESA
+                                            </th>
+                                            <th>
+                                                ESTADO
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </th>
+                            </tr>
+                        </thead>
                     </table>
                     <div style="height: 100vh;padding-bottom: 310px;">
                         <div style="height: 100%;">
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
-                                    
                                     <tbody>
                                         <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'index_start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
@@ -523,3 +522,27 @@
         </li>
     </ul>
 </br>
+<script id="myModalMailReservation.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Enviar mensaje Reservación</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+             <div class="col-xs-12">
+                <h5>E-mail</h5>
+                <input type="email" name=""  class="form-control" ng-model="vm.mailData.email" />
+            </div>
+       
+            <div class="col-xs-12">
+                <h5>Mensaje</h5>
+                <textarea class="form-control" rows="8" ng-model="vm.mailData.mensaje"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.sendMail()">Enviar</button>
+    </div>
+</script>
