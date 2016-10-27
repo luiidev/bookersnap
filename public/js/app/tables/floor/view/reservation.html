@@ -132,7 +132,7 @@
                                                             </a>
                                                         </li>
                                                         <li class="icon-people">
-                                                            <a href="">
+                                                            <a href="" ng-click="rm.mailReservationShow(value)">
                                                                 <i class="zmdi zmdi-email">
                                                                 </i>
                                                             </a>
@@ -502,3 +502,27 @@
         </li>
     </ul>
 </br>
+<script id="myModalMailReservation.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Enviar mensaje Reservación</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+             <div class="col-xs-12">
+                <h5>E-mail</h5>
+                <input type="email" name=""  class="form-control" ng-model="vm.mailData.email" />
+            </div>
+       
+            <div class="col-xs-12">
+                <h5>Mensaje</h5>
+                <textarea class="form-control" rows="8" ng-model="vm.mailData.mensaje"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.sendMail()">Enviar</button>
+    </div>
+</script>
