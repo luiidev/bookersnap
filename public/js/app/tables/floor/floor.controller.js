@@ -92,7 +92,9 @@ angular.module('floor.controller', [])
                 function success(response) {
                     vm.typeTurns = response;
                     TypeFilterDataFactory.setTypeTurnItems(response);
-                    $rootScope.$broadcast("floorListadoTypeTurnos");
+                    //$scope.$apply(function() {
+                    //$rootScope.$broadcast("floorListadoTypeTurnos");
+                    //});
                 },
                 function error(error) {
                     message.apiError(error);
@@ -115,6 +117,30 @@ angular.module('floor.controller', [])
                 }, function error(error) {
                     message.apiError(error);
                 });
+        };
+
+        var listSourceTypes = function() {
+            FloorDataFactory.getSourceTypes().then(function success(response) {
+                TypeFilterDataFactory.setSourceTypesItems(response.data.data);
+                //$rootScope.$broadcast("floorListadoSourceType");
+            }, function error(error) {
+                message.apiError(error);
+            });
+        };
+
+        var listStatuses = function() {
+            var deferred = $q.defer();
+            reservationService.getStatuses().then(function(response) {
+                //vm.statuses = response.data.data;
+                //console.log(vm.statuses);
+                TypeFilterDataFactory.setStatusTypesItems(response.data.data);
+            }).catch(function(error) {
+                message.apiError(error);
+            }).finally(function() {
+                deferred.resolve();
+            });
+
+            return deferred.promise;
         };
 
         var loadBlocks = function() {
@@ -391,7 +417,8 @@ angular.module('floor.controller', [])
             listTypeTurns();
             sizeLienzo();
             closeNotes();
-
+            listSourceTypes();
+            listStatuses();
             //onSocketNotes();
 
         })();
@@ -669,7 +696,7 @@ angular.module('floor.controller', [])
         };
 
         var totalGuests = function() {
-            vmd.reservation.guests.total = vmd.reservation.guests.men +  vmd.reservation.guests.women + vmd.reservation.guests.children;
+            vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
         };
 
         function parseData(reservation) {
@@ -692,9 +719,9 @@ angular.module('floor.controller', [])
                 server_id: reservation.res_server_id,
                 note: reservation.note || null,
                 guests: {
-                   men: men,
-                   women: women,
-                   children: children
+                    men: men,
+                    women: women,
+                    children: children
                 }
             };
 
@@ -740,6 +767,7 @@ angular.module('floor.controller', [])
             reservationService.getStatuses()
                 .then(function(response) {
                     vmd.statuses = response.data.data;
+                    console.log(vmd.statuses);
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {
@@ -818,13 +846,11 @@ angular.module('floor.controller', [])
 
         getTableReservation();
     })
-    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
+    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
         var rm = this;
 
         var fecha_actual = getFechaActual();
-        var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
         var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
-
         rm.fecha_actual = fecha_actual;
 
         rm.search = {
@@ -837,30 +863,6 @@ angular.module('floor.controller', [])
         $rootScope.$broadcast("floorClearSelected");
 
         var defaultOptionsFilters = function() {
-            //Datos y acciones para filtrar Reservas//
-            //****************************//
-            rm.categorias_reserva = [{
-                id: 0,
-                nombre: 'Todos',
-                checked: true,
-            }, {
-                id: 1,
-                nombre: 'Web',
-                checked: false,
-            }, {
-                id: 2,
-                nombre: 'Telefono',
-                checked: false,
-            }, {
-                id: 3,
-                nombre: 'Portal',
-                checked: false,
-            }, {
-                id: 4,
-                nombre: 'RP',
-                checked: false,
-            }];
-
             //Datos y acciones para filtrar Visitas//
             //****************************//
             rm.categorias_people = [{
@@ -898,7 +900,7 @@ angular.module('floor.controller', [])
                 var tRp = 0;
 
                 rm.res_listado = rm.res_listado_all;
-                console.log(angular.toJson(rm.res_listado, true));
+                //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
 
                     men += people.num_people_1;
@@ -937,11 +939,79 @@ angular.module('floor.controller', [])
                 rm.total_trp = tRp;
                 rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp; //rm.res_listado.length;
 
-
-                //console.log('Reservaciones: ' + angular.toJson(data, true));
+                //console.log('Reservaciones: ' + angular.toJson(rm.res_listado, true));
             });
         };
 
+        //Ya no va//
+        //****************************//
+        $rootScope.$on("floorListadoTypeTurnos", function() {
+
+            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+            console.log('Tipo de turnos ' + angular.toJson(rm.categorias_type, true));
+            //rm.categorias_type = turn;
+            TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+            rm.select_type(colection_filtro_turnos[0], null);
+
+        });
+
+        $rootScope.$on("floorListadoSourceType", function() {
+
+            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+            console.log(rm.categorias_reserva);
+            TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+            var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+            rm.select_reserva(colection_filtro_reservas[0], null);
+
+        });
+        //****************************//
+
+        rm.searchReservation = function() {
+            rm.search.show = !rm.search.show;
+        };
+
+        rm.select_type = function(categoria, event) {
+            rm.filter_type = categoria;
+
+            if (event !== null) {
+                event.stopPropagation();
+            }
+
+            if (categoria.id !== 0) {
+                //Evalua Cualquier Opcion diferente de Todos
+                if (categoria.checked === true) { //Deshabilitar
+                    TypeFilterDataFactory.delOpcionesFilterTurnos(categoria);
+                    categoria.checked = false;
+                    filtrarTurnos();
+                } else { //Habilitar y Deshabilitar todos
+                    categoria.checked = true;
+                    TypeFilterDataFactory.setOpcionesFilterTurnos(categoria);
+                    rm.categorias_type[0].checked = false;
+                    filtrarTurnos();
+                }
+            } else {
+                //Evalua Opcion TODOS
+                var deshabilitar = function() {
+                    rm.filter_type = categoria;
+                    angular.forEach(rm.categorias_type, function(type) {
+                        if (type.id !== 0) {
+                            TypeFilterDataFactory.delOpcionesFilterTurnos(type);
+                            type.checked = false;
+                        }
+                    });
+                };
+
+                if (categoria.checked === true) {
+                    deshabilitar();
+                } else {
+                    categoria.checked = true;
+                    deshabilitar();
+                }
+            }
+
+            return false;
+        };
         var filtrarTurnos = function() {
             var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
             rm.filter_type = colection_filtro_turnos;
@@ -951,6 +1021,49 @@ angular.module('floor.controller', [])
             //console.log(rm.filter_type);
         };
 
+        rm.select_people = function(categoria, event) {
+
+            rm.filter_people = categoria;
+
+            if (event !== null) {
+                event.stopPropagation();
+            }
+
+            if (categoria.idcategoria != 1) {
+                //Evalua Cualquier Opcion diferente de Todos
+                if (categoria.checked === true) { //Deshabilitar
+                    TypeFilterDataFactory.delOpcionesFilterVisitas(categoria);
+                    categoria.checked = false;
+                    filtrarVisitas();
+                } else { //Habilitar y Deshabilitar todos
+                    categoria.checked = true;
+                    TypeFilterDataFactory.setOpcionesFilterVisitas(categoria);
+                    rm.categorias_people[0].checked = false;
+                    filtrarVisitas();
+                }
+            } else {
+                //Evalua Opcion TODOS
+                var deshabilitar = function() {
+                    rm.filter_people = categoria;
+                    angular.forEach(rm.categorias_people, function(gender) {
+                        if (gender.idcategoria !== 1) {
+                            TypeFilterDataFactory.delOpcionesFilterVisitas(gender);
+                            gender.checked = false;
+                        }
+                    });
+                    rm.res_listado = rm.res_listado_all;
+                };
+
+                if (categoria.checked === true) {
+                    deshabilitar();
+                } else {
+                    rm.total_visitas = rm.total_people;
+                    categoria.checked = true;
+                    deshabilitar();
+                }
+            }
+            return false;
+        };
         var filtrarVisitas = function() {
             var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
             rm.filter_people = colection_filtro_visitas;
@@ -1033,139 +1146,6 @@ angular.module('floor.controller', [])
             */
         };
 
-        var filtrarReservas = function() {
-            var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-            rm.filter_reserva = colection_filtro_reservas;
-            if (rm.filter_reserva.length === 0) {
-                rm.categorias_reserva[0].checked = true;
-                rm.total_reservas = rm.res_listado_all.length;
-            } else {
-                var calculo = 0;
-                angular.forEach(rm.filter_reserva, function(reserva) {
-                    var idreserva = reserva.id;
-                    //console.log(idreserva);
-                    switch (idreserva) {
-                        case 1:
-                            calculo += rm.total_tweb;
-                            break;
-                        case 2:
-                            calculo += rm.total_ttel;
-                            break;
-                        case 3:
-                            calculo += rm.total_tpor;
-                            break;
-                        case 4:
-                            calculo += rm.total_trp;
-                            break;
-                    }
-                });
-                rm.total_reservas = calculo;
-            }
-        };
-
-        //Datos y acciones para filtrar por Turnos//
-        //****************************//
-        $rootScope.$on("floorListadoTypeTurnos", function() {
-            var turn = TypeFilterDataFactory.getTypeTurnItems();
-            rm.categorias_type = turn;
-            //console.log(angular.toJson(rm.categorias_type, true));
-            TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
-            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
-            //console.log(angular.toJson(colection_filtro_turnos[0], true));
-            rm.select_type(colection_filtro_turnos[0], null);
-
-        });
-
-        rm.searchReservation = function() {
-            rm.search.show = !rm.search.show;
-        };
-
-        rm.select_type = function(categoria, event) {
-            rm.filter_type = categoria;
-
-            if (event !== null) {
-                event.stopPropagation();
-            }
-
-            if (categoria.id !== 0) {
-                //Evalua Cualquier Opcion diferente de Todos
-                if (categoria.checked === true) { //Deshabilitar
-                    TypeFilterDataFactory.delOpcionesFilterTurnos(categoria);
-                    categoria.checked = false;
-                    filtrarTurnos();
-                } else { //Habilitar y Deshabilitar todos
-                    categoria.checked = true;
-                    TypeFilterDataFactory.setOpcionesFilterTurnos(categoria);
-                    rm.categorias_type[0].checked = false;
-                    filtrarTurnos();
-                }
-            } else {
-                //Evalua Opcion TODOS
-                var deshabilitar = function() {
-                    rm.filter_type = categoria;
-                    angular.forEach(rm.categorias_type, function(type) {
-                        if (type.id !== 0) {
-                            TypeFilterDataFactory.delOpcionesFilterTurnos(type);
-                            type.checked = false;
-                        }
-                    });
-                };
-
-                if (categoria.checked === true) {
-                    deshabilitar();
-                } else {
-                    categoria.checked = true;
-                    deshabilitar();
-                }
-            }
-
-            return false;
-        };
-
-        rm.select_people = function(categoria, event) {
-
-            rm.filter_people = categoria;
-
-            if (event !== null) {
-                event.stopPropagation();
-            }
-
-            if (categoria.idcategoria != 1) {
-                //Evalua Cualquier Opcion diferente de Todos
-                if (categoria.checked === true) { //Deshabilitar
-                    TypeFilterDataFactory.delOpcionesFilterVisitas(categoria);
-                    categoria.checked = false;
-                    filtrarVisitas();
-                } else { //Habilitar y Deshabilitar todos
-                    categoria.checked = true;
-                    TypeFilterDataFactory.setOpcionesFilterVisitas(categoria);
-                    rm.categorias_people[0].checked = false;
-                    filtrarVisitas();
-                }
-            } else {
-                //Evalua Opcion TODOS
-                var deshabilitar = function() {
-                    rm.filter_people = categoria;
-                    angular.forEach(rm.categorias_people, function(gender) {
-                        if (gender.idcategoria !== 1) {
-                            TypeFilterDataFactory.delOpcionesFilterVisitas(gender);
-                            gender.checked = false;
-                        }
-                    });
-                    rm.res_listado = rm.res_listado_all;
-                };
-
-                if (categoria.checked === true) {
-                    deshabilitar();
-                } else {
-                    rm.total_visitas = rm.total_people;
-                    categoria.checked = true;
-                    deshabilitar();
-                }
-            }
-            return false;
-        };
-
         rm.select_reserva = function(categoria, event) {
 
             rm.filter_reserva = categoria;
@@ -1208,6 +1188,35 @@ angular.module('floor.controller', [])
                 }
             }
             return false;
+        };
+        var filtrarReservas = function() {
+            var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+            rm.filter_reserva = colection_filtro_reservas;
+            if (rm.filter_reserva.length === 0) {
+                rm.categorias_reserva[0].checked = true;
+                rm.total_reservas = rm.res_listado_all.length;
+            } else {
+                var calculo = 0;
+                angular.forEach(rm.filter_reserva, function(reserva) {
+                    var idreserva = reserva.id;
+                    //console.log(idreserva);
+                    switch (idreserva) {
+                        case 1:
+                            calculo += rm.total_tweb;
+                            break;
+                        case 2:
+                            calculo += rm.total_ttel;
+                            break;
+                        case 3:
+                            calculo += rm.total_tpor;
+                            break;
+                        case 4:
+                            calculo += rm.total_trp;
+                            break;
+                    }
+                });
+                rm.total_reservas = calculo;
+            }
         };
 
         rm.selectReservation = function(reservation) {
@@ -1252,8 +1261,8 @@ angular.module('floor.controller', [])
                 controller: 'ModalMailReservationCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    email: function() {
-                        return reservation.email;
+                    reservationId: function() {
+                        return reservation.reservation_id;
                     }
                 }
             });
@@ -1263,10 +1272,46 @@ angular.module('floor.controller', [])
             }, 500);
         };
 
+        var listTypeTurns = function() {
+            FloorFactory.listTurnosActivos(rm.fecha_actual).then(function success(response) {
+
+                    TypeFilterDataFactory.setTypeTurnItems(response);
+                    rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+
+                    TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+                    var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+                    rm.select_type(colection_filtro_turnos[0], null);
+                },
+                function error(error) {
+                    message.apiError(error);
+                }
+            );
+        };
+
+        var listSourceTypes = function() {
+            FloorDataFactory.getSourceTypes().then(function success(response) {
+
+                TypeFilterDataFactory.setSourceTypesItems(response.data.data);
+                rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+
+                TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+                var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+                rm.select_reserva(colection_filtro_reservas[0], null);
+
+            }, function error(error) {
+                message.apiError(error);
+            });
+        };
+
         var init = function() {
+
+            getlistZonesBloqueosReservas();
+
             defaultOptionsFilters();
-            TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
-            rm.select_reserva(colection_filtro_reservas[0], null);
+            //Defini para filtro por defecto para visitas
+            TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
+            rm.select_people(colection_filtro_visitas[0], null);
+
 
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);
@@ -1275,31 +1320,50 @@ angular.module('floor.controller', [])
 
             ServerDataFactory.cleanTableServerItems();
 
-            getlistZonesBloqueosReservas();
-            //Agregar para filtro por defecto
-            TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
+            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+            if (rm.categorias_type.length === 0) {
+                listTypeTurns();
+            } else {
+                TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+                var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+                rm.select_type(colection_filtro_turnos[0], null);
+            }
 
-            rm.select_people(colection_filtro_visitas[0], null);
+            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+            if (rm.categorias_reserva.length === 0) {
+                listSourceTypes();
+            } else {
+                TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+                var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+                rm.select_reserva(colection_filtro_reservas[0], null);
+            }
 
         };
 
         init();
 
     })
-    .controller('ModalMailReservationCtrl', function($uibModalInstance, email) {
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservationId, FloorDataFactory) {
         var vm = this;
 
         vm.mailData = {
-            email: '',
-            mensaje: ''
+            mensaje: '',
+            subject: ''
         };
 
         var init = function() {
-            vm.mailData.email = (email === "" || email === undefined) ? "" : email;
+            console.log(angular.toJson(reservationId, true));
         };
 
         vm.sendMail = function() {
-            console.log("sendMail " + angular.toJson(vm.mailData, true));
+            FloorDataFactory.sendMessage(reservationId, vm.mailData).then(
+                function success(response) {
+                    console.log("sendMail " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.error("sendMail " + angular.toJson(response, true));
+                });
+
         };
 
         vm.closeModal = function() {
@@ -1307,7 +1371,7 @@ angular.module('floor.controller', [])
         };
 
         init();
-        console.log("ModalEditReservation " + email);
+
     })
     .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
         var wm = this;
@@ -1326,7 +1390,6 @@ angular.module('floor.controller', [])
             wm.search.show = !wm.search.show;
         };
 
-        $rootScope.$on("floorListadoTypeTurnos");
     })
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
@@ -1587,190 +1650,191 @@ angular.module('floor.controller', [])
         };
     })
     .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
-      function($rootScope, $state, $uibModalInstance, content, service, $q) {
+        function($rootScope, $state, $uibModalInstance, content, service, $q) {
 
-        var er = this;
+            var er = this;
 
-        er.sumar = function(guest) {
-            var total = er.reservation.guests.total;
-            if (total + 1 <= er.reservation.covers) {
-                er.reservation.guests[guest]++;
-                totalGuests();
-            }
-        };
-
-        er.restar = function(guest) {
-            var quantity = er.reservation.guests[guest];
-            if (quantity - 1 >= 0) {
-                er.reservation.guests[guest]--;
-                totalGuests();
-            }
-        };
-
-        var totalGuests = function() {
-            er.reservation.guests.total = er.reservation.guests.men +  er.reservation.guests.women + er.reservation.guests.children;
-        };
-
-        function parseData(reservation) {
-            var men = 0;
-            var women = 0;
-            var children = 0;
-            if (er.configuration.status_people_1) {
-                men = reservation.num_people_1 || 0;
-            }
-            if (er.configuration.status_people_2) {
-                women = reservation.num_people_2 || 0;
-            }
-            if (er.configuration.status_people_3) {
-                children = reservation.num_people_3 || 0;
-            }
-            er.reservation = {
-                id: reservation.reservation_id,
-                covers: reservation.num_people,
-                status_id: reservation.res_reservation_status_id,
-                server_id: reservation.res_server_id,
-                note: reservation.note || null,
-                guests: {
-                   men: men,
-                   women: women,
-                   children: children
+            er.sumar = function(guest) {
+                var total = er.reservation.guests.total;
+                if (total + 1 <= er.reservation.covers) {
+                    er.reservation.guests[guest]++;
+                    totalGuests();
                 }
             };
 
-            totalGuests();
-        }
-
-        function parseInfo(reservation) {
-            er.info = {
-                first_name: reservation.first_name,
-                last_name: reservation.last_name,
-                date: moment(reservation.start_date).format("dddd, d [de] MMMM"),
-                time: moment(reservation.start_time, "HH:mm:ss").format("H:mm A"),
-                tables: getTables(reservation.tables)
+            er.restar = function(guest) {
+                var quantity = er.reservation.guests[guest];
+                if (quantity - 1 >= 0) {
+                    er.reservation.guests[guest]--;
+                    totalGuests();
+                }
             };
-        }
 
-        function getTables(tables) {
-            var reservationTables = "";
-            angular.forEach(tables, function(table) {
-                reservationTables += table.name + ", ";
-            });
+            var totalGuests = function() {
+                er.reservation.guests.total = er.reservation.guests.men + er.reservation.guests.women + er.reservation.guests.children;
+            };
 
-            return reservationTables.substring(0, reservationTables.length - 2);
-        }
+            function parseData(reservation) {
+                var men = 0;
+                var women = 0;
+                var children = 0;
+                if (er.configuration.status_people_1) {
+                    men = reservation.num_people_1 || 0;
+                }
+                if (er.configuration.status_people_2) {
+                    women = reservation.num_people_2 || 0;
+                }
+                if (er.configuration.status_people_3) {
+                    children = reservation.num_people_3 || 0;
+                }
+                er.reservation = {
+                    id: reservation.reservation_id,
+                    covers: reservation.num_people,
+                    status_id: reservation.res_reservation_status_id,
+                    server_id: reservation.res_server_id,
+                    note: reservation.note || null,
+                    guests: {
+                        men: men,
+                        women: women,
+                        children: children
+                    }
+                };
 
-        var listGuest = function() {
-            var deferred = $q.defer();
-            service.getGuest()
-                .then(function(guests) {
-                    er.covers = guests;
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    deferred.resolve();
+                totalGuests();
+            }
+
+            function parseInfo(reservation) {
+                er.info = {
+                    first_name: reservation.first_name,
+                    last_name: reservation.last_name,
+                    date: moment(reservation.start_date).format("dddd, d [de] MMMM"),
+                    time: moment(reservation.start_time, "HH:mm:ss").format("H:mm A"),
+                    tables: getTables(reservation.tables)
+                };
+            }
+
+            function getTables(tables) {
+                var reservationTables = "";
+                angular.forEach(tables, function(table) {
+                    reservationTables += table.name + ", ";
                 });
 
-            return deferred.promise;
-        };
+                return reservationTables.substring(0, reservationTables.length - 2);
+            }
 
-        var listStatuses = function() {
-            var deferred = $q.defer();
-            service.getStatuses()
-                .then(function(response) {
-                    er.statuses = response.data.data;
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    deferred.resolve();
+            var listGuest = function() {
+                var deferred = $q.defer();
+                service.getGuest()
+                    .then(function(guests) {
+                        er.covers = guests;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    }).finally(function() {
+                        deferred.resolve();
+                    });
+
+                return deferred.promise;
+            };
+
+            var listStatuses = function() {
+                var deferred = $q.defer();
+                service.getStatuses()
+                    .then(function(response) {
+                        er.statuses = response.data.data;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    }).finally(function() {
+                        deferred.resolve();
+                    });
+
+                return deferred.promise;
+            };
+
+            var listServers = function() {
+                var deferred = $q.defer();
+                service.getServers()
+                    .then(function(response) {
+                        er.servers = response.data.data;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    }).finally(function() {
+                        deferred.resolve();
+                    });
+
+                return deferred.promise;
+            };
+
+            var loadConfiguration = function() {
+                var deferred = $q.defer();
+                service.getConfigurationRes()
+                    .then(function(response) {
+                        er.configuration = response.data.data;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    }).finally(function() {
+                        deferred.resolve();
+                    });
+
+                return deferred.promise;
+            };
+
+            er.reservationEditAll = function() {
+                $uibModalInstance.dismiss('cancel');
+                $state.go('mesas.reservation-edit', {
+                    id: er.reservation.id,
+                    date: moment().format("YYYY-MM-DD")
                 });
+            };
 
-            return deferred.promise;
-        };
+            er.cancel = function() {
+                $uibModalInstance.dismiss('cancel');
+            };
 
-        var listServers = function() {
-            var deferred = $q.defer();
-            service.getServers()
-                .then(function(response) {
-                    er.servers = response.data.data;
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    deferred.resolve();
-                });
-
-            return deferred.promise;
-        };
-
-        var loadConfiguration = function() {
-            var deferred = $q.defer();
-            service.getConfigurationRes()
-                .then(function(response) {
-                    er.configuration = response.data.data;
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    deferred.resolve();
-                });
-
-            return deferred.promise;
-        };
-
-        er.reservationEditAll = function() {
-            $uibModalInstance.dismiss('cancel');
-            $state.go('mesas.reservation-edit', {
-                id: er.reservation.id,
-                date: moment().format("YYYY-MM-DD")
-            });
-        };
-
-        er.cancel = function() {
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        er.save = function() {
-            var id = er.reservation.id;
-            service.quickEdit(id, er.reservation)
-                .then(function(response) {
-                    $rootScope.$broadcast("floorReload");
-                    message.success(response.data.msg);
-                    $uibModalInstance.dismiss('cancel');
-                }).catch(function(error) {
-                    message.apiError(error);
-                });
-        };
-
-        er.cancelReservation = function() {
-            message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
-                er.waitingResponse = true;
+            er.save = function() {
                 var id = er.reservation.id;
-                service.cancel(id)
+                service.quickEdit(id, er.reservation)
                     .then(function(response) {
                         $rootScope.$broadcast("floorReload");
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
-                        er.waitingResponse = false;
                     }).catch(function(error) {
                         message.apiError(error);
-                        er.waitingResponse = false;
                     });
-            });
-        };
+            };
 
-        function listResource() {
-            return $q.all([
-                listGuest(),
-                listStatuses(),
-                listServers(),
-                loadConfiguration()
-            ]);
+            er.cancelReservation = function() {
+                message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
+                    er.waitingResponse = true;
+                    var id = er.reservation.id;
+                    service.cancel(id)
+                        .then(function(response) {
+                            $rootScope.$broadcast("floorReload");
+                            message.success(response.data.msg);
+                            $uibModalInstance.dismiss('cancel');
+                            er.waitingResponse = false;
+                        }).catch(function(error) {
+                            message.apiError(error);
+                            er.waitingResponse = false;
+                        });
+                });
+            };
+
+            function listResource() {
+                return $q.all([
+                    listGuest(),
+                    listStatuses(),
+                    listServers(),
+                    loadConfiguration()
+                ]);
+            }
+
+            (function Init() {
+                listResource().then(function() {
+                    parseInfo(content.reservation);
+                    parseData(content.reservation);
+                });
+            })();
+
+            console.log(content.reservation);
         }
-
-        (function Init() {
-            listResource().then(function() {
-                parseInfo(content.reservation);
-                parseData(content.reservation);
-            });
-        })();
-
-        console.log(content.reservation);
-    }]);
+    ]);
