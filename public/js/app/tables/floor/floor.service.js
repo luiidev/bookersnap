@@ -14,6 +14,9 @@ angular.module('floor.service', [])
 				sourceTypes = HttpFactory.get(ApiUrlRoot + "/reservation/source-types", null, sourceTypes, reload);
 				return sourceTypes;
 			},
+			sendMessage: function(reservacion_id, data) {
+				return $http.post(ApiUrlMesas + "/reservations/" + reservacion_id + "/send-email", data);
+			}
 
 		};
 	})
@@ -283,7 +286,6 @@ angular.module('floor.service', [])
 			},
 			tableFilter: function(zones, blocks, cant) {
 				// Manejo estatico de tiempo de reserva por cantidad  de invitados
-
 				//var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0);
 
 				var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0).millisecond(0);
@@ -303,7 +305,7 @@ angular.module('floor.service', [])
 								/*if ((start_time.isBetween(start_block, end_block, null, "()")) ||
 									(end_time.isBetween(start_block, end_block, null, "()")) ||
 									(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-*/
+								*/
 								if ((start_time.isBetween(start_block, end_block, null, "()")) ||
 									(end_time.isBetween(start_block, end_block, null, "()")) ||
 									(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
@@ -601,7 +603,6 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-
 			rowTableReservation: function(idTable) {
 				var me = this;
 				var defered = $q.defer();
