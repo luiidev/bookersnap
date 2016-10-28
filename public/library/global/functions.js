@@ -370,7 +370,7 @@ message.apiError = function(response, title, icon, options) {
     title = title || "Error";
     icon = icon || "error";
 
-    if (response.data !== null) {
+    if (Object.prototype.toStirng.call(response.data) == "[object Object]") {
         if (response.data.error !== null) {
             body = response.data.error.user_msg;
         } else {

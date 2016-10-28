@@ -445,10 +445,10 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-			listReservas: function() {
+			listReservas: function(reload) {
 				var defered = $q.defer();
 				var vReservation = [];
-				FloorDataFactory.getReservas().then(function(data) {
+				FloorDataFactory.getReservas(reload).then(function(data) {
 					// console.log("****", data.data.data);
 					angular.forEach(data.data.data, function(reserva) {
 
@@ -458,9 +458,9 @@ angular.module('floor.service', [])
 							res_server_id: reserva.res_server_id,
 							note: reserva.note,
 							num_people: reserva.num_guest,
-							num_people_1: reserva.num_people_1,
-							num_people_2: reserva.num_people_2,
-							num_people_3: reserva.num_people_3,
+							num_people_1: reserva.num_people_1 ? reserva.num_people_1 : '0',
+							num_people_2: reserva.num_people_2 ? reserva.num_people_2 : '0',
+							num_people_3: reserva.num_people_3 ? reserva.num_people_3 : '0',
 							res_source_type_id: reserva.res_source_type_id,
 							res_type_turn_id: reserva.res_type_turn_id,
 							datetime_input: reserva.datetime_input,
@@ -538,10 +538,10 @@ angular.module('floor.service', [])
 				return table_detail;
 			},
 			//Datos para el tab de reservaciones
-			listBloqueosReservas: function() {
+			listBloqueosReservas: function(reload) {
 				var me = this;
 				var defered = $q.defer();
-				me.listReservas().then(function success(reservations) {
+				me.listReservas(reload).then(function success(reservations) {
 
 					me.listBloqueos().then(function success(tableBlocks) {
 
