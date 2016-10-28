@@ -1239,6 +1239,10 @@ angular.module('floor.controller', [])
             }
         };
 
+        rm.infoReservationShow = function() {
+            var icon = true;
+            console.log('sd');
+        };
         rm.mailReservationShow = function(reservation) {
             //console.log("mailReservationShow " + angular.toJson(reservation, true));
             modalMailReservation = $uibModal.open({
@@ -1293,7 +1297,7 @@ angular.module('floor.controller', [])
 
         var init = function() {
 
-            //getlistZonesBloqueosReservas();
+            getlistZonesBloqueosReservas();
 
             defaultOptionsFilters();
             //Defini para filtro por defecto para visitas
