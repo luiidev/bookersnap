@@ -169,7 +169,7 @@ angular.module('reservation.controller', [])
                 vm.waitingResponse = true;
                 service.save(vm.reservation)
                     .then(function(response) {
-                        //message.success(response.data.msg);
+                        message.success(response.data.msg);
                         vm.waitingResponse = false;
                         vm.cancel();
                     }).catch(function(error) {

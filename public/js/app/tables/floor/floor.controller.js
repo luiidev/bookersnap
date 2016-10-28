@@ -736,7 +736,6 @@ angular.module('floor.controller', [])
             return reservationTables.substring(0, reservationTables.length - 2);
         }
 
-
         var listGuest = function() {
             var deferred = $q.defer();
             reservationService.getGuest()
@@ -1250,8 +1249,8 @@ angular.module('floor.controller', [])
                 controller: 'ModalMailReservationCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    reservationId: function() {
-                        return reservation.reservation_id;
+                    reservation: function() {
+                        return reservation;
                     }
                 }
             });
@@ -1294,7 +1293,7 @@ angular.module('floor.controller', [])
 
         var init = function() {
 
-            getlistZonesBloqueosReservas();
+            //getlistZonesBloqueosReservas();
 
             defaultOptionsFilters();
             //Defini para filtro por defecto para visitas
@@ -1332,8 +1331,15 @@ angular.module('floor.controller', [])
         init();
 
     })
-    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservationId, FloorDataFactory) {
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
         var vm = this;
+
+        vm.reservation = {
+            date: '',
+            time: '',
+            email: '',
+            nombre: ''
+        };
 
         vm.mailData = {
             message: '',
@@ -1341,11 +1347,15 @@ angular.module('floor.controller', [])
         };
 
         var init = function() {
-            console.log(angular.toJson(reservationId, true));
+            console.log(angular.toJson(reservation, true));
+            vm.reservation.date = reservation.start_date;
+            vm.reservation.time = reservation.start_time;
+            vm.reservation.email = reservation.email;
+            vm.reservation.nombre = reservation.first_name + " - " + reservation.last_name;
         };
 
         vm.sendMail = function() {
-            FloorDataFactory.sendMessage(reservationId, vm.mailData).then(
+            FloorDataFactory.sendMessage(reservation.reservation_id, vm.mailData).then(
                 function success(response) {
                     response = response.data;
 

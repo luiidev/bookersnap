@@ -83,7 +83,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
-                                                                    {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                                {{value.res_reservation_status_id | statusEstados:'name'}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -362,8 +362,8 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
-                                                                    {{value.res_reservation_status_id | statusEstados:'name'}}
-                                                                </div>
+                                                                {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                     <tr class="line-row">
@@ -530,6 +530,14 @@
 
     <div class="modal-body">
         <div class="row">
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.date }}  - {{ vm.reservation.time }}</h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.nombre }}  - {{ vm.reservation.email }}</h5>
+            </div>
+
              <div class="col-xs-12">
                 <h5>Asunto</h5>
                 <input type="text" name=""  class="form-control" ng-model="vm.mailData.subject" />
