@@ -221,6 +221,7 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
+            //
             if (eventEstablished.event == "changeTable") {
                 return changeTable(obj);
             }
@@ -870,12 +871,12 @@ angular.module('floor.controller', [])
             }];
         };
 
-        var getlistZonesBloqueosReservas = function() {
+        var getlistZonesBloqueosReservas = function(reload) {
 
-            FloorFactory.listBloqueosReservas().then(function success(data) {
+            FloorFactory.listBloqueosReservas(reload).then(function success(data) {
 
                 rm.res_listado_all = data;
-
+                //});
                 var total = 0;
                 var men = 0;
                 var women = 0;
@@ -885,7 +886,11 @@ angular.module('floor.controller', [])
                 var tPor = 0;
                 var tRp = 0;
 
+
                 rm.res_listado = rm.res_listado_all;
+
+
+
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
 
@@ -952,6 +957,11 @@ angular.module('floor.controller', [])
 
         });
         //****************************//
+
+        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+            //messageAlert("Success", data.user_msg, "success", 2000, true);
+            getlistZonesBloqueosReservas(true);
+        });
 
         rm.searchReservation = function() {
             rm.search.show = !rm.search.show;
