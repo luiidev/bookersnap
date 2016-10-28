@@ -3,7 +3,7 @@
 	<div class="input-group">
                 <div class="fg-line">
                     <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!wm.search.show">
-                    <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-show="wm.search.show">
+                    <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait()" ng-show="wm.search.show">
                         <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg"></i>
                         <span>AGREGAR ESPERA</span>
                     </button>

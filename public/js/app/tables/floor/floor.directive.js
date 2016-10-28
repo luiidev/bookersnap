@@ -151,7 +151,6 @@ angular.module('floor.directive', [])
     .directive('ngDragMoveReservation', function() {
 
         function makeDraggable(scope, element, attr) {
-            var clone;
             element.draggable({
                 helper: "clone",
                 appendTo: '#lienzo',

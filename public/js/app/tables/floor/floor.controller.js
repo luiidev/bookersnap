@@ -1362,7 +1362,7 @@ angular.module('floor.controller', [])
         init();
 
     })
-    .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory) {
+    .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory, $uibModal) {
         var wm = this;
 
         //Limpiar data y estilos de servers
@@ -1377,6 +1377,15 @@ angular.module('floor.controller', [])
         };
         wm.searchReservation = function() {
             wm.search.show = !wm.search.show;
+        };
+
+        wm.createWait = function() {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCreateWaitList.html',
+                controller: 'waitListCtrl',
+                controllerAs: 'wl',
+                size: '',
+            });
         };
 
     })
@@ -1826,4 +1835,117 @@ angular.module('floor.controller', [])
 
             console.log(content.reservation);
         }
-    ]);
+    ])
+.controller("waitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
+    function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
+
+        var wl = this;
+
+        wl.reservation = {};
+        wl.addGuest = true;
+
+        /**
+         * HTTP
+         */
+        var listGuest = function() {
+            var deferred = $q.defer();
+            service.getGuest()
+                .then(function(guests) {
+                    wl.covers = guests;
+                    wl.reservation.covers = 2;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
+        };
+
+        var listDurations = function() {
+            var deferred = $q.defer();
+
+            service.getDurations()
+                .then(function(durations) {
+                    wl.durations = durations;
+                    wl.reservation.duration = "00:15:00";
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
+        };
+        /**
+         * END HTTP
+         */
+        
+
+        /**
+         * Search guest list
+         */
+        var auxiliar;
+        wl.searchGuest = function(name) {
+            console.log(name);
+            if (auxiliar) $timeout.cancel(auxiliar);
+            if (name === "") {
+                wl.guestList = [];
+                return;
+            }
+            var search = function() {
+                service.getGuestList(name)
+                    .then(function(response) {
+                        wl.guestList = response.data.data.data;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    });
+            };
+
+            auxiliar = $timeout(search, 500);
+        };
+
+        wl.selectGuest = function(guest) {
+            wl.reservation.guest_id = guest.id;
+            wl.guest = guest;
+            wl.addGuest = false;
+        };
+
+        wl.removeGuest = function() {
+            wl.reservation.guest_id = null;
+            wl.newGuest = null;
+            wl.guestList = [];
+            wl.addGuest = true;
+        };
+        /**
+         * END Search guest list
+         */
+
+        wl.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        wl.save = function() {
+            console.log(wl.reservation, wl.newGuest);
+            // service.saveWait()
+            //     .then(function(response) {
+            //         message.success(response.data.msg);
+            //         $uibModalInstance.dismiss('cancel');
+            //     }).catch(function(error) {
+            //         message.apiError(error);
+            //     });
+        };
+
+
+        function listResource() {
+            return $q.all([
+                listGuest(),
+                listDurations()
+            ]);
+        }
+
+        (function Init() {
+            listResource().then(function() {
+
+            });
+        })();
+    }
+]);
