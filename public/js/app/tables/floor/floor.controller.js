@@ -1237,6 +1237,10 @@ angular.module('floor.controller', [])
             }
         };
 
+        rm.infoReservationShow = function() {
+            var icon = true;
+            console.log('sd');
+        };
         rm.mailReservationShow = function(reservation) {
             //console.log("mailReservationShow " + angular.toJson(reservation, true));
             modalMailReservation = $uibModal.open({
