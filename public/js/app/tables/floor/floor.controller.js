@@ -221,7 +221,6 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
-            //
             if (eventEstablished.event == "changeTable") {
                 return changeTable(obj);
             }
@@ -876,7 +875,7 @@ angular.module('floor.controller', [])
             FloorFactory.listBloqueosReservas(reload).then(function success(data) {
 
                 rm.res_listado_all = data;
-                //});
+
                 var total = 0;
                 var men = 0;
                 var women = 0;
