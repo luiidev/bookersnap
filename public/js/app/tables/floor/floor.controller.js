@@ -398,6 +398,7 @@ angular.module('floor.controller', [])
                 listTypeTurns();
             }
         });
+
         (function Init() {
             loadZones(fecha_actual);
             listTypeTurns();

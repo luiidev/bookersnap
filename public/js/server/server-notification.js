@@ -34,7 +34,8 @@ io.on('connection', function(socket) {
 
   //Cuando se actualiza una reserva desde Floor
   socket.on('b-mesas-floor-upd-res', function(data) {
-    console.log("b-mesas-floor-upd-re " + JSON.stringify(data));
+    console.log("b-mesas-floor-upd-res " + JSON.stringify(data));
+    io.to(data.room).emit('b-mesas-floor-upd-res', data);
   });
 
   socket.on('delete-room-micrositio', function(data) {
