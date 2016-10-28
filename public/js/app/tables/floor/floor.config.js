@@ -1,6 +1,6 @@
-angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service'])
+angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service', 'floor.notify.controller'])
     .constant("screenSizeFloor", {
-    minSize: 675,
+        minSize: 675,
         header: 185,
         menu: 400
     })
@@ -10,6 +10,11 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 url: '/floor',
                 views: {
                     '@': {
+                        templateUrl: '/js/app/tables/floor/view/parent.html',
+                        controller: 'NotificationCtrl',
+                        controllerAs: 'vm'
+                    },
+                    'index@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/index.html',
                         controller: 'FloorCtrl',
                         controllerAs: 'vm'

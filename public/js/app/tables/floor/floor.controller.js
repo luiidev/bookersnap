@@ -35,8 +35,6 @@ angular.module('floor.controller', [])
         var timeoutNotes;
         var openNotesTimeOut;
 
-        var serverSocket = ServerNotification.getConnection();
-
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
 
@@ -50,6 +48,10 @@ angular.module('floor.controller', [])
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
             $table.tablesSelected(vm.zones, tables);
+        });
+
+        $scope.$on("floorNotesReload", function(mote) {
+            vm.notes = note;
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
@@ -219,6 +221,7 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
+            //
             if (eventEstablished.event == "changeTable") {
                 return changeTable(obj);
             }
@@ -291,18 +294,6 @@ angular.module('floor.controller', [])
                         vm.notesBoxValida = false;
                     });
                 }
-            });
-        };
-
-        var onSocketNotes = function() {
-            serverSocket.on("b-mesas-floor-notes", function(data) {
-                console.log("onSocketNotes " + angular.toJson(data, true));
-                if (!vm.notesBox) {
-                    vm.notesNotify = true;
-                    vm.notesNotification = true;
-                    listTypeTurns();
-                }
-
             });
         };
 
@@ -400,6 +391,14 @@ angular.module('floor.controller', [])
         /**
          * END
          */
+
+        $scope.$on("NotifyFloorNotesReload", function(evt, data) {
+            if (!vm.notesBox) {
+                vm.notesNotify = true;
+                vm.notesNotification = true;
+                listTypeTurns();
+            }
+        });
 
         (function Init() {
             loadZones(fecha_actual);
@@ -736,7 +735,6 @@ angular.module('floor.controller', [])
             return reservationTables.substring(0, reservationTables.length - 2);
         }
 
-
         var listGuest = function() {
             var deferred = $q.defer();
             reservationService.getGuest()
@@ -873,12 +871,12 @@ angular.module('floor.controller', [])
             }];
         };
 
-        var getlistZonesBloqueosReservas = function() {
+        var getlistZonesBloqueosReservas = function(reload) {
 
-            FloorFactory.listBloqueosReservas().then(function success(data) {
+            FloorFactory.listBloqueosReservas(reload).then(function success(data) {
 
                 rm.res_listado_all = data;
-
+                //});
                 var total = 0;
                 var men = 0;
                 var women = 0;
@@ -888,7 +886,11 @@ angular.module('floor.controller', [])
                 var tPor = 0;
                 var tRp = 0;
 
+
                 rm.res_listado = rm.res_listado_all;
+
+
+
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
 
@@ -955,6 +957,11 @@ angular.module('floor.controller', [])
 
         });
         //****************************//
+
+        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+            //messageAlert("Success", data.user_msg, "success", 2000, true);
+            getlistZonesBloqueosReservas(true);
+        });
 
         rm.searchReservation = function() {
             rm.search.show = !rm.search.show;
@@ -1240,6 +1247,10 @@ angular.module('floor.controller', [])
             }
         };
 
+        rm.infoReservationShow = function() {
+            var icon = true;
+            console.log('sd');
+        };
         rm.mailReservationShow = function(reservation) {
             //console.log("mailReservationShow " + angular.toJson(reservation, true));
             modalMailReservation = $uibModal.open({
@@ -1250,8 +1261,8 @@ angular.module('floor.controller', [])
                 controller: 'ModalMailReservationCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    reservationId: function() {
-                        return reservation.reservation_id;
+                    reservation: function() {
+                        return reservation;
                     }
                 }
             });
@@ -1332,27 +1343,63 @@ angular.module('floor.controller', [])
         init();
 
     })
-    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservationId, FloorDataFactory) {
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
         var vm = this;
 
+        vm.reservation = {
+            date: '',
+            time: '',
+            email: '',
+            nombre: ''
+        };
+
         vm.mailData = {
-            mensaje: '',
+            message: '',
             subject: ''
         };
 
         var init = function() {
-            console.log(angular.toJson(reservationId, true));
+            console.log(angular.toJson(reservation, true));
+            vm.reservation.date = reservation.start_date;
+            vm.reservation.time = reservation.start_time;
+            vm.reservation.email = reservation.email;
+            vm.reservation.nombre = reservation.first_name + " - " + reservation.last_name;
         };
 
         vm.sendMail = function() {
-            FloorDataFactory.sendMessage(reservationId, vm.mailData).then(
+            FloorDataFactory.sendMessage(reservation.reservation_id, vm.mailData).then(
                 function success(response) {
+                    response = response.data;
+
+                    messageAlert("Success", response.msg, "success", 2000, true);
+                    $uibModalInstance.dismiss('cancel');
+
                     console.log("sendMail " + angular.toJson(response, true));
                 },
                 function error(response) {
+                    message.apiError(response);
                     console.error("sendMail " + angular.toJson(response, true));
                 });
+        };
 
+        vm.validateSendMail = function() {
+            var valida = 0;
+
+            if (vm.mailData.message === "") {
+                alertMultiple("Alerta", "Ingrese un mensaje", "info", null);
+                valida = 1;
+            }
+
+            if (vm.mailData.subject === "") {
+                alertMultiple("Alerta", "Ingrese un asunto", "info", null);
+                valida = 1;
+            }
+
+            if (valida === 0) {
+                vm.sendMail();
+            } else {
+                $uibModalInstance.dismiss('cancel');
+            }
         };
 
         vm.closeModal = function() {

@@ -290,7 +290,7 @@ var getDayText = function(index, option) {
 
 var messageAlert = function(title, text, type, time, confirmButton) {
     time = (time) ? null : 2000;
-    confirmButton = (confirmButton) ? false : confirmButton;
+    confirmButton = (confirmButton === undefined || confirmButton === null) ? false : confirmButton;
     swal({
         title: title,
         text: text,
