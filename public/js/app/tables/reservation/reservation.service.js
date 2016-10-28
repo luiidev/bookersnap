@@ -192,7 +192,7 @@ angular.module('reservation.service', [])
                         class: {
                             name: null,
                             setStatusClass: function(status) {
-                                if (status >= 14) {
+                                if (status == 4) {
                                     this.name = "box-icon item-status-" + status;
                                 }
                             }
@@ -367,7 +367,7 @@ angular.module('reservation.service', [])
                             if (table.id == block.res_table_id) {
                                 var start_block = moment(block.start_time, "HH:mm:ss");
                                 var end_block = moment(block.end_time, "HH:mm:ss");
-                                if (hour.isBetween(start_block, end_block, null, "()") || block.res_reservation_status_id >= 14) {
+                                if (hour.isBetween(start_block, end_block, null, "()") || block.res_reservation_status_id == 4) {
                                     if (block.res_server_id) {
                                         table.server.setReservation(block.res_server.color);
                                     }
@@ -538,7 +538,7 @@ angular.module('reservation.service', [])
                                 angular.forEach(zone.tables, function(table) {
                                     if (table.id == block.res_table_id) {
                                         var now, start;
-                                        if (reservation.datetime_input && reservation.res_reservation_status_id >= 14){
+                                        if (reservation.datetime_input && reservation.res_reservation_status_id == 4){
                                             now = moment();
 
                                             if (type == "seated") {

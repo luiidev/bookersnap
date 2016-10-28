@@ -756,7 +756,7 @@ angular.module('floor.controller', [])
             reservationService.getStatuses()
                 .then(function(response) {
                     vmd.statuses = response.data.data;
-                    console.log(vmd.statuses);
+                    // console.log(vmd.statuses);
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {
