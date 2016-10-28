@@ -351,7 +351,7 @@ angular.module('calendar.controller', [])
     function init() {
         var $moment = moment(vm.date);
         vm.formatted_date = $moment.format('MMMM DD');
-        vm.day_name = $moment.format('dddd') + ($moment.day() == 6 || $moment.day() == 0 ? 's' : '');
+        vm.day_name = $moment.format('dddd') + ($moment.day() == 6 || $moment.day() === 0 ? 's' : '');
     }
 
     init();

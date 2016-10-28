@@ -180,8 +180,8 @@ angular.module('floor.controller', [])
             return $q.all([loadBlocks(), loadReservations()]);
         };
 
-        var loadZones = function(date) {
-            reservationService.getZones(date)
+        var loadZones = function(date, reload) {
+            reservationService.getZones(date, reload)
                 .then(function(response) {
                     var zones = response.data.data;
                     vm.zones = reservationHelper.loadTable(zones);
@@ -399,6 +399,14 @@ angular.module('floor.controller', [])
             }
         });
 
+        $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
+            messageAlert("Info", data.user_msg, "info", 2000, true);
+
+            if (data.reload === "zonas") {
+                loadZones(fecha_actual, true);
+            }
+        });
+
         (function Init() {
             loadZones(fecha_actual);
             listTypeTurns();
@@ -406,7 +414,6 @@ angular.module('floor.controller', [])
             closeNotes();
             listSourceTypes();
             listStatuses();
-            //onSocketNotes();
 
         })();
     })

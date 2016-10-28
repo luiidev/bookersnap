@@ -11,4 +11,8 @@ angular.module("floor.notify.controller", [])
 			$rootScope.$broadcast("NotifyFloorTableReservationReload", data);
 		});
 
+		serverSocket.on("b-mesas-config-update", function(data) {
+			$rootScope.$broadcast("NotifyFloorConfigUpdateReload", data);
+		});
+
 	});
