@@ -35,8 +35,6 @@ angular.module('floor.controller', [])
         var timeoutNotes;
         var openNotesTimeOut;
 
-        var serverSocket = ServerNotification.getConnection();
-
         vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
 
@@ -50,6 +48,10 @@ angular.module('floor.controller', [])
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
             $table.tablesSelected(vm.zones, tables);
+        });
+
+        $scope.$on("floorNotesReload", function(mote) {
+            vm.notes = note;
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
@@ -294,18 +296,6 @@ angular.module('floor.controller', [])
             });
         };
 
-        var onSocketNotes = function() {
-            serverSocket.on("b-mesas-floor-notes", function(data) {
-                console.log("onSocketNotes " + angular.toJson(data, true));
-                if (!vm.notesBox) {
-                    vm.notesNotify = true;
-                    vm.notesNotification = true;
-                    listTypeTurns();
-                }
-
-            });
-        };
-
         vm.saveNotes = function(turn) {
             if (timeoutNotes) $timeout.cancel(timeoutNotes);
             vm.notesData.id = turn.notes.id;
@@ -401,6 +391,13 @@ angular.module('floor.controller', [])
          * END
          */
 
+        $scope.$on("NotifyFloorNotesReload", function(evt, data) {
+            if (!vm.notesBox) {
+                vm.notesNotify = true;
+                vm.notesNotification = true;
+                listTypeTurns();
+            }
+        });
         (function Init() {
             loadZones(fecha_actual);
             listTypeTurns();
@@ -1293,7 +1290,7 @@ angular.module('floor.controller', [])
 
         var init = function() {
 
-            //getlistZonesBloqueosReservas();
+            getlistZonesBloqueosReservas();
 
             defaultOptionsFilters();
             //Defini para filtro por defecto para visitas
