@@ -345,16 +345,23 @@ angular.module('floor.filter', [])
 		};
 	})
 	.filter("statusEstados", function(TypeFilterDataFactory, $filter) {
-		return function(valor) {
+		return function(valor, opcion) {
+
 			if (valor !== null) {
 				var name_status = "";
+				var color = "";
 				var listadoStatus = TypeFilterDataFactory.getStatusTypesItems();
-				angular.forEach(listadoStatus, function(statu) {
-					if (statu.id == valor) {
-						name_status = $filter('uppercase')(statu.name);
+				angular.forEach(listadoStatus, function(status) {
+					if (status.id == valor) {
+						name_status = $filter('uppercase')(status.name);
+						color = status.color;
 					}
 				});
-				return name_status;
+				if (opcion == "name") {
+					return name_status;
+				} else if (opcion == "color") {
+					return color;
+				}
 			}
 		};
 	});

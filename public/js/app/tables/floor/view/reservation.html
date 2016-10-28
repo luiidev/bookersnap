@@ -82,8 +82,8 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div class="box-estado-res bg-green">
-                                                                {{value.res_reservation_status_id | statusEstados}}
+                                                            <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
+                                                                    {{value.res_reservation_status_id | statusEstados:'name'}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -361,9 +361,9 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div class="box-estado-res bg-green">
-                                                                {{value.res_reservation_status_id | statusEstados}}
-                                                            </div>
+                                                            <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
+                                                                    {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                                </div>
                                                         </td>
                                                     </tr>
                                                     <tr class="line-row">

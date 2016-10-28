@@ -22,7 +22,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 				}
 				vm.loadingConfiguration = false;
 			}, function error(response) {
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning");
 				vm.loadingConfiguration = false;
 			});
 		};
@@ -32,7 +32,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 			ConfigurationService.getPercentages().then(function success(response) {
 				vm.percentageList = response;
 			}, function error(response) {
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning");
 			});
 		};
 		//Actualiza la configuration
@@ -43,8 +43,10 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 				messageAlert("Actualizo", "Se actualizo correctamente", "success");
 				vm.flagSaveConfiguration = false;
 			}, function error(response) {
+				// console.log(response);
+				messageErrorApi(response.data, "Error", "warning");
 				vm.flagSaveConfiguration = false;
-				alert = response.data.data;
+				alert = response.data;
 			});
 		};
 
@@ -56,7 +58,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 				vm.codList = response;
 				vm.loadingCode = false;
 			}, function error(response) {
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning");
 				vm.loadingCode = false;
 			});
 		};
@@ -71,7 +73,12 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 				}
 				vm.loadingCode = false;
 			}, function error(response) {
-				alert = response.data.data;
+				if (res_code_status == 1) {
+					vm.configuration.res_code_status = 0;
+				} else {
+					vm.configuration.res_code_status = 1;
+				}
+				messageErrorApi(response.data, "Error", "warning");
 				vm.loadingCode = false;
 			});
 		};
@@ -115,7 +122,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
 				vm.loadingGetUser = false;
 			}, function error(response) {
 				vm.loadingGetUser = false;
-				messageErrorApi(response, "Error", "warning");
+				messageErrorApi(response.data, "Error", "warning");
 			});
 		};
 

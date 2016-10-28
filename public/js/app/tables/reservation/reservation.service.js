@@ -173,6 +173,7 @@ angular.module('reservation.service', [])
                         rotate: data.config_rotation,
                         id: data.id,
                         status: data.status,
+                        reservations: {},
                         suggested: false,
                         selected: false,
                         block: false,
@@ -371,6 +372,7 @@ angular.module('reservation.service', [])
                                         table.server.setReservation(block.res_server.color);
                                     }
                                     table.class.setStatusClass(block.res_reservation_status_id);
+                                    table.reservations.active = block;
 
                                     if (block.res_reservation_id === null) {
                                         table.block = true;
