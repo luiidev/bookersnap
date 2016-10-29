@@ -74,8 +74,8 @@ angular.module('floor.controller', [])
         };
 
         /*$scope.$on("listadoTypeTurnos", function() {
-            alert("hola ");
-        });*/
+                alert("hola ");
+            });*/
 
         vm.eventEstablish = function(eventDrop, data) {
             eventEstablished.event = eventDrop;
@@ -149,17 +149,20 @@ angular.module('floor.controller', [])
         };
 
         var loadBlocks = function() {
+
             var deferred = $q.defer();
             reservationService.getBlocks(null, true)
                 .then(function(response) {
                     blocks = response.data.data;
+                    // console.log("loadBlock " + angular.toJson(blocks, true));
+
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
+                    console.log("loadBlock2 " + angular.toJson(blocks, true));
                     deferred.resolve();
-                    //////////////////////////////////////////////////////////////
                     $table.setBorderColorForReservation(vm.zones, blocks);
-                    //////////////////////////////////////////////////////////////
+
                 });
             return deferred.promise;
         };
@@ -363,14 +366,8 @@ angular.module('floor.controller', [])
 
             updateTime = $timeout(vm.showTimeCustom, 60000, true, event);
         };
-        /**
-         * END
-         */
 
-
-        /**
-         * Cambio de de mesa de una reservacion
-         */
+        //Cambio de de mesa de una reservacion
         var changeTable = function(table) {
             var dropTable = eventEstablished.data;
             if (dropTable.id != table.id) {
@@ -387,9 +384,6 @@ angular.module('floor.controller', [])
                     });
             }
         };
-        /**
-         * END
-         */
 
         $scope.$on("NotifyFloorNotesReload", function(evt, data) {
             if (!vm.notesBox) {
@@ -414,6 +408,8 @@ angular.module('floor.controller', [])
             closeNotes();
             listSourceTypes();
             listStatuses();
+
+            reload();
 
         })();
     })
@@ -892,10 +888,7 @@ angular.module('floor.controller', [])
                 var tPor = 0;
                 var tRp = 0;
 
-
                 rm.res_listado = rm.res_listado_all;
-
-
 
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
@@ -1893,7 +1886,6 @@ angular.module('floor.controller', [])
         function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
 
             var wl = this;
-
             wl.reservation = {};
             wl.addGuest = true;
 
