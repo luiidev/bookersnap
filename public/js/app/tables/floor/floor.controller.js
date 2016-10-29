@@ -1970,7 +1970,17 @@ angular.module('floor.controller', [])
             };
 
             wl.save = function() {
+                if (!wl.reservation.guest_id) {
+                    if (wl.newGuest) {
+                        delete wl.reservation.guest_id;
+                        wl.reservation.guest = wl.newGuest;
+                    }
+                } else {
+                    delete wl.reservation.guest;
+                }
+
                 console.log(wl.reservation, wl.newGuest);
+
                 // service.saveWait()
                 //     .then(function(response) {
                 //         message.success(response.data.msg);

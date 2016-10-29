@@ -173,7 +173,6 @@ angular.module('reservation.controller', [])
                         vm.waitingResponse = false;
                         vm.cancel();
                     }).catch(function(error) {
-                        console.error(angular.toJson(error, true));
                         message.apiError(error);
                         vm.waitingResponse = false;
                     });
