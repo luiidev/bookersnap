@@ -74,8 +74,8 @@ angular.module('floor.controller', [])
         };
 
         /*$scope.$on("listadoTypeTurnos", function() {
-            alert("hola ");
-        });*/
+                alert("hola ");
+            });*/
 
         vm.eventEstablish = function(eventDrop, data) {
             eventEstablished.event = eventDrop;
@@ -149,17 +149,20 @@ angular.module('floor.controller', [])
         };
 
         var loadBlocks = function() {
+
             var deferred = $q.defer();
             reservationService.getBlocks(null, true)
                 .then(function(response) {
                     blocks = response.data.data;
+                    // console.log("loadBlock " + angular.toJson(blocks, true));
+
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
+                    console.log("loadBlock2 " + angular.toJson(blocks, true));
                     deferred.resolve();
-                    //////////////////////////////////////////////////////////////
                     $table.setBorderColorForReservation(vm.zones, blocks);
-                    //////////////////////////////////////////////////////////////
+
                 });
             return deferred.promise;
         };
@@ -364,14 +367,8 @@ angular.module('floor.controller', [])
 
             updateTime = $timeout(vm.showTimeCustom, 60000, true, event);
         };
-        /**
-         * END
-         */
 
-
-        /**
-         * Cambio de de mesa de una reservacion
-         */
+        //Cambio de de mesa de una reservacion
         var changeTable = function(table) {
             var dropTable = eventEstablished.data;
             if (dropTable.id != table.id) {
@@ -388,9 +385,6 @@ angular.module('floor.controller', [])
                     });
             }
         };
-        /**
-         * END
-         */
 
         $scope.$on("NotifyFloorNotesReload", function(evt, data) {
             if (!vm.notesBox) {
@@ -415,6 +409,8 @@ angular.module('floor.controller', [])
             closeNotes();
             listSourceTypes();
             listStatuses();
+
+            reload();
 
         })();
     })
@@ -893,10 +889,7 @@ angular.module('floor.controller', [])
                 var tPor = 0;
                 var tRp = 0;
 
-
                 rm.res_listado = rm.res_listado_all;
-
-
 
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
@@ -1890,116 +1883,116 @@ angular.module('floor.controller', [])
             console.log(content.reservation);
         }
     ])
-.controller("waitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
-    function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
+    .controller("waitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
+        function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
 
-        var wl = this;
+            var wl = this;
 
-        wl.reservation = {};
-        wl.addGuest = true;
+            wl.reservation = {};
+            wl.addGuest = true;
 
-        /**
-         * HTTP
-         */
-        var listGuest = function() {
-            var deferred = $q.defer();
-            service.getGuest()
-                .then(function(guests) {
-                    wl.covers = guests;
-                    wl.reservation.covers = 2;
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    deferred.resolve();
-                });
-
-            return deferred.promise;
-        };
-
-        var listDurations = function() {
-            var deferred = $q.defer();
-
-            service.getDurations()
-                .then(function(durations) {
-                    wl.durations = durations;
-                    wl.reservation.duration = "00:15:00";
-                }).finally(function() {
-                    deferred.resolve();
-                });
-
-            return deferred.promise;
-        };
-        /**
-         * END HTTP
-         */
-        
-
-        /**
-         * Search guest list
-         */
-        var auxiliar;
-        wl.searchGuest = function(name) {
-            console.log(name);
-            if (auxiliar) $timeout.cancel(auxiliar);
-            if (name === "") {
-                wl.guestList = [];
-                return;
-            }
-            var search = function() {
-                service.getGuestList(name)
-                    .then(function(response) {
-                        wl.guestList = response.data.data.data;
+            /**
+             * HTTP
+             */
+            var listGuest = function() {
+                var deferred = $q.defer();
+                service.getGuest()
+                    .then(function(guests) {
+                        wl.covers = guests;
+                        wl.reservation.covers = 2;
                     }).catch(function(error) {
                         message.apiError(error);
+                    }).finally(function() {
+                        deferred.resolve();
                     });
+
+                return deferred.promise;
             };
 
-            auxiliar = $timeout(search, 500);
-        };
+            var listDurations = function() {
+                var deferred = $q.defer();
 
-        wl.selectGuest = function(guest) {
-            wl.reservation.guest_id = guest.id;
-            wl.guest = guest;
-            wl.addGuest = false;
-        };
+                service.getDurations()
+                    .then(function(durations) {
+                        wl.durations = durations;
+                        wl.reservation.duration = "00:15:00";
+                    }).finally(function() {
+                        deferred.resolve();
+                    });
 
-        wl.removeGuest = function() {
-            wl.reservation.guest_id = null;
-            wl.newGuest = null;
-            wl.guestList = [];
-            wl.addGuest = true;
-        };
-        /**
-         * END Search guest list
-         */
-
-        wl.cancel = function() {
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        wl.save = function() {
-            console.log(wl.reservation, wl.newGuest);
-            // service.saveWait()
-            //     .then(function(response) {
-            //         message.success(response.data.msg);
-            //         $uibModalInstance.dismiss('cancel');
-            //     }).catch(function(error) {
-            //         message.apiError(error);
-            //     });
-        };
+                return deferred.promise;
+            };
+            /**
+             * END HTTP
+             */
 
 
-        function listResource() {
-            return $q.all([
-                listGuest(),
-                listDurations()
-            ]);
+            /**
+             * Search guest list
+             */
+            var auxiliar;
+            wl.searchGuest = function(name) {
+                console.log(name);
+                if (auxiliar) $timeout.cancel(auxiliar);
+                if (name === "") {
+                    wl.guestList = [];
+                    return;
+                }
+                var search = function() {
+                    service.getGuestList(name)
+                        .then(function(response) {
+                            wl.guestList = response.data.data.data;
+                        }).catch(function(error) {
+                            message.apiError(error);
+                        });
+                };
+
+                auxiliar = $timeout(search, 500);
+            };
+
+            wl.selectGuest = function(guest) {
+                wl.reservation.guest_id = guest.id;
+                wl.guest = guest;
+                wl.addGuest = false;
+            };
+
+            wl.removeGuest = function() {
+                wl.reservation.guest_id = null;
+                wl.newGuest = null;
+                wl.guestList = [];
+                wl.addGuest = true;
+            };
+            /**
+             * END Search guest list
+             */
+
+            wl.cancel = function() {
+                $uibModalInstance.dismiss('cancel');
+            };
+
+            wl.save = function() {
+                console.log(wl.reservation, wl.newGuest);
+                // service.saveWait()
+                //     .then(function(response) {
+                //         message.success(response.data.msg);
+                //         $uibModalInstance.dismiss('cancel');
+                //     }).catch(function(error) {
+                //         message.apiError(error);
+                //     });
+            };
+
+
+            function listResource() {
+                return $q.all([
+                    listGuest(),
+                    listDurations()
+                ]);
+            }
+
+            (function Init() {
+                listResource().then(function() {
+
+                });
+            })();
         }
-
-        (function Init() {
-            listResource().then(function() {
-
-            });
-        })();
-    }
-]);
+    ]);
