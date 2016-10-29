@@ -158,12 +158,22 @@ angular.module('floor.directive', [])
                    $(ui.helper).css({
                        "z-index": 2,
                    });
+                   angular.element('.bg-window-floor').addClass('drag-dispel');
+                   scope.onStartFn();
+                },
+                stop: function(event, ui) {
+                    angular.element('.bg-window-floor').removeClass('drag-dispel');
+                    scope.onEndFn();
                 }
             });
         }
 
         return {
             link: makeDraggable,
+            scope: {
+                onStartFn: '&',
+                onEndFn: '&'
+            }
         };
 
     });
