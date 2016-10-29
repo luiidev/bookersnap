@@ -160,8 +160,9 @@ angular.module('floor.controller', [])
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
                     console.log("loadBlock2 " + angular.toJson(blocks, true));
-                    deferred.resolve();
                     $table.setBorderColorForReservation(vm.zones, blocks);
+                    deferred.resolve();
+
 
                 });
             return deferred.promise;
