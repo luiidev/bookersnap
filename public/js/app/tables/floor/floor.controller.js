@@ -181,9 +181,10 @@ angular.module('floor.controller', [])
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
-                    // console.log("loadBlock2 " + angular.toJson(blocks, true));
                     deferred.resolve();
                     $table.setBorderColorForReservation(vm.zones, blocks);
+                    deferred.resolve();
+
 
                 });
             return deferred.promise;
@@ -1999,15 +2000,19 @@ angular.module('floor.controller', [])
                     delete wl.reservation.guest;
                 }
 
-                console.log(wl.reservation, wl.newGuest);
+                wl.reservation.guest = wl.newGuest;
 
-                // service.saveWait()
-                //     .then(function(response) {
-                //         message.success(response.data.msg);
-                //         $uibModalInstance.dismiss('cancel');
-                //     }).catch(function(error) {
-                //         message.apiError(error);
-                //     });
+                console.log("reservation " + angular.toJson(wl.reservation, true));
+
+                service.saveWait(wl.reservation)
+                    .then(function(response) {
+                        console.log("saveWait " + angular.toJson(response, true));
+                        message.success(response.data.msg);
+                        $uibModalInstance.dismiss('cancel');
+                    }).catch(function(error) {
+                        console.error("saveWait " + angular.toJson(error, true));
+                        message.apiError(error);
+                    });
             };
 
 
