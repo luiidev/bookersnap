@@ -390,6 +390,7 @@ angular.module('reservation.service', [])
                                         table.server.setReservation(block.res_server.color);
                                     }
                                     table.class.setStatusClass(block.res_reservation_status_id);
+
                                     table.reservations.active = block;
 
                                     if (block.res_reservation_id === null) {

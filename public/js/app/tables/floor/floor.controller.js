@@ -12,7 +12,7 @@ angular.module('floor.controller', [])
         var blocks = [];
         var reservations = [];
         var eventEstablished = {};
-
+        var zones = [];
         /**
          * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
@@ -62,6 +62,28 @@ angular.module('floor.controller', [])
         $scope.$on("floorReload", function() {
             reload();
         });
+
+        vm.tablesSelected = function(obj) {
+
+            // $scope.$apply(function() {
+                var tables = [];
+                FloorFactory.rowTableReservation(obj.id).then(function(data) {
+                  angular.forEach(data, function(reservation) {
+                        if (reservation.reservation_id == obj.reservations.active.res_reservation_id) {
+                            tables = reservation.tables;
+                        }
+                  });
+                  $table.tablesSelected(vm.zones, tables);
+                });
+                $scope.$apply();
+            // });
+        };
+
+        vm.clearSelected = function() {
+            $scope.$apply(function() {
+                $table.clearSelected(vm.zones);
+            });
+        };
 
         var reload = function() {
             loadBlocksReservations()
@@ -159,7 +181,7 @@ angular.module('floor.controller', [])
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 }).finally(function() {
-                    console.log("loadBlock2 " + angular.toJson(blocks, true));
+                    deferred.resolve();
                     $table.setBorderColorForReservation(vm.zones, blocks);
                     deferred.resolve();
 
@@ -187,7 +209,7 @@ angular.module('floor.controller', [])
         var loadZones = function(date, reload) {
             reservationService.getZones(date, reload)
                 .then(function(response) {
-                    var zones = response.data.data;
+                    zones = response.data.data;
                     vm.zones = reservationHelper.loadTable(zones);
                     FloorFactory.setDataZonesTables(zones);
                 }).catch(function(error) {
@@ -372,7 +394,6 @@ angular.module('floor.controller', [])
         var changeTable = function(table) {
             var dropTable = eventEstablished.data;
             if (dropTable.id != table.id) {
-                // console.log(dropTable, table);
                 var id = dropTable.reservations.active.res_reservation_id;
                 var data = {
                     table_id: table.id
