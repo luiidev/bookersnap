@@ -22,8 +22,6 @@
 		        <tr>
 		          <th>PAX</th>
 		          <th>NOMBRE</th>
-		          <th>SALON</th>
-		          <th>MESA</th>
 		          <th>TIEMPO E.</th>
 		        </tr>
 		    </thead>
@@ -33,23 +31,16 @@
 	        	<div class="scrollbar-inner">
 					<table cellpadding="0" cellspacing="0" class="table-listado">
 		                <tbody>
-		                    <tr class="listado-column">
+		                    <tr class="listado-column" ng-repeat="value in wm.res_listado | waitlistCondicion" ng-drag-up-coming data-quantity="{{ value.num_people }}" on-start-fn="wm.selectWaitlist(value)">
 		                        <td>
 		                            <table class="table-listado">
 		                                <tr>
 		                                    <td>
-		                                        10
+		                                        {{value.num_people}}
 		                                    </td>
 		                                    <td>
-		                                        Carlos Nores
-		                                    </td>
-		                                    <td>
-		                                        1
-		                                    </td>
-		                                    <td>
-		                                        A15 <span>+</span>
-		                                    </td>
-		                                    
+		                                        {{value.first_name}} {{value.last_name}}
+		                                    </td>		                                    
 		                                    <td rowspan="2">
 		                                        <div class="label label-success f-12">
 		                                            85min
@@ -85,11 +76,6 @@
 		                                            </li>
 		                                        </ul>
 		                                    </td>
-		                                    <td>
-		                                        <div class="box-estado-res">
-		                                            Menu
-		                                        </div>
-		                                    </td>
 		                                    <td></td>
 		                                </tr>
 		                            </table>
@@ -98,8 +84,10 @@
 		                    </tr>
 		                </tbody>
                     </table>
+                    <div class="divider">CANCELADOS</div>
 				</div>
 			</div>
 		</div>
+
     </div>
 </div>

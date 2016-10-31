@@ -1,18 +1,15 @@
 <footer class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" id="footer">
 </footer>
-
 <section class="h-100vh" id="main">
     <section class="w-100 p-0" id="content">
         <div class="container w-100 p-l-0 p-l-0 p-section-right" ui-view="principal">
         </div>
     </section>
 </section>
-
 <section class="section-right-floor" style="z-index: 8">
     <div ui-view="tabReservaciones">
     </div>
 </section>
-
 <script id="myModalContentDetail.html" type="text/ng-template">
     <div class="reservation-list-content" ng-hide="vmd.EditContent">
         <div class="modal-header">
@@ -190,7 +187,6 @@
         </div>
     </div>
 </script>
-
 <script id="ModalEditReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -325,7 +321,6 @@
         </div>
     </div>
 </script>
-
 <script id="modalConfiguration.html" type="text/ng-template">
     <div class="modal-body modal-configuration">
         <div class="card">
@@ -391,7 +386,6 @@
         </div>
     </div>
 </script>
-
 <script id="ModalCreateWaitList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -409,7 +403,7 @@
                                 </label>
                                 <div class="col-xs-10 p-r-30">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="name" ng-model="wl.newGuest.first_name" ng-change="wl.searchGuest(wl.newGuest.first_name)"/>
+                                            <input type="text" class="form-control input" id="name" ng-model="wl.newGuest.first_name" ng-change="wl.searchGuest(wl.newGuest.first_name)" required="true" />
                                     </div>
                                 </div>
                             </div>
@@ -511,10 +505,10 @@
 
        </div>
 
-
         <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
             <div class="text-center">
-                <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse">Agregar a lista de espera</button>
+                <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse">
+                {{ wl.buttonText }}</button>
             </div>
         </div>
     </div>

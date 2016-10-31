@@ -79,7 +79,7 @@ angular.module('floor.filter', [])
 		return function(items) {
 			var salida = [];
 			angular.forEach(items, function(item) {
-				if (item.res_reservation_status_id !== null) {
+				if (item.res_reservation_status_id !== null && item.tables.length !== 0) {
 					var status = item.res_reservation_status_id;
 					switch (status) {
 						case 1:
@@ -94,11 +94,32 @@ angular.module('floor.filter', [])
 			return salida;
 		};
 	})
+	.filter("waitlistCondicion", function() {
+		return function(items) {
+			var salida = [];
+			angular.forEach(items, function(item) {
+				if (item.wait_list == 1 && item.tables.length === 0) {
+					var status = item.res_reservation_status_id;
+					switch (status) {
+						case 1:
+						case 2:
+						case 3:
+						case 6:
+						case 7:
+							salida.push(item);
+							break;
+					}
+
+				}
+			});
+			return salida;
+		};
+	})
 	.filter("statusSeated", function() {
 		return function(items) {
 			var salida = [];
 			angular.forEach(items, function(item) {
-				if (item.res_reservation_status_id !== null) {
+				if (item.res_reservation_status_id !== null && item.tables.length !== 0) {
 					var status = item.res_reservation_status_id;
 					switch (status) {
 						case 4:
@@ -106,6 +127,17 @@ angular.module('floor.filter', [])
 							break;
 					}
 
+				}
+			});
+			return salida;
+		};
+	})
+	.filter("statusAll", function() {
+		return function(items) {
+			var salida = [];
+			angular.forEach(items, function(item) {
+				if (item.res_reservation_status_id !== null && item.tables.length !== 0) {
+					salida.push(item);
 				}
 			});
 			return salida;
