@@ -310,7 +310,7 @@ message.show = function(title, text, type, options, action) {
         type: type,
     };
 
-    action = (action !== undefined) ? action : function() {};
+    action = (typeof action == "function") ? action : function() {};
 
     if (options !== undefined && options !== null) {
         if (typeof options == "object") {

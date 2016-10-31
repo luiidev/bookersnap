@@ -168,9 +168,10 @@ angular.module('reservation.service', [])
             };
         }
     ])
-    .factory("reservationHelper", ["TableFactory", "screenSize", function(TableFactory, screenSize) {
+    .factory("reservationHelper", ["TableFactory", "screenSize", "$interval", "$q",function(TableFactory, screenSize, $interval, $q) {
         var loadTable = function(zones) {
-            var itemZones = [];
+            var dataZones = [];
+            dataZones.tables = [];
 
             angular.forEach(zones, function(zone) {
                 var item = {};
@@ -191,7 +192,20 @@ angular.module('reservation.service', [])
                         rotate: data.config_rotation,
                         id: data.id,
                         status: data.status,
-                        reservations: {},
+                        reservations: {
+                            active: null,
+                            data: []
+                        },
+                        blocks: {
+                            active: null,
+                            data: []
+                        },
+                        blocksPermanent: {
+                            active: null,
+                            data: []
+                        },
+                        blocksPermanentClass: false,
+                        events: [],
                         suggested: false,
                         selected: false,
                         block: false,
@@ -223,14 +237,111 @@ angular.module('reservation.service', [])
                 });
                 item.name = zone.name;
                 item.tables = tables;
-                itemZones.push(item);
+                dataZones.push(item);
+                Array.prototype.push.apply(dataZones.tables, tables);
             });
 
-            return itemZones;
+            return dataZones;
+        };
+
+        var dataZones;
+        var loadTableV2 = function(zones, add) {
+            dataZones = loadTable(zones);
+            allCases.blocksPermanent();
+            if (Object.prototype.toString.call(add) == "[object Object]") {
+                if (typeof allCases[add.name] == "function") {
+                    allCases[add.name](add.data);
+                }
+            } else if (Object.protype.toString.call(add) == "[object Array]") {
+
+            }
+
+            return dataZones;
+        };
+
+        var allCases = {
+            blocks: function (blocks) {
+                angular.forEach(dataZones.tables, function(table) {
+                        angular.forEach(blocks, function(block) {
+                            if (table.id == block.res_table_id) {
+                                table.blocks.data.push(block);
+                                addEvent(table, block.start_time, block.end_time,
+                                 function(table) {
+                                    table.block = true;
+                                },
+                                 function(table) {
+                                    table.block = false;
+                                });
+                            }
+                        });
+                });
+            },
+            blocksPermanent: function () {
+                angular.forEach(dataZones.tables, function(table) {
+                    // console.log(Object.prototype.toString.call(table), table);
+                    // console.log(Object.prototype.toString.call(table.turns));
+                    if (Object.prototype.toString.call(table.turns) == "[object Array]") {
+                        // console.log(Object.prototype.toString.call(table.turns));
+                        angular.forEach(table.turns, function(turn) {
+                            table.blocksPermanent.data.push(turn);
+                            addEvent(table, turn.start_time, turn.end_time,
+                             function(table) {
+                                table.blocksPermanentClass = true;
+                                console.log(table.id, table.name,  table.blocksPermanentClass);
+                            },
+                             function(table) {
+                                table.blocksPermanentClass = false;
+                            });
+                        });
+                    }
+                });
+            }
+        };
+
+        var addEvent = function (table, start, end, startCallback, endCallback) {
+            table.events = table.events || [];
+            var event = newEvent(table, start, end, startCallback, endCallback);
+            table.events.push(event);
+        };
+
+        var newEvent = function (table, start, end, startEvent, endEvent) {
+            var event = {};
+            event.start = start;
+            event.end = end;
+            event.startEvent = startEvent;
+            event.endEvent = endEvent;
+            event.fire = function() {
+                try {
+                    var deferred = $q.defer();
+                    var time = moment();
+                    event.startTime = event.startTime || moment(event.start, "HH:mm:ss");
+                    event.endTime = event.endTime || moment(event.end, "HH:mm:ss");
+                    // console.log(time.format("HH:mm:ss"), event.startTime.format("HH:mm:ss"), event.endTime.format("HH:mm:ss"));
+                    if (time.isBetween(event.startTime, event.endTime)) {
+                        event.startEvent(table);
+                    } else {
+                        if (time.isAfter(event.endTime)) {
+                            event.endEvent(table);
+                            $interval.cancel(event.timeoutID);
+                            if (event.timeoutID) console.log("Evento cancelado, hora actual es mayor a su fin, ID: ", event.timeoutID.$$intervalId);
+                        }
+                    }
+                    deferred.resolve();
+                    return deferred.promise;
+                } catch (e){
+                    console.log("Event error: ",e);
+                }
+            };
+            event.fire().then(function() {
+                event.timeoutID = $interval(event.fire, 60000);
+            });
+
+           return event;
         };
 
         return {
             loadTable: loadTable,
+            loadTableV2: loadTableV2
         };
     }])
     .factory("screenHelper", ["$window", function($window) {
