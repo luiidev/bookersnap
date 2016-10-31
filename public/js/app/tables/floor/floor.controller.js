@@ -1981,8 +1981,6 @@ angular.module('floor.controller', [])
 
                 wl.reservation.guest = wl.newGuest;
 
-                console.log("reservation " + angular.toJson(wl.reservation, true));
-
                 service.saveWait(wl.reservation)
                     .then(function(response) {
                         console.log("saveWait " + angular.toJson(response, true));
