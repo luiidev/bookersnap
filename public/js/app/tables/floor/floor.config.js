@@ -11,7 +11,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/floor/view/parent.html',
-                        controller: 'NotificationCtrl',
+                        controller: 'FloorMainCtrl',
                         controllerAs: 'vm'
                     },
                     'index@mesas.floor': {
@@ -37,7 +37,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
             .state('mesas.floor.walkin', {
                 url: '/walkin',
                 templateUrl: '/js/app/tables/floor/view/waitlist.html',
-                controller: 'waitlistController',
+                controller: 'WaitListCtrl',
                 controllerAs: 'wm',
             })
             .state('mesas.floor.server', {

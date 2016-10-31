@@ -1,5 +1,5 @@
 angular.module("floor.notify.controller", [])
-	.controller('NotificationCtrl', function($scope, $rootScope, ServerNotification) {
+	.controller('FloorMainCtrl', function($scope, $rootScope, ServerNotification) {
 
 		var serverSocket = ServerNotification.getConnection();
 
