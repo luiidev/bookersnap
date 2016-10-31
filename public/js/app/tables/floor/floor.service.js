@@ -21,6 +21,7 @@ angular.module('floor.service', [])
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
+		var reservasAndBlocks = [];
 		var typeColection = [];
 		var sourceColection = [];
 		var statusColection = [];
@@ -28,6 +29,12 @@ angular.module('floor.service', [])
 		var filtrosVisita = [];
 		var filtrosReserva = [];
 		return {
+			setReservasAndBlocks: function(data) {
+				reservasAndBlocks = data;
+			},
+			getReservasAndBlocks: function() {
+				return reservasAndBlocks;
+			},
 			setTypeTurnItems: function(typeItem) {
 				var vTurn = [];
 				var itemTodos = {
@@ -467,7 +474,8 @@ angular.module('floor.service', [])
 							datetime_output: reserva.datetime_output,
 							email: reserva.email,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-							last_name: reserva.guest ? reserva.guest.last_name : ""
+							last_name: reserva.guest ? reserva.guest.last_name : "",
+							wait_list: reserva.wait_list
 						};
 						//console.log(obj);
 						vReservation.push(obj);
