@@ -988,7 +988,7 @@ angular.module('floor.controller', [])
             //messageAlert("Success", data.user_msg, "success", 2000, true);
             getlistZonesBloqueosReservas(true);
         });
-        $scope.$on("waitlistReload", function() {
+        $rootScope.$on("waitlistReload", function() {
             getlistZonesBloqueosReservas(true);
         });
 
