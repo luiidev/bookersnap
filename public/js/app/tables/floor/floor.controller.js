@@ -988,6 +988,9 @@ angular.module('floor.controller', [])
             //messageAlert("Success", data.user_msg, "success", 2000, true);
             getlistZonesBloqueosReservas(true);
         });
+        $scope.$on("waitlistReload", function() {
+            getlistZonesBloqueosReservas(true);
+        });
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1431,7 +1434,7 @@ angular.module('floor.controller', [])
         init();
     })
 
-.controller('WaitListCtrl', function($rootScope, FloorFactory, ServerDataFactory, $uibModal, TypeFilterDataFactory) {
+.controller('WaitListCtrl', function($rootScope, $scope, FloorFactory, ServerDataFactory, $uibModal, TypeFilterDataFactory) {
 
         var wm = this;
 
@@ -1457,14 +1460,15 @@ angular.module('floor.controller', [])
         };
 
         wm.selectWaitlist = function(waitlist) {
-            console.log("o,o", waitlist);
             $scope.$apply(function() {
                 $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
             });
         };
 
         var init = function() {
+
             wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
+
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);
             angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -1472,6 +1476,8 @@ angular.module('floor.controller', [])
 
             ServerDataFactory.cleanTableServerItems();
         };
+
+        $rootScope.$broadcast("waitlistReload");
 
         init();
 
