@@ -1,5 +1,5 @@
 angular.module('floor.controller', [])
-    .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, reservationHelper, reservationService, TypeTurnFactory,
+    .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
@@ -66,16 +66,16 @@ angular.module('floor.controller', [])
         vm.tablesSelected = function(obj) {
 
             // $scope.$apply(function() {
-                var tables = [];
-                FloorFactory.rowTableReservation(obj.id).then(function(data) {
-                  angular.forEach(data, function(reservation) {
-                        if (reservation.reservation_id == obj.reservations.active.res_reservation_id) {
-                            tables = reservation.tables;
-                        }
-                  });
-                  $table.tablesSelected(vm.zones, tables);
+            var tables = [];
+            FloorFactory.rowTableReservation(obj.id).then(function(data) {
+                angular.forEach(data, function(reservation) {
+                    if (reservation.reservation_id == obj.reservations.active.res_reservation_id) {
+                        tables = reservation.tables;
+                    }
                 });
-                $scope.$apply();
+                $table.tablesSelected(vm.zones, tables);
+            });
+            $scope.$apply();
             // });
         };
 
@@ -417,14 +417,12 @@ angular.module('floor.controller', [])
 
         $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
             messageAlert("Info", data.user_msg, "info", 2000, true);
-
-            if (data.reload === "zonas") {
-                loadZones(fecha_actual, true);
-            }
+            $state.reload();
         });
 
-        (function Init() {
-            loadZones(fecha_actual);
+        var init = function() {
+
+            loadZones(fecha_actual, true);
             listTypeTurns();
             sizeLienzo();
             closeNotes();
@@ -432,8 +430,10 @@ angular.module('floor.controller', [])
             listStatuses();
 
             reload();
+        };
 
-        })();
+        init();
+
     })
     .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
@@ -866,6 +866,10 @@ angular.module('floor.controller', [])
         rm.search = {
             show: true
         };
+        rm.searchReservation = function() {
+            rm.search.show = !rm.search.show;
+            rm.busqueda = "";
+        };
 
         //Validar open modal Mail Reservation
         var modalMailReservation = null;
@@ -899,6 +903,7 @@ angular.module('floor.controller', [])
             FloorFactory.listBloqueosReservas(reload).then(function success(data) {
 
                 rm.res_listado_all = data;
+                TypeFilterDataFactory.setReservasAndBlocks(data);
 
                 var total = 0;
                 var men = 0;
@@ -978,14 +983,13 @@ angular.module('floor.controller', [])
         });
         //****************************//
 
-        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-            //messageAlert("Success", data.user_msg, "success", 2000, true);
+        $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+            messageAlert("Notificación", data.user_msg, "info", 2000, true);
             getlistZonesBloqueosReservas(true);
         });
-
-        rm.searchReservation = function() {
-            rm.search.show = !rm.search.show;
-        };
+        $scope.$on("waitlistReload", function() {
+            getlistZonesBloqueosReservas(true);
+        });
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1427,21 +1431,20 @@ angular.module('floor.controller', [])
         };
 
         init();
-
     })
-    .controller('waitlistController', function($rootScope, FloorFactory, ServerDataFactory, $uibModal) {
+
+.controller('WaitListCtrl', function($rootScope, $scope, FloorFactory, ServerDataFactory, $uibModal, TypeFilterDataFactory) {
+
         var wm = this;
 
-        //Limpiar data y estilos de servers
-        FloorFactory.isEditServer(false);
-        angular.element('.bg-window-floor').removeClass('drag-dispel');
-        // angular.element('.table-zone').removeClass("selected-table");
-        $rootScope.$broadcast("floorClearSelected");
-        ServerDataFactory.cleanTableServerItems();
+        wm.res_listado = [];
 
         wm.search = {
             show: true
         };
+
+        $rootScope.$broadcast("floorClearSelected");
+
         wm.searchReservation = function() {
             wm.search.show = !wm.search.show;
         };
@@ -1449,11 +1452,33 @@ angular.module('floor.controller', [])
         wm.createWait = function() {
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalCreateWaitList.html',
-                controller: 'waitListCtrl',
+                controller: 'ModalWaitListCtrl',
                 controllerAs: 'wl',
                 size: '',
             });
         };
+
+        wm.selectWaitlist = function(waitlist) {
+            $scope.$apply(function() {
+                $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
+            });
+        };
+
+        var init = function() {
+
+            wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
+
+            //Limpiar data y estilos de servers
+            FloorFactory.isEditServer(false);
+            angular.element('.bg-window-floor').removeClass('drag-dispel');
+            // angular.element('.table-zone').removeClass("selected-table");
+
+            ServerDataFactory.cleanTableServerItems();
+        };
+
+        $rootScope.$broadcast("waitlistReload");
+
+        init();
 
     })
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
@@ -1903,12 +1928,13 @@ angular.module('floor.controller', [])
             console.log(content.reservation);
         }
     ])
-    .controller("waitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
+    .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
         function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
 
             var wl = this;
             wl.reservation = {};
             wl.addGuest = true;
+            wl.buttonText = 'Agregar a lista de espera';
 
             /**
              * HTTP
@@ -1934,7 +1960,7 @@ angular.module('floor.controller', [])
                 service.getDurations()
                     .then(function(durations) {
                         wl.durations = durations;
-                        wl.reservation.duration = "00:15:00";
+                        wl.reservation.quote = "00:15:00";
                     }).finally(function() {
                         deferred.resolve();
                     });
@@ -1944,7 +1970,6 @@ angular.module('floor.controller', [])
             /**
              * END HTTP
              */
-
 
             /**
              * Search guest list
@@ -2000,32 +2025,27 @@ angular.module('floor.controller', [])
                 }
 
                 wl.reservation.guest = wl.newGuest;
-
-                console.log("reservation " + angular.toJson(wl.reservation, true));
+                wl.buttonText = 'Enviando ...';
 
                 service.saveWait(wl.reservation)
                     .then(function(response) {
-                        console.log("saveWait " + angular.toJson(response, true));
+                        wl.buttonText = 'Agregar a lista de espera';
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                     }).catch(function(error) {
+                        wl.buttonText = 'Agregar a lista de espera';
                         console.error("saveWait " + angular.toJson(error, true));
                         message.apiError(error);
                     });
             };
 
-
             function listResource() {
-                return $q.all([
-                    listGuest(),
-                    listDurations()
-                ]);
+                listGuest();
+                listDurations();
             }
 
             (function Init() {
-                listResource().then(function() {
-
-                });
+                listResource();
             })();
         }
     ]);
