@@ -984,8 +984,8 @@ angular.module('floor.controller', [])
         });
         //****************************//
 
-        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-            //messageAlert("Success", data.user_msg, "success", 2000, true);
+        $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+            messageAlert("Notificación", data.user_msg, "info", 2000, true);
             getlistZonesBloqueosReservas(true);
         });
         $rootScope.$on("waitlistReload", function() {
