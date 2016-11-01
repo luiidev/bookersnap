@@ -987,10 +987,10 @@ angular.module('floor.controller', [])
         $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             messageAlert("Notificación", data.user_msg, "info", 2000, true);
             getlistZonesBloqueosReservas(true);
+            //data que me llega actualizara objeto
+
         });
-        $rootScope.$on("waitlistReload", function() {
-            getlistZonesBloqueosReservas(true);
-        });
+        //$rootScope.$broadcast("waitlistReload");
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1477,7 +1477,9 @@ angular.module('floor.controller', [])
             ServerDataFactory.cleanTableServerItems();
         };
 
-        $rootScope.$broadcast("waitlistReload");
+        /*$rootScope.$on("waitlistReload", function() {
+            init();
+        });*/
 
         init();
 
