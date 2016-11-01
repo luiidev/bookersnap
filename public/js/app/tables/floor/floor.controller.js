@@ -206,8 +206,8 @@ angular.module('floor.controller', [])
             return $q.all([loadBlocks(), loadReservations()]);
         };
 
-        var loadZones = function(date, reload) {
-            reservationService.getZones(date, reload)
+        var loadZones = function(date, rel) {
+            reservationService.getZones(date, rel)
                 .then(function(response) {
                     zones = response.data.data;
                     vm.zones = reservationHelper.loadTable(zones);
@@ -623,7 +623,6 @@ angular.module('floor.controller', [])
             reservationService.quickCreate(reservation)
                 .then(function(response) {
                     $rootScope.$broadcast("floorReload");
-                    message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
                     message.apiError(error);
