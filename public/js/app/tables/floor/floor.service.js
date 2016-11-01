@@ -35,6 +35,12 @@ angular.module('floor.service', [])
 			getReservasAndBlocks: function() {
 				return reservasAndBlocks;
 			},
+			delItemReservasAndBlocks: function(index) {
+				reservasAndBlocks.splice(index, 1);
+			},
+			addItemReservasAndBlocks: function(item) {
+				reservasAndBlocks.push(item);
+			},
 			setTypeTurnItems: function(typeItem) {
 				var vTurn = [];
 				var itemTodos = {

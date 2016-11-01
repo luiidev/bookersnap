@@ -1467,6 +1467,7 @@ angular.module('floor.controller', [])
         var init = function() {
 
             wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
+            console.log(wm.res_listado);
 
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);
