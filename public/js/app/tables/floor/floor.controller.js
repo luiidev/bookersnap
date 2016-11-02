@@ -61,7 +61,9 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("NotifyFloorBlock", function(evt, data) {
-            console.log("NotifyFloorBlock " + angular.toJson(data, true));
+            var blockTest = FloorFactory.parseDataBlock(data);
+            FloorFactory.asingBlockTables(blockTest, vm.zones);
+            console.log("NotifyFloorBlock " + angular.toJson(vm.zones, true));
         });
 
         $scope.$on("floorReload", function() {
@@ -206,12 +208,12 @@ angular.module('floor.controller', [])
         var loadZones = function(date, reload) {
             FloorFactory.getZones(date, reload).then(
                 function success(response) {
-                    //console.log(angular.toJson(response, true));
+
                     zones = response;
                     vm.zones = reservationHelper.loadTable(zones);
                     FloorFactory.setDataZonesTables(zones);
                     reloadFloor();
-                    //FloorFactory.setDataZonesTables(zones);
+                    console.log(angular.toJson(vm.zones, true));
                 },
                 function error(response) {
                     console.error(response);

@@ -234,7 +234,8 @@ angular.module('floor.service', [])
 							var blockEndTime = moment(block.end_time, "HH:mm:ss");
 
 							if (time.isBetween(blockStartTime, blockEndTime)) {
-								console.log('Se ha bloqueado', block);
+								//console.log('Se ha bloqueado', block);
+								table.block = true;
 							} else {
 								if (time.isAfter(blockEndTime)) {
 									$interval.cancel(event.eventInterval);
@@ -287,6 +288,19 @@ angular.module('floor.service', [])
 					}
 				});
 				return tableBlocks;
+			},
+			parseDataBlock: function(block) {
+				var blockTables = [];
+				angular.forEach(block.tables, function(table) {
+					blockTables.push({
+						res_table_id: table.id,
+						start_time: block.start_time,
+						end_time: block.end_time,
+						start_date: block.start_date
+					});
+
+				});
+				return blockTables;
 			},
 			setBorderColorForReservation: function(zones, blocks) {
 				var hour = moment();
