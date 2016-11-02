@@ -179,7 +179,7 @@ angular.module('floor.service', [])
 			}
 		};
 	})
-	.factory('FloorFactory', function($q, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory, BlockFactory) {
+	.factory('FloorFactory', function($q, $interval, reservationService, TableFactory, FloorDataFactory, ServerFactory, CalendarService, NoteFactoryData, TypeFilterDataFactory, BlockFactory, $table) {
 		var flag = {
 			editServer: false
 		};
@@ -187,6 +187,107 @@ angular.module('floor.service', [])
 		var zonesTotal = [];
 		var navegaTabZone = 0;
 		return {
+			getZones: function(date, reload) {
+				var defered = $q.defer();
+				reservationService.getZones(date, reload)
+					.then(
+						function success(response) {
+							response = response.data.data;
+							defered.resolve(response);
+
+						},
+						function error(response) {
+							response = response.data;
+							defered.reject(response);
+						}
+					);
+				return defered.promise;
+			},
+			getBlocks: function() {
+				var defered = $q.defer();
+				var self = this;
+				reservationService.getBlocks(null, true)
+					.then(function success(response) {
+						response = response.data.data;
+						/*angular.forEach(response, function(block) {
+							self.addEventBlocks(block);
+						});*/
+						defered.resolve(response);
+						//blocks = response.data.data;
+						//console.log("loadBlock " + angular.toJson(blocks, true));
+					}, function error(response) {
+						response = response.data;
+						defered.reject(response);
+					});
+				//$table.setBorderColorForReservation(vm.zones, blocks);
+				return defered.promise;
+			},
+			addEventBlocks: function(table) {
+
+				angular.forEach(table.blocks, function(block) {
+					var event = {};
+					event.fire = function() {
+						var time = moment();
+						try {
+
+							var blockStartTime = moment(block.start_time, "HH:mm:ss");
+							var blockEndTime = moment(block.end_time, "HH:mm:ss");
+
+							if (time.isBetween(blockStartTime, blockEndTime)) {
+								console.log('Se ha bloqueado', block);
+							} else {
+								if (time.isAfter(blockEndTime)) {
+									$interval.cancel(event.eventInterval);
+									table.block = false;
+									if (event.eventInterval) console.log("Evento cancelado, hora actual es mayor a su fin, ID: ", block);
+								}
+							}
+
+						} catch (e) {
+							console.log("Event error: ", e);
+						}
+					};
+					event.eventInterval = $interval(event.fire, 6000);
+
+					table.events.push(event);
+				});
+			},
+			getServers: function() {
+				var deferred = $q.defer();
+				reservationService.getServers()
+					.then(function success(response) {
+						response = response.data.data;
+						deferred.resolve(response);
+					}, function error(response) {
+						response = response.data;
+						defered.reject(response);
+					});
+
+				return deferred.promise;
+			},
+			asingBlockTables: function(blocks, zones) {
+				var self = this;
+				angular.forEach(zones, function(zone) {
+					angular.forEach(zone.tables, function(table) {
+						table.blocks = self.searchBlockTables(blocks, table);
+						self.addEventBlocks(table);
+					});
+				});
+				//console.log('AsigBlock', angular.toJson(zones, true));
+			},
+			searchBlockTables: function(blocks, table) {
+				var tableBlocks = [];
+				angular.forEach(blocks, function(block) {
+					if (block.res_table_id == table.id) {
+						tableBlocks.push({
+							start_time: block.start_time,
+							end_time: block.end_time,
+							start_date: block.start_date
+						});
+					}
+				});
+				return tableBlocks;
+			},
 			setBorderColorForReservation: function(zones, blocks) {
 				var hour = moment();
 
@@ -463,6 +564,7 @@ angular.module('floor.service', [])
 				var vReservation = [];
 				FloorDataFactory.getReservas(reload).then(function(data) {
 					// console.log("****", data.data.data);
+
 					angular.forEach(data.data.data, function(reserva) {
 
 						var obj = {
@@ -482,6 +584,7 @@ angular.module('floor.service', [])
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
 							wait_list: reserva.wait_list
+
 						};
 						//console.log(obj);
 						vReservation.push(obj);
@@ -559,7 +662,6 @@ angular.module('floor.service', [])
 
 					me.listBloqueos().then(function success(tableBlocks) {
 
-
 						//console.log(angular.toJson(lstreserva, true));
 
 						me.listOnlyBloqueos().then(function success(blocks) {
@@ -573,8 +675,6 @@ angular.module('floor.service', [])
 							defered.reject(response.data);
 						});
 
-
-
 					}, function error(response) {
 						defered.reject(response.data);
 					});
@@ -583,6 +683,19 @@ angular.module('floor.service', [])
 					defered.reject(response.data);
 				});
 
+				return defered.promise;
+			},
+			listadoReservaciones: function() {
+				var me = this;
+				var defered = $q.defer();
+				me.listBloqueosReservas().then(
+					function success(data) {
+						//TypeFilterDataFactory.setReservasAndBlocks(data);
+						defered.resolve(data);
+					},
+					function error(response) {
+						defered.reject(response.data);
+					});
 				return defered.promise;
 			},
 			listOnlyBloqueos: function() {

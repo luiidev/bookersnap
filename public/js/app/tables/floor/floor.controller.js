@@ -11,6 +11,7 @@ angular.module('floor.controller', [])
         vm.zones = [];
         var blocks = [];
         var reservations = [];
+        var servers = [];
         var eventEstablished = {};
         var zones = [];
         /**
@@ -60,7 +61,7 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("floorReload", function() {
-            reload();
+            reloadFloor();
         });
 
         vm.tablesSelected = function(obj) {
@@ -85,19 +86,13 @@ angular.module('floor.controller', [])
             });
         };
 
-        var reload = function() {
-            loadBlocksReservations()
-                .then(function() {
-                    if (vm.showTime) {
-                        var event = $table.lastTimeEvent();
-                        if (event) vm.showTimeCustom(event);
-                    }
-                });
+        var reloadFloor = function() {
+            loadBlocksReservationsServers();
+            if (vm.showTime) {
+                var event = $table.lastTimeEvent();
+                if (event) vm.showTimeCustom(event);
+            }
         };
-
-        /*$scope.$on("listadoTypeTurnos", function() {
-                alert("hola ");
-            });*/
 
         vm.eventEstablish = function(eventDrop, data) {
             eventEstablished.event = eventDrop;
@@ -129,21 +124,23 @@ angular.module('floor.controller', [])
             );
         };
 
-        var getServers = function() {
-            ServerDataFactory.listadoServers()
-                .then(function success(servers) {
-                    //////////////////////////////////////////////////////////////
+        var loadServers = function() {
+            FloorFactory.getServers().then(
+                function success(response) {
+                    servers = response;
                     $table.setColorTable(vm.zones, servers);
-                    //////////////////////////////////////////////////////////////
                     ServerDataFactory.setServerItems(servers);
                     //console.log(angular.toJson(servers, true));
-                    /* Se cargan los colores que ya fueron asignados  */
+                    // Se cargan los colores que ya fueron asignados  
                     angular.forEach(servers, function(server, m) {
                         ServerDataFactory.setColorItems(server.color);
                     });
-                }, function error(error) {
-                    message.apiError(error);
-                });
+                    //console.log(angular.toJson(vm.zones, true));
+                },
+                function error(response) {
+                    console.error(response);
+                }
+            );
         };
 
         var listSourceTypes = function() {
@@ -171,53 +168,52 @@ angular.module('floor.controller', [])
         };
 
         var loadBlocks = function() {
-
-            var deferred = $q.defer();
-            reservationService.getBlocks(null, true)
-                .then(function(response) {
-                    blocks = response.data.data;
-                    // console.log("loadBlock " + angular.toJson(blocks, true));
-
-                }).catch(function(error) {
-                    message.apiError(error, "No se pudo cargar las reservaciones");
-                }).finally(function() {
-                    deferred.resolve();
+            FloorFactory.getBlocks().then(
+                function success(response) {
+                    blocks = response;
+                    FloorFactory.asingBlockTables(blocks, vm.zones);
                     $table.setBorderColorForReservation(vm.zones, blocks);
-                    deferred.resolve();
-
-
-                });
-            return deferred.promise;
+                    //console.log(angular.toJson(blocks, true));
+                },
+                function error(response) {
+                    message.apiError(response, "No se pudo cargar las reservaciones");
+                }
+            );
         };
 
         var loadReservations = function() {
-            var deferred = $q.defer();
+
             FloorDataFactory.getReservas(true)
                 .then(function(response) {
                     reservations = response.data.data;
                 }).catch(function(error) {
-                    deferred.resolve();
                     message.apiError(error, "No se pudo cargar las reservaciones");
                 });
-            return deferred.promise;
+
         };
 
-        var loadBlocksReservations = function() {
-            return $q.all([loadBlocks(), loadReservations()]);
+        var loadBlocksReservationsServers = function() {
+            //return $q.all([loadBlocks(), loadReservations()]);
+            loadBlocks();
+            loadReservations();
+            loadServers();
         };
 
-        var loadZones = function(date, rel) {
-            reservationService.getZones(date, rel)
-                .then(function(response) {
-                    zones = response.data.data;
+        var loadZones = function(date, reload) {
+            FloorFactory.getZones(date, reload).then(
+                function success(response) {
+                    //console.log(angular.toJson(response, true));
+                    zones = response;
                     vm.zones = reservationHelper.loadTable(zones);
                     FloorFactory.setDataZonesTables(zones);
-                }).catch(function(error) {
-                    message.apiError(error);
-                }).finally(function() {
-                    getServers();
-                    reload();
-                });
+                    reloadFloor();
+                    //FloorFactory.setDataZonesTables(zones);
+                },
+                function error(response) {
+                    console.error(response);
+                }
+            );
+
         };
 
         vm.mostrarDetail = function(index, data) {
@@ -400,7 +396,7 @@ angular.module('floor.controller', [])
                 };
                 reservationService.sit(id, data)
                     .then(function(response) {
-                        reload();
+                        reloadFloor();
                     }).catch(function(error) {
                         message.apiError(error);
                     });
@@ -420,17 +416,22 @@ angular.module('floor.controller', [])
             $state.reload();
         });
 
-        /*var getlistZonesBloqueosReservas = function() {
+        //Informacion para lado lateral para tabs Reservations y lista de espera
+        var getlistZonesBloqueosReservas = function() {
 
-            FloorFactory.listBloqueosReservas().then(function success(data) {
-                console.log('Carga: ' + data);
-                TypeFilterDataFactory.setReservasAndBlocks(data);
-            });
+            FloorFactory.listadoReservaciones().then(
+                function success(response) {
+                    //console.log(response);
+                    TypeFilterDataFactory.setReservasAndBlocks(response);
+                },
+                function error(response) {
+                    console.error(response);
+                }
+            );
 
-        };*/
+        };
 
         var init = function() {
-            //getlistZonesBloqueosReservas();
 
             loadZones(fecha_actual, true);
             listTypeTurns();
@@ -439,7 +440,8 @@ angular.module('floor.controller', [])
             listSourceTypes();
             listStatuses();
 
-            reload();
+            getlistZonesBloqueosReservas();
+
         };
 
         init();
@@ -913,7 +915,7 @@ angular.module('floor.controller', [])
             FloorFactory.listBloqueosReservas().then(function success(data) {
 
                 rm.res_listado_all = data;
-                TypeFilterDataFactory.setReservasAndBlocks(data);
+                //TypeFilterDataFactory.setReservasAndBlocks(data);
 
                 var total = 0;
                 var men = 0;
@@ -1319,11 +1321,22 @@ angular.module('floor.controller', [])
 
             getlistZonesBloqueosReservas();
             //$timeout
+            /*
+FloorFactory.listadoReservaciones().then(
+                function success(response) {
+                    //console.log(response);
+                    TypeFilterDataFactory.setReservasAndBlocks(response);
+                },
+                function error(response) {
+                    console.error(response);
+                }
+            );
+            */
             var res_listado_data = TypeFilterDataFactory.getReservasAndBlocks();
             console.log(res_listado_data);
 
             defaultOptionsFilters();
-            //Defini para filtro por defecto para visitas
+            //Definir para filtro por defecto para visitas
             TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
             rm.select_people(colection_filtro_visitas[0], null);
 
