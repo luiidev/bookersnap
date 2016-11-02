@@ -38,22 +38,25 @@
     </div>
 
 
-    <ul class="list-group listado-servers">
-        <li class="list-group-item title">Servidores activos</li>
-        <li class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers" ng-click="sm.btnEditServer($index,server)">
-            <div class="col-xs-2 p-0 center">
-                <span class="badge" style="background-color:{{server.color}} !important ">&nbsp</span>
-            </div>
-            <div class="col-xs-7 p-0">
-                <label class="col-xs-12 p-0">{{server.name}}</label>
-                <label class="col-xs-12 p-0">Last Seated : N/A </label>
-            </div>
-            <div class="col-xs-3 p-l-5 p-r-0">
-                <label class="col-xs-12 p-0">Now: 0</label>
-                <label class="col-xs-12 p-0">Total: {{server.tables.length}} </label>
-            </div>
-        </li>
-    </ul>
+                <ul class="list-group listado-servers">
+                    <li class="list-group-item title">Servidores activos</li>
+                    <li class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers" ng-click="sm.btnEditServer($index,server)">
+
+                            <div class="col-xs-2 p-0 center">
+                                <span class="badge" style="background-color:{{server.color}} !important ">&nbsp</span>
+                            </div>
+                            <div class="col-xs-7 p-0">
+                                <label class="col-xs-12 p-0">{{server.name}}</label>
+                                <label class="col-xs-12 p-0">Last Seated : N/A </label>
+                            </div>
+                            <div class="col-xs-3 p-l-5 p-r-0">
+                                <label class="col-xs-12 p-0">Now: 0</label>
+                                <label class="col-xs-12 p-0">Total: {{server.tables.length}} </label>
+                            </div>
+
+                    </li>
+                </ul>
+
 </div>
 <br>
 <div class="col-xs-12 new-detail-server" id="form_new_server" ng-show="sm.showForm">

@@ -1,6 +1,6 @@
 angular.module('floor.service', [])
-	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas) {
-		var reservations, tables;
+	.factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas, ApiUrlRoot) {
+		var reservations, tables, sourceTypes;
 		return {
 			getBloqueos: function(reload) {
 				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
@@ -10,11 +10,20 @@ angular.module('floor.service', [])
 				reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
 				return reservations;
 			},
+			getSourceTypes: function(reload) {
+				sourceTypes = HttpFactory.get(ApiUrlRoot + "/reservation/source-types", null, sourceTypes, reload);
+				return sourceTypes;
+			},
+			sendMessage: function(reservacion_id, data) {
+				return $http.post(ApiUrlMesas + "/reservations/" + reservacion_id + "/send-email", data);
+			}
 
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
+		var sourceColection = [];
+		var statusColection = [];
 		var filtrosTurno = [];
 		var filtrosVisita = [];
 		var filtrosReserva = [];
@@ -43,8 +52,40 @@ angular.module('floor.service', [])
 				vTurn.unshift(itemTodos);
 				typeColection = vTurn;
 			},
-			getTypeTurnItems: function() {
+			getTypeTurnItems: function(FloorFactory) {
 				return typeColection;
+			},
+			setSourceTypesItems: function(sourceItem) {
+				var vSource = [];
+				var itemTodos = {
+					id: 0,
+					name: "Todos",
+					status: 1,
+					checked: true,
+					turn: [{
+						hours_ini: "00:00:00",
+						hours_end: "00:00:00"
+					}]
+				};
+				angular.forEach(sourceItem, function(value) {
+					vSource.push({
+						id: value.id,
+						name: value.name,
+						description: value.description,
+						checked: false
+					});
+				});
+				vSource.unshift(itemTodos);
+				sourceColection = vSource;
+			},
+			getSourceTypesItems: function() {
+				return sourceColection;
+			},
+			setStatusTypesItems: function(statusItem) {
+				statusColection = statusItem;
+			},
+			getStatusTypesItems: function() {
+				return statusColection;
 			},
 			setOpcionesFilterTurnos: function(typeItem) {
 				if (typeItem.id === 0) {
@@ -245,7 +286,6 @@ angular.module('floor.service', [])
 			},
 			tableFilter: function(zones, blocks, cant) {
 				// Manejo estatico de tiempo de reserva por cantidad  de invitados
-
 				//var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0);
 
 				var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0).millisecond(0);
@@ -265,7 +305,7 @@ angular.module('floor.service', [])
 								/*if ((start_time.isBetween(start_block, end_block, null, "()")) ||
 									(end_time.isBetween(start_block, end_block, null, "()")) ||
 									(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-*/
+								*/
 								if ((start_time.isBetween(start_block, end_block, null, "()")) ||
 									(end_time.isBetween(start_block, end_block, null, "()")) ||
 									(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
@@ -382,6 +422,7 @@ angular.module('floor.service', [])
 				FloorDataFactory.getBloqueos().success(function(data) {
 					// console.log("***", data.data);
 					angular.forEach(data.data, function(reserva) {
+
 						var dataReservation = {
 							table_id: reserva.res_table_id,
 							//table_name: reserva.res_table_name,
@@ -410,6 +451,7 @@ angular.module('floor.service', [])
 				FloorDataFactory.getReservas().then(function(data) {
 					// console.log("****", data.data.data);
 					angular.forEach(data.data.data, function(reserva) {
+
 						var obj = {
 							reservation_id: reserva.id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
@@ -423,7 +465,7 @@ angular.module('floor.service', [])
 							res_type_turn_id: reserva.res_type_turn_id,
 							datetime_input: reserva.datetime_input,
 							datetime_output: reserva.datetime_output,
-
+							email: reserva.email,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : ""
 						};
@@ -561,7 +603,6 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-
 			rowTableReservation: function(idTable) {
 				var me = this;
 				var defered = $q.defer();

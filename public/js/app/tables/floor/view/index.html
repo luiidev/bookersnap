@@ -1,4 +1,5 @@
-
+<footer class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" id="footer">
+</footer>
 
 <section class="h-100vh" id="main">
     <section class="w-100 p-0" id="content">
@@ -6,13 +7,11 @@
         </div>
     </section>
 </section>
-<footer class="footer-custom-res" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" id="footer">
-</footer>
+
 <section class="section-right-floor" style="z-index: 8">
     <div ui-view="tabReservaciones">
     </div>
 </section>
-
 
 <script id="myModalContentDetail.html" type="text/ng-template">
     <div class="reservation-list-content" ng-hide="vmd.EditContent">
@@ -176,10 +175,10 @@
                             <div class="clearfix"></div>
                         </li>
                     </ul>
-                    <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+<!--                     <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
                         <span class="box-total">{{vmd.reservation.guests.total}}</span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -311,10 +310,10 @@
                             <div class="clearfix"></div>
                         </li>
                     </ul>
-                    <div class="box-result" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+<!--                     <div class="box-result" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
                         <span class="box-total">{{er.reservation.guests.total}}</span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
