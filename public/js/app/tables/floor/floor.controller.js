@@ -60,6 +60,10 @@ angular.module('floor.controller', [])
             if (index !== null) vm.tabSelectedZone(index);
         });
 
+        $scope.$on("NotifyFloorBlock", function(evt, data) {
+            console.log("NotifyFloorBlock " + angular.toJson(data, true));
+        });
+
         $scope.$on("floorReload", function() {
             reloadFloor();
         });
