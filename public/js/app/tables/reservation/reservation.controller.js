@@ -664,7 +664,10 @@ angular.module('reservation.controller', [])
             vm.$watch("zones", true);
 
             var loadTablesEdit2 = function(zones, blocks) {
-                vm.zones = helper.loadTableV2(zones, {name: "blocks", data: blocks});
+                vm.zones = helper.loadTableV2(zones, {
+                    name: "blocks",
+                    data: blocks
+                });
                 console.log(vm.zones);
                 setMaxIndex();
             };

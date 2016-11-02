@@ -168,7 +168,7 @@ angular.module('reservation.service', [])
             };
         }
     ])
-    .factory("reservationHelper", ["TableFactory", "screenSize", "$interval", "$q",function(TableFactory, screenSize, $interval, $q) {
+    .factory("reservationHelper", ["TableFactory", "screenSize", "$interval", "$q", function(TableFactory, screenSize, $interval, $q) {
         var loadTable = function(zones) {
             var dataZones = [];
             dataZones.tables = [];
@@ -260,23 +260,23 @@ angular.module('reservation.service', [])
         };
 
         var allCases = {
-            blocks: function (blocks) {
+            blocks: function(blocks) {
                 angular.forEach(dataZones.tables, function(table) {
-                        angular.forEach(blocks, function(block) {
-                            if (table.id == block.res_table_id) {
-                                table.blocks.data.push(block);
-                                addEvent(table, block.start_time, block.end_time,
-                                 function(table) {
+                    angular.forEach(blocks, function(block) {
+                        if (table.id == block.res_table_id) {
+                            table.blocks.data.push(block);
+                            addEvent(table, block.start_time, block.end_time,
+                                function(table) {
                                     table.block = true;
                                 },
-                                 function(table) {
+                                function(table) {
                                     table.block = false;
                                 });
-                            }
-                        });
+                        }
+                    });
                 });
             },
-            blocksPermanent: function () {
+            blocksPermanent: function() {
                 angular.forEach(dataZones.tables, function(table) {
                     // console.log(Object.prototype.toString.call(table), table);
                     // console.log(Object.prototype.toString.call(table.turns));
@@ -285,26 +285,26 @@ angular.module('reservation.service', [])
                         angular.forEach(table.turns, function(turn) {
                             table.blocksPermanent.data.push(turn);
                             addEvent(table, turn.start_time, turn.end_time,
-                             function(table) {
-                                table.blocksPermanentClass = true;
-                                console.log(table.id, table.name,  table.blocksPermanentClass);
-                            },
-                             function(table) {
-                                table.blocksPermanentClass = false;
-                            });
+                                function(table) {
+                                    table.blocksPermanentClass = true;
+                                    console.log(table.id, table.name, table.blocksPermanentClass);
+                                },
+                                function(table) {
+                                    table.blocksPermanentClass = false;
+                                });
                         });
                     }
                 });
             }
         };
 
-        var addEvent = function (table, start, end, startCallback, endCallback) {
+        var addEvent = function(table, start, end, startCallback, endCallback) {
             table.events = table.events || [];
             var event = newEvent(table, start, end, startCallback, endCallback);
             table.events.push(event);
         };
 
-        var newEvent = function (table, start, end, startEvent, endEvent) {
+        var newEvent = function(table, start, end, startEvent, endEvent) {
             var event = {};
             event.start = start;
             event.end = end;
@@ -316,8 +316,10 @@ angular.module('reservation.service', [])
                     var time = moment();
                     event.startTime = event.startTime || moment(event.start, "HH:mm:ss");
                     event.endTime = event.endTime || moment(event.end, "HH:mm:ss");
+
                     // console.log(time.format("HH:mm:ss"), event.startTime.format("HH:mm:ss"), event.endTime.format("HH:mm:ss"));
                     if (time.isBetween(event.startTime, event.endTime)) {
+                        console.log('En rango', start, ' - ', end);
                         event.startEvent(table);
                     } else {
                         if (time.isAfter(event.endTime)) {
@@ -328,15 +330,15 @@ angular.module('reservation.service', [])
                     }
                     deferred.resolve();
                     return deferred.promise;
-                } catch (e){
-                    console.log("Event error: ",e);
+                } catch (e) {
+                    console.log("Event error: ", e);
                 }
             };
             event.fire().then(function() {
                 event.timeoutID = $interval(event.fire, 60000);
             });
 
-           return event;
+            return event;
         };
 
         return {
