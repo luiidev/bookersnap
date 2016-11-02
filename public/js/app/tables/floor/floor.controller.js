@@ -971,6 +971,21 @@ angular.module('floor.controller', [])
             });
         };
 
+        var getlistZonesBloqueosReservasReload = function() {
+
+            FloorFactory.listadoReservaciones().then(function success(response) {
+                    //console.log(response);
+                    TypeFilterDataFactory.setReservasAndBlocks(response);
+                    rm.res_listado_data = response;
+                },
+                function error(response) {
+                    console.error(response);
+                }
+            );
+
+        };
+
+
         $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             messageAlert("Notificación", data.user_msg, "info", 2000, true);
             console.log("Formato: " + angular.toJson(data, true));
@@ -1320,20 +1335,16 @@ angular.module('floor.controller', [])
         var init = function() {
 
             getlistZonesBloqueosReservas();
-            //$timeout
-            /*
-FloorFactory.listadoReservaciones().then(
-                function success(response) {
-                    //console.log(response);
-                    TypeFilterDataFactory.setReservasAndBlocks(response);
-                },
-                function error(response) {
-                    console.error(response);
-                }
-            );
-            */
+
             var res_listado_data = TypeFilterDataFactory.getReservasAndBlocks();
-            console.log(res_listado_data);
+            if (res_listado_data.length === 0) {
+                getlistZonesBloqueosReservasReload();
+            } else {
+                rm.res_listado_data = TypeFilterDataFactory.getReservasAndBlocks();
+
+            }
+            console.log(rm.res_listado_data);
+
 
             defaultOptionsFilters();
             //Definir para filtro por defecto para visitas
