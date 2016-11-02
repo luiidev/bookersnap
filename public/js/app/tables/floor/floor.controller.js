@@ -420,7 +420,17 @@ angular.module('floor.controller', [])
             $state.reload();
         });
 
+        /*var getlistZonesBloqueosReservas = function() {
+
+            FloorFactory.listBloqueosReservas().then(function success(data) {
+                console.log('Carga: ' + data);
+                TypeFilterDataFactory.setReservasAndBlocks(data);
+            });
+
+        };*/
+
         var init = function() {
+            //getlistZonesBloqueosReservas();
 
             loadZones(fecha_actual, true);
             listTypeTurns();
@@ -898,9 +908,9 @@ angular.module('floor.controller', [])
             }];
         };
 
-        var getlistZonesBloqueosReservas = function(reload) {
+        var getlistZonesBloqueosReservas = function() {
 
-            FloorFactory.listBloqueosReservas(reload).then(function success(data) {
+            FloorFactory.listBloqueosReservas().then(function success(data) {
 
                 rm.res_listado_all = data;
                 TypeFilterDataFactory.setReservasAndBlocks(data);
@@ -959,34 +969,12 @@ angular.module('floor.controller', [])
             });
         };
 
-        //Ya no va//
-        //****************************//
-        $rootScope.$on("floorListadoTypeTurnos", function() {
-
-            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
-            console.log('Tipo de turnos ' + angular.toJson(rm.categorias_type, true));
-            //rm.categorias_type = turn;
-            TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
-            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
-            rm.select_type(colection_filtro_turnos[0], null);
-
-        });
-
-        $rootScope.$on("floorListadoSourceType", function() {
-
-            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
-            console.log(rm.categorias_reserva);
-            TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
-            var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-            rm.select_reserva(colection_filtro_reservas[0], null);
-
-        });
-        //****************************//
-
         $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             messageAlert("Notificación", data.user_msg, "info", 2000, true);
-            getlistZonesBloqueosReservas(true);
+            console.log("Formato: " + angular.toJson(data, true));
+            //getlistZonesBloqueosReservas(true);
             //data que me llega actualizara objeto
+
 
         });
         //$rootScope.$broadcast("waitlistReload");
@@ -1330,6 +1318,9 @@ angular.module('floor.controller', [])
         var init = function() {
 
             getlistZonesBloqueosReservas();
+            //$timeout
+            var res_listado_data = TypeFilterDataFactory.getReservasAndBlocks();
+            console.log(res_listado_data);
 
             defaultOptionsFilters();
             //Defini para filtro por defecto para visitas
@@ -1467,7 +1458,7 @@ angular.module('floor.controller', [])
         var init = function() {
 
             wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
-            console.log(wm.res_listado);
+            //console.log(wm.res_listado);
 
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);
