@@ -28,26 +28,26 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <table class="table-listado">
+                                    <table class="table-listado sub-table">
                                         <tr>
-                                            <th>
+                                            <td class="child-hour">
                                                 HORA
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td class="child-pax">
                                                 PAX
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td style="width:130px">
                                                 NOMBRE
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td class="child-room">
                                                 SALON
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td class="child-table">
                                                 MESA
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td class="child-status">
                                                 ESTADO
-                                            </th>
+                                            </td>
                                         </tr>
                                     </table>
                                 </th>
@@ -61,27 +61,28 @@
                                     <tbody>
                                         <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-if="value.reservation_id" ng-repeat="value in rm.res_listado | statusCondicion | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
-                                                <table class="table-listado">
+                                                <table class="table-listado sub-table">
                                                     <tr>
-                                                        <td>
+                                                        <td class="child-hour">
                                                             {{value.start_time}}
                                                         </td>
-                                                        <td>
-                                                            {{value.num_people}}
+                                                        <td class="child-pax">
+                                                            &nbsp;&nbsp;{{value.num_people}}
                                                         </td>
-                                                        <td>
+                                                        <td class="child-name">
                                                             {{value.first_name}} {{value.last_name}}
                                                         </td>
-                                                        <td>
+                                                        <td class="child-room">
+                                                            <span style="width: 40px; background: #cc0000"></span>
                                                             {{value.tables[0].zone_indice}}
                                                         </td>
-                                                        <td>
+                                                        <td class="child-table">
                                                             {{value.tables[0].name}}
                                                             <span ng-if="value.tables.length>1">
                                                                 +
                                                             </span>
                                                         </td>
-                                                        <td>
+                                                        <td class="child-status">
                                                             <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
                                                                 {{value.res_reservation_status_id | statusEstados:'name'}}
                                                             </div>

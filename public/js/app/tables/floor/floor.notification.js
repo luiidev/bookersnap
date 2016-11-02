@@ -15,4 +15,8 @@ angular.module("floor.notify.controller", [])
 			$rootScope.$broadcast("NotifyFloorConfigUpdateReload", data);
 		});
 
+		serverSocket.on("b-mesas-floor-upd-block", function(data) {
+			$rootScope.$broadcast("NotifyFloorBlock", data.data);
+		});
+
 	});

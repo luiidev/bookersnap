@@ -59,6 +59,10 @@ angular.module('floor.controller', [])
             if (index !== null) vm.tabSelectedZone(index);
         });
 
+        $scope.$on("NotifyFloorBlock", function(evt, data) {
+            console.log("NotifyFloorBlock " + angular.toJson(data, true));
+        });
+
         $scope.$on("floorReload", function() {
             reload();
         });
@@ -986,10 +990,10 @@ angular.module('floor.controller', [])
         $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             messageAlert("Notificación", data.user_msg, "info", 2000, true);
             getlistZonesBloqueosReservas(true);
+            //data que me llega actualizara objeto
+
         });
-        $scope.$on("waitlistReload", function() {
-            getlistZonesBloqueosReservas(true);
-        });
+        //$rootScope.$broadcast("waitlistReload");
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1467,6 +1471,7 @@ angular.module('floor.controller', [])
         var init = function() {
 
             wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
+            console.log(wm.res_listado);
 
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);
@@ -1476,7 +1481,9 @@ angular.module('floor.controller', [])
             ServerDataFactory.cleanTableServerItems();
         };
 
-        $rootScope.$broadcast("waitlistReload");
+        /*$rootScope.$on("waitlistReload", function() {
+            init();
+        });*/
 
         init();
 
