@@ -13,8 +13,8 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/reservation/view/index.html',
-                        controller: "reservationCtrl.Store",
-                        // controllerAs: 'vm',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
                     }
                 },
             })
@@ -23,8 +23,8 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/reservation/view/index.html',
-                        controller: "reservationCtrl.Store",
-                        // controllerAs: 'vm',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
                     }
                 },
             });

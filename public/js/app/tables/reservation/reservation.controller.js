@@ -1,10 +1,8 @@
 angular.module('reservation.controller', [])
-    .controller("reservationCtrl.Index", [function() {
-        console.log("=)");
-    }])
-    .controller("reservationCtrl.Store", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
+    .controller("reservationCtrl.StoreUpdate", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
         "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state", "$table", "$q",
-        function(vm, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state, $table, $q) {
+        function($scope, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state, $table, $q) {
+            var vm = this;
 
             /**
              * Entidad de reservacion
@@ -401,7 +399,7 @@ angular.module('reservation.controller', [])
                 service.getReservations()
                     .then(function(response) {
                         reservations = response.data.data;
-                        deferred.resolve();
+                        deferred.resolve(reservations);
                     }).catch(function(error) {
                         message.apiError(error, "No se pudo cargar las reservaciones");
                     });
@@ -442,7 +440,7 @@ angular.module('reservation.controller', [])
 
             angular.element($window).bind('resize', function() {
                 sizeLienzo();
-                vm.$digest();
+                $scope.$digest();
             });
 
             var sizeLienzo = function() {
@@ -577,14 +575,13 @@ angular.module('reservation.controller', [])
                 if (reservation.res_guest_id) {
                     vm.guest = reservation.guest;
                 }
-
+                console.log(reservation);
                 paintTables(reservation.tables);
                 paintTags(reservation.tags);
             }
 
             function paintTables(tables) {
                 $table.paintTables(vm.zones, tables);
-
                 listTableSelected();
             }
 
@@ -614,60 +611,35 @@ angular.module('reservation.controller', [])
             var InitModule = function(date) {
                 vm.waitingResponse = true;
 
-                loadReservation();
-
                 $q.all([
                     loadZones(date),
                     loadBlocks(date),
+                    loadReservations(),
                     listGuest(),
                     listServers(),
                     listStatuses(),
                     listReservationTags(),
                     loadTurns(date),
-                    loadReservations(),
                 ]).then(function(data) {
-                    loadTablesEdit2(data[0], data[1]);
+                    loadTablesEdit(data[0], data[2]);
+                    loadReservation();
                     vm.tablesBlockValid();
-
-                    var event = $table.lastTimeEvent();
-                    if (event) showTimeCustom(event);
+                    showTimeCustom();
 
                     vm.waitingResponse = false;
                 });
-
-                // $q.all([
-                //     loadZones(date),
-                //     loadBlocks(date),
-                //     // loadReservations(),
-                // ]).then(function(data) {
-                //     loadTablesEdit2(data[0], data[1]);
-                // });
-
-
             };
 
-            var updateTime;
-            var showTimeCustom = function(event) {
-                if (updateTime) $timeout.cancel(updateTime);
-
-                $table.makeTime(vm.zones, blocks, reservations, event);
-                vm.showTime = true;
-
-                updateTime = $timeout(showTimeCustom, 60000, true, event);
+            var showTimeCustom = function() {
+                var tActive = $table.lastTimeEvent();
+                console.log(tActive);
+                if (tActive) vm.zones.tActive = tActive;
             };
 
-            var loadTablesEdit = function(dataZones) {
-                vm.zones = helper.loadTableV2(dataZones);
-                setMaxIndex();
-            };
+            $scope.$watch("zones", true);
 
-            vm.$watch("zones", true);
-
-            var loadTablesEdit2 = function(zones, blocks) {
-                vm.zones = helper.loadTableV2(zones, {
-                    name: "blocks",
-                    data: blocks
-                });
+            var loadTablesEdit = function(zones, reservations) {
+                vm.zones = helper.loadTableV2(zones, [{name: "reservations", data: reservations}]);
                 console.log(vm.zones);
                 setMaxIndex();
             };
