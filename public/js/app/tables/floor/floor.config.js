@@ -21,11 +21,23 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                     },
                     'principal@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/principal.html',
-
                     },
                     'tabReservaciones@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/tabReservaciones.html',
                     },
+                    // 'reservations@mesas.floor.reservation': {
+                    //     url: '/reservation/:date/add',
+                    //     templateUrl: '/js/app/tables/reservation/view/index.html',
+                    //     controller: 'reservationCtrl.StoreUpdate',
+                    //     controllerAs: 'rc',
+                    //     parent: 'mesas.floor'
+                    // },
+                    // 'reservations@mesas.floor.reservation-edit': {
+                    //     url: '/reservation/:date/edit/:id',
+                    //     templateUrl: '/js/app/tables/reservation/view/index.html',
+                    //     controller: 'reservationCtrl.StoreUpdate',
+                    //     controllerAs: 'rc'
+                    // }
                 },
             })
             .state('mesas.floor.reservation', {
@@ -45,5 +57,19 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                 templateUrl: '/js/app/tables/floor/view/server.html',
                 controller: 'serverController',
                 controllerAs: 'sm',
-            });
+            })
+            // .state('mesas.floor.reservation', {
+            //     url: '/reservation/:date/add',
+            //     templateUrl: '/js/app/tables/reservation/view/index.html',
+            //     controller: 'reservationCtrl.StoreUpdate',
+            //     controllerAs: 'rc',
+            //     parent: 'mesas.floor'
+            // })
+            // .state('mesas.floor.reservation-edit', {
+            //     url: '/reservation/:date/edit/:id',
+            //     templateUrl: '/js/app/tables/reservation/view/index.html',
+            //     controller: 'reservationCtrl.StoreUpdate',
+            //     controllerAs: 'rc',
+            //     parent: 'mesas.floor'
+            // });
     });
