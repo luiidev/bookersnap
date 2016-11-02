@@ -632,6 +632,7 @@ angular.module('reservation.controller', [])
 
             var showTimeCustom = function() {
                 var tActive = $table.lastTimeEvent();
+                console.log(tActive);
                 if (tActive) vm.zones.tActive = tActive;
             };
 

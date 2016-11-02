@@ -20,9 +20,9 @@
                                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
-                                <div class="item-drag-time" ng-style="{background: obj.time[zones.tActive].color}"
-                                 ng-if="zones.tActive && zones.tActive != 'nextTimeAll' && obj.time[zones.tActive].text">{{ obj.time[zones.tActive].text }}</div>
-                                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
+                                <div class="item-drag-time" ng-style="{background: obj.time[rc.zones.tActive].color}"
+                                 ng-if="rc.zones.tActive && rc.zones.tActive != 'nextTimeAll' && obj.time[rc.zones.tActive].text">{{ obj.time[rc.zones.tActive].text }}</div>
+                                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && rc.zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
                             </div>
                     </div>
                 </div>

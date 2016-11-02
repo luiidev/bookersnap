@@ -38,6 +38,12 @@ io.on('connection', function(socket) {
     io.to(data.room).emit('b-mesas-floor-upd-res', data);
   });
 
+  //Cuando se (actualiza - agrega ) un bloqueo de mesas
+  socket.on('b-mesas-floor-upd-block', function(data) {
+    console.log("b-mesas-floor-upd-block " + JSON.stringify(data));
+    io.to(data.room).emit('b-mesas-floor-upd-block', data);
+  });
+
   //Cuando se actualiza la configuracion (turnos,zonas,tags,etc)
   socket.on('b-mesas-config-update', function(data) {
     console.log("b-mesas-config-update " + JSON.stringify(data));
