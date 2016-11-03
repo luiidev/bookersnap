@@ -20,29 +20,38 @@
                     <h2 class="f-14">Proximas reservas y bloqueos</h2>
                 </div>
                 <div class="lv-body">
-                    <div ng-repeat="item in vmd.itemReservations" ng-class="item.block_id ? 'lv-item media border-left-amber':'lv-item media border-left-green'">
+                    <div ng-repeat="item in vmd.reservations" class="lv-item media border-left-green">
                         <div class="media-body">
-                            <div ng-if="item.block_id" style="cursor: pointer;">
-                                <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                            <div ng-click="vmd.reservationEdit(item)" style="cursor: pointer;">
+                                <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}</div>
                                 <ul class="lv-attrs" >
-                                    <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
-                                    <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
-                                </ul>
-                            </div>
-
-                            <div ng-if="item.reservation_id" ng-click="vmd.reservationEdit(item)" style="cursor: pointer;">
-                                <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.first_name}} {{item.last_name}}</div>
-                                <ul class="lv-attrs" >
-                                    <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
-                                    <li ng-if="item.reservation_id"><i class="zmdi zmdi-account-o"></i> {{item.num_people}} personas</li>
+                                    <li><i class="zmdi zmdi-time"></i> {{item.hours_reservation}}</li>
+                                    <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
                                 </ul>
                             </div>
 
                         </div>
                     </div>
-                    <div class="not-information" ng-if="vmd.itemReservations==''">
-                        No existe mesas reservadas o bloqueadas
+
+                    <div ng-repeat="item in vmd.blocks" class="lv-item media border-left-amber">
+                        <div class="media-body">
+                            <div style="cursor: pointer;">
+                                <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                                <ul class="lv-attrs" >
+                                    <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="not-information" ng-if="!vmd.reservations.length">
+                        No se encontro reservas
+                    </div>
+                    
+                    <div class="not-information" ng-if="!vmd.blocks.length">
+                        No se encontro bloqueos
+                    </div>
+
                 </div>
             </div>
         </div>
