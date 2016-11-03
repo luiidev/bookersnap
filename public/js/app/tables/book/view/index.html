@@ -1,7 +1,6 @@
 <section id="main">
-    <section id="content" ng-controller="BookCtrl">
-        <div class="container container-book">
-            <div class="block-header text-center">
+    <section class="w-100 p-0" id="content">
+        <!--<div class="block-header text-center">
                 <ul class="calendar-box">
                     <li>
                         <a href="javascript:void(0)" ng-click="setDate('-')">
@@ -16,114 +15,86 @@
                             </button>
                         </div>
                     </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="setDate('+')">
+                            <i class="zmdi zmdi-chevron-right calendar-btn">
+                            </i>
+                        </a>
+                    </li>
                 </ul>
+            </div>-->
+        <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
+        </div>
+        <div class="card">
+            <div class="listview lv-bordered lv-lg">
+                <div class="lv-header-alt clearfix">
+                    <h2 class="lvh-label hidden-xs pull-left f-700">
+                        Sort by :
+                    </h2>
+                    <!-- ngIf: mactrl.listviewSearchStat -->
+                    <ul class="lv-actions actions pull-left">
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Time">
+                                <i class="zmdi zmdi-time">
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Status">
+                                <i class="zmdi zmdi-fire zmdi-hc-fw">
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
+                                <i class="zmdi zmdi-accounts zmdi-hc-fw">
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Guest">
+                                <i class="zmdi zmdi-account-o zmdi-hc-fw">
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Table">
+                                <i class="zmdi zmdi-collection-item zmdi-hc-fw">
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Date Created">
+                                <i class="zmdi zmdi-calendar zmdi-hc-fw">
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="lv-actions actions">
+                        <li>
+                            <div class="fg-line">
+                                <input class="form-control input-sm" placeholder="Search" type="text">
+                                </input>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lv-body">
+                    <div class="lv-item media" ng-click="newReservation(item.time)" ng-repeat="item in timeAvailability">
+                        <div class="media-body">
+                            <div class="lv-title f-14">
+                                Available
+                            </div>
+                            <small class="lv-small f-15">
+                                {{item.time}}
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 </section>
-<small>
-    All Shifts - 10 Covers
-</small>
-<li>
-    <a href="javascript:void(0)" ng-click="setDate('+')">
-        <i class="zmdi zmdi-chevron-right calendar-btn">
-        </i>
-    </a>
-</li>
-<div class="row m-t-20">
-    <h4>
-        Search Availability by Party Size
-    </h4>
-    <!--
-                 <uib-pagination direction-links="false" total-items="searchGuest.totalItems" ng-model="searchGuest.selected" class="guest-pagination"></uib-pagination>-->
-    <ul class="pagination search-guest">
-        <li ng-repeat="item in searchGuest.totalItems">
-            <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" ng-click="selectGuest(item,$index,'')">
-                {{ item }}
-            </button>
-        </li>
-        <li uib-dropdown="">
-            <button class="btn btn-icon waves-effect waves-circle dropdown-toggle" id="btn-more-guest" uib-dropdown-toggle="">
-                {{ searchGuest.moreGuestSelected }}
-            </button>
-            <ul class="dropdown-menu guest-list">
-                <li ng-repeat="item in searchGuest.moreGuest">
-                    <a href="" ng-click="selectGuest(item.id,$index,'more')">
-                        {{ item.label }}
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
-<div class="card">
-    <div class="listview lv-bordered lv-lg">
-        <div class="lv-header-alt clearfix">
-            <h2 class="lvh-label hidden-xs pull-left f-700">
-                Sort by :
-            </h2>
-            <!-- ngIf: mactrl.listviewSearchStat -->
-            <ul class="lv-actions actions pull-left">
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Time">
-                        <i class="zmdi zmdi-time">
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Status">
-                        <i class="zmdi zmdi-fire zmdi-hc-fw">
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Covers">
-                        <i class="zmdi zmdi-accounts zmdi-hc-fw">
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Guest">
-                        <i class="zmdi zmdi-account-o zmdi-hc-fw">
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Table">
-                        <i class="zmdi zmdi-collection-item zmdi-hc-fw">
-                        </i>
-                    </a>
-                </li>
-                <li>
-                    <a href="" tooltip-class="tooltip-red" tooltip-placement="top" uib-tooltip="Date Created">
-                        <i class="zmdi zmdi-calendar zmdi-hc-fw">
-                        </i>
-                    </a>
-                </li>
-            </ul>
-            <ul class="lv-actions actions">
-                <li>
-                    <div class="fg-line">
-                        <input class="form-control input-sm" placeholder="Search" type="text">
-                        </input>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="lv-body">
-            <div class="lv-item media" ng-click="newReservation(item.time)" ng-repeat="item in timeAvailability">
-                <div class="media-body">
-                    <div class="lv-title f-14">
-                        Available
-                    </div>
-                    <small class="lv-small f-15">
-                        {{item.time}}
-                    </small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <script id="modalNewReservation.html" type="text/ng-template">
     <div class="modal-header">
     <h3 class="modal-title">New Reservation</h3>

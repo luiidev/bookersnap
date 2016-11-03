@@ -1340,7 +1340,7 @@ angular.module('floor.controller', [])
 
         var init = function() {
 
-            getlistZonesBloqueosReservas();
+            //getlistZonesBloqueosReservas();
 
             var res_listado_data = TypeFilterDataFactory.getReservasAndBlocks();
             if (res_listado_data.length === 0) {

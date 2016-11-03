@@ -577,7 +577,7 @@ angular.module('floor.service', [])
 				var defered = $q.defer();
 				var vReservation = [];
 				FloorDataFactory.getReservas(reload).then(function(data) {
-					// console.log("****", data.data.data);
+					console.log("listReservas", data.data.data);
 
 					angular.forEach(data.data.data, function(reserva) {
 
