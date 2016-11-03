@@ -59,7 +59,7 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-if="value.reservation_id" ng-repeat="value in rm.res_listado | statusCondicion | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | statusCondicion | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
                                                 <table class="table-listado sub-table">
                                                     <tr>
@@ -74,7 +74,7 @@
                                                         </td>
                                                         <td class="child-room">
                                                             <span style="width: 40px; background: #cc0000"></span>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td class="child-table">
                                                             {{value.tables[0].name}}
@@ -83,8 +83,8 @@
                                                             </span>
                                                         </td>
                                                         <td class="child-status">
-                                                            <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
-                                                                {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                            <div class="box-estado-res bg-{{value.status.color}}">
+                                                                {{value.status.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -141,12 +141,12 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_type_turn_id | statusTurnos}}
+                                                                {{value.type_turn.name}}
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_source_type_id | statusReservas}}
+                                                                {{value.source.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -195,7 +195,7 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming="" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-if="value.reservation_id" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusSeated" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming="" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusSeated" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
                                                 <table class="table-listado">
                                                     <tr>
@@ -209,7 +209,7 @@
                                                             {{value.first_name}} {{value.last_name}}
                                                         </td>
                                                         <td>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td>
                                                             {{value.tables[0].name}}
@@ -218,8 +218,8 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
-                                                                {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                            <div class="box-estado-res bg-{{value.status.color}}">
+                                                                {{value.status.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -281,12 +281,12 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_type_turn_id | statusTurnos}}
+                                                                {{value.type_turn.name}}
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_source_type_id | statusReservas}}
+                                                                {{value.source.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -335,7 +335,7 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'index_start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
                                                 <table class="table-listado" ng-hide="value.block_id" ng-click="rm.editReservation(value)">
                                                     <tr>
@@ -349,7 +349,7 @@
                                                             {{value.first_name}} {{value.last_name}}
                                                         </td>
                                                         <td>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td>
                                                             {{value.tables[0].name}}
@@ -358,8 +358,8 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div class="box-estado-res bg-{{value.res_reservation_status_id | statusEstados:'color'}}">
-                                                                {{value.res_reservation_status_id | statusEstados:'name'}}
+                                                            <div class="box-estado-res bg-{{value.status.color}}">
+                                                                {{value.status.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -421,17 +421,17 @@
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_type_turn_id | statusTurnos}}
+                                                                {{value.type_turn.name}}
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="box-estado-res">
-                                                                {{value.res_source_type_id | statusReservas}}
+                                                                {{value.source.name}}
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <table class="table-listado p-0 m-0" ng-show="value.block_id" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.block_id})">
+                                                <!--<table class="table-listado p-0 m-0" ng-show="value.block_id" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.block_id})">
                                                     <tr>
                                                         <td>
                                                             {{value.start_time}} - {{value.end_time}}
@@ -451,7 +451,7 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                </table>
+                                                </table>-->
                                             </td>
                                         </tr>
                                     </tbody>

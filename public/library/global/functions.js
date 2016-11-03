@@ -524,7 +524,8 @@ este formato : 08:00:00 y con esta funcion obtenemos su indice = 32
 esta funcion usamos para cuando queremos marcar algun elemento por defecto en un select(hora con rango)
 */
 var getIndexHour = function(value, nextDay) {
-    nextDay = (nextDay) ? 0 : nextDay;
+
+    nextDay = (nextDay === null || nextDay === undefined) ? 0 : nextDay;
 
     var hourIndex = value.indexOf(":");
     var min = value.substr(hourIndex);
@@ -559,4 +560,27 @@ var getHourNextDay = function(hoursIni, hoursEnd) {
     }
 
     return nextDay;
+};
+
+var plusHour = function(hoursIni, hoursEnd) {
+    var hourTotal = 0;
+    var addHour = false;
+
+    //var hourIndex = hoursIni.indexOf(":");
+    //var hour = parseInt(hoursIni.substr(0, hourIndex));
+    //var min = hoursIni.substr(hourIndex + 1, 2);
+
+    var vHourIni = hoursIni.split(":");
+    var vHourEnd = hoursEnd.split(":");
+
+    var sMin = (parseInt(vHourIni[1]) + parseInt(vHourEnd[1]));
+    if (sMin >= 60) {
+        addHour = true;
+        sMin -= 60;
+    }
+    var sHour = (parseInt(vHourIni[0]) + parseInt(vHourEnd[0]) + (addHour ? 1 : 0));
+
+    hourTotal = sHour + ':' + sMin + ':00';
+
+    return hourTotal;
 };
