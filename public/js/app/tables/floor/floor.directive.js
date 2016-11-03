@@ -18,19 +18,12 @@ angular.module('floor.directive', [])
                     scope.onDroppedFn();
                 }
             });
-
-
-            element.on('click', function(event) {
-                event.preventDefault();
-                scope.onClickFn();
-            });
         }
 
         return {
             link: makeSelectTable,
             scope: {
                 num: "=",
-                onClickFn: '&',
                 onDroppedFn: '&'
             }
         };
