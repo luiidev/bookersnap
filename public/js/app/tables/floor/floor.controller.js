@@ -188,8 +188,8 @@ angular.module('floor.controller', [])
             FloorFactory.getReservations()
                 .then(function(response) {
                     reservations = response;
+                    //FloorFactory.setReservasAndBlocks(response);
                     //$rootScope.$broadcast("saveReservations", response);
-                    //TypeFilterDataFactory.setReservasAndBlocks(reservations);
                     //console.log('Listado de reservaciones', angular.toJson(reservations, true));
                 }).catch(function(error) {
                     message.apiError(error, "No se pudo cargar las reservaciones");
@@ -199,8 +199,8 @@ angular.module('floor.controller', [])
 
         var loadBlocksReservationsServers = function() {
             //return $q.all([loadBlocks(), loadReservations()]);
-            loadBlocks();
             loadReservations();
+            loadBlocks();
             loadServers();
         };
 
@@ -901,7 +901,7 @@ angular.module('floor.controller', [])
 
         var getColectionReservation = function() {
 
-            FloorFactory.getReservations().then(function(response) {
+            FloorFactory.getServicioReservaciones().then(function(response) {
                 rm.res_listado_all = response;
 
                 var total = 0;
@@ -952,71 +952,10 @@ angular.module('floor.controller', [])
                 rm.total_ttel = tTel;
                 rm.total_tpor = tPor;
                 rm.total_trp = tRp;
-                rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp; //rm.res_listado.length;
+                rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp;
 
-                //console.log('Reservaciones: ' + angular.toJson(rm.res_listado, true));
 
-            }).catch(function(error) {
-                message.apiError(error, "No se pudo cargar las reservaciones");
             });
-
-            /*FloorFactory.listBloqueosReservas().then(function success(data) {
-
-                rm.res_listado_all = data;
-                //TypeFilterDataFactory.setReservasAndBlocks(data);
-
-                var total = 0;
-                var men = 0;
-                var women = 0;
-                var children = 0;
-                var tWeb = 0;
-                var tTel = 0;
-                var tPor = 0;
-                var tRp = 0;
-
-                rm.res_listado = rm.res_listado_all;
-
-                //console.log(angular.toJson(rm.res_listado, true));
-                angular.forEach(rm.res_listado_all, function(people) {
-
-                    men += people.num_people_1;
-                    women += people.num_people_2;
-                    children += people.num_people_3;
-                    total += people.num_people;
-
-                    var source_type = people.res_source_type_id;
-                    switch (source_type) {
-                        case 1:
-                            tWeb += 1;
-                            break;
-                        case 2:
-                            tTel += 1;
-                            break;
-                        case 3:
-                            tPor += 1;
-                            break;
-                        case 4:
-                            tRp += 1;
-                            break;
-                    }
-
-                });
-
-
-                rm.total_men = men;
-                rm.total_women = women;
-                rm.total_children = children;
-                rm.total_people = total;
-                rm.total_visitas = total;
-
-                rm.total_tweb = tWeb;
-                rm.total_ttel = tTel;
-                rm.total_tpor = tPor;
-                rm.total_trp = tRp;
-                rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp; //rm.res_listado.length;
-
-                //console.log('Reservaciones: ' + angular.toJson(rm.res_listado, true));
-            });*/
 
         };
 
@@ -1026,13 +965,6 @@ angular.module('floor.controller', [])
 
         });
 
-        /*$rootScope.$on("saveReservations", function(reservations) {
-            TypeFilterDataFactory.setReservasAndBlocks(reservations);
-            rm.reservaciones = TypeFilterDataFactory.getReservasAndBlocks();
-            console.log('Tab Reservaciones', angular.toJson(rm.reservaciones, true));
-        });*/
-
-        //$rootScope.$broadcast("waitlistReload");
 
         rm.select_type = function(categoria, event) {
             rm.filter_type = categoria;
@@ -1370,6 +1302,7 @@ angular.module('floor.controller', [])
             });
         };
 
+
         var init = function() {
 
             getColectionReservation();
@@ -1403,6 +1336,7 @@ angular.module('floor.controller', [])
                 var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
                 rm.select_reserva(colection_filtro_reservas[0], null);
             }
+
 
         };
 
@@ -1507,9 +1441,6 @@ angular.module('floor.controller', [])
         };
 
         var init = function() {
-
-            wm.res_listado = TypeFilterDataFactory.getReservasAndBlocks();
-            //console.log(wm.res_listado);
 
             //Limpiar data y estilos de servers
             FloorFactory.isEditServer(false);

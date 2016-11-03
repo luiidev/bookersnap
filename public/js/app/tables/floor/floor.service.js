@@ -17,7 +17,6 @@ angular.module('floor.service', [])
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
-		var reservasAndBlocks = [];
 		var typeColection = [];
 		var sourceColection = [];
 		var statusColection = [];
@@ -25,18 +24,6 @@ angular.module('floor.service', [])
 		var filtrosVisita = [];
 		var filtrosReserva = [];
 		return {
-			setReservasAndBlocks: function(data) {
-				reservasAndBlocks = data;
-			},
-			getReservasAndBlocks: function() {
-				return reservasAndBlocks;
-			},
-			delItemReservasAndBlocks: function(index) {
-				reservasAndBlocks.splice(index, 1);
-			},
-			addItemReservasAndBlocks: function(item) {
-				reservasAndBlocks.push(item);
-			},
 			setTypeTurnItems: function(typeItem) {
 				var vTurn = [];
 				var itemTodos = {
@@ -182,6 +169,7 @@ angular.module('floor.service', [])
 		var serverColection = [];
 		var zonesTotal = [];
 		var navegaTabZone = 0;
+		var reservasAndBlocks = [];
 		return {
 			getZones: function(date, reload) {
 				var defered = $q.defer();
@@ -330,7 +318,7 @@ angular.module('floor.service', [])
 						});
 
 					});
-					console.log(angular.toJson(objReservation, true));
+					//console.log(angular.toJson(objReservation, true));
 					defered.resolve(objReservation);
 				}, function error(response) {
 					response = response.data;
@@ -628,182 +616,6 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-			/********************/
-			/*
-			listBloqueos: function() {
-				var defered = $q.defer();
-				var vReservation = [];
-				FloorDataFactory.getBloqueos().success(function(data) {
-					// console.log("***", data.data);
-					angular.forEach(data.data, function(reserva) {
-
-						var dataReservation = {
-							table_id: reserva.res_table_id,
-							//table_name: reserva.res_table_name,
-							block_id: reserva.res_block_id,
-							reservation_id: reserva.res_reservation_id,
-							num_people: reserva.num_guest,
-							res_reservation_status_id: reserva.res_reservation_status_id,
-							start_date: reserva.start_date,
-							start_time: reserva.start_time,
-							end_time: reserva.end_time,
-							first_name: reserva.first_name,
-							last_name: reserva.last_name
-						};
-						vReservation.push(dataReservation);
-					});
-
-					defered.resolve(vReservation);
-				}).error(function(data, status, headers) {
-					defered.reject(data);
-				});
-				return defered.promise;
-			},
-			listReservas: function(reload) {
-				var defered = $q.defer();
-				var vReservation = [];
-				reservationService.getReservations(reload).then(function(data) {
-					// console.log("****", data.data.data);
-
-					angular.forEach(data.data.data, function(reserva) {
-
-						var obj = {
-							reservation_id: reserva.id,
-							res_reservation_status_id: reserva.res_reservation_status_id,
-							res_server_id: reserva.res_server_id,
-							note: reserva.note,
-							num_people: reserva.num_guest,
-							num_people_1: reserva.num_people_1 ? reserva.num_people_1 : 0,
-							num_people_2: reserva.num_people_2 ? reserva.num_people_2 : 0,
-							num_people_3: reserva.num_people_3 ? reserva.num_people_3 : 0,
-							res_source_type_id: reserva.res_source_type_id,
-							res_type_turn_id: reserva.res_type_turn_id,
-							datetime_input: reserva.datetime_input,
-							datetime_output: reserva.datetime_output,
-							email: reserva.email,
-							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-							last_name: reserva.guest ? reserva.guest.last_name : "",
-							wait_list: reserva.wait_list
-
-						};
-						//console.log(obj);
-						vReservation.push(obj);
-					});
-					//console.log('blbl', vReservation);
-					defered.resolve(vReservation);
-				}, function(data, status, headers) {
-					defered.reject(data);
-				});
-				return defered.promise;
-			},
-			//Funcion para unir reservas y reservas-bloqueados
-			mergeReservasBloqueo: function(reservations, tableBlocks) {
-				var vReserva = [];
-				var me = this;
-				// console.log("**", reservations);
-				angular.forEach(reservations, function(reserva) {
-
-					var idreservacion = reserva.reservation_id;
-					var vTables = [];
-
-					angular.forEach(tableBlocks, function(block, key) {
-
-						if (block.reservation_id == idreservacion) {
-							var nextDay = getHourNextDay(block.start_time, block.start_time);
-							// reserva.num_people = block.num_people;
-							reserva.start_date = block.start_date;
-							reserva.start_time = block.start_time;
-							reserva.end_time = block.end_time;
-							reserva.index_start_time = getIndexHour(block.start_time, nextDay);
-							vTables.push(me.buscarTableReservation(block.table_id));
-
-						}
-
-					});
-					reserva.tables = vTables;
-					vReserva.push(reserva);
-				});
-				//console.log(vReserva);
-				return vReserva;
-			},
-			//Datos para el tab de reservaciones
-			listBloqueosReservas: function(reload) {
-				var me = this;
-				var defered = $q.defer();
-				me.listReservas(reload).then(function success(reservations) {
-
-					me.listBloqueos().then(function success(tableBlocks) {
-
-						//console.log(angular.toJson(lstreserva, true));
-
-						//me.listOnlyBloqueos().then(function success(blocks) {
-						var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
-
-						//console.log(lstreserva);
-						//var union = lstreserva.concat(blocks);
-						//console.log(angular.toJson(union, true));
-						defered.resolve(lstreserva);
-						//}, function error(response) {
-						//defered.reject(response.data);
-						//});
-
-					}, function error(response) {
-						defered.reject(response.data);
-					});
-
-				}, function error(response) {
-					defered.reject(response.data);
-				});
-
-				return defered.promise;
-			},
-			listadoReservaciones: function() {
-				var me = this;
-				var defered = $q.defer();
-				me.listBloqueosReservas().then(
-					function success(data) {
-						//TypeFilterDataFactory.setReservasAndBlocks(data);
-						defered.resolve(data);
-					},
-					function error(response) {
-						defered.reject(response.data);
-					});
-				return defered.promise;
-			},
-			listOnlyBloqueos: function() {
-				var me = this;
-				var defered = $q.defer();
-				BlockFactory.getBlocks().success(function(data) {
-					var vTables = [];
-					var vBloqueos = [];
-					angular.forEach(data.data, function(block) {
-						var tables = block.tables;
-						var nextDay = getHourNextDay(block.start_time, block.start_time);
-
-						block.num_people = 0;
-						block.num_people_1 = 0;
-						block.num_people_2 = 0;
-						block.num_people_3 = 0;
-						block.res_source_type_id = null;
-						block.res_type_turn_id = null;
-						block.block_id = block.id;
-						block.index_start_time = getIndexHour(block.start_time, nextDay);
-
-						angular.forEach(tables, function(table, key) {
-							vTables.push(me.buscarTableReservation(table.id));
-							block.tables = vTables;
-						});
-						vBloqueos.push(block);
-					});
-					//console.log(vBloqueos);
-					defered.resolve(vBloqueos);
-				}).error(function(data, status, headers) {
-					defered.reject(data);
-				});
-				return defered.promise;
-			},
-			*/
-			/********************/
 			//Todas las zonas con sus mesas y mas informacion //No se esta utilizando --verificar
 			listZonesReservas: function() {
 				var me = this;
@@ -941,7 +753,34 @@ angular.module('floor.service', [])
 					}
 				);
 				return defered.promise;
-			}
+			},
+			setReservasAndBlocks: function(data) {
+				reservasAndBlocks = data;
+			},
+			getServicioReservaciones: function() {
+				var me = this;
+				var defered = $q.defer();
+				if (reservasAndBlocks.length === 0) {
+
+					me.getReservations().then(function(data) {
+						reservasAndBlocks = data;
+						//console.log(reservasAndBlocks);
+						defered.resolve(reservasAndBlocks);
+						//return reservasAndBlocks;
+					});
+
+				} else {
+					defered.resolve(reservasAndBlocks);
+					//return reservasAndBlocks;
+				}
+				return defered.promise;
+			},
+			delItemReservasAndBlocks: function(index) {
+				reservasAndBlocks.splice(index, 1);
+			},
+			addItemReservasAndBlocks: function(item) {
+				reservasAndBlocks.push(item);
+			},
 		};
 	})
 	.factory('OperationFactory', function() {
