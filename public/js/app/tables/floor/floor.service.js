@@ -6,10 +6,6 @@ angular.module('floor.service', [])
 				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
 				return tables;
 			},
-			getReservas: function(reload) {
-				reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
-				return reservations;
-			},
 			getSourceTypes: function(reload) {
 				sourceTypes = HttpFactory.get(ApiUrlRoot + "/reservation/source-types", null, sourceTypes, reload);
 				return sourceTypes;
@@ -302,6 +298,44 @@ angular.module('floor.service', [])
 				});
 				return blockTables;
 			},
+			getReservations: function() {
+				var defered = $q.defer();
+				reservationService.getReservations().then(function(response) {
+					response = response.data.data;
+					var objReservation = [];
+					angular.forEach(response, function(reserva) {
+
+						objReservation.push({
+							reservation_id: reserva.id,
+							res_type_turn_id: reserva.res_type_turn_id,
+							res_source_type_id: reserva.res_source_type_id,
+							res_guest_id: reserva.res_guest_id,
+							res_reservation_status_id: reserva.res_reservation_status_id,
+							wait_list: reserva.wait_list,
+							start_date: reserva.date_reservation,
+							start_time: reserva.hours_reservation,
+							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
+							num_people: reserva.num_guest,
+							num_people_1: reserva.num_people_1 ? reserva.num_people_1 : 0,
+							num_people_2: reserva.num_people_2 ? reserva.num_people_2 : 0,
+							num_people_3: reserva.num_people_3 ? reserva.num_people_3 : 0,
+							tables: reserva.tables,
+							source: reserva.source,
+							status: reserva.status,
+							type_turn: reserva.type_turn,
+							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
+							last_name: reserva.guest ? reserva.guest.last_name : "",
+						});
+
+					});
+					console.log(angular.toJson(objReservation, true));
+					defered.resolve(objReservation);
+				}, function error(response) {
+					response = response.data;
+					defered.reject(response);
+				});
+				return defered.promise;
+			},
 			setBorderColorForReservation: function(zones, blocks) {
 				var hour = moment();
 
@@ -544,6 +578,7 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
+			/********************/
 			listBloqueos: function() {
 				var defered = $q.defer();
 				var vReservation = [];
@@ -576,7 +611,7 @@ angular.module('floor.service', [])
 			listReservas: function(reload) {
 				var defered = $q.defer();
 				var vReservation = [];
-				FloorDataFactory.getReservas(reload).then(function(data) {
+				reservationService.getReservations(reload).then(function(data) {
 					// console.log("****", data.data.data);
 
 					angular.forEach(data.data.data, function(reserva) {
@@ -639,7 +674,6 @@ angular.module('floor.service', [])
 				});
 				//console.log(vReserva);
 				return vReserva;
-
 			},
 			buscarTableReservation: function(idTable) {
 				var fecha_actual = getFechaActual();
@@ -678,16 +712,16 @@ angular.module('floor.service', [])
 
 						//console.log(angular.toJson(lstreserva, true));
 
-						me.listOnlyBloqueos().then(function success(blocks) {
-							var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
+						//me.listOnlyBloqueos().then(function success(blocks) {
+						var lstreserva = me.mergeReservasBloqueo(reservations, tableBlocks);
 
-							//console.log(lstreserva);
-							var union = lstreserva.concat(blocks);
-							//console.log(angular.toJson(union, true));
-							defered.resolve(union);
-						}, function error(response) {
-							defered.reject(response.data);
-						});
+						//console.log(lstreserva);
+						//var union = lstreserva.concat(blocks);
+						//console.log(angular.toJson(union, true));
+						defered.resolve(lstreserva);
+						//}, function error(response) {
+						//defered.reject(response.data);
+						//});
 
 					}, function error(response) {
 						defered.reject(response.data);
@@ -777,6 +811,7 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
+			/********************/
 			//Todas las zonas con sus mesas y mas informacion //No se esta utilizando --verificar
 			listZonesReservas: function() {
 				var me = this;
