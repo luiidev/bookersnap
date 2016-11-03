@@ -662,7 +662,6 @@ angular.module('floor.controller', [])
         var getTableReservation = function() {
             FloorFactory.rowTableReservation(content.table.id).then(function(data) {
                 vmd.itemReservations = data;
-                //console.log('PopUp: ' + angular.toJson(data, true));
             });
         };
 

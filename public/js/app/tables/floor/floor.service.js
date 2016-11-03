@@ -299,6 +299,7 @@ angular.module('floor.service', [])
 				return blockTables;
 			},
 			getReservations: function() {
+				var me = this;
 				var defered = $q.defer();
 				reservationService.getReservations().then(function(response) {
 					response = response.data.data;
@@ -312,6 +313,7 @@ angular.module('floor.service', [])
 							res_guest_id: reserva.res_guest_id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							wait_list: reserva.wait_list,
+							zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].id) : "",
 							start_date: reserva.date_reservation,
 							start_time: reserva.hours_reservation,
 							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -333,6 +335,54 @@ angular.module('floor.service', [])
 				}, function error(response) {
 					response = response.data;
 					defered.reject(response);
+				});
+				return defered.promise;
+			},
+			getIndiceZone: function(idTable) {
+				var fecha_actual = getFechaActual();
+				var defered = $q.defer();
+				var me = this;
+				//var table_detail = {};
+				var zone_indice;
+				var zonas = me.getDataZonesTables();
+
+				angular.forEach(zonas, function(zone, key_zone) {
+					var row_tables = zone.tables;
+					var indice = key_zone + 1;
+
+					angular.forEach(row_tables, function(table) {
+						if (table.id == idTable) {
+							zone_indice = indice;
+							/*table_detail = {
+								zone_indice: indice,
+								zone_id: zone.id,
+								name_zona: zone.name,
+								id: table.id,
+								name: table.name,
+							};*/
+						}
+					});
+
+				});
+				return zone_indice;
+			},
+			rowTableReservation: function(idTable) {
+				var me = this;
+				var defered = $q.defer();
+				me.getReservations().then(function success(reservations) {
+					var vTables = [];
+					angular.forEach(reservations, function(reservation) {
+						var tables = reservation.tables;
+						// console.log(reservation);
+						angular.forEach(tables, function(table) {
+							if (table.id === idTable) {
+								vTables.push(reservation);
+							}
+						});
+					});
+					defered.resolve(vTables);
+				}, function error(data) {
+					return data;
 				});
 				return defered.promise;
 			},
@@ -579,6 +629,7 @@ angular.module('floor.service', [])
 				return defered.promise;
 			},
 			/********************/
+			/*
 			listBloqueos: function() {
 				var defered = $q.defer();
 				var vReservation = [];
@@ -675,33 +726,6 @@ angular.module('floor.service', [])
 				//console.log(vReserva);
 				return vReserva;
 			},
-			buscarTableReservation: function(idTable) {
-				var fecha_actual = getFechaActual();
-				var defered = $q.defer();
-				var me = this;
-				var table_detail = {};
-				var zonas = me.getDataZonesTables();
-
-				angular.forEach(zonas, function(zone, key_zone) {
-					var row_tables = zone.tables;
-					var indice = key_zone + 1;
-
-					angular.forEach(row_tables, function(table) {
-						if (table.id == idTable) {
-							table_detail = {
-								zone_indice: indice,
-								zone_id: zone.id,
-								name_zona: zone.name,
-								id: table.id,
-								name: table.name,
-							};
-						}
-					});
-
-				});
-				//console.log(table_detail);
-				return table_detail;
-			},
 			//Datos para el tab de reservaciones
 			listBloqueosReservas: function(reload) {
 				var me = this;
@@ -778,39 +802,7 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-			rowTableReservation: function(idTable) {
-				var me = this;
-				var defered = $q.defer();
-				me.listBloqueosReservas().then(function success(reservations) {
-					var vTables = [];
-
-					angular.forEach(reservations, function(reservation) {
-						var tables = reservation.tables;
-						// console.log(reservation);
-						angular.forEach(tables, function(table) {
-							if (table.id === idTable) {
-								// console.log("*", reservation);
-								// var obj = {
-								// 	start_time: reservation.start_time,
-								// 	end_time: reservation.end_time,
-								// 	num_people: reservation.num_people,
-								// 	reservation_id: reservation.reservation_id,
-								// 	res_reservation_status_id: reservation.res_reservation_status_id
-								// };
-								vTables.push(reservation);
-								// console.log(angular.toJson(obj, true));
-							}
-						});
-					});
-					//console.log(angular.toJson(vTables, true));
-					//vTables.push(vTable);
-					defered.resolve(vTables);
-					//return vTables;
-				}, function error(data) {
-					return data;
-				});
-				return defered.promise;
-			},
+			*/
 			/********************/
 			//Todas las zonas con sus mesas y mas informacion //No se esta utilizando --verificar
 			listZonesReservas: function() {

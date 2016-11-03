@@ -74,7 +74,7 @@
                                                         </td>
                                                         <td class="child-room">
                                                             <span style="width: 40px; background: #cc0000"></span>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td class="child-table">
                                                             {{value.tables[0].name}}
@@ -209,7 +209,7 @@
                                                             {{value.first_name}} {{value.last_name}}
                                                         </td>
                                                         <td>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td>
                                                             {{value.tables[0].name}}
@@ -335,7 +335,7 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'index_start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
                                                 <table class="table-listado" ng-hide="value.block_id" ng-click="rm.editReservation(value)">
                                                     <tr>
@@ -349,7 +349,7 @@
                                                             {{value.first_name}} {{value.last_name}}
                                                         </td>
                                                         <td>
-                                                            {{value.tables[0].zone_indice}}
+                                                            {{value.zone_indice}}
                                                         </td>
                                                         <td>
                                                             {{value.tables[0].name}}
