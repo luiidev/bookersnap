@@ -15,6 +15,7 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                         templateUrl: '/js/app/tables/reservation/view/index.html',
                         controller: "reservationCtrl.StoreUpdate",
                         controllerAs: 'rc',
+                        reloadOnSearch : false,
                     }
                 },
             })
