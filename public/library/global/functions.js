@@ -561,3 +561,26 @@ var getHourNextDay = function(hoursIni, hoursEnd) {
 
     return nextDay;
 };
+
+var plusHour = function(hoursIni, hoursEnd) {
+    var hourTotal = 0;
+    var addHour = false;
+
+    //var hourIndex = hoursIni.indexOf(":");
+    //var hour = parseInt(hoursIni.substr(0, hourIndex));
+    //var min = hoursIni.substr(hourIndex + 1, 2);
+
+    var vHourIni = hoursIni.split(":");
+    var vHourEnd = hoursEnd.split(":");
+
+    var sMin = (parseInt(vHourIni[1]) + parseInt(vHourEnd[1]));
+    if (sMin >= 60) {
+        addHour = true;
+        sMin -= 60;
+    }
+    var sHour = (parseInt(vHourIni[0]) + parseInt(vHourEnd[0]) + (addHour ? 1 : 0));
+
+    hourTotal = sHour + ':' + sMin + ':00';
+
+    return hourTotal;
+};
