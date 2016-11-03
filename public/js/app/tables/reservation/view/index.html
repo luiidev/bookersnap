@@ -1,33 +1,28 @@
-<header data-current-skin="{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
-</header>
 <section class="h-100vh" id="main">
-    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }" data-ng-include="'/template/sidebar-left.html'" id="sidebar">
-    </aside>
-    <aside data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }" data-ng-include="'/template/chat.html'" id="chat">
-    </aside>
     <section id="content">
         <div class="container w-100 p-section-reservation p-r-0">
             <div class="reservation-content-header">
                 <div class="pull-left">
-                    <button class="btn bgm-bluegray" ng-click="prevZone()"><i class="zmdi zmdi-arrow-back"></i></button>
-                    <button class="btn bgm-bluegray" ng-click="nextZone()"><i class="zmdi zmdi-arrow-forward"></i></button>
-                    <label class="control-label">{{ zones[zoneIndex].name }}</label>
+                    <button class="btn bgm-bluegray" ng-click="rc.prevZone()"><i class="zmdi zmdi-arrow-back"></i></button>
+                    <button class="btn bgm-bluegray" ng-click="rc.nextZone()"><i class="zmdi zmdi-arrow-forward"></i></button>
+                    <label class="control-label">{{ rc.zones[rc.zoneIndex].name }}</label>
                 </div>
                 <div class="pull-right">
-                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('all')">Seleccionar todo</button>
-                    <button class="btn bgm-bluegray" ng-click="selectTableAllOrNone('none')">Seleccionar niguno</button>
+                    <button class="btn bgm-bluegray" ng-click="rc.selectTableAllOrNone('all')">Seleccionar todo</button>
+                    <button class="btn bgm-bluegray" ng-click="rc.selectTableAllOrNone('none')">Seleccionar niguno</button>
                 </div>
             </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div class="lienzo-v2" ng-drop="true" ng-style="{width: size, height: size, 'font-size': fontSize}" ng-repeat="zone in zones" ng-show="$index == zoneIndex">
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanentClass}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
+                    <div class="lienzo-v2" ng-drop="true" ng-style="{width: rc.size, height: rc.size, 'font-size': rc.fontSize}" ng-repeat="zone in rc.zones" ng-show="$index == rc.zoneIndex">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanentClass}]" ng-style="{top: obj.top, left: obj.left}" ng-click="rc.selectTable(obj)" ng-repeat="obj in zone.tables">
                                 <div class="table-label top">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
-                                <div class="item-drag-time" ng-style="{background: obj.time.color}" ng-if="obj.time.text">{{ obj.time.text }}</div>
-                                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.grouptime.length > 1}" ng-if="obj.grouptime.length" ng-repeat="time in obj.grouptime">{{ time.text }}</div>
+                                <div class="item-drag-time" ng-style="{background: obj.time[rc.zones.tActive].color}"
+                                 ng-if="rc.zones.tActive && rc.zones.tActive != 'nextTimeAll' && obj.time[rc.zones.tActive].text">{{ obj.time[rc.zones.tActive].text }}</div>
+                                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && rc.zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
                             </div>
                     </div>
                 </div>
@@ -35,15 +30,16 @@
         </div>
     </section>
 </section>
+
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y: auto;">
         <div class="card-header" style="text-align: center; line-height: 30px; color: #FFF;">
-            <button class="btn btn-danger pull-left" ng-click="cancel()">Cancelar</button>
+            <button class="btn btn-danger pull-left" ng-click="rc.cancel()">Cancelar</button>
             Agregar reservacion
-            <button class="btn btn-primary pull-right" ng-click="save()" ng-disabled="waitingResponse">Guardar</button>
+            <button class="btn btn-primary pull-right" ng-click="rc.save()" ng-disabled="rc.waitingResponse">Guardar</button>
         </div>
         <div class="card-body">
-            <div class="card reservation-guest-form" ng-show="addGuest">
+            <div class="card reservation-guest-form" ng-show="rc.addGuest">
                 <div class="card-body drag-border">
                     <form class="form-horizontal" role="form">
                         <div class="reservation-new-guest" >
@@ -53,7 +49,7 @@
                                 </label>
                                 <div class="col-xs-10">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="name" ng-model="newGuest.first_name" ng-change="searchGuest(newGuest.first_name)"/>
+                                            <input type="text" class="form-control input" id="name" ng-model="rc.newGuest.first_name" ng-change="rc.searchGuest(newGuest.first_name)"/>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +59,7 @@
                                 </label>
                                 <div class="col-xs-10">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="last_name" ng-model="newGuest.last_name"/>
+                                            <input type="text" class="form-control input" id="last_name" ng-model="rc.newGuest.last_name"/>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +69,7 @@
                                 </label>
                                 <div class="col-xs-10">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="phone" ng-model="newGuest.phone"/>
+                                            <input type="text" class="form-control input" id="phone" ng-model="rc.newGuest.phone"/>
                                     </div>
                                 </div>
                             </div>
@@ -83,19 +79,19 @@
                                 </label>
                                 <div class="col-xs-10">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="email" ng-model="newGuest.email"/>
+                                            <input type="text" class="form-control input" id="email" ng-model="rc.newGuest.email"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    <a href="javascript:void(0);" class="a-tittle" ng-click="addGuest=!addGuest">cancelar</a>
+                                    <a href="javascript:void(0);" class="a-tittle" ng-click="rc.addGuest=!addGuest">cancelar</a>
                                 </div>
                             </div>
 
                             <div class="guest-search-list">
                                 <div class="card m-0">
-                                    <div class="card-header bgm-amber" ng-repeat="guest in guestList" ng-click="selectGuest(guest)">
+                                    <div class="card-header bgm-amber" ng-repeat="guest in rc.guestList" ng-click="rc.selectGuest(guest)">
                                         <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
                                         <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
                                         <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
@@ -107,17 +103,17 @@
                 </div>
            </div>
 
-            <div class="card reservation-guest" ng-hide="addGuest || reservation.guest_id">
-                <div class="card-header bgm-blue"  ng-click="addGuest=!addGuest">
+            <div class="card reservation-guest" ng-hide="rc.addGuest || rc.reservation.guest_id">
+                <div class="card-header bgm-blue"  ng-click="rc.addGuest=!addGuest">
                     <h2>Agregar Invitado</h2>
                 </div>
            </div> 
 
-           <div class="card reservation-guest-selected" ng-show="reservation.guest_id">
-               <div class="card-header bgm-indigo" ng-click="removeGuest()">
-                   <h2>{{ guest.first_name + ", " + guest.last_name}}</h2>
-                   <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
-                   <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+           <div class="card reservation-guest-selected" ng-show="rc.reservation.guest_id">
+               <div class="card-header bgm-indigo" ng-click="rc.removeGuest()">
+                   <h2>{{ rc.guest.first_name + ", " + rc.guest.last_name}}</h2>
+                   <span ng-repeat="phone in rc.guest.phones">tel: {{ phone.number }}</span>
+                   <span ng-repeat="mail in rc.guest.emails" ng-if="!rc.guest.phones.length">email: {{ mail.email }}</span>
                    <span class="remove-guest">click para elejir nuevo invitado</span>
                </div>
           </div> 
@@ -132,7 +128,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="status" ng-model="reservation.status_id" ng-options="status.id as status.name for status in statuses">
+                                        <select class="form-control" id="status" ng-model="rc.reservation.status_id" ng-options="status.id as status.name for status in rc.statuses">
                                         </select>
                                     </div>
                                 </div>
@@ -145,7 +141,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="covers" ng-model="reservation.covers" ng-options="cover.id as cover.name for cover in covers" ng-change="tablesSuggested(reservation.covers)">
+                                        <select class="form-control" id="covers" ng-model="rc.reservation.covers" ng-options="cover.id as cover.name for cover in rc.covers" ng-change="rc.tablesSuggested(reservation.covers)">
                                         </select>
                                     </div>
                                 </div>
@@ -157,7 +153,7 @@
                             </label>
                             <div class="col-xs-10">
                                 <div class="fg-line">
-                                    <input class="form-control" id="date" type="date" ng-model="date" ng-value="date"  ng-change="changeDate()"/>
+                                    <input class="form-control" id="date" type="date" ng-model="rc.date" ng-value="rc.date"  ng-change="rc.changeDate()"/>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +165,7 @@
                                 <div class="col-xs-4">
                                     <div class="fg-line">
                                         <div class="select">
-                                            <select class="form-control" id="hour" ng-model="reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in hours" ng-change="tablesBlockValid()">
+                                            <select class="form-control" id="hour" ng-model="rc.reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in rc.hours" ng-change="rc.tablesBlockValid()">
                                             </select>
                                         </div>
                                     </div>
@@ -181,7 +177,7 @@
                             <div class="col-xs-4">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="duration" ng-model="reservation.duration" ng-options="duration.time as duration.name for duration in durations" ng-change="tablesBlockValid()">
+                                        <select class="form-control" id="duration" ng-model="rc.reservation.duration" ng-options="duration.time as duration.name for duration in rc.durations" ng-change="rc.tablesBlockValid()">
                                         </select>
                                     </div>
                                 </div>
@@ -194,7 +190,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="server" ng-model="reservation.server_id" ng-options="server.id as server.name for server in servers">
+                                        <select class="form-control" id="server" ng-model="rc.reservation.server_id" ng-options="server.id as server.name for server in rc.servers">
                                             <option selected="true" value="">
                                                 Ninguno
                                             </option>
@@ -208,19 +204,19 @@
                                 Mesas
                             </label>
                             <div class="col-xs-10">
-                                <div ng-if="!isTablesSelected">
-                                    <label class="control-label" for="server" style="color: #8c8c8c;">{{ tableSuggested.name || "Sin mesas" }}</label>
-                                    <a class="a-title pull-right" ng-show="tableSuggested.name" style="padding-top: 7px">Sugerido</a>
+                                <div ng-if="!rc.isTablesSelected">
+                                    <label class="control-label" for="server" style="color: #8c8c8c;">{{ rc.tableSuggested.name || "Sin mesas" }}</label>
+                                    <a class="a-title pull-right" ng-show="rc.tableSuggested.name" style="padding-top: 7px">Sugerido</a>
                                 </div>
 
-                                <label class="control-label p-r-5" for="server" ng-repeat="table in  tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
+                                <label class="control-label p-r-5" for="server" ng-repeat="table in  rc.tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
 
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">
                                 <div class="fg-line">
-                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="reservation.note"></textarea>
+                                    <textarea class="form-control input-sm" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="rc.reservation.note"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -233,15 +229,15 @@
                                     <div class="dropdown dropup" uib-dropdown>
                                         <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0);" >Editar Etiquetas</a>
                                         <ul class="dropdown-menu pull-right">
-                                            <li data-ng-repeat="tag in tags">
-                                                <a href="" ng-click="addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                            <li data-ng-repeat="tag in rc.tags">
+                                                <a href="" ng-click="rc.addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xs-12">
-                                <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in selectTags">{{ tag.name }}</button>
+                                <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in rc.selectTags">{{ tag.name }}</button>
                             </div>
                         </div>
                     </div>
@@ -250,13 +246,13 @@
 
       
             <div class="card">
-                <div class="card-header bgm-amber" style="margin-bottom: 5px;" ng-repeat="conflict in conflicts">
+                <div class="card-header bgm-amber" style="margin-bottom: 5px;" ng-repeat="conflict in rc.conflicts">
                     <h5>Conflicto en mesa - {{ conflict.name }}</h5><span>{{ conflict.desc }}</span>
                 </div>
             </div>
 
-             <div class="card" ng-show="isEdit">
-                 <div class="card-header bgm-red"  ng-click="cancelReservation()" style="
+             <div class="card" ng-show="rc.isEdit">
+                 <div class="card-header bgm-red"  ng-click="rc.cancelReservation()" style="
                     cursor: pointer;
                     padding: 15px 25px;
                  ">
