@@ -27,9 +27,21 @@ io.on('connection', function(socket) {
     socket.join(data);
   });
 
+  //Cuando se envian notas desde Floor
   socket.on('b-mesas-floor-notes', function(data) {
-    console.log("llego data del servidor  " + JSON.stringify(data));
     io.to(data.room).emit('b-mesas-floor-notes', data);
+  });
+
+  //Cuando se actualiza una reserva desde Floor
+  socket.on('b-mesas-floor-upd-res', function(data) {
+    console.log("b-mesas-floor-upd-res " + JSON.stringify(data));
+    io.to(data.room).emit('b-mesas-floor-upd-res', data);
+  });
+
+  //Cuando se actualiza la configuracion (turnos,zonas,tags,etc)
+  socket.on('b-mesas-config-update', function(data) {
+    console.log("b-mesas-config-update " + JSON.stringify(data));
+    io.to(data.room).emit('b-mesas-config-update', data);
   });
 
   socket.on('delete-room-micrositio', function(data) {

@@ -261,10 +261,10 @@ angular.module('block.controller', [])
             BlockFactory.saveBlock(blockData).then(
                 function success(response) {
                     if (response.data.success === true) {
-                        messageAlert("Success", response.data.msg, "success", 3000);
+                        messageAlert("Success", response.data.msg, "success", 0, true);
                         $state.go("mesas.floor");
                     } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 2000);
+                        messageAlert("Warning", response.data.jsonError, "warning", 0, true);
                     }
                 },
                 function error(response) {

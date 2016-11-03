@@ -30,7 +30,7 @@
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
             setAuthHeaders($http);
-            // ServerNotification.createConnection();
-            // ServerNotification.createRoom("microsites" + IdMicroSitio);
+            ServerNotification.createConnection();
+            ServerNotification.createRoom("microsites" + IdMicroSitio);
         });
 })();

@@ -169,11 +169,10 @@ angular.module('reservation.controller', [])
                 vm.waitingResponse = true;
                 service.save(vm.reservation)
                     .then(function(response) {
-                        //message.success(response.data.msg);
+                        message.success(response.data.msg);
                         vm.waitingResponse = false;
                         vm.cancel();
                     }).catch(function(error) {
-                        console.error(angular.toJson(error, true));
                         message.apiError(error);
                         vm.waitingResponse = false;
                     });
@@ -325,10 +324,11 @@ angular.module('reservation.controller', [])
                 service.getBlocks(date, true)
                     .then(function(response) {
                         blocks = response.data.data;
+                        deferred.resolve(response.data.data);
                     }).catch(function(error) {
                         message.apiError(error);
                     }).finally(function() {
-                        deferred.resolve();
+                        // deferred.resolve();
                     });
 
                 return deferred.promise;
@@ -384,11 +384,12 @@ angular.module('reservation.controller', [])
 
                 service.getZones(date, reload)
                     .then(function(response) {
-                        loadTablesEdit(response.data.data);
+                        // loadTablesEdit(response.data.data);
+                        deferred.resolve(response.data.data);
                     }).catch(function(error) {
                         message.apiError(error);
                     }).finally(function() {
-                        deferred.resolve();
+                        // deferred.resolve();
                     });
 
                 return deferred.promise;
@@ -624,7 +625,8 @@ angular.module('reservation.controller', [])
                     listReservationTags(),
                     loadTurns(date),
                     loadReservations(),
-                ]).then(function() {
+                ]).then(function(data) {
+                    loadTablesEdit2(data[0], data[1]);
                     vm.tablesBlockValid();
 
                     var event = $table.lastTimeEvent();
@@ -632,6 +634,16 @@ angular.module('reservation.controller', [])
 
                     vm.waitingResponse = false;
                 });
+
+                // $q.all([
+                //     loadZones(date),
+                //     loadBlocks(date),
+                //     // loadReservations(),
+                // ]).then(function(data) {
+                //     loadTablesEdit2(data[0], data[1]);
+                // });
+
+
             };
 
             var updateTime;
@@ -645,7 +657,15 @@ angular.module('reservation.controller', [])
             };
 
             var loadTablesEdit = function(dataZones) {
-                vm.zones = helper.loadTable(dataZones);
+                vm.zones = helper.loadTableV2(dataZones);
+                setMaxIndex();
+            };
+
+            vm.$watch("zones", true);
+
+            var loadTablesEdit2 = function(zones, blocks) {
+                vm.zones = helper.loadTableV2(zones, {name: "blocks", data: blocks});
+                console.log(vm.zones);
                 setMaxIndex();
             };
 

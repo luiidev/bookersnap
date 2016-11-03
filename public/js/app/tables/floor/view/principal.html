@@ -76,7 +76,6 @@
         </nav>
     </div>
 </section>
-
 <div class="box-zone-create bg-window-floor">
     <div class="box-lienzo-zone-v2 p-t-10">
         <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones" ng-show="$index == vm.flagSelectedZone">
@@ -85,10 +84,9 @@
                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied || obj.class.name || !vm.filter">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
-                <div ng-class="[obj.class.name]" ng-drag-mv-reservation ng-show="obj.class.name"></div>
+                <div ng-class="[obj.class.name]" ng-drag-move-reservation on-start-fn="vm.tablesSelected(obj)" on-end-fn="vm.clearSelected()" ng-show="obj.class.name"></div>
                 <div class="item-drag-time" ng-style="{background: obj.time.color}" ng-if="obj.time.text && vm.showTime">{{ obj.time.text }}</div>
                 <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.grouptime.length > 1}" ng-if="obj.grouptime.length && vm.showTime" ng-repeat="time in obj.grouptime">{{ time.text }}</div>
-
             </div>
         </div>
     </div>

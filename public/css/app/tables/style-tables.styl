@@ -310,107 +310,81 @@ $color_secundario = #616161
 			-o-user-select none
 			-ms-user-select none
 			user-select none
-			& .item-drag-table
-				position absolute
-				& .table-label
-					font-weight normal
-					font-size 0.9em
-					&.top
-						top -5px	
-					&.right 
-						right -5px
-					&.left
-						left -5px
-					&.bottom 
-						bottom -5px 
-				& .item-drag-cover
-					background-color #ccc
-					color #000
-					font-weight 500
-					width 100%
-					font-size .9em
-					border 0.5px solid #6b6a6a
-					top 50%
-					margin-top -9px
-					height 16px
-					line-height 16px
-					border-radius 4px
-					position: absolute
-					text-align: center
-				& .item-drag-time
-					background-color #33c200
-					color #fff
-					font-weight 500
-					width 45px
-					font-size .9em
-					top 50%
-					margin-top -8px
-					height 16px
-					line-height 16px
-					position: absolute
-					text-align: center
-					margin-left: auto
-					margin-right: auto
-				& .next-time-all
-					margin-bottom 10px
-					background #3a99d8
-					width 65px
-				& .nex-time-top
-					top: 16px
-				& .box-icon
-					background-repeat no-repeat
-					width 30px
-					height 30px
-					background-size 30px 30px
-					position absolute
-				& .item-suggested
-					background-image url(../../../img/table-suggested.svg)
-				& .item-occupied
-					background-image url(../../../img/alert.svg)
-				& .item-status-1
-					background-image url(../../../img/status/not-confirmed.svg)
-				& .item-status-2
-					background-image url('../../../img/status/confirmed.svg')
-				& .item-status-3
-					background-image url('../../../img/status/left-message.svg')
-				& .item-status-4
-					background-image url('../../../img/status/no-answer.svg')
-				& .item-status-5
-					background-image url('../../../img/status/wrong-number.svg')
-				& .item-status-6
-					background-image url('../../../img/status/partially-arrived.svg')
-				& .item-status-7
-					background-image url('../../../img/status/all-arrived.svg')	
-				& .item-status-8
-					background-image url('../../../img/status/paged.svg')
-				& .item-status-9
-					background-image url('../../../img/status/running-late.svg')
-				& .item-status-10
-					background-image url('../../../img/status/finished.svg')
-				& .item-status-11
-					background-image url('../../../img/status/canceled-guest.svg')
-				& .item-status-12
-					background-image url('../../../img/status/canceled-restaurant.svg')
-				& .item-status-13
-					background-image url('../../../img/status/no-show.svg')
-				& .item-status-14
-					background-image url('../../../img/status/seated.svg')
-				& .item-status-15
-					background-image url('../../../img/status/partially-seated.svg')
-				& .item-status-16
-					background-image url('../../../img/status/entree.svg')
-				& .item-status-17
-					background-image url('../../../img/status/dessert.svg')
-				& .item-status-18
-					background-image url('../../../img/status/table-cleared.svg')
-				& .item-status-19
-					background-image url('../../../img/status/appetizer.svg')
-				& .item-status-20
-					background-image url('../../../img/status/check-dropped.svg')
-				& .item-status-21
-					background-image url('../../../img/status/check-paid.svg')
-				&.block-table
-					background #424242
+		& .item-drag-table
+			position absolute
+		& .table-label
+			font-weight normal
+			font-size 0.9em
+			&.top
+				top -5px	
+			&.right 
+				right -5px
+			&.left
+				left -5px
+			&.bottom 
+				bottom -5px 
+		& .item-drag-cover
+			background-color #ccc
+			color #000
+			font-weight 500
+			width 100%
+			font-size .9em
+			border 0.5px solid #6b6a6a
+			top 50%
+			margin-top -9px
+			height 16px
+			line-height 16px
+			border-radius 4px
+			position: absolute
+			text-align: center
+		& .item-drag-time
+			background-color #33c200
+			color #fff
+			font-weight 500
+			width 45px
+			font-size .9em
+			top 50%
+			margin-top -8px
+			height 16px
+			line-height 16px
+			position: absolute
+			text-align: center
+			margin-left: auto
+			margin-right: auto
+		& .next-time-all
+			margin-bottom 10px
+			background #3a99d8
+			width 65px
+		& .nex-time-top
+			top: 16px
+		& .box-icon
+			background-repeat no-repeat
+			width 30px
+			height 30px
+			background-size 30px 30px
+			position absolute
+		& .item-suggested
+			background-image url(../../../img/table-suggested.svg)
+		& .item-occupied
+			background-image url(../../../img/alert.svg)
+		& .item-status-1
+			background-image url(../../../img/status/not-confirmed.svg)
+		& .item-status-2
+			background-image url('../../../img/status/confirmed.svg')
+		& .item-status-3
+			background-image url('../../../img/status/running-late.svg')
+		& .item-status-4
+			background-image url('../../../img/status/seated.svg')
+		& .item-status-5
+			background-image url('../../../img/status/table-cleared.svg')
+		& .item-status-6
+			background-image url('../../../img/status/canceled-restaurant.svg')
+		& .item-status-7
+			background-image url('../../../img/status/no-show.svg')
+		& .block-table
+			background #424242
+		& .block-table-permanent
+			background #424242
 				
 
 /*Create zone drag and drop*/
@@ -761,6 +735,11 @@ $background-tables-head = #eee
 .scrollbar-inner
 	height 100%
 	overflow-y auto
+	& .divider
+		background #656666
+		line-height 28px
+		color #eee
+		padding 0px 10px
 ::-webkit-scrollbar
 	width 6px
 	background #ccc
@@ -811,11 +790,29 @@ $background-tables-head = #eee
 				background #636363
 				& .table-listado
 					height 40px
-				
-				
+	&.sub-table
+		& tr td, & tr th
+			&.child-hour
+				width 40px
+				text-align center
+			&.child-pax
+				width 30px
+				text-align center
+			&.child-name
+				width 240px
+				text-align left
+			&.child-room
+				width 40px
+				text-align right
+			&.child-table
+				width 40px
+				text-align center
+			&.child-status
+				width 100px
+				text-align center		
 .box-estado-res
 	background #575757
-	width 98%
+	width 82px
 	padding 1px 4px
 	text-align center
 	&.bg-green
@@ -828,6 +825,10 @@ $background-tables-head = #eee
 		background #0c73a5
 	&.bg-brown
 		background #959a3e
+	&.bg-white
+		background #fff
+		border 1px solid #242424
+		color #242424
 
 .btn-menu
 	font-size .9em !important
@@ -1368,7 +1369,7 @@ li.divider
 			position absolute
 			width 100%
 			top 61px
-			z-index 1
+			z-index 10
 			& .card-header
 				margin-bottom 0
 				padding 10px 15px

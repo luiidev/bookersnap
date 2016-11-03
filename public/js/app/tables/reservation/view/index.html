@@ -21,7 +21,7 @@
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
                     <div class="lienzo-v2" ng-drop="true" ng-style="{width: size, height: size, 'font-size': fontSize}" ng-repeat="zone in zones" ng-show="$index == zoneIndex">
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
+                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanentClass}]" ng-style="{top: obj.top, left: obj.left}" ng-click="selectTable(obj)" ng-repeat="obj in zone.tables">
                                 <div class="table-label top">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>

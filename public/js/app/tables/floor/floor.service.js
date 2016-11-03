@@ -21,6 +21,7 @@ angular.module('floor.service', [])
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
+		var reservasAndBlocks = [];
 		var typeColection = [];
 		var sourceColection = [];
 		var statusColection = [];
@@ -28,6 +29,18 @@ angular.module('floor.service', [])
 		var filtrosVisita = [];
 		var filtrosReserva = [];
 		return {
+			setReservasAndBlocks: function(data) {
+				reservasAndBlocks = data;
+			},
+			getReservasAndBlocks: function() {
+				return reservasAndBlocks;
+			},
+			delItemReservasAndBlocks: function(index) {
+				reservasAndBlocks.splice(index, 1);
+			},
+			addItemReservasAndBlocks: function(item) {
+				reservasAndBlocks.push(item);
+			},
 			setTypeTurnItems: function(typeItem) {
 				var vTurn = [];
 				var itemTodos = {
@@ -445,10 +458,10 @@ angular.module('floor.service', [])
 				});
 				return defered.promise;
 			},
-			listReservas: function() {
+			listReservas: function(reload) {
 				var defered = $q.defer();
 				var vReservation = [];
-				FloorDataFactory.getReservas().then(function(data) {
+				FloorDataFactory.getReservas(reload).then(function(data) {
 					// console.log("****", data.data.data);
 					angular.forEach(data.data.data, function(reserva) {
 
@@ -458,16 +471,17 @@ angular.module('floor.service', [])
 							res_server_id: reserva.res_server_id,
 							note: reserva.note,
 							num_people: reserva.num_guest,
-							num_people_1: reserva.num_people_1,
-							num_people_2: reserva.num_people_2,
-							num_people_3: reserva.num_people_3,
+							num_people_1: reserva.num_people_1 ? reserva.num_people_1 : 0,
+							num_people_2: reserva.num_people_2 ? reserva.num_people_2 : 0,
+							num_people_3: reserva.num_people_3 ? reserva.num_people_3 : 0,
 							res_source_type_id: reserva.res_source_type_id,
 							res_type_turn_id: reserva.res_type_turn_id,
 							datetime_input: reserva.datetime_input,
 							datetime_output: reserva.datetime_output,
 							email: reserva.email,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-							last_name: reserva.guest ? reserva.guest.last_name : ""
+							last_name: reserva.guest ? reserva.guest.last_name : "",
+							wait_list: reserva.wait_list
 						};
 						//console.log(obj);
 						vReservation.push(obj);
@@ -538,10 +552,10 @@ angular.module('floor.service', [])
 				return table_detail;
 			},
 			//Datos para el tab de reservaciones
-			listBloqueosReservas: function() {
+			listBloqueosReservas: function(reload) {
 				var me = this;
 				var defered = $q.defer();
-				me.listReservas().then(function success(reservations) {
+				me.listReservas(reload).then(function success(reservations) {
 
 					me.listBloqueos().then(function success(tableBlocks) {
 

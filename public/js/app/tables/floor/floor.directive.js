@@ -148,66 +148,32 @@ angular.module('floor.directive', [])
             }
         };
     })
-    .directive('ngDragMvReservation', function() {
+    .directive('ngDragMoveReservation', function() {
 
         function makeDraggable(scope, element, attr) {
-            var clone;
             element.draggable({
                 helper: "clone",
-                // revert: true,
-                // scroll:true,
-                // containment: '#lienzo',
-                // appendTo: 'body',
-                cursorAt: {
-                    left: 16,
-                    top: 16
-                },
-                // grid: [ 20, 20 ],
-                // cursor: "move",
-               // cursorAt: { top: -12, left: -20 },
-               // axis: "x",s
-                drag: function(event, ui) {
-
-                    // $(ui.helper[0]).parent().css("transform", "translate(0,0) rotate(0deg)");
-                    // $(ui.helper[0]).css("transform", "translate(0,0) rotate(0deg)");
-                    $(ui.helper).css("background-color", "red");
-                    // console.log(ui);
-                    // ui.position.top++;
-                    // ui.position.left++;
-                    // ui.position.top -= 10;
-                    // var dropElem = ui.helper;
-                    // // console.log(dropElem);
-                    //  var clone = $(dropElem).clone();<
-
-                    // clone.css('top', ui.position.top - 400);
-                    // clone.css('left', ui.position.left - 0);
-                    // console.log(clone.offset());
-                    
-                    // $(ui.helper[0]).css("z-index", 100000);
-                    // console.log($(element).clone().css("background-color", "red"));
-                },
+                appendTo: '#lienzo',
                 start: function(event, ui) {
-                    console.log("start");
-                    // console.log(ui);
-                    // clone = $(ui.helper[0]);
-                    $(ui.helper).css('z-index','999999');
-                    $(ui.helper).css('position','fixed');
-                    // parentClone.css("transform", "translate(0,0) rotate(0deg)");
-                    // parentClone.css("background-color", "red");
-                    // console.log(parentClone);
+                   $(ui.helper).css({
+                       "z-index": 2,
+                   });
+                   angular.element('.bg-window-floor').addClass('drag-dispel');
+                   scope.onStartFn();
                 },
                 stop: function(event, ui) {
-                    console.log("stop");
-                    // parentClone.css("transform", "translate(0,0) rotate(-45deg)");
-                    // console.log(parentClone);
+                    angular.element('.bg-window-floor').removeClass('drag-dispel');
+                    scope.onEndFn();
                 }
             });
         }
 
         return {
-            scope: {
-            },
             link: makeDraggable,
+            scope: {
+                onStartFn: '&',
+                onEndFn: '&'
+            }
         };
 
     });

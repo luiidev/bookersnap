@@ -310,7 +310,7 @@ message.show = function(title, text, type, options, action) {
         type: type,
     };
 
-    action = (action !== undefined) ? action : function() {};
+    action = (typeof action == "function") ? action : function() {};
 
     if (options !== undefined && options !== null) {
         if (typeof options == "object") {
@@ -370,15 +370,19 @@ message.apiError = function(response, title, icon, options) {
     title = title || "Error";
     icon = icon || "error";
 
-    if (response.data !== null) {
-        if (response.data.error !== null) {
-            body = response.data.error.user_msg;
-        } else {
-            if (response.status == 401 || response.status == 403) {
-                body = "No tiene permisos para realizar esta acción";
+    if (Object.prototype.toString.call(response) == "[object Object]") {
+        if (Object.prototype.toString.call(response.data) == "[object Object]") {
+            if (response.data.error !== null) {
+                body = response.data.error.user_msg;
             } else {
-                body = "Ocurrió un error en el servidor";
+                if (response.status == 401 || response.status == 403) {
+                    body = "No tiene permisos para realizar esta acción";
+                } else {
+                    body = "Ocurrió un error en el servidor";
+                }
             }
+        } else {
+            body = "Ocurrió un error en el servidor";
         }
     } else {
         body = "Ocurrió un error en el servidor";
