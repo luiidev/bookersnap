@@ -1,6 +1,4 @@
-$color_principal = #424242
-$color_secundario = #616161 
-
+@import '../main.mixins.styl';
 .modal-header
 	text-align center
 .modal-footer
@@ -412,55 +410,30 @@ $color_secundario = #616161
 		z-index 2
 		
 /*--------------BOOK------------------*/
-
-.container-book
-	& .lv-body
-		& .lv-item
-			cursor pointer
-			//background-color #e6f3dc
-			border-left 4px solid #2196f3
-			&:first-child 
-				border-top 1px solid #ccc
-			&:not(:last-child)
-				border-bottom 1px dashed #ccc
-	& .calendar-box
-		list-style none
-		display inline-block
-		margin 0 
-		padding 0
-		&>li 
-			display inline-block
-			vertical-align top
-			& i.calendar-btn 
-				font-size 5em
-				color #ccc
-		& .date-picker
-			width 200px
-	& .pagination.search-guest
-		& li 
-			&.active .btn
-				background-color #00bcd4
+.menu-book 
+	padding 9px 15px 9px 15px
+	.card 
+		margin-bottom 0
+		& .card-body 
+			padding 8px
+			background-color #575757
+			//margin-bottom 8px
+			& i
+				font-size 1.3em
 				color #fff
-			& .btn
-				&:hover
-					background-color #00bcd4
+			& .dropdown
+				top 3px
+				&>a 
 					color #fff
-		& .dropdown-menu.guest-list
-			left -55px
-			border-radius 7px
-			&:before
-				content " "
-				top -20px
-				left 64px
-				position absolute
-				border-width 10px
-				border-bottom-color #fff
-				border-style solid
-				color transparent
-			&>li
-				text-align center
-		
-
+					width 100%
+					& > .caret
+						float right
+						top 8px
+						position relative
+						
+	.form-control
+		placeholder-text(#fff)
+	
 /*--------------GUEST------------------*/
 
 .p-section-guest 

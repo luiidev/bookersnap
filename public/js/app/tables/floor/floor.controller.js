@@ -1373,6 +1373,7 @@ angular.module('floor.controller', [])
         var init = function() {
 
             getColectionReservation();
+
             defaultOptionsFilters();
 
             //Definir para filtro por defecto para visitas
