@@ -291,7 +291,7 @@ angular.module('reservation.service', [])
         /**
          * Funciones de manejo interno
          */
-        var setColorTables= function(servers) {
+        var setColorTables = function(servers) {
             angular.forEach(this.tables, function(table) {
                 angular.forEach(servers, function(server) {
                     angular.forEach(server.tables, function(serverTable) {
@@ -302,16 +302,16 @@ angular.module('reservation.service', [])
                 });
             });
         };
-        var tablesSelected= function(selectTables) {
+        var tablesSelected = function(selectTables) {
             angular.forEach(this.tables, function(table) {
                 angular.forEach(selectTables, function(selectTable) {
-                        if (table.id == selectTable.id) {
-                            table.selected = true;
-                        }
+                    if (table.id == selectTable.id) {
+                        table.selected = true;
+                    }
                 });
             });
         };
-        var clearSelected= function() {
+        var clearSelected = function() {
             angular.forEach(this.tables, function(table) {
                 table.selected = false;
             });
@@ -321,7 +321,7 @@ angular.module('reservation.service', [])
             var start_time = moment().add(-moment().minutes() % 15, "minutes").second(0).millisecond(0);
             var end_time = start_time.clone().add((60 + 15 * cant), "minutes");
             // console.log(start_time.format("HH:mm:ss"), end_time.format("HH:mm:ss"));
-        
+
             angular.forEach(this.tables, function(table) {
                 angular.forEach(table.blocks.data, function(block) {
                     if (block.res_reservation_status_id < 4) {
@@ -355,9 +355,9 @@ angular.module('reservation.service', [])
         };
         var tableFilterClear = function() {
             angular.forEach(this.tables, function(table) {
-                    table.occupied = false;
-                    table.block = false;
-                    table.suggested = false;
+                table.occupied = false;
+                table.block = false;
+                table.suggested = false;
             });
         };
         /**
@@ -392,139 +392,139 @@ angular.module('reservation.service', [])
                                 }
                             };
                             addEvent(table, turn.start_time, end_time,
-                             function(table, block) {
-                                table.blocksPermanent.active = block;
-                            },
-                             function(table) {
-                                table.blocksPermanent.active = null;
-                            }, turn);
+                                function(table, block) {
+                                    table.blocksPermanent.active = block;
+                                },
+                                function(table) {
+                                    table.blocksPermanent.active = null;
+                                }, turn);
                         });
                     }
                 });
             },
             reservations: function(reservations) {
                 angular.forEach(dataZones.tables, function(table) {
-                        angular.forEach(reservations, function(reservation) {
-                            angular.forEach(reservation.tables, function(reserv_table) {
-                                if (table.id == reserv_table.id) {
-                                    table.reservations.data.push(reservation);
-                                }
-                            });
-                        });
-                        table.reservations.add = function(reservation) {
-                            table.reservations.active = null;
-                            table.server.reservation = null;
-                            table.reservations.data.push(reservation);
-                            table.reservations.timeReload();
-                        };
-                        table.reservations.remove = function(reservation) {
-                            table.reservations.active = null;
-                            for (var i = 0; i < table.reservations.data.length; i++) {
-                                if (table.reservations.data[i].id == reservation.id) {
-                                    table.server.reservation = null;
-                                    delete table.reservations.data[i];
-                                    break;
-                                }
+                    angular.forEach(reservations, function(reservation) {
+                        angular.forEach(reservation.tables, function(reserv_table) {
+                            if (table.id == reserv_table.id) {
+                                table.reservations.data.push(reservation);
                             }
-                            this.timeReload();
-                        };
-                        table.reservations.timeReload = function() {
-                            angular.forEach(table.reservations.data, function(reservation) {
-                                var now = moment();
-                                var reserv_start = moment(reservation.date_reservation + " " + reservation.hours_reservation);
+                        });
+                    });
+                    table.reservations.add = function(reservation) {
+                        table.reservations.active = null;
+                        table.server.reservation = null;
+                        table.reservations.data.push(reservation);
+                        table.reservations.timeReload();
+                    };
+                    table.reservations.remove = function(reservation) {
+                        table.reservations.active = null;
+                        for (var i = 0; i < table.reservations.data.length; i++) {
+                            if (table.reservations.data[i].id == reservation.id) {
+                                table.server.reservation = null;
+                                delete table.reservations.data[i];
+                                break;
+                            }
+                        }
+                        this.timeReload();
+                    };
+                    table.reservations.timeReload = function() {
+                        angular.forEach(table.reservations.data, function(reservation) {
+                            var now = moment();
+                            var reserv_start = moment(reservation.date_reservation + " " + reservation.hours_reservation);
 
-                                if (reservation.datetime_input && reservation.res_reservation_status_id == 4) {
-                                    table.reservations.active = reservation;
-                                    if (reservation.server) {
-                                        table.server.setReservation(reservation.server.color);
+                            if (reservation.datetime_input && reservation.res_reservation_status_id == 4) {
+                                table.reservations.active = reservation;
+                                if (reservation.server) {
+                                    table.server.setReservation(reservation.server.color);
+                                }
+
+                                cancelEvent(table.reservations.oldEvent1);
+                                table.reservations.oldEvent1 = addRecursiveEvent(table, function(table, event) {
+                                    // Seated
+                                    if (table.reservations.active) {
+                                        var now = moment();
+                                        var sit = moment(table.reservations.active.datetime_input);
+                                        table.time.seated.text = moment.utc(now.diff(sit)).format("HH:mm");
+                                    } else {
+                                        event.cancel = true;
                                     }
+                                });
 
-                                    cancelEvent(table.reservations.oldEvent1);
-                                    table.reservations.oldEvent1 = addRecursiveEvent(table, function(table, event) {
-                                        // Seated
-                                        if (table.reservations.active) {
-                                            var now = moment();
-                                            var sit = moment(table.reservations.active.datetime_input);
-                                            table.time.seated.text = moment.utc(now.diff(sit)).format("HH:mm");
+                                cancelEvent(table.reservations.oldEvent2);
+                                table.reservations.oldEvent2 = addRecursiveEvent(table, function(table, event) {
+                                    // Complete
+                                    if (table.reservations.active) {
+                                        var now = moment();
+                                        var reserv_start = moment(table.reservations.active.date_reservation + " " + table.reservations.active.hours_reservation);
+                                        var time = reserv_start.diff(now);
+                                        if (time > 0) {
+                                            table.time.complete.text = moment.utc(time).format("HH:mm");
                                         } else {
-                                            event.cancel = true;
+                                            var auxTime = now.diff(reserv_start);
+                                            table.time.complete.text = "-" + moment.utc(auxTime).format("HH:mm");
                                         }
-                                    });
+                                    } else {
+                                        event.cancel = true;
+                                    }
+                                });
+                            } else {
 
-                                    cancelEvent(table.reservations.oldEvent2);
-                                    table.reservations.oldEvent2 = addRecursiveEvent(table, function(table, event) {
-                                        // Complete
-                                        if (table.reservations.active) {
-                                            var now = moment();
-                                            var reserv_start = moment(table.reservations.active.date_reservation + " " + table.reservations.active.hours_reservation);
-                                            var time = reserv_start.diff(now);
-                                            if (time > 0) {
-                                                table.time.complete.text = moment.utc(time).format("HH:mm");
-                                            } else {
-                                                var auxTime = now.diff(reserv_start);
-                                                table.time.complete.text = "-" + moment.utc(auxTime).format("HH:mm");
-                                            }
+                                //  NextTime
+                                (function() {
+                                    var nextTime = reserv_start.diff(now);
+                                    var auxNextTime;
+
+                                    if (!table.time.nextTime.established) {
+                                        if (nextTime > 0) {
+                                            table.time.nextTime.text = moment.utc(nextTime).format("HH:mm");
                                         } else {
-                                            event.cancel = true;
-                                        }
-                                    });
-                                } else {
-
-                                    //  NextTime
-                                    (function(){
-                                        var nextTime = reserv_start.diff(now);
-                                        var auxNextTime;
-
-                                        if (!table.time.nextTime.established) {
-                                            if (nextTime > 0) {
-                                                table.time.nextTime.text = moment.utc(nextTime).format("HH:mm");
-                                            } else {
-                                                auxNextTime = now.diff(reserv_start);
-                                                table.time.nextTime.text = "-" + moment.utc(auxNextTime).format("HH:mm");
-                                            }
-                                            table.time.nextTime.established = true;
-                                        } else if (nextTime < 0) {
                                             auxNextTime = now.diff(reserv_start);
                                             table.time.nextTime.text = "-" + moment.utc(auxNextTime).format("HH:mm");
                                         }
-                                    })();
+                                        table.time.nextTime.established = true;
+                                    } else if (nextTime < 0) {
+                                        auxNextTime = now.diff(reserv_start);
+                                        table.time.nextTime.text = "-" + moment.utc(auxNextTime).format("HH:mm");
+                                    }
+                                })();
 
-                                    //  NextTimeAll
-                                    (function(){
-                                        if (table.time.nextTimeAll.length < 2) {
-                                            var newTime = {};
-                                            newTime.text = reserv_start.format("HH:mmA");
-                                            newTime.time = reserv_start;
-                                            table.time.nextTimeAll.push(newTime);
-                                        } else {
-                                            var replaceTime = function(table, reserv_start) {
-                                                var established = false;
-                                                angular.forEach(table.time.nextTimeAll, function(obj) {
-                                                    if (!established) {
-                                                        if (reserv_start.isBefore(obj.time)) {
-                                                            var aux = obj.time;
+                                //  NextTimeAll
+                                (function() {
+                                    if (table.time.nextTimeAll.length < 2) {
+                                        var newTime = {};
+                                        newTime.text = reserv_start.format("HH:mmA");
+                                        newTime.time = reserv_start;
+                                        table.time.nextTimeAll.push(newTime);
+                                    } else {
+                                        var replaceTime = function(table, reserv_start) {
+                                            var established = false;
+                                            angular.forEach(table.time.nextTimeAll, function(obj) {
+                                                if (!established) {
+                                                    if (reserv_start.isBefore(obj.time)) {
+                                                        var aux = obj.time;
 
-                                                            obj.text = reserv_start.format("HH:mmA");
-                                                            obj.time = reserv_start;
+                                                        obj.text = reserv_start.format("HH:mmA");
+                                                        obj.time = reserv_start;
 
-                                                            established = true;
+                                                        established = true;
 
-                                                            return replaceTime(table, aux);
-                                                        }
+                                                        return replaceTime(table, aux);
                                                     }
+                                                }
 
-                                                });
-                                            };
+                                            });
+                                        };
 
-                                            replaceTime(table, reserv_start);
-                                        }
-                                    })();
+                                        replaceTime(table, reserv_start);
+                                    }
+                                })();
 
-                                }
-                            });
-                        };
+                            }
+                        });
+                    };
 
-                        table.reservations.timeReload();
+                    table.reservations.timeReload();
 
                 });
             },
@@ -557,11 +557,11 @@ angular.module('reservation.service', [])
         };
 
         var newRecursiveEvent = function(table, recursiveEvent) {
-             var event = {};
-             event.recursiveEvent = recursiveEvent;
-             event.cancel = false;
-             event.fire = function() {
-                 try {
+            var event = {};
+            event.recursiveEvent = recursiveEvent;
+            event.cancel = false;
+            event.fire = function() {
+                try {
                     var deferred = $q.defer();
                     if (!event.cancel) {
                         event.recursiveEvent(table, event);
@@ -574,25 +574,25 @@ angular.module('reservation.service', [])
                     }
 
                     return deferred.promise;
-                 } catch (e){
-                     console.log("Event error: ",e);
-                 }
-             };
-             event.fire().then(function() {
-                 event.timeoutID = $interval(event.fire, 60000);
-             });
+                } catch (e) {
+                    console.log("Event error: ", e);
+                }
+            };
+            event.fire().then(function() {
+                event.timeoutID = $interval(event.fire, 60000);
+            });
 
             return event;
         };
 
-        var addEvent = function (table, start_time, end_time, startCallback, endCallback, arg) {
+        var addEvent = function(table, start_time, end_time, startCallback, endCallback, arg) {
             table.events = table.events || [];
             var event = newEvent(table, start_time, end_time, startCallback, endCallback, arg);
             table.events.push(event);
             return event;
         };
 
-        var newEvent = function (table, start_time, end_time, startEvent, endEvent, arg) {
+        var newEvent = function(table, start_time, end_time, startEvent, endEvent, arg) {
             var event = {};
             event.start = start_time;
             event.end = end_time;

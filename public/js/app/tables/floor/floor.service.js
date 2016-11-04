@@ -3,7 +3,7 @@ angular.module('floor.service', [])
 		var reservations, tables, sourceTypes;
 		return {
 			getBloqueos: function(reload) {
-				tables = HttpFactory.get(ApiUrlMesas + "/blocks/tables", null, tables, reload);
+				tables = HttpFactory.get(ApiUrlMesas + "/blocks", null, tables, reload);
 				return tables;
 			},
 			getSourceTypes: function(reload) {
@@ -286,6 +286,22 @@ angular.module('floor.service', [])
 				});
 				return blockTables;
 			},
+			getIndiceZone: function(idZone) {
+				var me = this;
+				var zone_indice;
+				var zonas = me.getDataZonesTables();
+				//console.log('llegas: ', zonas);
+
+				angular.forEach(zonas, function(zone, key_zone) {
+					var indice = key_zone + 1;
+					if (zone.id == idZone) {
+						zone_indice = indice;
+						return;
+					}
+
+				});
+				return zone_indice;
+			},
 			getReservations: function() {
 				var me = this;
 				var defered = $q.defer();
@@ -301,7 +317,7 @@ angular.module('floor.service', [])
 							res_guest_id: reserva.res_guest_id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							wait_list: reserva.wait_list,
-							zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].id) : "",
+							zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "",
 							start_date: reserva.date_reservation,
 							start_time: reserva.hours_reservation,
 							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -325,34 +341,6 @@ angular.module('floor.service', [])
 					defered.reject(response);
 				});
 				return defered.promise;
-			},
-			getIndiceZone: function(idTable) {
-				var fecha_actual = getFechaActual();
-				var defered = $q.defer();
-				var me = this;
-				//var table_detail = {};
-				var zone_indice;
-				var zonas = me.getDataZonesTables();
-
-				angular.forEach(zonas, function(zone, key_zone) {
-					var row_tables = zone.tables;
-					var indice = key_zone + 1;
-
-					angular.forEach(row_tables, function(table) {
-						if (table.id == idTable) {
-							zone_indice = indice;
-							/*table_detail = {
-								zone_indice: indice,
-								zone_id: zone.id,
-								name_zona: zone.name,
-								id: table.id,
-								name: table.name,
-							};*/
-						}
-					});
-
-				});
-				return zone_indice;
 			},
 			rowTableReservation: function(idTable) {
 				var me = this;
@@ -380,7 +368,7 @@ angular.module('floor.service', [])
 				angular.forEach(zones, function(zone) {
 					angular.forEach(zone.tables, function(table) {
 						table.server.reservation = null;
-						table.class.name = null;
+						/*table.class.name = null;*/
 					});
 				});
 
@@ -775,11 +763,27 @@ angular.module('floor.service', [])
 				}
 				return defered.promise;
 			},
-			delItemReservasAndBlocks: function(index) {
-				reservasAndBlocks.splice(index, 1);
-			},
 			addServicioReservaciones: function(item) {
-				reservasAndBlocks.push(item);
+				//console.log('Array actual', angular.toJson(reservasAndBlocks, true));
+				//If existe en el array reservasAndBlocks diferente de 0
+				if (reservasAndBlocks.length !== 0) {
+					var encontrado = false;
+					angular.forEach(reservasAndBlocks, function(reserva, index) {
+						if (item.reservation_id == reserva.reservation_id) {
+							reservasAndBlocks.splice(index, 1);
+							reservasAndBlocks.push(item);
+							//reservasAndBlocks[index] = item;
+							encontrado = true;
+							return;
+						}
+					});
+					if (encontrado === false) {
+						reservasAndBlocks.push(item);
+					}
+				} else {
+					reservasAndBlocks.push(item);
+				}
+
 			},
 			parseDataReservation: function(reserva) {
 				var me = this;
@@ -790,7 +794,7 @@ angular.module('floor.service', [])
 					res_guest_id: reserva.res_guest_id,
 					res_reservation_status_id: reserva.res_reservation_status_id,
 					wait_list: reserva.wait_list,
-					zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].id) : "",
+					zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "",
 					start_date: reserva.date_reservation,
 					start_time: reserva.hours_reservation,
 					end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -807,6 +811,116 @@ angular.module('floor.service', [])
 				};
 				return reservationData;
 			},
+			getBlocksForReservation: function() {
+				var defered = $q.defer();
+				var me = this;
+				FloorDataFactory.getBloqueos().then(function success(response) {
+					response = response.data.data;
+					var blockTables = [];
+					var dato;
+					angular.forEach(response, function(block) {
+
+						blockTables.push({
+							block_id: block.id,
+							start_time: block.start_time,
+							end_time: block.end_time,
+							start_date: block.start_date,
+							zone_indice: block.tables ? me.getIndiceZone(block.tables[0].res_zone_id) : "",
+							tables: block.tables,
+							events: [],
+							block: false,
+						});
+					});
+					defered.resolve(blockTables);
+				}, function error(response) {
+					response = response.data;
+					defered.reject(response);
+				});
+
+				return defered.promise;
+			},
+			mergeBlockToReservation: function(blocks) {
+
+				if (reservasAndBlocks.length !== 0) {
+					var encontrado = false;
+					angular.forEach(reservasAndBlocks, function(reserva, index) {
+						angular.forEach(blocks, function(item) {
+							if (item.block_id == reserva.block_id) {
+								reservasAndBlocks.splice(index, 1);
+								reservasAndBlocks.push(item);
+								//reservasAndBlocks[index] = item;
+								encontrado = true;
+								return;
+							}
+						});
+					});
+					if (encontrado === false) {
+						angular.forEach(blocks, function(item) {
+							reservasAndBlocks.push(item);
+						});
+					}
+				} else {
+					angular.forEach(blocks, function(item) {
+						reservasAndBlocks.push(item);
+					});
+				}
+
+				/*angular.forEach(blocks, function(item) {
+					reservasAndBlocks.push(item);
+				});*/
+			},
+			parseDataBloqueos: function(block) {
+				var me = this;
+				var blockData = {
+					block_id: block.id,
+					start_time: block.start_time,
+					end_time: block.end_time,
+					start_date: block.start_date,
+					zone_indice: block.tables ? me.getIndiceZone(block.tables[0].res_zone_id) : "",
+					tables: block.tables,
+					events: [],
+					block: false,
+				};
+				return blockData;
+
+			},
+			addServicioReservacionesAndBloqueos: function(item) {
+				//console.log('Array actual', angular.toJson(reservasAndBlocks, true));
+				//If existe en el array reservasAndBlocks diferente de 0
+				if (reservasAndBlocks.length !== 0) {
+					var encontrado = false;
+					angular.forEach(reservasAndBlocks, function(reserva, index) {
+						if (item.block_id == reserva.block_id) {
+							reservasAndBlocks.splice(index, 1);
+							reservasAndBlocks.push(item);
+							//reservasAndBlocks[index] = item;
+							encontrado = true;
+							return;
+						}
+					});
+					if (encontrado === false) {
+						reservasAndBlocks.push(item);
+					}
+				} else {
+					reservasAndBlocks.push(item);
+				}
+
+			},
+			getConfiguracionPeople: function(item) {
+				var defered = $q.defer();
+
+				reservationService.getConfigurationRes().then(function success(response) {
+						response = response.data.data;
+						defered.resolve(response);
+					},
+					function error(response) {
+						defered.reject(response.data);
+					}
+				);
+				return defered.promise;
+
+			}
+
 		};
 	})
 	.factory('OperationFactory', function() {
