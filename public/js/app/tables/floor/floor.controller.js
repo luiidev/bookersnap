@@ -84,18 +84,18 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("NotifyFloorBlock", function(evt, data) {
-            var blockTest = FloorFactory.parseDataBlock(data.data);
-            FloorFactory.asingBlockTables(blockTest, vm.zones);
+            // var blockTest = FloorFactory.parseDataBlock(data.data);
+            // FloorFactory.asingBlockTables(blockTest, vm.zones);
 
-            var blockParsear = FloorFactory.parseDataBloqueos(data.data);
-            FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
+            // var blockParsear = FloorFactory.parseDataBloqueos(data.data);
+            // FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
 
-            alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 1000, 20, 150);
-            console.log("NotifyFloorBlock " + angular.toJson(data, true));
+            // alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 1000, 20, 150);
+            // console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
         $scope.$on("floorReload", function() {
-            reloadFloor();
+            // reloadFloor();
         });
 
         var reloadFloor = function() {
@@ -580,7 +580,7 @@ angular.module('floor.controller', [])
 
         $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
             messageAlert("Info", data.user_msg, "info", 2000, true);
-            $state.reload();
+            // $state.reload();
         });
 
 
