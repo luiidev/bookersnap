@@ -9,11 +9,46 @@ angular.module('floor.controller', [])
         vm.typeTurns = [];
 
         vm.zones = [];
-        var blocks = [];
-        var reservations = [];
+        var blocks = {};
+        vm.reservations = {};
         var servers = [];
         var eventEstablished = {};
-        var zones = [];
+        var zones = {};
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Funcion de actualizacion de objecto
+         */
+        var updateData = function(update) {
+            // angular.forEach(this.data, function(obj) {
+            //     angular.forEach(update, function(upd) {
+            //         console.log(obj.id, upd.id);
+            //         if (obj.id == upd.id) {
+            //             console.log(obj , upd);
+            //             obj = angular.copy(upd);
+            //             console.log(obj);
+            //         }
+            //     });
+            // });
+        };
+        blocks.update = updateData;
+        vm.reservations.update = function(update) {
+            angular.forEach(this.data, function(obj) {
+                angular.forEach(update, function(upd) {
+                    if (obj.id == upd.id) {
+                        angular.forEach(upd, function(value, index) {
+                            obj[index] = value;
+                        });
+                    }
+                });
+            });
+        };
+        zones.update = updateData;
+        /**
+         * ENd
+         */
+         ////////////////////////////////////////////////////////////////////////////////////////////
+
         /**
          * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
@@ -195,12 +230,10 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
-            console.log(tables);
             vm.zones.tablesSelected(tables);
         });
 
         $scope.$on("floorClearSelected", function() {
-            console.log("=3");
             if (vm.zones.clearSelected) vm.zones.clearSelected();
         });
 
@@ -209,9 +242,10 @@ angular.module('floor.controller', [])
 
              reservationService.getZones(date)
                  .then(function(response) {
-                     deferred.resolve(response.data.data);
+                    zones.data = response.data.data;
+                    deferred.resolve(zones.data);
                  }).catch(function(error) {
-                     message.apiError(error);
+                    message.apiError(error);
                  });
 
              return deferred.promise;
@@ -222,8 +256,8 @@ angular.module('floor.controller', [])
 
              reservationService.getBlocks(date)
                  .then(function(response) {
-                     blocks = response.data.data;
-                     deferred.resolve(response.data.data);
+                     blocks.data = response.data.data;
+                     deferred.resolve(blocks.data);
                  }).catch(function(error) {
                      message.apiError(error);
                  });
@@ -236,8 +270,8 @@ angular.module('floor.controller', [])
 
              reservationService.getReservations()
                  .then(function(response) {
-                     reservations = response.data.data;
-                     deferred.resolve(reservations);
+                     vm.reservations.data = response.data.data;
+                     deferred.resolve(vm.reservations.data);
                  }).catch(function(error) {
                      message.apiError(error, "No se pudo cargar las reservaciones");
                  });
@@ -343,6 +377,62 @@ angular.module('floor.controller', [])
         /**
          * END
          */
+
+         /**
+          * Cambio de de mesa de una reservacion
+          */
+         var changeTable = function(table) {
+             var dropTable = eventEstablished.data;
+             if (dropTable.id != table.id) {
+                 var id = dropTable.reservations.active.id;
+                 var data = {
+                     table_id: table.id
+                 };
+                 reservationService.sit(id, data)
+                    .then(function(response) {
+                        vm.reservations.update(response.data.data);
+                        if (dropTable.reservations.active) {
+                            table.reservations.add(dropTable.reservations.active);
+                        }
+                        if (dropTable.reservations.active) {
+                            dropTable.reservations.remove(dropTable.reservations.active);
+                        }
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    });
+             }
+         };
+         /**
+          * END
+          */
+
+         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+             angular.forEach(vm.reservations.data, function(reservation) {
+                angular .forEach(data.data, function(obj_data) {
+                    if (reservation.id == obj_data.id) {
+                        angular.forEach(vm.zones.tables, function(table) {
+                            angular.forEach(reservation.tables, function(obj_table) {
+                                if (table.id == obj_table.id) {
+                                    table.reservations.remove(reservation);
+                                }
+                            });
+                        });
+                        angular.forEach(obj_data, function(value, index) {
+                            reservation[index] = value;
+                        });
+                        angular.forEach(vm.zones.tables, function(table) {
+                            angular.forEach(reservation.tables, function(obj_table) {
+                                if (table.id == obj_table.id) {
+                                    console.log(table.id , table.name, obj_table.id, reservation, "controller");
+                                    table.reservations.add(reservation, "Notificación");
+                                }
+                            });
+                        });
+                    }
+                });
+             });
+             console.log(data);
+         });
 
         /**
          * END Nuevo Modulo
@@ -474,24 +564,6 @@ angular.module('floor.controller', [])
             sizeLienzo();
             $scope.$digest();
         });
-
-        //Cambio de de mesa de una reservacion
-        var changeTable = function(table) {
-            var dropTable = eventEstablished.data;
-            if (dropTable.id != table.id) {
-                var id = dropTable.reservations.active.id;
-                var data = {
-                    table_id: table.id
-                };
-                reservationService.sit(id, data)
-                    .then(function(response) {
-                        // table.reservations.add(dropTable.reservations.active);
-                        dropTable.reservations.remove(dropTable.reservations.active);
-                    }).catch(function(error) {
-                        message.apiError(error);
-                    });
-            }
-        };
 
         $scope.$on("NotifyFloorNotesReload", function(evt, data) {
             if (!vm.notesBox) {
@@ -743,8 +815,8 @@ angular.module('floor.controller', [])
             name: content.table.name
         };
 
-        vmd.reservations = content.table.reservations.data; 
-        vmd.blocks = content.table.blocks.data; 
+        vmd.reservations = content.table.reservations; 
+        vmd.blocks = content.table.blocks;
         vmd.reservation = {};
 
         vmd.reservationEditAll = function() {
@@ -1101,7 +1173,7 @@ angular.module('floor.controller', [])
         };
 
         $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-            messageAlert("Notificación", data.user_msg, "info", 2000, true);
+            // messageAlert("Notificación", data.user_msg, "info", 2000, true);
             //console.log("Formato: " + angular.toJson(data, true));
         });
 

@@ -330,7 +330,7 @@ angular.module('floor.service', [])
 						});
 
 					});
-					console.log(angular.toJson(objReservation, true));
+					// console.log(angular.toJson(objReservation, true));
 					defered.resolve(objReservation);
 				}, function error(response) {
 					response = response.data;

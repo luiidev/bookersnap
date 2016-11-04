@@ -162,7 +162,6 @@ angular.module('reservation.controller', [])
             /**
              * Save. update and cancel reservation
              */
-
             var saveNewReservation = function() {
                 vm.waitingResponse = true;
                 service.save(vm.reservation)
