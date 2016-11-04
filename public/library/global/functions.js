@@ -432,7 +432,13 @@ var cleanString = function(cadena) {
 /*-----
 Permite mostrar mensajes tipo alert, multiples.
 ------*/
-var alertMultiple = function(title, text, type, icon) {
+var alertMultiple = function(title, text, type, icon, from, align, timer, x, y) {
+    from = (from) ? from : 'top';
+    align = (align) ? align : 'center';
+    timer = (timer) ? timer : 1000;
+    x = (x) ? x : 20;
+    y = (y) ? y : 85;
+
     $.growl({
         icon: icon,
         title: title + " ",
@@ -443,17 +449,17 @@ var alertMultiple = function(title, text, type, icon) {
         type: type,
         allow_dismiss: true,
         placement: {
-            from: 'top',
-            align: 'center'
+            from: from,
+            align: align
         },
         offset: {
-            x: 20,
-            y: 85
+            x: x,
+            y: y,
         },
         spacing: 10,
         z_index: 1031,
         delay: 2500,
-        timer: 1000,
+        timer: timer,
         url_target: '_blank',
         mouse_over: false,
         /*animate: {
