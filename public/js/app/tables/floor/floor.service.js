@@ -605,6 +605,7 @@ angular.module('floor.service', [])
 				return defered.promise;
 			},
 			//Todas las zonas con sus mesas y mas informacion //No se esta utilizando --verificar
+			/*
 			listZonesReservas: function() {
 				var me = this;
 				var defered = $q.defer();
@@ -691,7 +692,7 @@ angular.module('floor.service', [])
 
 				});
 				return defered.promise;
-			},
+			},*/
 			listTurnosActivos: function(date) {
 				var defered = $q.defer();
 				var self = this;
