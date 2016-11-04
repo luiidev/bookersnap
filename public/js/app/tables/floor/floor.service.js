@@ -17,7 +17,6 @@ angular.module('floor.service', [])
 		};
 	})
 	.factory('TypeFilterDataFactory', function() {
-		var reservasAndBlocks = [];
 		var typeColection = [];
 		var sourceColection = [];
 		var statusColection = [];
@@ -25,18 +24,6 @@ angular.module('floor.service', [])
 		var filtrosVisita = [];
 		var filtrosReserva = [];
 		return {
-			setReservasAndBlocks: function(data) {
-				reservasAndBlocks = data;
-			},
-			getReservasAndBlocks: function() {
-				return reservasAndBlocks;
-			},
-			delItemReservasAndBlocks: function(index) {
-				reservasAndBlocks.splice(index, 1);
-			},
-			addItemReservasAndBlocks: function(item) {
-				reservasAndBlocks.push(item);
-			},
 			setTypeTurnItems: function(typeItem) {
 				var vTurn = [];
 				var itemTodos = {
@@ -182,6 +169,7 @@ angular.module('floor.service', [])
 		var serverColection = [];
 		var zonesTotal = [];
 		var navegaTabZone = 0;
+		var reservasAndBlocks = [];
 		return {
 			getZones: function(date, reload) {
 				var defered = $q.defer();
@@ -330,7 +318,7 @@ angular.module('floor.service', [])
 						});
 
 					});
-					console.log(angular.toJson(objReservation, true));
+					//console.log(angular.toJson(objReservation, true));
 					defered.resolve(objReservation);
 				}, function error(response) {
 					response = response.data;
@@ -765,7 +753,34 @@ angular.module('floor.service', [])
 					}
 				);
 				return defered.promise;
-			}
+			},
+			setReservasAndBlocks: function(data) {
+				reservasAndBlocks = data;
+			},
+			getServicioReservaciones: function() {
+				var me = this;
+				var defered = $q.defer();
+				if (reservasAndBlocks.length === 0) {
+
+					me.getReservations().then(function(data) {
+						reservasAndBlocks = data;
+						//console.log(reservasAndBlocks);
+						defered.resolve(reservasAndBlocks);
+						//return reservasAndBlocks;
+					});
+
+				} else {
+					defered.resolve(reservasAndBlocks);
+					//return reservasAndBlocks;
+				}
+				return defered.promise;
+			},
+			delItemReservasAndBlocks: function(index) {
+				reservasAndBlocks.splice(index, 1);
+			},
+			addItemReservasAndBlocks: function(item) {
+				reservasAndBlocks.push(item);
+			},
 		};
 	})
 	.factory('OperationFactory', function() {

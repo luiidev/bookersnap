@@ -381,6 +381,8 @@
 			background-image url('../../../img/status/no-show.svg')
 		& .block-table
 			background #424242
+		& .block-table-temporal
+			background #424242
 		& .block-table-permanent
 			background #424242
 				
@@ -411,13 +413,19 @@
 		
 /*--------------BOOK------------------*/
 .menu-book 
-	padding 9px 15px 9px 15px
+	padding 9px 15px 2px 15px
 	.card 
-		margin-bottom 0
+		margin-bottom 6px
 		& .card-body 
 			padding 8px
 			background-color #575757
-			//margin-bottom 8px
+			& .input-group
+				top -2px
+				& .input-group-addon
+					text-align left
+					min-width 30px
+			&.dropdown-item 
+				padding 6px
 			& i
 				font-size 1.3em
 				color #fff
@@ -429,10 +437,33 @@
 					& > .caret
 						float right
 						top 8px
-						position relative
-						
+						position relative			
 	.form-control
+		color #fff
 		placeholder-text(#fff)
+.content-book
+	margin 0
+	& h5 
+		margin 0
+	& .reservation-item 
+		background-color #e6f3dc
+		border-bottom 1px solid #ccc
+		color #000
+		& .date-reservation 
+			& h5 
+				margin-bottom 0
+				margin-top 16px
+		& .item 
+			padding 15px 25px
+		& .settings-reservation 
+			color #000 
+			font-size 1.7em
+			cursor pointer
+		& .more 
+			padding 16px 25px 
+			background-color #ffeed3
+			color #f98e00
+			font-weight bold
 	
 /*--------------GUEST------------------*/
 

@@ -325,8 +325,6 @@ angular.module('reservation.controller', [])
                         deferred.resolve(response.data.data);
                     }).catch(function(error) {
                         message.apiError(error);
-                    }).finally(function() {
-                        // deferred.resolve();
                     });
 
                 return deferred.promise;
@@ -386,8 +384,6 @@ angular.module('reservation.controller', [])
                         deferred.resolve(response.data.data);
                     }).catch(function(error) {
                         message.apiError(error);
-                    }).finally(function() {
-                        // deferred.resolve();
                     });
 
                 return deferred.promise;
