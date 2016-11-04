@@ -7,7 +7,7 @@ angular.module('calendar.service', [])
 .service('CalendarService', function($http, ApiUrlMesas) {
     return {
         FormatTime: function(str_date, str_hour) {
-           return moment(str_hour, "HH:mm:ss").format("hh:mm A");
+            return moment(str_hour, "HH:mm:ss").format("hh:mm A");
         },
         isBefore: function(date, now) {
             var dateCalendar = moment(date);
@@ -17,7 +17,6 @@ angular.module('calendar.service', [])
             $http.get(ApiUrlMesas + '/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
         },
         GetShiftByDate: function($date, $listener) {
-            //$http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null).then($listener.OnSuccess, $listener.OnError);
             return $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null);
         },
         GetShiftsByType: function(id, $listener) {

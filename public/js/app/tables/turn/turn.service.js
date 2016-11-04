@@ -47,7 +47,7 @@ angular.module('turn.service', [])
 			}
 		};
 	})
-	.factory('TurnFactory', function(TurnDataFactory, DateFactory, ZoneFactory, BookDateFactory, $q) {
+	.factory('TurnFactory', function(TurnDataFactory, DateFactory, ZoneFactory, $q) {
 
 		return {
 			listTurns: function(options) {

@@ -4,13 +4,8 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive']
 			.state('mesas.book', {
 				url: '/book',
 				templateUrl: '/js/app/tables/book/view/index.html',
-				controller: 'BookCtrl'
+				controller: 'BookCtrl',
+				controllerAs: 'vm'
 			});
-		/*
-		.state ('block', {
-			url: '/block/:fecha',
-			templateUrl: '/js/app/tables/book/view/block.html'
-		})
-		*/
 
 	});

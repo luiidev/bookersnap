@@ -1,28 +1,5 @@
 <section id="main">
     <section class="w-100 p-0" id="content">
-        <!--<div class="block-header text-center">
-                <ul class="calendar-box">
-                    <li>
-                        <a href="javascript:void(0)" ng-click="setDate('-')">
-                            <i class="zmdi zmdi-chevron-left calendar-btn">
-                            </i>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="date-picker" ng-class="{ 'is-opened': opened == true }">
-                            <button class="btn btn-primary btn-lg waves-effect date-picker dp-blue" close-text="Close" datepicker-options="calendarBtn.dateOptions" is-open="opened" min-date="minDate" ng-click="openCalendar($event, 'opened')" ng-model="calendarBtn.dateCalendar" ng-required="true" show-weeks="false" uib-datepicker-popup="{{calendarBtn.format}}">
-                                {{calendarBtn.dateText}}
-                            </button>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" ng-click="setDate('+')">
-                            <i class="zmdi zmdi-chevron-right calendar-btn">
-                            </i>
-                        </a>
-                    </li>
-                </ul>
-            </div>-->
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
         <div class="card m-0">
@@ -94,39 +71,34 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item">
+            <div class="reservation-item" ng-repeat="item in vm.hoursAvailable">
                 <div class="item">
-                    11:30 am
-                </div>
-            </div>
-            <div class="reservation-item">
-                <div class="item">
-                    11:30 am
+                    {{ item.name }}
                 </div>
             </div>
             <div class="reservation-item bg-white">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
                         <div class="picture pull-left">
                             <img alt="" height="48" src="/images/avatar.jpg">
                             </img>
                         </div>
-                        <div class="pull-left m-l-5 p-t-10">
+                        <div class="pull-left box-name">
                             <h5>
                                 Moises Lascurain Murillo
                             </h5>
                             <span>
-                                <i class="tm-icon zmdi zmdi-email">
+                                <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                 </i>
                                 1
                             </span>
                             <span>
-                                <i class="zmdi zmdi-file-text zmdi-hc-fw">
+                                <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                 </i>
                                 15 invitados
                             </span>
                         </div>
-                        <div class="pull-left m-l-25 date-reservation">
+                        <div class="pull-left box-date">
                             <h5 class="f-700">
                                 11:45 AM
                             </h5>
@@ -134,7 +106,7 @@
                                 29/09/2016
                             </span>
                         </div>
-                        <div class="pull-left m-l-25 p-t-25">
+                        <div class="pull-left box-status">
                             <!--
                             <i class="zmdi zmdi-circle zmdi-hc-fw">
                             </i>
@@ -144,21 +116,21 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-3 col-sm-4 box-guest">
                         <div class="pull-left">
                             <div class="adults text-center">
                                 <i class="zmdi zmdi-male zmdi-hc-fw">
                                 </i>
                             </div>
-                            <div class="">
-                                <button class="btn bgm-gray-win waves-effect">
+                            <div class="buttons-add">
+                                <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
                                     </i>
                                 </button>
-                                <button class="btn bgm-gray-win waves-effect">
+                                <button class="btn bgm-gray-win">
                                     0
                                 </button>
-                                <button class="btn bgm-gray-win waves-effect">
+                                <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
                                     </i>
                                 </button>
@@ -169,39 +141,34 @@
                                 <i class="zmdi zmdi-mood zmdi-hc-fw">
                                 </i>
                             </div>
-                            <div class="">
-                                <button class="btn bgm-gray-win waves-effect">
+                            <div class="buttons-add">
+                                <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
                                     </i>
                                 </button>
-                                <button class="btn bgm-gray-win waves-effect">
+                                <button class="btn bgm-gray-win">
                                     0
                                 </button>
-                                <button class="btn bgm-gray-win waves-effect">
+                                <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
                                     </i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="pull-left col-md-2 p-t-10">
+                    <div class="col-lg-4 col-md-5 col-sm-12 box-config">
+                        <div class="pull-left col-lg-2 col-md-3 col-sm-4 price">
                             <div class="fg-line">
                                 <input class="form-control" name="" placeholder="S/0.00" type="text">
                                 </input>
                             </div>
                         </div>
-                        <div class="pull-left col-md-2 p-t-25">
-                            <h5 class="m-0">
-                                A3
-                            </h5>
-                        </div>
-                        <div class="pull-left col-md-3 p-t-15">
+                        <div class="pull-left col-lg-3 col-md-3 col-sm-3 phone">
                             <label class="label label-success">
                                 TELEFONO
                             </label>
                         </div>
-                        <div class="pull-left col-md-2 p-t-15">
+                        <div class="pull-left col-lg-2 col-md-3 col-sm-3 config">
                             <div class="dropdown" uib-dropdown="">
                                 <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" uib-dropdown-toggle="">
                                     <i class="zmdi zmdi-settings zmdi-hc-fw">
@@ -224,7 +191,7 @@
                             </div>
                         </div>
                         <div class="pull-right">
-                            <div class="pull-left m-l-20 more">
+                            <div class="pull-left tables">
                                 <div class="">
                                     21 +
                                 </div>
@@ -234,6 +201,8 @@
                 </div>
             </div>
         </div>
+        <footer class="footer-custom-res" data-ng-include="'/js/app/tables/book/view/partials/footer-book.html'" id="footer">
+        </footer>
     </section>
 </section>
 <script id="modalNewReservation.html" type="text/ng-template">
