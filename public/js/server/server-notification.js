@@ -4,7 +4,7 @@ var jwtDecode = require('jwt-decode');
 
 var fs = require('fs');
 
-app.listen(1337, "192.95.58.230");
+app.listen(1337, "127.0.0.1");
 
 function handler(req, res) {
 
