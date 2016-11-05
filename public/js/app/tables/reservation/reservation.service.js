@@ -370,7 +370,7 @@ angular.module('reservation.service', [])
                 angular.forEach(dataZones.tables, function(table) {
                     angular.forEach(blocks, function(block) {
                         if (table.id == block.res_table_id) {
-                            if (!block.res_reservation_id) {
+                            if (block.res_reservation_id === null) {
                                 table.blocks.data.push(block);
                                 addEvent(table, block.start_time, block.end_time,
                                     function(table, block) {
@@ -423,14 +423,17 @@ angular.module('reservation.service', [])
                         }
                     };
                     table.reservations.remove = function(reservation) {
-                        angular.forEach(table.reservations.data, function(data, i) {
-                            if (data.id == reservation.id) {
-                                table.reservations.data.splice(i, 1);
-                            }
-                        });
+                        if (Object.prototype.toString.call(reservation) == "[object Object]") {
+                            angular.forEach(table.reservations.data, function(data, i) {
+                                if (data.id == reservation.id) {
+                                    table.reservations.data.splice(i, 1);
+                                }
+                            });
+                        }
                         table.reservations.active = null;
                         table.server.reservation = null;
                         table.reservations.timeReload();
+
                     };
                     table.reservations.timeReload = function() {
                         table.time.seated.text = null;

@@ -348,7 +348,7 @@
             </div>
             <div class="card-body">
                 <ul class="modal-listado-num-people">
-                    <li class="lst-men" ng-show="vmc.config.status_people_1">
+                    <li class="lst-men">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'men')">
@@ -362,7 +362,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-women" ng-show="vmc.config.status_people_2">
+                    <li class="lst-women">
                         <div class="box-gender"><i class="zmdi zmdi-female"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'women')">
@@ -376,7 +376,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-children" ng-show="vmc.config.status_people_3">
+                    <li class="lst-children">
                         <div class="box-gender"><i class="zmdi zmdi-face"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'children')">
@@ -527,6 +527,11 @@
         <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
             <div class="text-center">
                 <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse">
+                {{ wl.buttonText }}</button>
+            </div>
+        </div>
+    </div>
+</script>gResponse">
                 {{ wl.buttonText }}</button>
             </div>
         </div>

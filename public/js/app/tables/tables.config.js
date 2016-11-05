@@ -1,5 +1,4 @@
 (function() {
-
     'use strict';
     var idMicrositio = obtenerIdMicrositio();
     angular.module('tables.app', [
@@ -25,14 +24,13 @@
         .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-            $stateProvider
-                .state('mesas', {
+        $stateProvider
+            .state('mesas', {
                     url: '/mesas',
                     templateUrl: ''
                 });
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
-
             setAuthHeaders($http);
             ServerNotification.createConnection();
             ServerNotification.createRoom("microsites" + IdMicroSitio);
