@@ -422,14 +422,16 @@ angular.module('reservation.service', [])
                             }
                         };
                         table.reservations.remove = function(reservation) {
-                            angular.forEach(table.reservations.data, function(data, i) {
-                                if (data.id == reservation.id) {
-                                    table.reservations.data.splice(i, 1);
-                                }
-                            });
-                            table.reservations.active = null;
-                            table.server.reservation = null;
-                            table.reservations.timeReload();
+                            if (Object.prototype.toString.call(reservation) == "[object Object]") {
+                                angular.forEach(table.reservations.data, function(data, i) {
+                                    if (data.id == reservation.id) {
+                                        table.reservations.data.splice(i, 1);
+                                    }
+                                });
+                                table.reservations.active = null;
+                                table.server.reservation = null;
+                                table.reservations.timeReload();
+                            }
                         };
                         table.reservations.timeReload = function() {
                             table.time.seated.text = null;
