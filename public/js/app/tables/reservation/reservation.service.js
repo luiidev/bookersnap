@@ -414,19 +414,17 @@ angular.module('reservation.service', [])
                             });
                         });
                         table.reservations.add = function(reservation, pref) {
-                            console.log(table.id, table.name,reservation, "add-prev", pref);
-                            console.log(table.id, table.name,reservation.id, "add", pref);
-                            table.reservations.data.push(reservation);
-                            table.reservations.active = null;
-                            table.server.reservation = null;
-                            table.reservations.timeReload();
+                            if (Object.prototype.toString.call(reservation) == "[object Object]") {
+                                table.reservations.data.push(reservation);
+                                table.reservations.active = null;
+                                table.server.reservation = null;
+                                table.reservations.timeReload();
+                            }
                         };
                         table.reservations.remove = function(reservation) {
                             angular.forEach(table.reservations.data, function(data, i) {
-                                console.log(table.id, table.name, reservation.id, "view");
                                 if (data.id == reservation.id) {
                                     table.reservations.data.splice(i, 1);
-                                    console.log(table.id, table.name,reservation.id, "remove");
                                 }
                             });
                             table.reservations.active = null;
