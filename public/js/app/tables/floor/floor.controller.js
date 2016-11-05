@@ -90,7 +90,7 @@ angular.module('floor.controller', [])
             var blockParsear = FloorFactory.parseDataBloqueos(data.data);
             FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
 
-            alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 1000, 20, 150);
+            alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
             console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
@@ -1229,7 +1229,7 @@ angular.module('floor.controller', [])
               FloorFactory.addServicioReservaciones(reservaTest);
             });
 
-            alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 1000, 20, 150);
+            alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
             //messageAlert("Notificación", data.user_msg, "info", 2000, true);
             //console.log("Formato: " + angular.toJson(reservaTest, true));
         });

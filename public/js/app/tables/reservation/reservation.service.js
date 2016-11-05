@@ -428,10 +428,11 @@ angular.module('reservation.service', [])
                                         table.reservations.data.splice(i, 1);
                                     }
                                 });
+                            }
                                 table.reservations.active = null;
                                 table.server.reservation = null;
                                 table.reservations.timeReload();
-                            }
+
                         };
                         table.reservations.timeReload = function() {
                             table.time.seated.text = null;
