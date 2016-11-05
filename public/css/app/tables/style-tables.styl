@@ -412,9 +412,10 @@
 		z-index 2
 		
 /*--------------BOOK------------------*/
+
 .menu-book 
-	padding 9px 15px 2px 15px
-	.card 
+	padding 9px 10px 2px 28px
+	& .card 
 		margin-bottom 6px
 		& .card-body 
 			padding 8px
@@ -438,33 +439,119 @@
 						float right
 						top 8px
 						position relative			
-	.form-control
+	& .form-control
 		color #fff
 		placeholder-text(#fff)
+	& .box-option 
+		width 300px
+		display inline-block
+		margin-right 25px
+		& .input-group-addon
+			padding 6px 0
+
+.footer-blook		
+	& .box-footer-date 
+		& h5 
+			margin 25px 0
+			color #fff
 .content-book
 	margin 0
 	& h5 
-		margin 0
+		margin 0 0 2px 0
 	& .reservation-item 
 		background-color #e6f3dc
 		border-bottom 1px solid #ccc
 		color #000
-		& .date-reservation 
-			& h5 
-				margin-bottom 0
-				margin-top 16px
+		& .box-info-reservation
+			& .box-name 
+				padding-top 10px
+				margin-left 5px
+			& .box-date
+				margin-left 25px
+				& h5 
+					margin-bottom 0
+					margin-top 10px
+			& .box-status
+				padding-top 15px
+				margin-left 25px
+			
+		& .box-guest 
+			& .buttons-add 
+				& .btn 
+					padding 4px 8px
+		& .box-config
+			& .price 
+				padding-top 10px
+			& .phone 
+				padding-top 15px
+			& .config 
+				padding-top 10px
+				& .settings-reservation 
+					color #000 
+					font-size 1.7em
+					cursor pointer
+			& .tables 
+				padding 15px 25px 
+				background-color #ffeed3
+				color #f98e00
+				font-weight bold
+				margin-left 20px
+			& .label 
+				padding 6px 25px
+				font-size 1em
+				
 		& .item 
 			padding 15px 25px
-		& .settings-reservation 
-			color #000 
-			font-size 1.7em
-			cursor pointer
-		& .more 
-			padding 16px 25px 
-			background-color #ffeed3
-			color #f98e00
-			font-weight bold
-	
+			
+@media (max-width: 1024px)
+	.footer-blook
+		& .box-footer-date 
+			display none
+	.menu-book
+		& .box-option 
+			width 160px
+			margin-right 20px
+			font-size 0.9em
+	.content-book
+		& .reservation-item
+			& .box-info-reservation
+				& .box-name 
+					padding-top 10px
+					margin-left 5px
+				& .box-date
+					margin-left 5px
+				& .box-status
+					margin-left 5px
+			& .box-config 
+				& .label 
+					padding 6px 9px
+					font-size 0.8em
+					
+@media (min-width:768px) and (max-width: 1023px)
+	.footer-blook
+		& .btn 
+			width 90px!important
+			font-size 0.7em
+		& .box-footer-date 
+			display none		
+		
+	.menu-book
+		padding 9px 0 2px 15px
+		& .form-control
+			font-size 1.1em 
+			
+		& .box-option 
+			width 140px
+			margin-right 2px
+			font-size 0.8em
+			
+	.content-book
+		& .reservation-item
+			& .box-config
+				& .phone 
+					text-align center
+
+					
 /*--------------GUEST------------------*/
 
 .p-section-guest 
@@ -1085,6 +1172,8 @@ ul.footer-floor
 			/*margin-top 8px*/
 			padding 3px 5px
 			width 100px
+			&:focus 
+				color #fff
 		&.ultimo-btn-right
 			padding-right 410px
 			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)

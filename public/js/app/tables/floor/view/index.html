@@ -20,36 +20,47 @@
                     <h2 class="f-14">Proximas reservas y bloqueos</h2>
                 </div>
                 <div class="lv-body">
-                    <div ng-repeat="item in vmd.reservations" class="lv-item media border-left-green">
+                    <div class="lv-item media border-left-green m-b-15" ng-if="vmd.reservations.active" ng-click="vmd.reservationEdit(vmd.reservations.active)" style="cursor: pointer;">
                         <div class="media-body">
-                            <div ng-click="vmd.reservationEdit(item)" style="cursor: pointer;">
-                                <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}</div>
-                                <ul class="lv-attrs" >
-                                    <li><i class="zmdi zmdi-time"></i> {{item.hours_reservation}}</li>
-                                    <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
-                                </ul>
-                            </div>
-
+                            <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{vmd.reservations.active.guest.first_name || "Reservacion sin nombre"}} {{vmd.reservations.active.guest.last_name}}</div>
+                            <ul class="lv-attrs" >
+                                <li><i class="zmdi zmdi-time"></i> {{vmd.reservations.active.hours_reservation}}</li>
+                                <li><i class="zmdi zmdi-account-o"></i> {{vmd.reservations.active.num_guest}} personas</li>
+                                <li class="bgm-green c-white">Reservacion sentada</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div ng-repeat="item in vmd.blocks" class="lv-item media border-left-amber">
-                        <div class="media-body">
-                            <div style="cursor: pointer;">
-                                <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
-                                <ul class="lv-attrs" >
-                                    <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
-                                </ul>
-                            </div>
+                    <div class="lv-item media border-left-green m-b-15" ng-repeat="item in vmd.reservations.data" ng-if="item.res_reservation_status_id < 4" ng-click="vmd.reservationEdit(item)" style="cursor: pointer;">
+                        <div class="media-body" >
+                            <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}</div>
+                            <ul class="lv-attrs" >
+                                <li><i class="zmdi zmdi-time"></i> {{item.hours_reservation}}</li>
+                                <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="not-information" ng-if="!vmd.reservations.length">
-                        No se encontro reservas
+                    <div class="lv-item media border-left-amber m-b-15" ng-if="vmd.blocks.active" style="cursor: default;">
+                        <div class="media-body">
+                            <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                            <ul class="lv-attrs" >
+                                <li><i class="zmdi zmdi-time"></i> {{vmd.blocks.active.start_time}} - {{vmd.blocks.active.end_time}}</li>
+                            </ul>
+                        </div>
                     </div>
-                    
-                    <div class="not-information" ng-if="!vmd.blocks.length">
-                        No se encontro bloqueos
+
+                    <div ng-repeat="item in vmd.blocks.data" class="lv-item media border-left-amber" style="cursor: default;">
+                        <div class="media-body">
+                            <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                            <ul class="lv-attrs" >
+                                <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="not-information" ng-if="!vmd.reservations.data.length && !vmd.blocks.data.length">
+                        No se encontro reservas y bloqueos
                     </div>
 
                 </div>
@@ -337,7 +348,7 @@
             </div>
             <div class="card-body">
                 <ul class="modal-listado-num-people">
-                    <li class="lst-men">
+                    <li class="lst-men" ng-show="vmc.config.status_people_1">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'men')">
@@ -351,7 +362,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-women">
+                    <li class="lst-women" ng-show="vmc.config.status_people_2">
                         <div class="box-gender"><i class="zmdi zmdi-female"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'women')">
@@ -365,7 +376,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-children">
+                    <li class="lst-children" ng-show="vmc.config.status_people_3">
                         <div class="box-gender"><i class="zmdi zmdi-face"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'children')">

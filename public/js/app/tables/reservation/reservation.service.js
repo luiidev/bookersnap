@@ -132,7 +132,7 @@ angular.module('reservation.service', [])
 
                         hour.turn = item.name;
                         hour.time = date_ini.format("HH:mm:ss");
-                        hour.name = date_ini.format("H:mmA");
+                        hour.name = date_ini.format("H:mm A");
                         hours.push(hour);
 
                         if (!timeDefaultIsEstablished) {
@@ -369,14 +369,16 @@ angular.module('reservation.service', [])
                 angular.forEach(dataZones.tables, function(table) {
                     angular.forEach(blocks, function(block) {
                         if (table.id == block.res_table_id) {
-                            table.blocks.data.push(block);
-                            addEvent(table, block.start_time, block.end_time,
-                                function(table, block) {
-                                    table.blocks.active = block;
-                                },
-                                function(table) {
-                                    table.blocks.active = null;
-                                }, block);
+                            if (!block.res_reservation_id) {
+                                table.blocks.data.push(block);
+                                addEvent(table, block.start_time, block.end_time,
+                                    function(table, block) {
+                                        table.blocks.active = block;
+                                    },
+                                    function(table) {
+                                        table.blocks.active = null;
+                                    }, block);
+                            }
                         }
                     });
                 });
@@ -411,24 +413,29 @@ angular.module('reservation.service', [])
                                 }
                             });
                         });
-                        table.reservations.add = function(reservation) {
-                            table.reservations.active = null;
-                            table.server.reservation = null;
-                            table.reservations.data.push(reservation);
-                            table.reservations.timeReload();
+                        table.reservations.add = function(reservation, pref) {
+                            if (Object.prototype.toString.call(reservation) == "[object Object]") {
+                                table.reservations.data.push(reservation);
+                                table.reservations.active = null;
+                                table.server.reservation = null;
+                                table.reservations.timeReload();
+                            }
                         };
                         table.reservations.remove = function(reservation) {
-                            table.reservations.active = null;
-                            for (var i = 0; i < table.reservations.data.length; i++) {
-                                if (table.reservations.data[i].id == reservation.id) {
-                                    table.server.reservation = null;
-                                    delete table.reservations.data[i];
-                                    break;
+                            angular.forEach(table.reservations.data, function(data, i) {
+                                if (data.id == reservation.id) {
+                                    table.reservations.data.splice(i, 1);
                                 }
-                            }
-                            this.timeReload();
+                            });
+                            table.reservations.active = null;
+                            table.server.reservation = null;
+                            table.reservations.timeReload();
                         };
                         table.reservations.timeReload = function() {
+                            table.time.seated.text = null;
+                            table.time.complete.text = null;
+                            table.time.nextTime.text = null;
+                            table.time.nextTimeAll.length = 0;
                             angular.forEach(table.reservations.data, function(reservation) {
                                 var now = moment();
                                 var reserv_start = moment(reservation.date_reservation + " " + reservation.hours_reservation);
