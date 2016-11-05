@@ -39,13 +39,9 @@
 <script src="/js/theme/dist/library.bower.min.js"></script>
 <script src="/js/theme/dist/app.level.min.js"></script>
 <script src="/js/theme/dist/template.modules.min.js"></script>
-<<<<<<< HEAD
 
 <script type="text/javascript" src="/library/socket.io/socket.io.js" > </script>
 
-=======
-<script type="text/javascript" src="/library/socket.io/socket.io.js" > </script>
->>>>>>> 852e04fde9f0e8df59a4233faa863107c5f6ed3d
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
 <script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
