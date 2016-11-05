@@ -1,5 +1,5 @@
 angular.module('book.service', [])
-	.factory('BookFactory', function($http, ApiUrlMesas) {
+	.factory('BookDataFactory', function($http, ApiUrlMesas) {
 		return {
 			getBooks: function(vDate) {
 				// return $http.get(ApiUrlMesas+"/book/"+vDate); 
@@ -7,13 +7,15 @@ angular.module('book.service', [])
 		};
 
 	})
-	.factory('BlockFactory', function($http, ApiUrlMesas) {
-		return {
-			getAllBlock: function(vDate) {
-				return $http.get(ApiUrlMesas + "/blocks?" + vDate);
-			}
-		};
+	.factory('BookFactory', function(reservationService, CalendarService) {
 
+		return {
+
+			getReservations: function() {
+
+			}
+
+		};
 	})
 	.factory('BookDateFactory', function() {
 		return {
@@ -68,7 +70,7 @@ angular.module('book.service', [])
 
 				var me = this;
 
-				var date = me.changeformatDate(date);
+				date = me.changeformatDate(date);
 
 				var d = new Date(date);
 

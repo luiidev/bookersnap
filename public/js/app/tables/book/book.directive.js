@@ -1,1 +1,1 @@
-angular.module('book.directive', [])
+angular.module('book.directive', []);

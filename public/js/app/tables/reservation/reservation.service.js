@@ -132,7 +132,7 @@ angular.module('reservation.service', [])
 
                         hour.turn = item.name;
                         hour.time = date_ini.format("HH:mm:ss");
-                        hour.name = date_ini.format("H:mmA");
+                        hour.name = date_ini.format("H:mm A");
                         hours.push(hour);
 
                         if (!timeDefaultIsEstablished) {

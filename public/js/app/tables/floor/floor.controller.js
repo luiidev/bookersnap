@@ -1,5 +1,6 @@
 angular.module('floor.controller', [])
-    .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
+
+.controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
@@ -592,6 +593,7 @@ angular.module('floor.controller', [])
         init();
 
     })
+    //POPUP CONFIGURACION DE PERSONAS (HOMBRES, MUJHERS Y NIÑOS)
     .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
 
@@ -806,7 +808,8 @@ angular.module('floor.controller', [])
                 });
         };
     })
-    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
+
+.controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.zoneName,
@@ -1007,6 +1010,7 @@ angular.module('floor.controller', [])
         };
 
     })
+    //Reservaciones
     .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
         var rm = this;
 
@@ -1632,6 +1636,7 @@ angular.module('floor.controller', [])
         init();
 
     })
+    //Servidores
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
         var sm = this;
