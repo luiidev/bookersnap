@@ -754,7 +754,7 @@ angular.module('floor.service', [])
 				);
 				return defered.promise;
 			},
-			setReservasAndBlocks: function(data) {
+			setServicioReservaciones: function(data) {
 				reservasAndBlocks = data;
 			},
 			getServicioReservaciones: function() {
@@ -778,8 +778,34 @@ angular.module('floor.service', [])
 			delItemReservasAndBlocks: function(index) {
 				reservasAndBlocks.splice(index, 1);
 			},
-			addItemReservasAndBlocks: function(item) {
+			addServicioReservaciones: function(item) {
 				reservasAndBlocks.push(item);
+			},
+			parseDataReservation: function(reserva) {
+				var me = this;
+				var reservationData = {
+					reservation_id: reserva.id,
+					res_type_turn_id: reserva.res_type_turn_id,
+					res_source_type_id: reserva.res_source_type_id,
+					res_guest_id: reserva.res_guest_id,
+					res_reservation_status_id: reserva.res_reservation_status_id,
+					wait_list: reserva.wait_list,
+					zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].id) : "",
+					start_date: reserva.date_reservation,
+					start_time: reserva.hours_reservation,
+					end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
+					num_people: reserva.num_guest,
+					num_people_1: reserva.num_people_1 ? reserva.num_people_1 : 0,
+					num_people_2: reserva.num_people_2 ? reserva.num_people_2 : 0,
+					num_people_3: reserva.num_people_3 ? reserva.num_people_3 : 0,
+					tables: reserva.tables,
+					source: reserva.source,
+					status: reserva.status,
+					type_turn: reserva.type_turn,
+					first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
+					last_name: reserva.guest ? reserva.guest.last_name : "",
+				};
+				return reservationData;
 			},
 		};
 	})
