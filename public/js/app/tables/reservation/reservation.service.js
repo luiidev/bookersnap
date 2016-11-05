@@ -369,7 +369,7 @@ angular.module('reservation.service', [])
                 angular.forEach(dataZones.tables, function(table) {
                     angular.forEach(blocks, function(block) {
                         if (table.id == block.res_table_id) {
-                            if (!block.res_reservation_id) {
+                            if (block.res_reservation_id === null) {
                                 table.blocks.data.push(block);
                                 addEvent(table, block.start_time, block.end_time,
                                     function(table, block) {
