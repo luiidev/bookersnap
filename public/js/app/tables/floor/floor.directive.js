@@ -12,7 +12,8 @@ angular.module('floor.directive', [])
                         scope.num = {
                             num_men: quantity,
                             num_women: 0,
-                            num_children: 0
+                            num_children: 0,
+                            total: quantity
                         };
                     });
                     scope.onDroppedFn();
@@ -148,11 +149,11 @@ angular.module('floor.directive', [])
                 helper: "clone",
                 appendTo: '#lienzo',
                 start: function(event, ui) {
-                   $(ui.helper).css({
-                       "z-index": 2,
-                   });
-                   angular.element('.bg-window-floor').addClass('drag-dispel');
-                   scope.onStartFn();
+                    $(ui.helper).css({
+                        "z-index": 2,
+                    });
+                    angular.element('.bg-window-floor').addClass('drag-dispel');
+                    scope.onStartFn();
                 },
                 stop: function(event, ui) {
                     angular.element('.bg-window-floor').removeClass('drag-dispel');

@@ -1,5 +1,6 @@
 angular.module('floor.controller', [])
-    .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
+
+.controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
@@ -196,12 +197,10 @@ angular.module('floor.controller', [])
         });
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
-            console.log(tables);
             vm.zones.tablesSelected(tables);
         });
 
         $scope.$on("floorClearSelected", function() {
-            console.log("=3");
             if (vm.zones.clearSelected) vm.zones.clearSelected();
         });
 
@@ -376,20 +375,65 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
+
             if (eventEstablished.event == "changeTable") {
                 return changeTable(obj);
             }
 
-            var cantidades = {
+            //Preguntar si abrir ventana o guardar directamente
+            console.log('ets');
+            vm.cantidades = {
                 men: vm.numpeople.num_men,
                 women: vm.numpeople.num_women,
-                children: vm.numpeople.num_children
+                children: vm.numpeople.num_children,
+                total: vm.numpeople.total
             };
 
-            modalInstancesConfiguration(cantidades, obj);
+            if (vm.configuracion.status_people_1 === 0 && vm.configuracion.status_people_2 === 0 && vm.configuracion.status_people_3 === 0) {
+                var parseReservation = function() {
+                    var now = moment();
+                    var date = now.format("YYYY-MM-DD");
+                    var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
+                    return {
+                        table_id: obj.id,
+                        guests: {
+                            men: 0,
+                            women: 0,
+                            children: 0,
+                            total: vm.cantidades.total
+                        },
+                        date: date,
+                        hour: start_time
+                    };
+                };
+
+                var reservation = parseReservation();
+                console.log('Guardar: ' + angular.toJson(reservation, true));
+                //FALTA PREPARAR EL API PARA EL CAMBIO
+                var create2 = function() {
+                    //vmc.waitingResponse = true;
+                    var reservation = parseReservation();
+                    reservationService.quickCreate(reservation)
+                        .then(function(response) {
+                            $rootScope.$broadcast("floorReload");
+                        }).catch(function(error) {
+                            message.apiError(error);
+                            //vmc.waitingResponse = false;
+                        });
+                };
+                create2();
+
+
+            } else {
+
+                modalInstancesConfiguration(vm.cantidades, obj, vm.configuracion);
+
+            }
+
+
         };
 
-        function modalInstancesConfiguration(cantidades, obj) {
+        function modalInstancesConfiguration(cantidades, obj, config) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -402,12 +446,17 @@ angular.module('floor.controller', [])
                     table: function() {
                         return obj;
                     },
+                    config: function() {
+                        return config;
+                    },
                     eventEstablished: function() {
                         return eventEstablished;
                     }
                 }
             });
         }
+
+
 
         function storeTables(num, table) {
             $scope.$apply(function() {
@@ -519,7 +568,17 @@ angular.module('floor.controller', [])
                     console.error(response);
                 }
             );
+        };
 
+        var loadConfigurationPeople = function() {
+            FloorFactory.getConfiguracionPeople().then(function(response) {
+                vm.configuracion = {
+                    status_people_1: response.status_people_1,
+                    status_people_2: response.status_people_2,
+                    status_people_3: response.status_people_3,
+                };
+                //console.log("Configuracion: " + angular.toJson(vm.configuracion, true));
+            });
         };
 
         var init = function() {
@@ -531,20 +590,21 @@ angular.module('floor.controller', [])
             closeNotes();
             listSourceTypes();
             listStatuses();
-
             // getlistZonesBloqueosReservas();
-
+            loadConfigurationPeople();
         };
 
         init();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService, $rootScope) {
+    //POPUP CONFIGURACION DE PERSONAS (HOMBRES, MUJHERS Y NIÑOS)
+    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
 
         //Datos pasados al modal
         vmc.numperson = num;
         vmc.table = table;
+        vmc.config = config;
 
         //Definiendo valores por defecto
         vmc.flagSelectedNumMen = num.men;
@@ -705,7 +765,7 @@ angular.module('floor.controller', [])
                 guests: {
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
-                    children: vmc.flagSelectedNumChildren,
+                    children: vmc.flagSelectedNumChildren
                 },
                 date: date,
                 hour: start_time
@@ -752,7 +812,8 @@ angular.module('floor.controller', [])
                 });
         };
     })
-    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
+
+.controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
         vmd.itemZona = {
             name_zona: content.zoneName,
@@ -953,6 +1014,7 @@ angular.module('floor.controller', [])
         };
 
     })
+    //Reservaciones
     .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
         var rm = this;
 
@@ -997,10 +1059,27 @@ angular.module('floor.controller', [])
 
         var getlistZonesBloqueosReservas = function() {
 
-            FloorFactory.listBloqueosReservas().then(function success(data) {
+            // FloorFactory.listBloqueosReservas().then(function success(data) {
 
-                rm.res_listado_all = data;
-                //TypeFilterDataFactory.setReservasAndBlocks(data);
+
+            //     rm.res_listado_all = data;
+            //     //TypeFilterDataFactory.setReservasAndBlocks(data);
+            // });
+        };
+        var getColectionReservation = function() {
+
+            FloorFactory.getConfiguracionPeople().then(function(response) {
+                rm.configuracion = {
+                    status_people_1: response.status_people_1,
+                    status_people_2: response.status_people_2,
+                    status_people_3: response.status_people_3,
+                };
+                //console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
+            });
+
+            FloorFactory.getServicioReservaciones().then(function(response) {
+
+                rm.res_listado_all = response;
 
                 var total = 0;
                 var men = 0;
@@ -1015,26 +1094,31 @@ angular.module('floor.controller', [])
 
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
+                    if (people.reservation_id) {
 
-                    men += people.num_people_1;
-                    women += people.num_people_2;
-                    children += people.num_people_3;
-                    total += people.num_people;
+                        men += people.num_people_1;
 
-                    var source_type = people.res_source_type_id;
-                    switch (source_type) {
-                        case 1:
-                            tWeb += 1;
-                            break;
-                        case 2:
-                            tTel += 1;
-                            break;
-                        case 3:
-                            tPor += 1;
-                            break;
-                        case 4:
-                            tRp += 1;
-                            break;
+                        women += people.num_people_2;
+
+                        children += people.num_people_3;
+
+                        total += people.num_people;
+
+                        var source_type = people.res_source_type_id;
+                        switch (source_type) {
+                            case 1:
+                                tWeb += 1;
+                                break;
+                            case 2:
+                                tTel += 1;
+                                break;
+                            case 3:
+                                tPor += 1;
+                                break;
+                            case 4:
+                                tRp += 1;
+                                break;
+                        }
                     }
 
                 });
@@ -1584,6 +1668,7 @@ angular.module('floor.controller', [])
         init();
 
     })
+    //Servidores
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
         var sm = this;

@@ -16,6 +16,7 @@ angular.module('floor.service', [])
 
 		};
 	})
+	//Data para filtro de reservas Turnos, Reservas y visitas
 	.factory('TypeFilterDataFactory', function() {
 		var typeColection = [];
 		var sourceColection = [];
@@ -924,6 +925,7 @@ angular.module('floor.service', [])
 
 		};
 	})
+	//Calculo numero de personas en modal
 	.factory('OperationFactory', function() {
 		return {
 			setNumPerson: function(numperson, tipo, value) {
