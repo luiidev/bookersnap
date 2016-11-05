@@ -384,20 +384,65 @@ angular.module('floor.controller', [])
         }
 
         vm.handConfiguration = function(obj) {
+
             if (eventEstablished.event == "changeTable") {
                 return changeTable(obj);
             }
 
-            var cantidades = {
+            //Preguntar si abrir ventana o guardar directamente
+            console.log('ets');
+            vm.cantidades = {
                 men: vm.numpeople.num_men,
                 women: vm.numpeople.num_women,
-                children: vm.numpeople.num_children
+                children: vm.numpeople.num_children,
+                total: vm.numpeople.total
             };
 
-            modalInstancesConfiguration(cantidades, obj);
+            if (vm.configuracion.status_people_1 === 0 && vm.configuracion.status_people_2 === 0 && vm.configuracion.status_people_3 === 0) {
+                var parseReservation = function() {
+                    var now = moment();
+                    var date = now.format("YYYY-MM-DD");
+                    var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
+                    return {
+                        table_id: obj.id,
+                        guests: {
+                            men: 0,
+                            women: 0,
+                            children: 0,
+                            total: vm.cantidades.total
+                        },
+                        date: date,
+                        hour: start_time
+                    };
+                };
+
+                var reservation = parseReservation();
+                console.log('Guardar: ' + angular.toJson(reservation, true));
+                //FALTA PREPARAR EL API PARA EL CAMBIO
+                var create2 = function() {
+                    //vmc.waitingResponse = true;
+                    var reservation = parseReservation();
+                    reservationService.quickCreate(reservation)
+                        .then(function(response) {
+                            $rootScope.$broadcast("floorReload");
+                        }).catch(function(error) {
+                            message.apiError(error);
+                            //vmc.waitingResponse = false;
+                        });
+                };
+                create2();
+
+
+            } else {
+
+                modalInstancesConfiguration(vm.cantidades, obj, vm.configuracion);
+
+            }
+
+
         };
 
-        function modalInstancesConfiguration(cantidades, obj) {
+        function modalInstancesConfiguration(cantidades, obj, config) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'modalConfiguration.html',
                 controller: 'ConfigurationInstanceCtrl',
@@ -410,12 +455,17 @@ angular.module('floor.controller', [])
                     table: function() {
                         return obj;
                     },
+                    config: function() {
+                        return config;
+                    },
                     eventEstablished: function() {
                         return eventEstablished;
                     }
                 }
             });
         }
+
+
 
         function storeTables(num, table) {
             $scope.$apply(function() {
@@ -515,6 +565,16 @@ angular.module('floor.controller', [])
             $state.reload();
         });
 
+        var loadConfigurationPeople = function() {
+            FloorFactory.getConfiguracionPeople().then(function(response) {
+                vm.configuracion = {
+                    status_people_1: response.status_people_1,
+                    status_people_2: response.status_people_2,
+                    status_people_3: response.status_people_3,
+                };
+                //console.log("Configuracion: " + angular.toJson(vm.configuracion, true));
+            });
+        };
 
         var init = function() {
 
@@ -525,19 +585,20 @@ angular.module('floor.controller', [])
             closeNotes();
             listSourceTypes();
             listStatuses();
-
+            loadConfigurationPeople();
 
         };
 
         init();
 
     })
-    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, eventEstablished, OperationFactory, reservationService, $rootScope) {
+    .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
         var vmc = this;
 
         //Datos pasados al modal
         vmc.numperson = num;
         vmc.table = table;
+        vmc.config = config;
 
         //Definiendo valores por defecto
         vmc.flagSelectedNumMen = num.men;
@@ -698,7 +759,7 @@ angular.module('floor.controller', [])
                 guests: {
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
-                    children: vmc.flagSelectedNumChildren,
+                    children: vmc.flagSelectedNumChildren
                 },
                 date: date,
                 hour: start_time
@@ -998,7 +1059,7 @@ angular.module('floor.controller', [])
                     status_people_2: response.status_people_2,
                     status_people_3: response.status_people_3,
                 };
-                console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
+                //console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
             });
 
             FloorFactory.getServicioReservaciones().then(function(response) {
@@ -1019,9 +1080,13 @@ angular.module('floor.controller', [])
                 //console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
                     if (people.reservation_id) {
+
                         men += people.num_people_1;
+
                         women += people.num_people_2;
+
                         children += people.num_people_3;
+
                         total += people.num_people;
 
                         var source_type = people.res_source_type_id;
