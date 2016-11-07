@@ -3,39 +3,107 @@ angular.module('floor.controller', [])
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
+
+        /**
+         * Fecha Actual
+         * @type {date}
+         */
         var fecha_actual = getFechaActual();
 
+        /**
+         * Fecha Actual
+         * @type {date}
+         */
         vm.fecha_actual = fecha_actual;
+
         vm.typeTurns = [];
 
+        /**
+         * Variables de manejo general de informacion
+         */
         vm.zones = [];
-        var blocks = [];
         vm.reservations = {};
+        var blocks = [];
         var servers = [];
-        var eventEstablished = {};
         var zones = [];
+        /**
+         * END Variables de manejo general de informacion
+         */
+
+         /**
+          * Accion que debe realizarse al soltar un elemento en una tabla
+          * @type {Object}
+          */
+         var eventEstablished = {};
+
+        /**
+         * Lista negra de eventos de WS que no deben ejecutarse,
+         * por que el usuario actual es quien las emitio
+         * @type {object}
+         */
+        var blackList = {};
+        blackList.data = [];
+
+        blackList.add = function (key) {
+          this.data.push(key);
+        };
+
+        blackList.contains = function(key) {
+          return this.data.indexOf(key) !== -1;
+        };
+
+        $scope.$on("blackList.add", function(evt, key) {
+          blackList.add(key);
+        });
+        /**
+         * END
+         */
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         /**
-         * Funcion de actualizacion de objecto
+         * Funcion de actualizacion de objeco
          */
-        var updateData =  function(update) {
-            angular.forEach(this.data, function(obj) {
-                angular.forEach(update, function(upd) {
-                    if (obj.id == upd.id) {
-                        angular.forEach(upd, function(value, index) {
-                            obj[index] = value;
+        vm.reservations.update =  function(data, apply) {
+             angular.forEach(this.data, function(reservation) {
+                angular .forEach(data, function(obj_data) {
+                    if (reservation.id == obj_data.id) {
+                        angular.forEach(vm.zones.tables, function(table) {
+                            angular.forEach(reservation.tables, function(obj_table) {
+                                if (table.id == obj_table.id) {
+                                    table.reservations.remove(reservation);
+                                }
+                            });
+                        });
+                        angular.forEach(obj_data, function(value, index) {
+                            reservation[index] = value;
+                        });
+                        angular.forEach(vm.zones.tables, function(table) {
+                            angular.forEach(reservation.tables, function(obj_table) {
+                                if (table.id == obj_table.id) {
+                                    table.reservations.add(reservation);
+                                }
+                            });
                         });
                     }
                 });
-            });
-        };
+             });
 
-        blocks.update = updateData;
-        vm.reservations.update = updateData;
-        zones.update = updateData;
+             if (apply) $scope.$apply();
+        };
+        vm.reservations.add =  function(reservation, apply) {
+              vm.reservations.data.push(reservation);
+              angular.forEach(vm.zones.tables, function(table) {
+                  angular.forEach(reservation.tables, function(obj_table) {
+                      if (table.id == obj_table.id) {
+                          table.reservations.add(reservation);
+                      }
+                  });
+              });
+
+             if (apply) $scope.$apply();
+        };
         /**
-         * ENd
+         * END
          */
          ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +129,6 @@ angular.module('floor.controller', [])
         var timeoutNotes;
         var openNotesTimeOut;
 
-        vm.fecha_actual = fecha_actual;
         vm.typeTurns = [];
 
         $scope.$on("floorNotesReload", function(mote) {
@@ -84,18 +151,13 @@ angular.module('floor.controller', [])
             console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
-        $scope.$on("floorReload", function() {
-            reloadFloor();
-        });
-
-        var reloadFloor = function() {
-            return;
-            loadBlocksReservationsServers();
-            if (vm.showTime) {
-                var event = $table.lastTimeEvent();
-                if (event) vm.showTimeCustom(event);
+        $scope.$on("floorReload", function(evt, data) {
+            if ( !blackList.contains(data.key) ) {
+              if (typeof events[data.action] == "function") {
+                  events[data.action](data.data);
+              }
             }
-        };
+        });
 
         vm.eventEstablish = function(eventDrop, data) {
             eventEstablished.event = eventDrop;
@@ -299,8 +361,6 @@ angular.module('floor.controller', [])
                // listGuest(),
                // listServers(),
                // listStatuses(),
-               // listReservationTags(),
-               // loadTurns(date),
            ]).then(function(data) {
                loadTablesEdit(data[0], data[1], data[2], data[3]);
 
@@ -310,7 +370,6 @@ angular.module('floor.controller', [])
 
        var showTimeCustom = function() {
            var tActive = $table.lastTimeEvent();
-           console.log(tActive);
            if (tActive) vm.zones.tActive = tActive;
        };
 
@@ -383,71 +442,41 @@ angular.module('floor.controller', [])
                 var data = {
                     table_id: table.id
                 };
+                var key = reservationService.key();
+                blackList.add(key);
+                data.key  = key;
                 reservationService.sit(id, data)
                    .then(function(response) {
                        vm.reservations.update(response.data.data);
-                       table.reservations.add(dropTable.reservations.active);
-                       dropTable.reservations.remove(dropTable.reservations.active);
                    }).catch(function(error) {
                        message.apiError(error);
                    });
             }
         };
-        /**
-         * END
-         */
-        
 
         /**
          * Eventos de Web Socket
          */
         var events = {};
         events.update = function(data) {
-             angular.forEach(vm.reservations.data, function(reservation) {
-                angular .forEach(data.data, function(obj_data) {
-                    if (reservation.id == obj_data.id) {
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(reservation.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    table.reservations.remove(reservation);
-                                }
-                            });
-                        });
-                        angular.forEach(obj_data, function(value, index) {
-                            reservation[index] = value;
-                        });
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(reservation.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    table.reservations.add(reservation);
-                                }
-                            });
-                        });
-                    }
-                });
-             });
-             $scope.$apply();
+             vm.reservations.update(data, true);
         };
+
         events.create = function(data) {
-              var reservation = data.data;
-              vm.reservations.data.push(reservation);
-             angular.forEach(vm.zones.tables, function(table) {
-                 angular.forEach(reservation.tables, function(obj_table) {
-                     if (table.id == obj_table.id) {
-                         table.reservations.add(reservation);
-                     }
-                 });
-             });
-             $scope.$apply();
+            vm.reservations.add(data, true);
         };
         /**
          * END
          */
 
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-          console.log(data);
-            if (typeof events[data.action] == "function") {
-                events[data.action](data);
+            if ( !blackList.contains(data.key) ) {
+              if (typeof events[data.action] == "function") {
+                  events[data.action](data.data);
+              }
+              console.log("Actualize por Web Socket");
+            } else {
+              console.log("Omiti una actualizacion por Web Socket");
             }
         });
 
@@ -520,9 +549,14 @@ angular.module('floor.controller', [])
                 var create2 = function() {
                     //vmc.waitingResponse = true;
                     var reservation = parseReservation();
+
+                    var key = reservationService.key();
+                    blackList.add(key);
+                    reservation.key  = key;
+
                     reservationService.quickCreate(reservation)
                         .then(function(response) {
-                            $rootScope.$broadcast("floorReload");
+                            vm.reservations.add(response.data.data);
                         }).catch(function(error) {
                             message.apiError(error);
                             //vmc.waitingResponse = false;
@@ -659,7 +693,6 @@ angular.module('floor.controller', [])
         var init = function() {
 
             InitModule();
-            // loadZones(fecha_actual, true);
             listTypeTurns();
             sizeLienzo();
             closeNotes();
@@ -859,6 +892,10 @@ angular.module('floor.controller', [])
             vmc.waitingResponse = true;
             var reservation = parseReservation();
 
+            var key = reservationService.key();
+            $rootScope.$broadcast("blackList.add", key);
+            reservation.key  = key;
+
             reservationService.quickCreate(reservation)
                 .then(function(response) {
                     table.reservations.add(response.data.data);
@@ -876,6 +913,10 @@ angular.module('floor.controller', [])
             var data = {
                 table_id: table.id
             };
+
+            var key = reservationService.key();
+            $rootScope.$broadcast("blackList.add", key);
+            data.key  = key;
 
             reservationService.sit(id, data)
                 .then(function(response) {
@@ -907,43 +948,40 @@ angular.module('floor.controller', [])
             });
         };
 
+        var originalReservation = {};
         vmd.reservationEdit = function(reservation) {
+            originalReservation= reservation;
             listResource().then(function() {
-                parseInfo(reservation);
                 parseData(reservation);
             });
 
             vmd.EditContent = true;
         };
 
-        function listResource() {
-            return $q.all([
-                listGuest(),
-                listStatuses(),
-                listServers(),
-                loadConfiguration()
-            ]);
+        vmd.infoName = function() {
+          // console.log(originalReservation);
+          var first_name = originalReservation.guest ? originalReservation.guest.first_name : "Reservacion sin nombre";
+          var last_name = originalReservation.guest ? originalReservation.guest.last_name : "";
+          return first_name + " " + last_name;
+        };
+        vmd.infoDate = function() {
+          return moment(originalReservation.date_reservation).format("dddd, d [de] MMMM");
+        };
+        vmd.infoTime = function() {
+          return moment(originalReservation.hours_reservation, "HH:mm:ss").format("H:mm A");
+        };
+        vmd.infoTables = function() {
+          return getTables(originalReservation.tables);
+        };
+
+        function getTables(tables) {
+            var reservationTables = "";
+            angular.forEach(tables, function(table) {
+                reservationTables += table.name + ", ";
+            });
+
+            return reservationTables.substring(0, reservationTables.length - 2);
         }
-
-        vmd.sumar = function(guest) {
-            var total = vmd.reservation.guests.total;
-            if (total + 1 <= vmd.reservation.covers) {
-                vmd.reservation.guests[guest]++;
-                totalGuests();
-            }
-        };
-
-        vmd.restar = function(guest) {
-            var quantity = vmd.reservation.guests[guest];
-            if (quantity - 1 >= 0) {
-                vmd.reservation.guests[guest]--;
-                totalGuests();
-            }
-        };
-
-        var totalGuests = function() {
-            vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
-        };
 
         function parseData(reservation) {
             var men = 0;
@@ -974,24 +1012,34 @@ angular.module('floor.controller', [])
             totalGuests();
         }
 
-        function parseInfo(reservation) {
-            vmd.info = {
-                first_name: reservation.guest ? reservation.first_name : "Reservacion sin nombre",
-                last_name: reservation.guest ? reservation.last_name : "",
-                date: moment(reservation.date_reservation).format("dddd, d [de] MMMM"),
-                time: moment(reservation.hours_reservation, "HH:mm:ss").format("H:mm A"),
-                tables: getTables(reservation.tables)
-            };
+        function listResource() {
+            return $q.all([
+                listGuest(),
+                listStatuses(),
+                listServers(),
+                loadConfiguration()
+            ]);
         }
 
-        function getTables(tables) {
-            var reservationTables = "";
-            angular.forEach(tables, function(table) {
-                reservationTables += table.name + ", ";
-            });
+        vmd.sumar = function(guest) {
+            var total = vmd.reservation.guests.total;
+            if (total + 1 <= vmd.reservation.covers) {
+                vmd.reservation.guests[guest]++;
+                totalGuests();
+            }
+        };
 
-            return reservationTables.substring(0, reservationTables.length - 2);
-        }
+        vmd.restar = function(guest) {
+            var quantity = vmd.reservation.guests[guest];
+            if (quantity - 1 >= 0) {
+                vmd.reservation.guests[guest]--;
+                totalGuests();
+            }
+        };
+
+        var totalGuests = function() {
+            vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
+        };
 
         var listGuest = function() {
             var deferred = $q.defer();
@@ -1061,9 +1109,14 @@ angular.module('floor.controller', [])
 
         vmd.save = function() {
             var id = vmd.reservation.id;
+
+            var key = reservationService.key();
+            $rootScope.$broadcast("blackList.add", key);
+            vmd.reservation.key  = key;
+
             reservationService.quickEdit(id, vmd.reservation)
                 .then(function(response) {
-                    $rootScope.$broadcast("floorReload");
+                    $rootScope.$broadcast("floorReload", response.data.data);
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
@@ -1075,9 +1128,13 @@ angular.module('floor.controller', [])
             message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
                 vmd.waitingResponse = true;
                 var id = vmd.reservation.id;
-                reservationService.cancel(id)
+
+                var key = reservationService.key();
+                $rootScope.$broadcast("blackList.add", key);
+
+                reservationService.cancel(id, {key: key})
                     .then(function(response) {
-                        $rootScope.$broadcast("floorReload");
+                        $rootScope.$broadcast("floorReload", response.data.data);
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                         vmd.waitingResponse = false;
@@ -2120,9 +2177,14 @@ angular.module('floor.controller', [])
 
             er.save = function() {
                 var id = er.reservation.id;
+
+                var key = reservationService.key();
+                $rootScope.$broadcast("blackList.add", key);
+                er.reservation.key  = key;
+
                 service.quickEdit(id, er.reservation)
                     .then(function(response) {
-                        $rootScope.$broadcast("floorReload");
+                        $rootScope.$broadcast("floorReload", response.data.data);
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                     }).catch(function(error) {
@@ -2134,9 +2196,13 @@ angular.module('floor.controller', [])
                 message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
                     er.waitingResponse = true;
                     var id = er.reservation.id;
-                    service.cancel(id)
+
+                    var key = service.key();
+                    $rootScope.$broadcast("blackList.add", key);
+
+                    service.cancel(id, {key: key})
                         .then(function(response) {
-                            $rootScope.$broadcast("floorReload");
+                            $rootScope.$broadcast("floorReload", response.data.data);
                             message.success(response.data.msg);
                             $uibModalInstance.dismiss('cancel');
                             er.waitingResponse = false;
@@ -2264,6 +2330,10 @@ angular.module('floor.controller', [])
 
                 wl.reservation.guest = wl.newGuest;
                 wl.buttonText = 'Enviando ...';
+
+                var key = reservationService.key();
+                $rootScope.$broadcast("blackList.add", key);
+                wl.reservation.key  = key;
 
                 service.saveWait(wl.reservation)
                     .then(function(response) {
