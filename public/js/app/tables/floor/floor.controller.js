@@ -151,12 +151,12 @@ angular.module('floor.controller', [])
             console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
-        $scope.$on("floorReload", function(evt, data) {
-            if ( !blackList.contains(data.key) ) {
-              if (typeof events[data.action] == "function") {
-                  events[data.action](data.data);
+        $scope.$on("floorReload", function(evt, data, action) {
+              if (action == "update") {
+                vm.reservations.update(data, true);
+              } else if (action == "add") {
+                vm.reservations.add(data, true);
               }
-            }
         });
 
         vm.eventEstablish = function(eventDrop, data) {
@@ -517,7 +517,6 @@ angular.module('floor.controller', [])
             }
 
             //Preguntar si abrir ventana o guardar directamente
-            console.log('ets');
             vm.cantidades = {
                 men: vm.numpeople.num_men,
                 women: vm.numpeople.num_women,
@@ -526,44 +525,50 @@ angular.module('floor.controller', [])
             };
 
             if (vm.configuracion.status_people_1 === 0 && vm.configuracion.status_people_2 === 0 && vm.configuracion.status_people_3 === 0) {
-                var parseReservation = function() {
-                    var now = moment();
-                    var date = now.format("YYYY-MM-DD");
-                    var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
-                    return {
-                        table_id: obj.id,
-                        guests: {
-                            men: 0,
-                            women: 0,
-                            children: 0,
-                            total: vm.cantidades.total
-                        },
-                        date: date,
-                        hour: start_time
-                    };
-                };
+               var parseReservation = function() {
+                 var now = moment();
+                 var date = now.format("YYYY-MM-DD");
+                 var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
+                 return {
+                   table_id: obj.id,
+                   guests: {
+                     men: 0,
+                     women: 0,
+                     children: 0,
+                     total: vm.cantidades.total
+                   },
+                   date: date,
+                   hour: start_time
+                 };
+               };
 
-                var reservation = parseReservation();
-                console.log('Guardar: ' + angular.toJson(reservation, true));
-                //FALTA PREPARAR EL API PARA EL CAMBIO
-                var create2 = function() {
-                    //vmc.waitingResponse = true;
-                    var reservation = parseReservation();
+               var create = function() {
+                 var reservation = parseReservation();
 
-                    var key = reservationService.key();
-                    blackList.add(key);
-                    reservation.key  = key;
+                 reservationService.quickCreate(reservation)
+                   .then(function(response) {
+                     $rootScope.$broadcast("floorReload", "add");
+                   }).catch(function(error) {
+                     message.apiError(error);
+                   });
+               };
 
-                    reservationService.quickCreate(reservation)
-                        .then(function(response) {
-                            vm.reservations.add(response.data.data);
-                        }).catch(function(error) {
-                            message.apiError(error);
-                            //vmc.waitingResponse = false;
-                        });
-                };
-                create2();
+               var sit = function() {
+                 var id = eventEstablished.data.reservation_id;
+                 var reservation = parseReservation();
+                 reservationService.sit(id, reservation)
+                   .then(function(response) {
+                     $rootScope.$broadcast("floorReload", "update");
+                   }).catch(function(error) {
+                     message.apiError(error);
+                   });
+               };
 
+               if (eventEstablished.event == "sit") {
+                 sit();
+               } else if (eventEstablished.event == "create") {
+                 create();
+               }
 
             } else {
 
@@ -920,7 +925,7 @@ angular.module('floor.controller', [])
 
             reservationService.sit(id, data)
                 .then(function(response) {
-                    table.reservations.add(response.data.data);
+                  $rootScope.$broadcast("floorReload", response.data.data, "update");
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
                     message.apiError(error);
@@ -1116,7 +1121,8 @@ angular.module('floor.controller', [])
 
             reservationService.quickEdit(id, vmd.reservation)
                 .then(function(response) {
-                    $rootScope.$broadcast("floorReload", response.data.data);
+                  console.log(response.data.data);
+                    $rootScope.$broadcast("floorReload", response.data.data, "update");
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
@@ -1134,7 +1140,7 @@ angular.module('floor.controller', [])
 
                 reservationService.cancel(id, {key: key})
                     .then(function(response) {
-                        $rootScope.$broadcast("floorReload", response.data.data);
+                        $rootScope.$broadcast("floorReload", response.data.data, "update");
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                         vmd.waitingResponse = false;
@@ -1270,7 +1276,7 @@ angular.module('floor.controller', [])
 
 
         };
-        $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
 
             angular.forEach(data.data, function(data) {
               var reservaTest = FloorFactory.parseDataReservation(data);
@@ -2178,13 +2184,13 @@ angular.module('floor.controller', [])
             er.save = function() {
                 var id = er.reservation.id;
 
-                var key = reservationService.key();
+                var key = service.key();
                 $rootScope.$broadcast("blackList.add", key);
                 er.reservation.key  = key;
 
                 service.quickEdit(id, er.reservation)
                     .then(function(response) {
-                        $rootScope.$broadcast("floorReload", response.data.data);
+                        $rootScope.$broadcast("floorReload", response.data.data, "update");
                         message.success(response.data.msg);
                         $uibModalInstance.dismiss('cancel');
                     }).catch(function(error) {
@@ -2202,7 +2208,7 @@ angular.module('floor.controller', [])
 
                     service.cancel(id, {key: key})
                         .then(function(response) {
-                            $rootScope.$broadcast("floorReload", response.data.data);
+                            $rootScope.$broadcast("floorReload", response.data.data, "update");
                             message.success(response.data.msg);
                             $uibModalInstance.dismiss('cancel');
                             er.waitingResponse = false;
@@ -2331,7 +2337,7 @@ angular.module('floor.controller', [])
                 wl.reservation.guest = wl.newGuest;
                 wl.buttonText = 'Enviando ...';
 
-                var key = reservationService.key();
+                var key = service.key();
                 $rootScope.$broadcast("blackList.add", key);
                 wl.reservation.key  = key;
 

@@ -2,7 +2,8 @@
 </footer>
 <section class="h-100vh" id="main">
     <section class="w-100 p-0" id="content">
-        <div class="container w-100 p-l-0 p-l-0 p-section-right" ui-view="principal"></div>
+        <div class="container w-100 p-l-0 p-l-0 p-section-right" ui-view="principal">
+        </div>
     </section>
 </section>
 <section class="section-right-floor" style="z-index: 8">
@@ -527,11 +528,6 @@
         <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
             <div class="text-center">
                 <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse">
-                {{ wl.buttonText }}</button>
-            </div>
-        </div>
-    </div>
-</script>gResponse">
                 {{ wl.buttonText }}</button>
             </div>
         </div>
