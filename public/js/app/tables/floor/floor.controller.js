@@ -498,7 +498,7 @@ angular.module('floor.controller', [])
         children: vm.numpeople.num_children,
         total: vm.numpeople.total
       };
-
+      console.log(obj);
       if (vm.configuracion.status_people_1 === 0 && vm.configuracion.status_people_2 === 0 && vm.configuracion.status_people_3 === 0) {
         var parseReservation = function() {
           var now = moment();
@@ -517,21 +517,34 @@ angular.module('floor.controller', [])
           };
         };
 
-        var reservation = parseReservation();
-        console.log('Guardar: ' + angular.toJson(reservation, true));
-        //FALTA PREPARAR EL API PARA EL CAMBIO
-        var create2 = function() {
-          //vmc.waitingResponse = true;
+        var create = function() {
           var reservation = parseReservation();
+
           reservationService.quickCreate(reservation)
             .then(function(response) {
               $rootScope.$broadcast("floorReload");
             }).catch(function(error) {
               message.apiError(error);
-              //vmc.waitingResponse = false;
             });
         };
-        create2();
+
+        var sit = function() {
+          var id = eventEstablished.data.reservation_id;
+          var reservation = parseReservation();
+          reservationService.sit(id, reservation)
+            .then(function(response) {
+              $rootScope.$broadcast("floorReload");
+            }).catch(function(error) {
+              message.apiError(error);
+            });
+        };
+
+        if (eventEstablished.event == "sit") {
+          sit();
+        } else if (eventEstablished.event == "create") {
+          create();
+        }
+
 
 
       } else {
