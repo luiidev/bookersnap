@@ -12,7 +12,8 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                     '@': {
                         templateUrl: '/js/app/tables/floor/view/parent.html',
                         controller: 'FloorMainCtrl',
-                        controllerAs: 'vm'
+                        controllerAs: 'vm',
+                        cache: true,
                     },
                     'index@mesas.floor': {
                         templateUrl: '/js/app/tables/floor/view/index.html',
