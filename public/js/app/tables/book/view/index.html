@@ -75,25 +75,26 @@
                 <div class="item" ng-show="!item.reservation.exists">
                     {{ item.time_text }}
                 </div>
-                <div class="row" ng-show="item.reservation.exists">
+                <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
                     <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
                         <div class="picture pull-left">
                             <img alt="" height="48" src="/images/avatar.jpg">
                             </img>
                         </div>
                         <div class="pull-left box-name">
-                            <h5>
-                                Moises Lascurain Murillo
+                            <h5 ng-bind="reservation.guest.name || ' Sin nombre'">
                             </h5>
                             <span>
                                 <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                 </i>
-                                {{ item.reservation.data.note }}
+                                <span ng-if="reservation.note != null">
+                                    1
+                                </span>
                             </span>
                             <span>
                                 <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                 </i>
-                                {{ item.reservation.data.num_guest }}
+                                {{ reservation.num_guest }}
                             </span>
                         </div>
                         <div class="pull-left box-date">
@@ -101,7 +102,7 @@
                                 {{ item.time_text }}
                             </h5>
                             <span class="f-700">
-                                {{ item.reservation.data.date_reservation }}
+                                {{ reservation.date_reservation }}
                             </span>
                         </div>
                         <div class="pull-left box-status">
@@ -109,8 +110,8 @@
                             <i class="zmdi zmdi-circle zmdi-hc-fw">
                             </i>
                             Reservado-->
-                            <label class="label" style="background-color : {{item.reservation.data.status.color}}">
-                                {{ item.reservation.data.status.name }}
+                            <label class="label" style="background-color : {{reservation.color}}">
+                                {{ reservation.status.name }}
                             </label>
                         </div>
                     </div>
@@ -126,7 +127,7 @@
                                     </i>
                                 </button>
                                 <button class="btn bgm-gray-win">
-                                    {{ item.reservation.data.num_people_1 + item.reservation.data.num_people_2 }}
+                                    {{ reservation.num_people_1 + reservation.num_people_2 }}
                                 </button>
                                 <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
