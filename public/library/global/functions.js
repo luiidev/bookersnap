@@ -435,7 +435,7 @@ Permite mostrar mensajes tipo alert, multiples.
 var alertMultiple = function(title, text, type, icon, from, align, timer, x, y) {
     from = (from) ? from : 'top';
     align = (align) ? align : 'center';
-    timer = (timer) ? timer : 1000;
+    timer = (timer) ? timer : 5000;
     x = (x) ? x : 20;
     y = (y) ? y : 85;
 

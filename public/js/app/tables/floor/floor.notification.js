@@ -7,7 +7,7 @@ angular.module("floor.notify.controller", [])
 			$rootScope.$broadcast("NotifyFloorNotesReload", data);
 		});
 
-		serverSocket.on("b-mesas-floor-upd-res", function(data) {
+		serverSocket.on("b-mesas-floor-res", function(data) {
 			$rootScope.$broadcast("NotifyFloorTableReservationReload", data);
 		});
 

@@ -7,14 +7,64 @@ angular.module('book.service', [])
 		};
 
 	})
-	.factory('BookFactory', function(reservationService, CalendarService) {
+	.factory('BookFactory', function($q, reservationService, CalendarService) {
 
 		return {
+			getReservations: function(reload, date) {
+				var defered = $q.defer();
 
-			getReservations: function() {
+				reservationService.getReservations(reload, date).then(
+					function success(response) {
+						response = response.data.data;
+						defered.resolve(response);
+					},
+					function error(response) {
+						defered.reject(response);
+					}
+				);
+				return defered.promise;
+			},
+			listBook: function(hours, reservations, blocks) {
+				var self = this;
+				var book = [];
 
+				angular.forEach(hours, function(hour, key) {
+					var existsReservation = self.existsReservation(hour, reservations);
+
+					var dataBook = {
+						time: hour.time,
+						time_text: hour.name,
+						reservation: {
+							exists: existsReservation.exists,
+							data: existsReservation.data
+						},
+						block: {
+							exists: false,
+							data: []
+						}
+					};
+
+					book.push(dataBook);
+
+				});
+
+				return book;
+			},
+			existsReservation: function(hour, reservations) {
+				var exists = {
+					exists: false,
+					data: []
+				};
+
+				angular.forEach(reservations, function(reservation, key) {
+					if (hour.time === reservation.hours_reservation) {
+						exists.exists = true;
+						exists.data = reservation;
+					}
+				});
+
+				return exists;
 			}
-
 		};
 	})
 	.factory('BookDateFactory', function() {
