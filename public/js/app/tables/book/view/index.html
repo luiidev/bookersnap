@@ -88,12 +88,12 @@
                             <span>
                                 <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                 </i>
-                                1
+                                {{ item.reservation.data.note }}
                             </span>
                             <span>
                                 <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                 </i>
-                                15 invitados
+                                {{ item.reservation.data.num_guest }}
                             </span>
                         </div>
                         <div class="pull-left box-date">
@@ -126,7 +126,7 @@
                                     </i>
                                 </button>
                                 <button class="btn bgm-gray-win">
-                                    0
+                                    {{ item.reservation.data.num_people_1 + item.reservation.data.num_people_2 }}
                                 </button>
                                 <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
