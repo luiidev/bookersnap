@@ -19,20 +19,7 @@ angular.module('floor.controller', [])
         /**
          * Funcion de actualizacion de objecto
          */
-        var updateData = function(update) {
-            // angular.forEach(this.data, function(obj) {
-            //     angular.forEach(update, function(upd) {
-            //         console.log(obj.id, upd.id);
-            //         if (obj.id == upd.id) {
-            //             console.log(obj , upd);
-            //             obj = angular.copy(upd);
-            //             console.log(obj);
-            //         }
-            //     });
-            // });
-        };
-        blocks.update = updateData;
-        vm.reservations.update = function(update) {
+        var updateData =  function(update) {
             angular.forEach(this.data, function(obj) {
                 angular.forEach(update, function(upd) {
                     if (obj.id == upd.id) {
@@ -43,6 +30,9 @@ angular.module('floor.controller', [])
                 });
             });
         };
+
+        blocks.update = updateData;
+        vm.reservations.update = updateData;
         zones.update = updateData;
         /**
          * ENd
@@ -436,6 +426,7 @@ angular.module('floor.controller', [])
                     }
                 });
              });
+             $scope.$apply();
         };
         events.create = function(data) {
               var reservation = data.data;
@@ -447,14 +438,14 @@ angular.module('floor.controller', [])
                      }
                  });
              });
-
-             console.log(vm.zones);
+             $scope.$apply();
         };
         /**
          * END
          */
 
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+          console.log(data);
             if (typeof events[data.action] == "function") {
                 events[data.action](data);
             }
