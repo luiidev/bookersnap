@@ -711,7 +711,6 @@ angular.module('floor.controller', [])
     };
 
     init();
-
   })
   //POPUP CONFIGURACION DE PERSONAS (HOMBRES, MUJHERS Y NIÑOS)
   .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
@@ -1154,7 +1153,6 @@ angular.module('floor.controller', [])
           });
       });
     };
-
   })
   //Reservaciones
   .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
@@ -1670,7 +1668,6 @@ angular.module('floor.controller', [])
     };
 
     init();
-
   })
   .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
     var vm = this;
@@ -1737,12 +1734,12 @@ angular.module('floor.controller', [])
 
     init();
   })
-
-.controller('WaitListCtrl', function($rootScope, $scope, FloorFactory, ServerDataFactory, $uibModal, TypeFilterDataFactory) {
+  .controller('WaitListCtrl', function($rootScope, $scope, $uibModal, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
 
     var wm = this;
 
     wm.res_listado = [];
+    wm.res_listado_canceled = [];
 
     wm.search = {
       show: true
@@ -1754,12 +1751,20 @@ angular.module('floor.controller', [])
       wm.search.show = !wm.search.show;
     };
 
-    wm.createWait = function() {
+    wm.createWait = function(option, data) {
       var modalInstance = $uibModal.open({
         templateUrl: 'ModalCreateWaitList.html',
         controller: 'ModalWaitListCtrl',
         controllerAs: 'wl',
         size: '',
+        resolve: {
+          option: function() {
+            return option;
+          },
+          data: function() {
+            return data;
+          }
+        }
       });
     };
 
@@ -1777,6 +1782,21 @@ angular.module('floor.controller', [])
       // angular.element('.table-zone').removeClass("selected-table");
 
       ServerDataFactory.cleanTableServerItems();
+
+      getListWailList(false);
+    };
+
+    var getListWailList = function(reload) {
+      FloorFactory.getWailList(reload).then(
+        function success(response) {
+          wm.res_listado = response.actives;
+          wm.res_listado_canceled = response.canceled;
+          console.log("getListReservations " + angular.toJson(response, true));
+        },
+        function error(response) {
+          console.error("getListReservations " + angular.toJson(response, true));
+        }
+      );
     };
 
     /*$rootScope.$on("waitlistReload", function() {
@@ -2245,17 +2265,20 @@ angular.module('floor.controller', [])
       console.log(content.reservation);
     }
   ])
-  .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
-    function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
+  .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout", "option", "data",
+
+    function($rootScope, $state, $uibModalInstance, service, $q, $timeout, option, data) {
 
       var wl = this;
+      var auxiliar;
+
       wl.reservation = {};
       wl.addGuest = true;
       wl.buttonText = 'Agregar a lista de espera';
+      wl.title = "Nueva entrada";
+      wl.option = option; //opcion del formulario : create | edit
+      wl.covers = [];
 
-      /**
-       * HTTP
-       */
       var listGuest = function() {
         var deferred = $q.defer();
         service.getGuest()
@@ -2284,14 +2307,8 @@ angular.module('floor.controller', [])
 
         return deferred.promise;
       };
-      /**
-       * END HTTP
-       */
 
-      /**
-       * Search guest list
-       */
-      var auxiliar;
+      //Search guest list
       wl.searchGuest = function(name) {
         console.log(name);
         if (auxiliar) $timeout.cancel(auxiliar);
@@ -2323,9 +2340,7 @@ angular.module('floor.controller', [])
         wl.guestList = [];
         wl.addGuest = true;
       };
-      /**
-       * END Search guest list
-       */
+      //End Search
 
       wl.cancel = function() {
         $uibModalInstance.dismiss('cancel');
@@ -2360,13 +2375,54 @@ angular.module('floor.controller', [])
           });
       };
 
-      function listResource() {
-        listGuest();
-        listDurations();
-      }
+      wl.delete = function() {
+        service.deleteWaitList(data.reservation_id).then(
+          function success() {
 
-      (function Init() {
-        listResource();
-      })();
+          },
+          function error() {
+
+          });
+        console.log("delete " + angular.toJson(data, true));
+      };
+
+      var listResource = function() {
+
+        return $q.all([listGuest(), listDurations()]);
+
+      };
+
+      var defineOption = function() {
+        if (option === "edit") {
+          loadEditData();
+        }
+        console.log(angular.toJson(data, true));
+      };
+
+      var loadEditData = function() {
+        wl.title = "Editar entrada";
+
+        if (data.guest !== null) {
+          wl.selectGuest(data.guest);
+        }
+
+        wl.reservation.covers = data.num_people;
+        wl.reservation.quote = data.quote;
+      };
+
+      var init = function() {
+        listResource().then(
+          function success(response) {
+            defineOption();
+          },
+          function error(response) {
+            console.error("listResource" + angular.toJson(response, true));
+          }
+        );
+
+      };
+
+      init();
+
     }
   ]);
