@@ -449,7 +449,7 @@
 <script id="ModalCreateWaitList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
-            <h4 style="display: inline;">Nueva entrada</h4>
+            <h4 style="display: inline;">{{ wl.title }}</h4>
             <button class="btn btn-danger pull-right" ng-click="wl.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body p-t-20" style="background: #ddd;">
@@ -567,8 +567,17 @@
 
         <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
             <div class="text-center">
-                <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse">
+                <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse"
+                ng-if="wl.option=='create'">
                 {{ wl.buttonText }}</button>
+
+                <button class="btn btn-primary btn-block" ng-click="wl.save()" ng-disabled="wl.waitingResponse"
+                ng-if="wl.option=='edit'">
+                Editar Lista de espera</button>
+
+                 <button class="btn btn-danger btn-block" ng-click="wl.delete()" ng-disabled="wl.waitingResponse"
+                ng-if="wl.option=='edit'">
+                Eliminar Lista de espera</button>
             </div>
         </div>
     </div>

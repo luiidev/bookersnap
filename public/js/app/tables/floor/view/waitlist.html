@@ -1,93 +1,119 @@
-</br>
 <div class="tab-reservation-floor">
-	<div class="input-group">
-                <div class="fg-line">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre u horario" ng-show="!wm.search.show">
-                    <button type="button" class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait()" ng-show="wm.search.show">
-                        <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg"></i>
-                        <span>AGREGAR ESPERA</span>
-                    </button>
-                </div>
-                <span class="input-group-addon last" >
-                    <button type="button" class="btn waves-effect" ng-click="wm.searchReservation()">
-                        <i class="zmdi zmdi-search" ng-show="wm.search.show"></i>
-                        <i class="zmdi zmdi-close" ng-show="!wm.search.show"></i>
-                    </button>
-                </span>
+    <div class="input-group">
+        <div class="fg-line">
+            <input class="form-control" ng-show="!wm.search.show" placeholder="Buscar por nombre u horario" type="text">
+                <button class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait('create')" ng-show="wm.search.show" type="button">
+                    <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg">
+                    </i>
+                    <span>
+                        AGREGAR ESPERA
+                    </span>
+                </button>
+            </input>
+        </div>
+        <span class="input-group-addon last">
+            <button class="btn waves-effect" ng-click="wm.searchReservation()" type="button">
+                <i class="zmdi zmdi-search" ng-show="wm.search.show">
+                </i>
+                <i class="zmdi zmdi-close" ng-show="!wm.search.show">
+                </i>
+            </button>
+        </span>
     </div>
-
-	<div>
-		<table class="table-listado" cellpadding="0" cellspacing="0">
-			<thead>
-		        <tr>
-		          <th>PAX</th>
-		          <th>NOMBRE</th>
-		          <th>TIEMPO E.</th>
-		        </tr>
-		    </thead>
-		</table>
-		<div style="height: 100vh;padding-bottom: 280px;">
-	    	<div style="height: 100%;">
-	        	<div class="scrollbar-inner">
-					<table cellpadding="0" cellspacing="0" class="table-listado">
-		                <tbody>
-		                    <tr class="listado-column" ng-repeat="value in wm.res_listado | waitlistCondicion" ng-drag-up-coming data-quantity="{{ value.num_people }}" on-start-fn="wm.selectWaitlist(value)">
-		                        <td>
-		                            <table class="table-listado">
-		                                <tr>
-		                                    <td>
-		                                        {{value.num_people}}
-		                                    </td>
-		                                    <td>
-		                                        {{value.first_name}} {{value.last_name}}
-		                                    </td>		                                    
-		                                    <td rowspan="2">
-		                                        <div class="label label-success f-12">
-		                                            85min
-		                                        </div>
-		                                    </td>
-		                                </tr>
-		                                <tr class="line-row">
-		                                    <td colspan="3">
-		                                        <ul class="actions p-0 m-0">
-		                                            <li class="dropdown" uib-dropdown="">
-		                                                <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" uib-dropdown-toggle="">
-		                                                    <i class="zmdi zmdi-info-outline">
-		                                                    </i>
-		                                                </a>
-		                                                <ul class="dropdown-menu dropdown-menu-left">
-		                                                    <li>
-		                                                        <a href="">
-		                                                            Eleccion primera
-		                                                        </a>
-		                                                    </li>
-		                                                    <li>
-		                                                        <a href="">
-		                                                            Segunda eleccion
-		                                                        </a>
-		                                                    </li>
-		                                                </ul>
-		                                            </li>
-		                                            <li class="icon-people">
-		                                                <a href="">
-		                                                    <i class="zmdi zmdi-email">
-		                                                    </i>
-		                                                </a>
-		                                            </li>
-		                                        </ul>
-		                                    </td>
-		                                    <td></td>
-		                                </tr>
-		                            </table>
-		                            
-		                        </td>
-		                    </tr>
-		                </tbody>
+    <div>
+        <table cellpadding="0" cellspacing="0" class="table-listado">
+            <thead>
+                <tr>
+                    <th>
+                        PAX
+                    </th>
+                    <th>
+                        NOMBRE
+                    </th>
+                    <th>
+                        TIEMPO E.
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <div style="height: 100vh;padding-bottom: 280px;">
+            <div style="height: 100%;">
+                <div class="scrollbar-inner">
+                    <table cellpadding="0" cellspacing="0" class="table-listado">
+                        <tbody>
+                            <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming="" ng-repeat="value in wm.res_listado | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
+                                <td>
+                                    <table class="table-listado">
+                                        <tr>
+                                            <td>
+                                                {{value.num_people}}
+                                            </td>
+                                            <td>
+                                                {{value.first_name}} {{value.last_name}}
+                                            </td>
+                                            <td class="text-right time_wail_list" ng-class="{'time_out' : value.time_out}" rowspan="3">
+                                                {{ value.minutes }} Min
+                                                <br>
+                                                    <span>
+                                                        {{ value.time_wail_list }}
+                                                    </span>
+                                                </br>
+                                            </td>
+                                        </tr>
+                                        <tr class="line-row">
+                                            <td colspan="3">
+                                                <ul class="actions p-0 m-0">
+                                                    <li class="dropdown" uib-dropdown="">
+                                                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" uib-dropdown-toggle="">
+                                                            <i class="zmdi zmdi-info-outline">
+                                                            </i>
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-left">
+                                                            <li>
+                                                                <a href="">
+                                                                    Eleccion primera
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="">
+                                                                    Segunda eleccion
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="icon-people">
+                                                        <a href="">
+                                                            <i class="zmdi zmdi-email">
+                                                            </i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
-                    <div class="divider">CANCELADOS</div>
-				</div>
-			</div>
-		</div>
-
+                    <div class="divider">
+                        CANCELADOS
+                    </div>
+                    <table cellpadding="0" cellspacing="0" class="table-listado">
+                        <tbody>
+                            <tr ng-repeat="item in wm.res_listado_canceled">
+                                <td class="canceled-wail_list">
+                                    {{ item.first_name }} {{ item.last_name }}
+                                    <br>
+                                        {{ item.num_people }} Invitados cancelados
+                                    </br>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

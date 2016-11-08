@@ -12,7 +12,8 @@ angular.module('floor.service', [])
 			},
 			sendMessage: function(reservacion_id, data) {
 				return $http.post(ApiUrlMesas + "/reservations/" + reservacion_id + "/send-email", data);
-			}
+			},
+
 
 		};
 	})
@@ -239,17 +240,17 @@ angular.module('floor.service', [])
 				});
 			},
 			getServers: function() {
-				var deferred = $q.defer();
+				var defered = $q.defer();
 				reservationService.getServers()
 					.then(function success(response) {
 						response = response.data.data;
-						deferred.resolve(response);
+						defered.resolve(response);
 					}, function error(response) {
 						response = response.data;
 						deferred.reject(response);
 					});
 
-				return deferred.promise;
+				return defered.promise;
 			},
 			asingBlockTables: function(blocks, zones) {
 				var self = this;
@@ -303,10 +304,10 @@ angular.module('floor.service', [])
 				});
 				return zone_indice;
 			},
-			getReservations: function() {
+			getReservations: function(reload) {
 				var me = this;
 				var defered = $q.defer();
-				reservationService.getReservations().then(function(response) {
+				reservationService.getReservations(reload).then(function(response) {
 					response = response.data.data;
 					var objReservation = [];
 
@@ -333,12 +334,15 @@ angular.module('floor.service', [])
 							type_turn: reserva.type_turn,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
+							guest: reserva.guest
 						};
 
-						if (reserva.wait_list == 0) {
-							reservaData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";							
+						if (reserva.wait_list === 0) {
+							reservaData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";
+						} else {
+							reservaData.quote = reserva.quote;
 						}
-						
+
 						objReservation.push(reservaData);
 
 					});
@@ -795,7 +799,6 @@ angular.module('floor.service', [])
 				}
 
 				// console.log("addServicioReservaciones " + angular.toJson(reservasAndBlocks, true));
-
 			},
 			parseDataReservation: function(reserva) {
 				var me = this;
@@ -895,7 +898,6 @@ angular.module('floor.service', [])
 					block: false,
 				};
 				return blockData;
-
 			},
 			addServicioReservacionesAndBloqueos: function(item) {
 				//console.log('Array actual', angular.toJson(reservasAndBlocks, true));
@@ -917,7 +919,6 @@ angular.module('floor.service', [])
 				} else {
 					reservasAndBlocks.push(item);
 				}
-
 			},
 			getConfiguracionPeople: function(item) {
 				var defered = $q.defer();
@@ -931,7 +932,57 @@ angular.module('floor.service', [])
 					}
 				);
 				return defered.promise;
+			},
+			getWailList: function(reload) {
+				var defered = $q.defer();
+				var self = this;
 
+				self.getReservations(reload).then(
+					function success(response) {
+						var waitList = {
+							actives: [],
+							canceled: []
+						};
+
+						angular.forEach(response, function(reservation) {
+							if (reservation.wait_list == 1) {
+								if (reservation.res_reservation_status_id != 6) {
+									reservation.minutes = calculateMinutesTime("2016-11-08 " + reservation.quote);
+									reservation.time_out = false;
+
+									var interval = function() {
+										var now = moment();
+										var start_time = moment(reservation.start_time, "HH:mm:ss");
+										reservation.time_wail_list = moment.utc(now.diff(start_time)).format("HH:mm");
+
+										var validaTime = calculateMinutesTime("2016-11-08 " + reservation.time_wail_list);
+
+										if (validaTime >= reservation.minutes) {
+											reservation.time_out = true;
+											$interval.cancel(interval);
+										}
+
+										console.log(calculateMinutesTime("2016-11-08 " + reservation.time_wail_list));
+									};
+
+									interval();
+									$interval(interval, 60000);
+
+									waitList.actives.push(reservation);
+								} else {
+									waitList.canceled.push(reservation);
+								}
+							}
+						});
+
+						defered.resolve(waitList);
+					},
+					function error(response) {
+						defered.reject(response);
+					}
+				);
+
+				return defered.promise;
 			}
 
 		};

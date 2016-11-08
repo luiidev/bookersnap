@@ -590,3 +590,11 @@ var plusHour = function(hoursIni, hoursEnd) {
 
     return hourTotal;
 };
+
+//Funcion que devuelve los minutos de una hora - fecha
+var calculateMinutesTime = function(date) {
+    var time = moment(date);
+    var minutes = (time.hour() * 60) + time.minute();
+
+    return minutes;
+};

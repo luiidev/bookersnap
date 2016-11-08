@@ -728,6 +728,7 @@ angular.module('floor.controller', [])
                 num: i
             });
         }
+<<<<<<< HEAD
         vmc.colectionNum = vNumpeople;
 
         //Al pulsar numero 13 o mayor
@@ -786,6 +787,207 @@ angular.module('floor.controller', [])
             vmc.flagSelectedCountNumMen = num.men;
         } else {
             vmc.numdinamicoMen = 13;
+=======
+      });
+    };
+
+    vm.saveNotes = function(turn) {
+      if (timeoutNotes) $timeout.cancel(timeoutNotes);
+      vm.notesData.id = turn.notes.id;
+      vm.notesData.res_type_turn_id = turn.id;
+      vm.notesData.texto = turn.notes.texto;
+      vm.notesData.date_add = turn.notes.date_add;
+
+      timeoutNotes = $timeout(function() {
+        FloorFactory.createNotes(vm.notesData).then(
+          function success(response) {
+            vm.notesSave = true;
+            console.log("saveNotes success " + angular.toJson(response, true));
+          },
+          function error(response) {
+            console.error("saveNotes " + angular.toJson(response, true));
+          }
+        );
+      }, 1000);
+    };
+
+    angular.element($window).bind('resize', function() {
+      sizeLienzo();
+      $scope.$digest();
+    });
+
+    $scope.$on("NotifyFloorNotesReload", function(evt, data) {
+      if (!vm.notesBox) {
+        vm.notesNotify = true;
+        vm.notesNotification = true;
+        listTypeTurns();
+      }
+    });
+
+    $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
+      messageAlert("Info", data.user_msg, "info", 2000, true);
+      $state.reload();
+    });
+
+    var loadConfigurationPeople = function() {
+      FloorFactory.getConfiguracionPeople().then(function(response) {
+        vm.configuracion = {
+          status_people_1: response.status_people_1,
+          status_people_2: response.status_people_2,
+          status_people_3: response.status_people_3,
+        };
+        //console.log("Configuracion: " + angular.toJson(vm.configuracion, true));
+      });
+    };
+
+    var init = function() {
+
+      InitModule();
+      listTypeTurns();
+      sizeLienzo();
+      closeNotes();
+      listSourceTypes();
+      listStatuses();
+      loadConfigurationPeople();
+
+    };
+
+    init();
+  })
+  //POPUP CONFIGURACION DE PERSONAS (HOMBRES, MUJHERS Y NIÑOS)
+  .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
+    var vmc = this;
+
+    //Datos pasados al modal
+    vmc.numperson = num;
+    vmc.table = table;
+    vmc.config = config;
+
+    //Definiendo valores por defecto
+    vmc.flagSelectedNumMen = num.men;
+    vmc.flagSelectedNumWomen = num.women;
+    vmc.flagSelectedNumChildren = num.children;
+    vmc.resultado = num.men + num.women + num.children;
+
+    //Creando numero de casillas
+    var vNumpeople = [];
+    for (var i = 0; i <= 12; i++) {
+      vNumpeople.push({
+        num: i
+      });
+    }
+    vmc.colectionNum = vNumpeople;
+
+    //Al pulsar numero 13 o mayor
+    vmc.numThirteen = function(value, person) {
+      if (person == 'men') {
+        vmc.flagSelectedNumMen = value;
+        vmc.flagSelectedCountNumMen = value;
+        vmc.numdinamicoMen = value;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+      if (person == 'women') {
+        vmc.flagSelectedNumWomen = value;
+        vmc.flagSelectedCountNumWomen = value;
+        vmc.numdinamicoWomen = value;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+      if (person == 'children') {
+        vmc.flagSelectedNumChildren = value;
+        vmc.flagSelectedCountNumChildren = value;
+        vmc.numdinamicoChildren = value;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+    };
+
+    //Al pulsar numero menor a 13
+    vmc.btnSelectedNum = function(value, person) {
+      if (person == 'men') {
+        vmc.flagSelectedNumMen = value;
+        vmc.flagSelectedCountNumMen = 0;
+        vmc.numdinamicoMen = 13;
+        OperationFactory.setNumPerson(vmc.numperson, person, value);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+      if (person == 'women') {
+        vmc.flagSelectedNumWomen = value;
+        vmc.flagSelectedCountNumWomen = 0;
+        vmc.numdinamicoWomen = 13;
+        OperationFactory.setNumPerson(vmc.numperson, person, value);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+      if (person == 'children') {
+        vmc.flagSelectedNumChildren = value;
+        vmc.flagSelectedCountNumChildren = 0;
+        vmc.numdinamicoChildren = 13;
+        OperationFactory.setNumPerson(vmc.numperson, person, value);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+    };
+
+    //Automarcar mayores que 13 segun datos traidos por defecto
+    if (num.men > 12) {
+      vmc.numdinamicoMen = num.men;
+      vmc.flagSelectedCountNumMen = num.men;
+    } else {
+      vmc.numdinamicoMen = 13;
+    }
+
+    if (num.women > 12) {
+      vmc.numdinamicoWomen = num.women;
+      vmc.flagSelectedCountNumWomen = num.women;
+    } else {
+      vmc.numdinamicoWomen = 13;
+    }
+
+    if (num.children > 12) {
+      vmc.numdinamicoChildren = num.children;
+      vmc.flagSelectedCountNumChildren = num.children;
+
+    } else {
+      vmc.numdinamicoChildren = 13;
+    }
+
+    //Al pulsar boton plus
+    vmc.sumar = function(person) {
+      if (person == 'men') {
+        vmc.numdinamicoMen++;
+        vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
+        vmc.flagSelectedNumMen = -1;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+        //console.log('Datos ' + angular.toJson(vmc.numperson));
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+
+      if (person == 'women') {
+        vmc.numdinamicoWomen++;
+        vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
+        vmc.flagSelectedNumWomen = -1;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+
+      if (person == 'children') {
+        vmc.numdinamicoChildren++;
+        vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
+        vmc.flagSelectedNumChildren = -1;
+        OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+        vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+      }
+    };
+    //Al pulsar boton minus
+    vmc.restar = function(person) {
+      if (person == 'men') {
+        if (vmc.numdinamicoMen > 13) {
+          vmc.numdinamicoMen--;
+          vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
+          vmc.flagSelectedNumMen = -1;
+          OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+          vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
         }
 
         if (num.women > 12) {
@@ -974,6 +1176,7 @@ angular.module('floor.controller', [])
             vmd.EditContent = true;
         };
 
+<<<<<<< HEAD
         vmd.infoName = function() {
           var first_name = originalReservation.guest ? originalReservation.guest.first_name : "Reservacion sin nombre";
           var last_name = originalReservation.guest ? originalReservation.guest.last_name : "";
@@ -988,6 +1191,139 @@ angular.module('floor.controller', [])
         vmd.infoTables = function() {
           return getTables(originalReservation.tables);
         };
+=======
+      reservationService.quickEdit(id, vmd.reservation)
+        .then(function(response) {
+          console.log(response.data.data);
+          $rootScope.$broadcast("floorReload", response.data.data, "update");
+          message.success(response.data.msg);
+          $uibModalInstance.dismiss('cancel');
+        }).catch(function(error) {
+          message.apiError(error);
+        });
+    };
+
+    vmd.cancelReservation = function() {
+      message.confirm("¿ Esta seguro de cencelar la reservacion ?", "Esta accion se puede revertir", function() {
+        vmd.waitingResponse = true;
+        var id = vmd.reservation.id;
+
+        var key = reservationService.key();
+        $rootScope.$broadcast("blackList.add", key);
+
+        reservationService.cancel(id, {
+            key: key
+          })
+          .then(function(response) {
+            $rootScope.$broadcast("floorReload", response.data.data, "update");
+            message.success(response.data.msg);
+            $uibModalInstance.dismiss('cancel');
+            vmd.waitingResponse = false;
+          }).catch(function(error) {
+            message.apiError(error);
+            vmd.waitingResponse = false;
+          });
+      });
+    };
+  })
+  //Reservaciones
+  .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
+    var rm = this;
+
+    var fecha_actual = getFechaActual();
+    var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
+    rm.fecha_actual = fecha_actual;
+
+    rm.search = {
+      show: true
+    };
+    rm.searchReservation = function() {
+      rm.search.show = !rm.search.show;
+      rm.busqueda = "";
+    };
+
+    //Validar open modal Mail Reservation
+    var modalMailReservation = null;
+
+    $rootScope.$broadcast("floorClearSelected");
+
+    var defaultOptionsFilters = function() {
+      //Datos y acciones para filtrar Visitas//
+      //****************************//
+      rm.categorias_people = [{
+        idcategoria: 1,
+        nombre: 'Todos',
+        checked: true,
+      }, {
+        idcategoria: 2,
+        nombre: 'Hombres',
+        checked: false,
+      }, {
+        idcategoria: 3,
+        nombre: 'Mujeres',
+        checked: false,
+      }, {
+        idcategoria: 4,
+        nombre: 'Niños(as)',
+        checked: false,
+      }];
+    };
+
+    var getColectionReservation = function() {
+
+      FloorFactory.getConfiguracionPeople().then(function(response) {
+        rm.configuracion = {
+          status_people_1: response.status_people_1,
+          status_people_2: response.status_people_2,
+          status_people_3: response.status_people_3,
+        };
+        //console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
+      });
+
+      FloorFactory.getServicioReservaciones().then(function(response) {
+
+        rm.res_listado_all = response;
+
+        var total = 0;
+        var men = 0;
+        var women = 0;
+        var children = 0;
+        var tWeb = 0;
+        var tTel = 0;
+        var tPor = 0;
+        var tRp = 0;
+
+        rm.res_listado = rm.res_listado_all;
+
+        //console.log(angular.toJson(rm.res_listado, true));
+        angular.forEach(rm.res_listado_all, function(people) {
+          if (people.reservation_id) {
+
+            men += people.num_people_1;
+
+            women += people.num_people_2;
+
+            children += people.num_people_3;
+
+            total += people.num_people;
+
+            var source_type = people.res_source_type_id;
+            switch (source_type) {
+              case 1:
+                tWeb += 1;
+                break;
+              case 2:
+                tTel += 1;
+                break;
+              case 3:
+                tPor += 1;
+                break;
+              case 4:
+                tRp += 1;
+                break;
+            }
+          }
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
         function getTables(tables) {
             var reservationTables = "";
@@ -1549,9 +1885,107 @@ angular.module('floor.controller', [])
 
             rm.filter_reserva = categoria;
 
+<<<<<<< HEAD
             if (event !== null) {
                 event.stopPropagation();
             }
+=======
+          TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+          var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+          rm.select_type(colection_filtro_turnos[0], null);
+        },
+        function error(error) {
+          message.apiError(error);
+        }
+      );
+    };
+
+    var listSourceTypes = function() {
+      FloorDataFactory.getSourceTypes().then(function success(response) {
+
+        TypeFilterDataFactory.setSourceTypesItems(response.data.data);
+        rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+
+        TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+        var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+        rm.select_reserva(colection_filtro_reservas[0], null);
+
+      }, function error(error) {
+        message.apiError(error);
+      });
+    };
+
+    var init = function() {
+
+      getColectionReservation();
+
+      defaultOptionsFilters();
+
+      //Definir para filtro por defecto para visitas
+      TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
+      rm.select_people(colection_filtro_visitas[0], null);
+
+      //Limpiar data y estilos de servers
+      FloorFactory.isEditServer(false);
+      angular.element('.bg-window-floor').removeClass('drag-dispel');
+      // angular.element('.table-zone').removeClass("selected-table");
+
+      ServerDataFactory.cleanTableServerItems();
+
+      rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+      if (rm.categorias_type.length === 0) {
+        listTypeTurns();
+      } else {
+        TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
+        var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
+        rm.select_type(colection_filtro_turnos[0], null);
+      }
+
+      rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+      if (rm.categorias_reserva.length === 0) {
+        listSourceTypes();
+      } else {
+        TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
+        var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
+        rm.select_reserva(colection_filtro_reservas[0], null);
+      }
+
+
+    };
+
+    init();
+  })
+  .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
+    var vm = this;
+
+    vm.reservation = {
+      date: '',
+      time: '',
+      email: '',
+      nombre: ''
+    };
+
+    vm.mailData = {
+      message: '',
+      subject: ''
+    };
+
+    var init = function() {
+      console.log(angular.toJson(reservation, true));
+      vm.reservation.date = reservation.start_date;
+      vm.reservation.time = reservation.start_time;
+      vm.reservation.email = reservation.email;
+      vm.reservation.nombre = reservation.first_name + " - " + reservation.last_name;
+    };
+
+    vm.sendMail = function() {
+      FloorDataFactory.sendMessage(reservation.reservation_id, vm.mailData).then(
+        function success(response) {
+          response = response.data;
+
+          messageAlert("Success", response.msg, "success", 2000, true);
+          $uibModalInstance.dismiss('cancel');
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
             if (categoria.id !== 0) {
                 //Evalua Cualquier Opcion diferente de Todos
@@ -1678,6 +2112,7 @@ angular.module('floor.controller', [])
         var listTypeTurns = function() {
             FloorFactory.listTurnosActivos(rm.fecha_actual).then(function success(response) {
 
+<<<<<<< HEAD
                     TypeFilterDataFactory.setTypeTurnItems(response);
                     rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
 
@@ -1690,10 +2125,16 @@ angular.module('floor.controller', [])
                 }
             );
         };
+=======
+    init();
+  })
+  .controller('WaitListCtrl', function($rootScope, $scope, $uibModal, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
         var listSourceTypes = function() {
             FloorDataFactory.getSourceTypes().then(function success(response) {
 
+<<<<<<< HEAD
                 TypeFilterDataFactory.setSourceTypesItems(response.data.data);
                 rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
 
@@ -1705,13 +2146,36 @@ angular.module('floor.controller', [])
                 message.apiError(error);
             });
         };
+=======
+    wm.res_listado = [];
+    wm.res_listado_canceled = [];
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
 
         var init = function() {
 
             getColectionReservation();
 
+<<<<<<< HEAD
             defaultOptionsFilters();
+=======
+    wm.createWait = function(option, data) {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'ModalCreateWaitList.html',
+        controller: 'ModalWaitListCtrl',
+        controllerAs: 'wl',
+        size: '',
+        resolve: {
+          option: function() {
+            return option;
+          },
+          data: function() {
+            return data;
+          }
+        }
+      });
+    };
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
             //Definir para filtro por defecto para visitas
             TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
@@ -1724,6 +2188,7 @@ angular.module('floor.controller', [])
 
             ServerDataFactory.cleanTableServerItems();
 
+<<<<<<< HEAD
             rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
             if (rm.categorias_type.length === 0) {
                 listTypeTurns();
@@ -1732,6 +2197,25 @@ angular.module('floor.controller', [])
                 var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
                 rm.select_type(colection_filtro_turnos[0], null);
             }
+=======
+      ServerDataFactory.cleanTableServerItems();
+
+      getListWailList(false);
+    };
+
+    var getListWailList = function(reload) {
+      FloorFactory.getWailList(reload).then(
+        function success(response) {
+          wm.res_listado = response.actives;
+          wm.res_listado_canceled = response.canceled;
+          console.log("getListReservations " + angular.toJson(response, true));
+        },
+        function error(response) {
+          console.error("getListReservations " + angular.toJson(response, true));
+        }
+      );
+    };
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
             rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
             if (rm.categorias_reserva.length === 0) {
@@ -2274,6 +2758,7 @@ angular.module('floor.controller', [])
                 return deferred.promise;
             };
 
+<<<<<<< HEAD
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
                 $state.go('mesas.reservation-edit', {
@@ -2281,6 +2766,67 @@ angular.module('floor.controller', [])
                     date: moment().format("YYYY-MM-DD")
                 });
             };
+=======
+          service.cancel(id, {
+              key: key
+            })
+            .then(function(response) {
+              $rootScope.$broadcast("floorReload", response.data.data, "update");
+              message.success(response.data.msg);
+              $uibModalInstance.dismiss('cancel');
+              er.waitingResponse = false;
+            }).catch(function(error) {
+              message.apiError(error);
+              er.waitingResponse = false;
+            });
+        });
+      };
+
+      function listResource() {
+        return $q.all([
+          listGuest(),
+          listStatuses(),
+          listServers(),
+          loadConfiguration()
+        ]);
+      }
+
+      (function Init() {
+        listResource().then(function() {
+          parseInfo(content.reservation);
+          parseData(content.reservation);
+        });
+      })();
+
+      console.log(content.reservation);
+    }
+  ])
+  .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout", "option", "data",
+
+    function($rootScope, $state, $uibModalInstance, service, $q, $timeout, option, data) {
+
+      var wl = this;
+      var auxiliar;
+
+      wl.reservation = {};
+      wl.addGuest = true;
+      wl.buttonText = 'Agregar a lista de espera';
+      wl.title = "Nueva entrada";
+      wl.option = option; //opcion del formulario : create | edit
+      wl.covers = [];
+
+      var listGuest = function() {
+        var deferred = $q.defer();
+        service.getGuest()
+          .then(function(guests) {
+            wl.covers = guests;
+            wl.reservation.covers = 2;
+          }).catch(function(error) {
+            message.apiError(error);
+          }).finally(function() {
+            deferred.resolve();
+          });
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
             er.cancel = function() {
                 $uibModalInstance.dismiss('cancel');
@@ -2333,6 +2879,7 @@ angular.module('floor.controller', [])
                 });
             };
 
+<<<<<<< HEAD
             function listResource() {
                 return $q.all([
                     listGuest(),
@@ -2350,6 +2897,58 @@ angular.module('floor.controller', [])
                 tag.checked = !tag.checked;
                 listTagsSelected();
             };
+=======
+        return deferred.promise;
+      };
+
+      //Search guest list
+      wl.searchGuest = function(name) {
+        console.log(name);
+        if (auxiliar) $timeout.cancel(auxiliar);
+        if (name === "") {
+          wl.guestList = [];
+          return;
+        }
+        var search = function() {
+          service.getGuestList(name)
+            .then(function(response) {
+              wl.guestList = response.data.data.data;
+            }).catch(function(error) {
+              message.apiError(error);
+            });
+        };
+
+        auxiliar = $timeout(search, 500);
+      };
+
+      wl.selectGuest = function(guest) {
+        wl.reservation.guest_id = guest.id;
+        wl.guest = guest;
+        wl.addGuest = false;
+      };
+
+      wl.removeGuest = function() {
+        wl.reservation.guest_id = null;
+        wl.newGuest = null;
+        wl.guestList = [];
+        wl.addGuest = true;
+      };
+      //End Search
+
+      wl.cancel = function() {
+        $uibModalInstance.dismiss('cancel');
+      };
+
+      wl.save = function() {
+        if (!wl.reservation.guest_id) {
+          if (wl.newGuest) {
+            delete wl.reservation.guest_id;
+            wl.reservation.guest = wl.newGuest;
+          }
+        } else {
+          delete wl.reservation.guest;
+        }
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8
 
             var listTagsSelected = function() {
                 angular.forEach(er.tags, function(tag) {
@@ -2403,6 +3002,7 @@ angular.module('floor.controller', [])
             wl.reservation = {};
             wl.addGuest = true;
             wl.buttonText = 'Agregar a lista de espera';
+<<<<<<< HEAD
 
             /**
              * HTTP
@@ -2521,3 +3121,61 @@ angular.module('floor.controller', [])
             })();
         }
     ]);
+=======
+            console.error("saveWait " + angular.toJson(error, true));
+            message.apiError(error);
+          });
+      };
+
+      wl.delete = function() {
+        service.deleteWaitList(data.reservation_id).then(
+          function success() {
+
+          },
+          function error() {
+
+          });
+        console.log("delete " + angular.toJson(data, true));
+      };
+
+      var listResource = function() {
+
+        return $q.all([listGuest(), listDurations()]);
+
+      };
+
+      var defineOption = function() {
+        if (option === "edit") {
+          loadEditData();
+        }
+        console.log(angular.toJson(data, true));
+      };
+
+      var loadEditData = function() {
+        wl.title = "Editar entrada";
+
+        if (data.guest !== null) {
+          wl.selectGuest(data.guest);
+        }
+
+        wl.reservation.covers = data.num_people;
+        wl.reservation.quote = data.quote;
+      };
+
+      var init = function() {
+        listResource().then(
+          function success(response) {
+            defineOption();
+          },
+          function error(response) {
+            console.error("listResource" + angular.toJson(response, true));
+          }
+        );
+
+      };
+
+      init();
+
+    }
+  ]);
+>>>>>>> 4e65a28f07a08f97cf88b68c3d4370fb2d0bf6d8

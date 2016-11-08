@@ -28,8 +28,8 @@ angular.module('floor.directive', [])
                 onDroppedFn: '&'
             }
         };
-
-    }).directive('ngTable', function() {
+    })
+    .directive('ngTable', function() {
 
         function tableSelected(scope, element, attr) {
 
@@ -60,7 +60,6 @@ angular.module('floor.directive', [])
                 onClickFn: '&'
             }
         };
-
     })
     .directive('ngDragNumPeople', function() {
 
@@ -89,7 +88,6 @@ angular.module('floor.directive', [])
             },
             link: makeDraggable,
         };
-
     })
     .directive('ngDragUpComing', function() {
 
@@ -122,7 +120,6 @@ angular.module('floor.directive', [])
                 onStartFn: '&'
             }
         };
-
     })
     .directive('ngDropTabZones', function() {
         function makeDroppable(scope, element, attr) {
@@ -169,5 +166,4 @@ angular.module('floor.directive', [])
                 onEndFn: '&'
             }
         };
-
     });
