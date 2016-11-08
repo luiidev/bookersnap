@@ -21,10 +21,10 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controllerAs: 'vm'
                     },
                     'principal@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/principal.html',
+                        templateUrl: '/js/app/tables/floor/view/principal.html'
                     },
                     'tabReservaciones@mesas.floor': {
-                        templateUrl: '/js/app/tables/floor/view/tabReservaciones.html',
+                        templateUrl: '/js/app/tables/floor/view/tabReservaciones.html'
                     },
                     // 'reservations@mesas.floor.reservation': {
                     //     url: '/reservation/:date/add',

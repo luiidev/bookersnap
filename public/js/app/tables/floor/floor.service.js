@@ -246,7 +246,7 @@ angular.module('floor.service', [])
 						deferred.resolve(response);
 					}, function error(response) {
 						response = response.data;
-						defered.reject(response);
+						deferred.reject(response);
 					});
 
 				return deferred.promise;
@@ -309,16 +309,16 @@ angular.module('floor.service', [])
 				reservationService.getReservations().then(function(response) {
 					response = response.data.data;
 					var objReservation = [];
-					angular.forEach(response, function(reserva) {
 
-						objReservation.push({
+					angular.forEach(response, function(reserva) {
+						var reservaData = {
 							reservation_id: reserva.id,
 							res_type_turn_id: reserva.res_type_turn_id,
 							res_source_type_id: reserva.res_source_type_id,
 							res_guest_id: reserva.res_guest_id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							wait_list: reserva.wait_list,
-							zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "",
+							zone_indice: '',
 							start_date: reserva.date_reservation,
 							start_time: reserva.hours_reservation,
 							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -329,13 +329,20 @@ angular.module('floor.service', [])
 							tables: reserva.tables,
 							source: reserva.source,
 							status: reserva.status,
+							tags: reserva.tags,
 							type_turn: reserva.type_turn,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
-						});
+						};
+
+						if (reserva.wait_list == 0) {
+							reservaData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";							
+						}
+						
+						objReservation.push(reservaData);
 
 					});
-					//console.log(angular.toJson(objReservation, true));
+					/*console.log(angular.toJson(objReservation, true));*/
 					defered.resolve(objReservation);
 				}, function error(response) {
 					response = response.data;
@@ -811,6 +818,7 @@ angular.module('floor.service', [])
 					source: reserva.source,
 					status: reserva.status,
 					type_turn: reserva.type_turn,
+					tags: reserva.tags,
 					first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 					last_name: reserva.guest ? reserva.guest.last_name : "",
 				};

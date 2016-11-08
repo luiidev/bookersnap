@@ -1886,7 +1886,7 @@ angular.module('floor.controller', [])
         };
 
 
-        //Obtener tablas seleccionadas del lienzo
+        // Obtener tablas seleccionadas del lienzo
         // var callListadoTable = function() {
         //     sm.listadoTablaServer = ServerDataFactory.getTableServerItems();
         //     // console.log(sm.listadoTablaServer);
@@ -2339,7 +2339,8 @@ angular.module('floor.controller', [])
                     listGuest(),
                     listStatuses(),
                     listServers(),
-                    loadConfiguration()
+                    loadConfiguration(),
+                    listReservationTags()
                 ]);
             }
 
