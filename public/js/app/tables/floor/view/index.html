@@ -17,9 +17,9 @@
         </div>
         <div class="modal-body">
             <div class="listview lv-bordered lv-lg">
-                <div class="lv-header-alt clearfix">
+<!--                 <div class="lv-header-alt clearfix">
                     <h2 class="f-14">Proximas reservas y bloqueos</h2>
-                </div>
+                </div> -->
                 <div class="lv-body">
                     <div class="lv-item media border-left-green m-b-15" ng-if="vmd.reservations.active" ng-click="vmd.reservationEdit(vmd.reservations.active)" style="cursor: pointer;">
                         <div class="media-body">
@@ -84,7 +84,7 @@
 
          <div class="card reservation-guest-selected" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
              <div class="card-header bgm-indigo" ng-click="removeGuest()">
-                 <h2>{{ vmd.info.first_name }} {{ vmd.info.last_name }}</h2>
+                 <h2>{{ vmd.infoName() }}</h2>
              </div>
         </div> 
 
@@ -93,9 +93,9 @@
                 <div class="card-body drag-border">
                     <div class="form-group" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
                         <div class="col-xs-12" style="text-align: center;padding: 15px;">
-                            <label class="col-xs-4 control-label pull-left" style="text-align: left;">{{ vmd.info.date }}</label>
-                            <label class="col-xs-4 control-label" style="text-align: center">{{ vmd.info.time }}</label>
-                            <label class="col-xs-4 control-label pull-right">{{ vmd.info.tables }}</label>
+                            <label class="col-xs-4 control-label pull-left" style="text-align: left;">{{ vmd.infoDate() }}</label>
+                            <label class="col-xs-4 control-label" style="text-align: center">{{ vmd.infoTime() }}</label>
+                            <label class="col-xs-4 control-label pull-right">{{ vmd.infoTables() }}</label>
                         </div>
                     </div>
                     <div class="form-group">

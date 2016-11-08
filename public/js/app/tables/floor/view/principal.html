@@ -79,7 +79,7 @@
 <div class="box-zone-create bg-window-floor">
     <div class="box-lienzo-zone-v2 p-t-10">
         <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones" ng-show="$index == vm.flagSelectedZone">
-            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-temporal': obj.blocks.active, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left, border: obj.server.reservation || obj.server.default}" ng-detail-table num="vm.numpeople" ng-mousedown="vm.eventEstablish('changeTable', obj)" ng-click="vm.mostrarDetail($parent.$index,obj)" on-dropped-fn="vm.handConfiguration(obj)" ng-repeat="obj in tab.tables">
+            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-temporal': obj.blocks.active, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left, border: obj.borderColor()}" ng-detail-table num="vm.numpeople" ng-mousedown="vm.eventEstablish('changeTable', obj)" ng-click="vm.mostrarDetail($parent.$index,obj)" on-dropped-fn="vm.handConfiguration(obj)" ng-repeat="obj in tab.tables">
                 <div class="table-label top" ng-bind="obj.name"></div>
                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied || obj.reservations.active || !vm.filter">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
