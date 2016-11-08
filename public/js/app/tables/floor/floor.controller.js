@@ -1278,10 +1278,15 @@ angular.module('floor.controller', [])
         };
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
 
+          if (data.action == "update") {
             angular.forEach(data.data, function(data) {
               var reservaTest = FloorFactory.parseDataReservation(data);
               FloorFactory.addServicioReservaciones(reservaTest);
             });
+          } else if (data.action == "create") {
+            var reservaTest = FloorFactory.parseDataReservation(data.data);
+            FloorFactory.addServicioReservaciones(reservaTest);
+          }
 
             alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
             //messageAlert("Notificación", data.user_msg, "info", 2000, true);
