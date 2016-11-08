@@ -1236,6 +1236,7 @@ angular.module('floor.controller', [])
 
 
     };
+
     $rootScope.$on("NotifyFloorTableReservationReload", function(evt, data) {
       console.log(data);
       if (data.action == "update") {

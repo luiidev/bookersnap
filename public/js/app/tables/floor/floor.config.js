@@ -43,9 +43,14 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
             })
             .state('mesas.floor.reservation', {
                 url: '/reservation',
-                templateUrl: '/js/app/tables/floor/view/reservation.html',
-                controller: 'reservationController',
-                controllerAs: 'rm',
+                views: {
+                    "": {
+                        templateUrl: '/js/app/tables/floor/view/reservation.html',
+                        controller: 'reservationController',
+                        controllerAs: 'rm'
+                    }
+                }
+
             })
             .state('mesas.floor.walkin', {
                 url: '/walkin',
