@@ -319,6 +319,7 @@ angular.module('floor.service', [])
 							res_guest_id: reserva.res_guest_id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							wait_list: reserva.wait_list,
+							zone_indice: '',
 							start_date: reserva.date_reservation,
 							start_time: reserva.hours_reservation,
 							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -329,6 +330,7 @@ angular.module('floor.service', [])
 							tables: reserva.tables,
 							source: reserva.source,
 							status: reserva.status,
+							tags: reserva.tags,
 							type_turn: reserva.type_turn,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
@@ -344,7 +346,7 @@ angular.module('floor.service', [])
 						objReservation.push(reservaData);
 
 					});
-					//console.log(angular.toJson(objReservation, true));
+					/*console.log(angular.toJson(objReservation, true));*/
 					defered.resolve(objReservation);
 				}, function error(response) {
 					response = response.data;
@@ -819,6 +821,7 @@ angular.module('floor.service', [])
 					source: reserva.source,
 					status: reserva.status,
 					type_turn: reserva.type_turn,
+					tags: reserva.tags,
 					first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 					last_name: reserva.guest ? reserva.guest.last_name : "",
 				};
