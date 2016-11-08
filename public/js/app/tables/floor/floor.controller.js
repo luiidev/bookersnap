@@ -146,7 +146,7 @@ angular.module('floor.controller', [])
 
             var blockParsear = FloorFactory.parseDataBloqueos(data.data);
             FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
-
+            $scope.$apply();
             alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
             console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
@@ -1363,7 +1363,7 @@ angular.module('floor.controller', [])
             var reservaTest = FloorFactory.parseDataReservation(data.data);
             FloorFactory.addServicioReservaciones(reservaTest);
           }
-
+          $scope.$apply();
             alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
             //messageAlert("Notificación", data.user_msg, "info", 2000, true);
             //console.log("Formato: " + angular.toJson(reservaTest, true));
@@ -2384,11 +2384,15 @@ angular.module('floor.controller', [])
              */
 
             (function Init() {
-                listResource().then(function() {
-                    parseInfo(content.reservation);
-                    parseData(content.reservation);
-                });
-                console.log(content.reservation);
+              var date = fecha_actual();
+              if (content.reservation.block_id) $state.go("mesas.floor.block" , {date: date, id: content.reservation.block_id});
+              listResource().then(function() {
+                  resetTags();
+                  parseInfo(content.reservation);
+                  parseData(content.reservation);
+                  paintTags(content.reservation.tags);
+              });
+            console.log(content.reservation);
             })();
         }
     ])

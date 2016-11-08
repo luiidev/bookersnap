@@ -357,7 +357,7 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-class="{'not_selector':value.block_id}" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                             <td>
                                                 <table class="table-listado sub-table" ng-if="value.reservation_id">
                                                     <tr>
