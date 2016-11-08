@@ -22,6 +22,7 @@
         .constant("UrlServerNotify", "http://127.0.0.1:1337/")
        .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
+
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
             $stateProvider
