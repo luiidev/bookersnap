@@ -59,7 +59,7 @@ angular.module('book.service', [])
 				angular.forEach(reservations, function(reservation, key) {
 					if (hour.time === reservation.hours_reservation) {
 						exists.exists = true;
-						exists.data = reservation;
+						exists.data.push(reservation);
 					}
 				});
 

@@ -766,7 +766,7 @@ angular.module('floor.service', [])
 				return defered.promise;
 			},
 			addServicioReservaciones: function(item) {
-				console.log("addServicioReservaciones1 " + angular.toJson(reservasAndBlocks, true));
+				// console.log("addServicioReservaciones1 " + angular.toJson(reservasAndBlocks, true));
 				//console.log('Array actual', angular.toJson(reservasAndBlocks, true));
 				//If existe en el array reservasAndBlocks diferente de 0
 				if (reservasAndBlocks.length !== 0) {
@@ -787,7 +787,7 @@ angular.module('floor.service', [])
 					reservasAndBlocks.push(item);
 				}
 
-				console.log("addServicioReservaciones " + angular.toJson(reservasAndBlocks, true));
+				// console.log("addServicioReservaciones " + angular.toJson(reservasAndBlocks, true));
 
 			},
 			parseDataReservation: function(reserva) {

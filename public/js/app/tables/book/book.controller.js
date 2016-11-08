@@ -15,7 +15,7 @@ angular.module('book.controller', [])
 	};
 
 	var listTurnAvailable = function() {
-		CalendarService.GetShiftByDate("2016-11-04", true).then(
+		CalendarService.GetShiftByDate("2016-11-07", true).then(
 			function success(response) {
 				response = response.data.data;
 				vm.turns = response;

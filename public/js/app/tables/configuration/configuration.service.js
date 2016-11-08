@@ -259,7 +259,7 @@ angular.module('configuration.service', [])
 			initDataFakeList: function(cant, prefijo) {
 				//Max cant de usuarios 1 -> 1000
 				var list = [];
-				for (let i = 0; i <= cant; i++) {
+				for (var i = 0; i <= cant; i++) {
 					if (i != 1) {
 						list[i] = {
 							id: i,
@@ -278,7 +278,7 @@ angular.module('configuration.service', [])
 				var tolerancia = 0;
 				var hora = 0;
 				var timeList = [];
-				for (let i = 0; i <= 36; i++) {
+				for (var i = 0; i <= 36; i++) {
 					if (i == 0) {
 						timeList[i] = {
 							id: i,

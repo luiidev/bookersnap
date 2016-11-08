@@ -3,6 +3,9 @@ angular.module('reservation.service', [])
         function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
             var zones, servers, resStatus, turns, blocks, tags, reservations, configuration;
             return {
+                key: function() {
+                    return Math.random().toString(36).substring(2,7);
+                },
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
@@ -15,8 +18,8 @@ angular.module('reservation.service', [])
                 quickEdit: function(id, data) {
                     return http.put(ApiUrlMesas + "/table/reservation/" + id + "/quickedit", data);
                 },
-                cancel: function(id) {
-                    return http.put(ApiUrlMesas + "/table/reservation/" + id + "/cancel");
+                cancel: function(id, data) {
+                    return http.put(ApiUrlMesas + "/table/reservation/" + id + "/cancel", data);
                 },
                 sit: function(id, data) {
                     return http.put(ApiUrlMesas + "/table/reservation/" + id + "/sit", data);
@@ -226,15 +229,18 @@ angular.module('reservation.service', [])
                         block: false,
                         occupied: false,
                         server: {
-                            default: null,
-                            reservation: null,
-                            setDefault: function(color) {
-                                this.default = "2px solid " + color;
-                            },
-                            setReservation: function(color) {
-                                this.reservation = "2px solid " + color;
-                            }
+                            color: null,
                         },
+                        borderColor: function() {
+                            if (this.reservations.active) {
+                                if (this.reservations.active.server) {
+                                    return  "2px solid " + this.reservations.active.server.color;
+                                }
+                            } else if (this.server.color){
+                                return   "2px solid " + this.server.color;
+                            }
+                            return  null;
+                        }
                     };
 
                     if (data.status == 1) {
@@ -445,9 +451,21 @@ angular.module('reservation.service', [])
 
                                 if (reservation.datetime_input && reservation.res_reservation_status_id == 4) {
                                     table.reservations.active = reservation;
-                                    if (reservation.server) {
-                                        table.server.setReservation(reservation.server.color);
-                                    }
+
+
+
+
+                                    // if (reservation.server) {
+                                    //     console.log(reservation.server);
+                                    //     table.server.setReservation(reservation.server.color);
+                                    //     console.log(table);
+                                    // }
+                                    // 
+                                    // 
+                                    // 
+                                    // 
+                                    // 
+                                    // 
 
                                     cancelEvent(table.reservations.oldEvent1);
                                     table.reservations.oldEvent1 = addRecursiveEvent(table, function(table, event) {
@@ -543,7 +561,7 @@ angular.module('reservation.service', [])
                     angular.forEach(servers, function(server) {
                         angular.forEach(server.tables, function(serverTable) {
                             if (table.id == serverTable.id) {
-                                table.server.setDefault(server.color);
+                                table.server.color = server.color;
                             }
                         });
                     });
