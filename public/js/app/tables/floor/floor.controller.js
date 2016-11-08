@@ -933,6 +933,19 @@ angular.module('floor.controller', [])
 
 .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
+
+        /**
+         * Tags de reservacion
+         * @type {Array}
+         */
+        vmd.tags = [];
+
+        /**
+         * Tags de reservacion seleccionados
+         * @type {Object}
+         */
+        vmd.selectTags = {};
+
         vmd.itemZona = {
             name_zona: content.zoneName,
             name: content.table.name
@@ -955,13 +968,13 @@ angular.module('floor.controller', [])
             originalReservation= reservation;
             listResource().then(function() {
                 parseData(reservation);
+                paintTags(reservation.tags);
             });
 
             vmd.EditContent = true;
         };
 
         vmd.infoName = function() {
-          // console.log(originalReservation);
           var first_name = originalReservation.guest ? originalReservation.guest.first_name : "Reservacion sin nombre";
           var last_name = originalReservation.guest ? originalReservation.guest.last_name : "";
           return first_name + " " + last_name;
@@ -1019,7 +1032,8 @@ angular.module('floor.controller', [])
                 listGuest(),
                 listStatuses(),
                 listServers(),
-                loadConfiguration()
+                loadConfiguration(),
+                listReservationTags()
             ]);
         }
 
@@ -1082,6 +1096,21 @@ angular.module('floor.controller', [])
             return deferred.promise;
         };
 
+        var listReservationTags = function() {
+            var deferred = $q.defer();
+
+            reservationService.getReservationTags()
+                .then(function(response) {
+                    vmd.tags = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
+        };
+
         var loadConfiguration = function() {
             var deferred = $q.defer();
             reservationService.getConfigurationRes()
@@ -1108,6 +1137,15 @@ angular.module('floor.controller', [])
 
         vmd.save = function() {
             var id = vmd.reservation.id;
+
+            ///////////////////////////////////////////////////////////////
+            // parse reservation.tags
+            ///////////////////////////////////////////////////////////////
+            vmd.reservation.tags = [];
+            vmd.reservation.tags = Object.keys(vmd.selectTags).reduce(function(result, value) {
+                result.push(parseInt(value));
+                return result;
+            }, []);
 
             var key = reservationService.key();
             $rootScope.$broadcast("blackList.add", key);
@@ -1150,6 +1188,39 @@ angular.module('floor.controller', [])
           var fecha_actual = getFechaActual();
           $state.go("mesas.reservation-new", {date: fecha_actual, tables: [ {id: content.table.id }] });
         };
+
+        /**
+         * Select tags
+         */
+        vmd.addTag = function(tag) {
+            tag.checked = !tag.checked;
+            listTagsSelected();
+        };
+
+        var listTagsSelected = function() {
+            angular.forEach(vmd.tags, function(tag) {
+                if (tag.checked) {
+                    vmd.selectTags[tag.id] = angular.copy(tag);
+                } else {
+                    delete vmd.selectTags[tag.id];
+                }
+            });
+        };
+
+        var paintTags = function(tags) {
+            angular.forEach(tags, function(tagInUse) {
+                angular.forEach(vmd.tags, function(tag) {
+                    if (tag.id == tagInUse.id) {
+                        tag.checked = true;
+                    }
+                });
+            });
+
+            listTagsSelected();
+        };
+        /**
+         * END Select tags
+         */
     })
     //Reservaciones
     .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
