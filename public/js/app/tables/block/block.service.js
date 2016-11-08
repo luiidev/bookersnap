@@ -13,8 +13,9 @@ angular.module('block.service', [])
                 blocksAll = HttpFactory.get(ApiUrlMesas + "/blocks/tables?" + vDate, {}, blocksAll, reload);
                 return blocksAll;
             },
-            getBlocks: function(reload) {
-                blocks = HttpFactory.get(ApiUrlMesas + "/blocks", null, blocks, reload);
+            getBlocks: function(reload, params) {
+                params = (params === undefined || params === null) ? "" : params;
+                blocks = HttpFactory.get(ApiUrlMesas + "/blocks?" + params, null, blocks, reload);
                 return blocks;
             },
             getBlock: function(vId, reload) {

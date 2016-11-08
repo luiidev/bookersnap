@@ -7,7 +7,7 @@ angular.module('book.service', [])
 		};
 
 	})
-	.factory('BookFactory', function($q, reservationService, CalendarService) {
+	.factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory) {
 
 		return {
 			getReservations: function(reload, date) {
@@ -30,6 +30,7 @@ angular.module('book.service', [])
 
 				angular.forEach(hours, function(hour, key) {
 					var existsReservation = self.existsReservation(hour, reservations);
+					var existsBlocks = self.existsBlocks(hour, blocks);
 
 					var dataBook = {
 						time: hour.time,
@@ -39,8 +40,8 @@ angular.module('book.service', [])
 							data: existsReservation.data
 						},
 						block: {
-							exists: false,
-							data: []
+							exists: existsBlocks.exists,
+							data: existsBlocks.data
 						}
 					};
 
@@ -49,6 +50,21 @@ angular.module('book.service', [])
 				});
 
 				return book;
+			},
+			existsBlocks: function(hour, blocks) {
+				var exists = {
+					exists: false,
+					data: []
+				};
+
+				angular.forEach(blocks, function(block, key) {
+					if (block.start_time == hour.time) {
+						exists.exists = true;
+						exists.data.push(block);
+					}
+				});
+
+				return exists;
 			},
 			existsReservation: function(hour, reservations) {
 				var exists = {
@@ -64,6 +80,25 @@ angular.module('book.service', [])
 				});
 
 				return exists;
+			},
+			getAllBlocks: function(reload, params) {
+				var defered = $q.defer();
+
+				BlockFactory.getBlocks(reload, params).then(
+					function success(response) {
+						defered.resolve(response.data.data);
+					},
+					function error(response) {
+						defered.reject(response.data);
+					}
+				);
+
+				return defered.promise;
+			},
+			listReservationAndBlocks: function(reload, date) {
+				var self = this;
+
+				return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
 			}
 		};
 	})
