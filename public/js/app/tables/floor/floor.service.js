@@ -309,16 +309,15 @@ angular.module('floor.service', [])
 				reservationService.getReservations().then(function(response) {
 					response = response.data.data;
 					var objReservation = [];
-					angular.forEach(response, function(reserva) {
 
-						objReservation.push({
+					angular.forEach(response, function(reserva) {
+						var reservaData = {
 							reservation_id: reserva.id,
 							res_type_turn_id: reserva.res_type_turn_id,
 							res_source_type_id: reserva.res_source_type_id,
 							res_guest_id: reserva.res_guest_id,
 							res_reservation_status_id: reserva.res_reservation_status_id,
 							wait_list: reserva.wait_list,
-							zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "",
 							start_date: reserva.date_reservation,
 							start_time: reserva.hours_reservation,
 							end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -332,7 +331,13 @@ angular.module('floor.service', [])
 							type_turn: reserva.type_turn,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
-						});
+						};
+
+						if (reserva.wait_list != 1) {
+							reservaData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";
+						}
+
+						objReservation.push(reservaData);
 
 					});
 					//console.log(angular.toJson(objReservation, true));
