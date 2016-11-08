@@ -10,6 +10,9 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
         $stateProvider
             .state('mesas.reservation-new', {
                 url: '/floor/reservation/:date/add',
+                params: {
+                    tables: null
+                },
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/reservation/view/index.html',

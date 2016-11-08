@@ -452,21 +452,6 @@ angular.module('reservation.service', [])
                                 if (reservation.datetime_input && reservation.res_reservation_status_id == 4) {
                                     table.reservations.active = reservation;
 
-
-
-
-                                    // if (reservation.server) {
-                                    //     console.log(reservation.server);
-                                    //     table.server.setReservation(reservation.server.color);
-                                    //     console.log(table);
-                                    // }
-                                    // 
-                                    // 
-                                    // 
-                                    // 
-                                    // 
-                                    // 
-
                                     cancelEvent(table.reservations.oldEvent1);
                                     table.reservations.oldEvent1 = addRecursiveEvent(table, function(table, event) {
                                         // Seated
@@ -596,9 +581,6 @@ angular.module('reservation.service', [])
                         deferred.resolve();
                     } else {
                         $interval.cancel(event.timeoutID);
-                        if (event.timeoutID) {
-                            return console.log("Evento recursivo cancelado, timeoutID: ", event.timeoutID.$$intervalId);
-                        }
                     }
 
                     return deferred.promise;
@@ -641,7 +623,6 @@ angular.module('reservation.service', [])
                                 event.endEvent(table, arg);
                             }
                             $interval.cancel(event.timeoutID);
-                            if (event.timeoutID) console.log("Evento cancelado, hora actual es mayor a su fin, timeoutID: ", event.timeoutID.$$intervalId);
                         }
                     }
                     deferred.resolve();
