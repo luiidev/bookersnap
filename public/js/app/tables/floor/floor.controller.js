@@ -965,6 +965,7 @@ angular.module('floor.controller', [])
 
         var originalReservation = {};
         vmd.reservationEdit = function(reservation) {
+            resetTags();
             originalReservation= reservation;
             listResource().then(function() {
                 parseData(reservation);
@@ -1153,7 +1154,6 @@ angular.module('floor.controller', [])
 
             reservationService.quickEdit(id, vmd.reservation)
                 .then(function(response) {
-                  console.log(response.data.data);
                     $rootScope.$broadcast("floorReload", response.data.data, "update");
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
@@ -1217,6 +1217,13 @@ angular.module('floor.controller', [])
             });
 
             listTagsSelected();
+        };
+
+        var resetTags = function() {
+          vmd.selectTags = {};
+          angular.forEach(vmd.tags, function(tag) {
+            tag.checked = false;
+          });
         };
         /**
          * END Select tags
@@ -2120,6 +2127,18 @@ angular.module('floor.controller', [])
 
             var er = this;
 
+          /**
+           * Tags de reservacion
+           * @type {Array}
+           */
+          er.tags = [];
+
+          /**
+           * Tags de reservacion seleccionados
+           * @type {Object}
+           */
+          er.selectTags = {};
+
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
                 totalGuests();
@@ -2227,6 +2246,21 @@ angular.module('floor.controller', [])
                 return deferred.promise;
             };
 
+        var listReservationTags = function() {
+            var deferred = $q.defer();
+
+            service.getReservationTags()
+                .then(function(response) {
+                    er.tags = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    deferred.resolve();
+                });
+
+            return deferred.promise;
+        };
+
             var loadConfiguration = function() {
                 var deferred = $q.defer();
                 service.getConfigurationRes()
@@ -2255,6 +2289,15 @@ angular.module('floor.controller', [])
 
             er.save = function() {
                 var id = er.reservation.id;
+
+                ///////////////////////////////////////////////////////////////
+                // parse reservation.tags
+                ///////////////////////////////////////////////////////////////
+                er.reservation.tags = [];
+                er.reservation.tags = Object.keys(er.selectTags).reduce(function(result, value) {
+                    result.push(parseInt(value));
+                    return result;
+                }, []);
 
                 var key = service.key();
                 $rootScope.$broadcast("blackList.add", key);
@@ -2300,11 +2343,52 @@ angular.module('floor.controller', [])
                 ]);
             }
 
+            /**
+             * Select tags
+             */
+            er.addTag = function(tag) {
+                tag.checked = !tag.checked;
+                listTagsSelected();
+            };
+
+            var listTagsSelected = function() {
+                angular.forEach(er.tags, function(tag) {
+                    if (tag.checked) {
+                        er.selectTags[tag.id] = angular.copy(tag);
+                    } else {
+                        delete er.selectTags[tag.id];
+                    }
+                });
+            };
+
+            var paintTags = function(tags) {
+                angular.forEach(tags, function(tagInUse) {
+                    angular.forEach(er.tags, function(tag) {
+                        if (tag.id == tagInUse.id) {
+                            tag.checked = true;
+                        }
+                    });
+                });
+
+                listTagsSelected();
+            };
+            
+            var resetTags = function() {
+              er.selectTags = {};
+              angular.forEach(er.tags, function(tag) {
+                tag.checked = false;
+              });
+            };
+            /**
+             * END Select tags
+             */
+
             (function Init() {
                 listResource().then(function() {
                     parseInfo(content.reservation);
                     parseData(content.reservation);
                 });
+                console.log(content.reservation);
             })();
         }
     ])

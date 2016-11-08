@@ -302,6 +302,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-xs-7 control-label itext-left" for="server">
+                            Etiquetas de reservación
+                        </label>
+                        <div class="col-xs-5">
+                            <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px;">
+                                <div class="dropdown dropup" uib-dropdown>
+                                    <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0)" >Editar Etiquetas</a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li data-ng-repeat="tag in er.tags">
+                                            <a href="javascript:void(0)" ng-click="er.addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 m-t-10">
+                            <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in er.selectTags">{{ tag.name }}</button>
+                        </div>
+                    </div>
 
                 </div>
             </form>
