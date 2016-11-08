@@ -859,59 +859,67 @@ $background-tables-head = #eee
 		border-bottom 0
 		padding 2px 0px 2px 4px
 	& thead > tr > th
-		padding 4px 0px 4px 4px
+		padding 4px 4px 4px 4px
 	& thead > tr, & tbody > tr
 		&.line-row
 			//border-bottom 1px solid #767676
 			& td > ul.actions > li.icon-people
-				width 42px
+				width 28px
 				padding 0
+				position relative
 				& a
-					height 0px
+					height 12px
 					padding 0px
 					width 100%
 					display block
 					& i
 						line-height 8px
+						position absolute
+						left 4px
 					& .num_people
 						color #fff
-						background #575757
-						border-radius 40px
-						padding 2px 6px
+						background #6f6f6f
+						border-radius 7px
+						padding 0px 5px
+						left 10px
+						top 2px
+						position absolute
 		&.listado-column
 			border-bottom 1px solid #767676
 			background rgba(66,66,66,0.5)
 			cursor pointer
 			width 400px
+			& td
+				padding 2px 2px 0px 4px
 			&.not_selector
 				background #636363
 				& .table-listado
 					height 40px
-	&.sub-table
-		& tr td, & tr th
+	&.sub-table		
+		& tr td, & tr th			
 			&.child-hour
-				width 40px
-				text-align left
-			&.child-pax
 				width 30px
 				text-align center
-			&.child-name
-				width 240px
-				text-align left
-			&.child-room
-				width 40px
-				text-align right
-			&.child-table
+			&.child-pax
 				width 40px
 				text-align center
+			&.child-name
+				text-align left
+			&.child-room
+				width 50px
+				text-align right
+			&.child-table
+				width 50px
+				text-align center
 			&.child-status
-				width 80px
+				width 60px
 				text-align center		
 .box-estado-res
 	background #575757
-	width 64px
-	padding 1px 4px
+	width 60px
+	padding 1px 1px
 	text-align center
+	text-transform: lowercase
 	&.bg-green
 		background #339966
 	&.bg-orange
@@ -926,7 +934,34 @@ $background-tables-head = #eee
 		background #fff
 		border 1px solid #242424
 		color #242424
-
+.box-turn-res
+	background #575757
+	width 60px
+	padding 1px 1px
+	text-align center
+	text-transform: lowercase
+.box-source-res
+	background #575757
+	width 60px
+	padding 1px 1px
+	text-align center
+	text-transform: lowercase
+	&.rp
+		background #272727
+	&.portal
+		background #691c1c
+	&.phone
+		background #5a0036
+	&.web
+		background #007386
+.box-tag-res
+	background #575757
+	width 70px
+	padding 1px 1px
+	text-align center
+	text-transform: lowercase
+	white-space:nowrap
+	
 .btn-menu
 	font-size .9em !important
 	margin-right 5px
@@ -1203,7 +1238,7 @@ ul.footer-floor
 							font-weight bold
 							font-size 1.9em
 							border 1px solid #dc4d4d
-							background #f12929
+							background #f12929							
 			& .dropdown-menu
 				margin-bottom 6px
 				min-width 130px
