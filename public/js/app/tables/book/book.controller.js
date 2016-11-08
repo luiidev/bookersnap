@@ -11,11 +11,10 @@ angular.module('book.controller', [])
 	var init = function() {
 
 		listTurnAvailable();
-
 	};
 
 	var listTurnAvailable = function() {
-		CalendarService.GetShiftByDate("2016-11-07", true).then(
+		CalendarService.GetShiftByDate(fecha_actual, true).then(
 			function success(response) {
 				response = response.data.data;
 				vm.turns = response;
@@ -32,7 +31,7 @@ angular.module('book.controller', [])
 			function success(response) {
 				vm.hoursTurns = response.hours;
 
-				listReservations(fecha_actual);
+				generatedListBook(fecha_actual);
 			},
 			function error(response) {
 				console.error("getHours " + angular.toJson(response, true));
@@ -40,18 +39,21 @@ angular.module('book.controller', [])
 		);
 	};
 
-	var listReservations = function(date) {
+	var generatedListBook = function(date) {
 		var params = getAsUriParameters({
 			date: date
 		});
 
-		BookFactory.getReservations(true, params).then(
+		BookFactory.listReservationAndBlocks(true, params).then(
 			function success(response) {
-				vm.listBook = BookFactory.listBook(vm.hoursTurns, response, null);
-				console.log("listReservations " + angular.toJson(vm.listBook, true));
+				//console.log("listReservationAndBlocks " + angular.toJson(response[0], true));
+
+				vm.listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1]);
+
+				console.log("listReservationAndBlocks " + angular.toJson(vm.listBook, true));
 			},
 			function error(response) {
-				console.error("listReservations " + angular.toJson(response, true));
+				console.error("listReservationAndBlocks " + angular.toJson(response, true));
 			}
 		);
 	};
