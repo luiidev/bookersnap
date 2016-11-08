@@ -348,6 +348,10 @@ message.error = function(title, text, time) {
     return this.short(title, text, time, "error");
 };
 
+message.alert = function(title, text, time) {
+    return this.short(title, text, time, "warning");
+};
+
 message.short = function(title, text, time, icon) {
     if (typeof text == "number") {
         return this.show(title, "", icon, {
@@ -359,10 +363,6 @@ message.short = function(title, text, time, icon) {
         });
     }
     return this.show(title, text, icon);
-};
-
-message.alert = function(title, text, icon, time) {
-    return this.show(title, text, "warning", time);
 };
 
 message.apiError = function(response, title, icon, options) {
