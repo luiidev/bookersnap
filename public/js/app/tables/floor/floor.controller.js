@@ -1813,46 +1813,69 @@ angular.module('floor.controller', [])
 
         init();
     })
-
-.controller('WaitListCtrl', function($rootScope, $scope, FloorFactory, ServerDataFactory, $uibModal, TypeFilterDataFactory) {
+    .controller('WaitListCtrl', function($rootScope, $scope, $uibModal, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
 
         var wm = this;
 
         wm.res_listado = [];
+        wm.res_listado_canceled = [];
 
         wm.search = {
-            show: true
+          show: true
         };
 
         $rootScope.$broadcast("floorClearSelected");
 
         wm.searchReservation = function() {
-            wm.search.show = !wm.search.show;
+          wm.search.show = !wm.search.show;
         };
 
-        wm.createWait = function() {
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalCreateWaitList.html',
-                controller: 'ModalWaitListCtrl',
-                controllerAs: 'wl',
-                size: '',
-            });
+        wm.createWait = function(option, data) {
+          var modalInstance = $uibModal.open({
+            templateUrl: 'ModalCreateWaitList.html',
+            controller: 'ModalWaitListCtrl',
+            controllerAs: 'wl',
+            size: '',
+            resolve: {
+              option: function() {
+                return option;
+              },
+              data: function() {
+                return data;
+              }
+            }
+          });
         };
 
         wm.selectWaitlist = function(waitlist) {
-            $scope.$apply(function() {
-                $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
-            });
+          $scope.$apply(function() {
+            $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
+          });
         };
 
         var init = function() {
 
-            //Limpiar data y estilos de servers
-            FloorFactory.isEditServer(false);
-            angular.element('.bg-window-floor').removeClass('drag-dispel');
-            // angular.element('.table-zone').removeClass("selected-table");
+          //Limpiar data y estilos de servers
+          FloorFactory.isEditServer(false);
+          angular.element('.bg-window-floor').removeClass('drag-dispel');
+          // angular.element('.table-zone').removeClass("selected-table");
 
-            ServerDataFactory.cleanTableServerItems();
+          ServerDataFactory.cleanTableServerItems();
+
+          getListWailList(false);
+        };
+
+        var getListWailList = function(reload) {
+          FloorFactory.getWailList(reload).then(
+            function success(response) {
+              wm.res_listado = response.actives;
+              wm.res_listado_canceled = response.canceled;
+              console.log("getListReservations " + angular.toJson(response, true));
+            },
+            function error(response) {
+              console.error("getListReservations " + angular.toJson(response, true));
+            }
+          );
         };
 
         /*$rootScope.$on("waitlistReload", function() {
@@ -1861,7 +1884,7 @@ angular.module('floor.controller', [])
 
         init();
 
-    })
+      })
     //Servidores
     .controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
@@ -2396,128 +2419,164 @@ angular.module('floor.controller', [])
             })();
         }
     ])
-    .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout",
-        function($rootScope, $state, $uibModalInstance, service, $q, $timeout) {
+.controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout", "option", "data",
 
-            var wl = this;
-            wl.reservation = {};
-            wl.addGuest = true;
-            wl.buttonText = 'Agregar a lista de espera';
+  function($rootScope, $state, $uibModalInstance, service, $q, $timeout, option, data) {
 
-            /**
-             * HTTP
-             */
-            var listGuest = function() {
-                var deferred = $q.defer();
-                service.getGuest()
-                    .then(function(guests) {
-                        wl.covers = guests;
-                        wl.reservation.covers = 2;
-                    }).catch(function(error) {
-                        message.apiError(error);
-                    }).finally(function() {
-                        deferred.resolve();
-                    });
+    var wl = this;
+    var auxiliar;
 
-                return deferred.promise;
-            };
+    wl.reservation = {};
+    wl.addGuest = true;
+    wl.buttonText = 'Agregar a lista de espera';
+    wl.title = "Nueva entrada";
+    wl.option = option; //opcion del formulario : create | edit
+    wl.covers = [];
 
-            var listDurations = function() {
-                var deferred = $q.defer();
+    var listGuest = function() {
+      var deferred = $q.defer();
+      service.getGuest()
+        .then(function(guests) {
+          wl.covers = guests;
+          wl.reservation.covers = 2;
+        }).catch(function(error) {
+          message.apiError(error);
+        }).finally(function() {
+          deferred.resolve();
+        });
 
-                service.getDurations()
-                    .then(function(durations) {
-                        wl.durations = durations;
-                        wl.reservation.quote = "00:15:00";
-                    }).finally(function() {
-                        deferred.resolve();
-                    });
+      return deferred.promise;
+    };
 
-                return deferred.promise;
-            };
-            /**
-             * END HTTP
-             */
+    var listDurations = function() {
+      var deferred = $q.defer();
 
-            /**
-             * Search guest list
-             */
-            var auxiliar;
-            wl.searchGuest = function(name) {
-                console.log(name);
-                if (auxiliar) $timeout.cancel(auxiliar);
-                if (name === "") {
-                    wl.guestList = [];
-                    return;
-                }
-                var search = function() {
-                    service.getGuestList(name)
-                        .then(function(response) {
-                            wl.guestList = response.data.data.data;
-                        }).catch(function(error) {
-                            message.apiError(error);
-                        });
-                };
+      service.getDurations()
+        .then(function(durations) {
+          wl.durations = durations;
+          wl.reservation.quote = "00:15:00";
+        }).finally(function() {
+          deferred.resolve();
+        });
 
-                auxiliar = $timeout(search, 500);
-            };
+      return deferred.promise;
+    };
 
-            wl.selectGuest = function(guest) {
-                wl.reservation.guest_id = guest.id;
-                wl.guest = guest;
-                wl.addGuest = false;
-            };
+    //Search guest list
+    wl.searchGuest = function(name) {
+      console.log(name);
+      if (auxiliar) $timeout.cancel(auxiliar);
+      if (name === "") {
+        wl.guestList = [];
+        return;
+      }
+      var search = function() {
+        service.getGuestList(name)
+          .then(function(response) {
+            wl.guestList = response.data.data.data;
+          }).catch(function(error) {
+            message.apiError(error);
+          });
+      };
 
-            wl.removeGuest = function() {
-                wl.reservation.guest_id = null;
-                wl.newGuest = null;
-                wl.guestList = [];
-                wl.addGuest = true;
-            };
-            /**
-             * END Search guest list
-             */
+      auxiliar = $timeout(search, 500);
+    };
 
-            wl.cancel = function() {
-                $uibModalInstance.dismiss('cancel');
-            };
+    wl.selectGuest = function(guest) {
+      wl.reservation.guest_id = guest.id;
+      wl.guest = guest;
+      wl.addGuest = false;
+    };
 
-            wl.save = function() {
-                if (!wl.reservation.guest_id) {
-                    if (wl.newGuest) {
-                        delete wl.reservation.guest_id;
-                        wl.reservation.guest = wl.newGuest;
-                    }
-                } else {
-                    delete wl.reservation.guest;
-                }
+    wl.removeGuest = function() {
+      wl.reservation.guest_id = null;
+      wl.newGuest = null;
+      wl.guestList = [];
+      wl.addGuest = true;
+    };
+    //End Search
 
-                wl.reservation.guest = wl.newGuest;
-                wl.buttonText = 'Enviando ...';
+    wl.cancel = function() {
+      $uibModalInstance.dismiss('cancel');
+    };
 
-                var key = service.key();
-                $rootScope.$broadcast("blackList.add", key);
-                wl.reservation.key  = key;
-
-                service.saveWait(wl.reservation)
-                    .then(function(response) {
-                        wl.buttonText = 'Agregar a lista de espera';
-                        message.success(response.data.msg);
-                        $uibModalInstance.dismiss('cancel');
-                    }).catch(function(error) {
-                        wl.buttonText = 'Agregar a lista de espera';
-                        console.error("saveWait " + angular.toJson(error, true));
-                        message.apiError(error);
-                    });
-            };
-
-            function listResource() {
-                listGuest();
-                listDurations();
-            }
-
-            (function Init() {
-                listResource();
-            })();
+    wl.save = function() {
+      if (!wl.reservation.guest_id) {
+        if (wl.newGuest) {
+          delete wl.reservation.guest_id;
+          wl.reservation.guest = wl.newGuest;
         }
-    ]);
+      } else {
+        delete wl.reservation.guest;
+      }
+
+      wl.reservation.guest = wl.newGuest;
+      wl.buttonText = 'Enviando ...';
+
+      var key = service.key();
+      $rootScope.$broadcast("blackList.add", key);
+      wl.reservation.key = key;
+
+      service.saveWait(wl.reservation)
+        .then(function(response) {
+          wl.buttonText = 'Agregar a lista de espera';
+          message.success(response.data.msg);
+          $uibModalInstance.dismiss('cancel');
+        }).catch(function(error) {
+          wl.buttonText = 'Agregar a lista de espera';
+          console.error("saveWait " + angular.toJson(error, true));
+          message.apiError(error);
+        });
+    };
+
+    wl.delete = function() {
+      service.deleteWaitList(data.reservation_id).then(
+        function success() {
+
+        },
+        function error() {
+
+        });
+      console.log("delete " + angular.toJson(data, true));
+    };
+
+    var listResource = function() {
+
+      return $q.all([listGuest(), listDurations()]);
+
+    };
+
+    var defineOption = function() {
+      if (option === "edit") {
+        loadEditData();
+      }
+      console.log(angular.toJson(data, true));
+    };
+
+    var loadEditData = function() {
+      wl.title = "Editar entrada";
+
+      if (data.guest !== null) {
+        wl.selectGuest(data.guest);
+      }
+
+      wl.reservation.covers = data.num_people;
+      wl.reservation.quote = data.quote;
+    };
+
+    var init = function() {
+      listResource().then(
+        function success(response) {
+          defineOption();
+        },
+        function error(response) {
+          console.error("listResource" + angular.toJson(response, true));
+        }
+      );
+
+    };
+
+    init();
+
+  }
+]);

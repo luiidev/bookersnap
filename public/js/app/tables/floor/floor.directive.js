@@ -145,6 +145,10 @@ angular.module('floor.directive', [])
             element.draggable({
                 helper: "clone",
                 appendTo: '#lienzo',
+                cursorAt: {
+                    left: 5,
+                    top: 5
+                },
                 start: function(event, ui) {
                     $(ui.helper).css({
                         "z-index": 2,
