@@ -1,5 +1,5 @@
 angular.module('floor.controller', [])
-  .controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
+  .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
     FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
     var vm = this;
@@ -55,6 +55,7 @@ angular.module('floor.controller', [])
     $scope.$on("blackList.add", function(evt, key) {
       blackList.add(key);
     });
+
     /**
      * END
      */
@@ -473,6 +474,8 @@ angular.module('floor.controller', [])
      */
 
     $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+      evt.preventDefault();
+      // console.log(evt, "o.o");
       if (!blackList.contains(data.key)) {
         if (typeof events[data.action] == "function") {
           events[data.action](data.data);
@@ -562,7 +565,7 @@ angular.module('floor.controller', [])
 
       reservationService.quickCreate(reservation)
         .then(function(response) {
-          $rootScope.$broadcast("floorReload", "add");
+          vm.reservations.add(response.data.data);
         }).catch(function(error) {
           message.apiError(error);
         });
@@ -573,7 +576,7 @@ angular.module('floor.controller', [])
       var reservation = parseReservation();
       reservationService.sit(id, reservation)
         .then(function(response) {
-          $rootScope.$broadcast("floorReload", "update");
+          vm.reservations.update(response.data.data);
         }).catch(function(error) {
           message.apiError(error);
         });
@@ -932,7 +935,8 @@ angular.module('floor.controller', [])
         });
     };
   })
-  .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
+
+.controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
     var vmd = this;
 
     /**
@@ -2564,6 +2568,7 @@ angular.module('floor.controller', [])
         if (option === "edit") {
           loadEditData();
         }
+        console.log(angular.toJson(data, true));
       };
 
       var loadEditData = function() {
@@ -2572,9 +2577,9 @@ angular.module('floor.controller', [])
         if (data.guest !== null) {
           wl.selectGuest(data.guest);
         }
+
         wl.reservation.covers = data.num_people;
         wl.reservation.quote = data.quote;
-        wl.reservation.note = data.note;
       };
 
       var init = function() {
