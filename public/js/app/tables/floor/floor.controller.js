@@ -1,6 +1,5 @@
 angular.module('floor.controller', [])
-
-.controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
+	.controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
 		FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
 		var vm = this;
@@ -23,9 +22,9 @@ angular.module('floor.controller', [])
 		 * Variables de manejo general de informacion
 		 */
 		vm.zones = [];
-		vm.reservations = {};
+		var reservations = {};
+		var servers = {};
 		var blocks = [];
-		var servers = [];
 		var zones = [];
 		/**
 		 * END Variables de manejo general de informacion
@@ -37,34 +36,11 @@ angular.module('floor.controller', [])
 		 */
 		var eventEstablished = {};
 
-		/**
-		 * Lista negra de eventos de WS que no deben ejecutarse,
-		 * por que el usuario actual es quien las emitio
-		 * @type {object}
-		 */
-		var blackList = {};
-		blackList.data = [];
-
-		blackList.add = function(key) {
-			this.data.push(key);
-		};
-
-		blackList.contains = function(key) {
-			return this.data.indexOf(key) !== -1;
-		};
-
-		$scope.$on("blackList.add", function(evt, key) {
-			blackList.add(key);
-		});
-		/**
-		 * END
-		 */
-
 		////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 * Funcion de actualizacion de objeco
 		 */
-		vm.reservations.update = function(data, apply) {
+		reservations.update = function(data, apply) {
 			angular.forEach(this.data, function(reservation) {
 				angular.forEach(data, function(obj_data) {
 					if (reservation.id == obj_data.id) {
@@ -91,8 +67,8 @@ angular.module('floor.controller', [])
 
 			if (apply) $scope.$apply();
 		};
-		vm.reservations.add = function(reservation, apply) {
-			vm.reservations.data.push(reservation);
+		reservations.add = function(reservation, apply) {
+			this.data.push(reservation);
 			angular.forEach(vm.zones.tables, function(table) {
 				angular.forEach(reservation.tables, function(obj_table) {
 					if (table.id == obj_table.id) {
@@ -103,6 +79,45 @@ angular.module('floor.controller', [])
 
 			if (apply) $scope.$apply();
 		};
+		servers.update = function(data, apply) {
+			angular.forEach(this.data, function(server) {
+				angular.forEach(data, function(obj_data) {
+					if (server.id == obj_data.id) {
+						angular.forEach(vm.zones.tables, function(table) {
+							angular.forEach(server.tables, function(obj_table) {
+								if (table.id == obj_table.id) {
+									delete table.server;
+								}
+							});
+						});
+						angular.forEach(obj_data, function(value, index) {
+							server[index] = value;
+						});
+						angular.forEach(vm.zones.tables, function(table) {
+							angular.forEach(server.tables, function(obj_table) {
+								if (table.id == obj_table.id) {
+									table.server = server;
+								}
+							});
+						});
+					}
+				});
+			});
+
+			if (apply) $scope.$apply();
+		};
+		servers.add = function(server, apply) {
+			this.data.push(server);
+			angular.forEach(vm.zones.tables, function(table) {
+				angular.forEach(server.tables, function(obj_table) {
+					if (table.id == obj_table.id) {
+						table.server = server;
+					}
+				});
+			});
+			console.log(this.data);
+			if (apply) $scope.$apply();
+		};
 		/**
 		 * END
 		 */
@@ -111,7 +126,6 @@ angular.module('floor.controller', [])
 		/**
 		 * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
 		 */
-
 		vm.titulo = "Floor";
 		vm.colorsSelect = [];
 
@@ -154,9 +168,9 @@ angular.module('floor.controller', [])
 
 		$scope.$on("floorReload", function(evt, data, action) {
 			if (action == "update") {
-				vm.reservations.update(data);
+				reservations.update(data);
 			} else if (action == "add") {
-				vm.reservations.add(data);
+				reservations.add(data);
 			}
 		});
 
@@ -187,22 +201,12 @@ angular.module('floor.controller', [])
 		//     );
 		// };
 
-		var loadServers = function() {
-			FloorFactory.getServers().then(function success(response) {
-					servers = response;
-					// $table.setColorTable(vm.zones, servers);
-					ServerDataFactory.setServerItems(servers);
-					// console.log('Servidores' + angular.toJson(servers, true));
-					// Se cargan los colores que ya fueron asignados  
-					angular.forEach(servers, function(server, m) {
-						ServerDataFactory.setColorItems(server.color);
-					});
-					//console.log(angular.toJson(vm.zones, true));
-				},
-				function error(response) {
-					console.error(response);
-				}
-			);
+		var loadServersCtrl = function(servers) {
+			ServerDataFactory.setServerItems(servers);
+
+			angular.forEach(servers, function(server, m) {
+				ServerDataFactory.setColorItems(server.color);
+			});
 		};
 
 		// var listSourceTypes = function() {
@@ -328,8 +332,8 @@ angular.module('floor.controller', [])
 
 			reservationService.getReservations(true)
 				.then(function(response) {
-					vm.reservations.data = response.data.data;
-					deferred.resolve(vm.reservations.data);
+					reservations.data = response.data.data;
+					deferred.resolve(reservations.data);
 				}).catch(function(error) {
 					message.apiError(error, "No se pudo cargar las reservaciones");
 				});
@@ -340,10 +344,14 @@ angular.module('floor.controller', [])
 		var loadServers2 = function() {
 			var deferred = $q.defer();
 
-			FloorFactory.getServers()
+			reservationService.getServers(true)
 				.then(function(response) {
-					servers = response;
-					deferred.resolve(servers);
+					servers.data = response.data.data;
+
+					// Other code - server ctrl
+					loadServersCtrl(servers.data);
+
+					deferred.resolve(servers.data);
 				}).catch(function(error) {
 					message.apiError(error);
 				});
@@ -359,7 +367,6 @@ angular.module('floor.controller', [])
 				loadReservations2(),
 				loadServers2(),
 				// listGuest(),
-				// listServers(),
 				// listStatuses(),
 			]).then(function(data) {
 				loadTablesEdit(data[0], data[1], data[2], data[3]);
@@ -383,10 +390,10 @@ angular.module('floor.controller', [])
 				name: "reservations",
 				data: reservations
 			}, {
-				name: "setColorTables",
+				name: "servers",
 				data: servers
 			}]);
-			console.log(vm.zones);
+			console.log(vm.zones, servers);
 		};
 
 		/**
@@ -446,12 +453,12 @@ angular.module('floor.controller', [])
 				var data = {
 					table_id: table.id
 				};
-				var key = reservationService.key();
-				blackList.add(key);
-				data.key = key;
+
+				reservationService.blackList.key(data);
+
 				reservationService.sit(id, data)
 					.then(function(response) {
-						vm.reservations.update(response.data.data);
+						reservations.update(response.data.data);
 					}).catch(function(error) {
 						message.apiError(error);
 					});
@@ -461,24 +468,42 @@ angular.module('floor.controller', [])
 		/**
 		 * Eventos de Web Socket
 		 */
-		var events = {};
-		events.update = function(data) {
-			vm.reservations.update(data, true);
+		var reservationEvents = {};
+		reservationEvents.update = function(data) {
+			reservations.update(data, true);
 		};
 
-		events.create = function(data) {
-			vm.reservations.add(data, true);
+		reservationEvents.create = function(data) {
+			reservations.add(data, true);
+		};
+
+		var serverEvents = {};
+		serverEvents.update = function(data) {
+			servers.update(data, true);
+		};
+
+		serverEvents.create = function(data) {
+			servers.add(data, true);
 		};
 		/**
 		 * END
 		 */
 
 		$scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-			evt.preventDefault();
-			// console.log(evt, "o.o");
-			if (!blackList.contains(data.key)) {
-				if (typeof events[data.action] == "function") {
-					events[data.action](data.data);
+			if (!reservationService.blackList.contains(data.key)) {
+				console.log("Actualize =)");
+				if (typeof reservationEvents[data.action] == "function") {
+					reservationEvents[data.action](data.data);
+				}
+			} else {
+				console.log("Ignore web socket =3");
+			}
+		});
+
+		$scope.$on("NotifyFloorTableServerReload", function(evt, data) {
+			if (!reservationService.blackList.contains(data.key)) {
+				if (typeof serverEvents[data.action] == "function") {
+					serverEvents[data.action](data.data);
 				}
 			}
 		});
@@ -532,9 +557,9 @@ angular.module('floor.controller', [])
 				vm.configuracion.status_people_3 === 0) {
 
 				if (eventEstablished.event == "sit") {
-					sit(obj);
+					sit();
 				} else if (eventEstablished.event == "create") {
-					create(obj);
+					create();
 				}
 
 			} else {
@@ -543,7 +568,7 @@ angular.module('floor.controller', [])
 
 		};
 
-		var parseReservation = function(obj) {
+		var parseReservation = function() {
 			var now = moment();
 			var date = now.format("YYYY-MM-DD");
 			var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
@@ -560,23 +585,23 @@ angular.module('floor.controller', [])
 			};
 		};
 
-		var create = function(obj) {
-			var reservation = parseReservation(obj);
+		var create = function() {
+			var reservation = parseReservation();
 
 			reservationService.quickCreate(reservation)
 				.then(function(response) {
-					vm.reservations.add(response.data.data);
+					reservations.add(response.data.data);
 				}).catch(function(error) {
 					message.apiError(error);
 				});
 		};
 
-		var sit = function(obj) {
+		var sit = function() {
 			var id = eventEstablished.data.reservation_id;
-			var reservation = parseReservation(obj);
+			var reservation = parseReservation();
 			reservationService.sit(id, reservation)
 				.then(function(response) {
-					vm.reservations.update(response.data.data);
+					reservations.update(response.data.data);
 				}).catch(function(error) {
 					message.apiError(error);
 				});
@@ -604,6 +629,8 @@ angular.module('floor.controller', [])
 				}
 			});
 		}
+
+
 
 		function storeTables(num, table) {
 			table.selected = !table.selected;
@@ -700,7 +727,7 @@ angular.module('floor.controller', [])
 			// listTypeTurns();
 			sizeLienzo();
 			closeNotes();
-			loadServers();
+			// loadServers();
 			// listSourceTypes();
 			// listStatuses();
 			loadConfigurationPeople();
@@ -897,9 +924,7 @@ angular.module('floor.controller', [])
 			vmc.waitingResponse = true;
 			var reservation = parseReservation();
 
-			var key = reservationService.key();
-			$rootScope.$broadcast("blackList.add", key);
-			reservation.key = key;
+			reservationService.blackList.key(reservation);
 
 			reservationService.quickCreate(reservation)
 				.then(function(response) {
@@ -919,9 +944,7 @@ angular.module('floor.controller', [])
 				table_id: table.id
 			};
 
-			var key = reservationService.key();
-			$rootScope.$broadcast("blackList.add", key);
-			data.key = key;
+			reservationService.blackList.key(data);
 
 			reservationService.sit(id, data)
 				.then(function(response) {
@@ -1151,9 +1174,7 @@ angular.module('floor.controller', [])
 				return result;
 			}, []);
 
-			var key = reservationService.key();
-			$rootScope.$broadcast("blackList.add", key);
-			vmd.reservation.key = key;
+			reservationService.blackList.key(vmd.reservation);
 
 			reservationService.quickEdit(id, vmd.reservation)
 				.then(function(response) {
@@ -1170,8 +1191,7 @@ angular.module('floor.controller', [])
 				vmd.waitingResponse = true;
 				var id = vmd.reservation.id;
 
-				var key = reservationService.key();
-				$rootScope.$broadcast("blackList.add", key);
+				reservationService.blackList.key();
 
 				reservationService.cancel(id, {
 						key: key
@@ -1924,7 +1944,7 @@ angular.module('floor.controller', [])
 
 	})
 	//Servidores
-	.controller('serverController', function($scope, $rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
+	.controller('serverController', function($rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
 		var sm = this;
 		//Variable para manejo de pantalla nuevo y crear
@@ -2359,9 +2379,7 @@ angular.module('floor.controller', [])
 					return result;
 				}, []);
 
-				var key = service.key();
-				$rootScope.$broadcast("blackList.add", key);
-				er.reservation.key = key;
+				service.blackList.key(er.reservation);
 
 				service.quickEdit(id, er.reservation)
 					.then(function(response) {
@@ -2378,8 +2396,7 @@ angular.module('floor.controller', [])
 					er.waitingResponse = true;
 					var id = er.reservation.id;
 
-					var key = service.key();
-					$rootScope.$broadcast("blackList.add", key);
+					service.blackList.key();
 
 					service.cancel(id, {
 							key: key
@@ -2447,7 +2464,7 @@ angular.module('floor.controller', [])
 			 */
 
 			(function Init() {
-				var date = fecha_actual();
+				var date = getFechaActual();
 				if (content.reservation.block_id) $state.go("mesas.floor.block", {
 					date: date,
 					id: content.reservation.block_id
