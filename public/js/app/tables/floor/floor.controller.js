@@ -55,7 +55,6 @@ angular.module('floor.controller', [])
     $scope.$on("blackList.add", function(evt, key) {
       blackList.add(key);
     });
-
     /**
      * END
      */
