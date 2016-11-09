@@ -98,7 +98,6 @@ angular.module('floor.controller', [])
                         table.reservations.add(reservation);
                     }
                 });
-
             });
 
             if (apply) $scope.$apply();
@@ -1340,7 +1339,6 @@ angular.module('floor.controller', [])
                                 break;
                         }
                     }
-
                 });
 
                 rm.total_men = men;
@@ -1362,9 +1360,8 @@ angular.module('floor.controller', [])
                 //asignar servicio de reservaciones
                 //console.log("blockReservation: " + angular.toJson(response, true));
             });
-
-
         };
+
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
 
             if (data.action == "update") {
