@@ -1,6 +1,5 @@
 angular.module("floor.notify.controller", [])
 	.controller('FloorMainCtrl', function($scope, $rootScope, ServerNotification) {
-
 		var serverSocket = ServerNotification.getConnection();
 
 		serverSocket.on("b-mesas-floor-notes", function(data) {
@@ -8,9 +7,13 @@ angular.module("floor.notify.controller", [])
 		});
 
 		serverSocket.on("b-mesas-floor-res", function(data) {
-			$rootScope.$broadcast("NotifyFloorTableReservationReload", data);
+			if (data.controller == "waitList") {
+				$rootScope.$broadcast("NotifyFloorWaitListReload", data);
+			} else {
+				$rootScope.$broadcast("NotifyFloorTableReservationReload", data);
+			}
 		});
-		
+
 		serverSocket.on("b-mesas-config-update", function(data) {
 			$rootScope.$broadcast("NotifyFloorConfigUpdateReload", data);
 		});
