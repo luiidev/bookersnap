@@ -2396,7 +2396,6 @@ angular.module('floor.controller', [])
         if (option === "edit") {
           loadEditData();
         }
-        console.log(angular.toJson(data, true));
       };
 
       var loadEditData = function() {
@@ -2408,6 +2407,7 @@ angular.module('floor.controller', [])
 
         wl.reservation.covers = data.num_people;
         wl.reservation.quote = data.quote;
+        wl.reservation.note = data.note;
       };
 
       var init = function() {

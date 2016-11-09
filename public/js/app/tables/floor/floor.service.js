@@ -13,8 +13,6 @@ angular.module('floor.service', [])
 			sendMessage: function(reservacion_id, data) {
 				return $http.post(ApiUrlMesas + "/reservations/" + reservacion_id + "/send-email", data);
 			},
-
-
 		};
 	})
 	//Data para filtro de reservas Turnos, Reservas y visitas
@@ -334,7 +332,8 @@ angular.module('floor.service', [])
 							type_turn: reserva.type_turn,
 							first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
 							last_name: reserva.guest ? reserva.guest.last_name : "",
-							guest: reserva.guest
+							guest: reserva.guest,
+							note: reserva.note
 						};
 
 						if (reserva.wait_list === 0) {
