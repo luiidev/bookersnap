@@ -1,12 +1,10 @@
-angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service', 'floor.notify.controller'])
-    .constant("screenSizeFloor", {
+angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service', 'floor.notify.controller']).constant("screenSizeFloor", {
         minSize: 675,
         header: 185,
         menu: 400
     })
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
-        $stateProvider
-            .state('mesas.floor', {
+        $stateProvider.state('mesas.floor', {
                 url: '/floor',
                 views: {
                     '@': {
@@ -40,8 +38,7 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                     //     controllerAs: 'rc'
                     // }
                 },
-            })
-            .state('mesas.floor.reservation', {
+            }).state('mesas.floor.reservation', {
                 url: '/reservation',
                 views: {
                     "": {
@@ -50,15 +47,12 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
                         controllerAs: 'rm'
                     }
                 }
-
-            })
-            .state('mesas.floor.walkin', {
+            }).state('mesas.floor.walkin', {
                 url: '/walkin',
                 templateUrl: '/js/app/tables/floor/view/waitlist.html',
                 controller: 'WaitListCtrl',
                 controllerAs: 'wm',
-            })
-            .state('mesas.floor.server', {
+            }).state('mesas.floor.server', {
                 url: '/server',
                 templateUrl: '/js/app/tables/floor/view/server.html',
                 controller: 'serverController',

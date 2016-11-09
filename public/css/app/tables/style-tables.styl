@@ -100,6 +100,14 @@
 		&.block
 			background #8a8a8a
 			border solid 2px #797979
+		&.rt0
+			& .item-drag-cover
+				-moz-transform: translate(-50%,-50%)
+				-ms-transform: translate(-50%,-50%)
+				-webkit-transform: translate(-50%,-50%)
+				transform: translate(-50%,-50%)
+				top: 50%
+				left: 50%
 		&.rt45
 			& .table-label.top
 				-moz-transform translate(-50%,-100%) rotate(-45deg)
@@ -125,9 +133,12 @@
 				margin: 0 !important
 			& .item-drag-cover
 			& .item-drag-time
-				transform: translate(-50%,-100%) rotate(-45deg)
-				left: 50%;
-				margin-top: 6px !important;
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-45deg)
+				-ms-transform: translate(-50%,-50%) rotate(-45deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-45deg)
 			& .box-icon
 				left: 50%
 				top: 50%
@@ -135,7 +146,20 @@
 				-ms-transform: translate(-50%,-50%) rotate(-45deg)
 				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
 				transform: translate(-50%,-50%) rotate(-45deg)
-		&.rt135 
+		&.rt90
+			& .item-drag-cover
+				-moz-transform: translate(-50%,-50%)
+				-ms-transform: translate(-50%,-50%)
+				-webkit-transform: translate(-50%,-50%)
+				transform: translate(-50%,-50%)
+				top: 50%
+				left: 50%
+		&.rt135
+			& .item-drag-cover
+			& .item-drag-time
+				transform: translate(-50%,-50%) rotate(-45deg)
+				top: 50%
+				left: 50%
 			& .table-label.top
 				-moz-transform translate(-50%,-100%) rotate(-45deg)
 				-ms-transform translate(-50%,-100%) rotate(-45deg)
@@ -330,32 +354,31 @@
 			font-size .9em
 			border 0.5px solid #6b6a6a
 			top 50%
-			margin-top -9px
-			height 16px
 			line-height 16px
 			border-radius 4px
 			position: absolute
+			padding 1px 5px 1px 5px
 			text-align: center
 		& .item-drag-time
+			font-size .8em
 			background-color #33c200
 			color #fff
 			font-weight 500
-			width 45px
-			font-size .9em
+			text-align center
+			padding 1px 5px 1px 5px
+			position absolute
+			left 50%
 			top 50%
-			margin-top -8px
-			height 16px
-			line-height 16px
-			position: absolute
-			text-align: center
-			margin-left: auto
-			margin-right: auto
+			-moz-transform translate(-50%,-50%)
+			-ms-transform translate(-50%,-50%)
+			-webkit-transform translate(-50%,-50%)
+			transform translate(-50%,-50%)			
 		& .next-time-all
 			margin-bottom 10px
 			background #3a99d8
-			width 65px
-		& .nex-time-top
-			top: 16px
+			border solid 1px #2a577a
+			&:nth-child(2n+1)
+				top 82%
 		& .box-icon
 			background-repeat no-repeat
 			width 30px
