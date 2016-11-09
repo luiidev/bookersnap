@@ -46,6 +46,7 @@ gulp.task('library-bower-js', function() {
     gulp.src([
             'public/library/bower_components/jquery/dist/jquery.min.js',
             'public/library/bower_components/angular/angular.min.js',
+            'public/library/bower_components/angular-locale/angular-locale_es-mx.min.js',
             'public/library/bower_components/angular-animate/angular-animate.min.js',
             'public/library/bower_components/angular-resource/angular-resource.min.js',
             'public/library/bower_components/angular-ui-router/release/angular-ui-router.min.js',

@@ -245,7 +245,7 @@ angular.module('floor.service', [])
 						defered.resolve(response);
 					}, function error(response) {
 						response = response.data;
-						defered.reject(response);
+						deferred.reject(response);
 					});
 
 				return defered.promise;

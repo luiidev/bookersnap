@@ -110,6 +110,28 @@ angular.module('reservation.controller', [])
              */
             var editState = false;
 
+
+            /**
+             * Datepicker config
+             */
+            $scope.toggleMin = function() {
+                $scope.minDate = $scope.minDate ? null : new Date();
+            };
+            $scope.toggleMin();
+
+            $scope.open = function($event, opened) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $scope[opened] = true;
+            };
+
+            $scope.format = 'dd-MM-yyyy';
+            /**
+             * END Datepicker config
+             */
+
+
             vm.save = function() {
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tables ids
@@ -190,6 +212,11 @@ angular.module('reservation.controller', [])
 
             vm.cancel = function() {
                 return redirect();
+            };
+
+            var reset = function() {
+                vm.tablesSelected = {};
+                vm.zones.length = 0;
             };
             /**
              * END Save. update and cancel reservation
@@ -460,6 +487,7 @@ angular.module('reservation.controller', [])
                 var search = function() {
                     service.getGuestList(name)
                         .then(function(response) {
+                            console.log(response.data.data);
                             vm.guestList = response.data.data.data;
                         }).catch(function(error) {
                             message.apiError(error);
@@ -480,6 +508,10 @@ angular.module('reservation.controller', [])
                 vm.newGuest = null;
                 vm.guestList = [];
                 vm.addGuest = false;
+            };
+
+            vm.searchListHide = function() {
+                vm.guestList = [];
             };
             /**
              * END Search guest list
@@ -627,7 +659,6 @@ angular.module('reservation.controller', [])
 
             var showTimeCustom = function() {
                 var tActive = $table.lastTimeEvent();
-                console.log(tActive);
                 if (tActive) vm.zones.tActive = tActive;
             };
 
@@ -635,7 +666,9 @@ angular.module('reservation.controller', [])
 
             var loadTablesEdit = function(zones, reservations) {
                 vm.zones = helper.loadTableV2(zones, [{name: "reservations", data: reservations}]);
-                console.log(vm.zones);
+                if ($stateParams.tables) {
+                    vm.zones.tablesSelected($stateParams.tables);
+                }
                 setMaxIndex();
             };
 
@@ -643,6 +676,7 @@ angular.module('reservation.controller', [])
                 var date = moment(vm.date);
 
                 if (!date.isValid()) {
+                    reset();
                     return message.error("Fecha invalida no se puede cargar las zonas");
                 }
 
