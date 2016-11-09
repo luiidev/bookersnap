@@ -1,5 +1,5 @@
 angular.module('floor.controller', [])
-.controller('FloorCtrl', function($scope, $rootScope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
+.controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
         FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
 
         var vm = this;
@@ -470,6 +470,8 @@ angular.module('floor.controller', [])
          */
 
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
+          evt.preventDefault();
+          // console.log(evt, "o.o");
             if ( !blackList.contains(data.key) ) {
               if (typeof events[data.action] == "function") {
                   events[data.action](data.data);
@@ -559,7 +561,7 @@ angular.module('floor.controller', [])
 
           reservationService.quickCreate(reservation)
             .then(function(response) {
-              $rootScope.$broadcast("floorReload", "add");
+              vm.reservations.add(response.data.data);
             }).catch(function(error) {
               message.apiError(error);
             });
@@ -570,7 +572,7 @@ angular.module('floor.controller', [])
           var reservation = parseReservation();
           reservationService.sit(id, reservation)
             .then(function(response) {
-              $rootScope.$broadcast("floorReload", "update");
+              vm.reservations.update(response.data.data);
             }).catch(function(error) {
               message.apiError(error);
             });
