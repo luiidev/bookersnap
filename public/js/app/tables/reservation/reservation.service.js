@@ -2,10 +2,40 @@ angular.module('reservation.service', [])
     .factory("reservationService", ["$http", "HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
         function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
             var zones, servers, resStatus, turns, blocks, tags, reservations, configuration;
+
+            /**
+             * Lista negra de eventos de WS que no deben ejecutarse,
+             * por que el usuario actual es quien las emitio
+             * @type {object}
+             */
+            var blackListMethods = {};
+            blackList = [];
+
+            blackListMethods.add = function(key) {
+                blackList.push(key);
+            };
+
+            blackListMethods.key = function(obj) {
+                var key = Math.random().toString(36).substring(2, 7);
+                this.add(key);
+
+                if (obj) {
+                    obj.key = key;
+                    return obj;
+                }
+
+                return key;
+            };
+
+            blackListMethods.contains = function(key) {
+                return blackList.indexOf(key) !== -1;
+            };
+            /**
+             * END
+             */
+
             return {
-                key: function() {
-                    return Math.random().toString(36).substring(2, 7);
-                },
+                blackList: blackListMethods,
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
@@ -239,7 +269,8 @@ angular.module('reservation.service', [])
                                 if (this.reservations.active.server) {
                                     return "2px solid " + this.reservations.active.server.color;
                                 }
-                            } else if (this.server.color) {
+                            }
+                            if (this.server) {
                                 return "2px solid " + this.server.color;
                             }
                             return null;
@@ -544,12 +575,12 @@ angular.module('reservation.service', [])
 
                 });
             },
-            setColorTables: function(servers) {
+            servers: function(servers) {
                 angular.forEach(dataZones.tables, function(table) {
                     angular.forEach(servers, function(server) {
                         angular.forEach(server.tables, function(serverTable) {
                             if (table.id == serverTable.id) {
-                                table.server.color = server.color;
+                                table.server = server;
                             }
                         });
                     });
