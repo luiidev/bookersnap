@@ -55,21 +55,21 @@ angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directi
             }).state('mesas.floor.server', {
                 url: '/server',
                 templateUrl: '/js/app/tables/floor/view/server.html',
-                controller: 'serverController',
+                controller: 'serverCtrl',
                 controllerAs: 'sm',
-            })
-            // .state('mesas.floor.reservation', {
-            //     url: '/reservation/:date/add',
-            //     templateUrl: '/js/app/tables/reservation/view/index.html',
-            //     controller: 'reservationCtrl.StoreUpdate',
-            //     controllerAs: 'rc',
-            //     parent: 'mesas.floor'
-            // })
-            // .state('mesas.floor.reservation-edit', {
-            //     url: '/reservation/:date/edit/:id',
-            //     templateUrl: '/js/app/tables/reservation/view/index.html',
-            //     controller: 'reservationCtrl.StoreUpdate',
-            //     controllerAs: 'rc',
-            //     parent: 'mesas.floor'
-            // });
+            });
+        // .state('mesas.floor.reservation', {
+        //     url: '/reservation/:date/add',
+        //     templateUrl: '/js/app/tables/reservation/view/index.html',
+        //     controller: 'reservationCtrl.StoreUpdate',
+        //     controllerAs: 'rc',
+        //     parent: 'mesas.floor'
+        // })
+        // .state('mesas.floor.reservation-edit', {
+        //     url: '/reservation/:date/edit/:id',
+        //     templateUrl: '/js/app/tables/reservation/view/index.html',
+        //     controller: 'reservationCtrl.StoreUpdate',
+        //     controllerAs: 'rc',
+        //     parent: 'mesas.floor'
+        // });
     });
