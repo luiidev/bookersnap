@@ -557,9 +557,9 @@ angular.module('floor.controller', [])
                 vm.configuracion.status_people_3 === 0) {
 
                 if (eventEstablished.event == "sit") {
-                    sit();
+                    sit(obj);
                 } else if (eventEstablished.event == "create") {
-                    create();
+                    create(obj);
                 }
 
             } else {
@@ -568,7 +568,7 @@ angular.module('floor.controller', [])
 
         };
 
-        var parseReservation = function() {
+        var parseReservation = function(obj) {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
             var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
@@ -585,8 +585,8 @@ angular.module('floor.controller', [])
             };
         };
 
-        var create = function() {
-            var reservation = parseReservation();
+        var create = function(obj) {
+            var reservation = parseReservation(obj);
 
             reservationService.quickCreate(reservation)
                 .then(function(response) {
@@ -596,9 +596,9 @@ angular.module('floor.controller', [])
                 });
         };
 
-        var sit = function() {
+        var sit = function(obj) {
             var id = eventEstablished.data.reservation_id;
-            var reservation = parseReservation();
+            var reservation = parseReservation(obj);
             reservationService.sit(id, reservation)
                 .then(function(response) {
                     reservations.update(response.data.data);
