@@ -144,8 +144,6 @@ angular.module('floor.controller')
         var timeoutNotes;
         var openNotesTimeOut;
 
-        vm.typeTurns = [];
-
         $scope.$on("floorNotesReload", function(mote) {
             vm.notes = note;
         });
@@ -189,17 +187,17 @@ angular.module('floor.controller')
             vm.flagSelectedZone = value;
         };
 
-        // var listTypeTurns = function() {
-        //     FloorFactory.listTurnosActivos(vm.fecha_actual).then(
-        //         function success(response) {
-        //             vm.typeTurns = response;
-        //             TypeFilterDataFactory.setTypeTurnItems(response);
-        //         },
-        //         function error(error) {
-        //             message.apiError(error);
-        //         }
-        //     );
-        // };
+        var listTypeTurns = function() {
+            FloorFactory.listTurnosActivos(vm.fecha_actual).then(
+                function success(response) {
+                    vm.typeTurns = response;
+                    TypeFilterDataFactory.setTypeTurnItems(response);
+                },
+                function error(error) {
+                    message.apiError(error);
+                }
+            );
+        };
 
         var loadServersCtrl = function(servers) {
             ServerDataFactory.setServerItems(servers);
@@ -372,6 +370,7 @@ angular.module('floor.controller')
                 loadTablesEdit(data[0], data[1], data[2], data[3]);
 
                 showTimeCustom();
+
             });
         };
 
@@ -702,8 +701,9 @@ angular.module('floor.controller')
             if (!vm.notesBox) {
                 vm.notesNotify = true;
                 vm.notesNotification = true;
-                listTypeTurns();
+
             }
+            listTypeTurns();
         });
 
         $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
@@ -725,7 +725,7 @@ angular.module('floor.controller')
         var init = function() {
 
             InitModule();
-            // listTypeTurns();
+            listTypeTurns();
             sizeLienzo();
             closeNotes();
             // loadServers();

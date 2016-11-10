@@ -1,184 +1,184 @@
 angular.module('book.service', [])
-	.factory('BookDataFactory', function($http, ApiUrlMesas) {
-		return {
-			getBooks: function(vDate) {
-				// return $http.get(ApiUrlMesas+"/book/"+vDate); 
-			}
-		};
+    .factory('BookDataFactory', function($http, ApiUrlMesas) {
+        return {
+            getBooks: function(vDate) {
+                // return $http.get(ApiUrlMesas+"/book/"+vDate); 
+            }
+        };
 
-	})
-	.factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory) {
+    })
+    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory) {
 
-		return {
-			getReservations: function(reload, date) {
-				var defered = $q.defer();
+        return {
+            getReservations: function(reload, date) {
+                var defered = $q.defer();
 
-				reservationService.getReservations(reload, date).then(
-					function success(response) {
-						response = response.data.data;
-						defered.resolve(response);
-					},
-					function error(response) {
-						defered.reject(response);
-					}
-				);
-				return defered.promise;
-			},
-			listBook: function(hours, reservations, blocks) {
-				var self = this;
-				var book = [];
+                reservationService.getReservations(reload, date).then(
+                    function success(response) {
+                        response = response.data.data;
+                        defered.resolve(response);
+                    },
+                    function error(response) {
+                        defered.reject(response);
+                    }
+                );
+                return defered.promise;
+            },
+            listBook: function(hours, reservations, blocks) {
+                var self = this;
+                var book = [];
 
-				angular.forEach(hours, function(hour, key) {
-					var existsReservation = self.existsReservation(hour, reservations);
-					var existsBlocks = self.existsBlocks(hour, blocks);
+                angular.forEach(hours, function(hour, key) {
+                    var existsReservation = self.existsReservation(hour, reservations);
+                    var existsBlocks = self.existsBlocks(hour, blocks);
 
-					var dataBook = {
-						time: hour.time,
-						time_text: hour.name,
-						reservation: {
-							exists: existsReservation.exists,
-							data: existsReservation.data
-						},
-						block: {
-							exists: existsBlocks.exists,
-							data: existsBlocks.data
-						}
-					};
+                    var dataBook = {
+                        time: hour.time,
+                        time_text: hour.name,
+                        reservation: {
+                            exists: existsReservation.exists,
+                            data: existsReservation.data
+                        },
+                        block: {
+                            exists: existsBlocks.exists,
+                            data: existsBlocks.data
+                        }
+                    };
 
-					book.push(dataBook);
+                    book.push(dataBook);
 
-				});
+                });
 
-				return book;
-			},
-			existsBlocks: function(hour, blocks) {
-				var exists = {
-					exists: false,
-					data: []
-				};
+                return book;
+            },
+            existsBlocks: function(hour, blocks) {
+                var exists = {
+                    exists: false,
+                    data: []
+                };
 
-				angular.forEach(blocks, function(block, key) {
-					if (block.start_time == hour.time) {
-						exists.exists = true;
-						exists.data.push(block);
-					}
-				});
+                angular.forEach(blocks, function(block, key) {
+                    if (block.start_time == hour.time) {
+                        exists.exists = true;
+                        exists.data.push(block);
+                    }
+                });
 
-				return exists;
-			},
-			existsReservation: function(hour, reservations) {
-				var exists = {
-					exists: false,
-					data: []
-				};
+                return exists;
+            },
+            existsReservation: function(hour, reservations) {
+                var exists = {
+                    exists: false,
+                    data: []
+                };
 
-				angular.forEach(reservations, function(reservation, key) {
-					if (hour.time === reservation.hours_reservation) {
-						exists.exists = true;
-						exists.data.push(reservation);
-					}
-				});
+                angular.forEach(reservations, function(reservation, key) {
+                    if (hour.time === reservation.hours_reservation) {
+                        exists.exists = true;
+                        exists.data.push(reservation);
+                    }
+                });
 
-				return exists;
-			},
-			getAllBlocks: function(reload, params) {
-				var defered = $q.defer();
+                return exists;
+            },
+            getAllBlocks: function(reload, params) {
+                var defered = $q.defer();
 
-				BlockFactory.getBlocks(reload, params).then(
-					function success(response) {
-						defered.resolve(response.data.data);
-					},
-					function error(response) {
-						defered.reject(response.data);
-					}
-				);
+                BlockFactory.getBlocks(reload, params).then(
+                    function success(response) {
+                        defered.resolve(response.data.data);
+                    },
+                    function error(response) {
+                        defered.reject(response.data);
+                    }
+                );
 
-				return defered.promise;
-			},
-			listReservationAndBlocks: function(reload, date) {
-				var self = this;
+                return defered.promise;
+            },
+            listReservationAndBlocks: function(reload, date) {
+                var self = this;
 
-				return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
-			}
-		};
-	})
-	.factory('BookDateFactory', function() {
-		return {
-			rangeDateAvailable: function(minSteep, turn) {
+                return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
+            }
+        };
+    })
+    .factory('BookDateFactory', function() {
+        return {
+            rangeDateAvailable: function(minSteep, turn) {
 
-				var iniHour = turn.hours_ini.split(":");
-				var iniMin = turn.hours_ini.split(":");
+                var iniHour = turn.hours_ini.split(":");
+                var iniMin = turn.hours_ini.split(":");
 
-				var endHour = turn.hours_end.split(":");
-				var endMin = turn.hours_end.split(":");
+                var endHour = turn.hours_end.split(":");
+                var endMin = turn.hours_end.split(":");
 
-				endHour = parseInt(endHour[0]);
-				endMin = parseInt(endMin[1]);
+                endHour = parseInt(endHour[0]);
+                endMin = parseInt(endMin[1]);
 
-				var hour = parseInt(iniHour[0]);
-				var min = parseInt(iniMin[1]);
+                var hour = parseInt(iniHour[0]);
+                var min = parseInt(iniMin[1]);
 
-				var time = [];
+                var time = [];
 
-				while (hour <= endHour) {
+                while (hour <= endHour) {
 
-					var sHorario = (hour <= 12) ? "AM" : "PM";
+                    var sHorario = (hour <= 12) ? "AM" : "PM";
 
-					var hora = hour + ":" + ((min === 0) ? "00" : min) + " " + sHorario;
-					time.push(hora);
+                    var hora = hour + ":" + ((min === 0) ? "00" : min) + " " + sHorario;
+                    time.push(hora);
 
-					if (min == (60 - minSteep)) {
-						hour += 1;
-						min = 0;
-					} else {
-						if (hour == endHour && min == endMin) {
-							hour = 45;
-						}
-						min += minSteep;
-					}
+                    if (min == (60 - minSteep)) {
+                        hour += 1;
+                        min = 0;
+                    } else {
+                        if (hour == endHour && min == endMin) {
+                            hour = 45;
+                        }
+                        min += minSteep;
+                    }
 
-				}
+                }
 
-				return time;
-			},
-			getDate: function(language, options, date) {
-				var me = this;
-				date = (date) ? null : date;
-				if (date !== null) {
-					date = me.changeformatDate(date.toString());
-					return new Date(date).toLocaleDateString(language, options);
-				} else {
-					return new Date().toLocaleDateString(language, options);
-				}
-			},
-			setDate: function(date, option) {
+                return time;
+            },
+            getDate: function(language, options, date) {
+                var me = this;
+                date = (date) ? null : date;
+                if (date !== null) {
+                    date = me.changeformatDate(date.toString());
+                    return new Date(date).toLocaleDateString(language, options);
+                } else {
+                    return new Date().toLocaleDateString(language, options);
+                }
+            },
+            setDate: function(date, option) {
 
-				var me = this;
+                var me = this;
 
-				date = me.changeformatDate(date);
+                date = me.changeformatDate(date);
 
-				var d = new Date(date);
+                var d = new Date(date);
 
-				if (option == "+") {
-					d.setDate(d.getDate() + 1);
-				} else {
-					d.setDate(d.getDate() - 1);
-				}
+                if (option == "+") {
+                    d.setDate(d.getDate() + 1);
+                } else {
+                    d.setDate(d.getDate() - 1);
+                }
 
-				var dateFinal = me.getDate("es-ES", {}, d);
+                var dateFinal = me.getDate("es-ES", {}, d);
 
-				return dateFinal;
-			},
-			changeformatDate: function(date) {
+                return dateFinal;
+            },
+            changeformatDate: function(date) {
 
-				var d = date.split("/");
-				var dateFormat = d[2] + "-" + d[1] + "-" + d[0];
+                var d = date.split("/");
+                var dateFormat = d[2] + "-" + d[1] + "-" + d[0];
 
-				return dateFormat;
-			}
+                return dateFormat;
+            }
 
-		};
+        };
 
-	})
+    })
 
 ;

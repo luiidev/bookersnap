@@ -1,5 +1,5 @@
 <div class="tab-reservation-floor">
-    <div class="input-group">
+    <div class="input-group header-actions">
         <div class="fg-line">
             <input class="form-control" ng-show="!wm.search.show" placeholder="Buscar por nombre u horario" type="text">
                 <button class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait('create')" ng-show="wm.search.show" type="button">
@@ -21,97 +21,101 @@
         </span>
     </div>
     <div>
-        <table cellpadding="0" cellspacing="0" class="table-listado">
-            <thead>
-                <tr>
-                    <th>
-                        PAX
-                    </th>
-                    <th>
-                        NOMBRE
-                    </th>
-                    <th>
-                        TIEMPO E.
-                    </th>
-                </tr>
-            </thead>
-        </table>
-        <div style="height: 100vh;padding-bottom: 280px;">
-            <div style="height: 100%;">
-                <div class="scrollbar-inner">
-                    <table cellpadding="0" cellspacing="0" class="table-listado">
-                        <tbody>
-                            <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming="" ng-repeat="value in wm.res_listado | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
-                                <td>
-                                    <table class="table-listado">
-                                        <tr>
-                                            <td>
-                                                {{value.num_people}}
-                                            </td>
-                                            <td>
-                                                {{value.first_name}} {{value.last_name}}
-                                            </td>
-                                            <td class="text-right time_wail_list" ng-class="{'time_out' : value.time_out}" rowspan="3">
-                                                {{ value.minutes }} Min
-                                                <br>
-                                                    <span>
-                                                        {{ value.time_wait_list }}
-                                                    </span>
-                                                </br>
-                                            </td>
-                                        </tr>
-                                        <tr class="line-row">
-                                            <td colspan="3">
-                                                <ul class="actions p-0 m-0">
-                                                    <li class="dropdown" uib-dropdown="">
-                                                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" ng-click="wm.guestDataMore()" uib-dropdown-toggle="">
-                                                            <i class="zmdi zmdi-info-outline">
-                                                            </i>
-                                                        </a>
-                                                        <ul class="dropdown-menu dropdown-menu-left">
-                                                            <li>
-                                                                <a href="">
-                                                                    Eleccion primera
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="">
-                                                                    Segunda eleccion
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="icon-people">
-                                                        <a href="">
-                                                            <i class="zmdi zmdi-email">
-                                                            </i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                            <td>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="divider">
-                        CANCELADOS
+        <div class="floor-waitlist">
+            <div class="header">
+                <table class="table-listado">
+                    <thead>
+                        <tr>
+                            <th class="child-pax">
+                                PAX
+                            </th>
+                            <th class="child-name">
+                                NOMBRE
+                            </th>
+                            <th class="child-time">
+                                TIEMPO E.
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="body">
+                <div class="container-list">
+                    <div class="scrollbar-inner">
+                        <table cellpadding="0" cellspacing="0" class="table-listado">
+                            <tbody>
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming="" ng-repeat="value in wm.res_listado | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
+                                    <td>
+                                        <table class="table-listado">
+                                            <tr>
+                                                <td class="child-pax">
+                                                    {{value.num_people}}
+                                                </td>
+                                                <td class="child-name">
+                                                    {{value.first_name}} {{value.last_name}}
+                                                </td>
+                                                <td class="child-time text-right time_wail_list" ng-class="{'time_out' : value.time_out}" rowspan="3">
+                                                    {{ value.minutes }} Min
+                                                    <br>
+                                                        <span>
+                                                            {{ value.time_wait_list }}
+                                                        </span>
+                                                    </br>
+                                                </td>
+                                            </tr>
+                                            <tr class="line-row">
+                                                <td colspan="3">
+                                                    <ul class="actions p-0 m-0">
+                                                        <li class="dropdown" uib-dropdown="">
+                                                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" ng-click="wm.disabledModal()" uib-dropdown-toggle="">
+                                                                <i class="zmdi zmdi-info-outline">
+                                                                </i>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-left" ng-if="value.guest.emails.length> 0 || value.guest.phones.length >0">
+                                                                <li ng-if="value.guest.emails!=null">
+                                                                    <a href="#">
+                                                                        {{ value.guest.emails[0].email }}
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-if="value.guest.phones!=null">
+                                                                    <a href="">
+                                                                        {{ value.guest.phones[0].number }}
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="icon-people">
+                                                            <a href="" ng-click="wm.mailReservationShow(value)">
+                                                                <i class="zmdi zmdi-email">
+                                                                </i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="divider">
+                            CANCELADOS
+                        </div>
+                        <table cellpadding="0" cellspacing="0" class="table-listado">
+                            <tbody>
+                                <tr ng-repeat="item in wm.res_listado_canceled">
+                                    <td class="canceled-wail_list">
+                                        {{ item.first_name }} {{ item.last_name }}
+                                        <br>
+                                            {{ item.num_people }} Invitados cancelados
+                                        </br>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <table cellpadding="0" cellspacing="0" class="table-listado">
-                        <tbody>
-                            <tr ng-repeat="item in wm.res_listado_canceled">
-                                <td class="canceled-wail_list">
-                                    {{ item.first_name }} {{ item.last_name }}
-                                    <br>
-                                        {{ item.num_people }} Invitados cancelados
-                                    </br>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>

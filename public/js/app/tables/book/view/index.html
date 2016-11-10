@@ -61,7 +61,16 @@
         <div class="content-book">
             <div class="reservation-item" ng-class="{'bg-white' : item.reservation.exists}" ng-repeat="item in vm.listBook">
                 <div class="item" ng-class="{'block' : item.block.exists}" ng-show="!item.reservation.exists">
-                    {{ item.time_text }}
+                    <span class="title" ng-if="item.block.exists">
+                        MANAGER BLOCK
+                    </span>
+                    <span class="title" ng-if="!item.block.exists">
+                        DISPONIBLE
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                    <span ng-if="item.block.exists">
+                        - {{ item.block.data[0].end_time | limitTo:5 }}
+                    </span>
                 </div>
                 <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
                     <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
