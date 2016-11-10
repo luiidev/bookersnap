@@ -72,6 +72,12 @@
                         - {{ item.block.data[0].end_time | limitTo:5 }}
                     </span>
                 </div>
+                <div class="item" ng-if="!item.reservation.exists ">
+                    <span class="title">
+                        DISPONIBLE
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                </div>
                 <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
                     <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
                         <div class="picture pull-left">
