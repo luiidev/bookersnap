@@ -237,9 +237,9 @@ angular.module('floor.service', [])
                     table.events.push(event);
                 });
             },
-            getServers: function() {
+            getServers: function(reload) {
                 var defered = $q.defer();
-                reservationService.getServers()
+                reservationService.getServers(reload)
                     .then(function success(response) {
                         response = response.data.data;
                         defered.resolve(response);
@@ -310,40 +310,8 @@ angular.module('floor.service', [])
                     var objReservation = [];
 
                     angular.forEach(response, function(reserva) {
-                        var reservaData = {
-                            reservation_id: reserva.id,
-                            res_type_turn_id: reserva.res_type_turn_id,
-                            res_source_type_id: reserva.res_source_type_id,
-                            res_guest_id: reserva.res_guest_id,
-                            res_reservation_status_id: reserva.res_reservation_status_id,
-                            wait_list: reserva.wait_list,
-                            zone_indice: '',
-                            start_date: reserva.date_reservation,
-                            start_time: reserva.hours_reservation,
-                            end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
-                            num_people: reserva.num_guest,
-                            num_people_1: reserva.num_people_1 ? reserva.num_people_1 : 0,
-                            num_people_2: reserva.num_people_2 ? reserva.num_people_2 : 0,
-                            num_people_3: reserva.num_people_3 ? reserva.num_people_3 : 0,
-                            tables: reserva.tables,
-                            source: reserva.source,
-                            status: reserva.status,
-                            tags: reserva.tags,
-                            type_turn: reserva.type_turn,
-                            first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
-                            last_name: reserva.guest ? reserva.guest.last_name : "",
-                            guest: reserva.guest,
-                            note: reserva.note
-                        };
-
-                        if (reserva.wait_list === 0) {
-                            reservaData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";
-                        } else {
-                            reservaData.quote = reserva.quote;
-                        }
-
+                        var reservaData = me.parseDataReservation(reserva);
                         objReservation.push(reservaData);
-
                     });
                     /*console.log(angular.toJson(objReservation, true));*/
                     defered.resolve(objReservation);
@@ -796,7 +764,6 @@ angular.module('floor.service', [])
                 } else {
                     reservasAndBlocks.push(item);
                 }
-
                 // console.log("addServicioReservaciones " + angular.toJson(reservasAndBlocks, true));
             },
             parseDataReservation: function(reserva) {
@@ -808,7 +775,7 @@ angular.module('floor.service', [])
                     res_guest_id: reserva.res_guest_id,
                     res_reservation_status_id: reserva.res_reservation_status_id,
                     wait_list: reserva.wait_list,
-                    zone_indice: reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "",
+                    zone_indice: '',
                     start_date: reserva.date_reservation,
                     start_time: reserva.hours_reservation,
                     end_time: plusHour(reserva.hours_reservation, reserva.hours_duration),
@@ -819,11 +786,20 @@ angular.module('floor.service', [])
                     tables: reserva.tables,
                     source: reserva.source,
                     status: reserva.status,
-                    type_turn: reserva.type_turn,
                     tags: reserva.tags,
+                    type_turn: reserva.type_turn,
                     first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
                     last_name: reserva.guest ? reserva.guest.last_name : "",
+                    guest: reserva.guest,
+                    note: reserva.note
                 };
+
+                if (reserva.wait_list === 0) {
+                    reservationData.zone_indice = reserva.tables ? me.getIndiceZone(reserva.tables[0].res_zone_id) : "";
+                } else {
+                    reservationData.quote = reserva.quote;
+                }
+
                 return reservationData;
             },
             getBlocksForReservation: function() {
@@ -834,7 +810,6 @@ angular.module('floor.service', [])
                     var blockTables = [];
                     var dato;
                     angular.forEach(response, function(block) {
-
                         blockTables.push({
                             block_id: block.id,
                             start_time: block.start_time,
@@ -935,7 +910,6 @@ angular.module('floor.service', [])
             getWailList: function(reload) {
                 var defered = $q.defer();
                 var self = this;
-
                 self.getReservations(reload).then(
                     function success(response) {
                         var waitList = {
@@ -982,6 +956,74 @@ angular.module('floor.service', [])
                 );
 
                 return defered.promise;
+            },
+            setDataWaitList: function(waitListData) {
+                var waitList = {
+                    actives: [],
+                    canceled: []
+                };
+
+                angular.forEach(waitListData, function(reservation) {
+                    if (reservation.wait_list == 1) {
+                        if (reservation.res_reservation_status_id != 6) {
+                            reservation.minutes = calculateMinutesTime("2016-11-08 " + reservation.quote);
+                            reservation.time_out = false;
+
+                            var interval = function() {
+                                var now = moment();
+                                var start_time = moment(reservation.start_time, "HH:mm:ss");
+                                reservation.time_wait_list = moment.utc(now.diff(start_time)).format("HH:mm");
+
+                                var validaTime = calculateMinutesTime("2016-11-08 " + reservation.time_wait_list);
+
+                                if (validaTime >= reservation.minutes) {
+                                    reservation.time_out = true;
+                                    $interval.cancel(interval);
+                                }
+                            };
+
+                            interval();
+                            $interval(interval, 60000);
+
+                            waitList.actives.push(reservation);
+
+                        } else {
+                            waitList.canceled.push(reservation);
+                        }
+                    }
+                });
+
+                return waitList;
+            },
+            saveWaitList: function(data, option) {
+                var defered = null;
+
+                if (option == "create") {
+                    defered = reservationService.createWaitList(data);
+                } else {
+                    defered = reservationService.updateWaitList(data);
+                }
+
+                return defered;
+            },
+            deleteWaitList: function(waitListActives, waitListCancelled, dataWaitList) {
+                //Eliminar de activos
+                angular.forEach(waitListActives, function(value, key) {
+                    if (value.reservation_id == dataWaitList.reservation_id) {
+                        waitListActives.splice(key, 1);
+                    }
+                });
+                //Agregar la lista de espera a cancelados
+                waitListCancelled.push(dataWaitList);
+
+                return waitListCancelled;
+            },
+            updateWaitList: function(waitListActives, dataWaitList) {
+                angular.forEach(waitListActives, function(value, key) {
+                    if (value.reservation_id == dataWaitList.reservation_id) {
+                        waitListActives[key] = dataWaitList;
+                    }
+                });
             }
 
         };
@@ -1040,6 +1082,7 @@ angular.module('floor.service', [])
                 return serverColection;
             },
             setServerItems: function(serverItem) {
+                serverColection.length = 0;
                 serverColection = serverItem;
             },
             addServerItems: function(serverItem) {
