@@ -886,6 +886,27 @@ $background-tables-head = #eee
 ::-webkit-scrollbar-thumb
 	border 1px solid #959595
 	background #858585
+.floor-waitlist
+	& .headder
+		background #005581
+		color #fff
+	& .body
+		height 100vh
+		padding-bottom 208px
+		& .container-list
+			height 100%
+	& tr th
+		&.child-time
+			padding-right 10px
+	& tr td, & tr th
+		&.child-pax
+			width 60px
+			text-align center
+		&.child-name					
+			text-align left
+		&.child-time
+			width 100px
+			text-align right
 .floor-reservations
 	& .headder
 		background #005581
@@ -901,7 +922,6 @@ $background-tables-head = #eee
 	color #fff
 	width 100%
 	height 24px
-	
 	& tr td, & tr th
 		&.child-hour
 			width 40px

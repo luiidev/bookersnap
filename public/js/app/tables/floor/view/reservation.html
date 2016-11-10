@@ -21,6 +21,14 @@
                         </i>
                     </button>
                 </span>
+                <span class="input-group-addon last">
+                    <button class="btn waves-effect" type="button" ui-sref="mesas.calendar" style="background-color: #575757;color: #fff;">
+                        <i class="zmdi zmdi-settings" ng-show="rm.search.show" style="">
+                        </i>
+                        <i class="zmdi zmdi-close ng-hide" ng-show="!rm.search.show">
+                        </i>
+                    </button>
+                </span>
             </div>
             <tabset justified="true">
                 <tab active="tab.active" heading="Por llegar">
