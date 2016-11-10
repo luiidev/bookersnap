@@ -479,6 +479,7 @@ angular.module('reservation.controller', [])
              */
             var auxiliar;
             vm.searchGuest = function(name) {
+                vm.searchListHide = false;
                 if (auxiliar) $timeout.cancel(auxiliar);
                 if (name === "") {
                     vm.guestList = [];
@@ -487,7 +488,6 @@ angular.module('reservation.controller', [])
                 var search = function() {
                     service.getGuestList(name)
                         .then(function(response) {
-                            console.log(response.data.data);
                             vm.guestList = response.data.data.data;
                         }).catch(function(error) {
                             message.apiError(error);
@@ -510,9 +510,9 @@ angular.module('reservation.controller', [])
                 vm.addGuest = false;
             };
 
-            vm.searchListHide = function() {
-                vm.guestList = [];
-            };
+            // vm.searchListHide = function() {
+            //     vm.guestList = [];
+            // };
             /**
              * END Search guest list
              */
@@ -665,7 +665,10 @@ angular.module('reservation.controller', [])
             $scope.$watch("zones", true);
 
             var loadTablesEdit = function(zones, reservations) {
-                vm.zones = helper.loadTableV2(zones, [{name: "reservations", data: reservations}]);
+                vm.zones = helper.loadTableV2(zones, [{
+                    name: "reservations",
+                    data: reservations
+                }]);
                 if ($stateParams.tables) {
                     vm.zones.tablesSelected($stateParams.tables);
                 }

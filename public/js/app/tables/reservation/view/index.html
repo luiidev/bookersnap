@@ -49,7 +49,7 @@
                                 </label>
                                 <div class="col-xs-10">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="name" ng-model="rc.newGuest.first_name" ng-blur="rc.searchListHide()" ng-change="rc.searchGuest(rc.newGuest.first_name)"/>
+                                            <input type="text" class="form-control input" id="name" ng-model="rc.newGuest.first_name" ng-blur="rc.searchListHide = true" ng-change="rc.searchGuest(rc.newGuest.first_name)"/>
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
 
-                            <div class="guest-search-list">
+                            <div class="guest-search-list" ng-hide="rc.searchListHide && !rc.over" ng-mouseover="rc.over = true" ng-mouseout="rc.over = false">
                                 <div class="card m-0">
                                     <div class="card-header bgm-amber" ng-repeat="guest in rc.guestList" ng-click="rc.selectGuest(guest)">
                                         <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
@@ -104,7 +104,7 @@
            </div>
 
             <div class="card reservation-guest" ng-hide="rc.addGuest || rc.reservation.guest_id">
-                <div class="card-header bgm-blue"  ng-click="rc.addGuest=!addGuest">
+                <div class="card-header bgm-blue"  ng-click="rc.addGuest=!rc.addGuest">
                     <h2>Agregar Invitado</h2>
                 </div>
            </div> 
