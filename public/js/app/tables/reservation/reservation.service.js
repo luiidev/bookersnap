@@ -300,7 +300,7 @@ angular.module('reservation.service', [])
             /**
              * Funciones internas
              */
-            dataZones.setColorTables = setColorTables;
+            // dataZones.setColorTables = setColorTables;
             dataZones.tablesSelected = tablesSelected;
             dataZones.clearSelected = clearSelected;
             dataZones.tableFilter = tableFilter;
@@ -334,17 +334,17 @@ angular.module('reservation.service', [])
         /**
          * Funciones de manejo interno
          */
-        var setColorTables = function(servers) {
-            angular.forEach(this.tables, function(table) {
-                angular.forEach(servers, function(server) {
-                    angular.forEach(server.tables, function(serverTable) {
-                        if (table.id == serverTable.id) {
-                            table.server.setDefault(server.color);
-                        }
-                    });
-                });
-            });
-        };
+        // var setColorTables = function(servers) {
+        //     angular.forEach(this.tables, function(table) {
+        //         angular.forEach(servers, function(server) {
+        //             angular.forEach(server.tables, function(serverTable) {
+        //                 if (table.id == serverTable.id) {
+        //                     table.server.setDefault(server.color);
+        //                 }
+        //             });
+        //         });
+        //     });
+        // };
         var tablesSelected = function(selectTables) {
             angular.forEach(this.tables, function(table) {
                 angular.forEach(selectTables, function(selectTable) {
@@ -460,7 +460,6 @@ angular.module('reservation.service', [])
                         if (Object.prototype.toString.call(reservation) == "[object Object]") {
                             table.reservations.data.push(reservation);
                             table.reservations.active = null;
-                            table.server.reservation = null;
                             table.reservations.timeReload();
                         }
                     };
@@ -473,7 +472,6 @@ angular.module('reservation.service', [])
                             });
                         }
                         table.reservations.active = null;
-                        table.server.reservation = null;
                         table.reservations.timeReload();
 
                     };

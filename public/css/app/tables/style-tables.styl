@@ -72,8 +72,8 @@
 		transform rotate(90deg)
 		&.recta 
 			transform none
-			width 48px!important
-			height 75px!important
+			height 10.13513513513514% !important
+			width 6.486486486486486% !important
 	& .rt135
 		-moz-transform rotate(135deg)
 		-ms-transform rotate(135deg)
@@ -81,12 +81,12 @@
 		transform rotate(135deg)
 		&.recta
 			transform-origin bottom left
-			-moz-transform translateY(-23.43146px) rotate(45deg)
-			-ms-transform translateY(-23.43146px) rotate(45deg)
-			-webkit-transform translateY(-23.43146px) rotate(45deg)
-			transform translateY(-23.43146px) rotate(45deg)
-			width 48px!important
-			height 75px!important
+			-moz-transform translateY(-50%) rotate(45deg)
+			-ms-transform translateY(-50%) rotate(45deg)
+			-webkit-transform translateY(-50%) rotate(45deg)
+			transform translateY(-50%) rotate(45deg)
+			height 10.13513513513514% !important
+			width 6.486486486486486% !important
 	& .table-zone
 		position absolute
 		cursor pointer
@@ -100,6 +100,14 @@
 		&.block
 			background #8a8a8a
 			border solid 2px #797979
+		&.rt0
+			& .item-drag-cover
+				-moz-transform: translate(-50%,-50%)
+				-ms-transform: translate(-50%,-50%)
+				-webkit-transform: translate(-50%,-50%)
+				transform: translate(-50%,-50%)
+				top: 50%
+				left: 50%
 		&.rt45
 			& .table-label.top
 				-moz-transform translate(-50%,-100%) rotate(-45deg)
@@ -125,9 +133,12 @@
 				margin: 0 !important
 			& .item-drag-cover
 			& .item-drag-time
-				transform: translate(-50%,-100%) rotate(-45deg)
-				left: 50%;
-				margin-top: 6px !important;
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-45deg)
+				-ms-transform: translate(-50%,-50%) rotate(-45deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-45deg)
 			& .box-icon
 				left: 50%
 				top: 50%
@@ -135,7 +146,27 @@
 				-ms-transform: translate(-50%,-50%) rotate(-45deg)
 				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
 				transform: translate(-50%,-50%) rotate(-45deg)
-		&.rt135 
+		&.rt90
+			& .item-drag-cover
+				-moz-transform: translate(-50%,-50%)
+				-ms-transform: translate(-50%,-50%)
+				-webkit-transform: translate(-50%,-50%)
+				transform: translate(-50%,-50%)
+				top: 50%
+				left: 50%
+		&.rt135
+			& .box-icon
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-45deg)
+				-ms-transform: translate(-50%,-50%) rotate(-45deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-45deg)
+			& .item-drag-cover
+			& .item-drag-time
+				transform: translate(-50%,-50%) rotate(-45deg)
+				top: 50%
+				left: 50%
 			& .table-label.top
 				-moz-transform translate(-50%,-100%) rotate(-45deg)
 				-ms-transform translate(-50%,-100%) rotate(-45deg)
@@ -330,32 +361,31 @@
 			font-size .9em
 			border 0.5px solid #6b6a6a
 			top 50%
-			margin-top -9px
-			height 16px
 			line-height 16px
 			border-radius 4px
 			position: absolute
+			padding 1px 5px 1px 5px
 			text-align: center
 		& .item-drag-time
+			font-size .8em
 			background-color #33c200
 			color #fff
 			font-weight 500
-			width 45px
-			font-size .9em
+			text-align center
+			padding 1px 5px 1px 5px
+			position absolute
+			left 50%
 			top 50%
-			margin-top -8px
-			height 16px
-			line-height 16px
-			position: absolute
-			text-align: center
-			margin-left: auto
-			margin-right: auto
+			-moz-transform translate(-50%,-50%)
+			-ms-transform translate(-50%,-50%)
+			-webkit-transform translate(-50%,-50%)
+			transform translate(-50%,-50%)			
 		& .next-time-all
 			margin-bottom 10px
 			background #3a99d8
-			width 65px
-		& .nex-time-top
-			top: 16px
+			border solid 1px #2a577a
+			&:nth-child(2n+1)
+				top 82%
 		& .box-icon
 			background-repeat no-repeat
 			width 30px
@@ -612,6 +642,9 @@ $background-tables-head = #eee
 		text-align center 
 		width 70px
 		padding 2px 0 6px 0
+	& .title-expected-time
+		width 170px
+		text-align center
 .box-turno-create
 	& hr 
 		border-top 1px dashed #ccc
@@ -853,11 +886,40 @@ $background-tables-head = #eee
 ::-webkit-scrollbar-thumb
 	border 1px solid #959595
 	background #858585
+.floor-reservations
+	& .headder
+		background #005581
+		color #fff
+	& .body
+		height 100vh
+		padding-bottom 316px
+		& .container-list
+			height 100%
 .table-listado
 	font-size 0.9em
 	background transparent
 	color #fff
 	width 100%
+	height 24px
+	
+	& tr td, & tr th
+		&.child-hour
+			width 40px
+			text-align center
+		&.child-pax
+			width 40px
+			text-align center
+		&.child-name
+			text-align left
+		&.child-room
+			width 50px
+			text-align right
+		&.child-table
+			width 50px
+			text-align center
+		&.child-status
+			width 60px
+			text-align center
 	& .canceled-wail_list
 		background #ccc
 		padding 10px !important
@@ -871,13 +933,14 @@ $background-tables-head = #eee
 		font-weight bold
 	& thead tr th
 		background #005581
-		color #fff		
-	& thead > tr > th, & tbody > tr > td, & tbody > tr:last-child >td
+		color #fff
+		font-size 1rem
+		height 30px
+		padding 2px
+	& tbody > tr > td, & tbody > tr:last-child >td
 		border-top 0
 		border-bottom 0
-		padding 2px 0px 2px 4px
-	& thead > tr > th
-		padding 4px 4px 4px 4px
+		padding 2px
 	& thead > tr, & tbody > tr
 		&.line-row
 			//border-bottom 1px solid #767676
@@ -906,32 +969,11 @@ $background-tables-head = #eee
 			border-bottom 1px solid #767676
 			background rgba(66,66,66,0.5)
 			cursor pointer
-			width 400px
-			& td
-				padding 2px 2px 0px 4px
+			width 400px			
 			&.not_selector
 				background #636363
 				& .table-listado
-					height 40px
-	&.sub-table		
-		& tr td, & tr th			
-			&.child-hour
-				width 30px
-				text-align center
-			&.child-pax
-				width 40px
-				text-align center
-			&.child-name
-				text-align left
-			&.child-room
-				width 50px
-				text-align right
-			&.child-table
-				width 50px
-				text-align center
-			&.child-status
-				width 60px
-				text-align center		
+					height 40px	
 .box-estado-res
 	background #575757
 	width 60px
@@ -1042,7 +1084,6 @@ $background-tables-head = #eee
 	background none
 
 .tab-reservation-floor
-	margin-top -10px
 	& .tab-nav
 		li
 			background #575757
@@ -1050,7 +1091,8 @@ $background-tables-head = #eee
 			a
 				font-size 12px
 				color rgba(255,255,255,0.6)
-				padding 4px 0px
+				padding 8px 0px
+				width 127px
 	& .tab-nav:not(.tn-vertical) > li.active > a
 		color rgba(255,255,255,0.6)
 	& .tab-nav:not(.tn-vertical) > li.active
@@ -1060,8 +1102,8 @@ $background-tables-head = #eee
 		background none
 	& .tab-content
 		padding-top 8px
-	& .input-group
-		padding 10px
+	& .header-actions
+		padding 5px
 		& .fg-line:not([class*=has-]):after
 			background none;
 		& .form-control
@@ -1069,10 +1111,14 @@ $background-tables-head = #eee
 			padding 10px
 			color #fff
 			position absolute
-			top -5px
 			left 0px
+			height 36px
+		& .btn
+			border-radius 0px
+			height 36px
 		& .input-group-addon
 			padding 0
+			min-width inherit
 ul.modal-listado-num-people
 	list-style none
 	li
