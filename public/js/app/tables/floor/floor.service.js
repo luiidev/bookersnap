@@ -13,8 +13,6 @@ angular.module('floor.service', [])
             sendMessage: function(reservacion_id, data) {
                 return $http.post(ApiUrlMesas + "/reservations/" + reservacion_id + "/send-email", data);
             },
-
-
         };
     })
     //Data para filtro de reservas Turnos, Reservas y visitas
@@ -196,7 +194,7 @@ angular.module('floor.service', [])
                     .then(function success(response) {
                         response = response.data.data;
                         /*angular.forEach(response, function(block) {
-                        	self.addEventBlocks(block);
+                            self.addEventBlocks(block);
                         });*/
                         defered.resolve(response);
                         //blocks = response.data.data;
@@ -247,7 +245,7 @@ angular.module('floor.service', [])
                         defered.resolve(response);
                     }, function error(response) {
                         response = response.data;
-                        defered.reject(response);
+                        deferred.reject(response);
                     });
 
                 return defered.promise;
@@ -334,7 +332,8 @@ angular.module('floor.service', [])
                             type_turn: reserva.type_turn,
                             first_name: reserva.guest ? reserva.guest.first_name : "Reservacion sin nombre",
                             last_name: reserva.guest ? reserva.guest.last_name : "",
-                            guest: reserva.guest
+                            guest: reserva.guest,
+                            note: reserva.note
                         };
 
                         if (reserva.wait_list === 0) {
@@ -503,8 +502,8 @@ angular.module('floor.service', [])
                                 var end_block = moment(block.end_time, "HH:mm:ss");
 
                                 /*if ((start_time.isBetween(start_block, end_block, null, "()")) ||
-                                	(end_time.isBetween(start_block, end_block, null, "()")) ||
-                                	(start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+                                    (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                    (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
                                 */
                                 if ((start_time.isBetween(start_block, end_block, null, "()")) ||
                                     (end_time.isBetween(start_block, end_block, null, "()")) ||
@@ -619,91 +618,91 @@ angular.module('floor.service', [])
             //Todas las zonas con sus mesas y mas informacion //No se esta utilizando --verificar
             /*
             listZonesReservas: function() {
-            	var me = this;
-            	var defered = $q.defer();
-            	var fecha_actual = getFechaActual();
-            	reservationService.getZones(fecha_actual).success(function(data) {
-            		console.log("zonas");
-            		console.log(data.data);
-            		return data;
-            	}).error(function(data) {
-            		defered.reject(data);
-            	}).then(function(zonesData) {
-            		me.listBloqueos().then(function success(response) {
-            			console.log("blocks");
-            			console.log(response);
-            			return response;
-            		}, function error(response) {
-            			return response;
-            		}).then(function success(blocks) {
+                var me = this;
+                var defered = $q.defer();
+                var fecha_actual = getFechaActual();
+                reservationService.getZones(fecha_actual).success(function(data) {
+                    console.log("zonas");
+                    console.log(data.data);
+                    return data;
+                }).error(function(data) {
+                    defered.reject(data);
+                }).then(function(zonesData) {
+                    me.listBloqueos().then(function success(response) {
+                        console.log("blocks");
+                        console.log(response);
+                        return response;
+                    }, function error(response) {
+                        return response;
+                    }).then(function success(blocks) {
 
-            			me.listTableServes().then(function success(server) {
-            				console.log("servers");
-            				console.log(server);
-            				return server;
-            			}, function error(server) {
-            				return server;
-            			}).then(function success(servers) {
+                        me.listTableServes().then(function success(server) {
+                            console.log("servers");
+                            console.log(server);
+                            return server;
+                        }, function error(server) {
+                            return server;
+                        }).then(function success(servers) {
 
-            				var vZones = [];
-            				angular.forEach(zonesData.data.data, function(zone) {
-            					console.log("------------------------------------------");
-            					var tables = zone.tables;
-            					var vTables = [];
-            					angular.forEach(tables, function(table) {
-            						var position = table.config_position.split(",");
-            						var dataTable = {
-            							zone_id: zone.id,
-            							name_zona: zone.name,
-            							table_id: table.id,
-            							name: table.name,
-            							minCover: table.min_cover,
-            							maxCover: table.max_cover,
-            							left: position[0],
-            							top: position[1],
-            							shape: TableFactory.getLabelShape(table.config_forme),
-            							size: TableFactory.getLabelSize(table.config_size),
-            							rotate: table.config_rotation,
-            							price: table.price,
-            						};
-            						angular.forEach(blocks, function(block) {
-            							//console.log(blocks);
-            							if (block.table_id === table.id) {
-            								console.log("block", table, block);
-            								dataTable.res_reservation_status_id = block.res_reservation_status_id;
-            								dataTable.reservation_id = block.reservation_id;
-            							}
-            						});
-            						angular.forEach(servers, function(server) {
-            							//console.log(blocks);
-            							if (server.table_id === table.id) {
-            								console.log("server", table, server);
-            								dataTable.server_id = server.server_id;
-            								dataTable.color = server.color;
-            							}
-            						});
-            						vTables.push(dataTable);
-            					});
-            					var dataZone = {
-            						zone_id: zone.id,
-            						name: zone.name,
-            						table: vTables,
-            					};
-            					vZones.push(dataZone);
-            				});
+                            var vZones = [];
+                            angular.forEach(zonesData.data.data, function(zone) {
+                                console.log("------------------------------------------");
+                                var tables = zone.tables;
+                                var vTables = [];
+                                angular.forEach(tables, function(table) {
+                                    var position = table.config_position.split(",");
+                                    var dataTable = {
+                                        zone_id: zone.id,
+                                        name_zona: zone.name,
+                                        table_id: table.id,
+                                        name: table.name,
+                                        minCover: table.min_cover,
+                                        maxCover: table.max_cover,
+                                        left: position[0],
+                                        top: position[1],
+                                        shape: TableFactory.getLabelShape(table.config_forme),
+                                        size: TableFactory.getLabelSize(table.config_size),
+                                        rotate: table.config_rotation,
+                                        price: table.price,
+                                    };
+                                    angular.forEach(blocks, function(block) {
+                                        //console.log(blocks);
+                                        if (block.table_id === table.id) {
+                                            console.log("block", table, block);
+                                            dataTable.res_reservation_status_id = block.res_reservation_status_id;
+                                            dataTable.reservation_id = block.reservation_id;
+                                        }
+                                    });
+                                    angular.forEach(servers, function(server) {
+                                        //console.log(blocks);
+                                        if (server.table_id === table.id) {
+                                            console.log("server", table, server);
+                                            dataTable.server_id = server.server_id;
+                                            dataTable.color = server.color;
+                                        }
+                                    });
+                                    vTables.push(dataTable);
+                                });
+                                var dataZone = {
+                                    zone_id: zone.id,
+                                    name: zone.name,
+                                    table: vTables,
+                                };
+                                vZones.push(dataZone);
+                            });
 
-            				defered.resolve(vZones);
+                            defered.resolve(vZones);
 
-            			}, function error(server) {
-            				defered.reject(server);
-            			});
+                        }, function error(server) {
+                            defered.reject(server);
+                        });
 
-            		}, function error(response) {
-            			defered.reject(response);
-            		});
+                    }, function error(response) {
+                        defered.reject(response);
+                    });
 
-            	});
-            	return defered.promise;
+                });
+                return defered.promise;
             },*/
             listTurnosActivos: function(date) {
                 var defered = $q.defer();
@@ -882,7 +881,7 @@ angular.module('floor.service', [])
                 }
 
                 /*angular.forEach(blocks, function(item) {
-                	reservasAndBlocks.push(item);
+                    reservasAndBlocks.push(item);
                 });*/
             },
             parseDataBloqueos: function(block) {

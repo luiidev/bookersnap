@@ -72,8 +72,8 @@
 		transform rotate(90deg)
 		&.recta 
 			transform none
-			width 48px!important
-			height 75px!important
+			height 10.13513513513514% !important
+			width 6.486486486486486% !important
 	& .rt135
 		-moz-transform rotate(135deg)
 		-ms-transform rotate(135deg)
@@ -81,12 +81,12 @@
 		transform rotate(135deg)
 		&.recta
 			transform-origin bottom left
-			-moz-transform translateY(-23.43146px) rotate(45deg)
-			-ms-transform translateY(-23.43146px) rotate(45deg)
-			-webkit-transform translateY(-23.43146px) rotate(45deg)
-			transform translateY(-23.43146px) rotate(45deg)
-			width 48px!important
-			height 75px!important
+			-moz-transform translateY(-50%) rotate(45deg)
+			-ms-transform translateY(-50%) rotate(45deg)
+			-webkit-transform translateY(-50%) rotate(45deg)
+			transform translateY(-50%) rotate(45deg)
+			height 10.13513513513514% !important
+			width 6.486486486486486% !important
 	& .table-zone
 		position absolute
 		cursor pointer
@@ -155,6 +155,13 @@
 				top: 50%
 				left: 50%
 		&.rt135
+			& .box-icon
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-45deg)
+				-ms-transform: translate(-50%,-50%) rotate(-45deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-45deg)
 			& .item-drag-cover
 			& .item-drag-time
 				transform: translate(-50%,-50%) rotate(-45deg)
@@ -635,6 +642,9 @@ $background-tables-head = #eee
 		text-align center 
 		width 70px
 		padding 2px 0 6px 0
+	& .title-expected-time
+		width 170px
+		text-align center
 .box-turno-create
 	& hr 
 		border-top 1px dashed #ccc
@@ -881,6 +891,7 @@ $background-tables-head = #eee
 	background transparent
 	color #fff
 	width 100%
+	height 24px
 	& .canceled-wail_list
 		background #ccc
 		padding 10px !important
@@ -1065,7 +1076,7 @@ $background-tables-head = #eee
 	background none
 
 .tab-reservation-floor
-	margin-top -10px
+	margin-top -10px	
 	& .tab-nav
 		li
 			background #575757
@@ -1073,7 +1084,8 @@ $background-tables-head = #eee
 			a
 				font-size 12px
 				color rgba(255,255,255,0.6)
-				padding 4px 0px
+				padding 8px 0px
+				width 127px
 	& .tab-nav:not(.tn-vertical) > li.active > a
 		color rgba(255,255,255,0.6)
 	& .tab-nav:not(.tn-vertical) > li.active
@@ -1083,8 +1095,8 @@ $background-tables-head = #eee
 		background none
 	& .tab-content
 		padding-top 8px
-	& .input-group
-		padding 10px
+	& .header-actions
+		padding 5px
 		& .fg-line:not([class*=has-]):after
 			background none;
 		& .form-control
@@ -1092,10 +1104,14 @@ $background-tables-head = #eee
 			padding 10px
 			color #fff
 			position absolute
-			top -5px
 			left 0px
+			height 36px
+		& .btn
+			border-radius 0px
+			height 36px
 		& .input-group-addon
 			padding 0
+			min-width inherit
 ul.modal-listado-num-people
 	list-style none
 	li
@@ -1637,3 +1653,7 @@ li.divider
 	color white
 	background-color green
 	border-radius 2px
+	
+.form-group
+	.btn-dpbody
+		padding: 1px 6px
