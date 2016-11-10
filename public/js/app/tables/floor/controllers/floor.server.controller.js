@@ -1,5 +1,5 @@
 angular.module('floor.controller')
-    .controller('serverController', function($rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
+    .controller('serverCtrl', function($rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
         var sm = this;
         //Variable para manejo de pantalla nuevo y crear
