@@ -40,7 +40,6 @@ angular.module('floor.controller', [])
         /**
          * Funcion de actualizacion de objeco
          */
-
         reservations.update = function(data, apply) {
             angular.forEach(this.data, function(reservation) {
                 angular.forEach(data, function(obj_data) {
@@ -558,9 +557,9 @@ angular.module('floor.controller', [])
                 vm.configuracion.status_people_3 === 0) {
 
                 if (eventEstablished.event == "sit") {
-                    sit();
+                    sit(obj);
                 } else if (eventEstablished.event == "create") {
-                    create();
+                    create(obj);
                 }
 
             } else {
@@ -569,7 +568,7 @@ angular.module('floor.controller', [])
 
         };
 
-        var parseReservation = function() {
+        var parseReservation = function(obj) {
             var now = moment();
             var date = now.format("YYYY-MM-DD");
             var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
@@ -586,8 +585,8 @@ angular.module('floor.controller', [])
             };
         };
 
-        var create = function() {
-            var reservation = parseReservation();
+        var create = function(obj) {
+            var reservation = parseReservation(obj);
 
             reservationService.quickCreate(reservation)
                 .then(function(response) {
@@ -597,9 +596,9 @@ angular.module('floor.controller', [])
                 });
         };
 
-        var sit = function() {
+        var sit = function(obj) {
             var id = eventEstablished.data.reservation_id;
-            var reservation = parseReservation();
+            var reservation = parseReservation(obj);
             reservationService.sit(id, reservation)
                 .then(function(response) {
                     reservations.update(response.data.data);
@@ -736,7 +735,6 @@ angular.module('floor.controller', [])
         };
 
         init();
-
     })
     //POPUP CONFIGURACION DE PERSONAS (HOMBRES, MUJHERS Y NIÑOS)
     .controller('ConfigurationInstanceCtrl', function($uibModalInstance, num, table, config, eventEstablished, OperationFactory, reservationService, $rootScope) {
@@ -957,8 +955,7 @@ angular.module('floor.controller', [])
                 });
         };
     })
-
-.controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
+    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
 
         /**
@@ -1776,7 +1773,6 @@ angular.module('floor.controller', [])
         };
 
         init();
-
     })
     .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
         var vm = this;
@@ -1842,109 +1838,7 @@ angular.module('floor.controller', [])
         };
 
         init();
-    })
-    .controller('WaitListCtrl', function($rootScope, $scope, $uibModal, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
-
-        var wm = this;
-
-        wm.res_listado = [];
-        wm.res_listado_canceled = [];
-
-        wm.search = {
-            show: true
-        };
-
-        $rootScope.$broadcast("floorClearSelected");
-
-        wm.searchReservation = function() {
-            wm.search.show = !wm.search.show;
-        };
-
-        wm.createWait = function(option, data) {
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalCreateWaitList.html',
-                controller: 'ModalWaitListCtrl',
-                controllerAs: 'wl',
-                size: '',
-                resolve: {
-                    option: function() {
-                        return option;
-                    },
-                    data: function() {
-                        return data;
-                    }
-                }
-            });
-        };
-
-        wm.selectWaitlist = function(waitlist) {
-            $scope.$apply(function() {
-                $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
-            });
-        };
-
-        var init = function() {
-
-            //Limpiar data y estilos de servers
-            FloorFactory.isEditServer(false);
-            angular.element('.bg-window-floor').removeClass('drag-dispel');
-            // angular.element('.table-zone').removeClass("selected-table");
-
-            ServerDataFactory.cleanTableServerItems();
-
-            getListWailList(false);
-        };
-
-        var getListWailList = function(reload) {
-            FloorFactory.getWailList(reload).then(
-                function success(response) {
-                    wm.res_listado = response.actives;
-                    wm.res_listado_canceled = response.canceled;
-                    console.log("getListReservations " + angular.toJson(response, true));
-                },
-                function error(response) {
-                    console.error("getListReservations " + angular.toJson(response, true));
-                }
-            );
-        };
-
-        var addWaitListNotification = function(dataWaitList) {
-
-            var waitListData = FloorFactory.parseDataReservation(dataWaitList.data);
-            waitListData = FloorFactory.setDataWaitList([waitListData]);
-
-            switch (dataWaitList.action) {
-                case "create":
-                    $scope.$apply(function() {
-                        wm.res_listado.push(waitListData.actives[0]);
-                    });
-                    break;
-                case "update":
-                    $scope.$apply(function() {
-                        FloorFactory.updateWaitList(wm.res_listado, waitListData.actives[0]);
-                    });
-                    break;
-                case "delete":
-                    $scope.$apply(function() {
-                        console.log("delete " + angular.toJson(waitListData, true));
-                        FloorFactory.deleteWaitList(wm.res_listado, wm.res_listado_canceled, waitListData.canceled[0]);
-                    });
-                    break;
-            }
-
-        };
-
-        $scope.$on("NotifyFloorWaitListReload", function(evt, data) {
-            //console.log("Nueva lista de espera " + angular.toJson(data, true));
-            addWaitListNotification(data);
-
-            alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-        });
-
-        init();
-
-    })
-    //Servidores
+    }) //Servidores
     .controller('serverController', function($rootScope, $stateParams, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, $timeout) {
 
         var sm = this;
@@ -2480,6 +2374,106 @@ angular.module('floor.controller', [])
             })();
         }
     ])
+    .controller('WaitListCtrl', function($rootScope, $scope, $uibModal, FloorFactory, ServerDataFactory, TypeFilterDataFactory) {
+
+        var wm = this;
+
+        wm.res_listado = [];
+        wm.res_listado_canceled = [];
+
+        wm.search = {
+            show: true
+        };
+
+        $rootScope.$broadcast("floorClearSelected");
+
+        wm.searchReservation = function() {
+            wm.search.show = !wm.search.show;
+        };
+
+        wm.createWait = function(option, data) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCreateWaitList.html',
+                controller: 'ModalWaitListCtrl',
+                controllerAs: 'wl',
+                size: '',
+                resolve: {
+                    option: function() {
+                        return option;
+                    },
+                    data: function() {
+                        return data;
+                    }
+                }
+            });
+        };
+
+        wm.selectWaitlist = function(waitlist) {
+            $scope.$apply(function() {
+                $rootScope.$broadcast("floorEventEstablish", "sit", waitlist);
+            });
+        };
+
+        var init = function() {
+
+            //Limpiar data y estilos de servers
+            FloorFactory.isEditServer(false);
+            angular.element('.bg-window-floor').removeClass('drag-dispel');
+            // angular.element('.table-zone').removeClass("selected-table");
+
+            ServerDataFactory.cleanTableServerItems();
+
+            getListWailList(false);
+        };
+
+        var getListWailList = function(reload) {
+            FloorFactory.getWailList(reload).then(
+                function success(response) {
+                    wm.res_listado = response.actives;
+                    wm.res_listado_canceled = response.canceled;
+                    console.log("getListReservations " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.error("getListReservations " + angular.toJson(response, true));
+                }
+            );
+        };
+
+        var addWaitListNotification = function(dataWaitList) {
+
+            var waitListData = FloorFactory.parseDataReservation(dataWaitList.data);
+            waitListData = FloorFactory.setDataWaitList([waitListData]);
+
+            switch (dataWaitList.action) {
+                case "create":
+                    $scope.$apply(function() {
+                        wm.res_listado.push(waitListData.actives[0]);
+                    });
+                    break;
+                case "update":
+                    $scope.$apply(function() {
+                        FloorFactory.updateWaitList(wm.res_listado, waitListData.actives[0]);
+                    });
+                    break;
+                case "delete":
+                    $scope.$apply(function() {
+                        console.log("delete " + angular.toJson(waitListData, true));
+                        FloorFactory.deleteWaitList(wm.res_listado, wm.res_listado_canceled, waitListData.canceled[0]);
+                    });
+                    break;
+            }
+
+        };
+
+        $scope.$on("NotifyFloorWaitListReload", function(evt, data) {
+            //console.log("Nueva lista de espera " + angular.toJson(data, true));
+            addWaitListNotification(data);
+
+            alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
+        });
+
+        init();
+    })
     .controller("ModalWaitListCtrl", ["$rootScope", "$state", "$uibModalInstance", "reservationService", "$q", "$timeout", "option", "data", "FloorFactory",
 
         function($rootScope, $state, $uibModalInstance, service, $q, $timeout, option, data, FloorFactory) {
@@ -2573,10 +2567,6 @@ angular.module('floor.controller', [])
 
                 wl.reservation.guest = wl.newGuest;
                 wl.buttonText = 'Enviando ...';
-
-                var key = service.key();
-                $rootScope.$broadcast("blackList.add", key);
-                wl.reservation.key = key;
 
                 FloorFactory.saveWaitList(wl.reservation, wl.option).then(
                     function success(response) {
