@@ -302,6 +302,7 @@ angular.module('reservation.service', [])
              */
             // dataZones.setColorTables = setColorTables;
             dataZones.tablesSelected = tablesSelected;
+            dataZones.notSelect = notSelect;
             dataZones.clearSelected = clearSelected;
             dataZones.tableFilter = tableFilter;
             dataZones.tableFilterClear = tableFilterClear;
@@ -352,6 +353,13 @@ angular.module('reservation.service', [])
                         table.selected = true;
                     }
                 });
+            });
+        };
+        var notSelect = function(tableObj) {
+            angular.forEach(this.tables, function(table) {
+                if (table.id == tableObj.id) {
+                    table.selected = false;
+                }
             });
         };
         var clearSelected = function() {

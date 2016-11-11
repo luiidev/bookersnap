@@ -1103,6 +1103,27 @@ $background-tables-head = #eee
 .tab-menu-floor:not(.tn-vertical):not([data-tab-color])>li>a:after
 	background none
 
+.tab-server-floor
+	& .header-actions
+		padding 5px
+		& .btn
+			border-radius 0px
+			height 36px			
+			&.btn-add
+				width 392px
+	& .floor-servers
+		& .headder
+			background #005581
+			color #fff
+		& .body
+			height 100vh
+			padding-bottom 177px
+			& .container-list
+				height 100%
+				& .scrollbar-inner
+					width: 100%
+					overflow-x: hidden
+					padding: 10px
 .tab-reservation-floor
 	& .tab-nav
 		li
@@ -1684,3 +1705,9 @@ li.divider
 .form-group
 	.btn-dpbody
 		padding: 1px 6px
+
+.listado-servers
+	.badge 
+		width: 25px;
+		height: 25px;
+		display: block;
