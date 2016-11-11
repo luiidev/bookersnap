@@ -20,6 +20,7 @@ angular.module('floor.controller', [])
             vm.reservation.time = reservation.start_time;
             vm.reservation.email = reservation.email;
             vm.reservation.nombre = reservation.first_name + " - " + reservation.last_name;
+            vm.reservation.note = reservation.note;
         };
 
         vm.sendMail = function() {

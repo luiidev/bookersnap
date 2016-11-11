@@ -4,6 +4,8 @@ angular.module('floor.controller')
 
         var fecha_actual = getFechaActual();
         var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
+        var validaModal = false; //modal editar reservacion
+
         rm.fecha_actual = fecha_actual;
 
         rm.search = {
@@ -13,9 +15,6 @@ angular.module('floor.controller')
             rm.search.show = !rm.search.show;
             rm.busqueda = "";
         };
-
-        //Validar open modal Mail Reservation
-        var modalMailReservation = null;
 
         $rootScope.$broadcast("floorClearSelected");
 
@@ -69,7 +68,7 @@ angular.module('floor.controller')
 
                 rm.res_listado = rm.res_listado_all;
 
-                //console.log(angular.toJson(rm.res_listado, true));
+                console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
                     if (people.reservation_id) {
 
@@ -401,30 +400,34 @@ angular.module('floor.controller')
         };
 
         rm.editReservation = function(reservation) {
-            if (modalMailReservation === null) {
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'ModalEditReservation.html',
-                    controller: 'editReservationCtrl',
-                    controllerAs: 'er',
-                    size: '',
-                    resolve: {
-                        content: function() {
-                            return {
-                                reservation: reservation
-                            };
-                        }
-                    }
-                });
+            if (validaModal === true) {
+                return;
             }
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalEditReservation.html',
+                controller: 'editReservationCtrl',
+                controllerAs: 'er',
+                size: '',
+                resolve: {
+                    content: function() {
+                        return {
+                            reservation: reservation
+                        };
+                    }
+                }
+            });
+
         };
 
         rm.infoReservationShow = function() {
             var icon = true;
             console.log('sd');
         };
+
         rm.mailReservationShow = function(reservation) {
-            //console.log("mailReservationShow " + angular.toJson(reservation, true));
-            modalMailReservation = $uibModal.open({
+            rm.disabledModal();
+            var modalMailReservation = $uibModal.open({
                 animation: true,
                 templateUrl: 'myModalMailReservation.html',
                 size: 'md',
@@ -438,9 +441,14 @@ angular.module('floor.controller')
                 }
             });
 
+        };
+
+        rm.disabledModal = function() {
+            validaModal = true;
+            console.log("disabledModal");
             $timeout(function() {
-                modalMailReservation = null;
-            }, 500);
+                validaModal = false;
+            }, 600);
         };
 
         var listTypeTurns = function() {

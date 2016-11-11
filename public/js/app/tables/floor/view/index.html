@@ -582,3 +582,44 @@
         </div>
     </div>
 </script>
+<script id="myModalMailReservation.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Enviar mensaje Reservación</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.date }}  - {{ vm.reservation.time }}</h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.nombre }}  - {{ vm.reservation.email }}</h5>
+            </div>
+
+             <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.note }}</h5>
+            </div>
+
+             <div class="col-xs-12">
+                <h5>Asunto</h5>
+                <div class="fg-line">
+                    <input type="text" name=""  class="form-control" ng-model="vm.mailData.subject" />
+                </div>
+            </div>
+       
+            <div class="col-xs-12">
+                <h5>Mensaje</h5>
+                <div class="fg-line">
+                    <textarea class="form-control" rows="8" ng-model="vm.mailData.message"></textarea>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
+    </div>
+</script>
