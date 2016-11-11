@@ -1,7 +1,7 @@
 angular.module('reservation.app', ['reservation.controller', 'reservation.service'])
     .constant("screenSize", {
         minSize: 400,
-        header: 185,
+        header: 120,
         menu: 400
     })
     .constant("quantityGuest", 100)
