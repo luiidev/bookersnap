@@ -1,6 +1,6 @@
 angular.module('floor.app', ['floor.controller', 'floor.service', 'floor.directive', 'floor.filter', 'server.service', 'floor.notify.controller', 'global.service'])
     .constant("screenSizeFloor", {
-        minSize: 675,
+        minSize: 400,
         header: 185,
         menu: 400
     })

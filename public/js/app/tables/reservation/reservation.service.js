@@ -690,16 +690,17 @@ angular.module('reservation.service', [])
 
             var width = $window.innerWidth;
             var height = $window.innerHeight;
+            console.log(width, height, screenSize.menu, screenSize.header);
             var size;
 
-            if (width - screenSize.menu >= height) {
+            if (width - screenSize.menu >= height - screenSize.header) {
                 height -= screenSize.header;
                 if (height < screenSize.minSize) {
                     size = screenSize.minSize;
                 } else {
                     size = height;
                 }
-            } else if (height - screenSize.header >= width) {
+            } else if (height - screenSize.header >= width - screenSize.menu) {
                 width -= screenSize.menu;
                 if (width < screenSize.minSize) {
                     size = screenSize.minSize;
