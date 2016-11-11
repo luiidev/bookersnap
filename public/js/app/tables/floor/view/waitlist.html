@@ -67,25 +67,25 @@
                                                 <td colspan="3">
                                                     <ul class="actions p-0 m-0">
                                                         <li class="dropdown" uib-dropdown="">
-                                                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" uib-dropdown-toggle="">
+                                                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" ng-click="wm.disabledModal()" uib-dropdown-toggle="">
                                                                 <i class="zmdi zmdi-info-outline">
                                                                 </i>
                                                             </a>
-                                                            <ul class="dropdown-menu dropdown-menu-left">
-                                                                <li>
-                                                                    <a href="">
-                                                                        Eleccion primera
+                                                            <ul class="dropdown-menu dropdown-menu-left" ng-if="value.guest.emails.length> 0 || value.guest.phones.length >0">
+                                                                <li ng-if="value.guest.emails!=null">
+                                                                    <a href="#">
+                                                                        {{ value.guest.emails[0].email }}
                                                                     </a>
                                                                 </li>
-                                                                <li>
+                                                                <li ng-if="value.guest.phones!=null">
                                                                     <a href="">
-                                                                        Segunda eleccion
+                                                                        {{ value.guest.phones[0].number }}
                                                                     </a>
                                                                 </li>
                                                             </ul>
                                                         </li>
                                                         <li class="icon-people">
-                                                            <a href="">
+                                                            <a href="" ng-click="wm.mailReservationShow(value)">
                                                                 <i class="zmdi zmdi-email">
                                                                 </i>
                                                             </a>
