@@ -38,7 +38,6 @@
         <button class="btn btn-default-blue btn-block" ng-click="sm.addServer()"><i class="zmdi zmdi-plus-circle zmdi-hc-fw zmdi-hc-lg"></i> Add Server</button>
     </div>
 
-
                 <ul class="list-group listado-servers">
                     <li class="list-group-item title">Servidores activos</li>
                     <li class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers.data" ng-click="sm.editServer(server)">
@@ -66,7 +65,7 @@
         <button class="btn btn-default pull-left waves-effect" ng-click="sm.cancelEdit() ">Cancelar</button>
         <span ng-show="sm.flagServer">Editar servidor</span>
         <span ng-show="sm.flagServer==false">Nuevo servidor</span>
-        <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()">
+        <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()" ng-disabled="!sm.server.name || !sm.server.color || !sm.server.tables.length">
             <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
     </div>
 
@@ -83,7 +82,7 @@
         <div class="title">Seleccionar color</div>
         <div class="Form-field Form-field--smallSpacing">
             <div class="ServerColor-previewContainer">
-                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-model="sm.color"  ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
+                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
                 </label>
             </div>
         </div>

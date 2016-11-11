@@ -335,17 +335,6 @@ angular.module('reservation.service', [])
         /**
          * Funciones de manejo interno
          */
-        // var setColorTables = function(servers) {
-        //     angular.forEach(this.tables, function(table) {
-        //         angular.forEach(servers, function(server) {
-        //             angular.forEach(server.tables, function(serverTable) {
-        //                 if (table.id == serverTable.id) {
-        //                     table.server.setDefault(server.color);
-        //                 }
-        //             });
-        //         });
-        //     });
-        // };
         var tablesSelected = function(selectTables) {
             angular.forEach(this.tables, function(table) {
                 angular.forEach(selectTables, function(selectTable) {
