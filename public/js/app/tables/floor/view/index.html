@@ -156,9 +156,9 @@
                             <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px;">
                                 <div class="dropdown dropup" uib-dropdown>
                                     <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0)" >Editar Etiquetas</a>
-                                    <ul class="dropdown-menu pull-right">
+                                    <ul class="dropdown-menu pull-right" ng-style="vmd.dTag && { 'transform': 'scale(1)', 'opacity': '1'}">
                                         <li data-ng-repeat="tag in vmd.tags">
-                                            <a href="javascript:void(0)" ng-click="vmd.addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                            <a href="javascript:void(0)" ng-click="vmd.addTag(tag)" ng-mouseover="vmd.dTag = true" ng-mouseout="vmd.dTag = false">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -310,9 +310,9 @@
                             <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px;">
                                 <div class="dropdown dropup" uib-dropdown>
                                     <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0)" >Editar Etiquetas</a>
-                                    <ul class="dropdown-menu pull-right">
+                                    <ul class="dropdown-menu pull-right" ng-style="er.dTag && { 'transform': 'scale(1)', 'opacity': '1'}">
                                         <li data-ng-repeat="tag in er.tags">
-                                            <a href="javascript:void(0)" ng-click="er.addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                            <a href="javascript:void(0)" ng-click="er.addTag(tag)" ng-mouseover="er.dTag = true" ng-mouseout="er.dTag = false">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
                                         </li>
                                     </ul>
                                 </div>

@@ -229,9 +229,9 @@
                                 <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px;">
                                     <div class="dropdown dropup" uib-dropdown>
                                         <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0);" >Editar Etiquetas</a>
-                                        <ul class="dropdown-menu pull-right">
+                                        <ul class="dropdown-menu pull-right" ng-style="rc.dTag && { 'transform': 'scale(1)', 'opacity': '1'}">
                                             <li data-ng-repeat="tag in rc.tags">
-                                                <a href="" ng-click="rc.addTag(tag)">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                                <a href="" ng-click="rc.addTag(tag)" ng-mouseover="rc.dTag = true" ng-mouseout="rc.dTag = false">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
                                             </li>
                                         </ul>
                                     </div>
