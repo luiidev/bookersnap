@@ -1,5 +1,5 @@
 angular.module('floor.controller')
-    .controller('serverCtrl', function($rootScope, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, reservationService, global) {
+    .controller('serverCtrl', function($scope, $rootScope, $state, ServerFactory, ServerDataFactory, ColorFactory, FloorFactory, reservationService, global) {
 
         var sm = this;
 
@@ -125,17 +125,16 @@ angular.module('floor.controller')
         };
 
         sm.btnDeleteServer = function() {
-
-            ServerFactory.deleteServer(sm.server.id)
-                .then(function(response) {
-                    message.success("Se elimino el servidor");
-                    sm.cancelEdit();
-                    console.log(response);
-                    // sm.servers.add();
-                }).catch(function(error) {
-                    message.apiError(error);
-                });
-
+            message.confirm("¿ Esta seguro de eliminar este servidor ?", "Esta accion no se puede revertir", function() {
+                ServerFactory.deleteServer(sm.server.id)
+                    .then(function(response) {
+                        message.success("Se elimino el servidor");
+                        sm.servers.delete(response.data.data);
+                        sm.cancelEdit();
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    });
+            });
         };
 
         (function Init() {
