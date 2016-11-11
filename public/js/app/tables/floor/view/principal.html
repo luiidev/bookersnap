@@ -1,9 +1,9 @@
-<section class="bgm-gray-win menu-section" id="content">
+<section class="bgm-gray-win menu-section p-l-0 p-r-0" id="content">
     <div class="w-100 p-0">
         <nav class="ha-menu">
             <ul>
                 <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zones.data">
-                    <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
+                    <button class="btn btn-menu w-90-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
                         {{tab.name}}
                         <span class="num-orden-zona">
                             {{$index+1}}
@@ -12,7 +12,7 @@
                 </li>
                 <li class="dropdown" ng-if="vm.flagSelectedZone > 4" uib-dropdown="">
                     <button aria-expanded="false" aria-haspopup="true" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" type="button" uib-dropdown-toggle="">
-                        <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-3x">
+                        <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-2x">
                         </span>
                     </button>
                     <ul class="dropdown-menu">
@@ -24,10 +24,10 @@
                     </ul>
                 </li>
                 <li class="dropdown open pull-right tab-tiempo" uib-dropdown="">
-                    <button aria-expanded="true" aria-haspopup="true" class="btn btn-menu w-100-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="">
-                        <i class="zmdi zmdi-time zmdi-hc-3x yellow-time p-absolute t-10">
+                    <button aria-expanded="true" aria-haspopup="true" class="btn btn-menu w-90-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="">
+                        <i class="zmdi zmdi-time zmdi-hc-2x yellow-time p-absolute t-18">
                         </i>
-                        <span class="txt-time m-l-35">
+                        <span class="txt-time m-l-25">
                             Tiempo
                             <span class="caret">
                             </span>
@@ -62,10 +62,10 @@
                     </ul>
                 </li>
                 <li class="waves-effect pull-right">
-                    <button class="btn btn-menu w-100-px btn-default-nav">
-                        <i class="zmdi zmdi-case-check zmdi-hc-3x p-absolute t-10">
+                    <button class="btn btn-menu w-90-px btn-default-nav">
+                        <i class="zmdi zmdi-case-check zmdi-hc-2x p-absolute t-18">
                         </i>
-                        <span class="m-l-40">
+                        <span class="m-l-30">
                             R.P
                         </span>
                     </button>

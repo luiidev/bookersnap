@@ -1,0 +1,84 @@
+<section id="main">
+    <section class="w-100 p-0" id="content">
+        <div data-ng-include="'/template/config-menu-tables.html'">
+        </div>
+        <div class="container">
+            <div class="card">
+                <div class="pm-body clearfix list-table">
+                    <div class="availability-reservation-form">
+                        <div class="card-header p-l-0 p-r-0">
+                            <h2>
+                                Disponiblidad
+                                <small>
+                                </small>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <form  name="availavilitySearchForm" novalidate>
+                                <div class="row">
+                                    <div class="col-sm-3 p-b-20">
+                                            <label>Cantidad de Invitados:</label>                 
+                                        <div class="form-group fg-line">
+                                            <div class="select">                        
+                                                    <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.num_guest" ng-options="guest.id as guest.option for guest in vm.guests" required>
+                                                      <option value=""></option>
+                                                    </select>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 p-b-20">
+                                            <label>Fecha:</label>                  
+                                        <div class="form-group fg-line">
+                                            <div class="date-picker" ng-class="{ 'is-opened': vm.opened == true }">                        
+                                                    <input type="text" class="form-control input-sm"  placeholder="FECHA" ng-model="vm.configuration.date" uib-datepicker-popup="{{vm.format}}" min-date="vm.dateMin" max-date="vm.dateMax" show-weeks="false"  is-open="vm.opened"  ng-click="vm.openCalendar($event, 'opened')">
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 p-b-20">
+                                        <div class="form-group fg-line">
+                                            <label>Hora:</label>                 
+                                            <div class="select">                        
+                                                    <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.hour" ng-options="hour.option as hour.option for hour in vm.hours" required>
+                                                      <option value=""></option>
+                                                    </select>
+                                            </div>  
+                                        </div>                                      
+                                    </div>
+                                    <div class="col-sm-3 p-b-20">
+                                        <div class="form-group fg-line">
+                                            <label>Zonas</label>                 
+                                            <div class="select">                        
+                                                    <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.zone" ng-options="zone.id as zone.option for zone in vm.zones" required>
+                                                      <option value=""></option>
+                                                    </select>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 m-b-20 form-group">
+                                        <button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.getAvailability(vm.configuration)" ng-disabled="vm.loadingSearch"><i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5" ></i>Buscar<loading-box wait="vm.loadingSearch" pls="white" bg="blue" size="xs" time="5000"></loading-box>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="event-info min-h-100-px">
+                                <div class="col-sm-12 center-content " >
+                                    <loading-box wait="vm.loadingSearch" size="lg" time="5000"></loading-box>
+                                    <div class="event-item hour" ng-repeat="availavility in vm.availabilities" >
+                                            <a  ng-show="availavility.hour !== null">{{availavility.hour | uppercase}}</a>
+                                            <a  ng-show="availavility.hour == null">No Disponible</a>
+                                    </div>
+<!--                                     <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.availabilities.length > 0">
+                                           <p class="lead" ng-bind="vm.message.tagsGuest"></p> 
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<footer data-ng-include="'/template/footer.html'" id="footer"></footer>

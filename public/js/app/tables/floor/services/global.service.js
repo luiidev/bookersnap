@@ -61,7 +61,7 @@ angular.module('global.service', [])
                     if (server.id == obj_data.id) {
                         angular.forEach(lienzo.data.tables, function(table) {
                             angular.forEach(server.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
+                                if (table.id == obj_table.id && table.server.id == obj_data.id) {
                                     delete table.server;
                                 }
                             });
@@ -88,6 +88,20 @@ angular.module('global.service', [])
                         table.server = server;
                     }
                 });
+            });
+        };
+        servers.delete = function(del_server) {
+            angular.forEach(this.data, function(server, server_index) {
+                if (server.id == del_server.id) {
+                    angular.forEach(lienzo.data.tables, function(table) {
+                        angular.forEach(server.tables, function(obj_table) {
+                            if (table.id == obj_table.id && table.server.id == del_server.id) {
+                                delete table.server;
+                            }
+                        });
+                    });
+                    servers.data.splice(server_index, 1);
+                }
             });
         };
         /**

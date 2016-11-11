@@ -32,7 +32,6 @@
 }
 </style>
 
-
 <div class="tab-server-floor" ng-show="!sm.showForm" >
 
     <div class="input-group header-actions">
@@ -72,14 +71,13 @@
 
 </div>
 
-
 <div class="tab-server-floor new-detail-server" id="form_new_server" ng-show="sm.showForm">
     
-    <div class="header-actions">
+    <div class="header-actions m-b-10">
         <button class="btn btn-default pull-left waves-effect" ng-click="sm.cancelEdit() ">Cancelar</button>
         <span ng-show="sm.flagServer">Editar servidor</span>
         <span ng-show="sm.flagServer==false">Nuevo servidor</span>
-        <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()">
+        <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()" ng-disabled="!sm.server.name || !sm.server.color || !sm.server.tables.length">
             <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
     </div>
     <div class="floor-servers">
@@ -87,8 +85,8 @@
             
         </div>
         <div class="body">
-            <div class="container-list p-l-10 p-r-10">
-                <div class="scrollbar-inner">
+            <div class="container-list">
+                <div class="scrollbar-inner p-l-10 p-r-10">
                     <div class="p-t-10">
                         <div class="title">Nombre de servidor</div>
                         <div class="form-group">
@@ -98,11 +96,11 @@
                         </div>
                     </div>
 
-                    <div class="m-b-20">
+                    <div class="">
                         <div class="title">Seleccionar color</div>
                         <div class="Form-field Form-field--smallSpacing">
                             <div class="ServerColor-previewContainer">
-                                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-model="sm.color"  ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
+                                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
                                 </label>
                             </div>
                         </div>

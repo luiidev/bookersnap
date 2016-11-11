@@ -208,7 +208,7 @@ angular.module('reservation.service', [])
             };
         }
     ])
-    .factory("reservationHelper", ["TableFactory", "screenSize", "$interval", "$q", function(TableFactory, screenSize, $interval, $q) {
+    .factory("reservationHelper", ["TableFactory", "$interval", "$q", function(TableFactory, $interval, $q) {
         var loadTable = function(zones) {
             var dataZones = [];
             dataZones.tables = [];
@@ -219,8 +219,8 @@ angular.module('reservation.service', [])
                 var tables = [];
                 angular.forEach(zone.tables, function(data) {
                     var position = data.config_position.split(",");
-                    var left = (parseInt(position[0]) / screenSize.minSize) * 100 + "%";
-                    var top = (parseInt(position[1]) / screenSize.minSize) * 100 + "%";
+                    var left = (parseInt(position[0]) / 675) * 100 + "%";
+                    var top = (parseInt(position[1]) / 675) * 100 + "%";
                     var size = TableFactory.getLabelSize(data.config_size) + "-relative";
                     var dataTable = {
                         name: data.name,
@@ -336,17 +336,6 @@ angular.module('reservation.service', [])
         /**
          * Funciones de manejo interno
          */
-        // var setColorTables = function(servers) {
-        //     angular.forEach(this.tables, function(table) {
-        //         angular.forEach(servers, function(server) {
-        //             angular.forEach(server.tables, function(serverTable) {
-        //                 if (table.id == serverTable.id) {
-        //                     table.server.setDefault(server.color);
-        //                 }
-        //             });
-        //         });
-        //     });
-        // };
         var tablesSelected = function(selectTables) {
             angular.forEach(this.tables, function(table) {
                 angular.forEach(selectTables, function(selectTable) {
@@ -702,16 +691,17 @@ angular.module('reservation.service', [])
 
             var width = $window.innerWidth;
             var height = $window.innerHeight;
+            console.log(width, height, screenSize.menu, screenSize.header);
             var size;
 
-            if (width - screenSize.menu >= height) {
+            if (width - screenSize.menu >= height - screenSize.header) {
                 height -= screenSize.header;
                 if (height < screenSize.minSize) {
                     size = screenSize.minSize;
                 } else {
                     size = height;
                 }
-            } else if (height - screenSize.header >= width) {
+            } else if (height - screenSize.header >= width - screenSize.menu) {
                 width -= screenSize.menu;
                 if (width < screenSize.minSize) {
                     size = screenSize.minSize;
