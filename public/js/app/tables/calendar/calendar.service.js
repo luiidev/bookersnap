@@ -4,7 +4,8 @@
 
 angular.module('calendar.service', [])
 
-.service('CalendarService', function($http, ApiUrlMesas) {
+.service('CalendarService', function($http, ApiUrlMesas, HttpFactory) {
+    var zones, shifts;
     return {
         FormatTime: function(str_date, str_hour) {
             return moment(str_hour, "HH:mm:ss").format("hh:mm A");
@@ -17,7 +18,8 @@ angular.module('calendar.service', [])
             $http.get(ApiUrlMesas + '/calendar/' + $month, null).then($listener.OnSuccess, $listener.OnError);
         },
         GetShiftByDate: function($date, $listener) {
-            return $http.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', null);
+            shifts = HttpFactory.get(ApiUrlMesas + '/calendar/' + $date + '/shifts', {}, shifts, false);
+            return shifts;
         },
         GetShiftsByType: function(id, $listener) {
             $http.get(ApiUrlMesas + '/turns?type_turn=' + id, null).then($listener.OnSuccess, $listener.OnError);
@@ -91,6 +93,10 @@ angular.module('calendar.service', [])
                 shift_id: shift_id,
                 date: date
             }).then($listener.OnSuccess, $listener.OnError);
+        },
+        GetZones: function(date, date_end, reload) {
+            zones = HttpFactory.get(ApiUrlMesas + "/calendar/" + date + "/zones?" + date_end, {}, zones, reload);
+            return zones;
         },
     };
 });

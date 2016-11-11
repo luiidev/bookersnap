@@ -69,7 +69,7 @@
                             </i>
                         </span>
                         <div class="fg-line">
-                            <input class="form-control bg-transparent" placeholder="Nombre / Apellido" type="text">
+                            <input class="form-control bg-transparent" ng-model="vm.bookFilter.text" placeholder="Nombre / Apellido" type="text">
                             </input>
                         </div>
                     </div>
@@ -107,14 +107,9 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="#">
-                                        Dropdown link
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Dropdown link
+                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.turns">
+                                    <a href="" ng-click="vm.filterBook('turn',item)">
+                                        {{ item.name }}
                                     </a>
                                 </li>
                             </ul>
@@ -138,14 +133,9 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="#">
-                                        Dropdown link
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Dropdown link
+                                <li ng-class="{'active' : item.checked}" ng-click="vm.filterBook('source',item)" ng-repeat="item in vm.sources">
+                                    <a href="">
+                                        {{ item.name }}
                                     </a>
                                 </li>
                             </ul>
@@ -169,14 +159,9 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>
+                                <li ng-repeat="item in vm.zones">
                                     <a href="#">
-                                        Dropdown link
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Dropdown link
+                                        {{ item.name }}
                                     </a>
                                 </li>
                             </ul>

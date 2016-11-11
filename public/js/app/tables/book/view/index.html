@@ -6,7 +6,7 @@
             <div class="listview lv-bordered lv-lg">
                 <div class="lv-header-alt clearfix">
                     <h2 class="lvh-label hidden-xs pull-left f-700">
-                        Sort by :
+                        Ordenar :
                     </h2>
                     <!-- ngIf: mactrl.listviewSearchStat -->
                     <ul class="lv-actions actions pull-left">
@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item" ng-repeat="item in vm.listBook">
+            <div class="reservation-item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | filter:vm.bookFilter.text">
                 <div class="item" ng-class="{'block' : item.block.exists}" ng-show="!item.reservation.exists">
                     <span class="title" ng-if="item.block.exists">
                         MANAGER BLOCK
@@ -94,7 +94,7 @@
                             </img>
                         </div>
                         <div class="pull-left box-name">
-                            <h5 ng-bind="reservation.guest.name || ' Sin nombre'">
+                            <h5 ng-bind="reservation.guest.first_name || ' Sin nombre'">
                             </h5>
                             <span>
                                 <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
@@ -176,7 +176,7 @@
                         </div>
                         <div class="pull-left col-lg-3 col-md-3 col-sm-3 phone">
                             <label class="label label-success">
-                                TELEFONO
+                                {{ reservation.source.name }}
                             </label>
                         </div>
                         <div class="pull-left col-lg-2 col-md-3 col-sm-3 config">
