@@ -1,8 +1,18 @@
 angular.module('book.service', [])
-    .factory('BookDataFactory', function($http, ApiUrlMesas) {
+    .factory('BookDataFactory', function($http, ApiUrlMesas, FloorDataFactory, CalendarService) {
+        var typeTurns, sources, zones;
         return {
-            getBooks: function(vDate) {
-                // return $http.get(ApiUrlMesas+"/book/"+vDate); 
+            getTypeTurns: function(date) {
+                typeTurns = CalendarService.GetShiftByDate(date);
+                return typeTurns;
+            },
+            getSources: function(reload) {
+                sources = FloorDataFactory.getSourceTypes(reload);
+                return sources;
+            },
+            getZones: function(params) {
+                zones = CalendarService.GetZones(params.date_ini, params.date_end, params.reload);
+                return zones;
             }
         };
 
@@ -35,6 +45,7 @@ angular.module('book.service', [])
                     var dataBook = {
                         time: hour.time,
                         time_text: hour.name,
+                        turn_id: hour.turn_id,
                         reservation: {
                             exists: existsReservation.exists,
                             data: existsReservation.data
@@ -48,6 +59,8 @@ angular.module('book.service', [])
                     book.push(dataBook);
 
                 });
+
+                console.log("listBook " + angular.toJson(book, true));
 
                 return book;
             },
@@ -99,86 +112,62 @@ angular.module('book.service', [])
                 var self = this;
 
                 return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
-            }
-        };
-    })
-    .factory('BookDateFactory', function() {
-        return {
-            rangeDateAvailable: function(minSteep, turn) {
+            },
+            //Agrega los turnos (id) a la lista de marcados
+            addTurnsByFilter: function(typeTurn, filterTypeTurns, turns) {
+                var self = this;
+                if (typeTurn.turn !== null) {
+                    if (filterTypeTurns.length > 0) {
+                        var index = filterTypeTurns.indexOf(typeTurn.turn.id);
 
-                var iniHour = turn.hours_ini.split(":");
-                var iniMin = turn.hours_ini.split(":");
-
-                var endHour = turn.hours_end.split(":");
-                var endMin = turn.hours_end.split(":");
-
-                endHour = parseInt(endHour[0]);
-                endMin = parseInt(endMin[1]);
-
-                var hour = parseInt(iniHour[0]);
-                var min = parseInt(iniMin[1]);
-
-                var time = [];
-
-                while (hour <= endHour) {
-
-                    var sHorario = (hour <= 12) ? "AM" : "PM";
-
-                    var hora = hour + ":" + ((min === 0) ? "00" : min) + " " + sHorario;
-                    time.push(hora);
-
-                    if (min == (60 - minSteep)) {
-                        hour += 1;
-                        min = 0;
-                    } else {
-                        if (hour == endHour && min == endMin) {
-                            hour = 45;
+                        if (index == -1) {
+                            filterTypeTurns.push(typeTurn.turn.id);
+                            self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
+                        } else {
+                            filterTypeTurns.splice(index, 1);
+                            self.setCheckedTypeTurn(turns, typeTurn.turn.id, false);
                         }
-                        min += minSteep;
+
+                    } else {
+                        filterTypeTurns.push(typeTurn.turn.id);
+                        self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
                     }
-
                 }
-
-                return time;
             },
-            getDate: function(language, options, date) {
-                var me = this;
-                date = (date) ? null : date;
-                if (date !== null) {
-                    date = me.changeformatDate(date.toString());
-                    return new Date(date).toLocaleDateString(language, options);
+            //Habilita en la vista los types turns que hallamos marcados
+            setCheckedTypeTurn: function(turns, turnId, checked) {
+                angular.forEach(turns, function(turn, key) {
+                    if (turn.turn !== null) {
+                        if (turn.turn.id == turnId) {
+                            turn.checked = checked;
+                        }
+                    }
+                });
+            },
+            //Agrega los sources (id) a la lista de marcados
+            addSourcesByFilter: function(source, filterSources, sources) {
+                var self = this;
+                if (filterSources.length > 0) {
+                    var index = filterSources.indexOf(source.id);
+                    if (index == -1) {
+                        filterSources.push(source.id);
+                        self.setCheckedSource(sources, source.id, true);
+                    } else {
+                        filterSources.splice(index, 1);
+                        self.setCheckedSource(sources, source.id, false);
+                    }
                 } else {
-                    return new Date().toLocaleDateString(language, options);
+                    filterSources.push(source.id);
+                    self.setCheckedSource(sources, source.id, true);
                 }
             },
-            setDate: function(date, option) {
-
-                var me = this;
-
-                date = me.changeformatDate(date);
-
-                var d = new Date(date);
-
-                if (option == "+") {
-                    d.setDate(d.getDate() + 1);
-                } else {
-                    d.setDate(d.getDate() - 1);
-                }
-
-                var dateFinal = me.getDate("es-ES", {}, d);
-
-                return dateFinal;
+            //Habilita en la vista los sources que hallamos marcados
+            setCheckedSource: function(sources, sourceId, checked) {
+                angular.forEach(sources, function(source, key) {
+                    if (source.id == sourceId) {
+                        source.checked = checked;
+                    }
+                });
             },
-            changeformatDate: function(date) {
-
-                var d = date.split("/");
-                var dateFormat = d[2] + "-" + d[1] + "-" + d[0];
-
-                return dateFormat;
-            }
-
         };
-
-    })
-
-;
+    });
