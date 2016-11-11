@@ -13,8 +13,7 @@
 
           $rootScope.$broadcast("floorClearSelected");
 
-          wm.guestDataMore = function() {
-              console.log("guestDataMore");
+          wm.disabledModal = function() {
               validaModal = true;
               $timeout(function() {
                   validaModal = false;
@@ -51,6 +50,24 @@
               });
           };
 
+          wm.mailReservationShow = function(reservation) {
+              wm.disabledModal();
+              var modalMailReservation = $uibModal.open({
+                  animation: true,
+                  templateUrl: 'myModalMailReservation.html',
+                  size: 'md',
+                  //keyboard: false,
+                  controller: 'ModalMailReservationCtrl',
+                  controllerAs: 'vm',
+                  resolve: {
+                      reservation: function() {
+                          return reservation;
+                      }
+                  }
+              });
+
+          };
+
           var init = function() {
               //Limpiar data y estilos de servers
               FloorFactory.isEditServer(false);
@@ -67,7 +84,7 @@
                   function success(response) {
                       wm.res_listado = response.actives;
                       wm.res_listado_canceled = response.canceled;
-                      console.log("getListReservations " + angular.toJson(response, true));
+                      console.log("getListReservationss " + angular.toJson(wm.res_listado, true));
                   },
                   function error(response) {
                       console.error("getListReservations " + angular.toJson(response, true));

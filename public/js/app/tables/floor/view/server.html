@@ -32,84 +32,106 @@
 }
 </style>
 
-<div class="col-sm-12 m-t-20 p-0" ng-show="!sm.showForm" style="overflow: auto; height: 600px;">
+<div class="tab-server-floor" ng-show="!sm.showForm" >
 
-    <div class="col-xs-12">
-        <button class="btn btn-default-blue btn-block" ng-click="sm.addServer()"><i class="zmdi zmdi-plus-circle zmdi-hc-fw zmdi-hc-lg"></i> Add Server</button>
+    <div class="input-group header-actions">
+        <button class="btn btn-default-blue btn-block text-center waves-effect animated btn-add" ng-click="sm.addServer()"  type="button">
+            <!--<i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg">
+            </i>-->
+            <span>
+                AGREGAR SERVIDORES
+            </span>
+        </button>
     </div>
-
-                <ul class="list-group listado-servers">
+    <div class="floor-servers">
+        <div class="header">
+            
+        </div>
+        <div class="body">
+            <div class="container-list">
+                <ul class="list-group scrollbar-inner listado-servers">
                     <li class="list-group-item title">Servidores activos</li>
                     <li class="list-group-item col-xs-12 no-padding" ng-repeat="server in sm.servers.data" ng-click="sm.editServer(server)">
-
-                            <div class="col-xs-2 p-0 center">
-                                <span class="badge" ng-style="{'background-color': server.color}"></span>
-                            </div>
-                            <div class="col-xs-7 p-0">
-                                <label class="col-xs-12 p-0">{{server.name}}</label>
-                                <label class="col-xs-12 p-0">Last Seated : N/A </label>
-                            </div>
-                            <div class="col-xs-3 p-l-5 p-r-0">
-                                <label class="col-xs-12 p-0">Now: 0</label>
-                                <label class="col-xs-12 p-0">Total: {{server.tables.length}} </label>
-                            </div>
-
+                        <div class="col-xs-2 p-0 center">
+                            <span class="badge" ng-style="{'background-color': server.color}"></span>
+                        </div>
+                        <div class="col-xs-7 p-0">
+                            <label class="col-xs-12 p-0">{{server.name}}</label>
+                            <label class="col-xs-12 p-0">Last Seated : N/A </label>
+                        </div>
+                        <div class="col-xs-3 p-l-5 p-r-0">
+                            <label class="col-xs-12 p-0">Now: 0</label>
+                            <label class="col-xs-12 p-0">Total: {{server.tables.length}} </label>
+                        </div>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
 
 </div>
-<br>
-<div class="col-xs-12 new-detail-server" id="form_new_server" ng-show="sm.showForm">
+
+<div class="tab-server-floor new-detail-server" id="form_new_server" ng-show="sm.showForm">
     
-    <div class="header-actions m-b-20">
+    <div class="header-actions">
         <button class="btn btn-default pull-left waves-effect" ng-click="sm.cancelEdit() ">Cancelar</button>
         <span ng-show="sm.flagServer">Editar servidor</span>
         <span ng-show="sm.flagServer==false">Nuevo servidor</span>
         <button class="btn btn-default-blue pull-right waves-effect" ng-click="sm.saveOrUpdateServer()" ng-disabled="!sm.server.name || !sm.server.color || !sm.server.tables.length">
             <i class="zmdi zmdi-floppy zmdi-hc-fw zmdi-hc-lg"></i> GUARDAR</button>
     </div>
-
-    <div class="">
-        <div class="title">Nombre de servidor</div>
-        <div class="form-group">
-            <div class="fg-line">
-                <input type="text" class="form-control input-sm" ng-model="sm.server.name" placeholder="Nombre de servidor">
-            </div> 
+    <div class="floor-servers">
+        <div class="header">
+            
         </div>
-    </div>
+        <div class="body">
+            <div class="container-list p-l-10 p-r-10">
+                <div class="scrollbar-inner">
+                    <div class="p-t-10">
+                        <div class="title">Nombre de servidor</div>
+                        <div class="form-group">
+                            <div class="fg-line">
+                                <input type="text" class="form-control input-sm" ng-model="sm.server.name" placeholder="Nombre de servidor">
+                            </div> 
+                        </div>
+                    </div>
 
-    <div class="">
-        <div class="title">Seleccionar color</div>
-        <div class="Form-field Form-field--smallSpacing">
-            <div class="ServerColor-previewContainer">
-                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
-                </label>
+                    <div class="">
+                        <div class="title">Seleccionar color</div>
+                        <div class="Form-field Form-field--smallSpacing">
+                            <div class="ServerColor-previewContainer">
+                                <label class="ServerColor-preview" ng-class="{'is-selected': color.selected}" ng-click="sm.selectColor(color);" ng-style="{'background-color': color.hex}" ng-repeat="color in sm.colors">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-b-10">
+                        <div class="title">Colores usados</div>
+                        <div class="Form-field Form-field--smallSpacing">
+                            <div class="ServerColor-previewContainer">
+                                <label class="ServerColor-preview"  ng-style="{'background-color': server.color}" ng-repeat="server in sm.servers.data">
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="title">Mesas seleccionadas: {{sm.server.tables.length}}</div>
+                        <span ng-if="sm.server.tables.length==0">No tiene mesas seleccionadas</span>
+                        <div class="ServerColor-previewContainer m-t-10 m-b-10 ">
+                                <p ng-repeat="table in sm.server.tables" class="m-l-5 tag-table">
+                                    <label>{{table.name}}</label>
+                                    <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable($index, table) ">X</button>
+                                </p>
+                        </div>
+                    </div>
+
+                     <div class="">
+                        <button class="btn btn-danger btn-block" ng-click="sm.btnDeleteServer() " ng-show="sm.flagServer"><i class="zmdi zmdi-delete zmdi-hc-fw zmdi-hc-lg"></i> ELIMINAR</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <div class="title">Colores usados</div>
-        <div class="Form-field Form-field--smallSpacing">
-            <div class="ServerColor-previewContainer">
-                <label class="ServerColor-preview"  ng-style="{'background-color': server.color}" ng-repeat="server in sm.servers.data">
-            </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12 p-t-10 p-l-0 p-r-0">
-        <div class="title">Mesas seleccionadas: {{sm.server.tables.length}}</div>
-        <span ng-if="sm.server.tables.length==0">No tiene mesas seleccionadas</span>
-        <div class="ServerColor-previewContainer m-t-10 m-b-10 ">
-                <p ng-repeat="table in sm.server.tables" class="m-l-5 tag-table">
-                    <label>{{table.name}}</label>
-                    <button class="btn btn-primary btn-xs waves-effect" ng-click="sm.removeTable($index, table) ">X</button>
-                </p>
-        </div>
-    </div>
-
-     <div class="col-xs-12 p-t-10 p-l-0 p-r-0 ">
-        <button class="btn btn-danger btn-block" ng-click="sm.btnDeleteServer() " ng-show="sm.flagServer"><i class="zmdi zmdi-delete zmdi-hc-fw zmdi-hc-lg"></i> ELIMINAR</button>
     </div>
 </div>

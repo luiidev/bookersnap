@@ -500,7 +500,8 @@
 		border-bottom 1px solid #ccc
 		color #000
 		& .block 
-			background-color #ccc
+			background-color $color_principal
+			color #fff
 		& .resv-data
 			border-bottom 1px solid #ccc
 		& .box-info-reservation
@@ -544,7 +545,9 @@
 				font-size 1em
 				
 		& .item 
-			padding 15px 25px
+			padding 6px 25px
+			& .title 
+				display block
 			
 @media (max-width: 1024px)
 	.footer-blook
@@ -886,6 +889,27 @@ $background-tables-head = #eee
 ::-webkit-scrollbar-thumb
 	border 1px solid #959595
 	background #858585
+.floor-waitlist
+	& .headder
+		background #005581
+		color #fff
+	& .body
+		height 100vh
+		padding-bottom 208px
+		& .container-list
+			height 100%
+	& tr th
+		&.child-time
+			padding-right 10px
+	& tr td, & tr th
+		&.child-pax
+			width 60px
+			text-align center
+		&.child-name					
+			text-align left
+		&.child-time
+			width 100px
+			text-align right
 .floor-reservations
 	& .headder
 		background #005581
@@ -901,7 +925,6 @@ $background-tables-head = #eee
 	color #fff
 	width 100%
 	height 24px
-	
 	& tr td, & tr th
 		&.child-hour
 			width 40px
@@ -1083,6 +1106,26 @@ $background-tables-head = #eee
 .tab-menu-floor:not(.tn-vertical):not([data-tab-color])>li>a:after
 	background none
 
+.tab-server-floor
+	& .header-actions
+		padding 5px
+		& .btn
+			border-radius 0px
+			height 36px			
+			&.btn-add
+				width 392px
+	& .floor-servers
+		& .headder
+			background #005581
+			color #fff
+		& .body
+			height 100vh
+			padding-bottom 177px
+			& .container-list
+				height 100%
+				& .scrollbar-inner
+					width: 100%
+					overflow-x: hidden
 .tab-reservation-floor
 	& .tab-nav
 		li
