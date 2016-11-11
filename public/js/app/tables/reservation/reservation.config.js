@@ -1,6 +1,6 @@
 angular.module('reservation.app', ['reservation.controller', 'reservation.service'])
     .constant("screenSize", {
-        minSize: 675,
+        minSize: 400,
         header: 185,
         menu: 400
     })
@@ -18,7 +18,7 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                         templateUrl: '/js/app/tables/reservation/view/index.html',
                         controller: "reservationCtrl.StoreUpdate",
                         controllerAs: 'rc',
-                        reloadOnSearch : false,
+                        reloadOnSearch: false,
                     }
                 },
             })

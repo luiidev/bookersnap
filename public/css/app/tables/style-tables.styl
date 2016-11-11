@@ -329,8 +329,8 @@
 		//height 100vh
 		& .lienzo-v2
 			background-color #CCC
-			min-width 675px
-			min-height 675px
+			min-width 400px
+			min-height 400px
 			overflow hidden
 			margin 0 auto
 			position relative
@@ -344,7 +344,7 @@
 			position absolute
 		& .table-label
 			font-weight normal
-			font-size 0.9em
+			font-size 0.6em
 			&.top
 				top -5px	
 			&.right 
@@ -956,8 +956,8 @@ $background-tables-head = #eee
 		font-weight bold
 	& thead tr th
 		background #005581
-		color #fff
-		font-size 1rem
+		color rgba(239, 239, 239, 0.78)
+		font-size 1em
 		height 30px
 		padding 2px
 	& tbody > tr > td, & tbody > tr:last-child >td
@@ -975,7 +975,7 @@ $background-tables-head = #eee
 					height 12px
 					padding 0px
 					width 100%
-					display block
+					display block					
 					& i
 						line-height 8px
 						position absolute
@@ -992,11 +992,15 @@ $background-tables-head = #eee
 			border-bottom 1px solid #767676
 			background rgba(66,66,66,0.5)
 			cursor pointer
-			width 400px			
+			width 400px
+			& a:hover>i
+				color #e6c610
+			&:hover
+				background rgb(87, 87, 87)
 			&.not_selector
 				background #636363
 				& .table-listado
-					height 40px	
+					height 40px
 .box-estado-res
 	background #575757
 	width 60px
@@ -1056,8 +1060,6 @@ $background-tables-head = #eee
 	font-weight bold
 .btn-primary-nav
 	background-color #005581
-	padding-left 15px!important
-	padding-right 15px!important
 .btn-default-nav
 	background-color #575757
 .tab-tiempo
@@ -1323,7 +1325,7 @@ ul.footer-floor
 			&:focus 
 				color #fff
 		&.ultimo-btn-right
-			padding-right 410px
+			padding-right 400px
 			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
 				margin-right 410px
 				background #f12929
@@ -1357,7 +1359,7 @@ ul.footer-floor
 			width 40px
 			height 70px
 			padding 0px 0px 4px 4px
-			margin 0px 25px 0px 6px
+			margin 0px 8px 0px 8px
 			img
 				width 100%
 	.f-btn-notas
