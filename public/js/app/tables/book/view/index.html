@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item" ng-class="{'bg-white' : item.reservation.exists}" ng-repeat="item in vm.listBook">
+            <div class="reservation-item" ng-repeat="item in vm.listBook">
                 <div class="item" ng-class="{'block' : item.block.exists}" ng-show="!item.reservation.exists">
                     <span class="title" ng-if="item.block.exists">
                         MANAGER BLOCK
@@ -72,13 +72,22 @@
                         - {{ item.block.data[0].end_time | limitTo:5 }}
                     </span>
                 </div>
-                <div class="item" ng-if="!item.reservation.exists ">
+                <div class="item" ng-class="{'block' : item.block.exists}" ng-if="item.reservation.exists && item.block.exists" ui-sref="mesas.floor.blockEdit({date :'2016-11-10',block_id:item.block.data[0].id})">
+                    <span class="title">
+                        MANAGER BLOCK
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                    <span>
+                        - {{ item.block.data[0].end_time | limitTo:5 }}
+                    </span>
+                </div>
+                <div class="item" ng-if="item.reservation.exists && item.block.exists ">
                     <span class="title">
                         DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
                 </div>
-                <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
+                <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1,'bg-white' : item.reservation.exists}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
                     <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
                         <div class="picture pull-left">
                             <img alt="" height="48" src="/images/avatar.jpg">

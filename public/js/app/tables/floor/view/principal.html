@@ -2,7 +2,7 @@
     <div class="w-100 p-0">
         <nav class="ha-menu">
             <ul>
-                <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zones">
+                <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zones.data">
                     <button class="btn btn-menu w-100-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
                         {{tab.name}}
                         <span class="num-orden-zona">
@@ -16,7 +16,7 @@
                         </span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li ng-if="$index >= 4" ng-repeat="tab in vm.zones">
+                        <li ng-if="$index >= 4" ng-repeat="tab in vm.zones.data">
                             <a data-ng-click="vm.tabSelectedZone($index)">
                                 {{tab.name}}
                             </a>
@@ -78,16 +78,16 @@
 </section>
 <div class="box-zone-create bg-window-floor">
     <div class="box-lienzo-zone-v2 p-t-10">
-        <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones" ng-show="$index == vm.flagSelectedZone">
+        <div class="lienzo-v2" id="lienzo" ng-style="{width: vm.size, height: vm.size, fontSize:vm.fontSize}" ng-repeat="tab in vm.zones.data" ng-show="$index == vm.flagSelectedZone">
             <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-temporal': obj.blocks.active, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left, border: obj.borderColor()}" ng-detail-table num="vm.numpeople" ng-mousedown="vm.eventEstablish('changeTable', obj)" ng-click="vm.mostrarDetail($parent.$index,obj)" on-dropped-fn="vm.handConfiguration(obj)" ng-repeat="obj in tab.tables">
                 <div class="table-label top" ng-bind="obj.name"></div>
                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied || obj.reservations.active || !vm.filter">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
                 <div ng-class="[{'box-icon item-status-4': obj.reservations.active}]" ng-drag-move-reservation on-start-fn="vm.tablesSelected(obj)" on-end-fn="vm.clearSelected()" ng-show="obj.reservations.active"></div>
-                <div class="item-drag-time" ng-style="{background: obj.time[vm.zones.tActive].color}"
-                 ng-if="vm.zones.tActive && vm.zones.tActive != 'nextTimeAll' && obj.time[vm.zones.tActive].text">{{ obj.time[vm.zones.tActive].text }}</div>
-                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && vm.zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
+                <div class="item-drag-time" ng-style="{background: obj.time[vm.zones.data.tActive].color}"
+                 ng-if="vm.zones.data.tActive && vm.zones.data.tActive != 'nextTimeAll' && obj.time[vm.zones.data.tActive].text">{{ obj.time[vm.zones.data.tActive].text }}</div>
+                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && vm.zones.data.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
             </div>
         </div>
     </div>

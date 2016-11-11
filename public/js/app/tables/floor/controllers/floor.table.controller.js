@@ -1,6 +1,6 @@
 angular.module('floor.controller')
-    .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, TypeTurnFactory,
-        FloorFactory, FloorDataFactory, ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, TypeFilterDataFactory, ServerNotification) {
+    .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, FloorFactory,
+        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory) {
 
         var vm = this;
 
@@ -21,9 +21,9 @@ angular.module('floor.controller')
         /**
          * Variables de manejo general de informacion
          */
-        vm.zones = [];
-        var reservations = {};
-        var servers = {};
+        vm.zones = global.lienzo;
+        var reservations = global.reservations;
+        var servers = global.servers;
         var blocks = [];
         var zones = [];
         /**
@@ -37,90 +37,90 @@ angular.module('floor.controller')
         var eventEstablished = {};
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Funcion de actualizacion de objeco
-         */
-        reservations.update = function(data, apply) {
-            angular.forEach(this.data, function(reservation) {
-                angular.forEach(data, function(obj_data) {
-                    if (reservation.id == obj_data.id) {
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(reservation.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    table.reservations.remove(reservation);
-                                }
-                            });
-                        });
-                        angular.forEach(obj_data, function(value, index) {
-                            reservation[index] = value;
-                        });
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(reservation.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    table.reservations.add(reservation);
-                                }
-                            });
-                        });
-                    }
-                });
-            });
+        // /**
+        //  * Funcion de actualizacion de objeco
+        //  */
+        // reservations.update = function(data, apply) {
+        //     angular.forEach(this.data, function(reservation) {
+        //         angular.forEach(data, function(obj_data) {
+        //             if (reservation.id == obj_data.id) {
+        //                 angular.forEach(vm.zones.data.tables, function(table) {
+        //                     angular.forEach(reservation.tables, function(obj_table) {
+        //                         if (table.id == obj_table.id) {
+        //                             table.reservations.remove(reservation);
+        //                         }
+        //                     });
+        //                 });
+        //                 angular.forEach(obj_data, function(value, index) {
+        //                     reservation[index] = value;
+        //                 });
+        //                 angular.forEach(vm.zones.data.tables, function(table) {
+        //                     angular.forEach(reservation.tables, function(obj_table) {
+        //                         if (table.id == obj_table.id) {
+        //                             table.reservations.add(reservation);
+        //                         }
+        //                     });
+        //                 });
+        //             }
+        //         });
+        //     });
 
-            if (apply) $scope.$apply();
-        };
-        reservations.add = function(reservation, apply) {
-            this.data.push(reservation);
-            angular.forEach(vm.zones.tables, function(table) {
-                angular.forEach(reservation.tables, function(obj_table) {
-                    if (table.id == obj_table.id) {
-                        table.reservations.add(reservation);
-                    }
-                });
-            });
+        //     if (apply) $scope.$apply();
+        // };
+        // reservations.add = function(reservation, apply) {
+        //     this.data.push(reservation);
+        //     angular.forEach(vm.zones.data.tables, function(table) {
+        //         angular.forEach(reservation.tables, function(obj_table) {
+        //             if (table.id == obj_table.id) {
+        //                 table.reservations.add(reservation);
+        //             }
+        //         });
+        //     });
 
-            if (apply) $scope.$apply();
-        };
-        servers.update = function(data, apply) {
-            angular.forEach(this.data, function(server) {
-                angular.forEach(data, function(obj_data) {
-                    if (server.id == obj_data.id) {
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(server.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    delete table.server;
-                                }
-                            });
-                        });
-                        angular.forEach(obj_data, function(value, index) {
-                            server[index] = value;
-                        });
-                        angular.forEach(vm.zones.tables, function(table) {
-                            angular.forEach(server.tables, function(obj_table) {
-                                if (table.id == obj_table.id) {
-                                    table.server = server;
-                                }
-                            });
-                        });
-                    }
-                });
-            });
+        //     if (apply) $scope.$apply();
+        // };
+        // servers.update = function(data, apply) {
+        //     angular.forEach(this.data, function(server) {
+        //         angular.forEach(data, function(obj_data) {
+        //             if (server.id == obj_data.id) {
+        //                 angular.forEach(vm.zones.data.tables, function(table) {
+        //                     angular.forEach(server.tables, function(obj_table) {
+        //                         if (table.id == obj_table.id) {
+        //                             delete table.server;
+        //                         }
+        //                     });
+        //                 });
+        //                 angular.forEach(obj_data, function(value, index) {
+        //                     server[index] = value;
+        //                 });
+        //                 angular.forEach(vm.zones.data.tables, function(table) {
+        //                     angular.forEach(server.tables, function(obj_table) {
+        //                         if (table.id == obj_table.id) {
+        //                             table.server = server;
+        //                         }
+        //                     });
+        //                 });
+        //             }
+        //         });
+        //     });
 
-            if (apply) $scope.$apply();
-        };
-        servers.add = function(server, apply) {
-            this.data.push(server);
-            angular.forEach(vm.zones.tables, function(table) {
-                angular.forEach(server.tables, function(obj_table) {
-                    if (table.id == obj_table.id) {
-                        table.server = server;
-                    }
-                });
-            });
-            console.log(this.data);
-            if (apply) $scope.$apply();
-        };
-        /**
-         * END
-         */
+        //     if (apply) $scope.$apply();
+        // };
+        // servers.add = function(server, apply) {
+        //     this.data.push(server);
+        //     angular.forEach(vm.zones.data.tables, function(table) {
+        //         angular.forEach(server.tables, function(obj_table) {
+        //             if (table.id == obj_table.id) {
+        //                 table.server = server;
+        //             }
+        //         });
+        //     });
+        //     console.log(this.data);
+        //     if (apply) $scope.$apply();
+        // };
+        // /**
+        //  * END
+        //  */
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
@@ -149,13 +149,13 @@ angular.module('floor.controller')
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
-            var index = $table.getZoneIndexForTable(vm.zones, tables);
+            var index = $table.getZoneIndexForTable(vm.zones.data, tables);
             if (index !== null) vm.tabSelectedZone(index);
         });
 
         $scope.$on("NotifyFloorBlock", function(evt, data) {
             var blockTest = FloorFactory.parseDataBlock(data.data);
-            FloorFactory.asingBlockTables(blockTest, vm.zones);
+            FloorFactory.asingBlockTables(blockTest, vm.zones.data);
 
             var blockParsear = FloorFactory.parseDataBloqueos(data.data);
             FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
@@ -178,7 +178,7 @@ angular.module('floor.controller')
         };
 
         vm.findTableForServer = function(tables) {
-            var index = $table.getZoneIndexForTable(vm.zones, tables);
+            var index = $table.getZoneIndexForTable(vm.zones.data, tables);
             if (index !== null) vm.tabSelectedZone(index);
         };
 
@@ -199,13 +199,13 @@ angular.module('floor.controller')
             );
         };
 
-        var loadServersCtrl = function(servers) {
-            ServerDataFactory.setServerItems(servers);
+        // var loadServersCtrl = function(servers) {
+        //     ServerDataFactory.setServerItems(servers);
 
-            angular.forEach(servers, function(server, m) {
-                ServerDataFactory.setColorItems(server.color);
-            });
-        };
+        //     angular.forEach(servers, function(server, m) {
+        //         ServerDataFactory.setColorItems(server.color);
+        //     });
+        // };
 
         // var listSourceTypes = function() {
         //     FloorDataFactory.getSourceTypes().then(function success(response) {
@@ -234,8 +234,8 @@ angular.module('floor.controller')
         //     FloorFactory.getBlocks().then(
         //         function success(response) {
         //             blocks = response;
-        //             FloorFactory.asingBlockTables(blocks, vm.zones);
-        //             $table.setBorderColorForReservation(vm.zones, blocks);
+        //             FloorFactory.asingBlockTables(blocks, vm.zones.data);
+        //             $table.setBorderColorForReservation(vm.zones.data, blocks);
         //             //console.log(angular.toJson(blocks, true));
         //         },
         //         function error(response) {
@@ -270,10 +270,10 @@ angular.module('floor.controller')
         //         function success(response) {
 
         //             zones = response;
-        //             vm.zones = reservationHelper.loadTable(zones);
+        //             vm.zones.data = reservationHelper.loadTable(zones);
         //             FloorFactory.setDataZonesTables(zones);
         //             reloadFloor();
-        //             //console.log(angular.toJson(vm.zones, true));
+        //             //console.log(angular.toJson(vm.zones.data, true));
         //         },
         //         function error(response) {
         //             console.error(response);
@@ -290,11 +290,11 @@ angular.module('floor.controller')
         });
 
         $scope.$on("floorTablesSelected", function(evt, tables) {
-            vm.zones.tablesSelected(tables);
+            vm.zones.data.tablesSelected(tables);
         });
 
         $scope.$on("floorClearSelected", function() {
-            if (vm.zones.clearSelected) vm.zones.clearSelected();
+            if (vm.zones.data.clearSelected) vm.zones.data.clearSelected();
         });
 
         var loadZones2 = function(date) {
@@ -345,10 +345,6 @@ angular.module('floor.controller')
             reservationService.getServers(true)
                 .then(function(response) {
                     servers.data = response.data.data;
-
-                    // Other code - server ctrl
-                    loadServersCtrl(servers.data);
-
                     deferred.resolve(servers.data);
                 }).catch(function(error) {
                     message.apiError(error);
@@ -376,13 +372,16 @@ angular.module('floor.controller')
 
         var showTimeCustom = function() {
             var tActive = $table.lastTimeEvent();
-            if (tActive) vm.zones.tActive = tActive;
+            if (tActive) vm.zones.data.tActive = tActive;
         };
 
-        $scope.$watch("zones", true);
+        // $scope.$watch("zones.data", true);
+        // $scope.$watch("global.lienzo", true);
+        // $scope.$watch("global.reservation", true);
+        // $scope.$watch("reservation", true);s
 
         var loadTablesEdit = function(zones, blocks, reservations, servers) {
-            vm.zones = reservationHelper.loadTableV2(zones, [{
+            vm.zones.data = reservationHelper.loadTableV2(zones, [{
                 name: "blocks",
                 data: blocks
             }, {
@@ -392,7 +391,6 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
-            console.log(vm.zones, servers);
         };
 
         /**
@@ -400,12 +398,12 @@ angular.module('floor.controller')
          */
         vm.hideTimes = function() {
             $table.lastTimeEvent("reset");
-            vm.zones.tActive = null;
+            vm.zones.data.tActive = null;
         };
 
         vm.showTimeCustom = function(event) {
             $table.setTimeEvent(event);
-            vm.zones.tActive = event;
+            vm.zones.data.tActive = event;
         };
         /**
          * END
@@ -413,12 +411,12 @@ angular.module('floor.controller')
 
         vm.tablesSelected = function(table) {
             var tables = table.reservations.active.tables;
-            vm.zones.tablesSelected(tables);
+            vm.zones.data.tablesSelected(tables);
             $scope.$apply();
         };
 
         vm.clearSelected = function() {
-            vm.zones.clearSelected();
+            vm.zones.data.clearSelected();
             $scope.$apply();
         };
 
@@ -429,13 +427,13 @@ angular.module('floor.controller')
          */
         vm.tableFilter = function(num) {
             vm.filter = true;
-            vm.zones.tableFilter(num);
+            vm.zones.data.tableFilter(num);
             $scope.$apply();
         };
 
         vm.tableFilterClear = function() {
             vm.filter = false;
-            vm.zones.tableFilterClear();
+            vm.zones.data.tableFilterClear();
             $scope.$apply();
         };
         /**
@@ -469,20 +467,24 @@ angular.module('floor.controller')
          */
         var reservationEvents = {};
         reservationEvents.update = function(data) {
-            reservations.update(data, true);
+            reservations.update(data);
+            $scope.$apply();
         };
 
         reservationEvents.create = function(data) {
-            reservations.add(data, true);
+            reservations.add(data);
+            $scope.$apply();
         };
 
         var serverEvents = {};
         serverEvents.update = function(data) {
-            servers.update(data, true);
+            servers.update(data);
+            $scope.$apply();
         };
 
         serverEvents.create = function(data) {
-            servers.add(data, true);
+            servers.add(data);
+            $scope.$apply();
         };
         /**
          * END
@@ -490,17 +492,13 @@ angular.module('floor.controller')
 
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             if (!reservationService.blackList.contains(data.key)) {
-                console.log("Actualize =)");
                 if (typeof reservationEvents[data.action] == "function") {
                     reservationEvents[data.action](data.data);
                 }
-            } else {
-                console.log("Ignore web socket =3");
             }
         });
 
         $scope.$on("NotifyFloorTableServerReload", function(evt, data) {
-            console.log("o.o");
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof serverEvents[data.action] == "function") {
                     serverEvents[data.action](data.data);
@@ -530,7 +528,7 @@ angular.module('floor.controller')
                 resolve: {
                     content: function() {
                         return {
-                            zoneName: vm.zones[index].name,
+                            zoneName: vm.zones.data[index].name,
                             table: table,
                         };
                     }
