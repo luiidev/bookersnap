@@ -12,6 +12,13 @@ angular.module('availability.service', [])
                     }
                 });
             },
+            getZones: function(date) {
+                return $http.get(ApiUrlMesas + "/availability/zones", {
+                    params: {
+                        date: date
+                    }
+                });
+            },
         };
     })
     .service('ReservationTemporalDataService', function($http, ApiUrlMesas) {
@@ -45,7 +52,7 @@ angular.module('availability.service', [])
             }
         };
     })
-    .service('AvailabilityService', function($q, AvailabilityDataService) {
+    .service('AvailabilityService', function($q, AvailabilityDataService, ConfigurationDataService) {
         return {
             getAvailability: function(config) {
                 var defered = $q.defer();
@@ -58,6 +65,40 @@ angular.module('availability.service', [])
                     defered.reject(response);
                 });
                 return promise;
+            },
+            getZones: function(date) {
+                var defered = $q.defer();
+                var promise = defered.promise;
+                AvailabilityDataService.getZones(date).success(function(data) {
+                    data = data.data;
+                    defered.resolve(data);
+                }).error(function(data, status, headers) {
+                    var response = jsonErrorData(data, status, headers);
+                    defered.reject(response);
+                });
+                return promise;
+            },
+            getConfig: function() {
+                var defered = $q.defer();
+                var promise = defered.promise;
+                ConfigurationDataService.getConfiguration().success(function(data) {
+                    data = data.data;
+                    defered.resolve(data);
+                }).error(function(data, status, headers) {
+                    var response = jsonErrorData(data, status, headers);
+                    defered.reject(response);
+                });
+                return promise;
+            },
+            getGuest: function(cant) {
+                var guest = [];
+                for (var i = 1; i <= cant; i++) {
+                    guest.push({
+                        id: i,
+                        option: i + " " + "INVITADOS"
+                    });
+                }
+                return guest;
             }
         };
     });
