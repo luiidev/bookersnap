@@ -5,7 +5,8 @@ angular.module("floor.notify.controller", [])
     var serverSocket = ServerNotification.getConnection();
 
     serverSocket.on("b-mesas-floor-notes", function(data) {
-        $scope.$broadcast("NotifyFloorNotesReload", data);
+        $scope.$broadcast("floorNotesReload", data);
+        // $scope.$broadcast("NotifyFloorNotesReload", data);
     });
 
     serverSocket.on("b-mesas-floor-res", function(data) {

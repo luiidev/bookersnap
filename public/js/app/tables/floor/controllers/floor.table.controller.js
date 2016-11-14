@@ -40,7 +40,8 @@ angular.module('floor.controller')
          * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
         vm.titulo = "Floor";
-        vm.colorsSelect = [];
+
+        // vm.colorsSelect = [];
 
         vm.flagSelectedZone = 0;
 
@@ -51,14 +52,25 @@ angular.module('floor.controller')
             texto: '',
             res_type_turn_id: ''
         };
-        vm.notesNotify = false; //se activa cuando llega notificaciones de notas
+        // vm.notesNotify = false; //se activa cuando llega notificaciones de notas
         vm.notesSave = false; // se activa cuando creamos notas
 
         var timeoutNotes;
         var openNotesTimeOut;
 
-        $scope.$on("floorNotesReload", function(mote) {
-            vm.notes = note;
+        $scope.$on("floorNotesReload", function(evt, note) {
+            angular.forEach(vm.typeTurns, function(typeTurn) {
+                if (typeTurn.turn) {
+                    if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                        typeTurn.notes.texto = note.data.texto;
+                    }
+                }
+            });
+            if (!vm.notesBox) {
+                // vm.notesNotify = true;
+                vm.notesNotification = true;
+            }
+            $scope.$apply();
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
@@ -550,10 +562,9 @@ angular.module('floor.controller')
         vm.openNotes = function() {
             vm.notesBox = !vm.notesBox;
             if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
-
+            vm.notesNotification = false;
             openNotesTimeOut = $timeout(function() {
                 vm.notesBoxValida = true;
-
             }, 500);
         };
 
@@ -597,14 +608,14 @@ angular.module('floor.controller')
             $scope.$digest();
         });
 
-        $scope.$on("NotifyFloorNotesReload", function(evt, data) {
-            if (!vm.notesBox) {
-                vm.notesNotify = true;
-                vm.notesNotification = true;
+        // $scope.$on("NotifyFloorNotesReload", function(evt, data) {
+        //     if (!vm.notesBox) {
+        //         vm.notesNotify = true;
+        //         vm.notesNotification = true;
 
-            }
-            listTypeTurns();
-        });
+        //     }
+        //     listTypeTurns();
+        // });
 
         var loadConfigurationPeople = function() {
             FloorFactory.getConfiguracionPeople().then(function(response) {
