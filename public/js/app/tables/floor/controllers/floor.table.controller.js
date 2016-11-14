@@ -606,11 +606,6 @@ angular.module('floor.controller')
             listTypeTurns();
         });
 
-        $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
-            messageAlert("Info", data.user_msg, "info", 2000, true);
-            $state.reload();
-        });
-
         var loadConfigurationPeople = function() {
             FloorFactory.getConfiguracionPeople().then(function(response) {
                 vm.configuracion = {
@@ -621,6 +616,11 @@ angular.module('floor.controller')
                 //console.log("Configuracion: " + angular.toJson(vm.configuracion, true));
             });
         };
+
+        $scope.$on("NotifyFloorConfigUpdateReload", function(evt, message) {
+            alert(message + " Se requiere volver a cargar la página.");
+            $window.location.reload();
+        });
 
         var init = function() {
             InitModule();

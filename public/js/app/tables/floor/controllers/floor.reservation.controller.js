@@ -68,7 +68,7 @@ angular.module('floor.controller')
 
                 rm.res_listado = rm.res_listado_all;
 
-                console.log(angular.toJson(rm.res_listado, true));
+                // console.log(angular.toJson(rm.res_listado, true));
                 angular.forEach(rm.res_listado_all, function(people) {
                     if (people.reservation_id) {
 
