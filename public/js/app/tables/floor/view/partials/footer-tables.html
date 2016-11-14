@@ -13,18 +13,17 @@
                 </div>
             </button>
             <ul class="f-btn-notas">
-                <li class="dropdown dropup" uib-dropdown="">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5" ng-click="vm.openNotes()" type="button">
-                        <span class="zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}">
-                        </span>
+                <li class="dropdown dropup">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5"  bs-toggle-click bs-close="vm.listenNotes()" bs-open="vm.readNotes()">
+                        <span class="zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}"></span>
                         <div class="f-12">
                             Notas turnos
                         </div>
                     </button>
-                    <div class="box-tab-notas" ng-show="vm.notesBox">
+                    <div class="box-tab-notas"  bs-toggle-show>
                         <tabset active="activeJustified">
                             <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
-                                <textarea class="form-control" ng-keyup="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
+                                <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                                 </textarea>
                             </tab>
                         </tabset>

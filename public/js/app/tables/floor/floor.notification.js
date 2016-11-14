@@ -6,7 +6,6 @@ angular.module("floor.notify.controller", [])
 
     serverSocket.on("b-mesas-floor-notes", function(data) {
         $scope.$broadcast("floorNotesReload", data);
-        // $scope.$broadcast("NotifyFloorNotesReload", data);
     });
 
     serverSocket.on("b-mesas-floor-res", function(data) {

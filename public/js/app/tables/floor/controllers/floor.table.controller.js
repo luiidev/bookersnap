@@ -1,6 +1,6 @@
 angular.module('floor.controller')
     .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, FloorFactory,
-        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory) {
+        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory, $document) {
 
         var vm = this;
 
@@ -59,18 +59,19 @@ angular.module('floor.controller')
         var openNotesTimeOut;
 
         $scope.$on("floorNotesReload", function(evt, note) {
-            angular.forEach(vm.typeTurns, function(typeTurn) {
-                if (typeTurn.turn) {
-                    if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
-                        typeTurn.notes.texto = note.data.texto;
+            if (!reservationService.blackList.contains(note.key)) {
+                angular.forEach(vm.typeTurns, function(typeTurn) {
+                    if (typeTurn.turn) {
+                        if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes.texto = note.data.texto;
+                        }
                     }
+                });
+                if (!vm.notesBoxValida) {
+                    vm.notesNotification = true;
                 }
-            });
-            if (!vm.notesBox) {
-                // vm.notesNotify = true;
-                vm.notesNotification = true;
+                $scope.$apply();
             }
-            $scope.$apply();
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
@@ -559,28 +560,14 @@ angular.module('floor.controller')
             vm.fontSize = (14 * vm.size / screenSizeFloor.minSize + "px");
         };
 
-        vm.openNotes = function() {
-            vm.notesBox = !vm.notesBox;
-            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
+        vm.readNotes = function(notification) {
+            vm.notesBoxValida = true;
             vm.notesNotification = false;
-            openNotesTimeOut = $timeout(function() {
-                vm.notesBoxValida = true;
-            }, 500);
         };
 
-        var closeNotes = function() {
-            angular.element($window).bind('click', function(e) {
-
-                var container = $(".box-tab-notas");
-
-                if (container.has(e.target).length === 0 && vm.notesBoxValida === true) {
-
-                    $scope.$apply(function() {
-                        vm.notesBox = false;
-                        vm.notesBoxValida = false;
-                    });
-                }
-            });
+        vm.listenNotes = function(notification) {
+            vm.notesBoxValida = false;
+            vm.notesNotification = false;
         };
 
         vm.saveNotes = function(turn) {
@@ -589,6 +576,8 @@ angular.module('floor.controller')
             vm.notesData.res_type_turn_id = turn.id;
             vm.notesData.texto = turn.notes.texto;
             vm.notesData.date_add = turn.notes.date_add;
+
+            reservationService.blackList.key(vm.notesData);
 
             timeoutNotes = $timeout(function() {
                 FloorFactory.createNotes(vm.notesData).then(
@@ -637,7 +626,7 @@ angular.module('floor.controller')
             InitModule();
             listTypeTurns();
             sizeLienzo();
-            closeNotes();
+            // closeNotes();
             loadConfigurationPeople();
         };
 
