@@ -145,13 +145,15 @@ angular.module('floor.directive', [])
             element.draggable({
                 helper: "clone",
                 appendTo: '#lienzo',
-                cursorAt: {
-                    left: 5,
-                    top: 5
-                },
+                // cursorAt: {
+                //     left: 0,
+                //     top: 0
+                // },
                 start: function(event, ui) {
                     $(ui.helper).css({
                         "z-index": 2,
+                        "margin-left": "15px",
+                        "margin-top": "15px"
                     });
                     angular.element('.bg-window-floor').addClass('drag-dispel');
                     scope.onStartFn();

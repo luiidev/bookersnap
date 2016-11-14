@@ -13,33 +13,33 @@ angular.module('availability.controller', [])
             option: "17:30:00"
         }];
 
-        vm.zones = [{
-            id: null,
-            option: "All"
-        }, {
-            id: 1,
-            option: "Zona 1"
-        }, {
-            id: 2,
-            option: "Zona 2"
-        }];
-
-        vm.guests = [{
-            id: 2,
-            option: "2 Guest"
-        }, {
-            id: 3,
-            option: "3 Guest"
-        }, {
-            id: 4,
-            option: "4 Guest"
-        }];
-
         vm.configuration = {
             zone: null,
             hour: "17:00:00",
             date: moment().format('YYYY-MM-DD'),
             num_guest: 2
+        };
+
+        function getZones(date) {
+            AvailabilityService.getZones(date).then(function success(response) {
+                vm.zones = response;
+            }, function success(response) {
+                messageErrorApi(response.data, "Error", "warning");
+            });
+        }
+
+        function getGuest() {
+            AvailabilityService.getConfig().then(function success(response) {
+                vm.guests = AvailabilityService.getGuest(response.max_people);
+            }, function success(response) {
+                messageErrorApi(response.data, "Error", "warning");
+            });
+        }
+        getZones(vm.configuration.date);
+        getGuest();
+
+        vm.changeDate = function(date) {
+            getZones(date);
         };
 
         vm.getAvailability = function(config) {
