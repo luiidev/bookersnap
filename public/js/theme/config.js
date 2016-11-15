@@ -1,6 +1,6 @@
 materialAdmin
     .config(function ($stateProvider, $urlRouterProvider){
-        $urlRouterProvider.otherwise("/home");
+        $urlRouterProvider.otherwise("mesas/floor/reservation");
 
 
         $stateProvider
@@ -12,6 +12,7 @@ materialAdmin
             .state ('home', {
                 url: '/home',
                 templateUrl: '/views/home.html',
+                cache: false
                 /*resolve: {
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load ([
