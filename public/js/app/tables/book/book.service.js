@@ -53,8 +53,15 @@ angular.module('book.service', [])
                         block: {
                             exists: existsBlocks.exists,
                             data: existsBlocks.data
+                        },
+                        filter_options: {
+                            status: -1, //libre
                         }
                     };
+
+                    if (existsBlocks.exists === true || existsReservation.exists === true) {
+                        dataBook.filter_options.status = self.getStatusReservation(existsReservation.data);
+                    }
 
                     book.push(dataBook);
 
@@ -63,6 +70,13 @@ angular.module('book.service', [])
                 console.log("listBook " + angular.toJson(book, true));
 
                 return book;
+            },
+            getStatusReservation: function(reservation) {
+                var status = -1;
+                angular.forEach(reservation, function(data) {
+                    status = data.res_reservation_status_id;
+                });
+                return status;
             },
             existsBlocks: function(hour, blocks) {
                 var exists = {
