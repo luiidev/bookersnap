@@ -1,6 +1,6 @@
 angular.module('floor.controller')
     .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, FloorFactory,
-        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory) {
+        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory, $document) {
 
         var vm = this;
 
@@ -40,7 +40,8 @@ angular.module('floor.controller')
          * Variable de apoyo para saber que evento ejecutar en arrastre de objeto a un mesa
          */
         vm.titulo = "Floor";
-        vm.colorsSelect = [];
+
+        // vm.colorsSelect = [];
 
         vm.flagSelectedZone = 0;
 
@@ -51,14 +52,26 @@ angular.module('floor.controller')
             texto: '',
             res_type_turn_id: ''
         };
-        vm.notesNotify = false; //se activa cuando llega notificaciones de notas
+        // vm.notesNotify = false; //se activa cuando llega notificaciones de notas
         vm.notesSave = false; // se activa cuando creamos notas
 
         var timeoutNotes;
         var openNotesTimeOut;
 
-        $scope.$on("floorNotesReload", function(mote) {
-            vm.notes = note;
+        $scope.$on("floorNotesReload", function(evt, note) {
+            if (!reservationService.blackList.contains(note.key)) {
+                angular.forEach(vm.typeTurns, function(typeTurn) {
+                    if (typeTurn.turn) {
+                        if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes.texto = note.data.texto;
+                        }
+                    }
+                });
+                if (!vm.notesBoxValida) {
+                    vm.notesNotification = true;
+                }
+                $scope.$apply();
+            }
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
@@ -547,29 +560,14 @@ angular.module('floor.controller')
             vm.fontSize = (14 * vm.size / screenSizeFloor.minSize + "px");
         };
 
-        vm.openNotes = function() {
-            vm.notesBox = !vm.notesBox;
-            if (openNotesTimeOut) $timeout.cancel(openNotesTimeOut);
-
-            openNotesTimeOut = $timeout(function() {
-                vm.notesBoxValida = true;
-
-            }, 500);
+        vm.readNotes = function(notification) {
+            vm.notesBoxValida = true;
+            vm.notesNotification = false;
         };
 
-        var closeNotes = function() {
-            angular.element($window).bind('click', function(e) {
-
-                var container = $(".box-tab-notas");
-
-                if (container.has(e.target).length === 0 && vm.notesBoxValida === true) {
-
-                    $scope.$apply(function() {
-                        vm.notesBox = false;
-                        vm.notesBoxValida = false;
-                    });
-                }
-            });
+        vm.listenNotes = function(notification) {
+            vm.notesBoxValida = false;
+            vm.notesNotification = false;
         };
 
         vm.saveNotes = function(turn) {
@@ -578,6 +576,8 @@ angular.module('floor.controller')
             vm.notesData.res_type_turn_id = turn.id;
             vm.notesData.texto = turn.notes.texto;
             vm.notesData.date_add = turn.notes.date_add;
+
+            reservationService.blackList.key(vm.notesData);
 
             timeoutNotes = $timeout(function() {
                 FloorFactory.createNotes(vm.notesData).then(
@@ -597,19 +597,14 @@ angular.module('floor.controller')
             $scope.$digest();
         });
 
-        $scope.$on("NotifyFloorNotesReload", function(evt, data) {
-            if (!vm.notesBox) {
-                vm.notesNotify = true;
-                vm.notesNotification = true;
+        // $scope.$on("NotifyFloorNotesReload", function(evt, data) {
+        //     if (!vm.notesBox) {
+        //         vm.notesNotify = true;
+        //         vm.notesNotification = true;
 
-            }
-            listTypeTurns();
-        });
-
-        $scope.$on("NotifyFloorConfigUpdateReload", function(evt, data) {
-            messageAlert("Info", data.user_msg, "info", 2000, true);
-            $state.reload();
-        });
+        //     }
+        //     listTypeTurns();
+        // });
 
         var loadConfigurationPeople = function() {
             FloorFactory.getConfiguracionPeople().then(function(response) {
@@ -622,11 +617,16 @@ angular.module('floor.controller')
             });
         };
 
+        $scope.$on("NotifyFloorConfigUpdateReload", function(evt, message) {
+            alert(message + " Se requiere volver a cargar la página.");
+            $window.location.reload();
+        });
+
         var init = function() {
             InitModule();
             listTypeTurns();
             sizeLienzo();
-            closeNotes();
+            // closeNotes();
             loadConfigurationPeople();
         };
 

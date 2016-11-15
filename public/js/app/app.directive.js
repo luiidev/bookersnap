@@ -54,4 +54,46 @@ angular.module("bookersnap.directives", [])
                 }
             }
         };
+    }])
+    .directive("bsToggleClick", ["$document", function($document) {
+        return {
+            restrict: 'A',
+            scope: {
+                bsClose: "&",
+                bsOpen: "&"
+            },
+            link: function(scope, element, attrs) {
+                var parent = $(element).closest("[bs-toggle-click]").parent();
+                var children = parent.find("[bs-toggle-show]");
+
+                var closeChildren = function(evt) {
+                    if ($.contains(parent.get(0), evt.target)) {
+                        children.removeClass("ng-hide");
+                        $document.bind('click');
+                    } else {
+                        children.addClass("ng-hide");
+                        $document.unbind('click');
+                        scope.bsClose();
+                        scope.$apply();
+                    }
+                };
+
+                element.bind("click", function(evt) {
+                    if (children) {
+                        children.toggleClass("ng-hide");
+
+                        if (children.hasClass("ng-hide")) {
+                            scope.bsClose();
+                            $document.unbind('click', closeChildren);
+                        } else {
+                            scope.bsOpen();
+                            $document.bind('click', closeChildren);
+                        }
+                        scope.$apply();
+                    }
+                });
+
+                children.addClass("ng-hide");
+            }
+        };
     }]);

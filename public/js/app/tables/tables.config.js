@@ -13,8 +13,7 @@
             'reservation.app',
             'bookersnap.services',
             "customtag.app",
-            "configuration.app",
-            'availability.app'
+            "configuration.app"
         ])
         .constant("IdMicroSitio", idMicrositio)
         .constant("UrlServerNotify", "http://localhost:1337")
@@ -22,6 +21,7 @@
         .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
             $stateProvider
                 .state('mesas', {
                     url: '/mesas',
