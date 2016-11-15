@@ -143,159 +143,117 @@ angular.module('floor.filter', [])
             return salida;
         };
     })
-    .filter('peopleSel', function() {
+    .filter('gender', function() {
         return function(items, categorias) {
             var salida = [];
-            var tipo_categoria = Object.prototype.toString.call(categorias);
 
-            if (tipo_categoria == "[object Object]") {
-                salida = items;
-                return salida;
+            if (!categorias.length) {
+                return items;
             }
 
-            if (tipo_categoria == "[object Array]") {
-                if (categorias.length != []) {
+            var filterPeople1 = false;
+            var filterPeople2 = false;
+            var filterPeople3 = false;
 
-                    var filterPeople1 = false;
-                    var filterPeople2 = false;
-                    var filterPeople3 = false;
-
-                    angular.forEach(categorias, function(categoria) {
-                        var idcategoria = categoria.idcategoria;
-                        if (idcategoria === 2) {
-                            filterPeople1 = true;
-                        }
-                        if (idcategoria === 3) {
-                            filterPeople2 = true;
-                        }
-                        if (idcategoria === 4) {
-                            filterPeople3 = true;
-                        }
-                    });
-
-                    angular.forEach(items, function(item) {
-                        var filter = (filterPeople1 && item.num_people_1 > 0) || (filterPeople2 && item.num_people_2 > 0) || (filterPeople3 && item.num_people_3 > 0);
-                        if (filter) {
-                            salida.push(item);
-                        }
-                    });
-
-                    return salida;
-                    //return salida;
-                } else {
-                    salida = items;
-                    return salida;
+            angular.forEach(categorias, function(categoria) {
+                var idcategoria = categoria.id;
+                if (idcategoria === 2) {
+                    filterPeople1 = true;
                 }
+                if (idcategoria === 3) {
+                    filterPeople2 = true;
+                }
+                if (idcategoria === 4) {
+                    filterPeople3 = true;
+                }
+            });
 
-            }
+            angular.forEach(items, function(item) {
+                var filter = (filterPeople1 && item.num_people_1 > 0) || (filterPeople2 && item.num_people_2 > 0) || (filterPeople3 && item.num_people_3 > 0);
+                if (filter) {
+                    salida.push(item);
+                }
+            });
 
-
+            return salida;
         };
     })
-    .filter('reservaSel', function() {
+    .filter('typeRes', function() {
         return function(items, categorias) {
             var salida = [];
-            var tipo_categoria = Object.prototype.toString.call(categorias);
 
-            if (tipo_categoria == "[object Object]") {
-                salida = items;
-                return salida;
+            if (categorias.length === 0) {
+                return items;
             }
 
-            if (tipo_categoria == "[object Array]") {
-                if (categorias.length != []) {
+            var filterWeb = false;
+            var filterTelefono = false;
+            var filterPortal = false;
+            var filterRP = false;
 
-                    var filterWeb = false;
-                    var filterTelefono = false;
-                    var filterPortal = false;
-                    var filterRP = false;
-
-                    angular.forEach(categorias, function(categoria) {
-                        var idcategoria = categoria.id;
-                        if (idcategoria === 1) {
-                            filterWeb = true;
-                        }
-                        if (idcategoria === 2) {
-                            filterTelefono = true;
-                        }
-                        if (idcategoria === 3) {
-                            filterPortal = true;
-                        }
-                        if (idcategoria === 4) {
-                            filterRP = true;
-                        }
-                    });
-
-                    angular.forEach(items, function(item) {
-                        var filter = (filterWeb && item.res_source_type_id == 1) || (filterTelefono && item.res_source_type_id == 2) || (filterPortal && item.res_source_type_id == 3) || (filterRP && item.res_source_type_id == 4);
-                        if (filter) {
-                            salida.push(item);
-                        }
-                    });
-
-                    return salida;
-                    //return salida;
-                } else {
-                    salida = items;
-                    return salida;
+            angular.forEach(categorias, function(categoria) {
+                var idcategoria = categoria.id;
+                if (idcategoria === 1) {
+                    filterWeb = true;
                 }
+                if (idcategoria === 2) {
+                    filterTelefono = true;
+                }
+                if (idcategoria === 3) {
+                    filterPortal = true;
+                }
+                if (idcategoria === 4) {
+                    filterRP = true;
+                }
+            });
 
-            }
+            angular.forEach(items, function(item) {
+                var filter = (filterWeb && item.res_source_type_id == 1) || (filterTelefono && item.res_source_type_id == 2) || (filterPortal && item.res_source_type_id == 3) || (filterRP && item.res_source_type_id == 4);
+                if (filter) {
+                    salida.push(item);
+                }
+            });
 
-
+            return salida;
         };
     })
-    .filter('turnoSel', function() {
+    .filter('typeTurn', function() {
         return function(items, categorias) {
             var salida = [];
-            var tipo_categoria = Object.prototype.toString.call(categorias);
 
-            if (tipo_categoria == "[object Object]") {
-                salida = items;
-                return salida;
+            if (categorias.length === 0) {
+                return items;
             }
 
-            if (tipo_categoria == "[object Array]") {
-                if (categorias.length != []) {
+            var filterDesayuno = false;
+            var filterAlmuerzo = false;
+            var filterCena = false;
+            var filterBar = false;
 
-                    var filterDesayuno = false;
-                    var filterAlmuerzo = false;
-                    var filterCena = false;
-                    var filterBar = false;
-
-                    angular.forEach(categorias, function(categoria) {
-                        var idcategoria = categoria.id;
-                        if (idcategoria === 1) {
-                            filterDesayuno = true;
-                        }
-                        if (idcategoria === 2) {
-                            filterAlmuerzo = true;
-                        }
-                        if (idcategoria === 3) {
-                            filterCena = true;
-                        }
-                        if (idcategoria === 4) {
-                            filterBar = true;
-                        }
-                    });
-
-                    angular.forEach(items, function(item) {
-                        var filter = (filterDesayuno && item.res_type_turn_id == 1) || (filterAlmuerzo && item.res_type_turn_id == 2) || (filterCena && item.res_type_turn_id == 3) || (filterBar && item.res_type_turn_id == 4);
-                        if (filter) {
-                            salida.push(item);
-                        }
-                    });
-
-                    return salida;
-                    //return salida;
-                } else {
-                    salida = items;
-                    return salida;
+            angular.forEach(categorias, function(categoria) {
+                var idcategoria = categoria.id;
+                if (idcategoria === 1) {
+                    filterDesayuno = true;
                 }
+                if (idcategoria === 2) {
+                    filterAlmuerzo = true;
+                }
+                if (idcategoria === 3) {
+                    filterCena = true;
+                }
+                if (idcategoria === 4) {
+                    filterBar = true;
+                }
+            });
 
-            }
+            angular.forEach(items, function(item) {
+                var filter = (filterDesayuno && item.res_type_turn_id == 1) || (filterAlmuerzo && item.res_type_turn_id == 2) || (filterCena && item.res_type_turn_id == 3) || (filterBar && item.res_type_turn_id == 4);
+                if (filter) {
+                    salida.push(item);
+                }
+            });
 
-
+            return salida;
         };
     })
     .filter("statusTurnos", function(TypeFilterDataFactory, $filter) {
@@ -346,7 +304,7 @@ angular.module('floor.filter', [])
                 }
             }
         };
-    }).filter('customArray', function($filter) {
+    }).filter('customStatus', function($filter) {
         return function(list, arrayFilter, element) {
             if (arrayFilter) {
                 if (arrayFilter.length === 0) return list;

@@ -214,7 +214,7 @@ angular.module('reservation.service', [])
             dataZones.tables = [];
             dataZones.tActive = null;
 
-            angular.forEach(zones, function(zone) {
+            angular.forEach(zones, function(zone, zone_index) {
                 var item = {};
                 var tables = [];
                 angular.forEach(zone.tables, function(data) {
@@ -223,6 +223,11 @@ angular.module('reservation.service', [])
                     var top = (parseInt(position[1]) / 675) * 100 + "%";
                     var size = TableFactory.getLabelSize(data.config_size) + "-relative";
                     var dataTable = {
+                        zone: {
+                            index: zone_index,
+                            name: zone.name,
+                            number: zone_index + 1
+                        },
                         name: data.name,
                         minCover: data.min_cover,
                         maxCover: data.max_cover,
@@ -307,6 +312,7 @@ angular.module('reservation.service', [])
             dataZones.clearSelected = clearSelected;
             dataZones.tableFilter = tableFilter;
             dataZones.tableFilterClear = tableFilterClear;
+            dataZones.getZoneForTables = getZoneForTables;
             /**
              * END
              */
@@ -400,6 +406,22 @@ angular.module('reservation.service', [])
                 table.block = false;
                 table.suggested = false;
             });
+        };
+        var getZoneForTables = function(tables) {
+            var indexes = [];
+            var aux = [];
+            for (var i = 0; i < this.tables.length; i++) {
+                for (var x = 0; x < tables.length; x++) {
+                    if (this.tables[i].id == tables[x].id) {
+                        if (aux.indexOf(this.tables[i].zone.name) === -1) {
+                            indexes.push(this.tables[i].zone);
+                            aux.push(this.tables[i].zone.name);
+                        }
+                    }
+                }
+            }
+
+            return indexes;
         };
         /**
          * END

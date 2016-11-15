@@ -41,8 +41,6 @@ angular.module('floor.controller')
          */
         vm.titulo = "Floor";
 
-        // vm.colorsSelect = [];
-
         vm.flagSelectedZone = 0;
 
         //Notas turnos
@@ -75,8 +73,9 @@ angular.module('floor.controller')
         });
 
         $scope.$on("floorZoneIndexSelected", function(evt, tables) {
-            var index = $table.getZoneIndexForTable(vm.zones.data, tables);
-            if (index !== null) vm.tabSelectedZone(index);
+            // var index = $table.getZoneIndexForTable(vm.zones.data, tables);
+            // if (index !== null) vm.tabSelectedZone(index);
+            vm.findTableForServer(tables);
         });
 
         $scope.$on("NotifyFloorBlock", function(evt, data) {
@@ -87,7 +86,7 @@ angular.module('floor.controller')
             FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
             $scope.$apply();
             alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-        // console.log("NotifyFloorBlock " + angular.toJson(data, true));
+            // console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
         $scope.$on("floorReload", function(evt, data, action) {
@@ -104,8 +103,9 @@ angular.module('floor.controller')
         };
 
         vm.findTableForServer = function(tables) {
-            var index = $table.getZoneIndexForTable(vm.zones.data, tables);
-            if (index !== null) vm.tabSelectedZone(index);
+            var zones = vm.zones.data.getZoneForTables(tables);
+            var index = zones.length ? zones[0].index : 0;
+            vm.tabSelectedZone(index);
         };
 
         vm.tabSelectedZone = function(value) {
@@ -410,6 +410,7 @@ angular.module('floor.controller')
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof reservationEvents[data.action] == "function") {
                     reservationEvents[data.action](data.data);
+                    alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
                     $scope.$apply();
                 }
             }
@@ -823,7 +824,7 @@ angular.module('floor.controller')
 
             reservationService.quickCreate(reservation)
                 .then(function(response) {
-                    table.reservations.add(response.data.data);
+                    $rootScope.$broadcast("floorReload", response.data.data, "add");
                     $uibModalInstance.dismiss('cancel');
                 }).catch(function(error) {
                     message.apiError(error);
@@ -834,7 +835,7 @@ angular.module('floor.controller')
         var sit = function() {
             vmc.waitingResponse = true;
 
-            var id = eventEstablished.data.reservation_id;
+            var id = eventEstablished.data.id;
             var data = {
                 table_id: table.id
             };

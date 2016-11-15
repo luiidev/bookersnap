@@ -3,7 +3,7 @@
         <div class="input-group header-actions">
             <div class="fg-line">
                 <input class="form-control" id="fadeingEntrances2" ng-model="rm.busqueda" ng-show="!rm.search.show" placeholder="Buscar por nombre, mesa u horario" type="text">
-                    <button class="btn btn-default-blue btn-block text-center waves-effect animated" id="fadeingEntrances" ng-show="rm.search.show" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
+                    <button class="btn btn-default-blue btn-block text-center waves-effect animated" id="fadeingEntrances" ng-show="rm.search.show" type="button" ui-sref="mesas.reservation-new({date : '{{rm.fecha_actual}}'})">
                         <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
                         <span>CREAR RESERVACIÓN</span>
                     </button>
@@ -59,7 +59,7 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)" ng-repeat="value in rm.res_listado.data | filter:rm.busqueda | orderBy: 'hours_reservation' | customArray:rm.filter_status:'res_reservation_status_id'" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="rm.editReservation(value)" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)" ng-repeat="value in rm.res_listado.data | filter:rm.busqueda | orderBy: 'hours_reservation' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                     <td>
                                         <table class="table-listado sub-table">
                                             <tr>
@@ -73,7 +73,10 @@
                                                     {{ value.guest ? value.guest.first_name : 'Reservacion sin nombre'}} {{value.guest ? value.guest.last_name : ''}}
                                                 </td>
                                                 <td class="child-room">
-                                                    {{value.zone_indice || '??'}}
+                                                    {{ rm.getZone(value).length ? rm.getZone(value)[0].number : '-' }}
+                                                    <span ng-if="rm.getZone(value).length > 1">
+                                                        +
+                                                    </span>
                                                 </td>
                                                 <td class="child-table">
                                                     {{value.tables[0].name}}
@@ -94,8 +97,7 @@
                                                     <ul class="actions p-0 m-0">
                                                         <li class="dropdown" uib-dropdown="">
                                                             <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" ng-click="rm.disabledModal()" uib-dropdown-toggle="">
-                                                                <i class="zmdi zmdi-info-outline">
-                                                                </i>
+                                                                <i class="zmdi zmdi-info-outline"></i>
                                                             </a>
                                                             <ul class="dropdown-menu dropdown-menu-left" ng-if="value.guest.emails.length> 0 || value.guest.phones.length > 0">
                                                                 <li>
@@ -222,10 +224,10 @@
         </button>
         <ul class="dropdown-menu">
             <li ng-repeat="categoria in rm.categorias_people">
-                <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_people(categoria,$event)">
+                <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_genders(categoria,$event)">
                     <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked">
                     </i>
-                    {{categoria.nombre}}
+                    {{categoria.name}}
                 </a>
             </li>
         </ul>

@@ -1,340 +1,178 @@
 angular.module('floor.controller')
     .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory,
-        TypeFilterDataFactory, FloorDataFactory, global) {
+        TypeFilterDataFactory, FloorDataFactory, global, reservationService) {
         var rm = this;
 
-        var fecha_actual = getFechaActual();
-        var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
+        rm.visits = {};
+        rm.typeRes = {};
+        rm.filter_status = [1, 2, 3];
+        rm.filter_people = [];
+        rm.filter_reserva = [];
+        rm.filter_type = [];
+        rm.zonesNumber = [];
+
+        rm.fecha_actual = getFechaActual();
         var validaModal = false; //modal editar reservacion
-
-        rm.fecha_actual = fecha_actual;
-
         rm.search = {
             show: true
         };
+
         rm.searchReservation = function() {
             rm.search.show = !rm.search.show;
             rm.busqueda = "";
         };
 
-        $rootScope.$broadcast("floorClearSelected");
+        rm.categorias_people = [{
+            id: 1,
+            name: 'Todos',
+            checked: true,
+        }, {
+            id: 2,
+            name: 'Hombres',
+            filter: "men",
+            checked: false,
+        }, {
+            id: 3,
+            name: 'Mujeres',
+            filter: "woman",
+            checked: false,
+        }, {
+            id: 4,
+            name: 'Niños',
+            filter: "children",
+            checked: false,
+        }];
 
-        var defaultOptionsFilters = function() {
-            //Datos y acciones para filtrar Visitas//
-            //****************************//
-            rm.categorias_people = [{
-                idcategoria: 1,
-                nombre: 'Todos',
-                checked: true,
-            }, {
-                idcategoria: 2,
-                nombre: 'Hombres',
-                checked: false,
-            }, {
-                idcategoria: 3,
-                nombre: 'Mujeres',
-                checked: false,
-            }, {
-                idcategoria: 4,
-                nombre: 'Niños(as)',
-                checked: false,
-            }];
+        var statistics = function() {
+
+            var total = 0;
+            var men = 0;
+            var women = 0;
+            var children = 0;
+            var tWeb = 0;
+            var tTel = 0;
+            var tPor = 0;
+            var tRp = 0;
+
+            angular.forEach(rm.res_listado.data, function(reservation, index) {
+                men += reservation.num_people_1;
+                women += reservation.num_people_2;
+                children += reservation.num_people_3;
+                total += reservation.num_guest;
+
+                var source_type = reservation.res_source_type_id;
+                switch (source_type) {
+                    case 1:
+                        tRp += 1;
+                        break;
+                    case 2:
+                        tPor += 1;
+                        break;
+                    case 3:
+                        tTel += 1;
+                        break;
+                    case 4:
+                        tWeb += 1;
+                        break;
+                }
+            });
+
+            rm.visits.men = men;
+            rm.visits.woman = women;
+            rm.visits.children = children;
+            rm.visits.total_people = men + women + children;
+            rm.total_visitas = rm.visits.total_people;
+            visitsQuantity();
+
+            rm.typeRes.WEB = tWeb;
+            rm.typeRes.TELÉFONO = tTel;
+            rm.typeRes.PORTAL = tPor;
+            rm.typeRes.RP = tRp;
+            rm.typeRes.total_reservas = tWeb + tTel + tPor + tRp;
+            rm.total_reservas = rm.typeRes.total_reservas;
+
+            // FloorFactory.getBlocksForReservation().then(function(response) {
+            // FloorFactory.mergeBlockToReservation(response);
+            //asignar servicio de reservaciones
+            //console.log("blockReservation: " + angular.toJson(response, true));
+            // });
         };
 
-
-
-        var getColectionReservation = function() {
-
-            FloorFactory.getConfiguracionPeople().then(function(response) {
-                rm.configuracion = {
-                    status_people_1: response.status_people_1,
-                    status_people_2: response.status_people_2,
-                    status_people_3: response.status_people_3,
-                };
-                //console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
-            });
-
-
-            console.log(rm.res_listado);
-            return;
-            FloorFactory.getServicioReservaciones().then(function(response) {
-
-                rm.res_listado_all = response;
-
-                var total = 0;
-                var men = 0;
-                var women = 0;
-                var children = 0;
-                var tWeb = 0;
-                var tTel = 0;
-                var tPor = 0;
-                var tRp = 0;
-
-                rm.res_listado = rm.res_listado_all;
-
-                // console.log(angular.toJson(rm.res_listado, true));
-                angular.forEach(rm.res_listado_all, function(people) {
-                    if (people.reservation_id) {
-
-                        men += people.num_people_1;
-
-                        women += people.num_people_2;
-
-                        children += people.num_people_3;
-
-                        total += people.num_people;
-
-                        var source_type = people.res_source_type_id;
-                        switch (source_type) {
-                            case 1:
-                                tWeb += 1;
-                                break;
-                            case 2:
-                                tTel += 1;
-                                break;
-                            case 3:
-                                tPor += 1;
-                                break;
-                            case 4:
-                                tRp += 1;
-                                break;
-                        }
-                    }
-                });
-
-                rm.total_men = men;
-                rm.total_women = women;
-                rm.total_children = children;
-                rm.total_people = total;
-                rm.total_visitas = total;
-
-                rm.total_tweb = tWeb;
-                rm.total_ttel = tTel;
-                rm.total_tpor = tPor;
-                rm.total_trp = tRp;
-                rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp;
-
-            });
-
-            FloorFactory.getBlocksForReservation().then(function(response) {
-                FloorFactory.mergeBlockToReservation(response);
-                //asignar servicio de reservaciones
-                //console.log("blockReservation: " + angular.toJson(response, true));
-            });
-        };
-
-
-
-        $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
-
-            if (data.action == "update") {
-                angular.forEach(data.data, function(data) {
-                    var reservaTest = FloorFactory.parseDataReservation(data);
-                    FloorFactory.addServicioReservaciones(reservaTest);
-                });
-            } else if (data.action == "create") {
-                var reservaTest = FloorFactory.parseDataReservation(data.data);
-                FloorFactory.addServicioReservaciones(reservaTest);
+        rm.getZone = function(reservation) {
+            if (global.lienzo.data.getZoneForTables) {
+                return global.lienzo.data.getZoneForTables(reservation.tables);
             }
-            $scope.$apply();
-            alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-            //messageAlert("Notificación", data.user_msg, "info", 2000, true);
-            //console.log("Formato: " + angular.toJson(reservaTest, true));
-        });
+        };
 
+        var customSelect = function(categoria, event, collection, filter, index_all, callback) {
+            event.stopPropagation();
+
+            if (categoria.id === index_all) {
+                filter.length = 0;
+                clear_select(collection);
+            } else {
+                var index = filter.indexOf(categoria);
+                if (index === -1) {
+                    filter.push(categoria);
+                    categoria.checked = true;
+
+                    collection[0].checked = false;
+                } else {
+                    filter.splice(index, 1);
+                    categoria.checked = false;
+
+                    if (filter.length === 0) {
+                        collection[0].checked = true;
+                    }
+                }
+            }
+
+            if (callback) callback();
+        };
+
+        rm.select_genders = function(categoria, event) {
+            customSelect(categoria, event, rm.categorias_people, rm.filter_people, 1, visitsQuantity);
+        };
 
         rm.select_type = function(categoria, event) {
-            rm.filter_type = categoria;
-
-            if (event !== null) {
-                event.stopPropagation();
-            }
-
-            if (categoria.id !== 0) {
-                //Evalua Cualquier Opcion diferente de Todos
-                if (categoria.checked === true) { //Deshabilitar
-                    TypeFilterDataFactory.delOpcionesFilterTurnos(categoria);
-                    categoria.checked = false;
-                    filtrarTurnos();
-                } else { //Habilitar y Deshabilitar todos
-                    categoria.checked = true;
-                    TypeFilterDataFactory.setOpcionesFilterTurnos(categoria);
-                    rm.categorias_type[0].checked = false;
-                    filtrarTurnos();
-                }
-            } else {
-                //Evalua Opcion TODOS
-                var deshabilitar = function() {
-                    rm.filter_type = categoria;
-                    angular.forEach(rm.categorias_type, function(type) {
-                        if (type.id !== 0) {
-                            TypeFilterDataFactory.delOpcionesFilterTurnos(type);
-                            type.checked = false;
-                        }
-                    });
-                };
-
-                if (categoria.checked === true) {
-                    deshabilitar();
-                } else {
-                    categoria.checked = true;
-                    deshabilitar();
-                }
-            }
-
-            return false;
-        };
-        var filtrarTurnos = function() {
-            var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
-            rm.filter_type = colection_filtro_turnos;
-            if (rm.filter_type.length === 0) {
-                rm.categorias_type[0].checked = true;
-            }
-            //console.log(rm.filter_type);
-        };
-
-        rm.select_people = function(categoria, event) {
-
-            rm.filter_people = categoria;
-
-            if (event !== null) {
-                event.stopPropagation();
-            }
-
-            if (categoria.idcategoria != 1) {
-                //Evalua Cualquier Opcion diferente de Todos
-                if (categoria.checked === true) { //Deshabilitar
-                    TypeFilterDataFactory.delOpcionesFilterVisitas(categoria);
-                    categoria.checked = false;
-                    filtrarVisitas();
-                } else { //Habilitar y Deshabilitar todos
-                    categoria.checked = true;
-                    TypeFilterDataFactory.setOpcionesFilterVisitas(categoria);
-                    rm.categorias_people[0].checked = false;
-                    filtrarVisitas();
-                }
-            } else {
-                //Evalua Opcion TODOS
-                var deshabilitar = function() {
-                    rm.filter_people = categoria;
-                    angular.forEach(rm.categorias_people, function(gender) {
-                        if (gender.idcategoria !== 1) {
-                            TypeFilterDataFactory.delOpcionesFilterVisitas(gender);
-                            gender.checked = false;
-                        }
-                    });
-                    rm.res_listado = rm.res_listado_all;
-                };
-
-                if (categoria.checked === true) {
-                    deshabilitar();
-                } else {
-                    rm.total_visitas = rm.total_people;
-                    categoria.checked = true;
-                    deshabilitar();
-                }
-            }
-            return false;
-        };
-        var filtrarVisitas = function() {
-            var colection_filtro_visitas = TypeFilterDataFactory.getOpcionesFilterVisitas();
-            rm.filter_people = colection_filtro_visitas;
-
-            if (rm.filter_people.length === 0) {
-                rm.categorias_people[0].checked = true;
-                rm.total_visitas = rm.total_people;
-            } else {
-                var calculo = 0;
-                angular.forEach(rm.filter_people, function(genero) {
-                    var idgenero = genero.idcategoria;
-                    //console.log(idgenero);
-                    switch (idgenero) {
-                        case 2:
-                            calculo += rm.total_men;
-                            break;
-                        case 3:
-                            calculo += rm.total_women;
-                            break;
-                        case 4:
-                            calculo += rm.total_children;
-                            break;
-                    }
-                });
-                rm.total_visitas = calculo;
-            }
-
+            customSelect(categoria, event, rm.categorias_type, rm.filter_type, 0);
         };
 
         rm.select_reserva = function(categoria, event) {
-
-            rm.filter_reserva = categoria;
-
-            if (event !== null) {
-                event.stopPropagation();
-            }
-
-            if (categoria.id !== 0) {
-                //Evalua Cualquier Opcion diferente de Todos
-                if (categoria.checked === true) { //Deshabilitar
-                    TypeFilterDataFactory.delOpcionesFilterReservas(categoria);
-                    categoria.checked = false;
-                    filtrarReservas();
-                } else { //Habilitar y Deshabilitar todos
-                    categoria.checked = true;
-                    TypeFilterDataFactory.setOpcionesFilterReservas(categoria);
-                    rm.categorias_reserva[0].checked = false;
-                    filtrarReservas();
-                }
-            } else {
-                //Evalua Opcion TODOS
-                var deshabilitar = function() {
-                    rm.filter_reserva = categoria;
-                    angular.forEach(rm.categorias_reserva, function(reserva) {
-                        if (reserva.id !== 0) {
-                            TypeFilterDataFactory.delOpcionesFilterReservas(reserva);
-                            reserva.checked = false;
-                        }
-                    });
-
-                };
-
-                if (categoria.checked === true) {
-                    deshabilitar();
-                } else {
-                    categoria.checked = true;
-                    rm.total_reservas = rm.total_tweb + rm.total_ttel + rm.total_tpor + rm.total_trp;
-                    deshabilitar();
-                }
-            }
-            return false;
+            customSelect(categoria, event, rm.categorias_reserva, rm.filter_reserva, 0, reservaQuantity);
         };
-        var filtrarReservas = function() {
-            var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-            rm.filter_reserva = colection_filtro_reservas;
-            if (rm.filter_reserva.length === 0) {
-                rm.categorias_reserva[0].checked = true;
-                rm.total_reservas = rm.res_listado_all.length;
+
+        var clear_select = function(categories) {
+            angular.forEach(categories, function(categoria) {
+                categoria.checked = false;
+            });
+
+            categories[0].checked = true;
+        };
+
+        var visitsQuantity = function() {
+            if (rm.categorias_people[0].checked === true) {
+                rm.total_visitas = rm.visits.total_people;
             } else {
-                var calculo = 0;
-                angular.forEach(rm.filter_reserva, function(reserva) {
-                    var idreserva = reserva.id;
-                    //console.log(idreserva);
-                    switch (idreserva) {
-                        case 1:
-                            calculo += rm.total_tweb;
-                            break;
-                        case 2:
-                            calculo += rm.total_ttel;
-                            break;
-                        case 3:
-                            calculo += rm.total_tpor;
-                            break;
-                        case 4:
-                            calculo += rm.total_trp;
-                            break;
+                rm.total_visitas = 0;
+                angular.forEach(rm.categorias_people, function(categoria) {
+                    if (categoria.id !== 1 && categoria.checked === true) {
+                        rm.total_visitas += rm.visits[categoria.filter];
                     }
                 });
-                rm.total_reservas = calculo;
+            }
+        };
+
+        var reservaQuantity = function() {
+            if (rm.categorias_reserva[0].checked === true) {
+                rm.total_reservas = rm.typeRes.total_reservas;
+            } else {
+                rm.total_reservas = 0;
+                angular.forEach(rm.categorias_reserva, function(categoria) {
+                    if (categoria.id !== 0 && categoria.checked === true) {
+                        rm.total_reservas += rm.typeRes[categoria.name];
+                    }
+                });
             }
         };
 
@@ -373,10 +211,10 @@ angular.module('floor.controller')
 
         };
 
-        rm.infoReservationShow = function() {
-            var icon = true;
-            console.log('sd');
-        };
+        // rm.infoReservationShow = function() {
+        //     var icon = true;
+        //     console.log('sd');
+        // };
 
         rm.mailReservationShow = function(reservation) {
             rm.disabledModal();
@@ -393,7 +231,6 @@ angular.module('floor.controller')
                     }
                 }
             });
-
         };
 
         rm.disabledModal = function() {
@@ -406,13 +243,8 @@ angular.module('floor.controller')
 
         var listTypeTurns = function() {
             FloorFactory.listTurnosActivos(rm.fecha_actual).then(function success(response) {
-
                     TypeFilterDataFactory.setTypeTurnItems(response);
                     rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
-
-                    TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
-                    var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
-                    rm.select_type(colection_filtro_turnos[0], null);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -422,63 +254,39 @@ angular.module('floor.controller')
 
         var listSourceTypes = function() {
             FloorDataFactory.getSourceTypes().then(function success(response) {
-
                 TypeFilterDataFactory.setSourceTypesItems(response.data.data);
                 rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
-
-                TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
-                var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-                rm.select_reserva(colection_filtro_reservas[0], null);
-
             }, function error(error) {
                 message.apiError(error);
             });
         };
 
-
-        var init = function() {
-            rm.res_listado = global.reservations;
-
-            rm.filter_status = [1, 2, 3];
-
-            getColectionReservation();
-            return;
-
-            defaultOptionsFilters();
-
-            //Definir para filtro por defecto para visitas
-            TypeFilterDataFactory.setOpcionesFilterVisitas(rm.categorias_people[0]);
-            rm.select_people(colection_filtro_visitas[0], null);
-
-            //Limpiar data y estilos de servers
-            FloorFactory.isEditServer(false);
-            angular.element('.bg-window-floor').removeClass('drag-dispel');
-            // angular.element('.table-zone').removeClass("selected-table");
-
-            ServerDataFactory.cleanTableServerItems();
-
-            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
-            if (rm.categorias_type.length === 0) {
-                listTypeTurns();
-            } else {
-                TypeFilterDataFactory.setOpcionesFilterTurnos(rm.categorias_type[0]);
-                var colection_filtro_turnos = TypeFilterDataFactory.getOpcionesFilterTurnos();
-                rm.select_type(colection_filtro_turnos[0], null);
-            }
-
-            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
-            if (rm.categorias_reserva.length === 0) {
-                listSourceTypes();
-            } else {
-                TypeFilterDataFactory.setOpcionesFilterReservas(rm.categorias_reserva[0]);
-                var colection_filtro_reservas = TypeFilterDataFactory.getOpcionesFilterReservas();
-                rm.select_reserva(colection_filtro_reservas[0], null);
-            }
-
-
+        var loadConfiguration = function() {
+            FloorFactory.getConfiguracionPeople().then(function(response) {
+                rm.configuracion = {
+                    status_people_1: response.status_people_1,
+                    status_people_2: response.status_people_2,
+                    status_people_3: response.status_people_3,
+                };
+            });
         };
 
-        init();
+        var clearState = function() {
+            $rootScope.$broadcast("floorClearSelected");
+            angular.element('.bg-window-floor').removeClass('drag-dispel');
+            FloorFactory.isEditServer(false);
+        };
+
+        (function Init() {
+            clearState();
+
+            rm.res_listado = global.reservations;
+            $scope.$watch("rm.res_listado", statistics, true);
+
+            loadConfiguration();
+            listSourceTypes();
+            listTypeTurns();
+        })();
     })
     .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
         function($rootScope, $state, $uibModalInstance, content, service, $q) {
@@ -528,8 +336,8 @@ angular.module('floor.controller')
                     children = reservation.num_people_3 || 0;
                 }
                 er.reservation = {
-                    id: reservation.reservation_id,
-                    covers: reservation.num_people,
+                    id: reservation.id,
+                    covers: reservation.num_guest,
                     status_id: reservation.res_reservation_status_id,
                     server_id: reservation.res_server_id,
                     note: reservation.note || null,
@@ -545,10 +353,10 @@ angular.module('floor.controller')
 
             function parseInfo(reservation) {
                 er.info = {
-                    first_name: reservation.first_name,
-                    last_name: reservation.last_name,
-                    date: moment(reservation.start_date).format("dddd, d [de] MMMM"),
-                    time: moment(reservation.start_time, "HH:mm:ss").format("H:mm A"),
+                    first_name: reservation.guest ? reservation.guest.first_name : "Reservacion sin nombre.",
+                    last_name: reservation.guest ? reservation.guest.last_name : "",
+                    date: moment(reservation.date_reservation).format("dddd, d [de] MMMM"),
+                    time: moment(reservation.hours_reservation, "HH:mm:ss").format("H:mm A"),
                     tables: getTables(reservation.tables)
                 };
             }
@@ -743,10 +551,12 @@ angular.module('floor.controller')
 
             (function Init() {
                 var date = getFechaActual();
+
                 if (content.reservation.block_id) $state.go("mesas.floor.block", {
                     date: date,
                     id: content.reservation.block_id
                 });
+
                 listResource().then(function() {
                     resetTags();
                     parseInfo(content.reservation);
@@ -756,4 +566,72 @@ angular.module('floor.controller')
                 console.log(content.reservation);
             })();
         }
-    ]);
+    ])
+    .controller('ModalMailReservationCtrl', function($uibModalInstance, reservation, FloorDataFactory) {
+        var vm = this;
+
+        vm.reservation = {
+            date: '',
+            time: '',
+            email: '',
+            nombre: ''
+        };
+
+        vm.mailData = {
+            message: '',
+            subject: ''
+        };
+
+        var init = function() {
+            // console.log(angular.toJson(reservation, true));
+            vm.reservation.date = reservation.date_reservation;
+            vm.reservation.time = reservation.hours_reservation;
+            vm.reservation.email = reservation.email;
+            var first_name = reservation.guest ? reservation.guest.first_name : "Reservacion sin nombre";
+            var last_name = reservation.guest ? reservation.guest.last_name : "";
+            vm.reservation.nombre = first_name + " - " + last_name;
+            vm.reservation.note = reservation.note;
+        };
+
+        vm.sendMail = function() {
+            FloorDataFactory.sendMessage(reservation.id, vm.mailData).then(
+                function success(response) {
+                    response = response.data;
+
+                    messageAlert("Success", response.msg, "success", 2000, true);
+                    $uibModalInstance.dismiss('cancel');
+
+                    console.log("sendMail " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    message.apiError(response);
+                    console.error("sendMail " + angular.toJson(response, true));
+                });
+        };
+
+        vm.validateSendMail = function() {
+            var valida = 0;
+
+            if (vm.mailData.message === "") {
+                alertMultiple("Alerta", "Ingrese un mensaje", "info", null);
+                valida = 1;
+            }
+
+            if (vm.mailData.subject === "") {
+                alertMultiple("Alerta", "Ingrese un asunto", "info", null);
+                valida = 1;
+            }
+
+            if (valida === 0) {
+                vm.sendMail();
+            } else {
+                $uibModalInstance.dismiss('cancel');
+            }
+        };
+
+        vm.closeModal = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        init();
+    });
