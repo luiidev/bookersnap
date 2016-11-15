@@ -87,7 +87,7 @@ angular.module('floor.controller')
             FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
             $scope.$apply();
             alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-            console.log("NotifyFloorBlock " + angular.toJson(data, true));
+        // console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
         $scope.$on("floorReload", function(evt, data, action) {

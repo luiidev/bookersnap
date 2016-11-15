@@ -1,5 +1,6 @@
 angular.module('floor.controller')
-    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory, TypeFilterDataFactory, FloorDataFactory) {
+    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory,
+        TypeFilterDataFactory, FloorDataFactory, global) {
         var rm = this;
 
         var fecha_actual = getFechaActual();
@@ -53,6 +54,9 @@ angular.module('floor.controller')
                 //console.log("Configuracion: " + angular.toJson(rm.configuracion, true));
             });
 
+
+            console.log(rm.res_listado);
+            return;
             FloorFactory.getServicioReservaciones().then(function(response) {
 
                 rm.res_listado_all = response;
@@ -118,6 +122,8 @@ angular.module('floor.controller')
                 //console.log("blockReservation: " + angular.toJson(response, true));
             });
         };
+
+
 
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
 
@@ -257,59 +263,6 @@ angular.module('floor.controller')
                 rm.total_visitas = calculo;
             }
 
-            //Filtrado realizado por .filter de angular//
-            /*
-            var salida = [];
-            if (rm.filter_people.length !== 0) {
-
-                angular.forEach(rm.res_listado_all, function(item, index) {
-                    angular.forEach(rm.filter_people, function(genero) {
-                        var idgenero = genero.idcategoria;
-                        switch (idgenero) {
-                            case 2:
-                                if (item.num_people_1 !== 0) {
-                                    angular.forEach(salida, function(value, key) {
-                                        if (value.reservation_id == item.reservation_id) {
-                                            salida.splice(key, 1);
-                                        }
-                                    });
-                                    salida.push(item);
-                                }
-
-                                break;
-                            case 3:
-                                if (item.num_people_2 !== 0) {
-                                    angular.forEach(salida, function(value, key) {
-                                        if (value.reservation_id == item.reservation_id) {
-                                            salida.splice(key, 1);
-                                        }
-                                    });
-                                    salida.push(item);
-                                }
-                                break;
-                            case 4:
-
-                                if (item.num_people_3 !== 0) {
-                                    angular.forEach(salida, function(value, key) {
-                                        if (value.reservation_id == item.reservation_id) {
-                                            salida.splice(key, 1);
-                                        }
-                                    });
-                                    salida.push(item);
-                                }
-                                break;
-
-                        }
-                    });
-                });
-                rm.res_listado = salida;
-            } else {
-                angular.forEach(rm.res_listado_all, function(item, index) {
-                    salida.push(item);
-                });
-                rm.res_listado = salida;
-            }
-            */
         };
 
         rm.select_reserva = function(categoria, event) {
@@ -484,8 +437,12 @@ angular.module('floor.controller')
 
 
         var init = function() {
+            rm.res_listado = global.reservations;
+
+            rm.filter_status = [1, 2, 3];
 
             getColectionReservation();
+            return;
 
             defaultOptionsFilters();
 
