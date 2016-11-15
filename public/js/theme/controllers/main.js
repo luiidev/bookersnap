@@ -7,7 +7,7 @@
     //Welcome Message
     //growlService.growl('Welcome back Mallinda!', 'inverse')
 
-
+    this.fecha_actual = getFechaActual();
     // Detact Mobile Browser
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         angular.element('html').addClass('ismobile');
