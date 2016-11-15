@@ -30,7 +30,7 @@
                                             <label>Fecha:</label>                  
                                         <div class="form-group fg-line">
                                             <div class="date-picker" ng-class="{ 'is-opened': vm.opened == true }">                        
-                                                    <input type="text" class="form-control input-sm"  placeholder="FECHA" ng-model="vm.configuration.date" uib-datepicker-popup="{{vm.format}}" min-date="vm.dateMin" max-date="vm.dateMax" show-weeks="false"  is-open="vm.opened"  ng-click="vm.openCalendar($event, 'opened')">
+                                                    <input type="text" class="form-control input-sm"  placeholder="FECHA" ng-model="vm.configuration.date" uib-datepicker-popup="{{vm.format}}" min-date="vm.dateMin" max-date="vm.dateMax" show-weeks="false"  is-open="vm.opened" ng-click="vm.openCalendar($event, 'opened')">
                                             </div>  
                                         </div>
                                     </div>
@@ -69,8 +69,8 @@
                                             <a  ng-show="availavility.hour !== null">{{availavility.hour | uppercase}}</a>
                                             <a  ng-show="availavility.hour == null">No Disponible</a>
                                     </div>
-<!--                                     <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.availabilities.length > 0">
-                                           <p class="lead" ng-bind="vm.message.tagsGuest"></p> 
+<!--                                     <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.events.length > 0">
+                                           <p class="lead" ng-bind="vm.events[0].name"></p> 
                                     </div> -->
                                 </div>
                             </div>

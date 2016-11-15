@@ -52,6 +52,7 @@
     "jquery-ui": "^1.12.1",
     "jqueryui-touch-punch": "*",
     "ng-scrollbars": "^0.0.11",
-    "kjur-jsrsasign": "jsrsasign#^6.1.4"
+    "kjur-jsrsasign": "jsrsasign#^6.1.4",
+    "angular-daterangepicker": "^0.2.2"
   }
 }

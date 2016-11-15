@@ -11,19 +11,19 @@
                     <!-- ngIf: mactrl.listviewSearchStat -->
                     <ul class="lv-actions actions pull-left">
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Time">
+                            <a href="" ng-click="vm.orderBook('time')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Time">
                                 <i class="zmdi zmdi-time">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Status">
+                            <a href="" ng-click="vm.orderBook('status')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Status">
                                 <i class="zmdi zmdi-fire zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
+                            <a href="" ng-click="vm.orderBook('covers')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
                                 <i class="zmdi zmdi-accounts zmdi-hc-fw">
                                 </i>
                             </a>
@@ -122,7 +122,7 @@
                             <i class="zmdi zmdi-circle zmdi-hc-fw">
                             </i>
                             Reservado-->
-                            <label class="label" style="background-color : {{reservation.color}}">
+                            <label class="label" style="background-color : {{reservation.status.color}}">
                                 {{ reservation.status.name }}
                             </label>
                         </div>

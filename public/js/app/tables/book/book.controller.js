@@ -1,6 +1,6 @@
 angular.module('book.controller', [])
 
-.controller('BookCtrl', function($uibModal, $scope, BookFactory, CalendarService, reservationService, BookDataFactory) {
+.controller('BookCtrl', function($uibModal, $scope, orderByFilter, BookFactory, CalendarService, reservationService, BookDataFactory) {
     var vm = this;
 
     vm.turns = [];
@@ -14,6 +14,21 @@ angular.module('book.controller', [])
         sources: []
     };
 
+    //Ordernar book general
+    vm.bookOrderBy = {
+        general: {
+            value: 'time',
+            reverse: false
+        },
+        resBlock: {
+            value: '',
+            reverse: false,
+            time: '-time',
+            status: '+filter_options.status'
+        }
+
+    };
+    //Ordenar book - reservaciones - bloqueos
     var fecha_actual = moment().format('YYYY-MM-DD');
 
     vm.filterBook = function(option, value) {
@@ -25,6 +40,54 @@ angular.module('book.controller', [])
                 BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources);
                 break;
         }
+    };
+
+    vm.orderBook = function(value) {
+
+        switch (value) {
+            case 'time':
+                vm.bookOrderBy.general.reverse = (vm.bookOrderBy.general.value == value) ? !vm.bookOrderBy.general.reverse : false;
+                vm.bookOrderBy.general.value = 'time';
+                vm.listBook = orderByFilter(vm.listBook, 'time', vm.bookOrderBy.general.reverse);
+                break;
+            case 'status':
+                vm.bookOrderBy.general.value = 'status';
+
+                vm.listBook = orderByFilter(vm.listBook, ['reservation.exists', 'block.exists', vm.bookOrderBy.resBlock.status], true);
+
+                vm.bookOrderBy.resBlock.time = (vm.bookOrderBy.resBlock.time === "-time") ? "+time" : "-time";
+                vm.bookOrderBy.resBlock.status = (vm.bookOrderBy.resBlock.status === "+filter_options.status") ? "-filter_options.status" : "+filter_options.status";
+                vm.bookOrderBy.resBlock.value = "status";
+                break;
+            case 'covers':
+                vm.bookOrderBy.general.value = 'covers';
+                vm.listBook = orderByFilter(vm.listBook, ['block.exists', 'reservation.exists', vm.bookOrderBy.resBlock.time], true);
+
+                vm.bookOrderBy.resBlock.time = (vm.bookOrderBy.resBlock.time === "-time") ? "+time" : "-time";
+                vm.bookOrderBy.resBlock.value = "covers";
+                break;
+        }
+
+
+        console.log("orderBook " + angular.toJson(vm.bookOrderBy, true));
+    };
+
+    var filterStatus = function(listBook) {
+        var data = {
+            reservation: [],
+            items: []
+        };
+        angular.forEach(listBook, function(book, key) {
+            if (book.reservation.exists === true || book.block.exists === true) {
+                data.reservation.push(book);
+            } else {
+                data.items.push(book);
+            }
+        });
+
+        console.log("filterStatus " + angular.toJson(data, true));
+
+        return data;
     };
 
     var init = function() {

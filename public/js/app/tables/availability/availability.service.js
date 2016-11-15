@@ -12,10 +12,28 @@ angular.module('availability.service', [])
                     }
                 });
             },
-            getZones: function(date) {
+            getZones: function(config) {
                 return $http.get(ApiUrlMesas + "/availability/zones", {
                     params: {
-                        date: date
+                        date: config.date
+                    }
+                });
+            },
+            getHours: function(config) {
+                return $http.get(ApiUrlMesas + "/availability/hours", {
+                    params: {
+                        date: config.date,
+                        zone_id: config.zoneId
+                    }
+                });
+            },
+            getEvents: function(config) {
+                return $http.get(ApiUrlMesas + "/availability/events", {
+                    params: {
+                        date: config.date,
+                        hour: config.hour,
+                        next_day: config.nextDay,
+                        zone_id: config.zone
                     }
                 });
             },
@@ -30,7 +48,7 @@ angular.module('availability.service', [])
                         hour: config.hour,
                         num_guests: config.num_guests,
                         next_day: config.next_day,
-                        zone_id: config.zone_id
+                        zone_id: config.zone
                     }
                 });
             },
@@ -66,10 +84,34 @@ angular.module('availability.service', [])
                 });
                 return promise;
             },
-            getZones: function(date) {
+            getZones: function(config) {
                 var defered = $q.defer();
                 var promise = defered.promise;
-                AvailabilityDataService.getZones(date).success(function(data) {
+                AvailabilityDataService.getZones(config).success(function(data) {
+                    data = data.data;
+                    defered.resolve(data);
+                }).error(function(data, status, headers) {
+                    var response = jsonErrorData(data, status, headers);
+                    defered.reject(response);
+                });
+                return promise;
+            },
+            getHours: function(config) {
+                var defered = $q.defer();
+                var promise = defered.promise;
+                AvailabilityDataService.getHours(config).success(function(data) {
+                    data = data.data;
+                    defered.resolve(data);
+                }).error(function(data, status, headers) {
+                    var response = jsonErrorData(data, status, headers);
+                    defered.reject(response);
+                });
+                return promise;
+            },
+            getEvents: function(config) {
+                var defered = $q.defer();
+                var promise = defered.promise;
+                AvailabilityDataService.getEvents(config).success(function(data) {
                     data = data.data;
                     defered.resolve(data);
                 }).error(function(data, status, headers) {
