@@ -46,37 +46,70 @@ angular.module('book.service', [])
                         time: hour.time,
                         time_text: hour.name,
                         turn_id: hour.turn_id,
-                        reservation: {
-                            exists: existsReservation.exists,
-                            data: existsReservation.data
-                        },
-                        block: {
-                            exists: existsBlocks.exists,
-                            data: existsBlocks.data
-                        },
-                        filter_options: {
-                            status: -1, //libre
-                        }
+                        block: null,
+                        reservation: null,
+                        available: true
                     };
 
-                    if (existsBlocks.exists === true || existsReservation.exists === true) {
-                        dataBook.filter_options.status = self.getStatusReservation(existsReservation.data);
+                    if (existsBlocks.exists === false && existsReservation.exists === false) {
+                        book.push(dataBook);
+                    } else {
+
+                        angular.forEach(existsBlocks.data, function(block, key) {
+                            book.push({
+                                time: hour.time,
+                                time_text: hour.name,
+                                turn_id: hour.turn_id,
+                                block: block,
+                                reservation: null,
+                                available: false
+                            });
+                        });
+
+                        if (existsBlocks.exists === true) {
+                            book.push(dataBook);
+                        }
+
+                        angular.forEach(existsReservation.data, function(reservation, key) {
+                            book.push({
+                                time: hour.time,
+                                time_text: hour.name,
+                                turn_id: hour.turn_id,
+                                block: null,
+                                reservation: reservation,
+                                available: false
+                            });
+                        });
+
                     }
 
-                    book.push(dataBook);
-
                 });
-
-                console.log("listBook " + angular.toJson(book, true));
 
                 return book;
             },
-            getStatusReservation: function(reservation) {
-                var status = -1;
-                angular.forEach(reservation, function(data) {
-                    status = data.res_reservation_status_id;
+            //Filtramos solo las reservaciones y bloqueos del book
+            filterReservationsAndBlocks: function(listBook) {
+                var data = {
+                    reservations: [],
+                    blocks: [],
+                    availables: []
+                };
+
+                angular.forEach(listBook, function(book) {
+                    if (book.reservation === null && book.block === null) {
+                        data.availables.push(book);
+                    } else {
+
+                        if (book.reservation !== null) {
+                            book.reservation.table_filter = (book.reservation.tables.length > 0) ? book.reservation.tables[0].name : "";
+                            book.reservation.guest_filter = (book.reservation.guest !== null) ? book.reservation.guest.first_name + " " + book.reservation.guest.last_name : "";
+                        }
+
+                        data.reservations.push(book);
+                    }
                 });
-                return status;
+
+                return data;
             },
             existsBlocks: function(hour, blocks) {
                 var exists = {

@@ -29,22 +29,30 @@
                             </a>
                         </li>
                         <li>
-                            <a href="" ng-click="vm.orderBook('guest')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Guest">
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Guest">
                                 <i class="zmdi zmdi-account-o zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" ng-click="vm.orderBook('table')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Table">
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Table">
                                 <i class="zmdi zmdi-collection-item zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Date Created">
+                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Date Created">
                                 <i class="zmdi zmdi-calendar zmdi-hc-fw">
                                 </i>
                             </a>
+                        </li>
+                    </ul>
+                    <ul class="lv-actions actions">
+                        <li>
+                            <div class="fg-line">
+                                <input class="form-control input-sm" placeholder="Search" type="text">
+                                </input>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -52,19 +60,18 @@
         </div>
         <div class="content-book">
             <div class="reservation-item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | filter:vm.bookFilter.text">
-                <div class="item" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null">
-                    <span class="title" ng-if="item.block != null">
+                <div class="item" ng-class="{'block' : item.block.exists}" ng-show="!item.reservation.exists">
+                    <span class="title" ng-if="item.block.exists">
                         MANAGER BLOCK
                     </span>
-                    <span class="title" ng-if="item.available">
+                    <span class="title" ng-if="!item.block.exists">
                         DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
-                    <span ng-if="item.block != null">
-                        - {{ item.block.end_time | limitTo:5 }}
+                    <span ng-if="item.block.exists">
+                        - {{ item.block.data[0].end_time | limitTo:5 }}
                     </span>
                 </div>
-                <!--
                 <div class="item" ng-class="{'block' : item.block.exists}" ng-if="item.reservation.exists && item.block.exists" ui-sref="mesas.floor.blockEdit({date :'2016-11-10',block_id:item.block.data[0].id})">
                     <span class="title">
                         MANAGER BLOCK
@@ -76,30 +83,30 @@
                 </div>
                 <div class="item" ng-if="item.reservation.exists && item.block.exists ">
                     <span class="title">
-                        DISPONIBLES
+                        DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
-                </div>-->
-                <div class="row bg-white" ng-if="item.reservation != null">
+                </div>
+                <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1,'bg-white' : item.reservation.exists}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
                     <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
                         <div class="picture pull-left">
                             <img alt="" height="48" src="/images/avatar.jpg">
                             </img>
                         </div>
                         <div class="pull-left box-name">
-                            <h5 ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                            <h5 ng-bind="reservation.guest.first_name || ' Sin nombre'">
                             </h5>
                             <span>
                                 <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                 </i>
-                                <span ng-if="item.reservation.reservation.note != null">
+                                <span ng-if="reservation.note != null">
                                     1
                                 </span>
                             </span>
                             <span>
                                 <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                 </i>
-                                {{ item.reservation.num_guest }}
+                                {{ reservation.num_guest }}
                             </span>
                         </div>
                         <div class="pull-left box-date">
@@ -107,7 +114,7 @@
                                 {{ item.time_text }}
                             </h5>
                             <span class="f-700">
-                                {{ item.reservation.date_reservation }}
+                                {{ reservation.date_reservation }}
                             </span>
                         </div>
                         <div class="pull-left box-status">
@@ -115,8 +122,8 @@
                             <i class="zmdi zmdi-circle zmdi-hc-fw">
                             </i>
                             Reservado-->
-                            <label class="label" style="background-color : {{item.reservation.status.color}}">
-                                {{ item.reservation.status.name }}
+                            <label class="label" style="background-color : {{reservation.status.color}}">
+                                {{ reservation.status.name }}
                             </label>
                         </div>
                     </div>
@@ -132,7 +139,7 @@
                                     </i>
                                 </button>
                                 <button class="btn bgm-gray-win">
-                                    {{ item.reservation.num_people_1 + item.reservation.num_people_2 }}
+                                    {{ reservation.num_people_1 + reservation.num_people_2 }}
                                 </button>
                                 <button class="btn bgm-gray-win" ng-click="vm.addGuest(reservation,'add','adults')">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
@@ -151,7 +158,7 @@
                                     </i>
                                 </button>
                                 <button class="btn bgm-gray-win">
-                                    {{ item.reservation.num_people_3  || 0}}
+                                    {{ reservation.num_people_3  || 0}}
                                 </button>
                                 <button class="btn bgm-gray-win">
                                     <i class="zmdi zmdi-plus zmdi-hc-fw">
@@ -169,7 +176,7 @@
                         </div>
                         <div class="pull-left col-lg-3 col-md-3 col-sm-3 phone">
                             <label class="label label-success">
-                                {{ item.reservation.source.name }}
+                                {{ reservation.source.name }}
                             </label>
                         </div>
                         <div class="pull-left col-lg-2 col-md-3 col-sm-3 config">
@@ -197,7 +204,7 @@
                         <div class="pull-right">
                             <div class="pull-left tables">
                                 <div class="">
-                                    {{ item.reservation.tables[0].name }}
+                                    {{ reservation.tables[0].name }}
                                     <span ng-if="reservation.tables.length >1">
                                         +
                                     </span>
