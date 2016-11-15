@@ -691,7 +691,7 @@ angular.module('reservation.service', [])
 
             var width = $window.innerWidth;
             var height = $window.innerHeight;
-            console.log(width, height, screenSize.menu, screenSize.header);
+            //console.log(width, height, screenSize.menu, screenSize.header);
             var size;
 
             if (width - screenSize.menu >= height - screenSize.header) {
