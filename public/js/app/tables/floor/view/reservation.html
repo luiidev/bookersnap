@@ -359,9 +359,9 @@
                             <div class="scrollbar-inner">
                                 <table cellpadding="0" cellspacing="0" class="table-listado">
                                     <tbody>
-                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}" ng-click="rm.editReservation(value)" ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
-                                            <td>
-                                                <table class="table-listado sub-table" ng-if="value.reservation_id">
+                                        <tr class="listado-column" data-quantity="{{ value.num_people }}" id="num{{ value.num_people }}" ng-class="{'not_selector':value.block_id}"  ng-drag-up-coming="" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy:'start_time' | peopleSel:rm.filter_people | reservaSel:rm.filter_reserva | turnoSel:rm.filter_type | statusAll" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                            <td ng-if="value.reservation_id" ng-click="rm.editReservation(value)">
+                                                <table class="table-listado sub-table" >
                                                     <tr>
                                                         <td class="child-hour">
                                                             {{value.start_time | limitTo : 5:0  }}
@@ -465,7 +465,9 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <table class="table-listado p-0 m-0" ng-show="value.block_id" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.block_id})">
+                                            </td>
+                                            <td ng-show="value.block_id" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.block_id})"  >
+                                                <table class="table-listado p-0 m-0" >
                                                     <tr>
                                                         <td>
                                                             {{value.start_time}} - {{value.end_time}}

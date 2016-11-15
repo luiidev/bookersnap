@@ -121,7 +121,7 @@ angular.module('calendar.controller', [])
         var vm = this;
         vm.date = data.date;
         vm.flags = {
-            isLoading: false
+        isLoading: false
         };
 
         vm.shifts = [];

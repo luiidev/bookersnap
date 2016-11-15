@@ -262,7 +262,8 @@ angular.module('block.controller', [])
                 function success(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 0, true);
-                        $state.go("mesas.floor");
+                        //$state.go("mesas.floor");
+                        $window.open("/admin/ms/1/mesas", "_self");
                     } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 0, true);
                     }
@@ -280,7 +281,8 @@ angular.module('block.controller', [])
                 function success(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000);
-                        $state.go("mesas.floor");
+                        //$state.go("mesas.floor");
+                        $window.open("/admin/ms/1/mesas", "_self");
                     } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 2000);
                     }

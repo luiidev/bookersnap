@@ -705,7 +705,8 @@ angular.module('reservation.controller', [])
             };
 
             var redirect = function() {
-                $state.go("mesas.floor.reservation");
+                //$state.go("mesas.floor.reservation");
+                $window.open("/admin/ms/1/mesas", "_self");
             };
 
             (function Init() {
