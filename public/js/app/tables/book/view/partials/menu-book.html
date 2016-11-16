@@ -7,7 +7,7 @@
                     </i>
                     RES
                     <span>
-                        19
+                        {{ vm.resumenBook.reservations }}
                     </span>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     </i>
                     PAX
                     <span>
-                        19
+                        {{ vm.resumenBook.pax }}
                     </span>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     </i>
                     PAX INGRESO
                     <span>
-                        19
+                        {{ vm.resumenBook.ingresos }}
                     </span>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     </i>
                     CONVERSION
                     <span>
-                        %4.65
+                        % {{ vm.resumenBook.conversion }}
                     </span>
                 </div>
             </div>
@@ -79,14 +79,16 @@
         <div class="box-option">
             <div class="card bg-transparent no-box-shadow">
                 <div class="card-body card-padding c-white bg-transparent p-0">
-                    <div class="input-group">
+                    <div class="input-group form-group">
                         <span class="input-group-addon">
                             <i class="zmdi zmdi-calendar-note zmdi-hc-fw">
                             </i>
                         </span>
-                        <div class="fg-line">
-                            <input class="form-control bg-transparent" placeholder="28/09/2016" type="text">
-                            </input>
+                        <div class="date-picker" ng-class="{ 'is-opened': vm.calendar == true }">
+                            <div class="fg-line">
+                                <input class="form-control bg-transparent" is-open="vm.calendar" ng-click="vm.openCalendar($event, 'opened')" ng-model="vm.bookFilter.date" placeholder="2016-11-11" show-weeks="false" type="text" uib-datepicker-popup="{{vm.format}}">
+                                </input>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,8 +135,8 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li ng-class="{'active' : item.checked}" ng-click="vm.filterBook('source',item)" ng-repeat="item in vm.sources">
-                                    <a href="">
+                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.sources">
+                                    <a href="" ng-click="vm.filterBook('source',item)">
                                         {{ item.name }}
                                     </a>
                                 </li>
@@ -159,8 +161,8 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li ng-repeat="item in vm.zones">
-                                    <a href="#">
+                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.zones">
+                                    <a href="" ng-click="vm.filterBook('zones',item)">
                                         {{ item.name }}
                                     </a>
                                 </li>

@@ -17,7 +17,7 @@ angular.module('book.service', [])
         };
 
     })
-    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory) {
+    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory) {
 
         return {
             getReservations: function(reload, date) {
@@ -32,6 +32,20 @@ angular.module('book.service', [])
                         defered.reject(response);
                     }
                 );
+                return defered.promise;
+            },
+            getAllBlocks: function(reload, params) {
+                var defered = $q.defer();
+
+                BlockFactory.getBlocks(reload, params).then(
+                    function success(response) {
+                        defered.resolve(response.data.data);
+                    },
+                    function error(response) {
+                        defered.reject(response.data);
+                    }
+                );
+
                 return defered.promise;
             },
             listBook: function(hours, reservations, blocks) {
@@ -141,24 +155,35 @@ angular.module('book.service', [])
 
                 return exists;
             },
-            getAllBlocks: function(reload, params) {
-                var defered = $q.defer();
-
-                BlockFactory.getBlocks(reload, params).then(
-                    function success(response) {
-                        defered.resolve(response.data.data);
-                    },
-                    function error(response) {
-                        defered.reject(response.data);
-                    }
-                );
-
-                return defered.promise;
-            },
             listReservationAndBlocks: function(reload, date) {
                 var self = this;
-
                 return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
+            },
+            //Habilita en la vista los types turns que hallamos marcados
+            setCheckedTypeTurn: function(turns, turnId, checked) {
+                angular.forEach(turns, function(turn, key) {
+                    if (turn.turn !== null) {
+                        if (turn.turn.id == turnId) {
+                            turn.checked = checked;
+                        }
+                    }
+                });
+            },
+            //Habilita en la vista los sources que hallamos marcados
+            setCheckedSource: function(sources, sourceId, checked) {
+                angular.forEach(sources, function(source, key) {
+                    if (source.id == sourceId) {
+                        source.checked = checked;
+                    }
+                });
+            },
+            //Habilita en la vista las zonas que hallamos marcados
+            setCheckedZone: function(zones, zoneId, checked) {
+                angular.forEach(zones, function(zone, key) {
+                    if (zone.id == zoneId) {
+                        zone.checked = checked;
+                    }
+                });
             },
             //Agrega los turnos (id) a la lista de marcados
             addTurnsByFilter: function(typeTurn, filterTypeTurns, turns) {
@@ -181,16 +206,6 @@ angular.module('book.service', [])
                     }
                 }
             },
-            //Habilita en la vista los types turns que hallamos marcados
-            setCheckedTypeTurn: function(turns, turnId, checked) {
-                angular.forEach(turns, function(turn, key) {
-                    if (turn.turn !== null) {
-                        if (turn.turn.id == turnId) {
-                            turn.checked = checked;
-                        }
-                    }
-                });
-            },
             //Agrega los sources (id) a la lista de marcados
             addSourcesByFilter: function(source, filterSources, sources) {
                 var self = this;
@@ -208,13 +223,75 @@ angular.module('book.service', [])
                     self.setCheckedSource(sources, source.id, true);
                 }
             },
-            //Habilita en la vista los sources que hallamos marcados
-            setCheckedSource: function(sources, sourceId, checked) {
-                angular.forEach(sources, function(source, key) {
-                    if (source.id == sourceId) {
-                        source.checked = checked;
+            //Agrega las zones (id) a la lista de marcados
+            addZonesByFilter: function(zone, filterZones, zones) {
+                var self = this;
+
+                if (filterZones.length > 0) {
+                    var index = filterZones.indexOf(zone.id);
+
+                    if (index == -1) {
+                        filterZones.push(zone.id);
+                        self.setCheckedZone(zones, zone.id, true);
+                    } else {
+                        filterZones.splice(index, 1);
+                        self.setCheckedZone(zones, zone.id, false);
+                    }
+
+                } else {
+                    filterZones.push(zone.id);
+                    self.setCheckedZone(zones, zone.id, true);
+                }
+            },
+            //Ver si alguna mesa pertenece a la zona
+            existsTablesByZone: function(tables, zones) {
+                var exists = false;
+
+                angular.forEach(tables, function(table, key) {
+                    if (zones.indexOf(table.res_zone_id) != -1) {
+                        exists = true;
                     }
                 });
+
+                return exists;
             },
+            //Calcula el resumen del book, n° reservaciones,invitados,ingresados,etc
+            getResumenBook: function(listBook) {
+                var resumen = BookResumenFactory.calculate(listBook);
+                return resumen;
+            }
+
+        };
+    })
+    .factory('BookResumenFactory', function($q) {
+
+        return {
+            calculate: function(listBook) {
+                var resumenBook = {
+                    reservations: 0,
+                    pax: 0,
+                    ingresos: 0,
+                    conversion: 0
+                };
+
+                var resvSit = 0;
+
+                angular.forEach(listBook, function(book, key) {
+                    if (book.reservation !== null) {
+                        resumenBook.reservations += 1;
+                        resumenBook.pax += book.reservation.num_guest;
+
+                        if (book.reservation.status.id == 4) {
+                            resvSit += 1;
+                        }
+
+                    }
+                });
+
+                resumenBook.conversion = (resvSit / resumenBook.reservations) * 100;
+
+                return resumenBook;
+            }
+
         };
     });

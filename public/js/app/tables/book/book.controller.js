@@ -1,6 +1,8 @@
 angular.module('book.controller', [])
 
 .controller('BookCtrl', function($uibModal, $scope, orderByFilter, BookFactory, CalendarService, reservationService, BookDataFactory) {
+
+    var fecha_actual = moment().format('YYYY-MM-DD');
     var vm = this;
 
     vm.turns = [];
@@ -12,7 +14,9 @@ angular.module('book.controller', [])
 
     vm.bookFilter = {
         typeTurn: [],
-        sources: []
+        sources: [],
+        zones: [],
+        date: ''
     };
 
     //Ordernar book general
@@ -33,7 +37,12 @@ angular.module('book.controller', [])
 
     };
 
-    var fecha_actual = moment().format('YYYY-MM-DD');
+    vm.resumenBook = {
+        reservations: 0,
+        pax: 0,
+        ingresos: 0,
+        conversion: 0
+    };
 
     vm.filterBook = function(option, value) {
         switch (option) {
@@ -42,6 +51,9 @@ angular.module('book.controller', [])
                 break;
             case 'source':
                 BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources);
+                break;
+            case 'zones':
+                BookFactory.addZonesByFilter(value, vm.bookFilter.zones, vm.zones);
                 break;
         }
     };
@@ -99,30 +111,51 @@ angular.module('book.controller', [])
         }
     };
 
-    var init = function() {
-        listTurnAvailable();
-        listSources();
-        listZones();
+    vm.openCalendar = function($event, opened) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        vm.calendar = true;
     };
 
-    var listTurnAvailable = function() {
-        BookDataFactory.getTypeTurns(fecha_actual).then(
+    $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
+        if (newDate !== oldDate) {
+            newDate = convertFechaYYMMDD(newDate, "es-ES", {});
+            listZones(newDate, true);
+            listTurnAvailable(newDate);
+        }
+    });
+
+    $scope.$watch('vm.listBook', function(newBook, oldBook) {
+        if (newBook !== oldBook) {
+            console.log("se ejecuto un filtro");
+        }
+
+    });
+
+    var init = function() {
+        listTurnAvailable(fecha_actual);
+        listSources();
+        listZones(fecha_actual, false);
+    };
+
+    var listTurnAvailable = function(date) {
+        BookDataFactory.getTypeTurns(date).then(
             function success(response) {
                 response = response.data.data;
                 vm.turns = response;
 
-                listHoursTurns(vm.turns);
+                listHoursTurns(vm.turns, date);
             },
             function error(response) {
                 console.error("listTypeTurns " + angular.toJson(response, true));
             });
     };
 
-    var listHoursTurns = function(turns) {
+    var listHoursTurns = function(turns, date) {
         reservationService.getHours(turns).then(
             function success(response) {
                 vm.hoursTurns = response.hours;
-                generatedListBook(fecha_actual);
+                generatedListBook(date);
             },
             function error(response) {
                 console.error("getHours " + angular.toJson(response, true));
@@ -140,7 +173,9 @@ angular.module('book.controller', [])
                 var listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1]);
                 vm.listBook = listBook;
                 vm.listBookMaster = listBook;
-                console.log("generatedListBook " + angular.toJson(vm.listBook, true));
+
+                vm.resumenBook = BookFactory.getResumenBook(listBook);
+                console.log("generatedListBook " + angular.toJson(vm.resumenBook, true));
             },
             function error(response) {
                 console.error("listReservationAndBlocks " + angular.toJson(response, true));
@@ -159,11 +194,11 @@ angular.module('book.controller', [])
             });
     };
 
-    var listZones = function() {
+    var listZones = function(date, reload) {
         var params = {
-            date_ini: fecha_actual,
+            date_ini: date,
             date_end: getAsUriParameters({}),
-            reload: false
+            reload: reload
         };
 
         BookDataFactory.getZones(params).then(

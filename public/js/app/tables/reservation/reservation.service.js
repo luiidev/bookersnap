@@ -102,8 +102,9 @@ angular.module('reservation.service', [])
                     tags = HttpFactory.get(ApiUrlMesas + "/reservation/tag", null, tags, reload);
                     return tags;
                 },
-                getReservations: function(reload) {
-                    reservations = HttpFactory.get(ApiUrlMesas + "/reservations", null, reservations, reload);
+                getReservations: function(reload, params) {
+                    params = (params === undefined || params === null) ? "" : params;
+                    reservations = HttpFactory.get(ApiUrlMesas + "/reservations?" + params, null, reservations, reload);
                     return reservations;
                 },
                 getConfigurationRes: function(reload) {
