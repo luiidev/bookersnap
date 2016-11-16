@@ -3,70 +3,68 @@ angular.module('availability.controller', [])
         var vm = this;
 
         //Variables
-        vm.dateMin = moment().add(1, 'day').format('YYYY-MM-DD');
-        vm.dateMax = moment().add(7, 'day').format('YYYY-MM-DD');
+        vm.dateMin = moment().format(vm.format);
+        vm.date = new Date();
         vm.format = 'yyyy-MM-dd';
-        // vm.hours = [{
-        //     option: "17:00:00"
-        // }, {
-        //     option: "17:15:00"
-        // }, {
-        //     option: "17:30:00"
-        // }];
 
         vm.configuration = {
+            date: moment(vm.Date).format('YYYY-MM-DD'),
+            hour: null,
+            num_guest: null,
             zone: null,
-            date: moment().format('YYYY-MM-DD'),
-            num_guest: 2,
         };
 
         //Funciones
         vm.getAvailability = getAvailability;
         vm.openCalendar = openCalendar;
-        // vm.changeDate = changeDate;
+        vm.changeHour = changeHour;
+        vm.reservationTemporal = reservationTemporal;
+        vm.searchEventAvailability = searchEventAvailability;
 
-
-        function getZones(config) {
-            AvailabilityService.getZones(config).then(function success(response) {
+        function getZones() {
+            AvailabilityService.getZones(vm.configuration).then(function success(response) {
                 vm.zones = response;
+                vm.configuration.zone = vm.zones.length > 0 ? vm.zones[0].id : null;
             }, function success(response) {
                 messageErrorApi(response.data, "Error", "warning");
             });
         }
 
-        function getHours(config) {
-            AvailabilityService.getHours(config).then(function success(response) {
-                //Falta revizar next day
+        function getHours() {
+            AvailabilityService.getHours(vm.configuration).then(function success(response) {
                 vm.hours = response;
-                vm.configuration.hour = vm.hours[0].option;
-                vm.configuration.nextDay = vm.hours[0].next_day;
+                vm.configuration.hour = vm.hours.length > 0 ? vm.hours[0] : null;
+                getEvents();
             }, function success(response) {
                 messageErrorApi(response.data, "Error", "warning");
             });
         }
 
-        function getEvents(config) {
-            AvailabilityService.getEvents(config).then(function success(response) {
-                //Falta revizar next day
+        function getEvents() {
+            vm.loadingSearchEvent = true;
+            AvailabilityService.getEvents(vm.configuration).then(function success(response) {
                 vm.events = response;
                 console.log(vm.events);
+                vm.loadingSearchEvent = false;
             }, function success(response) {
                 messageErrorApi(response.data, "Error", "warning");
+                vm.loadingSearchEvent = false;
             });
         }
 
         function getGuest() {
             AvailabilityService.getConfig().then(function success(response) {
                 vm.guests = AvailabilityService.getGuest(response.max_people);
+                vm.configuration.num_guest = vm.guests.length > 0 ? 1 : null;
             }, function success(response) {
                 messageErrorApi(response.data, "Error", "warning");
             });
         }
 
-        function getAvailability(config) {
-            config.date = moment(config.date).format('YYYY-MM-DD');
+        function getAvailability() {
             vm.loadingSearch = true;
-            AvailabilityService.getAvailability(config).then(function success(response) {
+            console.log(vm.configuration);
+            AvailabilityService.getAvailability(vm.configuration).then(function success(response) {
                 vm.availabilities = response;
                 console.log(vm.availabilities);
                 vm.loadingSearch = false;
@@ -76,16 +74,6 @@ angular.module('availability.controller', [])
             });
         }
 
-        $scope.$watch('vm.configuration.date', function(newValue, oldValue) {
-            var newValueDate = moment(newValue).format('YYYY-MM-DD');
-            var oldValueDate = moment(oldValue).format('YYYY-MM-DD');
-            if (newValueDate !== oldValueDate) {
-                vm.configuration.date = newValueDate;
-                getZones(vm.configuration);
-                getHours(vm.configuration);
-                getEvents(vm.configuration);
-            }
-        });
 
         function openCalendar($event, opened) {
             $event.preventDefault();
@@ -93,17 +81,30 @@ angular.module('availability.controller', [])
             vm.opened = true;
         }
 
-        // function changeDate(date) {
-        //     getZones(date);
-        //     getHours(date, vm.configuration.zone);
-        // }
-
-        function init() {
-            getZones(vm.configuration);
-            getGuest();
-            getHours(vm.configuration);
+        function changeHour(hour) {
+            getEvents();
         }
 
-        init();
+        function reservationTemporal(hour) {
+            console.log(hour);
+        }
+
+        function searchEventAvailability(event) {
+            console.log(event, vm.configuration);
+        }
+
+        $scope.$watch('vm.date', function(newValue, oldValue) {
+            if (!moment(newValue).isSame(oldValue)) {
+                vm.configuration.date = moment(newValue).format('YYYY-MM-DD');
+                getHours();
+                getZones();
+            }
+        });
+
+        (function init() {
+            getZones();
+            getGuest();
+            getHours();
+        })();
 
     }]);

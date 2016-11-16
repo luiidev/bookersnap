@@ -5,9 +5,9 @@ angular.module('availability.service', [])
                 return $http.get(ApiUrlMesas + "/availability/basic", {
                     params: {
                         date: config.date,
-                        hour: config.hour,
+                        hour: config.hour.option,
+                        next_day: config.hour.next_day,
                         num_guests: config.num_guest,
-                        next_day: 0,
                         zone_id: config.zone_id
                     }
                 });
@@ -31,8 +31,8 @@ angular.module('availability.service', [])
                 return $http.get(ApiUrlMesas + "/availability/events", {
                     params: {
                         date: config.date,
-                        hour: config.hour,
-                        next_day: config.nextDay,
+                        hour: config.hour.option,
+                        next_day: config.hour.next_day,
                         zone_id: config.zone
                     }
                 });
@@ -45,9 +45,9 @@ angular.module('availability.service', [])
                 return $http.post(ApiUrlMesas + "/reservationtemporal", {}, {
                     params: {
                         date: config.date,
-                        hour: config.hour,
+                        hour: config.hour.option,
+                        next_day: config.hour.next_day,
                         num_guests: config.num_guests,
-                        next_day: config.next_day,
                         zone_id: config.zone
                     }
                 });
