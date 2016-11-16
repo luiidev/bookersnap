@@ -1,7 +1,7 @@
 <div class="tab-reservation-floor">
     <div class="input-group header-actions">
         <div class="fg-line">
-            <input class="form-control" ng-show="!wm.search.show" placeholder="Buscar por nombre u horario" type="text">
+            <input class="form-control" ng-model="wm.busqueda" ng-show="!wm.search.show" placeholder="Buscar por nombre u horario" type="text">
                 <button class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait('create')" ng-show="wm.search.show" type="button">
                     <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg">
                     </i>
@@ -44,7 +44,7 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming ng-repeat="value in wm.res_listado.actives | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming ng-repeat="value in wm.res_listado.actives | waitlistCondicion | filter: wm.busqueda" on-start-fn="wm.selectWaitlist(value)">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
