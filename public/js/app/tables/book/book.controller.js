@@ -5,7 +5,8 @@ angular.module('book.controller', [])
 
     vm.turns = [];
     vm.hoursTurns = []; //Lista de horas segun los turnos
-    vm.listBook = []; //Listado del book 
+    vm.listBook = []; //Listado del book para los filtros
+    vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
     vm.sources = [];
     vm.zones = [];
 
@@ -23,12 +24,15 @@ angular.module('book.controller', [])
         resBlock: {
             value: '',
             reverse: false,
-            time: '-time',
-            status: '+filter_options.status'
+            status: '+reservation.res_reservation_status_id',
+            covers: '+reservation.num_guest',
+            guest: '-reservation.guest_filter',
+            table: '-reservation.table_filter',
+            date: '-reservation.start_date'
         }
 
     };
-    //Ordenar book - reservaciones - bloqueos
+
     var fecha_actual = moment().format('YYYY-MM-DD');
 
     vm.filterBook = function(option, value) {
@@ -44,50 +48,55 @@ angular.module('book.controller', [])
 
     vm.orderBook = function(value) {
 
+        var reservations = BookFactory.filterReservationsAndBlocks(vm.listBookMaster);
+
         switch (value) {
             case 'time':
                 vm.bookOrderBy.general.reverse = (vm.bookOrderBy.general.value == value) ? !vm.bookOrderBy.general.reverse : false;
                 vm.bookOrderBy.general.value = 'time';
-                vm.listBook = orderByFilter(vm.listBook, 'time', vm.bookOrderBy.general.reverse);
+                vm.listBook = orderByFilter(vm.listBookMaster, 'time', vm.bookOrderBy.general.reverse);
                 break;
             case 'status':
-                vm.bookOrderBy.general.value = 'status';
+                vm.bookOrderBy.resBlock.value = 'status';
 
-                vm.listBook = orderByFilter(vm.listBook, ['reservation.exists', 'block.exists', vm.bookOrderBy.resBlock.status], true);
+                var filterStatus = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.status]);
+                vm.listBook = filterStatus.concat(reservations.availables);
+                vm.bookOrderBy.resBlock.status = (vm.bookOrderBy.resBlock.status === "+reservation.res_reservation_status_id") ? "-reservation.res_reservation_status_id" : "+reservation.res_reservation_status_id";
 
-                vm.bookOrderBy.resBlock.time = (vm.bookOrderBy.resBlock.time === "-time") ? "+time" : "-time";
-                vm.bookOrderBy.resBlock.status = (vm.bookOrderBy.resBlock.status === "+filter_options.status") ? "-filter_options.status" : "+filter_options.status";
-                vm.bookOrderBy.resBlock.value = "status";
                 break;
             case 'covers':
-                vm.bookOrderBy.general.value = 'covers';
-                vm.listBook = orderByFilter(vm.listBook, ['block.exists', 'reservation.exists', vm.bookOrderBy.resBlock.time], true);
-
-                vm.bookOrderBy.resBlock.time = (vm.bookOrderBy.resBlock.time === "-time") ? "+time" : "-time";
                 vm.bookOrderBy.resBlock.value = "covers";
+
+                var filterCovers = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.covers]);
+                vm.listBook = filterCovers.concat(reservations.availables);
+                vm.bookOrderBy.resBlock.covers = (vm.bookOrderBy.resBlock.covers === "+reservation.num_guest") ? "-reservation.num_guest" : "+reservation.num_guest";
+
+                break;
+            case 'guest':
+                vm.bookOrderBy.resBlock.value = "guest";
+
+                var filterGuest = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.guest]);
+                vm.listBook = filterGuest.concat(reservations.availables);
+                vm.bookOrderBy.resBlock.guest = (vm.bookOrderBy.resBlock.guest === "-reservation.guest_filter") ? "+reservation.guest_filter" : "-reservation.guest_filter";
+
+                break;
+            case 'table':
+                vm.bookOrderBy.resBlock.value = "table";
+
+                var filterTable = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.table]);
+                vm.listBook = filterTable.concat(reservations.availables);
+                vm.bookOrderBy.resBlock.table = (vm.bookOrderBy.resBlock.table === "-reservation.table_filter") ? "+reservation.table_filter" : "-reservation.table_filter";
+
+                break;
+            case 'date':
+                vm.bookOrderBy.resBlock.value = "date";
+
+                var filterDate = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.date]);
+                vm.listBook = filterDate.concat(reservations.availables);
+                vm.bookOrderBy.resBlock.date = (vm.bookOrderBy.resBlock.date === "-reservation.hours_reservation") ? "+reservation.hours_reservation" : "-reservation.hours_reservation";
+
                 break;
         }
-
-
-        console.log("orderBook " + angular.toJson(vm.bookOrderBy, true));
-    };
-
-    var filterStatus = function(listBook) {
-        var data = {
-            reservation: [],
-            items: []
-        };
-        angular.forEach(listBook, function(book, key) {
-            if (book.reservation.exists === true || book.block.exists === true) {
-                data.reservation.push(book);
-            } else {
-                data.items.push(book);
-            }
-        });
-
-        console.log("filterStatus " + angular.toJson(data, true));
-
-        return data;
     };
 
     var init = function() {
@@ -128,7 +137,10 @@ angular.module('book.controller', [])
 
         BookFactory.listReservationAndBlocks(true, params).then(
             function success(response) {
-                vm.listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1]);
+                var listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1]);
+                vm.listBook = listBook;
+                vm.listBookMaster = listBook;
+                console.log("generatedListBook " + angular.toJson(vm.listBook, true));
             },
             function error(response) {
                 console.error("listReservationAndBlocks " + angular.toJson(response, true));

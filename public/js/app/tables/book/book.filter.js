@@ -22,12 +22,11 @@ angular.module('book.filter', [])
 
             angular.forEach(books, function(book, key) {
                 if (sources.length > 0) {
-                    angular.forEach(book.reservation.data, function(reservation, key) {
-                        if (sources.indexOf(reservation.source.id) != -1) {
+                    if (book.reservation !== null) {
+                        if (sources.indexOf(book.reservation.source.id) != -1) {
                             listBook.push(book);
                         }
-                    });
-
+                    }
                 } else {
                     listBook.push(book);
                 }

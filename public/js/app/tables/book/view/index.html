@@ -29,19 +29,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Guest">
+                            <a href="" ng-click="vm.orderBook('guest')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Guest">
                                 <i class="zmdi zmdi-account-o zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Table">
+                            <a href="" ng-click="vm.orderBook('table')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Table">
                                 <i class="zmdi zmdi-collection-item zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li>
-                            <a href="" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Date Created">
+                            <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Date Created">
                                 <i class="zmdi zmdi-calendar zmdi-hc-fw">
                                 </i>
                             </a>
@@ -61,56 +61,40 @@
         </div>
         <div class="content-book">
             <div class="reservation-item col-lg-12" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | filter:vm.bookFilter.text">
-                <div class="item" ng-class="{'block' : item.block.exists}" ng-show="!item.reservation.exists">
-                    <span class="title" ng-if="item.block.exists">
+                <div class="item row" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null">
+                    <span class="title" ng-if="item.block != null">
                         MANAGER BLOCK
                     </span>
-                    <span class="title" ng-if="!item.block.exists">
+                    <span class="title" ng-if="item.available">
                         DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
-                    <span ng-if="item.block.exists">
-                        - {{ item.block.data[0].end_time | limitTo:5 }}
+                    <span ng-if="item.block != null">
+                        - {{ item.block.end_time | limitTo:5 }}
                     </span>
                 </div>
-                <div class="item" ng-class="{'block' : item.block.exists}" ng-if="item.reservation.exists && item.block.exists" ui-sref="mesas.floor.blockEdit({date :'2016-11-10',block_id:item.block.data[0].id})">
-                    <span class="title">
-                        MANAGER BLOCK
-                    </span>
-                    {{ item.time | limitTo:5 }}
-                    <span>
-                        - {{ item.block.data[0].end_time | limitTo:5 }}
-                    </span>
-                </div>
-                <div class="item" ng-if="item.reservation.exists && item.block.exists ">
-                    <span class="title">
-                        DISPONIBLE
-                    </span>
-                    {{ item.time | limitTo:5 }}
-                </div>
-
-                <div class="row" ng-class="{'resv-data' : $index+1 != item.reservation.data.length || reservation.length == 1,'bg-white' : item.reservation.exists}" ng-repeat="reservation in item.reservation.data" ng-show="item.reservation.exists">
+                <div class="row bg-white" ng-if="item.reservation != null">
                     <div class="box-guest">
                         <div class="picture">
                             <img alt="" src="/images/avatar.jpg">
                             </img>
                         </div>
                         <div class="info">
-                            <div class="name" ng-bind="reservation.guest.first_name || ' Sin nombre'">
+                            <div class="name" ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
                             </div>
                             <div class="list">
                                 <a class="item note">
                                     <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                     </i>
                                     nota
-                                    <span ng-if="reservation.note != null">
+                                    <span ng-if="item.reservation.note != null">
                                         
                                     </span>
                                 </a>
                                 <a class="item list-guest">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                     </i>
-                                    {{ reservation.num_guest }} invitados
+                                    {{ item.reservation.num_guest }} invitados
                                 </a>
                             </div>
                         </div>                            
@@ -121,12 +105,12 @@
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ reservation.date_reservation }}
+                                {{ item.reservation.date_reservation }}
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label" style="background-color : {{reservation.status.color}}">
-                                {{ reservation.status.name }}
+                            <label class="label" style="background-color : {{item.reservation.status.color}}">
+                                {{ item.reservation.status.name }}
                             </label>
                         </div>
 
@@ -136,7 +120,7 @@
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <div class="icon" ><i class="zmdi zmdi-male-alt zmdi-hc-fw"></i></div>
-                                        <div class="count" >12</div>
+                                        <div class="count" >{{ item.reservation.num_people_1  || 0}}</div>
                                     </div>
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
                                 </div>
@@ -146,7 +130,7 @@
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <div class="icon" ><i class="zmdi zmdi-female zmdi-hc-fw"></i></div>
-                                        <div class="count" >12</div>
+                                        <div class="count" >{{ item.reservation.num_people_2  || 0}}</div>
                                     </div>
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
                                 </div>
@@ -156,18 +140,17 @@
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <div class="icon" ><i class="zmdi zmdi-mood zmdi-hc-fw"></i></div>
-                                        <div class="count" >12</div>
+                                        <div class="count" >{{ item.reservation.num_people_3  || 0}}</div>
                                     </div>
                                     <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
                                 </div>
                             </div>
                         </div>
-
                         
                         
                         <div class="source">
                             <label class="label label-success">
-                                {{ reservation.source.name }}
+                                {{ item.reservation.source.name }}
                             </label>
                         </div>
                         <div class="consume">
@@ -202,8 +185,8 @@
                     </div>
                     <div class="tables">
                         <div class="item">
-                            {{ reservation.tables[0].name }}
-                            <span ng-if="reservation.tables.length >1">
+                            {{ item.reservation.tables[0].name }}
+                            <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
