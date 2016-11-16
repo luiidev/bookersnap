@@ -98,8 +98,8 @@ angular.module('floor.controller')
             rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
         };
 
-        FloorFactory.getBlocksForReservation().then(function(response) {
-            blocks = response;
+        reservationService.getBlocks().then(function(response) {
+            blocks = response.data.data;
             statistics();
         });
 
