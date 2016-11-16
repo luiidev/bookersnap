@@ -170,6 +170,8 @@ angular.module('floor.service', [])
         var zonesTotal = [];
         var navegaTabZone = 0;
         var reservasAndBlocks = [];
+
+        var turns_notes;
         return {
             getZones: function(date, reload) {
                 var defered = $q.defer();
@@ -674,6 +676,10 @@ angular.module('floor.service', [])
             },*/
             listTurnosActivos: function(date) {
                 var defered = $q.defer();
+                if (turns_notes) {
+                    defered.resolve(turns_notes);
+                    return defered.promise;
+                }
                 var self = this;
 
                 CalendarService.GetShiftByDate(date).then(
@@ -685,7 +691,7 @@ angular.module('floor.service', [])
                             function success(response) {
                                 response = response.data.data;
                                 response = self.listNotesTypeTurn(response, typeTurnsData);
-
+                                turns_notes = response;
                                 defered.resolve(response);
                             },
                             function error(response) {

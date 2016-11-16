@@ -44,15 +44,15 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming="" ng-repeat="value in wm.res_listado | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming ng-repeat="value in wm.res_listado.actives | waitlistCondicion" on-start-fn="wm.selectWaitlist(value)">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
                                                 <td class="child-pax">
-                                                    {{value.num_people}}
+                                                    {{value.num_guest}}
                                                 </td>
                                                 <td class="child-name">
-                                                    {{value.first_name}} {{value.last_name}}
+                                                    {{ value.guest.first_name || "Reservacion sin nombre."}} {{ value.guest.last_name || "" }}
                                                 </td>
                                                 <td class="child-time text-right time_wail_list" ng-class="{'time_out' : value.time_out}" rowspan="3">
                                                     {{ value.minutes }} Min
@@ -105,11 +105,11 @@
                         </div>
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr ng-repeat="item in wm.res_listado_canceled">
-                                    <td class="canceled-wail_list">
-                                        {{ item.first_name }} {{ item.last_name }}
+                                <tr class="listado-column" ng-repeat="item in wm.res_listado.canceled" ng-drag-up-coming on-start-fn="wm.selectWaitlist(item)">
+                                    <td class="canceled-wail_list" style="width: 400px;">
+                                        {{ item.guest.first_name || "Reservacion sin nombre."}} {{ item.guest.last_name || "" }}
                                         <br>
-                                            {{ item.num_people }} Invitados cancelados
+                                            {{ item.num_guest }} Invitados cancelados
                                         </br>
                                     </td>
                                 </tr>

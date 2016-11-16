@@ -602,7 +602,7 @@ angular.module('reservation.controller', [])
                 if (reservation.res_guest_id) {
                     vm.guest = reservation.guest;
                 }
-                console.log(reservation);
+
                 paintTables(reservation.tables);
                 paintTags(reservation.tags);
             }
