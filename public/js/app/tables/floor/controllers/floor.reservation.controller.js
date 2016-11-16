@@ -104,7 +104,7 @@ angular.module('floor.controller')
         });
 
         rm.getZone = function(reservation) {
-            return global.lienzo.data.getZoneForTables(reservation.tables);
+            if (global.lienzo.data.getZoneForTables) return global.lienzo.data.getZoneForTables(reservation.tables);
         };
 
         var customSelect = function(categoria, event, collection, filter, index_all, callback) {
@@ -485,7 +485,7 @@ angular.module('floor.controller')
                     er.waitingResponse = true;
                     var id = er.reservation.id;
 
-                    service.blackList.key();
+                    var key = service.blackList.key();
 
                     service.cancel(id, {
                             key: key

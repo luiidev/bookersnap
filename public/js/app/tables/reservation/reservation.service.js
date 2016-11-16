@@ -60,8 +60,10 @@ angular.module('reservation.service', [])
                 updateWaitList: function(data) {
                     return http.put(ApiUrlMesas + "/waitlist", data);
                 },
-                deleteWaitList: function(id) {
-                    return http.delete(ApiUrlMesas + "/waitlist/" + id);
+                deleteWaitList: function(id, data) {
+                    return http.delete(ApiUrlMesas + "/waitlist/" + id, {
+                        params: data
+                    });
                 },
                 getReservation: function(id) {
                     return http.get(ApiUrlMesas + "/table/reservation/" + id + "/edit");

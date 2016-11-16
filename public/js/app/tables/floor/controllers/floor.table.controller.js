@@ -838,7 +838,12 @@ angular.module('floor.controller')
 
             var id = eventEstablished.data.id;
             var data = {
-                table_id: table.id
+                table_id: table.id,
+                guests: {
+                    men: vmc.flagSelectedNumMen,
+                    women: vmc.flagSelectedNumWomen,
+                    children: vmc.flagSelectedNumChildren
+                },
             };
 
             reservationService.blackList.key(data);

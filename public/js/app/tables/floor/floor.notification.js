@@ -9,11 +9,7 @@ angular.module("floor.notify.controller", [])
     });
 
     serverSocket.on("b-mesas-floor-res", function(data) {
-        if (data.controller == "waitList") {
-            $scope.$broadcast("NotifyFloorWaitListReload", data);
-        } else {
-            $scope.$broadcast("NotifyFloorTableReservationReload", data);
-        }
+        $scope.$broadcast("NotifyFloorTableReservationReload", data);
     });
 
     serverSocket.on("b-mesas-config-update", function(data) {

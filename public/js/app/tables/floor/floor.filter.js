@@ -115,6 +115,15 @@ angular.module('floor.filter', [])
             return salida;
         };
     })
+    .filter("waitlist", function() {
+        return function(items) {
+            var salida = items.filter(function(item) {
+                return item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4);
+            });
+
+            return salida;
+        };
+    })
     .filter("statusSeated", function() {
         return function(items) {
             var salida = [];

@@ -29,7 +29,7 @@ angular.module('floor.service')
                                             $interval.cancel(interval);
                                         }
 
-                                        console.log(calculateMinutesTime("2016-11-08 " + reservation.time_wait_list));
+                                        // console.log(calculateMinutesTime("2016-11-08 " + reservation.time_wait_list));
                                     };
 
                                     interval();
