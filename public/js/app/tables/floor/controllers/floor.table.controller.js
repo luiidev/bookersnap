@@ -1,6 +1,6 @@
 angular.module('floor.controller')
     .controller('FloorCtrl', function($scope, $timeout, $q, $uibModal, $state, reservationHelper, reservationService, FloorFactory,
-        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory, $document) {
+        ServerDataFactory, $table, $window, screenHelper, screenSizeFloor, global, TypeFilterDataFactory, FloorDataFactory) {
 
         var vm = this;
 
@@ -286,6 +286,7 @@ angular.module('floor.controller')
                 loadBlocks(date),
                 loadReservations(),
                 loadServers(),
+                FloorDataFactory.getSourceTypes()
             ]).then(function(data) {
                 loadTablesEdit(data[0], data[1], data[2], data[3]);
 

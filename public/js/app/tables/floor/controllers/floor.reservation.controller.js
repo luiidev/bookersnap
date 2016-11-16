@@ -11,6 +11,10 @@ angular.module('floor.controller')
         rm.filter_type = [];
         rm.zonesNumber = [];
 
+        var blocks = [];
+
+        rm.res_listado = [];
+
         rm.fecha_actual = getFechaActual();
         var validaModal = false; //modal editar reservacion
         rm.search = {
@@ -54,7 +58,7 @@ angular.module('floor.controller')
             var tPor = 0;
             var tRp = 0;
 
-            angular.forEach(rm.res_listado.data, function(reservation, index) {
+            angular.forEach(rm.reservations.data, function(reservation, index) {
                 men += reservation.num_people_1;
                 women += reservation.num_people_2;
                 children += reservation.num_people_3;
@@ -91,17 +95,16 @@ angular.module('floor.controller')
             rm.typeRes.total_reservas = tWeb + tTel + tPor + tRp;
             rm.total_reservas = rm.typeRes.total_reservas;
 
-            // FloorFactory.getBlocksForReservation().then(function(response) {
-            // FloorFactory.mergeBlockToReservation(response);
-            //asignar servicio de reservaciones
-            //console.log("blockReservation: " + angular.toJson(response, true));
-            // });
+            rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
         };
 
+        FloorFactory.getBlocksForReservation().then(function(response) {
+            blocks = response;
+            statistics();
+        });
+
         rm.getZone = function(reservation) {
-            if (global.lienzo.data.getZoneForTables) {
-                return global.lienzo.data.getZoneForTables(reservation.tables);
-            }
+            return global.lienzo.data.getZoneForTables(reservation.tables);
         };
 
         var customSelect = function(categoria, event, collection, filter, index_all, callback) {
@@ -280,8 +283,8 @@ angular.module('floor.controller')
         (function Init() {
             clearState();
 
-            rm.res_listado = global.reservations;
-            $scope.$watch("rm.res_listado", statistics, true);
+            rm.reservations = global.reservations;
+            $scope.$watch("rm.reservations", statistics, true);
 
             loadConfiguration();
             listSourceTypes();
