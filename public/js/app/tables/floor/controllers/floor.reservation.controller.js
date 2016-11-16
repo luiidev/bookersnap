@@ -555,11 +555,6 @@ angular.module('floor.controller')
             (function Init() {
                 var date = getFechaActual();
 
-                if (content.reservation.block_id) $state.go("mesas.floor.block", {
-                    date: date,
-                    id: content.reservation.block_id
-                });
-
                 listResource().then(function() {
                     resetTags();
                     parseInfo(content.reservation);
