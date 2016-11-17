@@ -36,7 +36,7 @@ angular.module('book.controller', [])
         }
     };
     //Book View (Reservaciones)
-    vm.bookView = "all";
+    vm.bookView = false;
 
     vm.resumenBook = {
         reservations: 0,
