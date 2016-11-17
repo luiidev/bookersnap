@@ -34,8 +34,9 @@ angular.module('book.controller', [])
             table: '-reservation.table_filter',
             date: '-reservation.start_date'
         }
-
     };
+    //Book View (Reservaciones)
+    vm.bookView = "all";
 
     vm.resumenBook = {
         reservations: 0,
@@ -45,6 +46,7 @@ angular.module('book.controller', [])
     };
 
     vm.filterBook = function(option, value) {
+        console.log("filterBook " + angular.toJson(value, true));
         switch (option) {
             case 'turn':
                 BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns);
@@ -60,7 +62,7 @@ angular.module('book.controller', [])
 
     vm.orderBook = function(value) {
 
-        var reservations = BookFactory.filterReservationsAndBlocks(vm.listBookMaster);
+        var reservations = BookFactory.filterReservationsAndBlocks(vm.listBook);
 
         switch (value) {
             case 'time':
@@ -111,6 +113,10 @@ angular.module('book.controller', [])
         }
     };
 
+    vm.changeViewReservation = function() {
+        console.log("changeViewReservation");
+    };
+
     vm.openCalendar = function($event, opened) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -132,7 +138,13 @@ angular.module('book.controller', [])
 
     });
 
+    $scope.$on('resumenBookUpdate', function(evt, data) {
+        vm.resumenBook = data;
+        console.log("resumenBookUpdateo", angular.toJson(data, true));
+    });
+
     var init = function() {
+        BookFactory.init($scope);
         listTurnAvailable(fecha_actual);
         listSources();
         listZones(fecha_actual, false);
@@ -174,7 +186,7 @@ angular.module('book.controller', [])
                 vm.listBook = listBook;
                 vm.listBookMaster = listBook;
 
-                vm.resumenBook = BookFactory.getResumenBook(listBook);
+                //vm.resumenBook = BookFactory.getResumenBook(listBook);
                 console.log("generatedListBook " + angular.toJson(vm.resumenBook, true));
             },
             function error(response) {

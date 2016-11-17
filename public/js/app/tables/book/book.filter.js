@@ -1,5 +1,5 @@
 angular.module('book.filter', [])
-    .filter('turnsFilter', function() {
+    .filter('turnsFilter', function(BookFactory) {
         return function(books, turns) {
             var listBook = [];
 
@@ -13,10 +13,12 @@ angular.module('book.filter', [])
                 listBook = books;
             }
 
+            BookFactory.getResumenBook(listBook);
+
             return listBook;
         };
     })
-    .filter('sourcesFilter', function() {
+    .filter('sourcesFilter', function(BookFactory) {
         return function(books, sources) {
             var listBook = [];
 
@@ -31,6 +33,7 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
+            BookFactory.getResumenBook(listBook);
             return listBook;
         };
     })
@@ -50,6 +53,7 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
+            BookFactory.getResumenBook(listBook);
 
             return listBook;
         };

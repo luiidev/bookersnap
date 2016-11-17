@@ -447,14 +447,28 @@
 		
 /*--------------BOOK------------------*/
 
+.ts-label.reservation
+	min-width inherit
 .menu-book 
 	padding 9px 0 2px 9px
-	display: block
+	display: block	
 	& .card 
 		margin-bottom 6px
 		& .card-body 
 			padding 8px
 			background-color #575757
+			& .title
+				font-size 1em
+			& .title-movil
+				display none
+				font-size .8em
+			& .count
+				font-size 1em
+			& .count-movil
+				display none
+				width 100%
+				text-align center
+				font-size .8em
 			& .input-group
 				top -2px
 				& .input-group-addon
@@ -470,6 +484,7 @@
 				&>a 
 					color #fff
 					width 100%
+					font-size 1em
 					& > .caret
 						float right
 						top 8px
@@ -483,13 +498,13 @@
 		padding-right 5px
 		& .input-group-addon
 			padding 6px 0
-
 .footer-blook		
 	& .box-footer-date 
 		& h5 
 			margin 25px 0
 			color #fff
 .content-book
+	font-size 1em
 	margin 0
 	& h5 
 		margin 0 0 2px 0
@@ -502,48 +517,149 @@
 			color #fff
 		& .resv-data
 			border-bottom 1px solid #ccc
-		& .box-info-reservation
-			& .box-name 
-				padding-top 10px
-				margin-left 5px
-			& .box-date
-				margin-left 25px
-				& h5 
-					margin-bottom 0
-					margin-top 10px
-			& .box-status
-				padding-top 15px
-				margin-left 25px
-			
-		& .box-guest 
-			& .buttons-add 
-				& .btn 
-					padding 4px 8px
-		& .box-config
-			& .price 
-				padding-top 10px
-			& .phone 
-				padding-top 15px
-			& .config 
-				padding-top 10px
-				& .settings-reservation 
-					color #000 
-					font-size 1.7em
-					cursor pointer
-			& .tables 
-				padding 15px 15px 
-				background-color #ffeed3
-				color #f98e00
-				font-weight bold
-				margin-left 20px
-				width 69px
+		& .box-guest
+			width 20%
+			float left
+			& .picture
+				float left
+				height 48px
+				width 48px
+				& img
+					width 48px
+					height 48px
+			& .info
+				z-index 1
+				padding-left 55px
+				padding-right 0px
+				height 48px
+				width 100%
+				position relative
+				top 50%
+				& .name
+					position absolute
+					top 2px
+					width 100%
+					font-size 1.2em
+					font-weight 500
+				& .list
+					position absolute
+					bottom 2px
+					& .item
+						float left
+						padding 0px
+						padding-right 10px
+						color #adadad
+						cursor pointer
+						&:hover
+							color #000
+						&.note
+							width initial
+						&.list-guest
+							width initial
+						& .zmdi
+							font-size 1.6em
+		& .box-reservation
+			width 80%
+			float left
+			padding-right 110px
+			& .datetime
+				float left
+				width 10%
 				text-align center
-			& .label 
-				padding 6px 25px
-				font-size 1em
-				
+				font-weight 500
+				margin-top 6px
+				& .date
+					font-size 10px
+				& .time
+					font-size 14px
+			& .status
+				float left
+				width 10%
+				text-align center
+				& .label
+					width 7em
+					font-size .8em
+					display block
+					margin-top 16px
+					padding 5px 0px
+			& .source
+				float right
+				width 10%
+				padding-left 10px
+				& .label
+					width 7em
+					font-size .8em
+					display block
+					margin-top 16px
+					padding 5px 0px
+			& .consume
+				float right
+				width 10%
+				height 45px
+				padding-top 6px
+				padding-left 10px
+			& .people
+				float left
+				width 60%
+				height 45px
+				padding-top 6px
+				& .actions
+					padding-left 10px
+					width 100px
+					float left
+				& .btn-toolbar
+					padding-left 0px
+					& .btn-group
+						margin-left 0px
+						height 35px
+						width 30px
+						text-align center
+						font-weight 600
+						&.action
+							cursor pointer
+							&:hover
+								background-color #575757
+								color #fff
+						& .icon
+							& .zmdi
+								font-size 15px
+								padding-top 2px
+						& .count
+							font-size 12px
+						& .zmdi
+							padding-top 8px
+							font-size 18px
+		& .tables
+			right 0px
+			width 45px
+			height 45px
+			text-align center
+			position absolute
+			& .item
+				float right
+				background-color #ffeed3
+				width 50px
+				height 48px
+				font-size 14px
+				font-weight 500
+				color #f98e00
+				padding 0
+				padding-top 15px
+		& .config
+			right 45px
+			width 60px
+			text-align center
+			position absolute
+			background-color rgba(204, 204, 204, 0.46)
+			& .settings-reservation
+				height 48px
+				display block
+				color #000
+				font-size 20px
+				cursor pointer
+				padding-top 10px
 		& .item 
-			padding 6px 25px
+			padding 6px 15px
 			& .title 
 				display block
 			
@@ -555,28 +671,19 @@
 		& .box-option
 			font-size 0.9em
 	.content-book
+		font-size .8em
 		& .reservation-item
-			& .box-info-reservation
-				& .box-name 
-					padding-top 10px
-					margin-left 5px
-				& .box-date
-					margin-left 5px
-				& .box-status
-					margin-left 5px
-			& .box-config 
-				& .label 
-					padding 6px 9px
-					font-size 0.8em
-					
+			& .box-guest
+				width 25%
+			& .box-reservation
+				width 75%					
 @media (min-width:768px) and (max-width: 1023px)
 	.footer-blook
 		& .btn 
 			width 90px!important
 			font-size 0.7em
 		& .box-footer-date 
-			display none		
-		
+			display none
 	.menu-book
 		padding 9px 0 2px 15px
 		& .form-control
@@ -584,14 +691,108 @@
 			
 		& .box-option
 			font-size 0.8em
-			
 	.content-book
 		& .reservation-item
-			& .box-config
-				& .phone 
-					text-align center
-
-					
+			& .box-guest
+				width 25%
+			& .box-reservation
+				width 75%
+				padding-right 75px
+				& .datetime
+					width initial
+					margin-right 10px
+					min-width initial
+				& .status
+					width initial
+					margin-right 10px
+					& .label
+						width 20px
+						height 20px
+						border-radius 50%
+						display block
+						margin 0
+						color transparent
+						margin-top 14px
+				& .people
+					padding-left 0px
+			& .tables
+				right 0px
+				width 30px
+				& .item
+					width 30px
+					height 48px
+					font-size 12px
+					font-weight 500
+			& .config
+				right 30px
+				width 40px
+				& .settings-reservation
+					font-size 14px
+					cursor pointer
+					padding-top 14px
+@media (max-width:767px)
+	.menu-book 
+		padding 9px 0 2px 9px
+		display: block	
+		& .card 
+			margin-bottom 6px
+			& .card-body 
+				padding 8px
+				background-color #575757
+				text-align center
+				& .title
+					display none
+				& .title-movil
+					display initial
+				& .count
+					display none
+				& .count-movil
+					display block
+	.ts-label.reservation
+		display none
+	.content-book
+		& .reservation-item
+			& .box-guest
+				width 50%
+			& .box-reservation
+				width 50%
+				padding-right 75px
+				& .datetime
+					width initial
+					margin-right 10px
+					min-width initial
+				& .status
+					width initial
+					margin-right 10px
+					& .label
+						width 20px
+						height 20px
+						border-radius 50%
+						display block
+						margin 0
+						color transparent
+						margin-top 14px
+				& .source
+					display none
+				& .people
+					display none
+				& .consume
+					display none
+			& .tables
+				right 0px
+				width 30px
+				& .item
+					width 30px
+					height 48px
+					font-size 12px
+					font-weight 500
+			& .config
+				right 30px
+				width 40px
+				& .settings-reservation
+					font-size 14px
+					cursor pointer
+					padding-top 14px
 /*--------------GUEST------------------*/
 
 .p-section-guest 

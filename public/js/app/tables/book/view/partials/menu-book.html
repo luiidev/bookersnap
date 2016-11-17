@@ -2,61 +2,101 @@
     <div class="container w-100 menu-book">
         <div class="box-option">
             <div class="card">
-                <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw">
+                <div class="card-body c-white">
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
                     </i>
-                    RES
-                    <span>
+                    <span class="title">
+                        RES
+                    </span>
+                    <span class="title-movil">
+                        RES
+                    </span>
+                    <span class="count">
                         {{ vm.resumenBook.reservations }}
                     </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.reservations }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw">
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
                     </i>
-                    PAX
-                    <span>
+                    <span class="title">
+                        PAX
+                    </span>
+                    <span class="title-movil">
+                        PAX
+                    </span>
+                    <span class="count">
                         {{ vm.resumenBook.pax }}
                     </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.pax }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw">
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
                     </i>
-                    PAX INGRESO
-                    <span>
+                    <span class="title">
+                        PAX INGRESO
+                    </span>
+                    <span class="title-movil">
+                        PAXI
+                    </span>
+                    <span class="count">
                         {{ vm.resumenBook.ingresos }}
                     </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.ingresos }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw">
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
                     </i>
-                    CONVERSION
-                    <span>
-                        % {{ vm.resumenBook.conversion }}
+                    <span class="title">
+                        CONVERSION
                     </span>
+                    <span class="title-movil">
+                        CONV
+                    </span>
+                    <span class="count">
+                        {{ vm.resumenBook.conversion }} %
+                    </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.conversion }} %
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw">
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
                     </i>
-                    MDS
-                    <span>
+                    <span class="title">
+                        MDS
+                    </span>
+                    <span class="title-movil">
+                        MDS
+                    </span>
+                    <span class="count">
                         120/121
                     </span>
+                    <div class="count-movil">
+                        120/121
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,8 +148,8 @@
                                 <span class="caret">
                                 </span>
                             </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.turns">
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li ng-class="[{'active' : item.checked},{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
                                     <a href="" ng-click="vm.filterBook('turn',item)">
                                         {{ item.name }}
                                     </a>
@@ -134,7 +174,7 @@
                                 <span class="caret">
                                 </span>
                             </a>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu pull-right" role="menu">
                                 <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.sources">
                                     <a href="" ng-click="vm.filterBook('source',item)">
                                         {{ item.name }}
@@ -160,7 +200,7 @@
                                 <span class="caret">
                                 </span>
                             </a>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu pull-right" role="menu">
                                 <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.zones">
                                     <a href="" ng-click="vm.filterBook('zones',item)">
                                         {{ item.name }}

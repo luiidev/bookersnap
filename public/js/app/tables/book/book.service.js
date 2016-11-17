@@ -18,7 +18,7 @@ angular.module('book.service', [])
 
     })
     .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory) {
-
+        var scopeMain = null;
         return {
             getReservations: function(reload, date) {
                 var defered = $q.defer();
@@ -258,7 +258,10 @@ angular.module('book.service', [])
             //Calcula el resumen del book, n° reservaciones,invitados,ingresados,etc
             getResumenBook: function(listBook) {
                 var resumen = BookResumenFactory.calculate(listBook);
-                return resumen;
+                scopeMain.$broadcast('resumenBookUpdate', resumen);
+            },
+            init: function(scope) {
+                scopeMain = scope;
             }
 
         };
@@ -281,17 +284,19 @@ angular.module('book.service', [])
                         resumenBook.reservations += 1;
                         resumenBook.pax += book.reservation.num_guest;
 
-                        if (book.reservation.status.id == 4) {
+                        if (book.reservation.status.id == 4 || book.reservation.status.id == 5) {
                             resvSit += 1;
                         }
 
                     }
                 });
 
-                resumenBook.conversion = (resvSit / resumenBook.reservations) * 100;
+                if (resumenBook.resvSit > 0 || resumenBook.reservations > 0) {
+                    resumenBook.conversion = (resvSit / resumenBook.reservations) * 100;
+                }
 
                 return resumenBook;
-            }
+            },
 
         };
     });
