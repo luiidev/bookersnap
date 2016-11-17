@@ -50,9 +50,13 @@
                     <ul class="lv-actions actions">
                         <li>
                             <div class="toggle-switch toggle-switch-demo">
-                                <label for="ts1" class="ts-label reservation">Reservaciones</label>
-                                <input id="ts1" type="checkbox" hidden="hidden">
-                                <label for="ts1" class="ts-helper"></label>
+                                <label class="ts-label reservation" for="ts1">
+                                    Reservaciones
+                                </label>
+                                <input hidden="hidden" id="ts1" type="checkbox">
+                                    <label class="ts-helper" for="ts1">
+                                    </label>
+                                </input>
                             </div>
                         </li>
                     </ul>
@@ -60,7 +64,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item col-lg-12" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | filter:vm.bookFilter.text">
+            <div class="reservation-item col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
                 <div class="item row" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null">
                     <span class="title" ng-if="item.block != null">
                         MANAGER BLOCK
@@ -88,7 +92,6 @@
                                     </i>
                                     nota
                                     <span ng-if="item.reservation.note != null">
-                                        
                                     </span>
                                 </a>
                                 <a class="item list-guest">
@@ -97,7 +100,7 @@
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                             </div>
-                        </div>                            
+                        </div>
                     </div>
                     <div class="box-reservation">
                         <div class="datetime">
@@ -113,41 +116,71 @@
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
-
                         <div class="people">
                             <div class="actions">
-                                <div class="btn-toolbar " role="toolbar" aria-label="...">
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
-                                    <div class="btn-group" role="group" aria-label="...">
-                                        <div class="icon" ><i class="zmdi zmdi-male-alt zmdi-hc-fw"></i></div>
-                                        <div class="count" >{{ item.reservation.num_people_1  || 0}}</div>
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
                                     </div>
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-male-alt zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_1  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
                                 </div>
                             </div>
                             <div class="actions">
-                                <div class="btn-toolbar " role="toolbar" aria-label="...">
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
-                                    <div class="btn-group" role="group" aria-label="...">
-                                        <div class="icon" ><i class="zmdi zmdi-female zmdi-hc-fw"></i></div>
-                                        <div class="count" >{{ item.reservation.num_people_2  || 0}}</div>
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
                                     </div>
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-female zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_2  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
                                 </div>
                             </div>
                             <div class="actions">
-                                <div class="btn-toolbar " role="toolbar" aria-label="...">
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-minus zmdi-hc-fw"></i></div>
-                                    <div class="btn-group" role="group" aria-label="...">
-                                        <div class="icon" ><i class="zmdi zmdi-mood zmdi-hc-fw"></i></div>
-                                        <div class="count" >{{ item.reservation.num_people_3  || 0}}</div>
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
                                     </div>
-                                    <div class="btn-group action" role="group" aria-label="..."><i class="zmdi zmdi-plus zmdi-hc-fw"></i></div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-mood zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_3  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        
                         <div class="source">
                             <label class="label label-success">
                                 {{ item.reservation.source.name }}
@@ -160,7 +193,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="config">
                         <div class="dropdown" uib-dropdown="">
                             <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" uib-dropdown-toggle="">

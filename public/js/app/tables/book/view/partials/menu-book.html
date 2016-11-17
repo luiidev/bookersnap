@@ -3,55 +3,100 @@
         <div class="box-option">
             <div class="card">
                 <div class="card-body c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw icon"></i>
-                    <span class="title">RES</span>
-                    <span class="title-movil">RES</span>
-                    <span class="count">19</span>
-                    <div class="count-movil">19</div>
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
+                    </i>
+                    <span class="title">
+                        RES
+                    </span>
+                    <span class="title-movil">
+                        RES
+                    </span>
+                    <span class="count">
+                        {{ vm.resumenBook.reservations }}
+                    </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.reservations }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw icon"></i>
-                    <span class="title">PAX</span>
-                    <span class="title-movil">PAX</span>
-                    <span class="count">19</span>
-                    <div class="count-movil">19</div>
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
+                    </i>
+                    <span class="title">
+                        PAX
+                    </span>
+                    <span class="title-movil">
+                        PAX
+                    </span>
+                    <span class="count">
+                        {{ vm.resumenBook.pax }}
+                    </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.pax }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw icon"></i>
-                    <span class="title">PAX INGRESO</span>
-                    <span class="title-movil">PAXI</span>
-                    <span class="count">19</span>
-                    <div class="count-movil">19</div>
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
+                    </i>
+                    <span class="title">
+                        PAX INGRESO
+                    </span>
+                    <span class="title-movil">
+                        PAXI
+                    </span>
+                    <span class="count">
+                        {{ vm.resumenBook.ingresos }}
+                    </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.ingresos }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                <i class="zmdi zmdi-chart zmdi-hc-fw icon"></i>
-                    <span class="title">CONVERSION</span>
-                    <span class="title-movil">CONV</span>
-                    <span class="count">4.65%</span>
-                    <div class="count-movil">4.65%</div>
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
+                    </i>
+                    <span class="title">
+                        CONVERSION
+                    </span>
+                    <span class="title-movil">
+                        CONV
+                    </span>
+                    <span class="count">
+                        {{ vm.resumenBook.conversion }} %
+                    </span>
+                    <div class="count-movil">
+                        {{ vm.resumenBook.conversion }} %
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-option">
             <div class="card">
                 <div class="card-body card-padding c-white">
-                    <i class="zmdi zmdi-chart zmdi-hc-fw icon"></i>
-                    <span class="title">MDS</span>
-                    <span class="title-movil">MDS</span>
-                    <span class="count">120/121</span>
-                    <div class="count-movil">120/121</div>
+                    <i class="zmdi zmdi-chart zmdi-hc-fw icon">
+                    </i>
+                    <span class="title">
+                        MDS
+                    </span>
+                    <span class="title-movil">
+                        MDS
+                    </span>
+                    <span class="count">
+                        120/121
+                    </span>
+                    <div class="count-movil">
+                        120/121
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,14 +119,16 @@
         <div class="box-option">
             <div class="card bg-transparent no-box-shadow">
                 <div class="card-body card-padding c-white bg-transparent p-0">
-                    <div class="input-group">
+                    <div class="input-group form-group">
                         <span class="input-group-addon">
                             <i class="zmdi zmdi-calendar-note zmdi-hc-fw">
                             </i>
                         </span>
-                        <div class="fg-line">
-                            <input class="form-control bg-transparent" placeholder="28/09/2016" type="text">
-                            </input>
+                        <div class="date-picker" ng-class="{ 'is-opened': vm.calendar == true }">
+                            <div class="fg-line">
+                                <input class="form-control bg-transparent" is-open="vm.calendar" ng-click="vm.openCalendar($event, 'opened')" ng-model="vm.bookFilter.date" placeholder="2016-11-11" show-weeks="false" type="text" uib-datepicker-popup="{{vm.format}}">
+                                </input>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,7 +149,7 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.turns">
+                                <li ng-class="[{'active' : item.checked},{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
                                     <a href="" ng-click="vm.filterBook('turn',item)">
                                         {{ item.name }}
                                     </a>
@@ -128,8 +175,8 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li ng-class="{'active' : item.checked}" ng-click="vm.filterBook('source',item)" ng-repeat="item in vm.sources">
-                                    <a href="">
+                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.sources">
+                                    <a href="" ng-click="vm.filterBook('source',item)">
                                         {{ item.name }}
                                     </a>
                                 </li>
@@ -154,8 +201,8 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li ng-repeat="item in vm.zones">
-                                    <a href="#">
+                                <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.zones">
+                                    <a href="" ng-click="vm.filterBook('zones',item)">
                                         {{ item.name }}
                                     </a>
                                 </li>
