@@ -34,9 +34,17 @@ angular.module('availability.controller', [])
             AvailabilityService.getHours(vm.configuration).then(function success(response) {
                 vm.hours = response;
                 vm.configuration.hour = vm.hours.length > 0 ? vm.hours[0] : null;
+                console.log(vm.hours);
                 getEvents();
             }, function success(response) {
                 messageErrorApi(response.data, "Error", "warning");
+            // vm.hours = []{
+            //     option_user: "No existe Horarios Disponibles",
+            //     option: "06:00:00",
+            //     next_day: 1,
+            //     index: 120
+            // };
+                console.log(vm.hours);
             });
         }
 
