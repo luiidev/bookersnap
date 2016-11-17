@@ -662,7 +662,11 @@
 			padding 6px 15px
 			& .title 
 				display block
-			
+.footer-book
+	position fixed !important
+	z-index 8
+	height 60px !important
+	padding 0 !important
 @media (max-width: 1024px)
 	.footer-blook
 		& .box-footer-date 
@@ -794,7 +798,6 @@
 					cursor pointer
 					padding-top 14px
 /*--------------GUEST------------------*/
-
 .p-section-guest 
 	padding-left 400px
 .profile-main , #profile-main
@@ -1084,6 +1087,16 @@ $background-tables-head = #eee
 ::-webkit-scrollbar-thumb
 	border 1px solid #959595
 	background #858585
+/*STYLES FLOOR*/
+
+.section-right-floor
+	width 400px
+	top 0
+	right 0
+	position fixed
+	height 100vh
+	background #424242
+	padding-top 70px
 .floor-waitlist
 	& .headder
 		background #005581
@@ -1501,7 +1514,6 @@ ul.listado-filtros
 					padding 6px 10px
 					&.sel_active
 						background #005581
-			
 ul.footer-floor
 	height 75px
 	list-style none
@@ -1512,17 +1524,36 @@ ul.footer-floor
 		float left
 		padding 0
 		margin 0
+		&.dropdown-logo
+			height 100%
+			padding 10px
+			& img
+				width 26px
+				height 40px
+		&.dropdown-date
+			margin 0 auto
+			position absolute
+			margin-left -120px
+			width 120px
+			color #fff
+			height 100%
+			padding-top 10px
 		& .btn			
 			height 60px
-			/*margin-top 8px*/
-			padding 3px 5px
+			padding 5px
 			width 100px
 			&:focus 
 				color #fff
+			& .icon
+				width 100%
+				height 60%
+				font-size 28px
+			& .title
+				width 100%
+				height 40%
+				font-size 12px
 		&.ultimo-btn-right
-			padding-right 400px
 			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
-				margin-right 410px
 				background #f12929
 				& .listado-table
 					display table
@@ -1544,8 +1575,9 @@ ul.footer-floor
 							border 1px solid #dc4d4d
 							background #f12929							
 			& .dropdown-menu
-				margin-bottom 6px
+				margin-bottom 0px
 				min-width 130px
+				border-radius 0
 			& .btn
 				width 130px
 				font-weight bold
@@ -1574,7 +1606,7 @@ ul.footer-floor
 			line-height 15px
 			
 		.box-tab-notas
-			width 340px
+			width 300%
 			min-height 200px
 			position absolute
 			bottom 75px 
@@ -1601,9 +1633,12 @@ ul.footer-floor
 				resize none
 				width 100%
 				border 0
+			& .tab-nav
+				&>li>a
+					font-size .8em
 			& .tab-nav:not(.tn-vertical)>li
 				&>a:after 
-					background #0b618a
+					background #0b618a					
 				&.active>a
 					color #fff
 					background-color #0b618a
@@ -1827,9 +1862,9 @@ li.divider
 .footer-custom-res
 	position fixed !important
 	z-index 8
-	height 95px !important
-	padding-bottom 0px
-
+	height 60px !important
+	padding 0 !important
+	padding-right 400px !important
 // CUSTOM GUEST TAG
 .guest-tags-form
 	width 100%

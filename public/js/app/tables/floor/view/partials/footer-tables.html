@@ -1,22 +1,23 @@
 <div class="w-100 p-0" style="background-color: #424242;">
     <ul class="footer-floor">
-        <li class="logotipo-footer">
+        <li class="dropdown-logo">
             <img class="img-responsive" src="/images/icon-bookersnap.png">
             </img>
-        </li>
-        <li>
-            <button class="btn btn-default-red btn-sm text-center pull-left" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
-                <i class="tm-icon zmdi zmdi-notifications zmdi-hc-2x">
-                </i>
-                <div class="f-12">
+        </li>       
+        <li class="dropdown pull-left">
+            <button class="btn btn-default-red btn-sm" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
+                <div class="icon tm-icon zmdi zmdi-notifications zmdi-hc-2x"></div>
+                <div class="title">
                     Reservación
                 </div>
             </button>
+        </li>
+        <li class="dropdown pull-left">
             <ul class="f-btn-notas">
                 <li class="dropdown dropup">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect m-l-5 m-r-5"  bs-toggle-click bs-close="vm.listenNotes()" bs-open="vm.readNotes()">
-                        <span class="zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}"></span>
-                        <div class="f-12">
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect"  bs-toggle-click bs-close="vm.listenNotes()" bs-open="vm.readNotes()">
+                        <span class="icon zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}"></span>
+                        <div class="title">
                             Notas turnos
                         </div>
                     </button>
@@ -30,13 +31,19 @@
                     </div>
                 </li>
             </ul>
+        </li>
+        <li class="dropdown pull-left">
             <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
-                <span class="zmdi zmdi-lock-open zmdi-hc-2x">
+                <span class="icon zmdi zmdi-lock-open zmdi-hc-2x">
                 </span>
-                <div class="f-12">
+                <div class="title">
                     Bloqueos  mesas
                 </div>
             </button>
+        </li>
+        <li class="dropdown dropdown-date">
+            <div class="day">Miercole 16</div>
+            <div class="month">Setiembre del 2016</div>
         </li>
         <li class="dropdown dropup ultimo-btn-right pull-right" uib-dropdown="">
             <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">
