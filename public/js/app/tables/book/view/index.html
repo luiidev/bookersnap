@@ -47,12 +47,25 @@
                             </a>
                         </li>
                     </ul>
+                    <ul class="lv-actions actions">
+                        <li>
+                            <div class="toggle-switch toggle-switch-demo">
+                                <label class="ts-label reservation" for="ts1">
+                                    Reservaciones
+                                </label>
+                                <input hidden="hidden" id="ts1" type="checkbox">
+                                    <label class="ts-helper" for="ts1">
+                                    </label>
+                                </input>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | filter:vm.bookFilter.text">
-                <div class="item" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null">
+            <div class="reservation-item col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
+                <div class="item row" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null">
                     <span class="title" ng-if="item.block != null">
                         MANAGER BLOCK
                     </span>
@@ -64,145 +77,150 @@
                         - {{ item.block.end_time | limitTo:5 }}
                     </span>
                 </div>
-                <!--
-                <div class="item" ng-class="{'block' : item.block.exists}" ng-if="item.reservation.exists && item.block.exists" ui-sref="mesas.floor.blockEdit({date :'2016-11-10',block_id:item.block.data[0].id})">
-                    <span class="title">
-                        MANAGER BLOCK
-                    </span>
-                    {{ item.time | limitTo:5 }}
-                    <span>
-                        - {{ item.block.data[0].end_time | limitTo:5 }}
-                    </span>
-                </div>
-                <div class="item" ng-if="item.reservation.exists && item.block.exists ">
-                    <span class="title">
-                        DISPONIBLES
-                    </span>
-                    {{ item.time | limitTo:5 }}
-                </div>-->
                 <div class="row bg-white" ng-if="item.reservation != null">
-                    <div class="col-lg-4 col-md-4 col-sm-6 box-info-reservation">
-                        <div class="picture pull-left">
-                            <img alt="" height="48" src="/images/avatar.jpg">
+                    <div class="box-guest">
+                        <div class="picture">
+                            <img alt="" src="/images/avatar.jpg">
                             </img>
                         </div>
-                        <div class="pull-left box-name">
-                            <h5 ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
-                            </h5>
-                            <span>
-                                <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
-                                </i>
-                                <span ng-if="item.reservation.reservation.note != null">
-                                    1
-                                </span>
-                            </span>
-                            <span>
-                                <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                </i>
-                                {{ item.reservation.num_guest }}
-                            </span>
+                        <div class="info">
+                            <div class="name" ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                            </div>
+                            <div class="list">
+                                <a class="item note">
+                                    <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
+                                    </i>
+                                    nota
+                                    <span ng-if="item.reservation.note != null">
+                                    </span>
+                                </a>
+                                <a class="item list-guest">
+                                    <i class="zmdi zmdi-file-text zmdi-hc-lg">
+                                    </i>
+                                    {{ item.reservation.num_guest }} invitados
+                                </a>
+                            </div>
                         </div>
-                        <div class="pull-left box-date">
-                            <h5 class="f-700">
+                    </div>
+                    <div class="box-reservation">
+                        <div class="datetime">
+                            <div class="time">
                                 {{ item.time_text }}
-                            </h5>
-                            <span class="f-700">
+                            </div>
+                            <div class="date">
                                 {{ item.reservation.date_reservation }}
-                            </span>
+                            </div>
                         </div>
-                        <div class="pull-left box-status">
-                            <!--
-                            <i class="zmdi zmdi-circle zmdi-hc-fw">
-                            </i>
-                            Reservado-->
+                        <div class="status">
                             <label class="label" style="background-color : {{item.reservation.status.color}}">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-3 col-sm-4 box-guest">
-                        <div class="pull-left">
-                            <div class="adults text-center">
-                                <i class="zmdi zmdi-male zmdi-hc-fw">
-                                </i>
+                        <div class="people">
+                            <div class="actions">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-male-alt zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_1  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="buttons-add">
-                                <button class="btn bgm-gray-win">
-                                    <i class="zmdi zmdi-plus zmdi-hc-fw">
-                                    </i>
-                                </button>
-                                <button class="btn bgm-gray-win">
-                                    {{ item.reservation.num_people_1 + item.reservation.num_people_2 }}
-                                </button>
-                                <button class="btn bgm-gray-win" ng-click="vm.addGuest(reservation,'add','adults')">
-                                    <i class="zmdi zmdi-plus zmdi-hc-fw">
-                                    </i>
-                                </button>
+                            <div class="actions">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-female zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_2  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-mood zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_3  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="pull-left m-l-25">
-                            <div class="child text-center">
-                                <i class="zmdi zmdi-mood zmdi-hc-fw">
-                                </i>
-                            </div>
-                            <div class="buttons-add">
-                                <button class="btn bgm-gray-win">
-                                    <i class="zmdi zmdi-plus zmdi-hc-fw">
-                                    </i>
-                                </button>
-                                <button class="btn bgm-gray-win">
-                                    {{ item.reservation.num_people_3  || 0}}
-                                </button>
-                                <button class="btn bgm-gray-win">
-                                    <i class="zmdi zmdi-plus zmdi-hc-fw">
-                                    </i>
-                                </button>
-                            </div>
+                        <div class="source">
+                            <label class="label label-success">
+                                {{ item.reservation.source.name }}
+                            </label>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-5 col-sm-12 box-config">
-                        <div class="pull-left col-lg-2 col-md-3 col-sm-4 price">
+                        <div class="consume">
                             <div class="fg-line">
                                 <input class="form-control" name="" placeholder="S/0.00" type="text" value="{{ reservation.consume }}">
                                 </input>
                             </div>
                         </div>
-                        <div class="pull-left col-lg-3 col-md-3 col-sm-3 phone">
-                            <label class="label label-success">
-                                {{ item.reservation.source.name }}
-                            </label>
+                    </div>
+                    <div class="config">
+                        <div class="dropdown" uib-dropdown="">
+                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" uib-dropdown-toggle="">
+                                <i class="zmdi zmdi-settings zmdi-hc-fw">
+                                </i>
+                                <span class="caret">
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="#">
+                                        Dropdown link
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Dropdown link
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="pull-left col-lg-2 col-md-3 col-sm-3 config">
-                            <div class="dropdown" uib-dropdown="">
-                                <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" uib-dropdown-toggle="">
-                                    <i class="zmdi zmdi-settings zmdi-hc-fw">
-                                    </i>
-                                    <span class="caret">
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="#">
-                                            Dropdown link
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Dropdown link
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="pull-right">
-                            <div class="pull-left tables">
-                                <div class="">
-                                    {{ item.reservation.tables[0].name }}
-                                    <span ng-if="reservation.tables.length >1">
-                                        +
-                                    </span>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="tables">
+                        <div class="item">
+                            {{ item.reservation.tables[0].name }}
+                            <span ng-if="item.reservation.tables.length >1">
+                                +
+                            </span>
                         </div>
                     </div>
                 </div>
