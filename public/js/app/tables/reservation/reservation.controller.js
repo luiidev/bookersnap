@@ -1,7 +1,7 @@
 angular.module('reservation.controller', [])
     .controller("reservationCtrl.StoreUpdate", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
-        "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state", "$table", "$q",
-        function($scope, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state, $table, $q) {
+        "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state", "$table", "$q", "PreviousState",
+        function($scope, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state, $table, $q, PreviousState) {
             var vm = this;
 
             /**
@@ -705,8 +705,7 @@ angular.module('reservation.controller', [])
             };
 
             var redirect = function() {
-                //$state.go("mesas.floor.reservation");
-                $window.open("/admin/ms/1/mesas", "_self");
+                $state.go(PreviousState.name || "mesas.floor.reservation");
             };
 
             (function Init() {
