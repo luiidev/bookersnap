@@ -22,7 +22,7 @@ gulp.task('app-level-js', function() {
             'public/js/theme/templates.js'
         ])
         .pipe(concat('app.level.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin())
         .pipe(gulp.dest('public/js/theme/dist'));
 });
 
@@ -38,7 +38,7 @@ gulp.task('template-modules-js', function() {
             'public/js/theme/modules/calendar.js'
         ])
         .pipe(concat('template.modules.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin())
         .pipe(gulp.dest('public/js/theme/dist'));
 });
 

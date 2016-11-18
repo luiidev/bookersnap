@@ -1,115 +1,110 @@
-<div class="w-100 p-0" style="background-color: #424242;">
-    <ul class="footer-floor">
-        <li class="dropdown-logo">
-            <img class="img-responsive" src="/images/icon-bookersnap.png">
-            </img>
-        </li>       
-        <li class="dropdown pull-left">
-            <button class="btn btn-default-red btn-sm" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
-                <div class="icon tm-icon zmdi zmdi-notifications zmdi-hc-2x"></div>
-                <div class="title">
-                    Reservación
+
+<ul class="nav">
+    <li class="item-logo">
+        <img class="img-responsive" src="/images/icon-bookersnap.png">
+        </img>
+    </li> 
+    <li class="item-nav">
+        <button class="item-action btn btn-default-red btn-sm" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
+            <div class="icon tm-icon zmdi zmdi-notifications zmdi-hc-2x"></div>
+            <div class="title">
+                Reservación
+            </div>
+        </button>
+    </li>
+    <li class="item-nav f-btn-notas">
+        <button aria-expanded="false" aria-haspopup="true" class="item-action btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect"  bs-toggle-click bs-close="vm.listenNotes()" bs-open="vm.readNotes()">
+            <span class="icon zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}"></span>
+            <div class="title">
+                Notas turnos
+            </div>
+        </button>
+        <div class="box-tab-notas"  bs-toggle-show>
+            <tabset active="activeJustified">
+                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
+                    <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
+                    </textarea>
+                </tab>
+            </tabset>
+        </div>
+    </li>
+    <li class="item-nav">
+        <button class="item-action btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
+            <span class="icon zmdi zmdi-lock-open zmdi-hc-2x">
+            </span>
+            <div class="title">
+                Bloqueos  mesas
+            </div>
+        </button>
+    </li>
+    <li class="item-date">
+        <div class="day">Miercole 16</div>
+        <div class="month">Setiembre del 2016</div>
+    </li>
+    <li class="item-nav dropdown dropup num-guests" uib-dropdown="">
+        <button aria-expanded="false" aria-haspopup="true" class="item-action btn last-child btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">
+            MESA RAPIDA
+            <span class="caret">
+            </span>
+        </button>
+        <ul class="dropdown-menu">
+            <li class="listado-table" ng-mousedown="vm.eventEstablish('create')">
+                <div class="listado-row">
+                    <div class="listado-column" data-quantity="1" id="num1" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(1)">
+                        1
+                    </div>
+                    <div class="listado-column" data-quantity="2" id="num2" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(2)">
+                        2
+                    </div>
+                    <div class="listado-column" data-quantity="3" id="num3" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(3)">
+                        3
+                    </div>
                 </div>
-            </button>
-        </li>
-        <li class="dropdown pull-left">
-            <ul class="f-btn-notas">
-                <li class="dropdown dropup">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect"  bs-toggle-click bs-close="vm.listenNotes()" bs-open="vm.readNotes()">
-                        <span class="icon zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}"></span>
-                        <div class="title">
-                            Notas turnos
-                        </div>
-                    </button>
-                    <div class="box-tab-notas"  bs-toggle-show>
-                        <tabset active="activeJustified">
-                            <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
-                                <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
-                                </textarea>
-                            </tab>
-                        </tabset>
+                <div class="listado-row">
+                    <div class="listado-column" data-quantity="4" id="num4" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(4)">
+                        4
                     </div>
-                </li>
-            </ul>
-        </li>
-        <li class="dropdown pull-left">
-            <button class="btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
-                <span class="icon zmdi zmdi-lock-open zmdi-hc-2x">
-                </span>
-                <div class="title">
-                    Bloqueos  mesas
+                    <div class="listado-column" data-quantity="5" id="num5" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(5)">
+                        5
+                    </div>
+                    <div class="listado-column" data-quantity="6" id="num6" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(6)">
+                        6
+                    </div>
                 </div>
-            </button>
-        </li>
-        <li class="dropdown dropdown-date">
-            <div class="day">Miercole 16</div>
-            <div class="month">Setiembre del 2016</div>
-        </li>
-        <li class="dropdown dropup ultimo-btn-right pull-right" uib-dropdown="">
-            <button aria-expanded="false" aria-haspopup="true" class="btn btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">
-                MESA RAPIDA
-                <span class="caret">
-                </span>
-            </button>
-            <ul class="dropdown-menu">
-                <li class="listado-table" ng-mousedown="vm.eventEstablish('create')">
-                    <div class="listado-row">
-                        <div class="listado-column" data-quantity="1" id="num1" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(1)">
-                            1
-                        </div>
-                        <div class="listado-column" data-quantity="2" id="num2" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(2)">
-                            2
-                        </div>
-                        <div class="listado-column" data-quantity="3" id="num3" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(3)">
-                            3
-                        </div>
+                <div class="listado-row">
+                    <div class="listado-column" data-quantity="7" id="num7" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(7)">
+                        7
                     </div>
-                    <div class="listado-row">
-                        <div class="listado-column" data-quantity="4" id="num4" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(4)">
-                            4
-                        </div>
-                        <div class="listado-column" data-quantity="5" id="num5" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(5)">
-                            5
-                        </div>
-                        <div class="listado-column" data-quantity="6" id="num6" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(6)">
-                            6
-                        </div>
+                    <div class="listado-column" data-quantity="8" id="num8" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(8)">
+                        8
                     </div>
-                    <div class="listado-row">
-                        <div class="listado-column" data-quantity="7" id="num7" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(7)">
-                            7
-                        </div>
-                        <div class="listado-column" data-quantity="8" id="num8" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(8)">
-                            8
-                        </div>
-                        <div class="listado-column" data-quantity="9" id="num9" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(9)">
-                            9
-                        </div>
+                    <div class="listado-column" data-quantity="9" id="num9" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(9)">
+                        9
                     </div>
-                    <div class="listado-row">
-                        <div class="listado-column" data-quantity="10" id="num10" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(10)">
-                            10
-                        </div>
-                        <div class="listado-column" data-quantity="11" id="num11" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(11)">
-                            11
-                        </div>
-                        <div class="listado-column" data-quantity="12" id="num12" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(12)">
-                            12
-                        </div>
+                </div>
+                <div class="listado-row">
+                    <div class="listado-column" data-quantity="10" id="num10" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(10)">
+                        10
                     </div>
-                    <div class="listado-row">
-                        <div class="listado-column" data-quantity="13" id="num13" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(13)">
-                            13
-                        </div>
-                        <div class="listado-column" data-quantity="14" id="num14" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(14)">
-                            14
-                        </div>
-                        <div class="listado-column" data-quantity="15" id="num15" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(15)">
-                            15
-                        </div>
+                    <div class="listado-column" data-quantity="11" id="num11" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(11)">
+                        11
                     </div>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
+                    <div class="listado-column" data-quantity="12" id="num12" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(12)">
+                        12
+                    </div>
+                </div>
+                <div class="listado-row">
+                    <div class="listado-column" data-quantity="13" id="num13" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(13)">
+                        13
+                    </div>
+                    <div class="listado-column" data-quantity="14" id="num14" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(14)">
+                        14
+                    </div>
+                    <div class="listado-column" data-quantity="15" id="num15" ng-drag-num-people="" table-filter-clear-fn="vm.tableFilterClear()" table-filter-fn="vm.tableFilter(15)">
+                        15
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>

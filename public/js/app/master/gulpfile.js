@@ -17,11 +17,12 @@ var gulp = require('gulp'),
 gulp.task('app-bookersnap-master-js', function() {
     gulp.src([
             '**/*.js',
-            '../app.config.js',
+            '../app.master.js',
+            '../app.directive.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.master.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin())
         .pipe(gulp.dest('../../dist.app/master'));
 });
 
@@ -45,7 +46,7 @@ gulp.task('app-library-master-js', function() {
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.library.master.min.js'))
-        .pipe(jsmin())
+        //.pipe(jsmin())
         .pipe(gulp.dest('../../dist.app/master'));
 });
 
