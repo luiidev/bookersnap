@@ -328,8 +328,8 @@
 		padding-left 0
 		//height 100vh
 		& .lienzo-v2
-			min-width 400px
-			min-height 400px
+			min-width 300px
+			min-height 300px
 			overflow hidden
 			margin 0 auto
 			position relative
@@ -446,7 +446,6 @@
 		z-index 2
 		
 /*--------------BOOK------------------*/
-
 .ts-label.reservation
 	min-width inherit
 .menu-book 
@@ -498,7 +497,111 @@
 		padding-right 5px
 		& .input-group-addon
 			padding 6px 0
-.footer-blook		
+.header-book
+	width 100%
+	position relative
+	background #424242
+	& ul.stadistics
+		list-style none
+		margin 0
+		padding 0
+		height 50px
+		&>li
+			width 20%
+			height 100%
+			display inline-block
+			padding 5px 5px
+			float left
+			& .box
+				width 100%
+				height 40px
+				margin 0
+				padding 0
+				background #424242
+				color #fff
+				-webkit-box-shadow:inset 0 0 10px 2px #2f2f2f
+				box-shadow:inset 0 0 10px 2px #2f2f2f
+				padding 10px 5px
+				& .icon
+					width 20px
+					height 100%
+					text-align center
+					font-size .9em
+				& .title
+					font-size .9em
+				& .title-short
+					display none
+	& ul.filters
+		list-style none
+		margin 0
+		padding 0
+		height 50px
+		&>li
+			width 20%
+			height 100%
+			display inline-block
+			padding 5px
+			float left
+			position relative
+			& .input-group
+				height 40px
+				-webkit-box-shadow:inset 0 0 10px 2px #2f2f2f
+				box-shadow:inset 0 0 10px 2px #2f2f2f
+				& .form-control
+					height 40px
+					padding-left 5px
+					background-color #fff !important
+					color #000
+				& .input-group-addon
+				& .dropdown
+					&>a
+						color #fff
+						text-decoration none
+						width 100%
+						height 100%
+						padding-top 12px
+						& .caret
+							float right
+							margin-right 5px
+							margin-top 8px
+			& .input-group-addon
+				color #fff
+@media (max-width:768px)
+	.header-book
+		& ul.stadistics
+			& li
+				padding 0
+				& .box
+					padding 5px
+					width 100%
+					height 100%
+					text-align center
+					& .icon
+						width initial
+						height initial
+						font-size .8em
+					& .title
+						display none
+					& .title-short
+						display inline-block
+						font-size .8em
+					& .count
+						display block
+						width 100%
+						padding-top 2px
+						font-size 1em
+		& ul.filters
+			&>li
+				padding 0
+				& .input-group
+					height 50px
+					& .form-control
+						height 50px
+					& .dropdown
+						&>a
+							padding-top 18px
+							font-weight .8em
+.footer-blook
 	& .box-footer-date 
 		& h5 
 			margin 25px 0
@@ -622,13 +725,14 @@
 								color #fff
 						& .icon
 							& .zmdi
-								font-size 15px
+								color #ccc
+								font-size 16px
 								padding-top 2px
 						& .count
-							font-size 12px
+							font-size 13px
 						& .zmdi
 							padding-top 8px
-							font-size 18px
+							font-size 14px
 		& .tables
 			right 0px
 			width 45px
@@ -662,7 +766,11 @@
 			padding 6px 15px
 			& .title 
 				display block
-			
+.footer-book
+	position fixed !important
+	z-index 8
+	height 60px !important
+	padding 0 !important
 @media (max-width: 1024px)
 	.footer-blook
 		& .box-footer-date 
@@ -794,7 +902,6 @@
 					cursor pointer
 					padding-top 14px
 /*--------------GUEST------------------*/
-
 .p-section-guest 
 	padding-left 400px
 .profile-main , #profile-main
@@ -1084,6 +1191,360 @@ $background-tables-head = #eee
 ::-webkit-scrollbar-thumb
 	border 1px solid #959595
 	background #858585
+/*STYLES FLOOR*/
+
+.section-right-floor
+	width 400px
+	top 0
+	right 0
+	position fixed
+	height 100vh
+	background #424242
+	padding-top 70px
+	z-index 2
+@media (max-width:768px)
+	.section-right-floor
+		width 100%
+	footer.container-footer-floor
+		width 100%
+		padding 0
+		height 48px
+		& ul.footer-floor
+			& li 
+				&.dropdown-logo, .dropdown-date
+					display none
+				&.item
+					width 25%
+				& .btn
+					width 100%
+					margin 0
+	footer.container-footer-book
+		height 48px
+		ul.nav
+			& li
+				&.item-logo, .item-date
+					display none
+				&.item-nav
+					display inline-block
+					width 14.2857142857%
+					& .btn
+						& .icon
+							height 80%
+							font-size 30px
+						& .title
+							height 20%
+							font-size 8px
+.container-zones
+	position relative
+	width 100%
+	padding-right 400px
+	padding-top 70px
+	padding-bottom 110px
+	& .menu-top
+		height 60px
+		background-color #424242
+		& .btn-menu
+			font-size .9em
+			margin-right 2px
+			border-radius 0px
+			padding 4px
+			white-space normal
+			min-height 60px
+			box-shadow none
+			font-weight bold
+			& .index-zone
+				position: absolute
+				top 2px
+				left 4px
+.container-footer-floor
+	position fixed
+	z-index 2
+	height 60px
+	padding 0
+	padding-right 400px
+	width 100%
+	bottom 0px
+	background-color #424242
+	& .item-date
+		width: 100%
+		position: absolute
+		float: left
+		text-align: center
+		margin-left: -345px
+		padding-left: 345px
+		padding-right: 130px
+		margin-top: 10px
+		color: #fff
+		height: 100%
+		z-index -1
+.container-footer-book
+	position fixed
+	z-index 2
+	height 60px
+	padding 0
+	width 100%
+	bottom 0px
+	background-color #424242
+	& .item-date
+		width: 100%
+		position: absolute
+		float: left
+		text-align: center
+		margin-left: -445px
+		padding-left: 445px
+		padding-right: 300px
+		margin-top: 10px
+		color: #fff
+		height: 100%
+		z-index -1
+footer
+	ul.nav
+		height 100%
+		list-style none
+		margin 0
+		padding 0
+		position relative
+		&>li
+			height 100%
+			display inline-block
+			float left
+			padding 0
+			margin 0
+			position relative
+			&.item-logo
+				width 45px
+				height 100%
+				padding 10px
+				& img
+					width 26px
+					height 40px
+			&.item-nav
+				width 100px
+				height 100%
+				& .item-action
+					width 100%
+				& .btn
+					height 100%
+					padding 5px
+					&.first-child
+						margin-right 0px
+					&.last-child
+						margin-right 0px
+					&:focus 
+						color #fff
+					& .icon
+						width 100%
+						height 60%
+						font-size 28px
+					& .title
+						width 100%
+						height 40%
+						font-size 12px
+			&.num-guests
+				width 130px
+				float right
+				& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
+					background #f12929
+					& .listado-table
+						display table
+						text-align center
+						margin 0 auto
+						& .listado-row
+							display table-row
+							& .listado-column
+								display table-cell
+								vertical-align middle
+								width 42px
+								height 44px
+								padding 4px
+								color #fff
+								cursor pointer
+								font-weight bold
+								font-size 1.9em
+								border 1px solid #dc4d4d
+								background #f12929
+			&.f-btn-notas
+				& .box-tab-notas
+					width 300px
+					min-height 200px
+					position absolute
+					bottom 75px 
+					left -100px
+					background-color #fff
+					box-shadow 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12)
+					&:after,&:before
+						top 100%
+						left 50%
+						border solid transparent
+						content " "
+						height 0
+						width 0
+						position absolute
+						pointer-events none
+					&:after 
+						border-color rgba(136, 183, 213, 0)
+						border-top-color #fff
+						border-width 10px
+						margin-left -10px
+					& textarea
+						padding 5px
+						outline none
+						resize none
+						width 100%
+						border 0
+					& .tab-nav
+						&>li>a
+							font-size .8em
+					& .tab-nav:not(.tn-vertical)>li
+						&>a:after 
+							background #0b618a					
+						&.active>a
+							color #fff
+							background-color #0b618a
+						&.disabled>a
+							cursor not-allowed
+							opacity 0.6
+/*ul.footer-floor
+	height 100%
+	list-style none
+	margin 0
+	padding 0
+	position relative
+	li
+		display inline-block
+		float left
+		padding 0
+		margin 0
+		padding-right 2px
+		&:last-child
+			padding-right 0px
+		&.dropdown-logo
+			height 100%
+			padding 10px
+			& img
+				width 26px
+				height 40px
+		&.dropdown-date
+			position: absolute
+			width: 100%
+			padding-right: 883px
+			color: #fff
+			height: 100%
+			padding-top: 10px
+			text-align: center
+			font-size: .9em
+		& .item
+			width 100px
+		& .btn
+			height 60px
+			padding 5px
+			&.first-child
+				margin-right 0px
+			&.last-child
+				margin-right 0px
+			&:focus 
+				color #fff
+			& .icon
+				width 100%
+				height 60%
+				font-size 28px
+			& .title
+				width 100%
+				height 40%
+				font-size 12px
+		&.ultimo-btn-right
+			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
+				background #f12929
+				& .listado-table
+					display table
+					width 100%
+					text-align center
+					margin 0 auto
+					& .listado-row
+						display table-row
+						& .listado-column
+							display table-cell
+							vertical-align middle
+							width 42px
+							height 44px
+							padding 4px
+							color #fff
+							cursor pointer
+							font-weight bold
+							font-size 1.9em
+							border 1px solid #dc4d4d
+							background #f12929							
+			& .dropdown-menu
+				margin-bottom 0px
+				min-width 130px
+				border-radius 0
+			& .btn
+				width 130px
+				font-weight bold
+				border-radius 2px
+		&.logotipo-footer
+			width 40px
+			height 70px
+			padding 0px 0px 4px 4px
+			margin 0px 8px 0px 8px
+			img
+				width 100%
+	.f-btn-notas
+		list-style none
+		margin 0
+		padding 0
+		display inline
+		.tmn-counts
+			position absolute
+			font-style normal
+			background #f44336
+			padding 1px 5px
+			border-radius 2px
+			right 30px
+			top 2px
+			font-size 10px
+			line-height 15px
+			
+		.box-tab-notas
+			width 300%
+			min-height 200px
+			position absolute
+			bottom 75px 
+			left -100%
+			background-color #fff
+			box-shadow 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12)
+			&:after,&:before
+				top 100%
+				left 50%
+				border solid transparent
+				content " "
+				height 0
+				width 0
+				position absolute
+				pointer-events none
+			&:after 
+				border-color rgba(136, 183, 213, 0)
+				border-top-color #fff
+				border-width 10px
+				margin-left -10px
+			& textarea
+				padding 5px
+				outline none
+				resize none
+				width 100%
+				border 0
+			& .tab-nav
+				&>li>a
+					font-size .8em
+			& .tab-nav:not(.tn-vertical)>li
+				&>a:after 
+					background #0b618a					
+				&.active>a
+					color #fff
+					background-color #0b618a
+				&.disabled>a
+					cursor not-allowed
+					opacity 0.6*/
 .floor-waitlist
 	& .headder
 		background #005581
@@ -1501,117 +1962,6 @@ ul.listado-filtros
 					padding 6px 10px
 					&.sel_active
 						background #005581
-			
-ul.footer-floor
-	height 75px
-	list-style none
-	margin 0
-	padding 0
-	li
-		display inline-block
-		float left
-		padding 0
-		margin 0
-		& .btn			
-			height 60px
-			/*margin-top 8px*/
-			padding 3px 5px
-			width 100px
-			&:focus 
-				color #fff
-		&.ultimo-btn-right
-			padding-right 400px
-			& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
-				margin-right 410px
-				background #f12929
-				& .listado-table
-					display table
-					width 100%
-					text-align center
-					margin 0 auto
-					& .listado-row
-						display table-row
-						& .listado-column
-							display table-cell
-							vertical-align middle
-							width 42px
-							height 44px
-							padding 4px
-							color #fff
-							cursor pointer
-							font-weight bold
-							font-size 1.9em
-							border 1px solid #dc4d4d
-							background #f12929							
-			& .dropdown-menu
-				margin-bottom 6px
-				min-width 130px
-			& .btn
-				width 130px
-				font-weight bold
-				border-radius 2px
-		&.logotipo-footer
-			width 40px
-			height 70px
-			padding 0px 0px 4px 4px
-			margin 0px 8px 0px 8px
-			img
-				width 100%
-	.f-btn-notas
-		list-style none
-		margin 0
-		padding 0
-		display inline
-		.tmn-counts
-			position absolute
-			font-style normal
-			background #f44336
-			padding 1px 5px
-			border-radius 2px
-			right 30px
-			top 2px
-			font-size 10px
-			line-height 15px
-			
-		.box-tab-notas
-			width 340px
-			min-height 200px
-			position absolute
-			bottom 75px 
-			left -100%
-			background-color #fff
-			box-shadow 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12)
-			&:after,&:before
-				top 100%
-				left 50%
-				border solid transparent
-				content " "
-				height 0
-				width 0
-				position absolute
-				pointer-events none
-			&:after 
-				border-color rgba(136, 183, 213, 0)
-				border-top-color #fff
-				border-width 10px
-				margin-left -10px
-			& textarea
-				padding 5px
-				outline none
-				resize none
-				width 100%
-				border 0
-			& .tab-nav:not(.tn-vertical)>li
-				&>a:after 
-					background #0b618a
-				&.active>a
-					color #fff
-					background-color #0b618a
-				&.disabled>a
-					cursor not-allowed
-					opacity 0.6
-					
-					
 li.divider
 	width 2px
 	background #575757
@@ -1827,9 +2177,9 @@ li.divider
 .footer-custom-res
 	position fixed !important
 	z-index 8
-	height 95px !important
-	padding-bottom 0px
-
+	height 60px !important
+	padding 0 !important
+	padding-right 400px !important
 // CUSTOM GUEST TAG
 .guest-tags-form
 	width 100%

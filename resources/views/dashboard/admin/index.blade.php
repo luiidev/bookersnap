@@ -9,6 +9,9 @@
 </head>
 <body>
 <section id="main">
+    <form action="/auth/auth/logout" method="POST">
+        <button type="submit">LOGOUT</button>
+    </form>
     <section class="w-100 p-0" id="content">
     	<div class="container">
 	    	<div class="card-body table-responsive">

@@ -1,80 +1,76 @@
-<section class="bgm-gray-win menu-section p-l-0 p-r-0" id="content">
-    <div class="w-100 p-0">
-        <nav class="ha-menu">
-            <ul>
-                <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zones.data">
-                    <button class="btn btn-menu w-90-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
-                        {{tab.name}}
-                        <span class="num-orden-zona">
-                            {{$index+1}}
+<section class="menu-top" >
+    <nav class="ha-menu">
+        <ul>
+            <li class="waves-effect" ng-if="$index < 4" ng-repeat="tab in vm.zones.data">
+                <button class="btn btn-menu w-90-px {{vm.flagSelectedZone==$index ? 'btn-primary-nav': 'btn-default-nav'}}" data-ng-click="vm.tabSelectedZone($index)" ng-drop-tab-zones="" on-droppedd-fn="vm.tabSelectedZone($index)">
+                    {{tab.name}}
+                    <span class="index-zone">
+                        {{$index+1}}
+                    </span>
+                </button>
+            </li>
+            <li class="dropdown" ng-if="vm.flagSelectedZone > 4" uib-dropdown="">
+                <button aria-expanded="false" aria-haspopup="true" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" type="button" uib-dropdown-toggle="">
+                    <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-2x">
+                    </span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-if="$index >= 4" ng-repeat="tab in vm.zones.data">
+                        <a data-ng-click="vm.tabSelectedZone($index)">
+                            {{tab.name}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown open pull-right tab-tiempo" uib-dropdown="">
+                <button aria-expanded="true" aria-haspopup="true" class="btn btn-menu w-90-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="">
+                    <i class="zmdi zmdi-time zmdi-hc-2x yellow-time p-absolute t-18">
+                    </i>
+                    <span class="txt-time m-l-25">
+                        Tiempo
+                        <span class="caret">
                         </span>
-                    </button>
-                </li>
-                <li class="dropdown" ng-if="vm.flagSelectedZone > 4" uib-dropdown="">
-                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-menu m-l-3-i w-40-px dropdown-toggle waves-effect {{vm.flagSelectedZone >= 4 ? 'btn-primary-nav': 'btn-default-nav'}}" type="button" uib-dropdown-toggle="">
-                        <span class="zmdi zmdi-caret-right zmdi-hc-fw zmdi-hc-2x">
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li ng-if="$index >= 4" ng-repeat="tab in vm.zones.data">
-                            <a data-ng-click="vm.tabSelectedZone($index)">
-                                {{tab.name}}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown open pull-right tab-tiempo" uib-dropdown="">
-                    <button aria-expanded="true" aria-haspopup="true" class="btn btn-menu w-90-px btn-default-nav waves-effect dropdown-toggle item-txt-time" uib-dropdown-toggle="">
-                        <i class="zmdi zmdi-time zmdi-hc-2x yellow-time p-absolute t-18">
-                        </i>
-                        <span class="txt-time m-l-25">
-                            Tiempo
-                            <span class="caret">
-                            </span>
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="javascript:void(0)" ng-click="vm.hideTimes()">
-                                Ocultar tiempo
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" ng-click="vm.showTimeCustom('seated')">
-                                Tiempo sentado
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" ng-click="vm.showTimeCustom('complete')">
-                                Tiempo restante
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" ng-click="vm.showTimeCustom('nextTime')">
-                                Siguiente reservacion
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" ng-click="vm.showTimeCustom('nextTimeAll')">
-                                Siguiente segunda reservacion
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="waves-effect pull-right">
-                    <button class="btn btn-menu w-90-px btn-default-nav">
-                        <i class="zmdi zmdi-case-check zmdi-hc-2x p-absolute t-18">
-                        </i>
-                        <span class="m-l-30">
-                            R.P
-                        </span>
-                    </button>
-                </li>
-                <li class="clearfix">
-                </li>
-            </ul>
-        </nav>
-    </div>
+                    </span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:void(0)" ng-click="vm.hideTimes()">
+                            Ocultar tiempo
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="vm.showTimeCustom('seated')">
+                            Tiempo sentado
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="vm.showTimeCustom('complete')">
+                            Tiempo restante
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="vm.showTimeCustom('nextTime')">
+                            Siguiente reservacion
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="vm.showTimeCustom('nextTimeAll')">
+                            Siguientes 2 reservaciones
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="waves-effect pull-right">
+                <button class="btn btn-menu w-90-px btn-default-nav">
+                    <i class="zmdi zmdi-case-check zmdi-hc-2x p-absolute t-18">
+                    </i>
+                    <span class="m-l-30">
+                        R.P
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </nav>
 </section>
 <div class="box-zone-create bg-window-floor">
     <div class="box-lienzo-zone-v2 p-t-10">

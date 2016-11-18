@@ -2,7 +2,7 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('mesas.book', {
-                url: '/book',
+                url: '/book/:date',
                 views: {
                     "@": {
                         templateUrl: '/js/app/tables/book/view/index.html',

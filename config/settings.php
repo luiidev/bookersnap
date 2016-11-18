@@ -17,8 +17,8 @@ return array(
 
 // para usar la constante usar: config('settings.NOMBRE_CONSTANTE')
 return [
-    'API_AUTH_URL'  => 'http://192.168.0.102/v1',
-    'API_ADMIN_URL' => 'http://web.aplication.bookersnap/v1',
+    'API_AUTH_URL'  => 'http://localhost:8080/v1',
+    'API_ADMIN_URL' => 'http://web.aplication.bookersnap.vm/v1',
     'API_PROMO_URL' => 'http://api-promotion.vh/v1',
-    'MAIN_DOMAIN'   => 'reservantro2.com',
+    'MAIN_DOMAIN'   => 'weblaravel.studework.vm',
 ];
