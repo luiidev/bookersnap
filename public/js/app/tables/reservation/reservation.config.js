@@ -44,19 +44,5 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                     }
                 },
                 resolve: previousState
-            })
-            .state('mesas.reservation-book-new', {
-                url: '/book/reservation/:date/add',
-                params: {
-                    tables: null
-                },
-                views: {
-                    '@': {
-                        templateUrl: '/js/app/tables/reservation/view/index.html',
-                        controller: "reservationCtrl.StoreUpdate",
-                        controllerAs: 'rc',
-                    }
-                },
-                resolve: previousState
             });
     });
