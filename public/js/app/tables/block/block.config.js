@@ -5,6 +5,18 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
         menu: 400
     })
     .config(function($stateProvider, $urlRouterProvider) {
+        var PreviousState = [
+            "$state",
+            function($state) {
+                var currentStateData = {
+                    name: $state.current.name,
+                    params: $state.params,
+                    url: $state.href($state.current.name, $state.params)
+                };
+                return currentStateData;
+            }
+        ];
+
         $stateProvider
             .state('mesas.floor.block', {
                 url: '/:date/block',
@@ -18,7 +30,8 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                 resolve: {
                     $title: function() {
                         return 'Crear Bloqueos';
-                    }
+                    },
+                    PreviousState: PreviousState
                 }
             })
             .state('mesas.floor.blockEdit', {
@@ -33,7 +46,8 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                 resolve: {
                     $title: function() {
                         return 'Editar Bloqueo';
-                    }
+                    },
+                    PreviousState: PreviousState
                 }
             });
 

@@ -5,6 +5,8 @@ angular.module('book.controller', [])
     var fecha_actual = moment().format('YYYY-MM-DD');
     var vm = this;
 
+    vm.fecha_actual = fecha_actual;
+
     vm.turns = [];
     vm.hoursTurns = []; //Lista de horas segun los turnos
     vm.listBook = []; //Listado del book para los filtros

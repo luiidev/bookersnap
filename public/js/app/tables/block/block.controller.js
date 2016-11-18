@@ -1,6 +1,6 @@
 angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, screenHelper, screenSizeBlock,
-        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio) {
+        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio, PreviousState) {
 
         $scope.date = null;
         $scope.zoneIndexShow = 0;
@@ -262,8 +262,7 @@ angular.module('block.controller', [])
                 function success(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 0, true);
-                        //$state.go("mesas.floor");
-                        $window.open("/admin/ms/1/mesas", "_self");
+                        redirect();
                     } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 0, true);
                     }
@@ -281,8 +280,7 @@ angular.module('block.controller', [])
                 function success(response) {
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000);
-                        //$state.go("mesas.floor");
-                        $window.open("/admin/ms/1/mesas", "_self");
+                        redirect();
                     } else if (response.data.response === false) {
                         messageAlert("Warning", response.data.jsonError, "warning", 2000);
                     }
@@ -305,7 +303,7 @@ angular.module('block.controller', [])
                     function success(response) {
                         if (response.data.success === true) {
                             messageAlert("Success", response.data.msg, "success", 3000);
-                            $state.go("mesas.floor");
+                            redirect();
                         } else if (response.data.response === false) {
                             messageAlert("Warning", response.data.jsonError, "warning", 2000);
                         }
@@ -458,6 +456,14 @@ angular.module('block.controller', [])
 
         $scope.unselectAllTables = function() {
             BlockFactory.unselectAllTables($scope, $sce, loadTablesEdit);
+        };
+
+        $scope.cancel = function() {
+            return redirect();
+        };
+
+        var redirect = function() {
+            $state.go(PreviousState.name || "mesas.floor.reservation");
         };
 
         (function Init() {
