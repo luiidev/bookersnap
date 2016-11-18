@@ -1,6 +1,6 @@
 angular.module('book.controller', [])
 
-.controller('BookCtrl', function($uibModal, $scope, orderByFilter, BookFactory, CalendarService, reservationService, BookDataFactory) {
+.controller('BookCtrl', function($uibModal, $scope, $stateParams, $location, orderByFilter, BookFactory, CalendarService, reservationService, BookDataFactory) {
 
     var fecha_actual = moment().format('YYYY-MM-DD');
     var vm = this;
@@ -16,9 +16,13 @@ angular.module('book.controller', [])
         typeTurn: [],
         sources: [],
         zones: [],
-        date: ''
+        date: '',
+        options: {
+            turnAll: false,
+            sourcesAll: false,
+            zonesAll: false
+        }
     };
-
     //Ordernar book general
     vm.bookOrderBy = {
         general: {
@@ -46,23 +50,31 @@ angular.module('book.controller', [])
     };
 
     vm.filterBook = function(option, value) {
-        console.log("filterBook " + angular.toJson(value, true));
         switch (option) {
             case 'turn':
-                BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns);
+                vm.bookFilter.options.turnAll = (value == "all") ? !vm.bookFilter.options.turnAll : vm.bookFilter.options.turnAll;
+                BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns, vm.bookFilter.options.turnAll);
                 break;
             case 'source':
-                BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources);
+                vm.bookFilter.options.sourcesAll = (value == "all") ? !vm.bookFilter.options.sourcesAll : vm.bookFilter.options.sourcesAll;
+                BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources, vm.bookFilter.options.sourcesAll);
                 break;
             case 'zones':
-                BookFactory.addZonesByFilter(value, vm.bookFilter.zones, vm.zones);
+                vm.bookFilter.options.zonesAll = (value == "all") ? !vm.bookFilter.options.zonesAll : vm.bookFilter.options.zonesAll;
+                BookFactory.addZonesByFilter(value, vm.bookFilter.zones, vm.zones, vm.bookFilter.options.zonesAll);
+                break;
+            case 'reservations':
+                vm.orderBook(value);
+                break;
+            default:
+                vm.orderBook('time');
                 break;
         }
     };
 
     vm.orderBook = function(value) {
 
-        var reservations = BookFactory.filterReservationsAndBlocks(vm.listBook);
+        var reservations = BookFactory.filterReservationsAndBlocks(vm.listBookMaster);
 
         switch (value) {
             case 'time':
@@ -110,11 +122,13 @@ angular.module('book.controller', [])
                 vm.bookOrderBy.resBlock.date = (vm.bookOrderBy.resBlock.date === "-reservation.hours_reservation") ? "+reservation.hours_reservation" : "-reservation.hours_reservation";
 
                 break;
-        }
-    };
+            case 'reservations':
+                var filterRes = orderByFilter(reservations.reservations, [vm.bookOrderBy.resBlock.date]);
+                vm.listBook = filterRes;
+                vm.bookOrderBy.resBlock.date = (vm.bookOrderBy.resBlock.date === "-reservation.hours_reservation") ? "+reservation.hours_reservation" : "-reservation.hours_reservation";
 
-    vm.changeViewReservation = function() {
-        console.log("changeViewReservation");
+                break;
+        }
     };
 
     vm.openCalendar = function($event, opened) {
@@ -123,11 +137,42 @@ angular.module('book.controller', [])
         vm.calendar = true;
     };
 
+    vm.changeBookView = function() {
+        if (vm.bookView === true) {
+            vm.filterBook('reservations', 'reservations');
+        } else {
+            vm.bookOrderBy.general.reverse = true;
+            vm.filterBook('time', 'time');
+        }
+    };
+
+    vm.numGuestChange = function(type, option, value) {
+        console.log("numGuestChange " + angular.toJson(value, true));
+        switch (option) {
+            case 'men':
+                value.reservation.num_people_1 = (type == "-") ? value.reservation.num_people_1 - 1 : value.reservation.num_people_1 + 1;
+                value.reservation.num_people_1 = (value.reservation.num_people_1 <= 0) ? 0 : value.reservation.num_people_1;
+                break;
+            case 'women':
+                value.reservation.num_people_2 = (type == "-") ? value.reservation.num_people_2 - 1 : value.reservation.num_people_2 + 1;
+                value.reservation.num_people_2 = (value.reservation.num_people_2 <= 0) ? 0 : value.reservation.num_people_2;
+                break;
+            case 'child':
+                value.reservation.num_people_3 = (type == "-") ? value.reservation.num_people_3 - 1 : value.reservation.num_people_3 + 1;
+                value.reservation.num_people_3 = (value.reservation.num_people_3 <= 0) ? 0 : value.reservation.num_people_3;
+                break;
+        }
+
+        vm.resumenBook = BookFactory.getResumenBook(vm.listBook);
+    };
+
     $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
         if (newDate !== oldDate) {
             newDate = convertFechaYYMMDD(newDate, "es-ES", {});
             listZones(newDate, true);
             listTurnAvailable(newDate);
+
+            updateUrl(newDate);
         }
     });
 
@@ -135,19 +180,25 @@ angular.module('book.controller', [])
         if (newBook !== oldBook) {
             console.log("se ejecuto un filtro");
         }
-
     });
 
     $scope.$on('resumenBookUpdate', function(evt, data) {
         vm.resumenBook = data;
-        console.log("resumenBookUpdateo", angular.toJson(data, true));
     });
 
     var init = function() {
+        fecha_actual = ($stateParams.date === undefined || $stateParams.date === "") ? fecha_actual : $stateParams.date;
+        updateUrl(fecha_actual);
+
         BookFactory.init($scope);
         listTurnAvailable(fecha_actual);
         listSources();
         listZones(fecha_actual, false);
+    };
+
+    var updateUrl = function(date) {
+        vm.bookFilter.date = convertFechaToDate(date);
+        $location.url("/mesas/book/" + date);
     };
 
     var listTurnAvailable = function(date) {

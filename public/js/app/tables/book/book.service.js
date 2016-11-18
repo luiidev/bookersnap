@@ -186,9 +186,9 @@ angular.module('book.service', [])
                 });
             },
             //Agrega los turnos (id) a la lista de marcados
-            addTurnsByFilter: function(typeTurn, filterTypeTurns, turns) {
+            addTurnsByFilter: function(typeTurn, filterTypeTurns, turns, turnAll) {
                 var self = this;
-                if (typeTurn.turn !== null) {
+                if (typeTurn !== "all") {
                     if (filterTypeTurns.length > 0) {
                         var index = filterTypeTurns.indexOf(typeTurn.turn.id);
 
@@ -204,43 +204,84 @@ angular.module('book.service', [])
                         filterTypeTurns.push(typeTurn.turn.id);
                         self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
                     }
+                } else {
+
+                    filterTypeTurns.length = 0;
+
+                    angular.forEach(turns, function(turn, key) {
+                        if (turn.turn !== null) {
+
+                            if (turnAll === false) {
+                                self.setCheckedTypeTurn(turns, turn.turn.id, false);
+                            } else {
+                                filterTypeTurns.push(turn.turn.id);
+                                self.setCheckedTypeTurn(turns, turn.turn.id, true);
+                            }
+                        }
+                    });
                 }
             },
             //Agrega los sources (id) a la lista de marcados
-            addSourcesByFilter: function(source, filterSources, sources) {
+            addSourcesByFilter: function(source, filterSources, sources, sourceAll) {
                 var self = this;
-                if (filterSources.length > 0) {
-                    var index = filterSources.indexOf(source.id);
-                    if (index == -1) {
+                if (source !== "all") {
+                    if (filterSources.length > 0) {
+                        var index = filterSources.indexOf(source.id);
+                        if (index == -1) {
+                            filterSources.push(source.id);
+                            self.setCheckedSource(sources, source.id, true);
+                        } else {
+                            filterSources.splice(index, 1);
+                            self.setCheckedSource(sources, source.id, false);
+                        }
+                    } else {
                         filterSources.push(source.id);
                         self.setCheckedSource(sources, source.id, true);
-                    } else {
-                        filterSources.splice(index, 1);
-                        self.setCheckedSource(sources, source.id, false);
                     }
                 } else {
-                    filterSources.push(source.id);
-                    self.setCheckedSource(sources, source.id, true);
+                    filterSources.length = 0;
+
+                    angular.forEach(sources, function(value, key) {
+                        if (sourceAll === false) {
+                            self.setCheckedSource(sources, value.id, false);
+                        } else {
+                            filterSources.push(value.id);
+                            self.setCheckedSource(sources, value.id, true);
+                        }
+                    });
                 }
             },
             //Agrega las zones (id) a la lista de marcados
-            addZonesByFilter: function(zone, filterZones, zones) {
+            addZonesByFilter: function(zone, filterZones, zones, zonesAll) {
                 var self = this;
 
-                if (filterZones.length > 0) {
-                    var index = filterZones.indexOf(zone.id);
+                if (zone !== "all") {
+                    if (filterZones.length > 0) {
+                        var index = filterZones.indexOf(zone.id);
 
-                    if (index == -1) {
+                        if (index == -1) {
+                            filterZones.push(zone.id);
+                            self.setCheckedZone(zones, zone.id, true);
+                        } else {
+                            filterZones.splice(index, 1);
+                            self.setCheckedZone(zones, zone.id, false);
+                        }
+
+                    } else {
                         filterZones.push(zone.id);
                         self.setCheckedZone(zones, zone.id, true);
-                    } else {
-                        filterZones.splice(index, 1);
-                        self.setCheckedZone(zones, zone.id, false);
                     }
-
                 } else {
-                    filterZones.push(zone.id);
-                    self.setCheckedZone(zones, zone.id, true);
+                    filterZones.length = 0;
+
+                    angular.forEach(zones, function(value, key) {
+                        if (zonesAll === false) {
+                            self.setCheckedZone(zones, value.id, false);
+                        } else {
+                            filterZones.push(value.id);
+                            self.setCheckedZone(zones, value.id, true);
+                        }
+                    });
                 }
             },
             //Ver si alguna mesa pertenece a la zona
@@ -282,12 +323,12 @@ angular.module('book.service', [])
                 angular.forEach(listBook, function(book, key) {
                     if (book.reservation !== null) {
                         resumenBook.reservations += 1;
+                        resumenBook.ingresos += book.reservation.num_people_1 + book.reservation.num_people_2 + book.reservation.num_people_3;
                         resumenBook.pax += book.reservation.num_guest;
 
                         if (book.reservation.status.id == 4 || book.reservation.status.id == 5) {
                             resvSit += 1;
                         }
-
                     }
                 });
 

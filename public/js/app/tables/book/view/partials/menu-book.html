@@ -1,12 +1,15 @@
-
 <section class="header-book">
     <ul class="stadistics">
         <li>
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">RES</span>
-                <span class="title-short">RES</span>
+                <span class="title">
+                    RES
+                </span>
+                <span class="title-short">
+                    RES
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.reservations }}
                 </span>
@@ -16,8 +19,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">PAX</span>
-                <span class="title-short">PAX</span>
+                <span class="title">
+                    PAX
+                </span>
+                <span class="title-short">
+                    PAX
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.pax }}
                 </span>
@@ -27,8 +34,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">PAX INGRESO</span>
-                <span class="title-short">PAXI</span>
+                <span class="title">
+                    PAX INGRESO
+                </span>
+                <span class="title-short">
+                    PAXI
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.ingresos }}
                 </span>
@@ -38,8 +49,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">CONVERSIÓN</span>
-                <span class="title-short">CONV</span>
+                <span class="title">
+                    CONVERSIÓN
+                </span>
+                <span class="title-short">
+                    CONV
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.conversion }}%
                 </span>
@@ -49,8 +64,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">MDS</span>
-                <span class="title-short">MDS</span>
+                <span class="title">
+                    MDS
+                </span>
+                <span class="title-short">
+                    MDS
+                </span>
                 <span class="count">
                     120/121
                 </span>
@@ -97,9 +116,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
-                        <li ng-class="[{'active' : item.checked},{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.turnAll }">
+                            <a href="" ng-click="vm.filterBook('turn','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.turnAll">
+                                </i>
+                            </a>
+                        </li>
+                        <li ng-class="[{'active' : item.checked },{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
                             <a href="" ng-click="vm.filterBook('turn',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>
@@ -119,9 +147,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.sourcesAll }">
+                            <a href="" ng-click="vm.filterBook('source','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.sourcesAll">
+                                </i>
+                            </a>
+                        </li>
                         <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.sources">
                             <a href="" ng-click="vm.filterBook('source',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>
@@ -141,9 +178,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.zonesAll }">
+                            <a href="" ng-click="vm.filterBook('zones','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.zonesAll">
+                                </i>
+                            </a>
+                        </li>
                         <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.zones">
                             <a href="" ng-click="vm.filterBook('zones',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>
