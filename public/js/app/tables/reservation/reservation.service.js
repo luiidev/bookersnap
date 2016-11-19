@@ -39,6 +39,9 @@ angular.module('reservation.service', [])
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
+                patchReservation: function(data) {
+                    return http.patch(ApiUrlMesas + "/reservations/" + data.id, data);
+                },
                 quickCreate: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation/quickcreate", data);
                 },

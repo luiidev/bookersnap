@@ -17,8 +17,9 @@ angular.module('book.service', [])
         };
 
     })
-    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory) {
+    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory, ConfigurationDataService) {
         var scopeMain = null;
+        var configReservation = null;
         return {
             getReservations: function(reload, date) {
                 var defered = $q.defer();
@@ -157,7 +158,7 @@ angular.module('book.service', [])
             },
             listReservationAndBlocks: function(reload, date) {
                 var self = this;
-                return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date)]);
+                return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date), self.getConfigurationReservation()]);
             },
             //Habilita en la vista los types turns que hallamos marcados
             setCheckedTypeTurn: function(turns, turnId, checked) {
@@ -298,8 +299,26 @@ angular.module('book.service', [])
             },
             //Calcula el resumen del book, n° reservaciones,invitados,ingresados,etc
             getResumenBook: function(listBook) {
-                var resumen = BookResumenFactory.calculate(listBook);
+                var resumen = BookResumenFactory.calculate(listBook, configReservation);
                 scopeMain.$broadcast('resumenBookUpdate', resumen);
+            },
+            setConfigReservation: function(config) {
+                configReservation = config;
+                return configReservation;
+            },
+            getConfigurationReservation: function() {
+                var defered = $q.defer();
+
+                ConfigurationDataService.getConfiguration().then(
+                    function success(response) {
+                        defered.resolve(response.data.data);
+                    },
+                    function error(response) {
+                        defered.reject(response.data);
+                    }
+                );
+
+                return defered.promise;
             },
             init: function(scope) {
                 scopeMain = scope;
@@ -310,7 +329,8 @@ angular.module('book.service', [])
     .factory('BookResumenFactory', function($q) {
 
         return {
-            calculate: function(listBook) {
+            calculate: function(listBook, configReservation) {
+                var self = this;
                 var resumenBook = {
                     reservations: 0,
                     pax: 0,
@@ -323,7 +343,8 @@ angular.module('book.service', [])
                 angular.forEach(listBook, function(book, key) {
                     if (book.reservation !== null) {
                         resumenBook.reservations += 1;
-                        resumenBook.ingresos += book.reservation.num_people_1 + book.reservation.num_people_2 + book.reservation.num_people_3;
+
+                        resumenBook.ingresos += self.calculateIngresos(book, configReservation);
                         resumenBook.pax += book.reservation.num_guest;
 
                         if (book.reservation.status.id == 4 || book.reservation.status.id == 5) {
@@ -338,6 +359,23 @@ angular.module('book.service', [])
 
                 return resumenBook;
             },
+            calculateIngresos: function(book, configRes) {
+                var ingresos = 0;
+
+                if (configRes !== null) {
+                    if (configRes.status_people_1 === 1) {
+                        ingresos += book.reservation.num_people_1;
+                    }
+                    if (configRes.status_people_2 === 1) {
+                        ingresos += book.reservation.num_people_2;
+                    }
+                    if (configRes.status_people_3 === 1) {
+                        ingresos += book.reservation.num_people_3;
+                    }
+                }
+
+                return ingresos;
+            }
 
         };
     });
