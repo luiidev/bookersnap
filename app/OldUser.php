@@ -2,21 +2,22 @@
 
 namespace App;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
-{
-    protected $table = 'bs_user';
-    protected $appends = ['fullname'];
+class OldUser extends Model {
+
+    protected $connection = 'mysql_old';
+    protected $table = 'usermicrosite';
     public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+//    protected $fillable = [
+//        'name', 'email', 'password',
+//    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -26,8 +27,4 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    public function getFullnameAttribute(){
-        return trim("$this->firstname $this->lastname");
-    }
 }

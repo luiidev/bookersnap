@@ -17,7 +17,10 @@ Route::get('/admin', function () {
     return view('dashboard.admin.index');
 });
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'auth'*/]);
+Route::get('/admin/auth', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
+
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
+
 
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('reservation');
@@ -34,8 +37,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('/', ['as' => 'microsite-login', 'uses' => 'Test\AuthController@Index']);
         Route::post('/', 'Test\AuthController@LoginBs');
         Route::post('/social', 'Test\AuthController@RedirectSocialLogin');
-        Route::get('/social-callback', ['as' => 'social-callback',
-            'uses'                               => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
+        Route::get('/social-callback', ['as' => 'social-callback','uses' => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
     });
 
     Route::post('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
@@ -122,6 +124,7 @@ Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'au
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {
+
         Route::group(['prefix' => '/category'], function () {
             Route::get('/', 'CategoryController@index');
             Route::post('/', 'CategoryController@storeCategory');
@@ -133,7 +136,7 @@ Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'au
             Route::delete('/{id}', 'CategoryController@deleteCategory');
         });
 
-        Route::group(['prefix' => '/microsite', 'namespace' => 'Microsite'], function () {
+        Route::group(['prefix' => '/microsite', 'namespace' => 'Microsite'], function () {         
             Route::post('/', 'MicrositeController@storeMicrosite');
             Route::patch('/', 'MicrositeController@showPageMicrosite');
         });

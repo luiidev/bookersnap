@@ -2,9 +2,9 @@ angular.module('role.service', [])
     //--------------------------------------
     // SERVICIO MICROPORTALES
     //--------------------------------------
-    .factory('RoleService', function(Ajax) {
+    .factory('RoleService', function(Ajax, ApiAdminROOT) {
         var base_url = '/master/ajax/';
-        var api_admin_url = 'http://localhost:3000/v1/es/';
+    var api_admin_url = ApiAdminROOT;
         return {
             GetRoles: function($listener) {
                 Ajax.Req('get', api_admin_url + 'roles', null, $listener);

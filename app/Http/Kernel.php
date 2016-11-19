@@ -53,5 +53,6 @@ class Kernel extends HttpKernel
         'social-login-token' => \App\Http\Middleware\CheckSocialLoginToken::class,
         'route' => \App\Http\Middleware\RouteMiddleware::class,
         'checkCountry' => \App\Http\Middleware\CheckCountry::class,
+        'authTemp' => \App\Http\Middleware\AuthTemp::class
     ];
 }
