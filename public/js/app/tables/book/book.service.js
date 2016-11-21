@@ -15,7 +15,6 @@ angular.module('book.service', [])
                 return zones;
             }
         };
-
     })
     .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory, ConfigurationDataService) {
         var scopeMain = null;
@@ -320,6 +319,26 @@ angular.module('book.service', [])
 
                 return defered.promise;
             },
+            //Calcula total de mesas disponibles sobre las mesas ocupadas
+            calculateMDS: function(listBook, zones) {
+
+                var totalTables = BookResumenFactory.getTablesZones(zones);
+                var totalResSit = BookResumenFactory.getTablesSitRes(listBook);
+
+                var mds = totalResSit + "/" + totalTables;
+
+                return mds;
+            },
+            //Devuelve el objeto status dentro de un array segun su id
+            getStatusById: function(idStatus, statusData) {
+                var status = {};
+                angular.forEach(statusData, function(value, key) {
+                    if (value.id === idStatus) {
+                        status = value;
+                    }
+                });
+                return status;
+            },
             init: function(scope) {
                 scopeMain = scope;
             }
@@ -355,6 +374,7 @@ angular.module('book.service', [])
 
                 if (resumenBook.resvSit > 0 || resumenBook.reservations > 0) {
                     resumenBook.conversion = (resvSit / resumenBook.reservations) * 100;
+                    resumenBook.conversion = resumenBook.conversion.toFixed(2);
                 }
 
                 return resumenBook;
@@ -375,6 +395,36 @@ angular.module('book.service', [])
                 }
 
                 return ingresos;
+            },
+            //Obtiene el total de mesas disponibles
+            getTablesZones: function(zones) {
+                var total = 0;
+
+                angular.forEach(zones, function(zone, key) {
+                    angular.forEach(zone.tables, function(table, key) {
+                        if (table.status == 1) {
+                            total += 1;
+                        }
+                    });
+                });
+
+                return total;
+            },
+            //Obtiene el total de mesas ocupadas (reservaciones)
+            getTablesSitRes: function(listBook) {
+                var total = 0;
+
+                //console.log("getTablesSitRes " + angular.toJson(listBook, true));
+
+                angular.forEach(listBook, function(book, key) {
+                    if (book.reservation !== null) {
+                        if (book.reservation.res_reservation_status_id == 4) {
+                            total += book.reservation.tables.length;
+                        }
+                    }
+                });
+
+                return total;
             }
 
         };

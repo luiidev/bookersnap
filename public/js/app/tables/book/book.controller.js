@@ -10,6 +10,7 @@ angular.module('book.controller', [])
         vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
         vm.sources = [];
         vm.zones = [];
+        vm.statusReservation = []; //Listado de status para reservaciones
 
         vm.bookFilter = {
             typeTurn: [],
@@ -22,6 +23,7 @@ angular.module('book.controller', [])
                 zonesAll: false
             }
         };
+
         //Ordernar book general
         vm.bookOrderBy = {
             general: {
@@ -39,6 +41,7 @@ angular.module('book.controller', [])
                 date: '-reservation.start_date'
             }
         };
+
         //Book View (Reservaciones)
         vm.bookView = false;
 
@@ -49,6 +52,10 @@ angular.module('book.controller', [])
             ingresos: 0,
             conversion: 0
         };
+
+        //MDS
+        vm.mds = '';
+
         //Configuracion de reservaciones
         vm.configReservation = null;
 
@@ -154,9 +161,7 @@ angular.module('book.controller', [])
 
         vm.numGuestChange = function(type, option, value) {
 
-            console.log("numGuestChange " + angular.toJson(value, true));
-
-            validaNumGuestClick = true;
+            vm.blockClickBook();
             if (validaUpdateBookRes) $timeout.cancel(validaUpdateBookRes);
 
             switch (option) {
@@ -183,13 +188,43 @@ angular.module('book.controller', [])
                     num_people_2: value.reservation.num_people_2,
                     num_people_3: value.reservation.num_people_3
                 };
-
                 updateReservationBook(resUpdate);
             }, 1000);
+        };
 
+        vm.blockClickBook = function() {
+            validaNumGuestClick = true;
             $timeout(function() {
                 validaNumGuestClick = false;
             }, 500);
+        };
+
+        vm.updateStatusReservation = function(reservation, status) {
+            vm.blockClickBook();
+
+            var resUpdate = {
+                id: reservation.id,
+                res_reservation_status_id: status
+            };
+
+            updateReservationBook(resUpdate, function() {
+                reservation.res_reservation_status_id = parseInt(status);
+                reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
+            });
+        };
+
+        vm.updateAmountReservation = function(reservation) {
+            vm.blockClickBook();
+
+            if (validaUpdateBookRes) $timeout.cancel(validaUpdateBookRes);
+
+            validaUpdateBookRes = $timeout(function() {
+                var resUpdate = {
+                    id: reservation.id,
+                    consume: reservation.consume,
+                };
+                updateReservationBook(resUpdate);
+            }, 1000);
         };
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
@@ -214,6 +249,7 @@ angular.module('book.controller', [])
             listTurnAvailable(vm.fecha_actual);
             listSources();
             listZones(vm.fecha_actual, false);
+            listStatusReservation();
         };
 
         var updateUrl = function(date) {
@@ -259,7 +295,7 @@ angular.module('book.controller', [])
                     vm.configReservation = response[2];
 
                     BookFactory.setConfigReservation(vm.configReservation);
-                    //console.log("generatedListBook " + angular.toJson(vm.resumenBook, true));
+                    vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
                 },
                 function error(response) {
                     console.error("listReservationAndBlocks " + angular.toJson(response, true));
@@ -289,16 +325,20 @@ angular.module('book.controller', [])
                 function success(response) {
                     response = response.data.data;
                     vm.zones = response;
+
+                    console.log("listZones " + angular.toJson(response, true));
                 },
                 function error(response) {
                     console.error("listZones " + angular.toJson(response, true));
                 });
         };
 
-        var updateReservationBook = function(data) {
+        var updateReservationBook = function(data, action) {
+            action = (typeof action == "function") ? action : function() {};
 
             reservationService.patchReservation(data).then(
                 function success(response) {
+                    action();
                     console.log("updateReservationBook " + angular.toJson(response.data, true));
                 },
                 function error(response) {
@@ -333,6 +373,18 @@ angular.module('book.controller', [])
                     }
                 }
             });
+        };
+
+        var listStatusReservation = function() {
+            reservationService.getStatuses().then(
+                function success(response) {
+                    vm.statusReservation = response.data.data;
+                    console.log("listStatusReservation " + angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.log("listStatusReservation " + angular.toJson(response.data, true));
+                }
+            );
         };
 
         init();
