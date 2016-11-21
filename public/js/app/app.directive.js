@@ -63,7 +63,7 @@ angular.module("bookersnap.directives", [])
                 bsOpen: "&"
             },
             link: function(scope, element, attrs) {
-                var parent = $(element).closest("[bs-toggle-click]").parent();
+                var parent = $(element).closest("[bs-toggle-click]").parent().parent();
                 var children = parent.find("[bs-toggle-show]");
 
                 var closeChildren = function(evt) {
