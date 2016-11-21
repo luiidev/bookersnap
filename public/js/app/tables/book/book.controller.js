@@ -18,6 +18,7 @@ angular.module('book.controller', [])
 
         vm.startDate = dp_date;
         vm.endDate = dp_date;
+        vm.maxDate = dp_date;
 
         /**
          * Limpia el casillero de informacion de rango de fechas
@@ -38,7 +39,7 @@ angular.module('book.controller', [])
             vm.startDate = moment().add(end, "days").utc().toDate();
             vm.endDate = moment().add(start, "days").utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -51,7 +52,7 @@ angular.module('book.controller', [])
             vm.startDate = moment().startOf(block).utc().toDate();
             vm.endDate = moment().endOf(block).utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -64,7 +65,7 @@ angular.module('book.controller', [])
             vm.startDate = date.startOf('month').utc().toDate();
             vm.endDate = date.endOf('month').utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -73,7 +74,7 @@ angular.module('book.controller', [])
          * @return void
          */
         vm.showDateRange = function(event) {
-            selectDpMenu(event.currentTarget, true);
+            initDateEvent(event.currentTarget, true);
         };
 
         /**
@@ -81,14 +82,41 @@ angular.module('book.controller', [])
          * @type {DOM} element [manipulacion de clases]
          * @type {Boolean} dp_range [mostrar o esconder calendario]
          */
-        var check = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
-        var selectDpMenu = function(element, dp_range) {
-            vm.dp_range = (dp_range === true) ? dp_range : false;
-            var list = angular.element(document.querySelectorAll(".list-group .list-group-item")).removeClass("active");
+        var checkElem = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
+        var selectDpMenu = function(element) {
+            var list = document.querySelectorAll(".list-group .list-group-item");
+            angular.element(list).removeClass("active");
             angular.forEach(list, function(item) {
-                angular.element(item.querySelector(".zmdi")).remove();
+                var check = item.querySelector(".zmdi");
+                angular.element(check).remove();
             });
-            var current = angular.element(element).addClass("active").append(check);
+            var current = angular.element(element).addClass("active").append(checkElem);
+        };
+
+        var initDateEvent = function(element, dp_range) {
+            selectDpMenu(element);
+            if (!dp_range) hideRangeCalendar();
+            vm.dp_range = !dp_range ? false : true;
+            fireDateEvent();
+        };
+
+        /**
+         * Cambio de fecha de fin por accion del usuario | click en calendario
+         * @return void
+         */
+        vm.changeDateEnd = function(userClick) {
+            if (userClick) {
+                hideRangeCalendar();
+                fireDateEvent();
+            }
+        };
+
+        var hideRangeCalendar = function() {
+            angular.element(document.querySelector("[bs-toggle-click]")).click();
+        };
+
+        var fireDateEvent = function() {
+            console.log("Evento de cambio de fecha");
         };
 
         /**

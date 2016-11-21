@@ -74,7 +74,9 @@ angular.module("bookersnap.directives", [])
                         children.addClass("ng-hide");
                         $document.unbind('click');
                         scope.bsClose();
-                        scope.$apply();
+                        if (!scope.$$phase && !scope.$root.$$phase) {
+                            scope.$apply();
+                        }
                     }
                 };
 
@@ -89,7 +91,9 @@ angular.module("bookersnap.directives", [])
                             scope.bsOpen();
                             $document.bind('click', closeChildren);
                         }
-                        scope.$apply();
+                        if (!scope.$$phase && !scope.$root.$$phase) {
+                            scope.$apply();
+                        }
                     }
                 });
 

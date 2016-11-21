@@ -97,12 +97,12 @@
                 <div class="fg-line">
                     <input class="form-control bg-transparent" type="text" placeholder="{{ vm.startDate | date:'dd-MM-yyyy'}} - {{  vm.endDate | date:'dd-MM-yyyy' }}" ng-model="vm.date_info" ng-change="vm.clearDateInfo()" bs-toggle-click></input>
                 </div>
-                <div class="date-picker" bs-toggle-show style="position: absolute;;z-index: 5; background: #fff;">
+                <div class="date-picker dp-range-book" bs-toggle-show>
                     <div class="dp-custom-date">
-                        <div class="dp-content" style="display: inline-flex;">
+                        <div class="dp-content">
                             <datepicker ng-model="vm.startDate" max-date="vm.endDate" show-weeks="false" starting-day="1" ng-show="vm.dp_range"></datepicker>
-                            <datepicker ng-model="vm.endDate" min-date="vm.startDate" show-weeks="false" starting-day="1" ng-show="vm.dp_range"></datepicker>
-                            <div class="dp-menu" style="width: 170px;">
+                            <datepicker ng-model="vm.endDate" max-date="vm.maxDate" show-weeks="false" starting-day="1" ng-show="vm.dp_range" ng-change="vm.changeDateEnd(1)"></datepicker>
+                            <div class="dp-menu">
                                 <div class="list-group">
                                     <a href="javascript:void(0)" class="list-group-item active" ng-click="vm.changeDateCustom(0, 0, $event)">Hoy<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i></a>
                                     <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateBlock('week',$event)">Esta Semana</a>
