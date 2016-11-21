@@ -429,23 +429,33 @@ angular.module('book.controller', [])
         init();
 
     })
-    .controller("ModalBookReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService, $timeout, data, date, FloorFactory, global) {
+    .controller("ModalBookReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService, reservationHelper, $timeout, data, date, FloorFactory, global, $table) {
 
         var vm = this;
         var auxiliar;
 
         vm.reservation = {};
+        vm.reservation.guests = {
+            men: 0,
+            women: 0,
+            children: 0
+        };
         vm.addGuest = true;
         vm.buttonText = 'Agregar a lista de espera';
         vm.title = "Nueva entrada";
         vm.covers = [];
+        vm.guestList = [];
+
+        var tables, blocks;
+
+        date = date ? moment(date).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
 
         var listGuest = function() {
             var deferred = $q.defer();
             reservationService.getGuest()
                 .then(function(guests) {
                     vm.covers = guests;
-                    vm.reservation.covers = 2;
+                    vm.reservation.guests.men = 2;
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {
@@ -455,12 +465,39 @@ angular.module('book.controller', [])
             return deferred.promise;
         };
 
+        var loadZones = function() {
+            var deferred = $q.defer();
+            console.log(date);
+            reservationService.getZones(date, true)
+                .then(function(response) {
+                    deferred.resolve(response.data.data);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+
+            return deferred.promise;
+        };
+
+        var loadBlocks = function() {
+            var deferred = $q.defer();
+
+            reservationService.getBlocks(date, true)
+                .then(function(response) {
+                    blocks = response.data.data;
+                    deferred.resolve(response.data.data);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+
+            return deferred.promise;
+        };
+
         //Search guest list
         vm.searchGuest = function(name) {
-            // console.log(name);
+            console.log(name);
             if (auxiliar) $timeout.cancel(auxiliar);
-            if (name === "") {
-                vm.guestList = [];
+            if (!name) {
+                vm.guestList.length = 0;
                 return;
             }
             var search = function() {
@@ -503,6 +540,13 @@ angular.module('book.controller', [])
                 delete vm.reservation.guest;
             }
 
+            if (vm.reservation.table_id === null) {
+                return vm.redirectReservation();
+            }
+
+            vm.reservation.date = date;
+            vm.reservation.hour = data.time;
+
             vm.reservation.guest = vm.newGuest;
             vm.buttonText = 'Enviando ...';
 
@@ -511,66 +555,63 @@ angular.module('book.controller', [])
 
         var save = function() {
             reservationService.blackList.key(vm.reservation);
-            reservationService.createWaitList(vm.reservation).then(
+            reservationService.quickCreate(vm.reservation).then(
                 function success(response) {
-                    global.reservations.add(response.data.data);
+                    $rootScope.$broadcast("addReservationList", response.data.data);
                     vm.buttonText = 'Agregar a lista de espera';
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 },
                 function error(response) {
                     vm.buttonText = 'Agregar a lista de espera';
-                    message.apiError(response.data);
-                });
-        };
-
-        var update = function() {
-            reservationService.blackList.key(vm.reservation);
-            reservationService.updateWaitList(vm.reservation).then(
-                function success(response) {
-                    global.reservations.update(response.data.data);
-                    vm.buttonText = 'Agregar a lista de espera';
-                    message.success(response.data.msg);
-                    $uibModalInstance.dismiss('cancel');
-                },
-                function error(response) {
-                    vm.buttonText = 'Agregar a lista de espera';
-                    message.apiError(response.data);
-                });
-        };
-
-        vm.delete = function() {
-            var key = reservationService.blackList.key();
-            reservationService.deleteWaitList(data.id, {
-                key: key
-            }).then(
-                function success(response) {
-                    global.reservations.update(response.data.data);
-                    message.success(response.data.msg);
-                    $uibModalInstance.dismiss('cancel');
-                },
-                function error(response) {
                     message.apiError(response.data);
                 });
         };
 
         var listResource = function() {
-            return $q.all([listGuest()]);
+            return $q.all([
+                loadZones(),
+                loadBlocks(),
+                listGuest()
+            ]).then(function(data) {
+                tables = reservationHelper.loadTable(data[0]).tables;
+                parseInfo();
+            });
         };
 
         var parseInfo = function() {
-            date = date || moment().format("YYYY-MM-DD");
             vm.info = {
                 date: moment(date).format("dddd, MM/DD"),
                 time: data.time_text,
-                tables: "12"
             };
-            console.log(vm.info);
+            vm.suggestTables();
+        };
+
+        vm.suggestTables = function() {
+            var table = $table.tablesSuggestedDinamyc(tables, blocks, vm.reservation.guests.men, data.time);
+            if (table) {
+                vm.reservation.table_id = table.id;
+                vm.info.table = true;
+            } else {
+                vm.reservation.table_id = null;
+                vm.info.table = false;
+            }
+
+            vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.guests.men;
+        };
+
+        vm.redirectReservation = function() {
+            $uibModalInstance.dismiss('cancel');
+            $state.go("mesas.reservation-new", {
+                date: date,
+                tables: [{
+                    id: vm.reservation.table_id
+                }]
+            });
         };
 
         var init = function() {
             listResource();
-            parseInfo();
         };
 
         init();
