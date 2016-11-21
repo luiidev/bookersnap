@@ -5,6 +5,56 @@ angular.module('book.controller', [])
         var fecha_actual = moment().format('YYYY-MM-DD');
         var vm = this;
 
+        //////////////////////////////////////////////////////
+        var dp_date = moment().utc().toDate();
+        vm.startDate = dp_date;
+        vm.endDate = dp_date;
+
+        vm.clearDateInfo = function() {
+            vm.date_info = null;
+        };
+
+        vm.changeDateCustom = function(start, end, event) {
+            if (start >= end) {
+                vm.startDate = moment().add(end, "days").utc().toDate();
+                vm.endDate = moment().add(start, "days").utc().toDate();
+            } else {
+                vm.startDate = moment().add(start, "days").utc().toDate();
+                vm.endDate = moment().add(end, "days").utc().toDate();
+            }
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        vm.changeDateBlock = function(block, event) {
+            vm.startDate = moment().startOf(block).utc().toDate();
+            vm.endDate = moment().endOf(block).utc().toDate();
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        vm.changeDateLastMonth = function(event) {
+            var date = moment().startOf('month').subtract(1, "days");
+            vm.startDate = date.startOf('month').utc().toDate();
+            vm.endDate = date.endOf('month').utc().toDate();
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        vm.showDateRange = function(event) {
+            selectDpMenu(event.currentTarget, true);
+        };
+
+        var check = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
+        var selectDpMenu = function(element, dp_range) {
+            vm.dp_range = (dp_range === true) ? dp_range : false;
+            var list = angular.element(document.querySelectorAll(".list-group .list-group-item")).removeClass("active");
+            angular.forEach(list, function(item) {
+                angular.element(item.querySelector(".zmdi")).remove();
+            });
+            var current = angular.element(element).addClass("active").append(check);
+        };
+        //////////////////////////////////////////////////////
         vm.turns = [];
         vm.hoursTurns = []; //Lista de horas segun los turnos
         vm.listBook = []; //Listado del book para los filtros

@@ -73,13 +73,28 @@
         <li>
             <div class="input-group form-group">
                 <span class="input-group-addon">
-                    <i class="zmdi zmdi-calendar-note zmdi-hc-fw">
-                    </i>
+                    <i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i>
                 </span>
-                <div class="date-picker" ng-class="{ 'is-opened': vm.calendar == true }">
-                    <div class="fg-line">
-                        <input class="form-control bg-transparent" is-open="vm.calendar" ng-click="vm.openCalendar($event, 'opened')" ng-model="vm.bookFilter.date" placeholder="2016-11-11" show-weeks="false" type="text" uib-datepicker-popup="{{vm.format}}">
-                        </input>
+                <div class="fg-line">
+                    <input class="form-control bg-transparent" type="text" placeholder="{{ vm.startDate | date:'dd-MM-yyyy'}} - {{  vm.endDate | date:'dd-MM-yyyy' }}" ng-model="vm.date_info" ng-change="vm.clearDateInfo()" bs-toggle-click></input>
+                </div>
+                <div class="date-picker" bs-toggle-show style="position: absolute;;z-index: 5; background: #fff;">
+                    <div class="dp-custom-date">
+                        <div class="dp-content" style="display: inline-flex;">
+                            <datepicker ng-model="vm.startDate" max-date="vm.endDate" show-weeks="false" starting-day="1" ng-show="vm.dp_range"></datepicker>
+                            <datepicker ng-model="vm.endDate" min-date="vm.startDate" show-weeks="false" starting-day="1" ng-show="vm.dp_range"></datepicker>
+                            <div class="dp-menu" style="width: 170px;">
+                                <div class="list-group">
+                                    <a href="javascript:void(0)" class="list-group-item active" ng-click="vm.changeDateCustom(0, 0, $event)">Hoy<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i></a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateBlock('week',$event)">Esta Semana</a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateCustom(0, -7, $event)">Ultimos 7 días</a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateCustom(0, -30, $event)">Ultimos 30 días</a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateBlock('month',$event)">Este mes</a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.changeDateLastMonth($event)">Mes pasado</a>
+                                    <a href="javascript:void(0)" class="list-group-item" ng-click="vm.showDateRange($event)">Rango de fechas</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
