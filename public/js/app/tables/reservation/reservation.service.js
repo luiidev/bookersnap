@@ -429,70 +429,6 @@ angular.module('reservation.service', [])
 
             return indexes;
         };
-        var tablesSuggested = function(zones, blocks, cant, hour, duration) {
-            // console.log("------------------------------------------------");
-            var tableSuggested = null;
-
-            var start_time = hour ? moment(hour, "HH:mm:ss") : moment();
-            var auxiliar = duration ? moment(duration, "HH:mm:ss") : moment("01:15:00", "HH:mm:ss");
-            var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
-            // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
-            // console.log(blocks);
-            angular.forEach(blocks, function(block) {
-                var start_block = moment(block.start_time, "HH:mm:ss");
-                var end_block = moment(block.end_time, "HH:mm:ss");
-                angular.forEach(zones, function(zone) {
-                    if (tableSuggested) return;
-                    angular.forEach(zone.tables, function(table) {
-                        if (table.id == block.res_table_id) {
-                            var occupied, suggested;
-                            // Comprobar si el horario coincide con una reservacion o bloqueo
-                            if ((start_time.isBetween(start_block, end_block, null, "()")) ||
-                                (end_time.isBetween(start_block, end_block, null, "()")) ||
-                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
-
-                                if (block.res_reservation_id !== null) {
-                                    occupied = true;
-                                    suggested = false;
-                                } else {
-                                    block = true;
-                                    suggested = false;
-                                }
-                            } else { // Caso no coincida resetea su estado. El listado de bloqueos esta en orden de hora ascendente.
-                                if (block.res_reservation_id !== null) {
-                                    occupied = false;
-                                } else {
-                                    block = false;
-                                }
-                            }
-
-                            //
-                            if (!occupied && !suggested) {
-                                if (cant >= table.minCover && cant <= table.maxCover) {
-                                    if (!table.occupied && !table.block) {
-                                        if (!tableSuggested) tableSuggested = angular.copy(table);
-                                        table.suggested = true;
-                                    }
-                                } else {
-                                    table.suggested = false;
-                                }
-                            } else {
-                                tableSuggested = null;
-                            }
-                        }
-                    });
-                });
-            });
-
-
-            // angular.forEach(zones, function(zone) {
-            angular.forEach(this.tables, function(table) {
-
-            });
-            // });
-
-            return tableSuggested;
-        };
         /**
          * END
          */
@@ -905,6 +841,59 @@ angular.module('reservation.service', [])
                         });
                     });
                 });
+            },
+            tablesSuggestedDinamyc: function(tables, blocks, cant, hour) {
+                // console.log(tables, blocks, cant, hour);
+                // console.log("------------------------------------------------");
+
+                var start_time = hour ? moment(hour, "HH:mm:ss") : moment();
+                var auxiliar = moment("2000-01-01").add((60 + 15 * cant), "minutes");
+                var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+                console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+                // console.log(blocks);
+                angular.forEach(blocks, function(block) {
+                    if (tableSuggested) return; // Si ya se sugirio una mesa sale del bucle
+                    var start_block = moment(block.start_time, "HH:mm:ss");
+                    var end_block = moment(block.end_time, "HH:mm:ss");
+                    angular.forEach(tables, function(table) {
+                        if (table.id == block.res_table_id) {
+                            // Comprobar si el horario coincide con una reservacion o bloqueo
+                            if ((start_time.isBetween(start_block, end_block, null, "()")) ||
+                                (end_time.isBetween(start_block, end_block, null, "()")) ||
+                                (start_time.isSameOrBefore(start_block) && end_time.isSameOrAfter(end_block))) {
+
+                                if (block.res_reservation_id !== null) {
+                                    table.occupied = true;
+                                    table.suggested = false;
+                                } else {
+                                    block = true;
+                                    table.suggested = false;
+                                }
+                            } else { // Caso no coincida resetea su estado. El listado de bloqueos esta en orden de hora ascendente.
+                                if (block.res_reservation_id !== null) {
+                                    table.occupied = false;
+                                } else {
+                                    table.block = false;
+                                }
+                            }
+                        }
+                    });
+                });
+
+                var tableSuggested = null;
+
+                angular.forEach(tables, function(table) {
+                    if (tableSuggested) return;
+                    if (cant >= table.minCover && cant <= table.maxCover) {
+                        if (!table.occupied && !table.block) {
+                            if (!tableSuggested) {
+                                tableSuggested = angular.copy(table);
+                            }
+                        }
+                    }
+                });
+
+                return tableSuggested;
             },
             selectTableAllOrNone: function(zone, indicator) {
                 if (indicator == "all") {

@@ -370,11 +370,11 @@
             <div class="card m-b-5 p-b-5 p-t-10" style="border: 1px solid #eaeaea;">
                 <form class="form-horizontal" role="form">
                      <div class="card-body drag-border">
-                         <div class="form-group" style="cursor: pointer;" ng-click="br.reservationEditAll()">
+                         <div class="form-group" style="cursor: pointer;" ng-click="br.redirectReservation()">
                              <div class="col-xs-12" style="text-align: center;padding: 15px;">
                                  <label class="col-xs-4 control-label pull-left" style="text-align: left;">{{ br.info.date }}</label>
                                  <label class="col-xs-4 control-label" style="text-align: center">{{ br.info.time }}</label>
-                                 <label class="col-xs-4 control-label pull-right">{{ br.info.tables }}</label>
+                                 <label class="col-xs-4 control-label pull-right" ng-style="!br.info.table && {'color': 'red'}">{{ br.info.tableName }}</label>
                              </div>
                          </div>
                          <div class="form-group">
