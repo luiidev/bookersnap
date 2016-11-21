@@ -345,6 +345,21 @@ angular.module('book.service', [])
 
         };
     })
+    .factory('BookConfigFactory', function() {
+        return {
+            setConfig: function(config) {
+                localStorage.setItem("reservationView", config);
+            },
+            getConfig: function() {
+                var config = (localStorage.getItem("reservationView") !== null) ? localStorage.getItem("reservationView") : null;
+                config = (config == "true") ? true : false;
+                return config;
+            },
+            clearConfig: function() {
+                localStorage.removeItem("reservationView");
+            }
+        };
+    })
     .factory('BookResumenFactory', function($q) {
 
         return {

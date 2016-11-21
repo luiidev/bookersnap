@@ -1,6 +1,6 @@
 angular.module('book.controller', [])
     .controller('BookCtrl', function($uibModal, $scope, $stateParams, $location, $timeout, orderByFilter, BookFactory,
-        CalendarService, reservationService, BookDataFactory, $state, ConfigurationDataService) {
+        CalendarService, reservationService, BookDataFactory, $state, ConfigurationDataService, BookConfigFactory) {
 
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
@@ -242,12 +242,17 @@ angular.module('book.controller', [])
         };
 
         vm.changeBookView = function() {
+
             if (vm.bookView === true) {
                 vm.filterBook('reservations', 'reservations');
             } else {
                 vm.bookOrderBy.general.reverse = true;
                 vm.filterBook('time', 'time');
             }
+
+            BookConfigFactory.setConfig(vm.bookView);
+
+            updateUrl($stateParams.date, false);
         };
 
         vm.numGuestChange = function(type, option, value) {
@@ -304,7 +309,7 @@ angular.module('book.controller', [])
             });
         };
 
-        vm.updateAmountReservation = function(reservation) {
+        vm.updateConsumeReservation = function(reservation) {
             vm.blockClickBook();
 
             if (validaUpdateBookRes) $timeout.cancel(validaUpdateBookRes);
@@ -321,10 +326,11 @@ angular.module('book.controller', [])
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
             if (newDate !== oldDate) {
                 newDate = convertFechaYYMMDD(newDate, "es-ES", {});
+
                 listZones(newDate, true);
                 listTurnAvailable(newDate);
 
-                updateUrl(newDate);
+                updateUrl(newDate, true);
             }
         });
 
@@ -333,8 +339,10 @@ angular.module('book.controller', [])
         });
 
         var init = function() {
+            loadConfigViewReservation();
+
             vm.fecha_actual = ($stateParams.date === undefined || $stateParams.date === "") ? vm.fecha_actual : $stateParams.date;
-            updateUrl(vm.fecha_actual);
+            updateUrl(vm.fecha_actual, true);
 
             BookFactory.init($scope);
             listTurnAvailable(vm.fecha_actual);
@@ -343,9 +351,28 @@ angular.module('book.controller', [])
             listStatusReservation();
         };
 
-        var updateUrl = function(date) {
-            vm.bookFilter.date = convertFechaToDate(date);
-            $location.url("/mesas/book/" + date);
+        var loadConfigViewReservation = function() {
+            var config = BookConfigFactory.getConfig();
+
+            if (config !== null) {
+                vm.bookView = config;
+            }
+        };
+
+        var updateUrl = function(date, reload) {
+
+            if (reload === true) {
+                vm.bookFilter.date = convertFechaToDate(date);
+            }
+
+            if (vm.bookView === false) {
+                $location.url("/mesas/book/" + date);
+            } else {
+                var date_end = ($stateParams.date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : $stateParams.date_end;
+
+                $location.url("/mesas/book/" + date + "?date_end=" + date_end);
+            }
+
         };
 
         var listTurnAvailable = function(date) {
@@ -387,6 +414,11 @@ angular.module('book.controller', [])
 
                     BookFactory.setConfigReservation(vm.configReservation);
                     vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
+
+                    if (vm.bookView === true) {
+                        vm.changeBookView();
+                    }
+
                 },
                 function error(response) {
                     console.error("listReservationAndBlocks " + angular.toJson(response, true));
@@ -416,8 +448,6 @@ angular.module('book.controller', [])
                 function success(response) {
                     response = response.data.data;
                     vm.zones = response;
-
-                    console.log("listZones " + angular.toJson(response, true));
                 },
                 function error(response) {
                     console.error("listZones " + angular.toJson(response, true));
@@ -470,7 +500,6 @@ angular.module('book.controller', [])
             reservationService.getStatuses().then(
                 function success(response) {
                     vm.statusReservation = response.data.data;
-                    console.log("listStatusReservation " + angular.toJson(response, true));
                 },
                 function error(response) {
                     console.log("listStatusReservation " + angular.toJson(response.data, true));
