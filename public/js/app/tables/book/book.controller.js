@@ -4,6 +4,97 @@ angular.module('book.controller', [])
 
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
+
+        /**
+         * Manejo de rango de fechas
+         */
+
+        /**
+         * Fecha de inicio (hoy), se aplica UTC,
+         * datepicker covierte la zona horaria a utc y agrega/remueve horas
+         * @type {[Date | String]}
+         */
+        var dp_date = moment().utc().toDate();
+
+        vm.startDate = dp_date;
+        vm.endDate = dp_date;
+
+        /**
+         * Limpia el casillero de informacion de rango de fechas
+         * @return {[Void]}
+         */
+        vm.clearDateInfo = function() {
+            vm.date_info = null;
+        };
+
+        /**
+         * Rango de fechas restando hacia atras
+         * @param  {Integer} start [numero de dias]
+         * @param  {Integer} end   [numero de dias]
+         * @param  {$event | DOM} event [manipular las clases]
+         * @return  void
+         */
+        vm.changeDateCustom = function(start, end, event) {
+            vm.startDate = moment().add(end, "days").utc().toDate();
+            vm.endDate = moment().add(start, "days").utc().toDate();
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        /**
+         * Rango de fechas por bloque, esta semana | mes
+         * @param  {String} block [semana | mes]
+         * @param  {$event | DOM} event [manipular clases]
+         * @return  void
+         */
+        vm.changeDateBlock = function(block, event) {
+            vm.startDate = moment().startOf(block).utc().toDate();
+            vm.endDate = moment().endOf(block).utc().toDate();
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        /**
+         * Rango de fechas del mes pasado
+         * @param  {$event | DOM} event [manipular clases]
+         * @return void
+         */
+        vm.changeDateLastMonth = function(event) {
+            var date = moment().startOf('month').subtract(1, "days");
+            vm.startDate = date.startOf('month').utc().toDate();
+            vm.endDate = date.endOf('month').utc().toDate();
+
+            selectDpMenu(event.currentTarget);
+        };
+
+        /**
+         * Mostrar calendario de rango de fechas
+         * @param  {$event | DOM} event [manipular clases]
+         * @return void
+         */
+        vm.showDateRange = function(event) {
+            selectDpMenu(event.currentTarget, true);
+        };
+
+        /**
+         * Manipulacion de clases y dom
+         * @type {DOM} element [manipulacion de clases]
+         * @type {Boolean} dp_range [mostrar o esconder calendario]
+         */
+        var check = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
+        var selectDpMenu = function(element, dp_range) {
+            vm.dp_range = (dp_range === true) ? dp_range : false;
+            var list = angular.element(document.querySelectorAll(".list-group .list-group-item")).removeClass("active");
+            angular.forEach(list, function(item) {
+                angular.element(item.querySelector(".zmdi")).remove();
+            });
+            var current = angular.element(element).addClass("active").append(check);
+        };
+
+        /**
+         * End
+         */
+
         vm.turns = [];
         vm.hoursTurns = []; //Lista de horas segun los turnos
         vm.listBook = []; //Listado del book para los filtros
