@@ -348,15 +348,15 @@ angular.module('book.service', [])
     .factory('BookConfigFactory', function() {
         return {
             setConfig: function(config) {
-                localStorage.setItem("reservationView", config);
+                localStorage.setItem("reservationConfig", angular.toJson(config));
             },
             getConfig: function() {
-                var config = (localStorage.getItem("reservationView") !== null) ? localStorage.getItem("reservationView") : null;
-                config = (config === "true") ? true : false;
+                var config = (localStorage.getItem("reservationConfig") !== null) ? JSON.parse(localStorage.getItem("reservationConfig")) : null;
+
                 return config;
             },
             clearConfig: function() {
-                localStorage.removeItem("reservationView");
+                localStorage.removeItem("reservationConfig");
             }
         };
     })
