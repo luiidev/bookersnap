@@ -214,6 +214,22 @@ angular.module('floor.controller')
 
         };
 
+        rm.checkGuestList = function(reservation) {
+            rm.disabledModal();
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCheckGuestList.html',
+                controller: 'ModallCheckGuestListCtrl',
+                controllerAs: 'gl',
+                size: 'lg',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
+                    },
+                }
+            });
+        };
+
         // rm.infoReservationShow = function() {
         //     var icon = true;
         //     console.log('sd');
@@ -632,4 +648,86 @@ angular.module('floor.controller')
         };
 
         init();
-    });
+    })
+    .controller("ModallCheckGuestListCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", function($uibModalInstance, $q, reservationService, reservation) {
+
+        var vm = this;
+        vm.guestListAdd = [];
+        vm.person = {
+            man: 0,
+            woman: 0,
+            children: 0
+        };
+
+        var initModule = function() {
+            vm.guestList = angular.copy(reservation.guest_list);
+            vm.countPerson();
+        };
+
+        vm.changeArrived = function(item) {
+            if (!item.arrived) item.type_person = null;
+        };
+
+        vm.addGuest = function() {
+            var guest = {
+                name: vm.newGuest,
+                arrived: 0,
+                type_person: null
+            };
+            vm.guestListAdd.push(guest);
+            vm.newGuest = null;
+        };
+
+        vm.countPerson = function() {
+            vm.person.man = 0;
+            vm.person.woman = 0;
+            vm.person.children = 0;
+            angular.forEach(vm.guestList, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man++;
+                } else if (item.type_person === 2) {
+                    vm.person.woman++;
+                } else if (item.type_person === 3) {
+                    vm.person.children++;
+                }
+            });
+
+            angular.forEach(vm.guestListAdd, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man++;
+                } else if (item.type_person === 2) {
+                    vm.person.woman++;
+                } else if (item.type_person === 3) {
+                    vm.person.children++;
+                }
+            });
+        };
+
+        vm.save = function() {
+            vm.waitingResponse = true;
+            var key = reservationService.blackList.key();
+            reservationService.guestList(reservation.id, {
+                guest_list: vm.guestList,
+                guest_list_add: vm.guestListAdd,
+                key: key
+            }).then(
+                function success(response) {
+                    reservation.guest_list = response.data.data.guest_list;
+                    message.success("Se actualizo lista de invitados");
+                    vm.waitingResponse = false;
+                    vm.cancel();
+                },
+                function error(error) {
+                    message.apiError(error);
+                    vm.waitingResponse = false;
+                });
+        };
+
+        vm.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        (function init() {
+            initModule();
+        })();
+    }]);

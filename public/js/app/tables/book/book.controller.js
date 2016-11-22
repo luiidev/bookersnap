@@ -518,7 +518,6 @@ angular.module('book.controller', [])
         };
 
         vm.createReservation = function(data) {
-            console.log(data);
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalCreateBookReservation.html',
                 controller: 'ModalBookReservationCtrl',
@@ -531,6 +530,22 @@ angular.module('book.controller', [])
                     date: function() {
                         return vm.bookFilter.date;
                     }
+                }
+            });
+        };
+
+        vm.checkGuestList = function(reservation) {
+            vm.blockClickBook();
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCheckGuestList.html',
+                controller: 'ModallCheckGuestListCtrl',
+                controllerAs: 'gl',
+                size: 'lg',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
+                    },
                 }
             });
         };
@@ -682,9 +697,9 @@ angular.module('book.controller', [])
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 },
-                function error(response) {
+                function error(error) {
                     vm.buttonText = 'Agregar a lista de espera';
-                    message.apiError(response.data);
+                    message.apiError(error);
                 });
         };
 
@@ -735,4 +750,84 @@ angular.module('book.controller', [])
         };
 
         init();
-    });
+    })
+    .controller("ModallCheckGuestListCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", function($uibModalInstance, $q, reservationService, reservation) {
+
+        var vm = this;
+        vm.guestListAdd = [];
+        vm.person = {
+            man: 0,
+            woman: 0,
+            children: 0
+        };
+
+        var initModule = function() {
+            vm.guestList = angular.copy(reservation.guest_list);
+            vm.countPerson();
+        };
+
+        vm.changeArrived = function(item) {
+            if (!item.arrived) item.type_person = null;
+        };
+
+        vm.addGuest = function() {
+            var guest = {
+                name: vm.newGuest,
+                arrived: 0,
+                type_person: null
+            };
+            vm.guestListAdd.push(guest);
+            vm.newGuest = null;
+        };
+
+        vm.countPerson = function() {
+            vm.person.man = 0;
+            vm.person.woman = 0;
+            vm.person.children = 0;
+            angular.forEach(vm.guestList, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man++;
+                } else if (item.type_person === 2) {
+                    vm.person.woman++;
+                } else if (item.type_person === 3) {
+                    vm.person.children++;
+                }
+            });
+
+            angular.forEach(vm.guestListAdd, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man++;
+                } else if (item.type_person === 2) {
+                    vm.person.woman++;
+                } else if (item.type_person === 3) {
+                    vm.person.children++;
+                }
+            });
+        };
+
+        vm.save = function() {
+            vm.waitingResponse = true;
+            reservationService.guestList(reservation.id, {
+                guest_list: vm.guestList,
+                guest_list_add: vm.guestListAdd
+            }).then(
+                function success(response) {
+                    reservation.guest_list = response.data.data.guest_list;
+                    message.success("Se actualizo lista de invitados");
+                    vm.waitingResponse = false;
+                    vm.cancel();
+                },
+                function error(error) {
+                    message.apiError(error);
+                    vm.waitingResponse = false;
+                });
+        };
+
+        vm.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        (function init() {
+            initModule();
+        })();
+    }]);

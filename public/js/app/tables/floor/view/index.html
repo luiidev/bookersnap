@@ -619,3 +619,126 @@
         <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>
+
+<script id="ModalCheckGuestList.html" type="text/ng-template">
+    <div class="reservation-short-edit">
+        <div class="modal-header" style="line-height: 30px;">
+            <h4 style="display: inline;">Lista de invitados</h4>
+            <button class="btn btn-danger pull-right" ng-click="gl.cancel()"><i class="zmdi zmdi-close"></i></button>
+        </div>
+        <div class="modal-body p-t-20" style="background: #ddd;">
+
+            <div class="card reservation-guest-form p-b-10 p-t-10" style="border: 1px solid #eaeaea;">
+                <form class="form-horizontal" role="form" autocomplete="off">
+                        <div class="form-group m-b-0">
+                            <div class="col-xs-9 p-l-30">
+                               <div class="fg-line">
+                                       <input type="text" class="form-control input" placeholder="Nombre del invitado" ng-model="gl.newGuest"/>
+                               </div>
+                            </div>
+                            <div class="col-xs-3 p-r-30">
+                                <button class="btn btn-primary btn-block" ng-click="gl.addGuest()" ng-disabled="!gl.newGuest">Agregar</button>
+                            </div>
+                        </div>
+                </form>
+            </div>
+
+            <div class="card reservation-guest-form p-b-10 p-t-10" style="border: 1px solid #eaeaea;">
+
+                <form class="form-horizontal" role="form" autocomplete="off">
+                        <div class="guest-list">
+                            <div class="form-group header">
+                                <label class="col-xs-3 control-label">Asistencia</label>
+                                <label class="col-xs-4 control-label t-left">Nombre</label>
+                                <div class="col-xs-5">
+                                    <div class="guest-count-header">
+                                        <div class="guest-count">
+                                            <label>{{ gl.person.man }}</label>
+                                            <i class="zmdi zmdi-male-alt guest-icon"></i>
+                                        </div>
+                                        <div class="guest-count">
+                                            <label>{{ gl.person.woman }}</label>
+                                            <i class="zmdi zmdi-female guest-icon"></i>
+                                        </div>
+                                        <div class="guest-count">
+                                            <label>{{ gl.person.children }}</label>
+                                            <i class="zmdi zmdi-face guest-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-repeat="item in gl.guestList" style="height: 35px">
+                                <div class="col-xs-3">
+                                    <div class="checkbox text-center">
+                                        <label class="p-l-15">
+                                            <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.arrived" ng-change="gl.changeArrived(item)">
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-xs-4 control-label t-left">{{ item.name }}</label>
+                                <div class="col-xs-5" ng-if="!item.arrived"></div>
+                                <div class="col-xs-5 guest-gender" ng-show="item.arrived">
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="1" ng-model="item.type_person"  ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-male-alt guest-icon"></i>
+                                    </label>
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="2" ng-model="item.type_person"  ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-female guest-icon"></i>
+                                    </label>
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="3" ng-model="item.type_person"  ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-face guest-icon"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-repeat="item in gl.guestListAdd" style="height: 35px">
+                                <div class="col-xs-3">
+                                    <div class="checkbox text-center">
+                                        <label class="p-l-15">
+                                            <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.arrived" ng-change="gl.changeArrived(item)">
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-xs-4 control-label t-left">{{ item.name }}</label>
+                                <div class="col-xs-5" ng-if="!item.arrived"></div>
+                                <div class="col-xs-5 guest-gender" ng-show="item.arrived">
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="1" ng-model="item.type_person" ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-male-alt guest-icon"></i>
+                                    </label>
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="2" ng-model="item.type_person" ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-female guest-icon"></i>
+                                    </label>
+                                    <label class="radio radio-inline m-r-20">
+                                        <input type="radio" name="{{ item.id }}" ng-value="3" ng-model="item.type_person" ng-click="gl.countPerson()">
+                                        <i class="input-helper"></i>
+                                        <i class="zmdi zmdi-face guest-icon"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                </form>
+            </div>
+       </div>
+
+        <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
+            <div class="text-center">
+                <button class="btn btn-primary btn-block" ng-click="gl.save()" ng-disabled="gl.waitingResponse">
+                       Guardar Asistencias
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
