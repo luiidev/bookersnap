@@ -104,14 +104,14 @@
                         </input>
                     </div>
                 </div>
-                <div bs-toggle-show="" class="date-picker" style="position: absolute;;z-index: 5; background: #fff;">
+                <div bs-toggle-show="" class="date-picker dp-range-book">
                     <div class="dp-custom-date">
-                        <div class="dp-content" style="display: inline-flex;">
+                        <div class="dp-content">
                             <datepicker max-date="vm.endDate" ng-model="vm.startDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
                             </datepicker>
-                            <datepicker min-date="vm.startDate" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            <datepicker max-date="vm.maxDate" ng-change="vm.changeDateEnd(1)" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
                             </datepicker>
-                            <div class="dp-menu" style="width: 170px;">
+                            <div class="dp-menu">
                                 <div class="list-group">
                                     <a class="list-group-item active" href="javascript:void(0)" ng-click="vm.changeDateCustom(0, 0, $event)">
                                         Hoy

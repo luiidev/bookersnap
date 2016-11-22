@@ -352,7 +352,7 @@ angular.module('book.service', [])
             },
             getConfig: function() {
                 var config = (localStorage.getItem("reservationView") !== null) ? localStorage.getItem("reservationView") : null;
-                config = (config == "true") ? true : false;
+                config = (config === "true") ? true : false;
                 return config;
             },
             clearConfig: function() {

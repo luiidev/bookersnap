@@ -18,6 +18,7 @@ angular.module('book.controller', [])
 
         vm.startDate = dp_date;
         vm.endDate = dp_date;
+        vm.maxDate = dp_date;
 
         /**
          * Limpia el casillero de informacion de rango de fechas
@@ -38,7 +39,7 @@ angular.module('book.controller', [])
             vm.startDate = moment().add(end, "days").utc().toDate();
             vm.endDate = moment().add(start, "days").utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -51,7 +52,7 @@ angular.module('book.controller', [])
             vm.startDate = moment().startOf(block).utc().toDate();
             vm.endDate = moment().endOf(block).utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -64,7 +65,7 @@ angular.module('book.controller', [])
             vm.startDate = date.startOf('month').utc().toDate();
             vm.endDate = date.endOf('month').utc().toDate();
 
-            selectDpMenu(event.currentTarget);
+            initDateEvent(event.currentTarget);
         };
 
         /**
@@ -73,7 +74,7 @@ angular.module('book.controller', [])
          * @return void
          */
         vm.showDateRange = function(event) {
-            selectDpMenu(event.currentTarget, true);
+            initDateEvent(event.currentTarget, true);
         };
 
         /**
@@ -81,14 +82,48 @@ angular.module('book.controller', [])
          * @type {DOM} element [manipulacion de clases]
          * @type {Boolean} dp_range [mostrar o esconder calendario]
          */
-        var check = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
-        var selectDpMenu = function(element, dp_range) {
-            vm.dp_range = (dp_range === true) ? dp_range : false;
-            var list = angular.element(document.querySelectorAll(".list-group .list-group-item")).removeClass("active");
+        var checkElem = angular.element('<i class="zmdi zmdi-check zmdi-hc-fw pull-right"></i>');
+        var selectDpMenu = function(element) {
+            var list = document.querySelectorAll(".list-group .list-group-item");
+            angular.element(list).removeClass("active");
             angular.forEach(list, function(item) {
-                angular.element(item.querySelector(".zmdi")).remove();
+                var check = item.querySelector(".zmdi");
+                angular.element(check).remove();
             });
-            var current = angular.element(element).addClass("active").append(check);
+            var current = angular.element(element).addClass("active").append(checkElem);
+        };
+
+        var initDateEvent = function(element, dp_range) {
+            selectDpMenu(element);
+            if (!dp_range) hideRangeCalendar();
+            vm.dp_range = !dp_range ? false : true;
+            fireDateEvent();
+        };
+
+        /**
+         * Cambio de fecha de fin por accion del usuario | click en calendario
+         * @return void
+         */
+        vm.changeDateEnd = function(userClick) {
+            if (userClick) {
+                hideRangeCalendar();
+                fireDateEvent();
+            }
+        };
+
+        var hideRangeCalendar = function() {
+            angular.element(document.querySelector("[bs-toggle-click]")).click();
+        };
+
+        var fireDateEvent = function() {
+
+            var date_start = convertFechaYYMMDD(vm.startDate, "es-ES", {});
+            var date_end = convertFechaYYMMDD(vm.endDate, "es-ES", {});
+
+            updateUrl(date_start, date_end, false);
+
+            console.log("Evento de cambio de fecha " + date_start);
+            console.log("Evento de cambio de fecha " + date_end);
         };
 
         /**
@@ -252,7 +287,7 @@ angular.module('book.controller', [])
 
             BookConfigFactory.setConfig(vm.bookView);
 
-            updateUrl($stateParams.date, false);
+            updateUrl($stateParams.date, $stateParams.date_end, false);
         };
 
         vm.numGuestChange = function(type, option, value) {
@@ -324,13 +359,14 @@ angular.module('book.controller', [])
         };
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
+            console.log("view " + vm.bookView);
             if (newDate !== oldDate) {
                 newDate = convertFechaYYMMDD(newDate, "es-ES", {});
 
                 listZones(newDate, true);
                 listTurnAvailable(newDate);
 
-                updateUrl(newDate, true);
+                updateUrl(newDate, $stateParams.date_end, true);
             }
         });
 
@@ -342,7 +378,7 @@ angular.module('book.controller', [])
             loadConfigViewReservation();
 
             vm.fecha_actual = ($stateParams.date === undefined || $stateParams.date === "") ? vm.fecha_actual : $stateParams.date;
-            updateUrl(vm.fecha_actual, true);
+            updateUrl(vm.fecha_actual, $stateParams.date_end, true);
 
             BookFactory.init($scope);
             listTurnAvailable(vm.fecha_actual);
@@ -355,21 +391,24 @@ angular.module('book.controller', [])
             var config = BookConfigFactory.getConfig();
 
             if (config !== null) {
+
                 vm.bookView = config;
+                console.log("2 ", vm.bookView);
             }
         };
 
-        var updateUrl = function(date, reload) {
+        var updateUrl = function(date, date_end, reload) {
 
             if (reload === true) {
+                console.log("reload ", reload);
                 vm.bookFilter.date = convertFechaToDate(date);
             }
 
             if (vm.bookView === false) {
                 $location.url("/mesas/book/" + date);
             } else {
-                var date_end = ($stateParams.date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : $stateParams.date_end;
 
+                date_end = (date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : date_end;
                 $location.url("/mesas/book/" + date + "?date_end=" + date_end);
             }
 
@@ -414,7 +453,7 @@ angular.module('book.controller', [])
 
                     BookFactory.setConfigReservation(vm.configReservation);
                     vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
-
+                    console.log("1 ", vm.bookView);
                     if (vm.bookView === true) {
                         vm.changeBookView();
                     }
