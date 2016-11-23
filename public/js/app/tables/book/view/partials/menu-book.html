@@ -113,28 +113,40 @@
                             </datepicker>
                             <div class="dp-menu">
                                 <div class="list-group">
-                                    <a class="list-group-item active" href="javascript:void(0)" ng-click="vm.changeDateCustom(0, 0, $event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.hoy}" ng-click="vm.changeDateCustom(0, 0, $event,true)">
                                         Hoy
-                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right">
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.hoy">
                                         </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.changeDateBlock('week',$event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.week}" ng-click="vm.changeDateBlock('week',$event,true)">
                                         Esta Semana
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.week">
+                                        </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.changeDateCustom(0, -7, $event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastSevenDays}" ng-click="vm.changeDateCustom(0, -7, $event,true)">
                                         Ultimos 7 días
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastSevenDays">
+                                        </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.changeDateCustom(0, -30, $event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastThirtyDays}" ng-click="vm.changeDateCustom(0, -30, $event,true)">
                                         Ultimos 30 días
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastThirtyDays">
+                                        </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.changeDateBlock('month',$event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.thisMonth}" ng-click="vm.changeDateBlock('month',$event,true)">
                                         Este mes
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.thisMonth">
+                                        </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.changeDateLastMonth($event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastMonth}" ng-click="vm.changeDateLastMonth($event,true)">
                                         Mes pasado
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastMonth">
+                                        </i>
                                     </a>
-                                    <a class="list-group-item" href="javascript:void(0)" ng-click="vm.showDateRange($event)">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.range}" ng-click="vm.showDateRange($event,true)">
                                         Rango de fechas
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.range">
+                                        </i>
                                     </a>
                                 </div>
                             </div>
