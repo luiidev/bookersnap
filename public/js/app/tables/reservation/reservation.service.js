@@ -57,6 +57,9 @@ angular.module('reservation.service', [])
                 sit: function(id, data) {
                     return http.put(ApiUrlMesas + "/table/reservation/" + id + "/sit", data);
                 },
+                guestList: function(id, data) {
+                    return http.put(ApiUrlMesas + "/table/reservation/" + id + "/guest-list", data);
+                },
                 createWaitList: function(data) {
                     return http.post(ApiUrlMesas + "/waitlist", data);
                 },
