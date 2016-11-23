@@ -411,7 +411,7 @@ angular.module('floor.controller')
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof reservationEvents[data.action] == "function") {
                     reservationEvents[data.action](data.data);
-                    alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
                     $scope.$apply();
                 }
             }
