@@ -13,9 +13,7 @@
         </div>
         <div class="modal-body">
             <div class="listview lv-bordered lv-lg">
-<!--                 <div class="lv-header-alt clearfix">
-                    <h2 class="f-14">Proximas reservas y bloqueos</h2>
-                </div> -->
+
                 <div class="lv-body">
                     <div class="lv-item media border-left-green m-b-15" ng-if="vmd.reservations.active" ng-click="vmd.reservationEdit(vmd.reservations.active)" style="cursor: pointer;">
                         <div class="media-body">
@@ -23,7 +21,8 @@
                             <ul class="lv-attrs" >
                                 <li><i class="zmdi zmdi-time"></i> {{vmd.reservations.active.hours_reservation}}</li>
                                 <li><i class="zmdi zmdi-account-o"></i> {{vmd.reservations.active.num_guest}} personas</li>
-                                <li class="bgm-green c-white">Reservacion sentada</li>
+<!--                                 <li class="bgm-green c-white">Reservacion sentada</li> -->
+                                <li class="c-white" ng-class="'bgm-' + vmd.reservations.active.status.color">{{ vmd.reservations.active.status.name }}</li>
                             </ul>
                         </div>
                     </div>
@@ -34,6 +33,7 @@
                             <ul class="lv-attrs" >
                                 <li><i class="zmdi zmdi-time"></i> {{item.hours_reservation}}</li>
                                 <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
+                                <li class="c-white" ng-class="'bgm-' + item.status.color">{{ item.status.name }}</li>
                             </ul>
                         </div>
                     </div>

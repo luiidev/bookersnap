@@ -376,6 +376,10 @@ angular.module('floor.controller')
                     women: 0,
                     children: 0
                 });
+
+                guest_list_valid("men");
+                guest_list_valid("women");
+                guest_list_valid("children");
             };
 
             var guest_list_valid = function(guest) {

@@ -146,9 +146,53 @@ angular.module('book.controller', [])
          * End
          */
 
+        /**
+         * Mensaje de alerta para conteo de lista de invitados
+         */
+        vm.guestMessage = {
+            men: {
+                text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                active: false
+            },
+            women: {
+                text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                active: false
+            },
+            children: {
+                text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                active: false
+            }
+        };
+
+        var guest_list_count = function(reservations) {
+            reservations.reduce(function(data, item, i) {
+                if (!item.reservation) return data;
+                Object.assign(item.reservation, {
+                    men: 0,
+                    women: 0,
+                    children: 0
+                });
+                item.reservation.guest_list.reduce(function(reservation, item) {
+                    if (item.type_person === 1) {
+                        reservation.men++;
+                    } else if (item.type_person === 2) {
+                        reservation.women++;
+                    } else if (item.type_person === 3) {
+                        reservation.children++;
+                    }
+                    return reservation;
+                }, item.reservation);
+            }, this);
+            console.log(reservations);
+        };
+        /**
+         * END
+         */
+
         vm.turns = [];
         vm.hoursTurns = []; //Lista de horas segun los turnos
         vm.listBook = []; //Listado del book para los filtros
+        $scope.$watch("vm.listBook", guest_list_count, true, vm.listBook.reservation);
         vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
         vm.sources = [];
         vm.zones = [];
