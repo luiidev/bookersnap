@@ -27,8 +27,7 @@
             $stateProvider
                 .state('mesas', {
                     url: '/mesas',
-                    templateUrl: '',
-                    abstract: true,
+                    templateUrl: ''
                 });
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
