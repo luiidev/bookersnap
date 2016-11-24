@@ -535,7 +535,10 @@ angular.module('reservation.service', [])
                                     // Complete
                                     if (table.reservations.active) {
                                         var now = moment();
-                                        var reserv_start = moment(table.reservations.active.date_reservation + " " + table.reservations.active.hours_reservation);
+                                        var reserv = moment(table.reservations.active.date_reservation + " " + table.reservations.active.hours_reservation);
+                                        var auxiliar = moment(table.reservations.active.hours_duration, "HH:mm:ss");
+                                        var reserv_start = reserv.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+
                                         var time = reserv_start.diff(now);
                                         if (time > 0) {
                                             table.time.complete.text = moment.utc(time).format("HH:mm");

@@ -61,6 +61,7 @@ angular.module('floor.controller')
                 angular.forEach(vm.typeTurns, function(typeTurn) {
                     if (typeTurn.turn) {
                         if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes = typeTurn.notes ? typeTurn.notes : {};
                             typeTurn.notes.texto = note.data.texto;
                         }
                     }
@@ -311,8 +312,6 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
-
-            console.log(zones);
         };
 
         /**
@@ -423,6 +422,7 @@ angular.module('floor.controller')
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof serverEvents[data.action] == "function") {
                     serverEvents[data.action](data.data);
+                    if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
                     $scope.$apply();
                 }
             }
