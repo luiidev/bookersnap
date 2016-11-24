@@ -1,4 +1,4 @@
-<footer class="container-footer-floor" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" >
+<footer class="container-footer-floor" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'">
 </footer>
 <section class="container-zones" ui-view="principal">
 </section>
@@ -207,8 +207,11 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
+                        <div >
+                            <p class="c-red" ng-repeat="message in vmd.guestMessage" ng-show="message.active">{{ message.text }}</p>
+                        </div>
                     </ul>
-<!--                     <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+<!--              <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
                         <span class="box-total">{{vmd.reservation.guests.total}}</span>
                     </div> -->
@@ -223,6 +226,7 @@
         </div>
     </div>
 </script>
+
 <script id="ModalEditReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -331,7 +335,7 @@
                         <li class="lst-men" ng-if="er.configuration.status_people_1" style="display: inline-block;">
                             <div class="box-gender" style="width: 30px;">
                                 <i class="zmdi zmdi-male-alt" style="font-size: 2.5em;margin-top: 5px;"></i>
-                                </div>
+                            </div>
                             <div class="box-count pull-right">
                                 <button class="btn" ng-click="er.restar('men')">-</button>
                                 <span class="box-count-value btn-active">{{er.reservation.guests.men}}</span>
@@ -361,6 +365,9 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
+                        <div >
+                            <p class="c-red" ng-repeat="message in er.guestMessage" ng-show="message.active">{{ message.text }}</p>
+                        </div>
                     </ul>
 <!--                     <div class="box-result" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
@@ -385,7 +392,7 @@
             </div>
             <div class="card-body">
                 <ul class="modal-listado-num-people">
-                    <li class="lst-men">
+                    <li class="lst-men" ng-if="vmc.config.status_people_1">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'men')">
@@ -399,7 +406,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-women">
+                    <li class="lst-women" ng-if="vmc.config.status_people_2">
                         <div class="box-gender"><i class="zmdi zmdi-female"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'women')">
@@ -413,7 +420,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-children">
+                    <li class="lst-children" ng-if="vmc.config.status_people_3">
                         <div class="box-gender"><i class="zmdi zmdi-face"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'children')">
@@ -442,6 +449,7 @@
         </div>
     </div>
 </script>
+
 <script id="ModalCreateWaitList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -619,7 +627,6 @@
         <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>
-
 <script id="ModalCheckGuestList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">

@@ -311,6 +311,8 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
+
+            console.log(zones);
         };
 
         /**
@@ -649,14 +651,18 @@ angular.module('floor.controller')
         vmc.flagSelectedNumChildren = num.children;
         vmc.resultado = num.men + num.women + num.children;
 
+        vmc.colectionNum = []; //N° de casillas
+
         //Creando numero de casillas
-        var vNumpeople = [];
-        for (var i = 0; i <= 12; i++) {
-            vNumpeople.push({
-                num: i
-            });
-        }
-        vmc.colectionNum = vNumpeople;
+        var createNumCollection = function() {
+            var vNumpeople = [];
+            for (var i = 0; i <= 12; i++) {
+                vNumpeople.push({
+                    num: i
+                });
+            }
+            vmc.colectionNum = vNumpeople;
+        };
 
         //Al pulsar numero 13 o mayor
         vmc.numThirteen = function(value, person) {
@@ -709,52 +715,57 @@ angular.module('floor.controller')
         };
 
         //Automarcar mayores que 13 segun datos traidos por defecto
-        if (num.men > 12) {
-            vmc.numdinamicoMen = num.men;
-            vmc.flagSelectedCountNumMen = num.men;
-        } else {
-            vmc.numdinamicoMen = 13;
-        }
+        var defaultNumGuest = function() {
+            if (num.men > 12) {
+                vmc.numdinamicoMen = num.men;
+                vmc.flagSelectedCountNumMen = num.men;
+            } else {
+                vmc.numdinamicoMen = 13;
+            }
 
-        if (num.women > 12) {
-            vmc.numdinamicoWomen = num.women;
-            vmc.flagSelectedCountNumWomen = num.women;
-        } else {
-            vmc.numdinamicoWomen = 13;
-        }
+            if (num.women > 12) {
+                vmc.numdinamicoWomen = num.women;
+                vmc.flagSelectedCountNumWomen = num.women;
+            } else {
+                vmc.numdinamicoWomen = 13;
+            }
 
-        if (num.children > 12) {
-            vmc.numdinamicoChildren = num.children;
-            vmc.flagSelectedCountNumChildren = num.children;
+            if (num.children > 12) {
+                vmc.numdinamicoChildren = num.children;
+                vmc.flagSelectedCountNumChildren = num.children;
 
-        } else {
-            vmc.numdinamicoChildren = 13;
-        }
+            } else {
+                vmc.numdinamicoChildren = 13;
+            }
+        };
 
         //Al pulsar boton plus
         vmc.sumar = function(person) {
             if (person == 'men') {
                 vmc.numdinamicoMen++;
                 vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                vmc.flagSelectedNumMen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
-                //console.log('Datos ' + angular.toJson(vmc.numperson));
+
+                vmc.flagSelectedNumMen = vmc.numperson.men;
+                console.log('Datos ' + angular.toJson(vmc.numperson));
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'women') {
                 vmc.numdinamicoWomen++;
                 vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                vmc.flagSelectedNumWomen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+
+                vmc.flagSelectedNumWomen = vmc.numperson.women;
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'children') {
                 vmc.numdinamicoChildren++;
                 vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                vmc.flagSelectedNumChildren = -1;
+
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                vmc.flagSelectedNumChildren = vmc.numperson.children;
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
         };
@@ -764,8 +775,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoMen > 13) {
                     vmc.numdinamicoMen--;
                     vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                    vmc.flagSelectedNumMen = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                    vmc.flagSelectedNumMen = vmc.numperson.men;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -773,8 +785,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoWomen > 13) {
                     vmc.numdinamicoWomen--;
                     vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                    vmc.flagSelectedNumWomen = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+                    vmc.flagSelectedNumWomen = vmc.numperson.women;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -782,8 +795,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoChildren > 13) {
                     vmc.numdinamicoChildren--;
                     vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                    vmc.flagSelectedNumChildren = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                    vmc.flagSelectedNumChildren = vmc.numperson.children;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -857,6 +871,13 @@ angular.module('floor.controller')
                     vmc.waitingResponse = false;
                 });
         };
+
+        var init = function() {
+            createNumCollection();
+            defaultNumGuest();
+        };
+
+        init();
     })
     .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
@@ -897,6 +918,7 @@ angular.module('floor.controller')
             listResource().then(function() {
                 parseData(reservation);
                 paintTags(reservation.tags);
+                guest_list_count(reservation);
             });
 
             vmd.EditContent = true;
@@ -968,6 +990,7 @@ angular.module('floor.controller')
         vmd.sumar = function(guest) {
             vmd.reservation.guests[guest]++;
             totalGuests();
+            guest_list_valid(guest);
         };
 
         vmd.restar = function(guest) {
@@ -976,7 +999,55 @@ angular.module('floor.controller')
                 vmd.reservation.guests[guest]--;
                 totalGuests();
             }
+            guest_list_valid(guest);
         };
+
+        /**
+         * Validacion de cantidad invitados  vs cantidad en lista de invitados 
+         */
+        vmd.guestMessage = {
+            men: {
+                text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                active: false
+            },
+            women: {
+                text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                active: false
+            },
+            children: {
+                text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                active: false
+            }
+        };
+
+        var guest_list;
+        var guest_list_count = function(reservation) {
+            guest_list = reservation.guest_list.reduce(function(count, item) {
+                if (item.type_person === 1) {
+                    count.men++;
+                } else if (item.type_person === 2) {
+                    count.women++;
+                } else if (item.type_person === 3) {
+                    count.children++;
+                }
+                return count;
+            }, {
+                men: 0,
+                women: 0,
+                children: 0
+            });
+        };
+
+        var guest_list_valid = function(guest) {
+            if (vmd.reservation.guests[guest] < guest_list[guest]) {
+                vmd.guestMessage[guest].active = true;
+            } else {
+                vmd.guestMessage[guest].active = false;
+            }
+        };
+        /**
+         * END
+         */
 
         var totalGuests = function() {
             vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
@@ -1057,6 +1128,10 @@ angular.module('floor.controller')
             vmd.EditContent = false;
             vmd.reservation = {};
             vmd.info = {};
+
+            vmd.guestMessage.men.active = false;
+            vmd.guestMessage.women.active = false;
+            vmd.guestMessage.children.active = false;
         };
 
         $scope.cancel = function() {

@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
+            <div class="item-book col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
                 <div class="item row" ng-class="{'block' : item.block !=null}" ng-click="vm.createReservation(item)" ng-show="item.reservation == null">
                     <span class="title" ng-if="item.block != null">
                         MANAGER BLOCK

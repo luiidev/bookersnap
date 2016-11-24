@@ -143,11 +143,18 @@
 				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
 				transform: translate(-50%,-50%) rotate(-45deg)
 		&.rt90
+			& .box-icon
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-90deg)
+				-ms-transform: translate(-50%,-50%) rotate(-90deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)
 			& .item-drag-cover
-				-moz-transform: translate(-50%,-50%)
-				-ms-transform: translate(-50%,-50%)
-				-webkit-transform: translate(-50%,-50%)
-				transform: translate(-50%,-50%)
+				-moz-transform: translate(-50%,-50%) rotate(-90deg)
+				-ms-transform: translate(-50%,-50%) rotate(-90deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)
 				top: 50%
 				left: 50%
 			& .table-label
@@ -163,13 +170,13 @@
 			& .box-icon
 				left: 50%
 				top: 50%
-				-moz-transform: translate(-50%,-50%) rotate(-45deg)
-				-ms-transform: translate(-50%,-50%) rotate(-45deg)
-				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
-				transform: translate(-50%,-50%) rotate(-45deg)
+				-moz-transform: translate(-50%,-50%) rotate(-135deg)
+				-ms-transform: translate(-50%,-50%) rotate(-135deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-135deg)
+				transform: translate(-50%,-50%) rotate(-135deg)
 			& .item-drag-cover
 			& .item-drag-time
-				transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-135deg)
 				top: 50%
 				left: 50%
 			& .table-label
@@ -603,10 +610,15 @@
 	margin 0
 	& h5 
 		margin 0 0 2px 0
-	& .reservation-item 
+	& .item-book 
 		background-color #e6f3dc
 		border-bottom 1px solid #ccc
 		color #000
+		cursor pointer
+		&:hover
+			background-color #bfdea6
+			-webkit-box-shadow inset 0 0 10px 1px #8eb370
+			box-shadow inset 0 0 10px 1px #8eb370
 		& .block 
 			background-color $color_principal
 			color #fff
@@ -772,7 +784,7 @@
 			font-size 0.9em
 	.content-book
 		font-size .8em
-		& .reservation-item
+		& .item-book
 			& .box-guest
 				width 25%
 			& .box-reservation
@@ -792,7 +804,7 @@
 		& .box-option
 			font-size 0.8em
 	.content-book
-		& .reservation-item
+		& .item-book
 			& .box-guest
 				width 25%
 			& .box-reservation
@@ -851,7 +863,7 @@
 	.ts-label.reservation
 		display none
 	.content-book
-		& .reservation-item
+		& .item-book
 			& .box-guest
 				width 50%
 			& .box-reservation

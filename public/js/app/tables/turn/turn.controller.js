@@ -540,6 +540,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
         var init = function() {
             listTime();
             showRulesTable();
+
+            // console.log("ModalTableTimeCtrl " + angular.toJson(zoneSelected, true));
         };
 
         var listTime = function() {
@@ -587,10 +589,9 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
                         break;
                 }
-
             }
 
-            $scope.checkRuleAll(option);
+            // $scope.checkRuleAll(option);
         };
 
         var setModalRulesTables = function(table, turnForm, ruleId) {
@@ -622,8 +623,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
         var showRulesTable = function() {
 
-            var zoneRuleId = TurnFactory.getTurnRuleId(turnZoneAdd.zonesTables, zoneSelected.id);
-
+            //var zoneRuleId = TurnFactory.getTurnRuleId(turnZoneAdd.zonesTables, zoneSelected.id);
+            var zoneRuleId = zoneSelected.rule;
             $scope.rules.value = zoneRuleId;
 
             if (tablesId.length == 1) {
@@ -631,16 +632,14 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
                 tableItem.push(TurnFactory.getTableZoneTime(tablesData, tablesId[0]));
                 setModalRulesTables(tableItem, turnForm, null);
 
-                getRuleZone(1);
-
             } else {
 
                 angular.forEach(tablesId, function(value, key) {
                     tableItem.push(TurnFactory.getTableZoneTime(tablesData, value));
                 });
 
-                getRuleZone(2);
             }
+            getRuleZone(zoneRuleId);
         };
 
         var updateTableRules = function(rulesTable) {
