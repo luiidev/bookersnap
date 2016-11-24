@@ -372,8 +372,8 @@ angular.module('book.controller', [])
             };
 
             updateReservationBook(resUpdate, function() {
-                reservation.res_reservation_status_id = parseInt(status);
-                reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
+                // reservation.res_reservation_status_id = parseInt(status);
+                // reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
             });
         };
 
@@ -392,7 +392,15 @@ angular.module('book.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
-            console.log("NotifyNewReservation " + angular.toJson(data, true));
+
+            var response = addNewReservation(data.data, data.action);
+
+            console.log("NotifyNewReservation " + response);
+            if (response === true) {
+                alertMultiple("Notificación", data.user_msg, "info", null);
+                vm.orderBook('status');
+            }
+
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
@@ -656,13 +664,16 @@ angular.module('book.controller', [])
 
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalCheckGuestList.html',
-                controller: 'ModallCheckGuestListCtrl',
+                controller: 'ModallCheckGuestListBookCtrl',
                 controllerAs: 'gl',
                 size: 'lg',
                 resolve: {
                     reservation: function() {
                         return reservation;
                     },
+                    configuration: function() {
+                        return vm.configReservation;
+                    }
                 }
             });
         };
@@ -678,6 +689,20 @@ angular.module('book.controller', [])
             );
         };
 
+        var addNewReservation = function(reservation, action) {
+
+            var date_calendar = convertFechaYYMMDD(vm.bookFilter.date, "es-ES", {});
+
+            var dates = {
+                start_date: (vm.bookView === true) ? $stateParams.date : date_calendar,
+                end_date: (vm.bookView === true) ? $stateParams.date_end : date_calendar
+            };
+
+            var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBook, vm.listBookMaster, reservation, action);
+
+            return response;
+        };
+
         init();
 
     })
@@ -687,11 +712,8 @@ angular.module('book.controller', [])
         var auxiliar;
 
         vm.reservation = {};
-        vm.reservation.guests = {
-            men: 0,
-            women: 0,
-            children: 0
-        };
+        vm.reservation.status_id = 1;
+        vm.reservation.tables = [];
         vm.addGuest = true;
         vm.buttonText = 'Agregar a lista de espera';
         vm.title = "Nueva entrada";
@@ -707,7 +729,7 @@ angular.module('book.controller', [])
             reservationService.getGuest()
                 .then(function(guests) {
                     vm.covers = guests;
-                    vm.reservation.guests.men = 2;
+                    vm.reservation.covers = 2;
                 }).catch(function(error) {
                     message.apiError(error);
                 }).finally(function() {
@@ -792,7 +814,7 @@ angular.module('book.controller', [])
                 delete vm.reservation.guest;
             }
 
-            if (vm.reservation.table_id === null) {
+            if (vm.reservation.tables.length === 0) {
                 return vm.redirectReservation();
             }
 
@@ -807,7 +829,7 @@ angular.module('book.controller', [])
 
         var save = function() {
             reservationService.blackList.key(vm.reservation);
-            reservationService.quickCreate(vm.reservation).then(
+            reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
                     vm.buttonText = 'Agregar a lista de espera';
@@ -840,16 +862,17 @@ angular.module('book.controller', [])
         };
 
         vm.suggestTables = function() {
-            var table = $table.tablesSuggestedDinamyc(tables, blocks, vm.reservation.guests.men, data.time);
+            var table = $table.tablesSuggestedDinamyc(tables, blocks, vm.reservation.covers, data.time);
+            vm.reservation.duration = $table.duration(vm.reservation.covers);
             if (table) {
-                vm.reservation.table_id = table.id;
+                vm.reservation.tables = [table.id];
                 vm.info.table = true;
             } else {
-                vm.reservation.table_id = null;
+                vm.reservation.tables = null;
                 vm.info.table = false;
             }
 
-            vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.guests.men;
+            vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.covers;
         };
 
         vm.redirectReservation = function() {
@@ -868,23 +891,38 @@ angular.module('book.controller', [])
 
         init();
     })
-    .controller("ModallCheckGuestListCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", function($uibModalInstance, $q, reservationService, reservation) {
+    .controller("ModallCheckGuestListBookCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", "configuration", function($uibModalInstance, $q, reservationService, reservation, configuration) {
 
         var vm = this;
         vm.guestListAdd = [];
         vm.person = {
-            man: 0,
-            woman: 0,
-            children: 0
+            man: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            woman: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            children: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            total: 0
         };
 
-        var initModule = function() {
-            vm.guestList = angular.copy(reservation.guest_list);
-            vm.countPerson();
+        var person = {
+            man: 1,
+            woman: 2,
+            children: 3
         };
 
         vm.changeArrived = function(item) {
             if (!item.arrived) item.type_person = null;
+            vm.countPerson();
         };
 
         vm.addGuest = function() {
@@ -897,29 +935,111 @@ angular.module('book.controller', [])
             vm.newGuest = null;
         };
 
-        vm.countPerson = function() {
-            vm.person.man = 0;
-            vm.person.woman = 0;
-            vm.person.children = 0;
+        vm.countPerson = function(item, key) {
+            vm.person.man.quantity = 0;
+            vm.person.woman.quantity = 0;
+            vm.person.children.quantity = 0;
+            vm.person.man.auxiliar = vm.person.man.min;
+            vm.person.woman.auxiliar = vm.person.woman.min;
+            vm.person.children.auxiliar = vm.person.children.min;
+            vm.person.total = 0;
+            angular.forEach(vm.guestList, function(item) {
+                if (!item.status) return;
+                if (item.type_person === 1) {
+                    vm.person.man.quantity++;
+                    if (vm.person.man.quantity > vm.person.man.min) {
+                        vm.person.man.auxiliar = vm.person.man.quantity;
+                    }
+                } else if (item.type_person === 2) {
+                    vm.person.woman.quantity++;
+                    if (vm.person.woman.quantity > vm.person.woman.min) {
+                        vm.person.woman.auxiliar = vm.person.woman.quantity;
+                    }
+                } else if (item.type_person === 3) {
+                    vm.person.children.quantity++;
+                    if (vm.person.children.quantity > vm.person.children.min) {
+                        vm.person.children.auxiliar = vm.person.children.quantity;
+                    }
+                }
+
+                vm.person.total += item.arrived;
+            });
+
+            angular.forEach(vm.guestListAdd, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man.quantity++;
+                    if (vm.person.man.quantity > vm.person.man.min) {
+                        vm.person.man.auxiliar = vm.person.man.quantity;
+                    }
+                } else if (item.type_person === 2) {
+                    vm.person.woman.quantity++;
+                    if (vm.person.woman.quantity > vm.person.woman.min) {
+                        vm.person.woman.auxiliar = vm.person.woman.quantity;
+                    }
+                } else if (item.type_person === 3) {
+                    vm.person.children.quantity++;
+                    if (vm.person.children.quantity > vm.person.children.min) {
+                        vm.person.children.auxiliar = vm.person.children.quantity;
+                    }
+                }
+
+                vm.person.total += item.arrived;
+            });
+        };
+
+        vm.changePerson = function(item, key) {
+            var auxiliar = item[key];
+
+            item.man = 0;
+            item.woman = 0;
+            item.children = 0;
+            item[key] = auxiliar;
+
+            if (item[key] === 0) {
+                item.type_person = null;
+                item.arrived = 0;
+            } else {
+                item.type_person = person[key];
+                item.arrived = 1;
+            }
+
+            vm.countPerson();
+        };
+
+        var initList = function() {
             angular.forEach(vm.guestList, function(item) {
                 if (item.type_person === 1) {
-                    vm.person.man++;
+                    item.man = 1;
                 } else if (item.type_person === 2) {
-                    vm.person.woman++;
+                    item.woman = 1;
                 } else if (item.type_person === 3) {
-                    vm.person.children++;
+                    item.children = 1;
                 }
             });
 
             angular.forEach(vm.guestListAdd, function(item) {
                 if (item.type_person === 1) {
-                    vm.person.man++;
+                    item.man = 1;
                 } else if (item.type_person === 2) {
-                    vm.person.woman++;
+                    item.woman = 1;
                 } else if (item.type_person === 3) {
-                    vm.person.children++;
+                    item.children = 1;
                 }
             });
+
+            vm.countPerson();
+        };
+
+        vm.removeGuestListAdd = function(i) {
+            vm.guestListAdd.splice(i, 1);
+            vm.countPerson();
+        };
+
+        vm.removeGuestList = function(item) {
+            item.status = 0;
+            item.arrived = 0;
+            item.type_person = null;
+            vm.countPerson();
         };
 
         vm.save = function() {
@@ -929,7 +1049,9 @@ angular.module('book.controller', [])
                 guest_list_add: vm.guestListAdd
             }).then(
                 function success(response) {
-                    reservation.guest_list = response.data.data.guest_list;
+                    angular.forEach(response.data.data, function(value, key) {
+                        reservation[key] = value;
+                    });
                     message.success("Se actualizo lista de invitados");
                     vm.waitingResponse = false;
                     vm.cancel();
@@ -942,6 +1064,17 @@ angular.module('book.controller', [])
 
         vm.cancel = function() {
             $uibModalInstance.dismiss('cancel');
+        };
+
+        var initModule = function() {
+            vm.configPeople = configuration.status_people_1 + configuration.status_people_2 + configuration.status_people_3;
+            vm.configuration = configuration;
+            vm.person.man.min = reservation.num_people_1;
+            vm.person.woman.min = reservation.num_people_2;
+            vm.person.children.min = reservation.num_people_3;
+
+            vm.guestList = angular.copy(reservation.guest_list);
+            initList();
         };
 
         (function init() {

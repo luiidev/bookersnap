@@ -845,6 +845,11 @@ angular.module('reservation.service', [])
                     });
                 });
             },
+            duration: function(cant, base, interval) {
+                base = base || 60;
+                interval = interval || 15;
+                return moment("2000-01-01").add((base + interval * cant), "minutes").format("HH:mm:ss");
+            },
             tablesSuggestedDinamyc: function(tables, blocks, cant, hour) {
                 // console.log(tables, blocks, cant, hour);
                 // console.log("------------------------------------------------");

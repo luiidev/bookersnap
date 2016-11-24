@@ -5,7 +5,7 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
                 url: '/book/:date?date_end',
                 views: {
                     "@": {
-                        templateUrl: '/js/app/tables/floor/view/parent.html',
+                        templateUrl: '/js/app/tables/book/view/parent.html',
                         controller: 'BookNotificationCtrl'
                     },
                     'index@mesas.book': {
