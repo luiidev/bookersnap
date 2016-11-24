@@ -69,10 +69,8 @@
 <script type="text/javascript">
 
     var setAuthHeaders = function ($http) {
-
-        $http.defaults.headers.common['ms-mp-id'] = '{{$ms_id}}';
-        $http.defaults.headers.common['type-admin'] = 2;
-        $http.defaults.headers.common['Authorization'] = '{{$apitoken}}';
+//        $http.defaults.headers.common['type-admin'] = 2;
+        $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
     };
 
 </script>
