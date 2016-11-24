@@ -59,7 +59,7 @@
                                         Hora cierre
                                     </label>
                                     <div class="select">
-                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
+                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(false,'create')" ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
                                             <option value="">
                                             </option>
                                         </select>
@@ -123,7 +123,7 @@
                                     </div>
                                 </div>
                                 <div class="row m-t-10">
-                                    <div class="col-xs-12 box-zones" id="box-zones">
+                                    <div class="col-xs-12 box-zones" ng-hide="zonesTable">
                                         <table class="table table-striped animated">
                                             <thead>
                                                 <tr>
@@ -174,7 +174,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-xs-12 box-tables" id="box-tables" style="display: none">
+                                    <div class="col-xs-12 box-tables" ng-show="zonesTable">
                                         <div class="row m-b-10">
                                             <div class="col-xs-8 text-left">
                                                 <div class="row">
@@ -369,21 +369,21 @@
                             <th>Seleccionar todos</th>
                             <th> 
                                 <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll('online')" ng-checked="rulesAll.online">
+                                    <input type="radio" name="inlineRadioOptions"  value="2" ng-click="checkRuleAll(2)" ng-checked="rulesAll.online">
                                     <i class="input-helper"></i>
                                     Online
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll('local')" ng-checked="rulesAll.local">
+                                    <input type="radio" name="inlineRadioOptions" value="1"  ng-click="checkRuleAll(1)" ng-checked="rulesAll.local">
                                     <i class="input-helper"></i>
                                     Solo en local
                                 </label>
                             </th>
                             <th>
                                  <label class="radio radio-inline m-r-20">
-                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll('disabled')" ng-checked="rulesAll.disabled">
+                                    <input type="radio" name="inlineRadioOptions" value="0" ng-click="checkRuleAll(0)" ng-checked="rulesAll.disabled">
                                     <i class="input-helper"></i>
                                     No disponible
                                 </label>
