@@ -16,7 +16,7 @@ ejecutar esta tarea se ejecuta cada vez que actualizamos en los archivos de nues
 gulp.task('app-bookersnap-reservation-js', function() {
     gulp.src([
             '**/*.js',
-            '../app.config.js',
+            '../app.reservation.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.reservation.min.js'))
