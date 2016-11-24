@@ -147,23 +147,8 @@ angular.module('book.controller', [])
          */
 
         /**
-         * Mensaje de alerta para conteo de lista de invitados
+         *  Data para validacion de alerta para conteo de lista de invitados
          */
-        vm.guestMessage = {
-            men: {
-                text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
-                active: false
-            },
-            women: {
-                text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
-                active: false
-            },
-            children: {
-                text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
-                active: false
-            }
-        };
-
         var guest_list_count = function(reservations) {
             reservations.reduce(function(data, item, i) {
                 if (!item.reservation) return data;
@@ -183,7 +168,6 @@ angular.module('book.controller', [])
                     return reservation;
                 }, item.reservation);
             }, this);
-            console.log(reservations);
         };
         /**
          * END

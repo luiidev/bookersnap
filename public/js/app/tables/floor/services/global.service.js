@@ -31,9 +31,7 @@ angular.module('global.service', [])
                                 }
                             });
                         });
-                        angular.forEach(obj_data, function(value, index) {
-                            reservation[index] = value;
-                        });
+                        Object.assign(reservation, obj_data);
                         angular.forEach(lienzo.data.tables, function(table) {
                             angular.forEach(reservation.tables, function(obj_table) {
                                 if (table.id == obj_table.id) {

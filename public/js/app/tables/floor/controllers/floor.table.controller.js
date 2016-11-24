@@ -483,6 +483,12 @@ angular.module('floor.controller')
                 }
 
             } else {
+                if (eventEstablished.event == "sit") {
+                    if (eventEstablished.data.res_reservation_status_id == 4) {
+                        return sit(obj);
+                    }
+                }
+
                 modalInstancesConfiguration(vm.cantidades, obj, vm.configuracion);
             }
 
@@ -517,9 +523,10 @@ angular.module('floor.controller')
         };
 
         var sit = function(obj) {
-            var id = eventEstablished.data.reservation_id;
-            var reservation = parseReservation(obj);
-            reservationService.sit(id, reservation)
+            var id = eventEstablished.data.id;
+            reservationService.sit(id, {
+                    table_id: obj.id
+                })
                 .then(function(response) {
                     reservations.update(response.data.data);
                 }).catch(function(error) {
