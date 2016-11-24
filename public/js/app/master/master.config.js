@@ -9,6 +9,4 @@ angular.module('master.app', [
         'role.app',
         'auth.app'
     ])
-    .constant("UrlServerNotify", "http://localhost:1337")
-    .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
-    .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es');
+    .constant("UrlApiAdmin", 'http://apiadmin.studework.vm/v1/es');

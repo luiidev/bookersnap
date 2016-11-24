@@ -80,7 +80,7 @@ angular.module('book.service', [])
                             });
                         });
 
-                        if (existsBlocks.exists === true) {
+                        if (existsBlocks.exists === true || existsReservation.exists === true) {
                             book.push(dataBook);
                         }
 
@@ -94,7 +94,6 @@ angular.module('book.service', [])
                                 available: false
                             });
                         });
-
                     }
 
                 });
@@ -339,10 +338,73 @@ angular.module('book.service', [])
                 });
                 return status;
             },
+            //Agrega la reservación que llego de la notificación,segun fecha del book
+            addNewReservation: function(dates, hours, listBook, listBookMaster, reservation, action) {
+                var add = false;
+                var self = this;
+
+                if (moment(reservation.date_reservation).isSameOrBefore(dates.end_date) &&
+                    moment(reservation.date_reservation).isSameOrAfter(dates.start_date)) {
+
+                    angular.forEach(hours, function(hour, key) {
+                        if (reservation.hours_reservation == hour.time) {
+                            scopeMain.$apply(function() {
+
+                                /*if (action == "update") {
+                                    self.deleteReservationBook(listBook, reservation);
+                                    self.deleteReservationBook(listBookMaster, reservation);
+                                }*/
+
+                                self.addReservationBook(listBook, hour, reservation);
+                                self.addReservationBook(listBookMaster, hour, reservation);
+
+                                add = true;
+                            });
+                        }
+                    });
+
+
+                }
+
+                return add;
+            },
+            addReservationBook: function(listBook, hour, reservation) {
+                var valida = false;
+
+                angular.forEach(listBook, function(book, key) {
+                    if (book.reservation !== null) {
+                        if (book.reservation.id === reservation.id) {
+                            book.reservation = reservation;
+                            valida = true;
+                        }
+                    }
+                });
+
+                if (valida === false) {
+                    listBook.push({
+                        time: hour.time,
+                        time_text: hour.name,
+                        turn_id: hour.turn_id,
+                        block: null,
+                        reservation: reservation,
+                        available: false
+                    });
+                }
+
+
+            },
+            deleteReservationBook: function(listBook, reservation) {
+                angular.forEach(listBook, function(book, key) {
+                    if (book.reservation !== null) {
+                        if (book.reservation.id === reservation.id) {
+                            listBook.splice(key);
+                        }
+                    }
+                });
+            },
             init: function(scope) {
                 scopeMain = scope;
             }
-
         };
     })
     .factory('BookConfigFactory', function() {
