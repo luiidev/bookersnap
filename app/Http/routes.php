@@ -20,7 +20,7 @@ Route::get('/admin', function () {
 Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'auth'*/]);
 
 Route::get('/admin/ms/{id}/reservation', function () {
-    return view('reservation');
+    return view('dashboard.admin.reservation');
 });
 
 Route::get('/', function () {

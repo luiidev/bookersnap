@@ -14,9 +14,9 @@
          <link href="/css/app/reservation/app.bookersnap.library.reservation.min.css" rel="stylesheet">
         <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
          <!-- App Css -->
-       
+
         <link href="/css/app/reservation/style-reservation.min.css" rel="stylesheet">
-    
+
     </head>
     <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
 
@@ -77,6 +77,6 @@
         <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
         <script type="text/javascript" src="/js/dist.app/reservation/app.bookersnap.reservation.min.js"></script>
 
-   
+
     </body>
 </html>

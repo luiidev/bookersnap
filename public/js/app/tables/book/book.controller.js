@@ -372,8 +372,8 @@ angular.module('book.controller', [])
             };
 
             updateReservationBook(resUpdate, function() {
-                reservation.res_reservation_status_id = parseInt(status);
-                reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
+                // reservation.res_reservation_status_id = parseInt(status);
+                // reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
             });
         };
 
@@ -392,7 +392,15 @@ angular.module('book.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
-            console.log("NotifyNewReservation " + angular.toJson(data, true));
+
+            var response = addNewReservation(data.data, data.action);
+
+            console.log("NotifyNewReservation " + response);
+            if (response === true) {
+                alertMultiple("Notificación", data.user_msg, "info", null);
+                vm.orderBook('status');
+            }
+
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
@@ -676,6 +684,20 @@ angular.module('book.controller', [])
                     console.log("listStatusReservation " + angular.toJson(response.data, true));
                 }
             );
+        };
+
+        var addNewReservation = function(reservation, action) {
+
+            var date_calendar = convertFechaYYMMDD(vm.bookFilter.date, "es-ES", {});
+
+            var dates = {
+                start_date: (vm.bookView === true) ? $stateParams.date : date_calendar,
+                end_date: (vm.bookView === true) ? $stateParams.date_end : date_calendar
+            };
+
+            var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBook, vm.listBookMaster, reservation, action);
+
+            return response;
         };
 
         init();
