@@ -223,6 +223,7 @@ angular.module('reservation.service', [])
             dataZones.tables = [];
             dataZones.tActive = null;
 
+            var position_text = ["", "top", "right", "bottom", "left"];
             angular.forEach(zones, function(zone, zone_index) {
                 var item = {};
                 var tables = [];
@@ -245,6 +246,7 @@ angular.module('reservation.service', [])
                         shape: TableFactory.getLabelShape(data.config_forme),
                         size: size,
                         rotate: data.config_rotation,
+                        position_text: position_text[data.config_rotation_text],
                         id: data.id,
                         status: data.status,
                         reservations: {

@@ -311,6 +311,8 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
+
+            console.log(zones);
         };
 
         /**
