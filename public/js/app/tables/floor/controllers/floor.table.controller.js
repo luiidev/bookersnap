@@ -311,6 +311,8 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
+
+            console.log(zones);
         };
 
         /**
@@ -916,6 +918,7 @@ angular.module('floor.controller')
             listResource().then(function() {
                 parseData(reservation);
                 paintTags(reservation.tags);
+                guest_list_count(reservation);
             });
 
             vmd.EditContent = true;
@@ -987,6 +990,7 @@ angular.module('floor.controller')
         vmd.sumar = function(guest) {
             vmd.reservation.guests[guest]++;
             totalGuests();
+            guest_list_valid(guest);
         };
 
         vmd.restar = function(guest) {
@@ -995,7 +999,55 @@ angular.module('floor.controller')
                 vmd.reservation.guests[guest]--;
                 totalGuests();
             }
+            guest_list_valid(guest);
         };
+
+        /**
+         * Validacion de cantidad invitados  vs cantidad en lista de invitados 
+         */
+        vmd.guestMessage = {
+            men: {
+                text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                active: false
+            },
+            women: {
+                text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                active: false
+            },
+            children: {
+                text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                active: false
+            }
+        };
+
+        var guest_list;
+        var guest_list_count = function(reservation) {
+            guest_list = reservation.guest_list.reduce(function(count, item) {
+                if (item.type_person === 1) {
+                    count.men++;
+                } else if (item.type_person === 2) {
+                    count.women++;
+                } else if (item.type_person === 3) {
+                    count.children++;
+                }
+                return count;
+            }, {
+                men: 0,
+                women: 0,
+                children: 0
+            });
+        };
+
+        var guest_list_valid = function(guest) {
+            if (vmd.reservation.guests[guest] < guest_list[guest]) {
+                vmd.guestMessage[guest].active = true;
+            } else {
+                vmd.guestMessage[guest].active = false;
+            }
+        };
+        /**
+         * END
+         */
 
         var totalGuests = function() {
             vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
@@ -1076,6 +1128,10 @@ angular.module('floor.controller')
             vmd.EditContent = false;
             vmd.reservation = {};
             vmd.info = {};
+
+            vmd.guestMessage.men.active = false;
+            vmd.guestMessage.women.active = false;
+            vmd.guestMessage.children.active = false;
         };
 
         $scope.cancel = function() {
