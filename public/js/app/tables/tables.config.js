@@ -13,7 +13,8 @@
             'reservation.app',
             'bookersnap.services',
             "customtag.app",
-            "configuration.app"
+            "configuration.app",
+            "availability.app"
         ])
         .constant("IdMicroSitio", idMicrositio)
         .constant("UrlServerNotify", "http://127.0.0.1:1337/")
