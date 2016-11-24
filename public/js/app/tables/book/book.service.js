@@ -390,8 +390,6 @@ angular.module('book.service', [])
                         available: false
                     });
                 }
-
-
             },
             deleteReservationBook: function(listBook, reservation) {
                 angular.forEach(listBook, function(book, key) {
@@ -490,8 +488,6 @@ angular.module('book.service', [])
             //Obtiene el total de mesas ocupadas (reservaciones)
             getTablesSitRes: function(listBook) {
                 var total = 0;
-
-                //console.log("getTablesSitRes " + angular.toJson(listBook, true));
 
                 angular.forEach(listBook, function(book, key) {
                     if (book.reservation !== null) {

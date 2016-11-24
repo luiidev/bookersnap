@@ -1,4 +1,4 @@
-<footer class="container-footer-floor" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'" >
+<footer class="container-footer-floor" data-ng-include="'/js/app/tables/floor/view/partials/footer-tables.html'">
 </footer>
 <section class="container-zones" ui-view="principal">
 </section>
@@ -392,7 +392,7 @@
             </div>
             <div class="card-body">
                 <ul class="modal-listado-num-people">
-                    <li class="lst-men">
+                    <li class="lst-men" ng-if="vmc.config.status_people_1">
                         <div class="box-gender"><i class="zmdi zmdi-male-alt"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumMen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'men')">
@@ -406,7 +406,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-women">
+                    <li class="lst-women" ng-if="vmc.config.status_people_2">
                         <div class="box-gender"><i class="zmdi zmdi-female"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumWomen==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'women')">
@@ -420,7 +420,7 @@
                         </div>
                         <div class="clearfix"></div>
                     </li>
-                    <li class="lst-children">
+                    <li class="lst-children" ng-if="vmc.config.status_people_3">
                         <div class="box-gender"><i class="zmdi zmdi-face"></i></div>
                         <div style="float: left">
                             <button ng-repeat="value in vmc.colectionNum" class="btn {{vmc.flagSelectedNumChildren==value.num ? 'btn-active': ''}}" data-ng-click="vmc.btnSelectedNum(value.num,'children')">
@@ -627,7 +627,6 @@
         <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>
-
 <script id="ModalCheckGuestList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
