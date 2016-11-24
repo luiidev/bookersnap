@@ -19,6 +19,6 @@ return array(
 return [
     'API_AUTH_URL'  => 'http://apiauth.studework.vm/v1',
     'API_ADMIN_URL' => 'http://weblaravel.studework.vm/v1',
-    'API_PROMO_URL' => 'http://api-promotion.vh/v1',
+    'API_PROMO_URL' => 'http://api-promotion.vh:3005/v1',
     'MAIN_DOMAIN'   => 'weblaravel.studework.vm',
 ];
