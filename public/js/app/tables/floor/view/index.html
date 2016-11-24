@@ -207,8 +207,11 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
+                        <div >
+                            <p class="c-red" ng-repeat="message in vmd.guestMessage" ng-show="message.active">{{ message.text }}</p>
+                        </div>
                     </ul>
-<!--                     <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
+<!--              <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
                         <span class="box-total">{{vmd.reservation.guests.total}}</span>
                     </div> -->
@@ -223,6 +226,7 @@
         </div>
     </div>
 </script>
+
 <script id="ModalEditReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -331,7 +335,7 @@
                         <li class="lst-men" ng-if="er.configuration.status_people_1" style="display: inline-block;">
                             <div class="box-gender" style="width: 30px;">
                                 <i class="zmdi zmdi-male-alt" style="font-size: 2.5em;margin-top: 5px;"></i>
-                                </div>
+                            </div>
                             <div class="box-count pull-right">
                                 <button class="btn" ng-click="er.restar('men')">-</button>
                                 <span class="box-count-value btn-active">{{er.reservation.guests.men}}</span>
@@ -361,6 +365,9 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
+                        <div >
+                            <p class="c-red" ng-repeat="message in er.guestMessage" ng-show="message.active">{{ message.text }}</p>
+                        </div>
                     </ul>
 <!--                     <div class="box-result" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
@@ -442,6 +449,7 @@
         </div>
     </div>
 </script>
+
 <script id="ModalCreateWaitList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">

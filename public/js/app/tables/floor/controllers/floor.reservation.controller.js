@@ -330,6 +330,7 @@ angular.module('floor.controller')
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
                 totalGuests();
+                guest_list_valid(guest);
             };
 
             er.restar = function(guest) {
@@ -338,7 +339,55 @@ angular.module('floor.controller')
                     er.reservation.guests[guest]--;
                     totalGuests();
                 }
+                guest_list_valid(guest);
             };
+
+            /**
+             * Validacion de cantidad invitados  vs cantidad en lista de invitados 
+             */
+            er.guestMessage = {
+                men: {
+                    text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                    active: false
+                },
+                women: {
+                    text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                    active: false
+                },
+                children: {
+                    text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                    active: false
+                }
+            };
+
+            var guest_list;
+            var guest_list_count = function(reservation) {
+                guest_list = reservation.guest_list.reduce(function(count, item) {
+                    if (item.type_person === 1) {
+                        count.men++;
+                    } else if (item.type_person === 2) {
+                        count.women++;
+                    } else if (item.type_person === 3) {
+                        count.children++;
+                    }
+                    return count;
+                }, {
+                    men: 0,
+                    women: 0,
+                    children: 0
+                });
+            };
+
+            var guest_list_valid = function(guest) {
+                if (er.reservation.guests[guest] < guest_list[guest]) {
+                    er.guestMessage[guest].active = true;
+                } else {
+                    er.guestMessage[guest].active = false;
+                }
+            };
+            /**
+             * END
+             */
 
             var totalGuests = function() {
                 er.reservation.guests.total = er.reservation.guests.men + er.reservation.guests.women + er.reservation.guests.children;
@@ -579,8 +628,8 @@ angular.module('floor.controller')
                     parseInfo(content.reservation);
                     parseData(content.reservation);
                     paintTags(content.reservation.tags);
+                    guest_list_count(content.reservation);
                 });
-                console.log(content.reservation);
             })();
         }
     ])
