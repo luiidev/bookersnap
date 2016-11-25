@@ -234,32 +234,10 @@ angular.module('floor.filter', [])
                 return items;
             }
 
-            var filterDesayuno = false;
-            var filterAlmuerzo = false;
-            var filterCena = false;
-            var filterBar = false;
-
-            angular.forEach(categorias, function(categoria) {
-                var idcategoria = categoria.id;
-                if (idcategoria === 1) {
-                    filterDesayuno = true;
-                }
-                if (idcategoria === 2) {
-                    filterAlmuerzo = true;
-                }
-                if (idcategoria === 3) {
-                    filterCena = true;
-                }
-                if (idcategoria === 4) {
-                    filterBar = true;
-                }
-            });
-
-            angular.forEach(items, function(item) {
-                var filter = (filterDesayuno && item.res_type_turn_id == 1) || (filterAlmuerzo && item.res_type_turn_id == 2) || (filterCena && item.res_type_turn_id == 3) || (filterBar && item.res_type_turn_id == 4);
-                if (filter) {
-                    salida.push(item);
-                }
+            salida = items.filter(function(item) {
+                return categorias.some(function(category) {
+                    return category.turn.id == item.res_turn_id;
+                });
             });
 
             return salida;
