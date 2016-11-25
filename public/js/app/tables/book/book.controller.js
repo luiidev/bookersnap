@@ -1,6 +1,6 @@
 angular.module('book.controller', [])
     .controller('BookCtrl', function($uibModal, $scope, $stateParams, $location, $timeout, orderByFilter, BookFactory,
-        CalendarService, reservationService, BookDataFactory, $state, ConfigurationDataService, BookConfigFactory) {
+        CalendarService, reservationService, BookDataFactory, $state, ConfigurationDataService, BookConfigFactory, FloorFactory) {
 
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
@@ -176,7 +176,6 @@ angular.module('book.controller', [])
         vm.turns = [];
         vm.hoursTurns = []; //Lista de horas segun los turnos
         vm.listBook = []; //Listado del book para los filtros
-        $scope.$watch("vm.listBook", guest_list_count, true, vm.listBook.reservation);
         vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
         vm.sources = [];
         vm.zones = [];
@@ -248,8 +247,20 @@ angular.module('book.controller', [])
             end_date: ''
         };
 
+        //Notas turnos
+        vm.notesBox = false;
+        vm.notesBoxValida = false;
+
+        vm.notesData = {
+            texto: '',
+            res_type_turn_id: ''
+        };
+
+        vm.notesSave = false; // se activa cuando creamos notas
+
         var validaNumGuestClick = false;
         var validaUpdateBookRes;
+        var timeoutNotes;
 
         vm.filterBook = function(option, value) {
             switch (option) {
@@ -422,6 +433,40 @@ angular.module('book.controller', [])
             }, 1000);
         };
 
+        vm.saveNotes = function(turn) {
+
+            if (timeoutNotes) $timeout.cancel(timeoutNotes);
+
+            vm.notesData.id = turn.notes.id;
+            vm.notesData.res_type_turn_id = turn.id;
+            vm.notesData.texto = turn.notes.texto;
+            vm.notesData.date_add = turn.notes.date_add;
+
+            timeoutNotes = $timeout(function() {
+                reservationService.blackList.key(vm.notesData);
+
+                FloorFactory.createNotes(vm.notesData).then(
+                    function success(response) {
+                        vm.notesSave = true;
+                    },
+                    function error(response) {
+                        message.apiError(response);
+                        console.error("saveNotes " + angular.toJson(response, true));
+                    }
+                );
+            }, 1000);
+        };
+
+        vm.readNotes = function(notification) {
+            vm.notesBoxValida = true;
+            vm.notesNotification = false;
+        };
+
+        vm.listenNotes = function(notification) {
+            vm.notesBoxValida = false;
+            vm.notesNotification = false;
+        };
+
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
             var response = addNewReservation(data.data, data.action);
@@ -445,8 +490,29 @@ angular.module('book.controller', [])
             }
         });
 
+        $scope.$watch("vm.listBook", guest_list_count, true, vm.listBook.reservation);
+
         $scope.$on('resumenBookUpdate', function(evt, data) {
             vm.resumenBook = data;
+        });
+
+        $scope.$on("floorNotesReload", function(evt, note) {
+            if (!reservationService.blackList.contains(note.key)) {
+                angular.forEach(vm.turns, function(typeTurn) {
+                    if (typeTurn.turn) {
+                        if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes = typeTurn.notes ? typeTurn.notes : {};
+                            typeTurn.notes.texto = note.data.texto;
+                        }
+                    }
+                });
+
+                if (!vm.notesBoxValida) {
+                    vm.notesNotification = true;
+                }
+
+                $scope.$apply();
+            }
         });
 
         var init = function() {
@@ -569,9 +635,8 @@ angular.module('book.controller', [])
         var listTurnAvailable = function(date, date_end) {
             BookDataFactory.getTypeTurns(date).then(
                 function success(response) {
-                    response = response.data.data;
+                    response = response;
                     vm.turns = response;
-
                     listHoursTurns(vm.turns, date, date_end);
                 },
                 function error(response) {
@@ -678,20 +743,28 @@ angular.module('book.controller', [])
         };
 
         vm.createReservation = function(data) {
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalCreateBookReservation.html',
-                controller: 'ModalBookReservationCtrl',
-                controllerAs: 'br',
-                size: '',
-                resolve: {
-                    data: function() {
-                        return data;
-                    },
-                    date: function() {
-                        return vm.bookFilter.date;
+
+            if (data.block === null) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'ModalCreateBookReservation.html',
+                    controller: 'ModalBookReservationCtrl',
+                    controllerAs: 'br',
+                    size: '',
+                    resolve: {
+                        data: function() {
+                            return data;
+                        },
+                        date: function() {
+                            return vm.bookFilter.date;
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $state.go('mesas.floor.blockEdit', {
+                    date: data.block.start_date,
+                    block_id: data.block.id
+                });
+            }
         };
 
         vm.checkGuestList = function(reservation) {
@@ -699,7 +772,7 @@ angular.module('book.controller', [])
 
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalCheckGuestList.html',
-                controller: 'ModallCheckGuestListBookCtrl',
+                controller: 'ModalCheckGuestListBookCtrl',
                 controllerAs: 'gl',
                 size: 'lg',
                 resolve: {
@@ -708,6 +781,21 @@ angular.module('book.controller', [])
                     },
                     configuration: function() {
                         return vm.configReservation;
+                    }
+                }
+            });
+        };
+
+        vm.mailReservartion = function(reservation) {
+            vm.blockClickBook();
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalMailReservation.html',
+                controller: 'ModalMailReservationCtrl',
+                controllerAs: 'vm',
+                size: '',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
                     }
                 }
             });
@@ -926,7 +1014,7 @@ angular.module('book.controller', [])
 
         init();
     })
-    .controller("ModallCheckGuestListBookCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", "configuration", function($uibModalInstance, $q, reservationService, reservation, configuration) {
+    .controller("ModalCheckGuestListBookCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", "configuration", function($uibModalInstance, $q, reservationService, reservation, configuration) {
 
         var vm = this;
         vm.guestListAdd = [];

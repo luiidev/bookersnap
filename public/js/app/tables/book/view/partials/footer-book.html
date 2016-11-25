@@ -21,12 +21,12 @@
             </div>
         </button>
         <div bs-toggle-show="" class="box-tab-notas">
-            <uib-tabset active="activeJustified">
-                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
+            <tabset active="activeJustified">
+                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.turns">
                     <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                     </textarea>
                 </tab>
-            </uib-tabset>
+            </tabset>
         </div>
     </li>
     <li class="item-nav">
@@ -39,7 +39,7 @@
         </button>
     </li>
     <li class="item-nav">
-        <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
+        <button class="item-action btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.calendar">
             <span class="icon zmdi zmdi-calendar-alt zmdi-hc-2x">
             </span>
             <div class="title">

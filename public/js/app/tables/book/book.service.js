@@ -1,9 +1,9 @@
 angular.module('book.service', [])
-    .factory('BookDataFactory', function($http, ApiUrlMesas, FloorDataFactory, CalendarService) {
+    .factory('BookDataFactory', function($http, ApiUrlMesas, FloorDataFactory, FloorFactory, CalendarService) {
         var typeTurns, sources, zones;
         return {
             getTypeTurns: function(date) {
-                typeTurns = CalendarService.GetShiftByDate(date);
+                typeTurns = FloorFactory.listTurnosActivos(date);
                 return typeTurns;
             },
             getSources: function(reload) {

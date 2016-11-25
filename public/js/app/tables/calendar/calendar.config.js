@@ -5,21 +5,21 @@
 angular.module('calendar.app', ['calendar.controller', 'calendar.service'])
 
 .config(function($stateProvider) {
-	$stateProvider
-		.state('mesas.calendar', {
-			url: '/calendar',
-                                    views: {
-                                        '@': {
-                                            templateUrl: '/js/app/tables/calendar/view/index.html',
-                                            controller: 'CalendarIndexController',
-                                            controllerAs: 'vm'
-                                        }
+    $stateProvider
+        .state('mesas.calendar', {
+            url: '/calendar',
+            views: {
+                '@': {
+                    templateUrl: '/js/app/tables/calendar/view/index.html',
+                    controller: 'CalendarIndexController',
+                    controllerAs: 'vm'
+                }
 
-                                    },
-                                    resolve: {
-                                        $title: function() {
-                                            return 'Calendario';
-                                        }
-                                    }
-		});
+            },
+            resolve: {
+                $title: function() {
+                    return 'Calendario';
+                }
+            }
+        });
 });
