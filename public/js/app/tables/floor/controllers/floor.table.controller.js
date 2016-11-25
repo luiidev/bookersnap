@@ -296,6 +296,13 @@ angular.module('floor.controller')
             });
         };
 
+        vm.showTimeColor = {
+            "seated": "#33c200",
+            "complete": "#e6c610",
+            "nextTime": "#ed615b",
+            "nextTimeAll": "#3a99d8"
+        };
+
         var showTimeCustom = function() {
             var tActive = $table.lastTimeEvent();
             if (tActive) vm.zones.data.tActive = tActive;
