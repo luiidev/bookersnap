@@ -214,6 +214,12 @@ angular.module('book.controller', [])
             }
         };
 
+        //Fechas formato string (2016-11-24)
+        vm.datesText = {
+            start_date: '',
+            end_date: ''
+        };
+
         var validaNumGuestClick = false;
         var validaUpdateBookRes;
 
@@ -371,10 +377,7 @@ angular.module('book.controller', [])
                 res_reservation_status_id: status
             };
 
-            updateReservationBook(resUpdate, function() {
-                // reservation.res_reservation_status_id = parseInt(status);
-                // reservation.status = BookFactory.getStatusById(reservation.res_reservation_status_id, vm.statusReservation);
-            });
+            updateReservationBook(resUpdate);
         };
 
         vm.updateConsumeReservation = function(reservation) {
@@ -397,20 +400,19 @@ angular.module('book.controller', [])
 
             console.log("NotifyNewReservation " + response);
             if (response === true) {
-                alertMultiple("Notificación", data.user_msg, "info", null);
-                vm.orderBook('status');
-            }
+                if (!reservationService.blackList.contains(data.key)) {
+                    alertMultiple("Notificación", data.user_msg, "info", null);
+                }
 
+                //vm.orderBook('status');
+            }
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
             if (newDate !== oldDate) {
                 newDate = convertFechaYYMMDD(newDate, "es-ES", {});
-
                 //listZones(newDate, true);
                 //listTurnAvailable(newDate);
-                console.log('watch vm.bookFilter.date');
-
                 updateUrl(newDate, $stateParams.date_end, true);
             }
         });
@@ -424,6 +426,11 @@ angular.module('book.controller', [])
             BookFactory.init($scope);
             listSources();
             listStatusReservation();
+        };
+
+        var setDatesText = function(startDate, endDate) {
+            vm.datesText.start_date = (typeof startDate === 'string') ? startDate : convertFechaYYMMDD(startDate, "es-ES", {});
+            vm.datesText.end_date = (endDate !== null) ? convertFechaYYMMDD(endDate, "es-ES", {}) : '';
         };
 
         var defaultConfigCalendar = function() {
@@ -477,6 +484,9 @@ angular.module('book.controller', [])
                 listTurnAvailable(vm.fecha_actual, null);
                 listZones(vm.fecha_actual, '', false);
                 setDateBookFilter(vm.fecha_actual);
+
+                setDatesText(vm.fecha_actual, null);
+
             } else {
 
                 if (vm.configUserDefault.rangeDate.hoy === true) {
@@ -503,11 +513,10 @@ angular.module('book.controller', [])
                     vm.changeDateLastMonth(null, false);
                 }
 
-                var date_end = convertFechaYYMMDD(vm.endDate, "es-ES", {});
-                var date_start = convertFechaYYMMDD(vm.startDate, "es-ES", {});
+                setDatesText(vm.startDate, vm.endDate);
 
-                listTurnAvailable(date_start, date_end);
-                listZones(date_start, date_end, false);
+                listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date);
+                listZones(vm.datesText.start_date, vm.datesText.end_date, false);
             }
         };
 
@@ -557,7 +566,7 @@ angular.module('book.controller', [])
         var generatedListBook = function(date, date_end) {
             var params = getAsUriParameters({
                 date: date,
-                date_end: date_end
+                date_end: (date_end === null) ? date : date_end
             });
 
             BookFactory.listReservationAndBlocks(true, params).then(
@@ -618,12 +627,10 @@ angular.module('book.controller', [])
                 });
         };
 
-        var updateReservationBook = function(data, action) {
-            action = (typeof action == "function") ? action : function() {};
-
+        var updateReservationBook = function(data) {
+            reservationService.blackList.key(data);
             reservationService.patchReservation(data).then(
                 function success(response) {
-                    action();
                     console.log("updateReservationBook " + angular.toJson(response.data, true));
                 },
                 function error(response) {

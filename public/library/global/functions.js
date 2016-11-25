@@ -202,12 +202,7 @@ Las fechas de datepicker u otro elemento muestra un formato extenso, con esta fu
 YYYY-MM-DD
 -----*/
 var convertFechaYYMMDD = function(fecha, idioma, options) {
-    var newFecha = new Date(fecha).toLocaleDateString(idioma, options);
-    var arrayFecha = newFecha.split("/");
-
-    newFecha = arrayFecha[2] + "-" + arrayFecha[1] + "-" + arrayFecha[0];
-
-    return newFecha;
+    return moment(fecha).format('YYYY-MM-DD');
 };
 
 /*-------

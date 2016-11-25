@@ -350,11 +350,6 @@ angular.module('book.service', [])
                         if (reservation.hours_reservation == hour.time) {
                             scopeMain.$apply(function() {
 
-                                /*if (action == "update") {
-                                    self.deleteReservationBook(listBook, reservation);
-                                    self.deleteReservationBook(listBookMaster, reservation);
-                                }*/
-
                                 self.addReservationBook(listBook, hour, reservation);
                                 self.addReservationBook(listBookMaster, hour, reservation);
 
@@ -362,14 +357,13 @@ angular.module('book.service', [])
                             });
                         }
                     });
-
-
                 }
 
                 return add;
             },
             addReservationBook: function(listBook, hour, reservation) {
                 var valida = false;
+                var self = this;
 
                 angular.forEach(listBook, function(book, key) {
                     if (book.reservation !== null) {
@@ -381,7 +375,10 @@ angular.module('book.service', [])
                 });
 
                 if (valida === false) {
-                    listBook.push({
+
+                    var indexBook = self.getIndexHourBook(listBook, hour);
+
+                    listBook.splice(indexBook, 0, {
                         time: hour.time,
                         time_text: hour.name,
                         turn_id: hour.turn_id,
@@ -390,6 +387,16 @@ angular.module('book.service', [])
                         available: false
                     });
                 }
+            },
+            //Obtiene el indice del book segun la hora indicada
+            getIndexHourBook: function(listBook, hour) {
+                var index = 0;
+                angular.forEach(listBook, function(book, key) {
+                    if (book.time === hour.time) {
+                        index = key;
+                    }
+                });
+                return index;
             },
             deleteReservationBook: function(listBook, reservation) {
                 angular.forEach(listBook, function(book, key) {

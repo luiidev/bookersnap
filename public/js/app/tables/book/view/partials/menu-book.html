@@ -107,10 +107,10 @@
                 <div bs-toggle-show="" class="date-picker dp-range-book">
                     <div class="dp-custom-date">
                         <div class="dp-content">
-                            <datepicker max-date="vm.endDate" ng-model="vm.startDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
-                            </datepicker>
-                            <datepicker max-date="vm.maxDate" ng-change="vm.changeDateEnd(1)" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
-                            </datepicker>
+                            <uib-datepicker max-date="vm.endDate" ng-model="vm.startDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            </uib-datepicker>
+                            <uib-datepicker max-date="vm.maxDate" ng-change="vm.changeDateEnd(1)" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            </uib-datepicker>
                             <div class="dp-menu">
                                 <div class="list-group">
                                     <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.hoy}" ng-click="vm.changeDateCustom(0, 0, $event,true)">
