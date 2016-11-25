@@ -21,12 +21,12 @@
             </div>
         </button>
         <div bs-toggle-show="" class="box-tab-notas">
-            <tabset active="activeJustified">
+            <uib-tabset active="activeJustified">
                 <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.typeTurns">
                     <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                     </textarea>
                 </tab>
-            </tabset>
+            </uib-tabset>
         </div>
     </li>
     <li class="item-nav">
@@ -48,11 +48,21 @@
         </button>
     </li>
     <li class="item-date">
-        <div class="day">
-            Miercole 16
+        <div class="m-l-15" ng-class="{'pull-left' : vm.bookView}">
+            <div class="day">
+                {{ vm.datesText.start_date | date : 'EEEE d' : 'America/Lima'}}
+            </div>
+            <div class="month">
+                {{ vm.datesText.start_date | date : ' MMMM y' : 'America/Lima'}}
+            </div>
         </div>
-        <div class="month">
-            Setiembre del 2016
+        <div class="pull-right m-r-15" ng-if="vm.bookView">
+            <div class="day">
+                {{ vm.datesText.end_date | date : 'EEEE d' : 'America/Lima'}}
+            </div>
+            <div class="month">
+                {{ vm.datesText.end_date | date : ' MMMM y' : 'America/Lima'}}
+            </div>
         </div>
     </li>
     <li class="item-nav pull-right">
