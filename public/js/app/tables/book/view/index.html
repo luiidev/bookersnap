@@ -1,5 +1,5 @@
 <section id="main">
-    <section class="w-100 p-0" id="content">
+    <section class="w-100 p-0" >
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
         <div class="card m-0">
@@ -64,27 +64,30 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="item-book col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
-                <div class="item row" ng-class="{'block' : item.block !=null}" ng-click="vm.createReservation(item)" ng-show="item.reservation == null">
-                    <span class="title" ng-if="item.block != null">
-                        MANAGER BLOCK
-                    </span>
-                    <span class="title" ng-if="item.available">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
+
+                <div class="item available" ng-if="item.available" ng-click="vm.createReservation(item)" >
+                    <span class="title">
                         DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
-                    <span ng-if="item.block != null">
-                        - {{ item.block.end_time | limitTo:5 }}
-                    </span>
                 </div>
-                <div class="row bg-white" ng-click="vm.editReservation(item)" ng-if="item.reservation != null">
+
+                <div class="item block" ng-if="item.block != null">
+                    <span class="title">
+                        MANAGER BLOCK
+                    </span>
+                    {{ item.time | limitTo:5 }} - <span>{{ item.block.end_time | limitTo:5 }}</span>
+                </div>
+
+                <div class="item reservation" ng-click="vm.editReservation(item)" ng-if="item.reservation != null">
                     <div class="box-guest">
-                        <div class="picture">
-                            <img alt="" src="/images/avatar.jpg">
-                            </img>
+                        <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
                         </div>
                         <div class="info">
-                            <div class="name" ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                            <div class="name">
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'"></span>
+                                <span ng-bind="item.reservation.guest.last_name"></span>
                             </div>
                             <div class="list">
                                 <a class="item note">
