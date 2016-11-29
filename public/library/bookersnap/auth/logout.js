@@ -5,6 +5,7 @@ $.ajaxSetup({
 });
 
 function _logout() {
+    
     $.ajax({
         url: "/auth/auth/logout",
         method: "post",
