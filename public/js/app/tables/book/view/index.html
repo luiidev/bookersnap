@@ -65,7 +65,7 @@
         </div>
         <div class="content-book">
             <div class="item-book col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
-                <div class="item row" ng-class="{'block' : item.block !=null}" ng-click="vm.createReservation(item)" ng-show="item.reservation == null">
+                <div class="item row" ng-class="{'block' : item.block !=null}" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block != null">
                     <span class="title" ng-if="item.block != null">
                         MANAGER BLOCK
                     </span>
@@ -76,6 +76,18 @@
                     <span ng-if="item.block != null">
                         - {{ item.block.end_time | limitTo:5 }}
                     </span>
+                </div>
+                <div class="item row" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
+                    <span class="title">
+                        DISPONIBLE
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                </div>
+                <div class="item row no-available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available == false">
+                    <span class="title">
+                        NO HAY MESAS
+                    </span>
+                    {{ item.time | limitTo:5 }}
                 </div>
                 <div class="row bg-white" ng-click="vm.editReservation(item)" ng-if="item.reservation != null">
                     <div class="box-guest">

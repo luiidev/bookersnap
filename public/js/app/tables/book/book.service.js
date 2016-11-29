@@ -16,7 +16,15 @@ angular.module('book.service', [])
             }
         };
     })
-    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory, ConfigurationDataService) {
+    .factory('TablesDataFactory', function($http, ApiUrlMesas) {
+        return {
+            getAvailability: function(params) {
+                return $http.get(ApiUrlMesas + "/tables/availability?" + params);
+            }
+        };
+    })
+    .factory('BookFactory', function($q, reservationService, CalendarService, BlockFactory, BookResumenFactory,
+        ConfigurationDataService, TablesDataFactory) {
         var scopeMain = null;
         var configReservation = null;
         return {
@@ -48,9 +56,12 @@ angular.module('book.service', [])
 
                 return defered.promise;
             },
-            listBook: function(hours, reservations, blocks) {
+            listBook: function(hours, reservations, blocks, tablesAvailability) {
                 var self = this;
                 var book = [];
+
+                var reservation_hour_ini = "";
+                var reservation_hour_end = "";
 
                 angular.forEach(hours, function(hour, key) {
                     var existsReservation = self.existsReservation(hour, reservations);
@@ -62,7 +73,8 @@ angular.module('book.service', [])
                         turn_id: hour.turn_id,
                         block: null,
                         reservation: null,
-                        available: true
+                        available: false,
+                        tables: []
                     };
 
                     if (existsBlocks.exists === false && existsReservation.exists === false) {
@@ -76,13 +88,10 @@ angular.module('book.service', [])
                                 turn_id: hour.turn_id,
                                 block: block,
                                 reservation: null,
-                                available: false
+                                available: false,
+                                tables: []
                             });
                         });
-
-                        if (existsBlocks.exists === true || existsReservation.exists === true) {
-                            book.push(dataBook);
-                        }
 
                         angular.forEach(existsReservation.data, function(reservation, key) {
                             book.push({
@@ -91,12 +100,58 @@ angular.module('book.service', [])
                                 turn_id: hour.turn_id,
                                 block: null,
                                 reservation: reservation,
-                                available: false
+                                available: false,
+                                tables: []
                             });
                         });
+
+                        if (existsBlocks.exists === true || existsReservation.exists === true) {
+                            book.push(dataBook);
+                        }
+                    }
+                });
+
+                angular.forEach(book, function(value, key) {
+
+                    if (value.reservation !== null) {
+                        reservation_hour_ini = value.reservation.hours_reservation;
+                        //reservation_hour_end = value.reservation.hours_reservation;
                     }
 
+                    if (value.block === null && value.reservation === null) {
+                        value = self.assignTablesAvailabilityBook(value, tablesAvailability);
+                    }
+
+                    console.log("reservations " + reservation_hour_ini);
+
                 });
+
+                // console.log("books " + angular.toJson(book, true));
+                return book;
+            },
+            //Asignamos las mesas con disponibilidad
+            assignTablesAvailabilityBook: function(book, tables) {
+                var indexHour = getIndexHour(book.time, 0);
+
+                angular.forEach(tables, function(table, key) {
+                    if (table.availability[indexHour].time == book.time) {
+
+                        if (table.availability[indexHour].rule_id > 0) {
+                            //console.log("assignTablesAvailabilityBook " + angular.toJson(table.availability[indexHour], true));
+                            book.tables.push({
+                                id: table.id,
+                                res_zone_id: table.res_zone_id,
+                                min_cover: table.min_cover,
+                                max_cover: table.max_cover,
+                                name: table.name
+                            });
+                        }
+                    }
+                });
+
+                if (book.tables.length > 0) {
+                    book.available = true;
+                }
 
                 return book;
             },
@@ -154,9 +209,15 @@ angular.module('book.service', [])
 
                 return exists;
             },
+            //Obtenemos la reservaciones,bloqueos y mesas con su disponibilidad
             listReservationAndBlocks: function(reload, date) {
                 var self = this;
-                return $q.all([self.getReservations(reload, date), self.getAllBlocks(reload, date), self.getConfigurationReservation()]);
+                return $q.all([
+                    self.getReservations(reload, date),
+                    self.getAllBlocks(reload, date),
+                    self.getConfigurationReservation(),
+                    self.getTablesAvailability(date)
+                ]);
             },
             //Habilita en la vista los types turns que hallamos marcados
             setCheckedTypeTurn: function(turns, turnId, checked) {
@@ -406,6 +467,21 @@ angular.module('book.service', [])
                         }
                     }
                 });
+            },
+            //Obtiene las mesas y su disponibilidad segun la fecha indicada (no rango)
+            getTablesAvailability: function(params) {
+                var defered = $q.defer();
+
+                TablesDataFactory.getAvailability(params).then(
+                    function success(response) {
+                        defered.resolve(response.data.data);
+                    },
+                    function error(response) {
+                        defered.reject(response.data);
+                    }
+                );
+
+                return defered.promise;
             },
             init: function(scope) {
                 scopeMain = scope;
