@@ -476,7 +476,6 @@ angular.module('book.controller', [])
                 if (!reservationService.blackList.contains(data.key)) {
                     alertMultiple("Notificación", data.user_msg, "info", null);
                 }
-
                 //vm.orderBook('status');
             }
         });
@@ -516,8 +515,8 @@ angular.module('book.controller', [])
         });
 
         var init = function() {
-            loadConfigViewReservation();
             BookFactory.init($scope);
+            loadConfigViewReservation();
             listSources();
             listStatusReservation();
         };
@@ -664,7 +663,7 @@ angular.module('book.controller', [])
 
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
-                    var listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1]);
+                    var listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1], response[3]);
                     vm.listBook = listBook;
                     vm.listBookMaster = listBook;
                     vm.configReservation = response[2];
