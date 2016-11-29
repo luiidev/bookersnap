@@ -24,7 +24,7 @@
         <tabset justified="true">
             <tab heading="Por llegar" ng-click="rm.filter_status = [1,2,3]" active="tab.active"></tab>
             <tab heading="Sentados" ng-click="rm.filter_status = [4]"></tab>
-            <tab heading="Todos" ng-click="rm.filter_status = []"></tab>
+            <tab heading="Todos" ng-click="rm.filter_status.length = 0"></tab>
         </tabset>
 
         <div class="floor-reservations">
@@ -211,12 +211,23 @@
             <span class="caret">
             </span>
         </button>
-        <ul class="dropdown-menu">
+<!--         <ul class="dropdown-menu">
             <li ng-if="categoria.turn" ng-repeat="categoria in rm.categorias_type">
                 <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)">
-                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked">
-                    </i>
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
                     {{categoria.name}}
+                </a>
+            </li>
+        </ul> -->
+        <ul class="dropdown-menu">
+            <li ng-if="categoria.turn" ng-repeat="categoria in rm.categorias_type">
+                <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)" ng-if="$index == 0">
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
+                    {{categoria.name}}
+                </a>
+                <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)" ng-if="categoria.turn && $index != 0">
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
+                    {{categoria.turn.name}}
                 </a>
             </li>
         </ul>

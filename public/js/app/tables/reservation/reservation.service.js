@@ -175,7 +175,6 @@ angular.module('reservation.service', [])
                     var timeDefaultIsEstablished = false;
 
                     var addHour = function(date_ini, item, minutes) {
-                        date_ini.add(minutes, "minutes");
                         var hour = {};
 
                         hour.turn = item.name;
@@ -190,22 +189,26 @@ angular.module('reservation.service', [])
                                 timeDefaultIsEstablished = true;
                             }
                         }
+
+                        date_ini.add(minutes, "minutes");
                     };
 
                     angular.forEach(turns, function(item) {
                         if (item.turn !== null) {
                             var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
                             var date_end = moment(item.turn.hours_end, "HH:mm:ss");
-                            addHour(date_ini, item, 0);
 
-                            for (var i = 1; i < 95; i++) {
+                            for (var i = 0; i < 94; i++) {
+                                if (date_ini.isSame(date_end)) {
+                                    break;
+                                }
                                 addHour(date_ini, item, 15);
-                                if (date_ini.isSame(date_end)) break;
                             }
                         }
                     });
 
                     data.hours = hours;
+
                     if (!timeDefault) {
                         if (hours.length) data.default = hours[hours.length - 1].time;
                     } else {

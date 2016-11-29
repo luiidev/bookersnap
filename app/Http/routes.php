@@ -13,6 +13,10 @@
 
 //Route principal : Lista de micrositios
 
+Route::get("/sitio/{id}/widget", function() {
+    return view("widget.paso_1");
+});
+
 Route::get('/admin', function () {
     return view('dashboard.admin.index');
 });

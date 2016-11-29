@@ -65,10 +65,16 @@
         </div>
         <div class="content-book">
             <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
-
-                <div class="item available" ng-if="item.available" ng-click="vm.createReservation(item)" >
+                
+                <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                </div>
+                <div class="item no-available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available == false">
+                    <span class="title">
+                        NO HAY MESAS
                     </span>
                     {{ item.time | limitTo:5 }}
                 </div>
@@ -79,7 +85,6 @@
                     </span>
                     {{ item.time | limitTo:5 }} - <span>{{ item.block.end_time | limitTo:5 }}</span>
                 </div>
-
                 <div class="item reservation" ng-click="vm.editReservation(item)" ng-if="item.reservation != null">
                     <div class="box-guest">
                         <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
@@ -90,7 +95,7 @@
                                 <span ng-bind="item.reservation.guest.last_name"></span>
                             </div>
                             <div class="list">
-                                <a class="item note">
+                                <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
                                     <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                     </i>
                                     nota
@@ -98,7 +103,8 @@
                                     </span>
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
-                                    <i class="zmdi zmdi-file-text zmdi-hc-lg"></i>
+                                    <i class="zmdi zmdi-file-text zmdi-hc-lg">
+                                    </i>
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                             </div>
@@ -150,6 +156,7 @@
                                         </i>
                                     </div>
                                     <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
+
                                         <div class="icon">
                                             <i class="zmdi zmdi-female zmdi-hc-fw">
                                             </i>
@@ -171,6 +178,7 @@
                                         </i>
                                     </div>
                                     <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
+
                                         <div class="icon">
                                             <i class="zmdi zmdi-mood zmdi-hc-fw">
                                             </i>
@@ -193,8 +201,7 @@
                         </div>
                         <div class="consume">
                             <div class="fg-line">
-                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text">
-                                </input>
+                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text" />
                             </div>
                         </div>
                     </div>
@@ -451,7 +458,6 @@
         </div>
     </div>
 </script>
-
 <script id="ModalCheckGuestList.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
@@ -583,5 +589,46 @@
                 </button>
             </div>
         </div>
+    </div>
+</script>
+<script id="ModalMailReservation.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Enviar mensaje Reservación</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.date }}  - {{ vm.reservation.time }}</h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.nombre }}  - {{ vm.reservation.email }}</h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                <h5>{{ vm.reservation.note }}</h5>
+            </div>
+
+            <div class="col-xs-12">
+                <h5>Asunto</h5>
+                <div class="fg-line">
+                    <input type="text" name=""  class="form-control" ng-model="vm.mailData.subject" />
+                </div>
+            </div>
+       
+            <div class="col-xs-12">
+                <h5>Mensaje</h5>
+                <div class="fg-line">
+                    <textarea class="form-control" rows="8" ng-model="vm.mailData.message"></textarea>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>

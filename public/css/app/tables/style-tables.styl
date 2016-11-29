@@ -2,8 +2,7 @@
 .modal-header
 	text-align center
 .modal-footer
-	text-align center
-	
+	text-align center	
 .list-table
 	padding 0 25px
 	& .table-responsive
@@ -343,14 +342,32 @@
 		& .table-label
 			font-weight normal
 			font-size 0.6em
+			position absolute
+			text-decoration none
+			text-transform none
+			-moz-user-select -moz-none
+			-ms-user-select none
+			-webkit-user-select none
+			//width 100% 
+			//text-align center
 			&.top
-				top -5px	
+				left 50%
+				top -.2em
+				transform translate(-50%,-100%)		
 			&.right 
-				right -5px
+				right -11px
+				top 50% 
+				transform translate(100%,-50%)
+				text-align left	
 			&.left
-				left -5px
+				left -11px
+				top 50%
+				transform translate(-100%,-50%)
+				text-align right
 			&.bottom 
-				bottom -5px 
+				bottom -11px 
+				left 50%
+				transform translate(-50%,100%)
 		& .item-drag-cover
 			background-color #ccc
 			color #000
@@ -626,7 +643,13 @@
 				padding 10px 15px		
 				&:hover
 					background-color #bfdea6
-			&.block 
+			&.no-available
+				background-color #FFA5A5
+				padding 10px 15px
+				color #fff
+				&:hover
+					background-color #fb7c7c
+			&.block
 				background-color #84868d
 				padding 10px 15px
 				color #fff
