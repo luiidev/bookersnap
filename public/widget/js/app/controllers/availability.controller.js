@@ -89,7 +89,7 @@ angular.module("App")
         var resultFormat = function(items) {
             angular.forEach(items, function(item) {
                 if (item.hour !== null) {
-                    item.hour_format = moment(item.hour, "HH:mm:ss").format("h:ss A");
+                    item.hour_format = moment(item.hour, "HH:mm:ss").format("h:mm A");
                 } else {
                     item.hour_format = "No disponible";
                 }

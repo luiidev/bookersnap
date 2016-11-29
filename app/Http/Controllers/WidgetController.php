@@ -44,11 +44,9 @@ class WidgetController extends Controller
             "token" => "123456789"
         ];
 
-        $url = "localhost:3004/v1/es/microsites/1/reservationtemporal?date=2016-11-29&hour=02:00:00&num_guests=20&next_day=1&zone_id=1&token=123456789";
+        $url = "http://localhost:3004/v1/es/microsites/1/reservationtemporal?date=2016-11-29&hour=19:00:00&num_guests=2&next_day=0&token=123456789&zone_id=1";
 
-        $response = ApiRequestsHelper::SendRequest("GET", $url, []);
-
-        var_dump($response);
+        $response = ApiRequestsHelper::SendRequest("POST", $url, []);
 
         return $response;
 
