@@ -20,7 +20,7 @@ angular.module('global.service', [])
         /**
          * Funcion de actualizacion de objeco
          */
-        reservations.update = function(data) {
+        reservations.update = function(data, callback) {
             angular.forEach(this.data, function(reservation) {
                 angular.forEach(data, function(obj_data) {
                     if (reservation.id == obj_data.id) {
@@ -31,9 +31,7 @@ angular.module('global.service', [])
                                 }
                             });
                         });
-                        angular.forEach(obj_data, function(value, index) {
-                            reservation[index] = value;
-                        });
+                        Object.assign(reservation, obj_data);
                         angular.forEach(lienzo.data.tables, function(table) {
                             angular.forEach(reservation.tables, function(obj_table) {
                                 if (table.id == obj_table.id) {
@@ -44,16 +42,22 @@ angular.module('global.service', [])
                     }
                 });
             });
+            if (typeof callback == "function") callback();
         };
-        reservations.add = function(reservation) {
-            this.data.push(reservation);
-            angular.forEach(lienzo.data.tables, function(table) {
-                angular.forEach(reservation.tables, function(obj_table) {
-                    if (table.id == obj_table.id) {
-                        table.reservations.add(reservation);
-                    }
+        reservations.add = function(reservation, callback) {
+            var dateNow = moment().utc().format("YYYY-MM-DD");
+            if (reservation.date_reservation == dateNow) {
+                this.data.push(reservation);
+                angular.forEach(lienzo.data.tables, function(table) {
+                    angular.forEach(reservation.tables, function(obj_table) {
+                        if (table.id == obj_table.id) {
+                            table.reservations.add(reservation);
+                        }
+                    });
                 });
-            });
+
+                if (typeof callback == "function") callback();
+            }
         };
         servers.update = function(data) {
             angular.forEach(this.data, function(server) {

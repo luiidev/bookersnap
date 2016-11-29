@@ -686,7 +686,7 @@
 		& .box-reservation
 			width 75%
 			float left
-			padding-right 110px
+			padding-right 120px
 			& .datetime
 				float left
 				width 10%
@@ -752,7 +752,7 @@
 								color #fff
 						& .icon
 							& .zmdi
-								color #ccc
+								color #ffa829
 								font-size 24px
 								padding-top 2px
 						& .count
@@ -762,21 +762,58 @@
 							font-size 14px
 		& .tables
 			right 0px
-			width 45px
+			width 60px
 			text-align center
 			position absolute
 			& .item
 				float right
 				background-color #ffeed3
-				width 50px
+				width 60px
 				height 60px
 				font-size 14px
 				font-weight 500
 				color #f98e00
 				padding 0
 				padding-top 20px
+				&.web
+					display block
+				&.movil
+					display none
+					color #fff
+					padding-top 0px
+					& .table-name
+						height 30px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 5px 0 0 0
+					& .status-name
+						height 15px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 0
+						font-size .6em
+						text-transform uppercase
+						font-size .7em
+						padding-left 3px
+						padding-right 3px						
+					& .source-name
+						height 15px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 0
+						font-size .7em
+						padding-left 3px
+						padding-right 3px
+						text-transform uppercase
+						color rgba(255, 255, 255, 0.75)
 		& .config
-			right 45px
+			right 60px
 			width 60px
 			text-align center
 			position absolute
@@ -811,16 +848,17 @@
 					margin-right 10px
 					min-width initial
 				& .status
-					width initial
-					margin-right 10px
-					& .label
-						width 20px
-						height 20px
-						border-radius 50%
-						display block
-						margin 0
-						color transparent
-						margin-top 14px				
+					display none
+				& .source
+					display none
+				& .consume
+					width 20%
+			& .tables
+				& .item
+					&.web
+						display none
+					&.movil
+						display block	
 @media (min-width:768px) and (max-width: 1023px)
 	.footer-blook
 		& .btn 
@@ -927,21 +965,6 @@
 					display none
 				& .consume
 					display none
-			& .tables
-				right 0px
-				width 30px
-				& .item
-					width 30px
-					height 60px
-					font-size 12px
-					font-weight 500
-			& .config
-				right 30px
-				width 40px
-				& .settings-reservation
-					font-size 14px
-					cursor pointer
-					padding-top 14px
 /*--------------GUEST------------------*/
 .p-section-guest 
 	padding-left 400px

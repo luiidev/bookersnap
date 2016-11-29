@@ -114,7 +114,10 @@
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label" style="background-color : {{item.reservation.status.color}}">
+                            <label ng-if="item.reservation.status.color != 'white'" class="label" style="background-color : {{item.reservation.status.color}}">
+                                {{ item.reservation.status.name }}
+                            </label>
+                            <label ng-if="item.reservation.status.color == 'white'" class="label" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -125,7 +128,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_1 < item.reservation.men}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_1 < item.reservation.men ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-male-alt zmdi-hc-fw">
                                             </i>
@@ -146,7 +149,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-female zmdi-hc-fw">
                                             </i>
@@ -167,7 +170,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-mood zmdi-hc-fw">
                                             </i>
@@ -243,11 +246,16 @@
                         </div>
                     </div>
                     <div class="tables">
-                        <div class="item">
+                        <div class="item web">
                             {{ item.reservation.tables[0].name }}
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
+                        </div>
+                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} " >
+                            <span class="table-name" >{{ item.reservation.tables[0].name }} <span ng-if="item.reservation.tables.length >1">+</span></span>
+                            <span class="status-name">{{ item.reservation.status.name || 'Desconocido' }}</span>
+                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} " >{{ item.reservation.source.name || 'Desconocido' }}</span>
                         </div>
                     </div>
                 </div>

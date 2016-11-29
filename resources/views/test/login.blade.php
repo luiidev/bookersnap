@@ -28,6 +28,7 @@
             @endif
 
             <form method='post' action="">
+                LOGIN
                 <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
                 <div class="input-group m-b-20">
                     <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>

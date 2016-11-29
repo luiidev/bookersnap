@@ -1,7 +1,7 @@
 //Inicia el local storage de la url indicada
 xdLocalStorage.init({
-    iframeUrl: 'http://reservantro2.com/web/ls',
-    initCallback: function () {
+    iframeUrl: 'http://weblaravel.studework.vm/web/ls',
+    initCallback: function () {        
         //se sejecuta al cargarse el iframe
         xdLocalStorage.getItem("_sharedSession", function (data) {
             if (data.value !== null) {

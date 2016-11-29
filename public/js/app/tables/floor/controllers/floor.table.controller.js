@@ -61,6 +61,7 @@ angular.module('floor.controller')
                 angular.forEach(vm.typeTurns, function(typeTurn) {
                     if (typeTurn.turn) {
                         if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes = typeTurn.notes ? typeTurn.notes : {};
                             typeTurn.notes.texto = note.data.texto;
                         }
                     }
@@ -295,6 +296,13 @@ angular.module('floor.controller')
             });
         };
 
+        vm.showTimeColor = {
+            "seated": "#33c200",
+            "complete": "#e6c610",
+            "nextTime": "#ed615b",
+            "nextTimeAll": "#3a99d8"
+        };
+
         var showTimeCustom = function() {
             var tActive = $table.lastTimeEvent();
             if (tActive) vm.zones.data.tActive = tActive;
@@ -311,8 +319,6 @@ angular.module('floor.controller')
                 name: "servers",
                 data: servers
             }]);
-
-            console.log(zones);
         };
 
         /**
@@ -388,11 +394,11 @@ angular.module('floor.controller')
          * Eventos de Web Socket
          */
         var reservationEvents = {};
-        reservationEvents.update = function(data) {
-            reservations.update(data);
+        reservationEvents.update = function(data, callback) {
+            reservations.update(data, callback);
         };
-        reservationEvents.create = function(data) {
-            reservations.add(data);
+        reservationEvents.create = function(data, callback) {
+            reservations.add(data, callback);
         };
 
         var serverEvents = {};
@@ -412,8 +418,9 @@ angular.module('floor.controller')
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof reservationEvents[data.action] == "function") {
-                    reservationEvents[data.action](data.data);
-                    if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    reservationEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
                     $scope.$apply();
                 }
             }
@@ -423,6 +430,7 @@ angular.module('floor.controller')
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof serverEvents[data.action] == "function") {
                     serverEvents[data.action](data.data);
+                    if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
                     $scope.$apply();
                 }
             }
@@ -482,6 +490,12 @@ angular.module('floor.controller')
                 }
 
             } else {
+                if (eventEstablished.event == "sit") {
+                    if (eventEstablished.data.res_reservation_status_id == 4) {
+                        return sit(obj);
+                    }
+                }
+
                 modalInstancesConfiguration(vm.cantidades, obj, vm.configuracion);
             }
 
@@ -516,9 +530,10 @@ angular.module('floor.controller')
         };
 
         var sit = function(obj) {
-            var id = eventEstablished.data.reservation_id;
-            var reservation = parseReservation(obj);
-            reservationService.sit(id, reservation)
+            var id = eventEstablished.data.id;
+            reservationService.sit(id, {
+                    table_id: obj.id
+                })
                 .then(function(response) {
                     reservations.update(response.data.data);
                 }).catch(function(error) {
@@ -1036,6 +1051,10 @@ angular.module('floor.controller')
                 women: 0,
                 children: 0
             });
+
+            guest_list_valid("men");
+            guest_list_valid("women");
+            guest_list_valid("children");
         };
 
         var guest_list_valid = function(guest) {
