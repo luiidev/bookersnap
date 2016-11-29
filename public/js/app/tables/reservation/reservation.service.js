@@ -208,7 +208,7 @@ angular.module('reservation.service', [])
                     });
 
                     data.hours = hours;
-                    console.log(hours);
+
                     if (!timeDefault) {
                         if (hours.length) data.default = hours[hours.length - 1].time;
                     } else {
