@@ -5,9 +5,10 @@ angular.module("App")
         vm.date = moment().utc().toDate();
         vm.guests = [];
         vm.zones = [];
+        vm.hours = [];
+        vm.result = [];
         vm.availability = {};
         vm.loadingInfo = false;
-        vm.hours = [];
         vm.message = "";
         vm.dateOptions = {
             showWeeks: false,
@@ -66,6 +67,7 @@ angular.module("App")
             var deferred = $q.defer();
 
             vm.loadingInfo = true;
+            // vm.result.length = 0;
             availabilityService.getAvailability(vm.availability)
                 .then(function(response) {
                     vm.result = resultFormat(response.data.data);
@@ -87,7 +89,7 @@ angular.module("App")
         var resultFormat = function(items) {
             angular.forEach(items, function(item) {
                 if (item.hour !== null) {
-                    item.hour_format = moment(item.hour, "HH:mm:ss").format("h:ss A");
+                    item.hour_format = moment(item.hour, "HH:mm:ss").format("h:mm A");
                 } else {
                     item.hour_format = "No disponible";
                 }
@@ -102,8 +104,8 @@ angular.module("App")
             vm.availability.zone_id = vm.availability.zone_id || null;
             vm.availability.hour = utiles.filterHour(vm.hours, vm.availability.hour);
             vm.infoDate = moment(date).format("dddd, d [de] MMMM");
-            vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests;
-            console.log(vm.availability);
+            vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests + ' personas.';
+            // console.log(vm.availability);
             vm.searchAvailability();
         };
 
@@ -130,6 +132,7 @@ angular.module("App")
                 vm.loadingData = false;
             }).catch(function() {
                 vm.loadingInfo = false;
+                // vm.result.length = 0;
                 vm.message = "Elija otra opcion de busqueda";
             });
         };

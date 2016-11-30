@@ -64,18 +64,12 @@ body {
   bottom: -23px;
   z-index: 1;
 }
-@media screen and (min-width: 768px) {
-  .card-body.card-padding {
-    padding: 23px 25px;
-  }
+.card-body {
+	display: table;
+	width: 100%;
 }
-@media screen and (max-width: 991px) {
-  .card-body.card-padding {
-    padding: 18px;
-  }
-}
-.card-body.card-padding-sm {
-  padding: 15px;
+.card-body.card-padding {
+	padding: 20px 20px;
 }
 .card-header:not(.ch-alt):not([class*="bgm-"]) + .card-padding {
   padding-top: 0;
@@ -110,5 +104,69 @@ body {
 }
 
 [ng-if="showButtonBar"] [ng-click="select(null)"] {
-   display: none;
- } 
+	display: none;
+}
+.content-info {
+	padding-left: 0;
+	padding-right: 0; 
+	border-right: 1px solid #cbcbcb;
+}
+
+.content-info .reservation-info .site-info {
+	padding-right: 15px;
+	color: #555;
+}
+
+.content-info .reservation-info .site-info p {
+	font-size: 14px;
+	font-style: italic;
+	line-height: 15px;
+	margin-bottom: 0;
+	padding-bottom: 20px;
+}
+
+.content-info .reservation-info .info {
+	padding: 10px 0 10px 36px;
+	border-top: 1px solid #cbcbcb;
+}
+
+.content-info .reservation-info .info  span{
+	color: #555;
+}
+
+.content-info .reservation-info  .info.watch {
+	padding-left: 0;
+}
+
+.content-info .reservation-info  .info.watch .timer {
+	width: 120px;
+	height: 55px;
+	border: 1px solid #cbcbcb;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.content-info .reservation-info  .info.watch .timer span {
+	font-size: 35px;
+	line-height: 55px;
+}
+
+.p-b-20 {
+	padding-bottom: 20px !important;
+}
+
+.p-r-0 {
+	padding-right: 0 !important;
+}
+
+.m-t-0 {
+	margin-top: 0 !important;
+}
+
+.c-red {
+	color: #ce2413;
+}
+
+.c-blue {
+	color: #337ab7;
+}

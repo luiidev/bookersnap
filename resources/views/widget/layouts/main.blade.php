@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BookerSnap</title>
+    <title>@yield("title", "BookerSnap")</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('widget/css/styles.css') }}">
     <meta charset="utf-8">
@@ -12,8 +12,7 @@
 <div class="bs-container">
     <div class="row">
         <div class="col-xs-12 not-padding">
-            @section("content")
-            @show
+            @yield("content")
         </div>
     </div>
 </div>

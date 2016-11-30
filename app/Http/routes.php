@@ -13,9 +13,9 @@
 
 //Route principal : Lista de micrositios
 
-Route::get("/sitio/{id}/widget", function() {
-    return view("widget.paso_1");
-});
+Route::get("/w/{site}/", "WidgetController@index");
+
+Route::get("/w/{isite}/reserve/{date}/{hour}/{num}", "WidgetController@confirm");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

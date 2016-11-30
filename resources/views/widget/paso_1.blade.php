@@ -1,5 +1,7 @@
 @extends('widget.layouts.main')
 
+@section("title", "Paramontino | Busqueda")
+
 @section("content")
 <div class="card" ng-controller="availabilityCtrl">
     <div class="card-header">
