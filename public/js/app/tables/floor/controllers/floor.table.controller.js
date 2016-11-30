@@ -823,18 +823,13 @@ angular.module('floor.controller')
         };
 
         function parseReservation() {
-            var now = moment();
-            var date = now.format("YYYY-MM-DD");
-            var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.id,
                 guests: {
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
                     children: vmc.flagSelectedNumChildren
-                },
-                date: date,
-                hour: start_time
+                }
             };
         }
 
@@ -945,10 +940,11 @@ angular.module('floor.controller')
             return first_name + " " + last_name;
         };
         vmd.infoDate = function() {
-            return moment(originalReservation.date_reservation).format("dddd, d [de] MMMM");
+            return moment(originalReservation.date_reservation).format("dddd, D [de] MMMM");
         };
-        vmd.infoTime = function() {
-            return moment(originalReservation.hours_reservation, "HH:mm:ss").format("H:mm A");
+        vmd.infoTime = function(hour) {
+            var hour_eval = hour || originalReservation.hours_reservation;
+            return moment(hour_eval, "HH:mm:ss").format("H:mm A");
         };
         vmd.infoTables = function() {
             return getTables(originalReservation.tables);
