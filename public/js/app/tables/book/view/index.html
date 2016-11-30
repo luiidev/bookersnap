@@ -1,5 +1,5 @@
 <section id="main">
-    <section class="w-100 p-0" >
+    <section class="w-100 p-0">
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
         <div class="card m-0">
@@ -65,7 +65,6 @@
         </div>
         <div class="content-book">
             <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
-                
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
@@ -78,12 +77,14 @@
                     </span>
                     {{ item.time | limitTo:5 }}
                 </div>
-
                 <div class="item block" ng-if="item.block != null">
                     <span class="title">
                         MANAGER BLOCK
                     </span>
-                    {{ item.time | limitTo:5 }} - <span>{{ item.block.end_time | limitTo:5 }}</span>
+                    {{ item.time | limitTo:5 }} -
+                    <span>
+                        {{ item.block.end_time | limitTo:5 }}
+                    </span>
                 </div>
                 <div class="item reservation" ng-click="vm.editReservation(item)" ng-if="item.reservation != null">
                     <div class="box-guest">
@@ -91,8 +92,10 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'"></span>
-                                <span ng-bind="item.reservation.guest.last_name"></span>
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                </span>
+                                <span ng-bind="item.reservation.guest.last_name">
+                                </span>
                             </div>
                             <div class="list">
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
@@ -120,10 +123,10 @@
                             </div>
                         </div>
                         <div class="status">
-                            <label ng-if="item.reservation.status.color != 'white'" class="label" style="background-color : {{item.reservation.status.color}}">
+                            <label class="label" ng-if="item.reservation.status.color != 'white'" style="background-color : {{item.reservation.status.color}}">
                                 {{ item.reservation.status.name }}
                             </label>
-                            <label ng-if="item.reservation.status.color == 'white'" class="label" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
+                            <label class="label" ng-if="item.reservation.status.color == 'white'" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -134,7 +137,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_1 < item.reservation.men}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_1 < item.reservation.men ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_1 < item.reservation.men}" popover="{{ item.reservation.num_people_1 < item.reservation.men ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-male-alt zmdi-hc-fw">
                                             </i>
@@ -155,8 +158,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
-
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-female zmdi-hc-fw">
                                             </i>
@@ -177,8 +179,7 @@
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover-placement="top" popover-trigger="mouseenter" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" role="group">
-
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-mood zmdi-hc-fw">
                                             </i>
@@ -201,7 +202,7 @@
                         </div>
                         <div class="consume">
                             <div class="fg-line">
-                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text" />
+                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text"/>
                             </div>
                         </div>
                     </div>
@@ -259,14 +260,31 @@
                                 +
                             </span>
                         </div>
-                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} " >
-                            <span class="table-name" >{{ item.reservation.tables[0].name }} <span ng-if="item.reservation.tables.length >1">+</span></span>
-                            <span class="status-name">{{ item.reservation.status.name || 'Desconocido' }}</span>
-                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} " >{{ item.reservation.source.name || 'Desconocido' }}</span>
+                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
+                            <span class="table-name">
+                                {{ item.reservation.tables[0].name }}
+                                <span ng-if="item.reservation.tables.length >1">
+                                    +
+                                </span>
+                            </span>
+                            <span class="status-name">
+                                {{ item.reservation.status.name || 'Desconocido' }}
+                            </span>
+                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} ">
+                                {{ item.reservation.source.name || 'Desconocido' }}
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="text-center" ng-hide="vm.bookView">
+            <br>
+            </br>
+        </div>
+        <div class="text-center" ng-show="vm.bookView">
+            <uib-pagination items-per-page="vm.paginate_reservation.page_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
+            </uib-pagination>
         </div>
         <footer class="container-footer-book" data-ng-include="'/js/app/tables/book/view/partials/footer-book.html'">
         </footer>
