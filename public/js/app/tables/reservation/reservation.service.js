@@ -516,7 +516,7 @@ angular.module('reservation.service', [])
                         table.time.nextTimeAll.length = 0;
                         angular.forEach(table.reservations.data, function(reservation) {
                             var now = moment();
-                            var reserv_start = moment(reservation.date_reservation + " " + reservation.hours_reservation);
+                            var reserv_start = moment(reservation.datetime_input);
 
                             if (reservation.datetime_input && reservation.res_reservation_status_id == 4) {
                                 table.reservations.active = reservation;
@@ -538,15 +538,13 @@ angular.module('reservation.service', [])
                                     // Complete
                                     if (table.reservations.active) {
                                         var now = moment();
-                                        var reserv = moment(table.reservations.active.date_reservation + " " + table.reservations.active.hours_reservation);
-                                        var auxiliar = moment(table.reservations.active.hours_duration, "HH:mm:ss");
-                                        var reserv_start = reserv.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
+                                        var reserv_end = moment(table.reservations.active.datetime_output);
 
-                                        var time = reserv_start.diff(now);
+                                        var time = reserv_end.diff(now);
                                         if (time > 0) {
                                             table.time.complete.text = moment.utc(time).format("HH:mm");
                                         } else {
-                                            var auxTime = now.diff(reserv_start);
+                                            var auxTime = now.diff(reserv_end);
                                             table.time.complete.text = "-" + moment.utc(auxTime).format("HH:mm");
                                         }
                                     } else {
@@ -597,7 +595,6 @@ angular.module('reservation.service', [])
                                                         return replaceTime(table, aux);
                                                     }
                                                 }
-
                                             });
                                         };
 

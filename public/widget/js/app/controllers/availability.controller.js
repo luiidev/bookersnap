@@ -1,8 +1,8 @@
 angular.module("App")
     .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", function(vm, $q, availabilityService, utiles) {
 
-        var date = moment().utc().format("YYYY-MM-DD");
-        vm.date = moment().utc().toDate();
+        var date = moment().format("YYYY-MM-DD");
+        vm.date = moment().toDate();
         vm.guests = [];
         vm.zones = [];
         vm.hours = [];
@@ -103,7 +103,7 @@ angular.module("App")
             vm.availability.num_guests = vm.availability.num_guests || 2;
             vm.availability.zone_id = vm.availability.zone_id || null;
             vm.availability.hour = utiles.filterHour(vm.hours, vm.availability.hour);
-            vm.infoDate = moment(date).format("dddd, d [de] MMMM");
+            vm.infoDate = moment(date).format("dddd, D [de] MMMM");
             vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests + ' personas.';
             // console.log(vm.availability);
             vm.searchAvailability();
