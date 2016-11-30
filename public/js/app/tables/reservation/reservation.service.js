@@ -865,7 +865,7 @@ angular.module('reservation.service', [])
                 var start_time = hour ? moment(hour, "HH:mm:ss") : moment();
                 var auxiliar = moment("2000-01-01").add((60 + 15 * cant), "minutes");
                 var end_time = start_time.clone().add(auxiliar.hour(), "h").add(auxiliar.minute(), "m");
-                console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
+                // console.log(start_time.format("YYYY-MM-DD HH:mm:ss"), end_time.format("YYYY-MM-DD HH:mm:ss"));
                 // console.log(blocks);
                 angular.forEach(blocks, function(block) {
                     if (tableSuggested) return; // Si ya se sugirio una mesa sale del bucle

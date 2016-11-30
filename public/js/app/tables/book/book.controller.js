@@ -995,6 +995,8 @@ angular.module('book.controller', [])
             }
 
             vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.covers;
+
+            console.log("suggestTables " + angular.toJson(tables, true));
         };
 
         vm.redirectReservation = function() {
