@@ -37,20 +37,11 @@
                         </div>
                     </div>
 
-                    <div class="lv-item media border-left-amber m-b-15" ng-if="vmd.blocks.active" style="cursor: default;">
-                        <div class="media-body">
-                            <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
-                            <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.blocks.active.start_time) }} - {{ vmd.infoTime(vmd.blocks.active.end_time) }}</li>
-                            </ul>
-                        </div>
-                    </div>
-
                     <div ng-repeat="item in vmd.blocks.data" class="lv-item media border-left-amber" style="cursor: default;">
                         <div class="media-body">
                             <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
                             <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.start_time) }} - {{ vmd.infoTime(item.end_time) }}</li>
                             </ul>
                         </div>
                     </div>

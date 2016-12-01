@@ -59,7 +59,7 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)"   ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | waitlist" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)"   ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
                                     <td ng-if="value.id" ng-click="rm.editReservation(value)">
                                         <table class="table-listado sub-table">
                                             <tr>
@@ -172,7 +172,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td ng-show="value.block_id" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.block_id})"  >
+                                    <td ng-show="value.res_block_id" ng-mousedown="$event.stopPropagation()" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.res_block_id})"  >
                                         <table class="table-listado p-0 m-0" style="height: 40px;">
                                             <tr>
                                                 <td>

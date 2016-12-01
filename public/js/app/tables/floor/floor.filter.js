@@ -118,7 +118,7 @@ angular.module('floor.filter', [])
     .filter("waitlist", function() {
         return function(items) {
             var salida = items.filter(function(item) {
-                return item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4);
+                return item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4) || item.res_block_id;
             });
 
             return salida;
@@ -291,13 +291,42 @@ angular.module('floor.filter', [])
                 }
             }
         };
-    }).filter('customStatus', function($filter) {
+    }).filter('customStatus', function() {
         return function(list, arrayFilter, element) {
-            if (arrayFilter) {
-                if (arrayFilter.length === 0) return list;
-                return $filter("filter")(list, function(listItem) {
-                    return arrayFilter.indexOf(listItem[element]) != -1;
-                });
+            if (arrayFilter.length === 0) {
+                return list;
             }
+
+            var salida = list.filter(function(item) {
+                if (item.res_block_id) return false;
+                var status = arrayFilter.indexOf(item[element]) != -1;
+                var waitlist = item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4);
+                return status && waitlist;
+            });
+            return salida;
+        };
+    })
+    .filter("blocks", function() {
+        return function(list) {
+            var salida = list.reduce(function(array, item) {
+                // Si es una reservacion - devuelve la reservacion
+                if (item.id) {
+                    array.push(item);
+                } else if (item.res_block_id) { //Si es un bloqueo - Analiza si ya existe un bloqueo similar (api devuelve un bloqueo por mesa, no bloqueo con sus mesas)
+                    // Pregunta si ya existe el bloqueo
+                    var exists = array.some(function(itemX) {
+                        return itemX.res_block_id == item.res_block_id;
+                    });
+
+                    // Si no existe agrego el bloqueo a la lista a retornar
+                    if (!exists) {
+                        array.push(item);
+                    }
+                }
+
+                return array;
+            }, []);
+
+            return salida;
         };
     });
