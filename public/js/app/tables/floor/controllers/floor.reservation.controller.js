@@ -430,7 +430,7 @@ angular.module('floor.controller')
                 er.info = {
                     first_name: reservation.guest ? reservation.guest.first_name : "Reservacion sin nombre.",
                     last_name: reservation.guest ? reservation.guest.last_name : "",
-                    date: moment(reservation.date_reservation).format("dddd, d [de] MMMM"),
+                    date: moment(reservation.date_reservation).format("dddd, D [de] MMMM"),
                     time: moment(reservation.hours_reservation, "HH:mm:ss").format("H:mm A"),
                     tables: getTables(reservation.tables)
                 };

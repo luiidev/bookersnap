@@ -190,7 +190,8 @@ angular.module('book.controller', [])
                 turnAll: false,
                 sourcesAll: false,
                 zonesAll: false
-            }
+            },
+            text: ''
         };
 
         //Ordernar book general
@@ -261,6 +262,14 @@ angular.module('book.controller', [])
         var validaNumGuestClick = false;
         var validaUpdateBookRes;
         var timeoutNotes;
+
+        //para la paginacion de reservaciones
+        vm.paginate_reservation = {
+            page: 1,
+            total_pages: 0,
+            page_size: 2,
+            selected: 1
+        };
 
         vm.filterBook = function(option, value) {
             switch (option) {
@@ -467,24 +476,107 @@ angular.module('book.controller', [])
             vm.notesNotification = false;
         };
 
+        vm.editReservation = function(item) {
+            if (validaNumGuestClick === true) {
+                return;
+            }
+            $state.go('mesas.reservation-edit', {
+                id: item.reservation.id,
+                date: item.reservation.date_reservation
+            });
+        };
+
+        vm.createReservation = function(data) {
+
+            if (data.block === null) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'ModalCreateBookReservation.html',
+                    controller: 'ModalBookReservationCtrl',
+                    controllerAs: 'br',
+                    size: '',
+                    resolve: {
+                        data: function() {
+                            return data;
+                        },
+                        date: function() {
+                            return vm.bookFilter.date;
+                        }
+                    }
+                });
+            } else {
+                $state.go('mesas.floor.blockEdit', {
+                    date: data.block.start_date,
+                    block_id: data.block.id
+                });
+            }
+        };
+
+        vm.checkGuestList = function(reservation) {
+            vm.blockClickBook();
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCheckGuestList.html',
+                controller: 'ModalCheckGuestListBookCtrl',
+                controllerAs: 'gl',
+                size: 'lg',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
+                    },
+                    configuration: function() {
+                        return vm.configReservation;
+                    }
+                }
+            });
+        };
+
+        vm.mailReservartion = function(reservation) {
+            vm.blockClickBook();
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalMailReservation.html',
+                controller: 'ModalMailReservationCtrl',
+                controllerAs: 'vm',
+                size: '',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
+                    }
+                }
+            });
+        };
+
+        vm.changePagination = function() {
+            vm.paginate_reservation.page = vm.paginate_reservation.selected;
+
+            setDatesText(vm.startDate, vm.endDate);
+            generatedListBook(vm.datesText.start_date, vm.datesText.end_date);
+        };
+
+        vm.searchReservations = function() {
+            if (vm.bookView === true) {
+                vm.paginate_reservation.selected = 1;
+                vm.changePagination();
+            }
+        };
+
+        $scope.$on("NotifyBookConfigReload", function(evt, message) {
+            alert(message + " Se requiere volver a cargar la página.");
+            location.reload();
+        });
+
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
             var response = addNewReservation(data.data, data.action);
-
-            console.log("NotifyNewReservation " + response);
             if (response === true) {
                 if (!reservationService.blackList.contains(data.key)) {
                     alertMultiple("Notificación", data.user_msg, "info", null);
                 }
-                //vm.orderBook('status');
             }
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
             if (newDate !== oldDate) {
                 newDate = convertFechaYYMMDD(newDate, "es-ES", {});
-                //listZones(newDate, true);
-                //listTurnAvailable(newDate);
                 updateUrl(newDate, $stateParams.date_end, true);
             }
         });
@@ -574,10 +666,10 @@ angular.module('book.controller', [])
             vm.bookView = vm.configUserDefault.reservationView;
 
             if (vm.bookView === false) {
-                listTurnAvailable(vm.fecha_actual, null);
-                listZones(vm.fecha_actual, '', false);
-                setDateBookFilter(vm.fecha_actual);
+                listTurnAvailable(vm.fecha_actual, null, true);
+                listZones(vm.fecha_actual, '', true);
 
+                setDateBookFilter(vm.fecha_actual);
                 setDatesText(vm.fecha_actual, null);
 
             } else {
@@ -608,8 +700,8 @@ angular.module('book.controller', [])
 
                 setDatesText(vm.startDate, vm.endDate);
 
-                listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date);
-                listZones(vm.datesText.start_date, vm.datesText.end_date, false);
+                listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date, true);
+                listZones(vm.datesText.start_date, vm.datesText.end_date, true);
             }
         };
 
@@ -631,8 +723,8 @@ angular.module('book.controller', [])
             }
         };
 
-        var listTurnAvailable = function(date, date_end) {
-            BookDataFactory.getTypeTurns(date).then(
+        var listTurnAvailable = function(date, date_end, reload) {
+            BookDataFactory.getTypeTurns(date, reload).then(
                 function success(response) {
                     response = response;
                     vm.turns = response;
@@ -656,17 +748,34 @@ angular.module('book.controller', [])
         };
 
         var generatedListBook = function(date, date_end) {
-            var params = getAsUriParameters({
+            var params = {
                 date: date,
-                date_end: (date_end === null) ? date : date_end
-            });
+                date_end: (date_end === null) ? date : date_end,
+            };
+
+            if (vm.bookView === true) {
+                params.page_size = vm.paginate_reservation.page_size;
+                params.page = vm.paginate_reservation.page;
+            }
+
+            if (vm.bookFilter.text !== "") {
+                params.search_text = vm.bookFilter.text;
+            }
+
+            params = getAsUriParameters(params);
+
+            console.log("generatedListBook " + params);
 
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
-                    var listBook = BookFactory.listBook(vm.hoursTurns, response[0], response[1], response[3]);
+                    var listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
                     vm.listBook = listBook;
                     vm.listBookMaster = listBook;
                     vm.configReservation = response[2];
+
+                    vm.paginate_reservation.total_pages = response[0].last_page;
+
+                    console.log("generatedListBook " + angular.toJson(response[0], true));
 
                     BookFactory.setConfigReservation(vm.configReservation);
                     vm.fecha_actual = moment().format('YYYY-MM-DD');
@@ -731,75 +840,6 @@ angular.module('book.controller', [])
             );
         };
 
-        vm.editReservation = function(item) {
-            if (validaNumGuestClick === true) {
-                return;
-            }
-            $state.go('mesas.reservation-edit', {
-                id: item.reservation.id,
-                date: item.reservation.date_reservation
-            });
-        };
-
-        vm.createReservation = function(data) {
-
-            if (data.block === null) {
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'ModalCreateBookReservation.html',
-                    controller: 'ModalBookReservationCtrl',
-                    controllerAs: 'br',
-                    size: '',
-                    resolve: {
-                        data: function() {
-                            return data;
-                        },
-                        date: function() {
-                            return vm.bookFilter.date;
-                        }
-                    }
-                });
-            } else {
-                $state.go('mesas.floor.blockEdit', {
-                    date: data.block.start_date,
-                    block_id: data.block.id
-                });
-            }
-        };
-
-        vm.checkGuestList = function(reservation) {
-            vm.blockClickBook();
-
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalCheckGuestList.html',
-                controller: 'ModalCheckGuestListBookCtrl',
-                controllerAs: 'gl',
-                size: 'lg',
-                resolve: {
-                    reservation: function() {
-                        return reservation;
-                    },
-                    configuration: function() {
-                        return vm.configReservation;
-                    }
-                }
-            });
-        };
-
-        vm.mailReservartion = function(reservation) {
-            vm.blockClickBook();
-            var modalInstance = $uibModal.open({
-                templateUrl: 'ModalMailReservation.html',
-                controller: 'ModalMailReservationCtrl',
-                controllerAs: 'vm',
-                size: '',
-                resolve: {
-                    reservation: function() {
-                        return reservation;
-                    }
-                }
-            });
-        };
-
         var listStatusReservation = function() {
             reservationService.getStatuses().then(
                 function success(response) {
@@ -819,6 +859,8 @@ angular.module('book.controller', [])
                 start_date: (vm.bookView === true) ? $stateParams.date : date_calendar,
                 end_date: (vm.bookView === true) ? $stateParams.date_end : date_calendar
             };
+
+            reservation = (Array.isArray(reservation) === true) ? reservation[0] : reservation;
 
             var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBook, vm.listBookMaster, reservation, action);
 

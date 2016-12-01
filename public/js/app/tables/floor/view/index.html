@@ -19,7 +19,7 @@
                         <div class="media-body">
                             <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{vmd.reservations.active.guest.first_name || "Reservacion sin nombre"}} {{vmd.reservations.active.guest.last_name}}</div>
                             <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{vmd.reservations.active.hours_reservation}}</li>
+                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.reservations.active.hours_reservation) }}</li>
                                 <li><i class="zmdi zmdi-account-o"></i> {{vmd.reservations.active.num_guest}} personas</li>
                                 <li class="c-white" ng-class="'bgm-' + vmd.reservations.active.status.color">{{ vmd.reservations.active.status.name }}</li>
                             </ul>
@@ -30,7 +30,7 @@
                         <div class="media-body" >
                             <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}</div>
                             <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{item.hours_reservation}}</li>
+                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.hours_reservation)}}</li>
                                 <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
                                 <li class="c-white" ng-class="'bgm-' + item.status.color">{{ item.status.name }}</li>
                             </ul>
@@ -41,7 +41,7 @@
                         <div class="media-body">
                             <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
                             <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{vmd.blocks.active.start_time}} - {{vmd.blocks.active.end_time}}</li>
+                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.blocks.active.start_time) }} - {{ vmd.infoTime(vmd.blocks.active.end_time) }}</li>
                             </ul>
                         </div>
                     </div>
