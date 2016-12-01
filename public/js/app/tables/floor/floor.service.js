@@ -674,13 +674,16 @@ angular.module('floor.service', [])
                 });
                 return defered.promise;
             },*/
-            listTurnosActivos: function(date) {
+            listTurnosActivos: function(date, reload) {
                 var defered = $q.defer();
-                if (turns_notes) {
+                var self = this;
+
+                reload = (reload === undefined) ? false : reload;
+
+                if (turns_notes && reload === false) {
                     defered.resolve(turns_notes);
                     return defered.promise;
                 }
-                var self = this;
 
                 CalendarService.GetShiftByDate(date).then(
                     function success(response) {

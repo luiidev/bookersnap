@@ -2,8 +2,8 @@ angular.module('book.service', [])
     .factory('BookDataFactory', function($http, ApiUrlMesas, FloorDataFactory, FloorFactory, CalendarService) {
         var typeTurns, sources, zones;
         return {
-            getTypeTurns: function(date) {
-                typeTurns = FloorFactory.listTurnosActivos(date);
+            getTypeTurns: function(date, reload) {
+                typeTurns = FloorFactory.listTurnosActivos(date, reload);
                 return typeTurns;
             },
             getSources: function(reload) {
@@ -56,7 +56,8 @@ angular.module('book.service', [])
 
                 return defered.promise;
             },
-            listBook: function(hours, reservations, blocks, tablesAvailability) {
+            //Genera el book en base a las horas (disponibles de los turnos)
+            listBook: function(hours, bookView, reservations, blocks, tablesAvailability) {
                 var self = this;
                 var book = [];
 
@@ -68,7 +69,7 @@ angular.module('book.service', [])
                 };
 
                 angular.forEach(hours, function(hour, key) {
-                    var existsReservation = self.existsReservation(hour, reservations);
+                    var existsReservation = self.existsReservation(hour, reservations, bookView);
                     var existsBlocks = self.existsBlocks(hour, blocks);
 
                     var dataBook = {
@@ -97,6 +98,10 @@ angular.module('book.service', [])
                             });
                         });
 
+                        if (existsBlocks.exists === true || existsReservation.exists === true) {
+                            book.push(dataBook);
+                        }
+
                         angular.forEach(existsReservation.data, function(reservation, key) {
                             book.push({
                                 time: hour.time,
@@ -108,32 +113,28 @@ angular.module('book.service', [])
                                 tables: []
                             });
                         });
-
-                        if (existsBlocks.exists === true || existsReservation.exists === true) {
-                            book.push(dataBook);
-                        }
                     }
                 });
 
                 //actualizar tablesAvailables con las reservaciones
-                self.durationsReservaAvailableBook(reservations, tablesAvailability);
+                self.durationsReservaAvailableBook(reservations, tablesAvailability, bookView);
 
+                //Asignamos las mesas disponibles a la hora
                 angular.forEach(book, function(value, key) {
                     if (value.block === null && value.reservation === null) {
-                        value = self.assignTablesAvailabilityBook(value, tablesAvailability, reservations);
-                        //value = self.durationsReservaAvailableBook(reservations, value, tablesAvailability);
+                        value = self.assignTablesAvailabilityBook(value, tablesAvailability, reservations, bookView);
                     }
                 });
-                console.log("books " + angular.toJson(tablesAvailability, true));
+                //console.log("books " + angular.toJson(tablesAvailability, true));
                 //console.log("books " + angular.toJson(book, true));
                 return book;
             },
             //Asignamos disponibilidad si hay reservas,analizamos el tiempo de duración
-            durationsReservaAvailableBook: function(reservations, tablesAvailability) {
+            durationsReservaAvailableBook: function(reservations, tablesAvailability, bookView) {
                 var self = this;
 
                 angular.forEach(tablesAvailability, function(table, key) {
-                    var exists = self.existsTableReservaInBook(reservations, table.id);
+                    var exists = self.existsTableReservaInBook(reservations, table.id, bookView);
                     if (exists.exists === true) {
                         self.updateTablesAvailability(table.id, tablesAvailability, exists.data);
                         // console.log("la mesa esta reservada " + table.id);
@@ -164,11 +165,13 @@ angular.module('book.service', [])
                     }
                 });
             },
-            existsTableReservaInBook: function(reservations, table) {
+            existsTableReservaInBook: function(reservations, table, bookView) {
                 var exists = {
                     data: {},
                     exists: false
                 };
+
+                reservations = (bookView === true) ? reservations.data : reservations;
 
                 angular.forEach(reservations, function(reservation, key) {
                     angular.forEach(reservation.tables, function(value, key) {
@@ -183,7 +186,7 @@ angular.module('book.service', [])
                 return exists;
             },
             //Asignamos las mesas con disponibilidad
-            assignTablesAvailabilityBook: function(book, tables, reservations) {
+            assignTablesAvailabilityBook: function(book, tables, reservations, bookView) {
                 var self = this;
                 var indexHour = getIndexHour(book.time, 0);
 
@@ -193,11 +196,11 @@ angular.module('book.service', [])
                         if (table.availability[indexHour].rule_id > 0 && table.availability[indexHour].reserva === false) {
 
                             //var existsReservation = self.existsTableReservaInBook(reservations, table.id);
-                            var existsReservation = self.existsReservation(book, reservations);
+                            var existsReservation = self.existsReservation(book, reservations, bookView);
 
                             if (existsReservation.exists === true) {
 
-                                var exists = self.existsTableReservaInBook(existsReservation.data, table.id);
+                                // var exists = self.existsTableReservaInBook(existsReservation.data, table.id);
                                 /* if (existsReservation.data.hours_reservation !== book.time) {
                                      book.tables.push({
                                          id: table.id,
@@ -278,11 +281,13 @@ angular.module('book.service', [])
 
                 return exists;
             },
-            existsReservation: function(hour, reservations) {
+            existsReservation: function(hour, reservations, bookView) {
                 var exists = {
                     exists: false,
                     data: []
                 };
+
+                reservations = (bookView === true) ? reservations.data : reservations;
 
                 angular.forEach(reservations, function(reservation, key) {
                     if (hour.time === reservation.hours_reservation) {
@@ -294,13 +299,13 @@ angular.module('book.service', [])
                 return exists;
             },
             //Obtenemos la reservaciones,bloqueos y mesas con su disponibilidad
-            listReservationAndBlocks: function(reload, date) {
+            listReservationAndBlocks: function(reload, params) {
                 var self = this;
                 return $q.all([
-                    self.getReservations(reload, date),
-                    self.getAllBlocks(reload, date),
+                    self.getReservations(reload, params),
+                    self.getAllBlocks(reload, params),
                     self.getConfigurationReservation(),
-                    self.getTablesAvailability(date)
+                    self.getTablesAvailability(params)
                 ]);
             },
             //Habilita en la vista los types turns que hallamos marcados

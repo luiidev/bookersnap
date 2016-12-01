@@ -12,4 +12,8 @@ angular.module("book.controller")
         $scope.$broadcast("floorNotesReload", data);
     });
 
+    serverSocket.on("b-mesas-config-update", function(data) {
+        $scope.$broadcast("NotifyBookConfigReload", data.user_msg);
+    });
+
 });
