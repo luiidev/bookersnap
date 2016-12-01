@@ -84,6 +84,7 @@ angular.module('floor.controller')
             rm.total_reservas = rm.typeRes.total_reservas;
 
             rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
+            console.log(rm.res_listado);
         };
 
         reservationService.getBlocks().then(function(response) {
