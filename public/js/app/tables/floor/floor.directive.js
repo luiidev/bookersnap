@@ -2,11 +2,13 @@ angular.module('floor.directive', [])
     .directive('ngDetailTable', function() {
 
         function makeSelectTable(scope, element, attr) {
+            var table = $(element);
 
             element.droppable({
                 //accept: ".listado-column",
                 drop: function(event, ui) {
                     // console.log(ui.draggable[0].dataset.quantity);
+                    clearBG();
                     var quantity = parseInt(ui.draggable[0].dataset.quantity) || 0;
                     scope.$apply(function() {
                         scope.num = {
@@ -17,8 +19,22 @@ angular.module('floor.directive', [])
                         };
                     });
                     scope.onDroppedFn();
+                },
+                over: function(evt, ui) {
+                    var originalTable = $(ui.helper).parent().context.parentNode;
+                    if (originalTable != table[0]) {
+                        table.addClass("dropTable");
+                    }
+
+                },
+                out: function(evt, ui) {
+                    clearBG();
                 }
             });
+
+            function clearBG() {
+                table.removeClass("dropTable");
+            }
         }
 
         return {
@@ -96,7 +112,8 @@ angular.module('floor.directive', [])
             element.draggable({
                 helper: "clone",
                 cursorAt: {
-                    left: 190
+                    left: 200,
+                    top: 31
                 },
                 drag: function(event, ui) {
                     angular.element(".not_selector").draggable("disable");
@@ -146,14 +163,14 @@ angular.module('floor.directive', [])
                 helper: "clone",
                 appendTo: '#lienzo',
                 cursorAt: {
-                    left: 15,
-                    top: 15
+                    left: 10,
+                    top: 10
                 },
                 start: function(event, ui) {
                     $(ui.helper).css({
                         "z-index": 2,
-                        // "margin-left": "15px",
-                        // "margin-top": "15px"
+                        "margin-left": "10px",
+                        "margin-top": "10px"
                     });
                     angular.element('.bg-window-floor').addClass('drag-dispel');
                     scope.onStartFn();

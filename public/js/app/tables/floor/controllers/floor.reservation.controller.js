@@ -4,7 +4,7 @@ angular.module('floor.controller')
         var rm = this;
 
         rm.visits = {};
-        rm.typeRes = {};
+        rm.typeRes = [];
         rm.filter_status = [1, 2, 3];
         rm.filter_people = [];
         rm.filter_reserva = [];
@@ -53,10 +53,7 @@ angular.module('floor.controller')
             var men = 0;
             var women = 0;
             var children = 0;
-            var tWeb = 0;
-            var tTel = 0;
-            var tPor = 0;
-            var tRp = 0;
+            rm.typeRes = [];
 
             angular.forEach(rm.reservations.data, function(reservation, index) {
                 men += reservation.num_people_1;
@@ -65,19 +62,11 @@ angular.module('floor.controller')
                 total += reservation.num_guest;
 
                 var source_type = reservation.res_source_type_id;
-                switch (source_type) {
-                    case 1:
-                        tRp += 1;
-                        break;
-                    case 2:
-                        tPor += 1;
-                        break;
-                    case 3:
-                        tTel += 1;
-                        break;
-                    case 4:
-                        tWeb += 1;
-                        break;
+                var exist = rm.typeRes.hasOwnProperty(source_type);
+                if (exist) {
+                    rm.typeRes[source_type]++;
+                } else {
+                    rm.typeRes[source_type] = 1;
                 }
             });
 
@@ -88,11 +77,10 @@ angular.module('floor.controller')
             rm.total_visitas = rm.visits.total_people;
             visitsQuantity();
 
-            rm.typeRes.WEB = tWeb;
-            rm.typeRes.TELÉFONO = tTel;
-            rm.typeRes.PORTAL = tPor;
-            rm.typeRes.RP = tRp;
-            rm.typeRes.total_reservas = tWeb + tTel + tPor + tRp;
+            rm.typeRes.total_reservas = rm.typeRes.reduce(function(suma, value) {
+                return suma + value;
+            }, 0);
+
             rm.total_reservas = rm.typeRes.total_reservas;
 
             rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
@@ -173,7 +161,7 @@ angular.module('floor.controller')
                 rm.total_reservas = 0;
                 angular.forEach(rm.categorias_reserva, function(categoria) {
                     if (categoria.id !== 0 && categoria.checked === true) {
-                        rm.total_reservas += rm.typeRes[categoria.name];
+                        rm.total_reservas += rm.typeRes[categoria.id] || 0;
                     }
                 });
             }
