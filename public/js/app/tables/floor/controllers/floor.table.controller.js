@@ -241,7 +241,7 @@ angular.module('floor.controller')
         var loadBlocks = function(date) {
             var deferred = $q.defer();
 
-            reservationService.getBlocks(date)
+            reservationService.getBlocks(date, true)
                 .then(function(response) {
                     blocks.data = response.data.data;
                     deferred.resolve(blocks.data);

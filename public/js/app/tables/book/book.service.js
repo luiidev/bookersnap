@@ -28,10 +28,10 @@ angular.module('book.service', [])
         var scopeMain = null;
         var configReservation = null;
         return {
-            getReservations: function(reload, date) {
+            getReservations: function(reload, params) {
                 var defered = $q.defer();
 
-                reservationService.getReservations(reload, date).then(
+                reservationService.getReservationsSearch(reload, params).then(
                     function success(response) {
                         response = response.data.data;
                         defered.resolve(response);

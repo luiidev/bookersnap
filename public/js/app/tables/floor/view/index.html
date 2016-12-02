@@ -45,7 +45,7 @@
                             </ul>
                         </div>
                     </div>
-
+                    
                     <div class="lv-item media item-block" ng-if="vmd.blocks.active" >
                         <div class="media-body">
                             <div ng-model="vmd.existPoximasReservationsBlocks = 1"></div>
@@ -62,7 +62,7 @@
                             <div ng-model="vmd.existPoximasReservationsBlocks = 1"></div>
                             <div class="lv-title">Mesa Bloqueada</div>
                             <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{item.start_time}} - {{item.end_time}}</li>
+                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.start_time) }} - {{ vmd.infoTime(item.end_time) }}</li>
                             </ul>
                         </div>
                     </div>
