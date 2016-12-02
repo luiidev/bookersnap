@@ -140,6 +140,8 @@ angular.module('book.controller', [])
             var date_end = convertFechaYYMMDD(vm.endDate, "es-ES", {});
 
             updateUrl(date_start, date_end, false);
+
+            //vm.changePagination(date_start, date_end);
         };
 
         /**
@@ -191,7 +193,8 @@ angular.module('book.controller', [])
                 sourcesAll: false,
                 zonesAll: false
             },
-            text: ''
+            text: '',
+            search_text: ''
         };
 
         //Ordernar book general
@@ -272,8 +275,14 @@ angular.module('book.controller', [])
         };
 
         vm.filterBook = function(option, value) {
+
             switch (option) {
                 case 'turn':
+                    if (value !== "all") {
+                        if (value.turn === null) {
+                            return;
+                        }
+                    }
                     vm.bookFilter.options.turnAll = (value == "all") ? !vm.bookFilter.options.turnAll : vm.bookFilter.options.turnAll;
                     BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns, vm.bookFilter.options.turnAll);
                     break;
@@ -296,13 +305,13 @@ angular.module('book.controller', [])
 
         vm.orderBook = function(value) {
 
-            var reservations = BookFactory.filterReservationsAndBlocks(vm.listBook);
+            var reservations = BookFactory.filterReservationsAndBlocks(vm.listBook, vm.bookView);
 
             switch (value) {
                 case 'time':
                     vm.bookOrderBy.general.reverse = (vm.bookOrderBy.general.value == value) ? !vm.bookOrderBy.general.reverse : false;
                     vm.bookOrderBy.general.value = 'time';
-                    vm.listBook = orderByFilter(vm.listBookMaster, 'time', vm.bookOrderBy.general.reverse);
+                    vm.listBook = orderByFilter(vm.listBook, 'time', vm.bookOrderBy.general.reverse);
                     break;
                 case 'status':
                     vm.bookOrderBy.resBlock.value = 'status';
@@ -375,6 +384,7 @@ angular.module('book.controller', [])
             if (reloadUrl === true) {
                 updateUrl($stateParams.date, $stateParams.date_end, false);
             }
+            //console.log("changeBookView " + angular.toJson(vm.hoursTurns, true));
         };
 
         vm.numGuestChange = function(type, option, value) {
@@ -550,11 +560,26 @@ angular.module('book.controller', [])
 
             setDatesText(vm.startDate, vm.endDate);
 
+            var params_url = paramsFilterReservation();
+
+            pushParamsUrl(params_url);
+
+            generatedListBook(vm.datesText.start_date, vm.datesText.end_date);
+        };
+
+        vm.searchReservations = function() {
+            if (vm.bookView === true) {
+                vm.paginate_reservation.selected = 1;
+                vm.changePagination();
+            }
+        };
+
+        var paramsFilterReservation = function() {
             var params_url = {
                 date_end: vm.datesText.end_date,
-                turns: vm.bookFilter.typeTurn.toString(),
-                zones: vm.bookFilter.zones.toString(),
-                sources: vm.bookFilter.sources.toString()
+                turns: ($stateParams.turns === undefined || $stateParams.turns === "") ? vm.bookFilter.typeTurn.toString() : $stateParams.turns,
+                zones: ($stateParams.zones === undefined || $stateParams.zones === "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
+                sources: ($stateParams.sources === undefined || $stateParams.sources === "") ? vm.bookFilter.sources.toString() : $stateParams.sources
             };
 
             if (params_url.turns === "") {
@@ -567,19 +592,10 @@ angular.module('book.controller', [])
                 delete params_url.sources;
             }
 
-            clearParamsUrl(params_url);
-
-            generatedListBook(vm.datesText.start_date, vm.datesText.end_date);
+            return params_url;
         };
 
-        vm.searchReservations = function() {
-            if (vm.bookView === true) {
-                vm.paginate_reservation.selected = 1;
-                vm.changePagination();
-            }
-        };
-
-        var clearParamsUrl = function(params) {
+        var pushParamsUrl = function(params) {
             var url = $location.absUrl();
             var index = url.indexOf("?");
             url = url.substring(0, index);
@@ -587,9 +603,6 @@ angular.module('book.controller', [])
             params = getAsUriParameters(params);
             console.log(url + "?" + params);
             history.replaceState('', 'Pagina', url + "?" + params);
-
-
-
         };
 
         $scope.$on("NotifyBookConfigReload", function(evt, message) {
@@ -731,6 +744,9 @@ angular.module('book.controller', [])
                     vm.changeDateLastMonth(null, false);
                 }
 
+                vm.startDate = ($stateParams.date !== undefined || $stateParams.date === "") ? vm.startDate : convertFechaToDate($stateParams.date);
+                vm.endDate = ($stateParams.date_end !== undefined || $stateParams.date_end === "") ? vm.endDate : convertFechaToDate($stateParams.date_end);
+
                 setDatesText(vm.startDate, vm.endDate);
 
                 listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date, true);
@@ -752,7 +768,14 @@ angular.module('book.controller', [])
                 $location.url("/mesas/book/" + date);
             } else {
                 date_end = (date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : date_end;
-                $location.url("/mesas/book/" + date + "?date_end=" + date_end);
+                var url = "/mesas/book/" + date + "?date_end=" + date_end;
+
+                var params_url = paramsFilterReservation();
+                delete params_url.date_end;
+                console.log("loadConfigViewReservation " + angular.toJson(params_url, true));
+                url = url + "&" + getAsUriParameters(params_url);
+
+                $location.url(url);
             }
         };
 
@@ -788,14 +811,17 @@ angular.module('book.controller', [])
 
             if (vm.bookView === true) {
                 params.page_size = vm.paginate_reservation.page_size;
+
+                var params_url = paramsFilterReservation();
+
                 params.page = vm.paginate_reservation.page;
-                params.turns = vm.bookFilter.typeTurn.toString();
-                params.sources = vm.bookFilter.sources.toString();
-                params.zones = vm.bookFilter.zones.toString();
+                params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
+                params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
+                params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
             }
 
-            if (vm.bookFilter.text !== "") {
-                params.search_text = vm.bookFilter.text;
+            if (vm.bookFilter.search_text !== "") {
+                params.search_text = vm.bookFilter.search_text;
             }
 
             params = getAsUriParameters(params);
@@ -810,8 +836,6 @@ angular.module('book.controller', [])
                     vm.configReservation = response[2];
 
                     vm.paginate_reservation.total_pages = response[0].last_page * vm.paginate_reservation.page_size;
-
-                    console.log("generatedListBook " + angular.toJson(vm.paginate_reservation, true));
 
                     BookFactory.setConfigReservation(vm.configReservation);
                     vm.fecha_actual = moment().format('YYYY-MM-DD');
