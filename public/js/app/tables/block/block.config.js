@@ -5,17 +5,17 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
         menu: 400
     })
     .config(function($stateProvider, $urlRouterProvider) {
-        var PreviousState = [
-            "$state",
-            function($state) {
-                var currentStateData = {
-                    name: $state.current.name,
-                    params: $state.params,
-                    url: $state.href($state.current.name, $state.params)
-                };
-                return currentStateData;
-            }
-        ];
+        // var PreviousState = [
+        //     "$state",
+        //     function($state) {
+        //         var currentStateData = {
+        //             name: $state.current.name,
+        //             params: $state.params,
+        //             url: $state.href($state.current.name, $state.params)
+        //         };
+        //         return currentStateData;
+        //     }
+        // ];
 
         $stateProvider
             .state('mesas.floor.block', {
@@ -31,7 +31,23 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                     $title: function() {
                         return 'Crear Bloqueos';
                     },
-                    PreviousState: PreviousState
+                    // PreviousState: PreviousState
+                }
+            })
+            .state('mesas.book.block', {
+                url: '/block',
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/block/view/create.old.html',
+                        controller: 'blockCtr',
+                        cache: false,
+                    }
+                },
+                resolve: {
+                    $title: function() {
+                        return 'Crear Bloqueos';
+                    },
+                    // PreviousState: PreviousState
                 }
             })
             .state('mesas.floor.blockEdit', {
@@ -47,8 +63,7 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                     $title: function() {
                         return 'Editar Bloqueo';
                     },
-                    PreviousState: PreviousState
+                    // PreviousState: PreviousState
                 }
             });
-
     });

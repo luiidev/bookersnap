@@ -1,7 +1,7 @@
 angular.module('reservation.service', [])
     .factory("reservationService", ["$http", "HttpFactory", "ApiUrlMesas", "ApiUrlRoot", "quantityGuest", "$q",
         function(http, HttpFactory, ApiUrlMesas, ApiUrlRoot, quantityGuest, $q) {
-            var zones, servers, resStatus, turns, blocks, tags, reservations, configuration;
+            var zones, servers, resStatus, turns, blocks, tblocks, tags, reservations, configuration;
 
             /**
              * Lista negra de eventos de WS que no deben ejecutarse,
@@ -97,6 +97,14 @@ angular.module('reservation.service', [])
                         }
                     }, blocks, reload);
                     return blocks;
+                },
+                getTBlocks: function(date, reload) {
+                    tblocks = HttpFactory.get(ApiUrlMesas + "/blocks", {
+                        params: {
+                            date: date
+                        }
+                    }, tblocks, reload);
+                    return tblocks;
                 },
                 getGuestList: function(name) {
                     return http.get(ApiUrlMesas + "/guests", {
@@ -335,11 +343,12 @@ angular.module('reservation.service', [])
              * Funciones de cambios de estado con el tiempo
              */
             allCases.blocksPermanent();
-            if (Object.prototype.toString.call(add) == "[object Object]") {
+            var objectType = Object.prototype.toString.call(add);
+            if (objectType == "[object Object]") {
                 if (typeof allCases[add.name] == "function") {
                     allCases[add.name](add.data);
                 }
-            } else if (Object.prototype.toString.call(add) == "[object Array]") {
+            } else if (objectType == "[object Array]") {
                 angular.forEach(add, function(a) {
                     if (typeof allCases[a.name] == "function") {
                         allCases[a.name](a.data);
@@ -443,22 +452,62 @@ angular.module('reservation.service', [])
 
         var allCases = {
             blocks: function(blocks) {
-                angular.forEach(dataZones.tables, function(table) {
-                    angular.forEach(blocks, function(block) {
-                        if (table.id == block.res_table_id) {
-                            if (block.res_reservation_id === null) {
+                try {
+                    angular.forEach(dataZones.tables, function(table) {
+                        angular.forEach(blocks, function(block) {
+                            angular.forEach(block.tables, function(bTable) {
+                                if (table.id == bTable.id) {
+                                    table.blocks.data.push(block);
+                                    var event = addEvent(table, block.start_time, block.end_time,
+                                        function(table, block) {
+                                            table.blocks.active = block;
+                                        },
+                                        function(table) {
+                                            table.blocks.active = null;
+                                        }, block);
+                                    block.eventsID = block.eventsID || [];
+                                    block.eventsID.push(event);
+                                }
+                            });
+                        });
+
+                        table.blocks.add = function(block, pref) {
+                            if (Object.prototype.toString.call(block) == "[object Object]") {
                                 table.blocks.data.push(block);
-                                addEvent(table, block.start_time, block.end_time,
+                                var event = addEvent(table, block.start_time, block.end_time,
                                     function(table, block) {
                                         table.blocks.active = block;
                                     },
                                     function(table) {
                                         table.blocks.active = null;
                                     }, block);
+                                block.eventsID = block.eventsID || [];
+                                block.eventsID.push(event);
                             }
-                        }
+                        };
+                        table.blocks.remove = function(block) {
+                            if (Object.prototype.toString.call(block) == "[object Object]") {
+                                angular.forEach(table.blocks.data, function(data, i) {
+                                    if (data.id == block.id) {
+                                        if (data.eventsID) {
+                                            angular.forEach(data.eventsID, function(event) {
+                                                $interval.cancel(event.timeoutID);
+                                            });
+                                        }
+                                        if (table.blocks.active) {
+                                            if (table.blocks.active.id == data.id) {
+                                                table.blocks.active = null;
+                                            }
+                                        }
+                                        table.blocks.data.splice(i, 1);
+                                    }
+                                });
+                            }
+                        };
                     });
-                });
+                } catch (e) {
+                    console.log("Blocks :" + e);
+                }
             },
             blocksPermanent: function() {
                 angular.forEach(dataZones.tables, function(table) {
@@ -507,7 +556,6 @@ angular.module('reservation.service', [])
                         }
                         table.reservations.active = null;
                         table.reservations.timeReload();
-
                     };
                     table.reservations.timeReload = function() {
                         table.time.seated.text = null;
@@ -576,7 +624,7 @@ angular.module('reservation.service', [])
                                 (function() {
                                     if (table.time.nextTimeAll.length < 2) {
                                         var newTime = {};
-                                        newTime.text = reserv_start.format("HH:mmA");
+                                        newTime.text = reserv_start.format("h:mmA");
                                         newTime.time = reserv_start;
                                         table.time.nextTimeAll.push(newTime);
                                     } else {
@@ -587,7 +635,7 @@ angular.module('reservation.service', [])
                                                     if (reserv_start.isBefore(obj.time)) {
                                                         var aux = obj.time;
 
-                                                        obj.text = reserv_start.format("HH:mmA");
+                                                        obj.text = reserv_start.format("h:mmA");
                                                         obj.time = reserv_start;
 
                                                         established = true;

@@ -1,6 +1,6 @@
 angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, screenHelper, screenSizeBlock,
-        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio, PreviousState) {
+        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio) {
 
         $scope.date = null;
         $scope.zoneIndexShow = 0;
@@ -279,10 +279,10 @@ angular.module('block.controller', [])
             BlockFactory.editBlock(id, blockData).then(
                 function success(response) {
                     if (response.data.success === true) {
-                        messageAlert("Success", response.data.msg, "success", 3000);
+                        messageAlert("Success", response.data.msg, "success", 3000, true);
                         redirect();
                     } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 2000);
+                        messageAlert("Warning", response.data.jsonError, "warning", 2000, true);
                     }
                 },
                 function error(response) {
@@ -302,10 +302,10 @@ angular.module('block.controller', [])
                 BlockFactory.deleteBlock($stateParams.block_id).then(
                     function success(response) {
                         if (response.data.success === true) {
-                            messageAlert("Success", response.data.msg, "success", 3000);
+                            messageAlert("Success", response.data.msg, "success", 3000, true);
                             redirect();
                         } else if (response.data.response === false) {
-                            messageAlert("Warning", response.data.jsonError, "warning", 2000);
+                            messageAlert("Warning", response.data.jsonError, "warning", 2000, true);
                         }
                     },
                     function error(response) {
@@ -463,7 +463,11 @@ angular.module('block.controller', [])
         };
 
         var redirect = function() {
-            $state.go(PreviousState.name || "mesas.floor.reservation");
+            if ($state.is("mesas.book.block")) {
+                $state.go("mesas.book");
+            } else {
+                $state.go("mesas.floor.reservation");
+            }
         };
 
         (function Init() {
