@@ -123,6 +123,11 @@ angular.module('reservation.service', [])
                     reservations = HttpFactory.get(ApiUrlMesas + "/reservations?" + params, null, reservations, reload);
                     return reservations;
                 },
+                getReservationsSearch: function(reload, params) {
+                    params = (params === undefined || params === null) ? "" : params;
+                    reservations = HttpFactory.get(ApiUrlMesas + "/reservations/search?" + params, null, reservations, reload);
+                    return reservations;
+                },
                 getConfigurationRes: function(reload) {
                     configuration = HttpFactory.get(ApiUrlMesas + "/configuration/reservations", null, configuration, reload);
                     return configuration;
