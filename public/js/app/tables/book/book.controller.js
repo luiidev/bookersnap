@@ -549,6 +549,26 @@ angular.module('book.controller', [])
             vm.paginate_reservation.page = vm.paginate_reservation.selected;
 
             setDatesText(vm.startDate, vm.endDate);
+
+            var params_url = {
+                date_end: vm.datesText.end_date,
+                turns: vm.bookFilter.typeTurn.toString(),
+                zones: vm.bookFilter.zones.toString(),
+                sources: vm.bookFilter.sources.toString()
+            };
+
+            if (params_url.turns === "") {
+                delete params_url.turns;
+            }
+            if (params_url.zones === "") {
+                delete params_url.zones;
+            }
+            if (params_url.sources === "") {
+                delete params_url.sources;
+            }
+
+            clearParamsUrl(params_url);
+
             generatedListBook(vm.datesText.start_date, vm.datesText.end_date);
         };
 
@@ -557,6 +577,19 @@ angular.module('book.controller', [])
                 vm.paginate_reservation.selected = 1;
                 vm.changePagination();
             }
+        };
+
+        var clearParamsUrl = function(params) {
+            var url = $location.absUrl();
+            var index = url.indexOf("?");
+            url = url.substring(0, index);
+
+            params = getAsUriParameters(params);
+            console.log(url + "?" + params);
+            history.replaceState('', 'Pagina', url + "?" + params);
+
+
+
         };
 
         $scope.$on("NotifyBookConfigReload", function(evt, message) {
@@ -756,6 +789,9 @@ angular.module('book.controller', [])
             if (vm.bookView === true) {
                 params.page_size = vm.paginate_reservation.page_size;
                 params.page = vm.paginate_reservation.page;
+                params.turns = vm.bookFilter.typeTurn.toString();
+                params.sources = vm.bookFilter.sources.toString();
+                params.zones = vm.bookFilter.zones.toString();
             }
 
             if (vm.bookFilter.text !== "") {
@@ -773,9 +809,9 @@ angular.module('book.controller', [])
                     vm.listBookMaster = listBook;
                     vm.configReservation = response[2];
 
-                    vm.paginate_reservation.total_pages = response[0].last_page;
+                    vm.paginate_reservation.total_pages = response[0].last_page * vm.paginate_reservation.page_size;
 
-                    console.log("generatedListBook " + angular.toJson(response[0], true));
+                    console.log("generatedListBook " + angular.toJson(vm.paginate_reservation, true));
 
                     BookFactory.setConfigReservation(vm.configReservation);
                     vm.fecha_actual = moment().format('YYYY-MM-DD');

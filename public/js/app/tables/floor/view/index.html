@@ -8,45 +8,66 @@
 </section>
 <script id="myModalContentDetail.html" type="text/ng-template">
     <div class="reservation-list-content" ng-hide="vmd.EditContent">
-        <div class="modal-header">
-            <h4 class="modal-title">{{vmd.itemZona.name_zona}} - {{vmd.itemZona.name}}</h4>
+        <div class="modal-header p-15">
+            <h4 class="modal-title">MESA {{vmd.itemZona.name}}</h4>
+            <strong>{{vmd.itemZona.name_zona}}</strong>
         </div>
         <div class="modal-body">
-            <div class="listview lv-bordered lv-lg">
+            <div class="listview ">
 
-                <div class="lv-body">
-                    <div class="lv-item media border-left-green m-b-15" ng-if="vmd.reservations.active" ng-click="vmd.reservationEdit(vmd.reservations.active)" style="cursor: pointer;">
+                <div class="lv-body row">
+
+                    <div class="m-10" ng-if="vmd.reservations.active">RESERVACIONES SENTADAS</div>
+                    <div class="lv-item media item-reservation m-b-15" ng-if="vmd.reservations.active" ng-click="vmd.reservationEdit(vmd.reservations.active)">
                         <div class="media-body">
-                            <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{vmd.reservations.active.guest.first_name || "Reservacion sin nombre"}} {{vmd.reservations.active.guest.last_name}}</div>
-                            <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.reservations.active.hours_reservation) }}</li>
-                                <li><i class="zmdi zmdi-account-o"></i> {{vmd.reservations.active.num_guest}} personas</li>
-                                <li class="c-white" ng-class="'bgm-' + vmd.reservations.active.status.color">{{ vmd.reservations.active.status.name }}</li>
+                            <div class="lv-title">
+                                {{vmd.reservations.active.guest.first_name || "Reservacion sin nombre"}} {{vmd.reservations.active.guest.last_name}}
+                            </div>
+                            <ul class="lv-attrs reservation" >
+                                <li class="hours"><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.reservations.active.hours_reservation) }}</li>
+                                <li class="guests"><i class="zmdi zmdi-account-o"></i> {{vmd.reservations.active.num_guest}} personas</li>
+                                <li class="status c-white" ng-class="'bgm-' + vmd.reservations.active.status.color">{{ vmd.reservations.active.status.name }}</li>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="lv-item media border-left-green m-b-15" ng-repeat="item in vmd.reservations.data" ng-if="item.res_reservation_status_id < 4" ng-click="vmd.reservationEdit(item)" style="cursor: pointer;">
+                    <div class="m-10" ng-if="vmd.existPoximasReservationsBlocks" ng-model="vmd.existPoximasReservationsBlocks">PRÓXIMAS RESERVACIONES Y BLOQUEOS</div>
+                    <div class="lv-item media item-reservation" ng-repeat="item in vmd.reservations.data" ng-if="item.res_reservation_status_id < 4" ng-click="vmd.reservationEdit(item)">
+                        <div ng-model="vmd.existPoximasReservationsBlocks = 1"></div>
                         <div class="media-body" >
-                            <div class="lv-title"><i class="zmdi zmdi-calendar-note"></i> {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}</div>
-                            <ul class="lv-attrs" >
-                                <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.hours_reservation)}}</li>
-                                <li><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
-                                <li class="c-white" ng-class="'bgm-' + item.status.color">{{ item.status.name }}</li>
+                            <div class="lv-title">
+                                {{item.guest.first_name || "Reservacion sin nombre"}} {{item.guest.last_name}}
+                            </div>
+                            <ul class="lv-attrs reservation" >
+                                <li class="hours"><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.hours_reservation)}}</li>
+                                <li class="guests"><i class="zmdi zmdi-account-o"></i> {{item.num_guest}} personas</li>
+                                <li class="status c-white" ng-class="'bgm-' + item.status.color">{{ item.status.name }}</li>
                             </ul>
                         </div>
                     </div>
-
-                    <div ng-repeat="item in vmd.blocks.data" class="lv-item media border-left-amber" style="cursor: default;">
+                    
+                    <div class="lv-item media item-block" ng-if="vmd.blocks.active" >
                         <div class="media-body">
-                            <div class="lv-title"><i class="zmdi zmdi-block-alt"></i> Mesa Bloqueada</div>
+                            <div ng-model="vmd.existPoximasReservationsBlocks = 1"></div>
+                            <div class="lv-title">Mesa Bloqueada</div>
+                            <ul class="lv-attrs" >
+                                <li>
+                                    <i class="zmdi zmdi-time"></i> {{ vmd.infoTime(vmd.blocks.active.start_time) }} - {{ vmd.infoTime(vmd.blocks.active.end_time) }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div ng-repeat="item in vmd.blocks.data" class="lv-item media item-block" >
+                        <div class="media-body">
+                            <div ng-model="vmd.existPoximasReservationsBlocks = 1"></div>
+                            <div class="lv-title">Mesa Bloqueada</div>
                             <ul class="lv-attrs" >
                                 <li><i class="zmdi zmdi-time"></i> {{ vmd.infoTime(item.start_time) }} - {{ vmd.infoTime(item.end_time) }}</li>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="not-information" ng-if="!vmd.reservations.data.length && !vmd.blocks.data.length">
+                    <div class="not-information" ng-if="!vmd.reservations.active && !vmd.existPoximasReservationsBlocks">
                         No se encontro reservas y bloqueos
                     </div>
 
@@ -54,113 +75,115 @@
             </div>
         </div>
         <div class="modal-footer">
-            <div class="text-center">
-                <button class="btn btn-primary btn-block" ng-click="vmd.redirect()">crear reservación</button>
-            </div>
+            <button class="btn btn-primary btn-block btn-lg text-center" ng-click="vmd.redirect()">crear reservación</button>   
         </div>
     </div>
 
     <div class="reservation-short-edit" ng-show="vmd.EditContent">
         <div class="modal-header" style="line-height: 30px;">
             <button class="btn bgm-white pull-left" ng-click="vmd.cancelEdit()"><i class="zmdi zmdi-arrow-back"></i></button>
-            <h4 style="display: inline;">Detalle de reservacion</h4>
-            <button class="btn btn-primary pull-right" ng-click="vmd.save()" ng-disabled="vmd.waitingResponse">Guardar</button>
+            <h4 style="display: inline;">DETALLE DE RESERVACIÓN</h4>
+            <!-- <button class="btn btn-primary pull-right" ng-click="vmd.save()" ng-disabled="vmd.waitingResponse">Guardar</button> -->
         </div>
         <div class="modal-body">
 
-         <div class="card reservation-guest-selected" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
-             <div class="card-header bgm-indigo" ng-click="removeGuest()">
-                 <h2>{{ vmd.infoName() }}</h2>
-             </div>
-        </div> 
+            <div class="card m-b-5" style="padding-bottom: 5px;">
+                <form class="form-horizontal" role="form">
+                    <div class="card-body drag-border">
+                        <div class="resum-reservation" ng-click="vmd.reservationEditAll()">                        
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h4 class="title">{{ vmd.infoName() }}</h4>
+                                </div>
+                                <div class="col-xs-4">{{ vmd.infoDate() }}</div>
+                                <div class="col-xs-4 text-center">{{ vmd.infoTime() }}</div>
+                                <div class="col-xs-4 text-right">{{ vmd.infoTables() }}</div>
+                            </div>
+                        </div>
 
-        <div class="card m-b-5" style="padding-bottom: 5px;">
-            <form class="form-horizontal" role="form">
-                <div class="card-body drag-border">
-                    <div class="form-group" style="cursor: pointer;" ng-click="vmd.reservationEditAll()">
-                        <div class="col-xs-12" style="text-align: center;padding: 15px;">
-                            <label class="col-xs-4 control-label pull-left" style="text-align: left;">{{ vmd.infoDate() }}</label>
-                            <label class="col-xs-4 control-label" style="text-align: center">{{ vmd.infoTime() }}</label>
-                            <label class="col-xs-4 control-label pull-right">{{ vmd.infoTables() }}</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label" for="covers">
-                            Invitados
-                        </label>
-                        <div class="col-xs-10">
-                            <div class="fg-line">
-                                <div class="select">
-                                    <select class="form-control" id="covers" ng-model="vmd.reservation.covers" ng-options="cover.id as cover.name for cover in vmd.covers"></select>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" for="covers">
+                                Invitados
+                            </label>
+                            <div class="col-xs-9">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="covers" ng-model="vmd.reservation.covers" ng-options="cover.id as cover.name for cover in vmd.covers"></select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label" for="status">
-                            Estado
-                        </label>
-                        <div class="col-xs-10">
-                            <div class="fg-line">
-                                <div class="select">
-                                    <select class="form-control" id="status" ng-model="vmd.reservation.status_id" ng-options="status.id as status.name for status in vmd.statuses"></select>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" for="status">
+                                Estado
+                            </label>
+                            <div class="col-xs-9">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="status" ng-model="vmd.reservation.status_id" ng-options="status.id as status.name for status in vmd.statuses"></select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label" for="server">
-                            Mozo
-                        </label>
-                        <div class="col-xs-10">
-                            <div class="fg-line">
-                                <div class="select">
-                                    <select class="form-control" id="server" ng-model="vmd.reservation.server_id" ng-options="server.id as server.name for server in vmd.servers">
-                                        <option selected="true" value="">
-                                            Ninguno
-                                        </option>
-                                    </select>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" for="server">
+                                Servidor
+                            </label>
+                            <div class="col-xs-9">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="server" ng-model="vmd.reservation.server_id" ng-options="server.id as server.name for server in vmd.servers">
+                                            <option selected="true" value="">
+                                                Ninguno
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-2 control-label" for="note">
-                            Nota
-                        </label>
-                        <div class="col-xs-10">
-                            <div class="fg-line">
-                                <textarea class="form-control input-sm" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="vmd.reservation.note"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-7 control-label itext-left" for="server">
-                            Etiquetas de reservación
-                        </label>
-                        <div class="col-xs-5">
-                            <div class="clearfix dropdown-btn-demo pull-right" style="padding-top: 7px;">
-                                <div class="dropdown dropup" uib-dropdown>
-                                    <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0)" >Editar Etiquetas</a>
-                                    <ul class="dropdown-menu pull-right" ng-style="vmd.dTag && { 'transform': 'scale(1)', 'opacity': '1'}">
-                                        <li data-ng-repeat="tag in vmd.tags">
-                                            <a href="javascript:void(0)" ng-click="vmd.addTag(tag)" ng-mouseover="vmd.dTag = true" ng-mouseout="vmd.dTag = false">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
-                                        </li>
-                                    </ul>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" for="note">
+                                Nota
+                            </label>
+                            <div class="col-xs-9">
+                                <div class="fg-line">
+                                    <textarea rows="2" class="form-control" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="vmd.reservation.note"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 m-t-10">
-                            <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in vmd.selectTags">{{ tag.name }}</button>
+                        <div class="form-group" ng-show="vmd.existTagsReservations" >                            
+                            <label class="col-xs-3 control-label" for="tag">
+                                Etiquetas de Reservación
+                            </label>
+                            <div class="col-xs-9">
+                                <div class="p-t-10">
+                                    <label type="button" class="label bgm-lightblue tag-reservation pull-right" ng-repeat="tag in vmd.selectTags">
+                                        <span ng-model="vmd.existTagsReservations=1">{{ tag.name }}</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <div class="col-xs-12 p-t-10">
+                                <div class="clearfix dropdown-btn-demo pull-right">
+                                    <div class="dropdown dropup" uib-dropdown>
+                                        <a class="dropdown-toggle" uib-dropdown-toggle href="javascript:void(0)" >SELECCIONAR ETIQUETAS DE RESERVACIÓN</a>
+                                        <ul class="dropdown-menu pull-right" ng-style="vmd.dTag && { 'transform': 'scale(1)', 'opacity': '1'}">
+                                            <li data-ng-repeat="tag in vmd.tags">
+                                                <a href="javascript:void(0)" ng-click="vmd.addTag(tag)" ng-mouseover="vmd.dTag = true" ng-mouseout="vmd.dTag = false">{{ tag.name }} <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="tag.checked"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
-        </div>
 
-        <div class="modal-body modal-configuration" style="padding: 0 26px 10px;">
+        <div class="modal-body modal-configuration" style="padding: 0 25px 0px;">
             <div class="card" style="box-shadow: none;">
                 <div class="card-body">
                     <ul class="modal-listado-num-people" style="padding: 0;">
@@ -175,18 +198,7 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
-                        <li class="lst-women" style="display: inline-block;" ng-if="vmd.configuration.status_people_2">
-                            <div class="box-gender" style="width: 30px;">
-                                <i class="zmdi zmdi-female" style="font-size: 2.5em;margin-top: 5px;"></i>
-                            </div>
-                            <div class="box-count pull-right">
-                                <button class="btn" ng-click="vmd.restar('women')">-</button>
-                                <span class="box-count-value btn-active">{{vmd.reservation.guests.women}}</span>
-                                <button class="btn" ng-click="vmd.sumar('women')">+</button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
-                        <li class="lst-children" style="display: inline-block;" ng-if="vmd.configuration.status_people_3">
+                        <li class="lst-children pull-right" style="display: inline-block;" ng-if="vmd.configuration.status_people_3">
                             <div class="box-gender" style="width: 30px;">
                                 <i class="zmdi zmdi-face" style="font-size: 2.5em;margin-top: 5px;"></i>
                             </div>
@@ -197,10 +209,21 @@
                             </div>
                             <div class="clearfix"></div>
                         </li>
-                        <div >
-                            <p class="c-red" ng-repeat="message in vmd.guestMessage" ng-show="message.active">{{ message.text }}</p>
-                        </div>
+                        <li class="lst-women pull-right" style="display: inline-block;" ng-if="vmd.configuration.status_people_2">
+                            <div class="box-gender" style="width: 30px;">
+                                <i class="zmdi zmdi-female" style="font-size: 2.5em;margin-top: 5px;"></i>
+                            </div>
+                            <div class="box-count pull-right">
+                                <button class="btn" ng-click="vmd.restar('women')">-</button>
+                                <span class="box-count-value btn-active">{{vmd.reservation.guests.women}}</span>
+                                <button class="btn" ng-click="vmd.sumar('women')">+</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
                     </ul>
+                    <div>
+                        <p class="c-red" ng-repeat="message in vmd.guestMessage" ng-show="message.active">{{ message.text }}</p>
+                    </div>
 <!--              <div class="box-result" ng-if="vmd.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3">
                         <span class="f-700">TOTAL</span>
                         <span class="box-total">{{vmd.reservation.guests.total}}</span>
@@ -211,8 +234,12 @@
 
         <div class="modal-footer">
             <div class="text-center">
-                <button class="btn btn-warning btn-block" ng-click="vmd.cancelReservation()" ng-disabled="vmd.waitingResponse">Cancelar Reservacion</button>
+                <button class="btn btn-primary btn-lg btn-block" ng-click="vmd.save()" ng-disabled="vmd.waitingResponse">GUARDAR</button>
             </div>
+            <!-- CANCELAR RESERVACION: Poner reservacion en estado de cancelado -->
+            <!-- <div class="text-center">
+                <button class="btn btn-default btn-lg btn-block" ng-click="vmd.cancelReservation()" ng-disabled="vmd.waitingResponse">Cancelar Reservacion</button>
+            </div> -->
         </div>
     </div>
 </script>

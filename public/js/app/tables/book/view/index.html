@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
@@ -282,7 +282,7 @@
             <br>
             </br>
         </div>
-        <div class="text-center" ng-show="vm.bookView">
+        <div class="text-center" ng-show="vm.bookView && vm.listBook.length>0">
             <uib-pagination items-per-page="vm.paginate_reservation.page_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
             </uib-pagination>
         </div>
