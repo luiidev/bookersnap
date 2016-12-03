@@ -24,8 +24,4 @@ angular.module("floor.notify.controller", [])
         $scope.$broadcast("NotifyFloorBlock", data);
     });
 
-    serverSocket.on("b-mesas-floor-upd-block", function(data) {
-        $scope.$broadcast("NotifyFloorBlock", data);
-    });
-
 });

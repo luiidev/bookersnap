@@ -298,9 +298,9 @@ angular.module('floor.filter', [])
             }
 
             var salida = list.filter(function(item) {
-                if (item.res_block_id) return false;
-                var status = arrayFilter.indexOf(item[element]) != -1;
-                var waitlist = item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4);
+                if (item.start_time) return false; // Es un blockeo - se excluye
+                var status = arrayFilter.indexOf(item[element]) != -1; // Si su  estado(valor dinamico) se encuentra entre los filtros
+                var waitlist = item.wait_list === 0 || (item.wait_list == 1 && item.res_reservation_status_id == 4); // Si es waitlist, solo se muestra si esta sentado
                 return status && waitlist;
             });
             return salida;
@@ -310,18 +310,20 @@ angular.module('floor.filter', [])
         return function(list) {
             var salida = list.reduce(function(array, item) {
                 // Si es una reservacion - devuelve la reservacion
-                if (item.id) {
-                    array.push(item);
-                } else if (item.res_block_id) { //Si es un bloqueo - Analiza si ya existe un bloqueo similar (api devuelve un bloqueo por mesa, no bloqueo con sus mesas)
+
+                //Si es un bloqueo - Analiza si ya existe un bloqueo similar (api devuelve un bloqueo por mesa, no bloqueo con sus mesas)
+                if (item.start_time) {
                     // Pregunta si ya existe el bloqueo
                     var exists = array.some(function(itemX) {
-                        return itemX.res_block_id == item.res_block_id;
+                        return itemX.id == item.id && itemX.start_time;
                     });
 
                     // Si no existe agrego el bloqueo a la lista a retornar
                     if (!exists) {
                         array.push(item);
                     }
+                } else { //  Es una reservacion - se retorna
+                    array.push(item);
                 }
 
                 return array;
