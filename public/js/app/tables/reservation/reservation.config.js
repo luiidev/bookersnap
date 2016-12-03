@@ -6,23 +6,9 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
     })
     .constant("quantityGuest", 100)
     .config(function($stateProvider) {
-        var previousState = {
-            PreviousState: [
-                "$state",
-                function($state) {
-                    var currentStateData = {
-                        name: $state.current.name,
-                        params: $state.params,
-                        url: $state.href($state.current.name, $state.params)
-                    };
-                    return currentStateData;
-                }
-            ]
-        };
-
         $stateProvider
-            .state('mesas.reservation-new', {
-                url: '/floor/reservation/:date/add',
+            .state('mesas.floor.reservation.add', {
+                url: '/:date/add',
                 params: {
                     tables: null
                 },
@@ -33,9 +19,12 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                         controllerAs: 'rc',
                     }
                 },
-                resolve: previousState
-            }).state('mesas.reservation-edit', {
-                url: '/floor/reservation/:date/edit/:id',
+            })
+            .state('mesas.book-reservation-add', {
+                url: '/book/reservation/:date/add',
+                params: {
+                    tables: null
+                },
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/reservation/view/index.html',
@@ -43,6 +32,24 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                         controllerAs: 'rc',
                     }
                 },
-                resolve: previousState
+            }).state('mesas.floor.reservation.edit', {
+                url: '/:date/edit/:id',
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
+                    }
+                },
+            })
+            .state('mesas.floor-reservation-edit', {
+                url: '/book/reservation/:date/edit/:id',
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
+                    }
+                },
             });
     });

@@ -507,7 +507,7 @@ angular.module('floor.controller')
 
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
-                $state.go('mesas.reservation-edit', {
+                $state.go('mesas.floor.reservation.edit', {
                     id: er.reservation.id,
                     date: moment().format("YYYY-MM-DD")
                 });

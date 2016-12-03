@@ -933,7 +933,7 @@ angular.module('floor.controller')
 
         vmd.reservationEditAll = function() {
             $uibModalInstance.dismiss('cancel');
-            $state.go('mesas.reservation-edit', {
+            $state.go('mesas.floor.reservation.edit', {
                 id: vmd.reservation.id,
                 date: getFechaActual()
             });
@@ -1220,7 +1220,7 @@ angular.module('floor.controller')
         vmd.redirect = function() {
             $uibModalInstance.dismiss('cancel');
             var fecha_actual = getFechaActual();
-            $state.go("mesas.reservation-new", {
+            $state.go("mesas.floor.reservation.add", {
                 date: fecha_actual,
                 tables: [{
                     id: content.table.id

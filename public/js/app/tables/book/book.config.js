@@ -14,7 +14,6 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
                         controllerAs: 'vm'
                     },
                 }
-
             });
 
     });

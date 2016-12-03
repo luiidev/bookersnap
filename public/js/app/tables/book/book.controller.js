@@ -480,7 +480,7 @@ angular.module('book.controller', [])
             if (validaNumGuestClick === true) {
                 return;
             }
-            $state.go('mesas.reservation-edit', {
+            $state.go('mesas.floor-reservation-edit', {
                 id: item.reservation.id,
                 date: item.reservation.date_reservation
             });
@@ -1079,7 +1079,7 @@ angular.module('book.controller', [])
 
         vm.redirectReservation = function() {
             $uibModalInstance.dismiss('cancel');
-            $state.go("mesas.reservation-new", {
+            $state.go("mesas.book-reservation-add", {
                 date: date,
                 tables: [{
                     id: vm.reservation.table_id
