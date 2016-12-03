@@ -128,7 +128,7 @@ angular.module('book.service', [])
                     }
                 });
                 //console.log("books " + angular.toJson(tablesAvailability, true));
-                // console.log("books " + angular.toJson(book, true));
+                //console.log("books " + angular.toJson(book, true));
                 return book;
             },
             //Asignamos disponibilidad si hay reservas,analizamos el tiempo de duración

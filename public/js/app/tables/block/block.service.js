@@ -10,8 +10,7 @@ angular.module('block.service', [])
                 return zonesCalendar;
             },
             getAllBlock: function(vDate, reload) {
-                blocksAll = HttpFactory.get(ApiUrlMesas + "/blocks/tables?" + vDate, {}, blocksAll, reload);
-                return blocksAll;
+                return $http.get(ApiUrlMesas + "/blocks/tables?" + vDate);
             },
             getBlocks: function(reload, params) {
                 params = (params === undefined || params === null) ? "" : params;
@@ -19,8 +18,7 @@ angular.module('block.service', [])
                 return blocks;
             },
             getBlock: function(vId, reload) {
-                block = HttpFactory.get(ApiUrlMesas + "/blocks/" + vId, {}, block, reload);
-                return block;
+                return $http.get(ApiUrlMesas + "/blocks/" + vId);
             },
             saveBlock: function(data) {
                 return $http.post(ApiUrlMesas + "/blocks", data);

@@ -60,7 +60,7 @@
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
                                 <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)"   ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
-                                    <td ng-if="value.id" ng-click="rm.editReservation(value)">
+                                    <td ng-if="!value.start_time" ng-click="rm.editReservation(value)">
                                         <table class="table-listado sub-table">
                                             <tr>
                                                 <td class="child-hour">
@@ -72,8 +72,9 @@
                                                 <td class="child-name">
                                                     {{ value.guest ? value.guest.first_name : 'Reservacion sin nombre'}} {{value.guest ? value.guest.last_name : ''}}
                                                 </td>
-                                                <td class="child-room" ng-bind="rm.getZone(value).length ? rm.getZone(value)[0].number : '-'">
-                                                    <span ng-if="rm.getZone(value).length > 1">
+                                                <td class="child-room">
+                                                    {{ value.zone[0].number }}
+                                                    <span ng-if="value.zone.length > 1">
                                                         +
                                                     </span>
                                                 </td>
@@ -160,8 +161,8 @@
                                                     </div>
                                                 </td>
                                                 <td class="child-status">
-                                                    <div class="box-turn-res" ng-style="{background: value.type_turn.color}">
-                                                        {{value.type_turn.name}}
+                                                    <div class="box-turn-res" ng-style="{background: value.turn.type_turn.color}">
+                                                        {{value.turn.type_turn.name}}
                                                     </div>
                                                 </td>
                                                 <td class="child-status">
@@ -172,14 +173,17 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td ng-show="value.res_block_id" ng-mousedown="$event.stopPropagation()" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id:value.res_block_id})"  >
+                                    <td ng-show="value.start_time" ng-mousedown="$event.stopPropagation()" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id: value.id})"  >
                                         <table class="table-listado p-0 m-0" style="height: 40px;">
                                             <tr>
                                                 <td>
                                                     {{value.start_time}} - {{value.end_time}}
                                                 </td>
                                                 <td>
-                                                    {{value.zone_indice}}
+                                                    {{value.zone[0].number}}
+                                                    <span ng-if="value.zone.length>1">
+                                                        +
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     {{value.tables[0].name}}
@@ -211,14 +215,6 @@
             <span class="caret">
             </span>
         </button>
-<!--         <ul class="dropdown-menu">
-            <li ng-if="categoria.turn" ng-repeat="categoria in rm.categorias_type">
-                <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)">
-                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
-                    {{categoria.name}}
-                </a>
-            </li>
-        </ul> -->
         <ul class="dropdown-menu">
             <li ng-if="categoria.turn" ng-repeat="categoria in rm.categorias_type">
                 <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)" ng-if="$index == 0">

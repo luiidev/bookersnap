@@ -148,11 +148,15 @@
 				-moz-transform: translate(-50%,-50%) rotate(-90deg)
 				-ms-transform: translate(-50%,-50%) rotate(-90deg)
 				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
-				transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)		
 			& .item-drag-cover
 				-moz-transform: translate(-50%,-50%) rotate(-90deg)
 				-ms-transform: translate(-50%,-50%) rotate(-90deg)
 				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)
+				top: 50%
+				left: 50%
+			& .item-drag-time
 				transform: translate(-50%,-50%) rotate(-90deg)
 				top: 50%
 				left: 50%
@@ -401,9 +405,9 @@
 				top 82%
 		& .box-icon
 			background-repeat no-repeat
-			width 1em
-			height 1em
-			background-size 1em 1em
+			width 36px
+			height 36px
+			background-size 36px
 			position absolute
 			left: 50%
 			top: 50%
@@ -436,7 +440,82 @@
 		& .block-table-permanent
 			background #424242
 				
-
+/* -------------MODAL FLOOR RESERVATION-----------------*/
+.modal-content .reservation-list-content
+	& .modal-title
+		font-weight 700
+		padding-bottom 5px
+	& .listview
+		& .lv-body
+			& .not-information
+				height 100px
+				padding-top 40px
+				text-align center					
+			& .lv-item
+				border-top 1px solid #E5E5E5
+				&:not(:last-child)
+					border-bottom 1px solid #E5E5E5 !important
+				&.item-reservation
+					background-color #eee
+					cursor pointer
+					&:hover
+						background-color #b6e2e2						
+				&.item-block
+					background-color #828282
+					cursor pointer
+					&:hover
+						background-color #5a5a5a
+					& .media-body
+						& .lv-title
+							color #fff
+						& .lv-attrs
+							& li
+								background-color transparent
+								border-color #777
+								color #fff
+				& .media-body
+					& .lv-attrs
+						& .hours
+							width 90px
+						& .guests
+							width 100px
+						& .status
+							width 90px				
+				& .label 
+					font-size 85%
+.modal-content .reservation-short-edit
+	& .resum-reservation
+		background-color #eee
+		cursor pointer
+		display inline-block
+		width 100%
+		padding 10px 15px
+		margin-bottom 15px
+		-webkit-box-shadow 0px 1px 5px 1px #bfbfbf
+		box-shadow 0px 1px 5px 1px #bfbfbf
+		&:hover
+			background-color #b6e2e2
+	& .form-horizontal
+		& .form-group
+			border-top 1px solid #e6e6e6
+			border-left 1px solid #e6e6e6
+			border-right 1px solid #e6e6e6
+			padding 10px 0px
+			margin 0px
+			& .form-control
+				padding-left 10px
+				padding-right 10px
+			& textarea
+				padding 10px
+			&:hover
+				background-color #eee
+			&:last-child
+				border-bottom 1px solid #e6e6e6
+	& .label.tag-reservation
+		display inline-block
+		font-size 14px
+		margin-right 5px
+		padding 8px
 /*Create zone drag and drop*/
 [ng-drag]
 	-moz-user-select -moz-none
@@ -1013,11 +1092,11 @@
 	& .header-list-reservation
 		padding 0 53px
 	& .listview
-		& .lv-item
+		& .lv-item			
 			& .media-body
 				//border-bottom 1px solid #E5E5E5
 				& .lv-title
-					color #fff!important
+					color #fff !important				
 			& .notes 
 				padding 10px 15px
 			&:not(:last-child)
@@ -1433,7 +1512,8 @@ footer
 				& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
 					background #f12929
 					& .listado-table
-						display table
+						display block
+						padding-left 1px
 						text-align center
 						margin 0 auto
 						& .listado-row

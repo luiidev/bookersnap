@@ -47,8 +47,7 @@ angular.module('floor.controller')
             checked: false,
         }];
 
-        var statistics = function() {
-
+        var statistics = function(action) {
             var total = 0;
             var men = 0;
             var women = 0;
@@ -83,17 +82,16 @@ angular.module('floor.controller')
 
             rm.total_reservas = rm.typeRes.total_reservas;
 
-            rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
-            console.log(rm.res_listado);
+            rm.res_listado = Array.prototype.concat.call(angular.copy(rm.reservations.data), angular.copy(rm.blocks.data));
+            rm.getZone();
         };
 
-        reservationService.getBlocks().then(function(response) {
-            blocks = response.data.data;
-            statistics();
-        });
-
         rm.getZone = function(reservation) {
-            if (global.lienzo.data.getZoneForTables) return global.lienzo.data.getZoneForTables(reservation.tables);
+            if (rm.lienzo.data.getZoneForTables) {
+                angular.forEach(rm.res_listado, function(item) {
+                    item.zone = rm.lienzo.data.getZoneForTables(item.tables);
+                });
+            }
         };
 
         var customSelect = function(categoria, event, collection, filter, index_all, callback) {
@@ -292,7 +290,9 @@ angular.module('floor.controller')
             clearState();
 
             rm.reservations = global.reservations;
-            $scope.$watch("rm.reservations", statistics, true);
+            rm.blocks = global.blocks;
+            rm.lienzo = global.lienzo;
+            $scope.$watch("rm.lienzo", statistics, true);
 
             loadConfiguration();
             listSourceTypes();
@@ -633,16 +633,18 @@ angular.module('floor.controller')
             date: '',
             time: '',
             email: '',
-            nombre: ''
+            nombre: '',
+            messages: []
         };
 
         vm.mailData = {
             message: '',
-            subject: ''
+            subject: '',
+            email: ''
         };
 
         var init = function() {
-            // console.log(angular.toJson(reservation, true));
+            console.log(angular.toJson(reservation, true));
             vm.reservation.date = reservation.date_reservation;
             vm.reservation.time = reservation.hours_reservation;
             vm.reservation.email = reservation.email;
@@ -650,6 +652,9 @@ angular.module('floor.controller')
             var last_name = reservation.guest ? reservation.guest.last_name : "";
             vm.reservation.nombre = first_name + " - " + last_name;
             vm.reservation.note = reservation.note;
+            vm.reservation.messages = reservation.emails;
+            vm.mailData.email = reservation.email;
+
         };
 
         vm.sendMail = function() {

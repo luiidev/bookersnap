@@ -24,7 +24,7 @@ angular.module('floor.controller')
         vm.zones = global.lienzo;
         var reservations = global.reservations;
         var servers = global.servers;
-        var blocks = [];
+        var blocks = global.blocks;
         var zones = [];
         /**
          * END Variables de manejo general de informacion
@@ -77,17 +77,6 @@ angular.module('floor.controller')
             // var index = $table.getZoneIndexForTable(vm.zones.data, tables);
             // if (index !== null) vm.tabSelectedZone(index);
             vm.findTableForServer(tables);
-        });
-
-        $scope.$on("NotifyFloorBlock", function(evt, data) {
-            var blockTest = FloorFactory.parseDataBlock(data.data);
-            FloorFactory.asingBlockTables(blockTest, vm.zones.data);
-
-            var blockParsear = FloorFactory.parseDataBloqueos(data.data);
-            FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
-            $scope.$apply();
-            alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-            // console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
         $scope.$on("floorReload", function(evt, data, action) {
@@ -241,7 +230,7 @@ angular.module('floor.controller')
         var loadBlocks = function(date) {
             var deferred = $q.defer();
 
-            reservationService.getBlocks(date, true)
+            reservationService.getTBlocks(date, true)
                 .then(function(response) {
                     blocks.data = response.data.data;
                     deferred.resolve(blocks.data);
@@ -402,14 +391,25 @@ angular.module('floor.controller')
         };
 
         var serverEvents = {};
-        serverEvents.update = function(data) {
-            servers.update(data);
+        serverEvents.update = function(data, callback) {
+            servers.update(data, callback);
         };
-        serverEvents.create = function(data) {
-            servers.add(data);
+        serverEvents.create = function(data, callback) {
+            servers.add(data, callback);
         };
-        serverEvents.delete = function(data) {
-            servers.delete(data);
+        serverEvents.delete = function(data, callback) {
+            servers.delete(data, callback);
+        };
+
+        var blockEvents = {};
+        blockEvents.update = function(data, callback) {
+            blocks.update(data, callback);
+        };
+        blockEvents.create = function(data, callback) {
+            blocks.add(data, callback);
+        };
+        blockEvents.delete = function(data, callback) {
+            blocks.delete(data, callback);
         };
         /**
          * END
@@ -421,7 +421,9 @@ angular.module('floor.controller')
                     reservationEvents[data.action](data.data, function() {
                         if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
                     });
-                    $scope.$apply();
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             }
         });
@@ -429,9 +431,25 @@ angular.module('floor.controller')
         $scope.$on("NotifyFloorTableServerReload", function(evt, data) {
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof serverEvents[data.action] == "function") {
-                    serverEvents[data.action](data.data);
-                    if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
-                    $scope.$apply();
+                    serverEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
+                }
+            }
+        });
+
+        $scope.$on("NotifyFloorBlock", function(evt, data) {
+            if (!reservationService.blackList.contains(data.key)) {
+                if (typeof blockEvents[data.action] == "function") {
+                    blockEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             }
         });

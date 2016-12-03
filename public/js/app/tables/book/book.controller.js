@@ -576,11 +576,20 @@ angular.module('book.controller', [])
 
         var paramsFilterReservation = function() {
             var params_url = {
+                date: vm.datesText.start_date,
                 date_end: vm.datesText.end_date,
                 turns: ($stateParams.turns === undefined || $stateParams.turns === "") ? vm.bookFilter.typeTurn.toString() : $stateParams.turns,
                 zones: ($stateParams.zones === undefined || $stateParams.zones === "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
-                sources: ($stateParams.sources === undefined || $stateParams.sources === "") ? vm.bookFilter.sources.toString() : $stateParams.sources
+                sources: ($stateParams.sources === undefined || $stateParams.sources === "") ? vm.bookFilter.sources.toString() : $stateParams.sources,
+                search_text: ($stateParams.search_text === undefined) ? vm.bookFilter.search_text : $stateParams.search_text
             };
+
+            if (params_url.start_date === "") {
+                delete params_url.start_date;
+            }
+            if (params_url.search_text === "") {
+                delete params_url.search_text;
+            }
 
             if (params_url.turns === "") {
                 delete params_url.turns;
@@ -591,6 +600,8 @@ angular.module('book.controller', [])
             if (params_url.sources === "") {
                 delete params_url.sources;
             }
+
+            console.log("paramsFilterReservation " + angular.toJson(params_url, true));
 
             return params_url;
         };
@@ -717,7 +728,6 @@ angular.module('book.controller', [])
 
                 setDateBookFilter(vm.fecha_actual);
                 setDatesText(vm.fecha_actual, null);
-
             } else {
 
                 if (vm.configUserDefault.rangeDate.hoy === true) {
@@ -746,7 +756,7 @@ angular.module('book.controller', [])
 
                 vm.startDate = ($stateParams.date !== undefined || $stateParams.date === "") ? vm.startDate : convertFechaToDate($stateParams.date);
                 vm.endDate = ($stateParams.date_end !== undefined || $stateParams.date_end === "") ? vm.endDate : convertFechaToDate($stateParams.date_end);
-
+                console.log("init startDate " + $stateParams.date);
                 setDatesText(vm.startDate, vm.endDate);
 
                 listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date, true);
@@ -765,14 +775,15 @@ angular.module('book.controller', [])
             }
 
             if (vm.bookView === false) {
-                $location.url("/mesas/book/" + date);
+                $location.url("/mesas/book?date=" + date);
             } else {
                 date_end = (date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : date_end;
-                var url = "/mesas/book/" + date + "?date_end=" + date_end;
+                var url = "/mesas/book?date=" + date + "&date_end=" + date_end;
 
                 var params_url = paramsFilterReservation();
                 delete params_url.date_end;
-                console.log("loadConfigViewReservation " + angular.toJson(params_url, true));
+                delete params_url.date;
+                //console.log("loadConfigViewReservation " + angular.toJson(params_url, true));
                 url = url + "&" + getAsUriParameters(params_url);
 
                 $location.url(url);
@@ -780,6 +791,7 @@ angular.module('book.controller', [])
         };
 
         var listTurnAvailable = function(date, date_end, reload) {
+
             BookDataFactory.getTypeTurns(date, reload).then(
                 function success(response) {
                     response = response;
@@ -818,15 +830,15 @@ angular.module('book.controller', [])
                 params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
                 params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
                 params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
-            }
 
-            if (vm.bookFilter.search_text !== "") {
-                params.search_text = vm.bookFilter.search_text;
+                if (params_url.search_text !== undefined) {
+                    params.search_text = params_url.search_text;
+                }
             }
 
             params = getAsUriParameters(params);
 
-            console.log("generatedListBook " + params);
+            //console.log("generatedListBook " + params);
 
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
