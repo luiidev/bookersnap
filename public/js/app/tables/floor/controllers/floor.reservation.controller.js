@@ -633,16 +633,18 @@ angular.module('floor.controller')
             date: '',
             time: '',
             email: '',
-            nombre: ''
+            nombre: '',
+            messages: []
         };
 
         vm.mailData = {
             message: '',
-            subject: ''
+            subject: '',
+            email: ''
         };
 
         var init = function() {
-            // console.log(angular.toJson(reservation, true));
+            console.log(angular.toJson(reservation, true));
             vm.reservation.date = reservation.date_reservation;
             vm.reservation.time = reservation.hours_reservation;
             vm.reservation.email = reservation.email;
@@ -650,6 +652,9 @@ angular.module('floor.controller')
             var last_name = reservation.guest ? reservation.guest.last_name : "";
             vm.reservation.nombre = first_name + " - " + last_name;
             vm.reservation.note = reservation.note;
+            vm.reservation.messages = reservation.emails;
+            vm.mailData.email = reservation.email;
+
         };
 
         vm.sendMail = function() {

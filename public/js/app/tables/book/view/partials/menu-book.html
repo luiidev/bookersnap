@@ -83,8 +83,12 @@
                     <i class="zmdi zmdi-accounts zmdi-hc-fw">
                     </i>
                 </span>
-                <div class="fg-line">
-                    <input class="form-control bg-transparent" ng-enter="vm.searchReservations()" ng-model="vm.bookFilter.text" placeholder="Nombre / Apellido" type="text">
+                <div class="fg-line" ng-hide="vm.bookView">
+                    <input class="form-control bg-transparent" ng-model="vm.bookFilter.text" placeholder="Nombre / Apellido" type="text">
+                    </input>
+                </div>
+                <div class="fg-line" ng-show="vm.bookView">
+                    <input class="form-control bg-transparent" ng-enter="vm.searchReservations()" ng-model="vm.bookFilter.search_text" placeholder="Nombre / Apellido" type="text">
                     </input>
                 </div>
             </div>
