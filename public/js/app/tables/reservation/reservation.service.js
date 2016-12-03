@@ -212,7 +212,7 @@ angular.module('reservation.service', [])
                             var date_end = moment(item.turn.hours_end, "HH:mm:ss");
 
                             for (var i = 0; i < 94; i++) {
-                                if (date_ini.isSame(date_end)) {
+                                if (date_ini.format("HH:mm:ss") == date_end.format("HH:mm:ss")) {
                                     break;
                                 }
                                 addHour(date_ini, item, 15);

@@ -1,4 +1,4 @@
-angular.module('block.app', ['block.controller', 'block.service', 'block.directive'])
+angular.module('block.app', ['block.controller', 'block.service', 'block.directive', "block.filter"])
     .constant("screenSizeBlock", {
         minSize: 450,
         header: 112,

@@ -264,11 +264,11 @@ angular.module('block.controller', [])
                         messageAlert("Success", response.data.msg, "success", 0, true);
                         redirect();
                     } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 0, true);
+                        messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
                     }
                 },
                 function error(response) {
-                    messageErrorApi(response, "Error", "warning", 2000, true);
+                    messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
                 }
             );
 
@@ -418,11 +418,29 @@ angular.module('block.controller', [])
             $scope.opened = true;
         };
 
+        var messages = [];
+
         $scope.saveZone = function(option) {
+            var messages = [];
+            if ($scope.date === undefined) {
+                messages.push("Seleccione Fecha de reservacion");
+            }
 
-            if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
+            if (!$scope.startTime) {
+                messages.push("Seleccione Hora de inicio");
+            }
 
-                messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
+            if (!$scope.endTime) {
+                messages.push("Seleccione Hora final");
+            }
+
+            if (!$scope.mesasBloqueadas.length) {
+                messages.push("Seleccione al menos una mesa a bloquear");
+            }
+
+            if (messages.length) {
+
+                messageAlert("Alerta", messages.join("\n"), "warning", 3000, true);
 
             } else {
 
