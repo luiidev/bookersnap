@@ -2,7 +2,7 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('mesas.book', {
-                url: '/book/:date?date_end',
+                url: '/book?date&date_end&turns&zones&sources&search_text',
                 views: {
                     "@": {
                         templateUrl: '/js/app/tables/book/view/parent.html',
@@ -14,7 +14,6 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
                         controllerAs: 'vm'
                     },
                 }
-
             });
 
     });

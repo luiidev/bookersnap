@@ -116,7 +116,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-change="loadBlockTables()" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes">
+                                        <select class="form-control" ng-change="loadBlockTables()" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes | blockHour:startTime:endTime">
                                             <option disabled="disabled" selected="true" value="">
                                                 Seleccione
                                             </option>

@@ -68,6 +68,8 @@ angular.module('book.service', [])
                     hour_duration: null
                 };
 
+                hours = (bookView === false) ? hours : self.generatedHoursAll();
+
                 angular.forEach(hours, function(hour, key) {
                     var existsReservation = self.existsReservation(hour, reservations, bookView);
                     var existsBlocks = self.existsBlocks(hour, blocks);
@@ -243,12 +245,14 @@ angular.module('book.service', [])
                 return book;
             },
             //Filtramos solo las reservaciones y bloqueos del book
-            filterReservationsAndBlocks: function(listBook) {
+            filterReservationsAndBlocks: function(listBook, bookView) {
                 var data = {
                     reservations: [],
                     blocks: [],
                     availables: []
                 };
+
+                console.log("filterReservationsAndBlocks");
 
                 angular.forEach(listBook, function(book) {
                     if (book.reservation === null && book.block === null) {
@@ -260,7 +264,15 @@ angular.module('book.service', [])
                             book.reservation.guest_filter = (book.reservation.guest !== null) ? book.reservation.guest.first_name + " " + book.reservation.guest.last_name : "";
                         }
 
-                        data.reservations.push(book);
+                        if (bookView === false) {
+                            data.reservations.push(book);
+                        } else {
+                            if (book.block === null) {
+                                data.reservations.push(book);
+                            }
+                        }
+
+
                     }
                 });
 
@@ -571,6 +583,23 @@ angular.module('book.service', [])
                 );
 
                 return defered.promise;
+            },
+            //Genera la horas desde 00:00:00 hasta las 24:00:00 (solo para reservaciones)
+            generatedHoursAll: function() {
+                var hoursBook = [];
+                var hours = getRangoHours("00:00:00", "24:00:00");
+
+                angular.forEach(hours, function(hour, key) {
+                    hoursBook.push({
+                        turn: "",
+                        time: hour.hour24,
+                        name: hour.hour12,
+                        turn_id: 0
+                    });
+                });
+
+                return hoursBook;
+
             },
             init: function(scope) {
                 scopeMain = scope;

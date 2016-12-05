@@ -3,7 +3,7 @@
         <div class="input-group header-actions">
             <div class="fg-line">
                 <input class="form-control" id="fadeingEntrances2" ng-model="rm.busqueda" ng-show="!rm.search.show" placeholder="Buscar por nombre, mesa u horario" type="text">
-                    <button class="btn btn-default-blue btn-block text-center waves-effect animated" id="fadeingEntrances" ng-show="rm.search.show" type="button" ui-sref="mesas.reservation-new({date : '{{rm.fecha_actual}}'})">
+                    <button class="btn btn-default-blue btn-block text-center waves-effect animated" id="fadeingEntrances" ng-show="rm.search.show" type="button" ui-sref="mesas.floor.reservation.add({date : '{{rm.fecha_actual}}'})">
                         <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
                         <span>CREAR RESERVACIÓN</span>
                     </button>
