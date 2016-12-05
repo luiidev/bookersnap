@@ -182,6 +182,7 @@ angular.module('reservation.service', [])
 
                     var hours = [];
                     var timeDefault = "";
+                    var objDefault ;
                     var data = {};
 
                     var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0);
@@ -194,11 +195,13 @@ angular.module('reservation.service', [])
                         hour.time = date_ini.format("HH:mm:ss");
                         hour.name = date_ini.format("H:mm A");
                         hour.turn_id = item.turn.id;
+                        hour.zones = item.turn.zones;
                         hours.push(hour);
 
                         if (!timeDefaultIsEstablished) {
                             if (date_ini.isAfter(now)) {
                                 timeDefault = hour.time;
+                                objDefault = hour;
                                 timeDefaultIsEstablished = true;
                             }
                         }
@@ -224,8 +227,10 @@ angular.module('reservation.service', [])
 
                     if (!timeDefault) {
                         if (hours.length) data.default = hours[hours.length - 1].time;
+                        data.objDefault = null;
                     } else {
                         data.default = timeDefault;
+                        data.objDefault = objDefault;
                     }
                     deferred.resolve(data);
                     return deferred.promise;
@@ -318,6 +323,7 @@ angular.module('reservation.service', [])
                     }
                 });
                 item.name = zone.name;
+                item.id = zone.id
                 item.tables = tables;
                 dataZones.push(item);
                 Array.prototype.push.apply(dataZones.tables, tables);

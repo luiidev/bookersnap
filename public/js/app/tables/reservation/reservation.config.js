@@ -1,4 +1,4 @@
-angular.module('reservation.app', ['reservation.controller', 'reservation.service'])
+angular.module('reservation.app', ['reservation.controller', 'reservation.service', 'reservation.filter'])
     .constant("screenSize", {
         minSize: 400,
         header: 120,
