@@ -70,8 +70,6 @@ angular.module('book.service', [])
 
                 hours = (bookView === false) ? hours : self.generatedHoursAll();
 
-                console.log("hours " + bookView);
-
                 angular.forEach(hours, function(hour, key) {
                     var existsReservation = self.existsReservation(hour, reservations, bookView);
                     var existsBlocks = self.existsBlocks(hour, blocks);
@@ -461,8 +459,9 @@ angular.module('book.service', [])
                 return exists;
             },
             //Calcula el resumen del book, n° reservaciones,invitados,ingresados,etc
-            getResumenBook: function(listBook) {
-                var resumen = BookResumenFactory.calculate(listBook, configReservation);
+            getResumenBook: function(listBook, config) {
+                config = (config !== undefined && config !== null) ? config : configReservation;
+                var resumen = BookResumenFactory.calculate(listBook, config);
                 scopeMain.$broadcast('resumenBookUpdate', resumen);
             },
             setConfigReservation: function(config) {
@@ -590,7 +589,7 @@ angular.module('book.service', [])
             //Genera la horas desde 00:00:00 hasta las 24:00:00 (solo para reservaciones)
             generatedHoursAll: function() {
                 var hoursBook = [];
-                var hours = getRangoHours("00:00:00", "23:45:00");
+                var hours = getRangoHours("00:00:00", "23:45:00", true);
 
                 angular.forEach(hours, function(hour, key) {
                     hoursBook.push({
@@ -600,8 +599,6 @@ angular.module('book.service', [])
                         turn_id: 0
                     });
                 });
-
-                console.log("entre aqui " + angular.toJson(hours, true));
 
                 return hoursBook;
             },
@@ -666,7 +663,7 @@ angular.module('book.service', [])
     .factory('BookResumenFactory', function($q) {
 
         return {
-            calculate: function(listBook, configReservation) {
+            calculate: function(listBook, configReservations) {
                 var self = this;
                 var resumenBook = {
                     reservations: 0,
@@ -681,7 +678,7 @@ angular.module('book.service', [])
                     if (book.reservation !== null) {
                         resumenBook.reservations += 1;
 
-                        resumenBook.ingresos += self.calculateIngresos(book, configReservation);
+                        resumenBook.ingresos += self.calculateIngresos(book, configReservations);
                         resumenBook.pax += book.reservation.num_guest;
 
                         if (book.reservation.status.id == 4 || book.reservation.status.id == 5) {
@@ -701,7 +698,9 @@ angular.module('book.service', [])
                 var ingresos = 0;
 
                 if (configRes !== null) {
+
                     if (configRes.status_people_1 === 1) {
+                        //console.log("calculate " + book.reservation.num_people_1);
                         ingresos += book.reservation.num_people_1;
                     }
                     if (configRes.status_people_2 === 1) {

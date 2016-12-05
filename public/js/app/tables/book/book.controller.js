@@ -382,6 +382,7 @@ angular.module('book.controller', [])
             BookConfigFactory.setConfig(vm.configUserDefault);
 
             if (reloadUrl === true) {
+                console.log("changeBookView  entrea aui");
                 updateUrl($stateParams.date, $stateParams.date_end, false);
             }
             //console.log("changeBookView " + angular.toJson(vm.hoursTurns, true));
@@ -565,6 +566,7 @@ angular.module('book.controller', [])
             pushParamsUrl(params_url);
 
             generatedListBook(vm.datesText.start_date, vm.datesText.end_date);
+            generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
         };
 
         vm.searchReservations = function() {
@@ -838,12 +840,12 @@ angular.module('book.controller', [])
                 $location.url("/mesas/book?date=" + date);
             } else {
                 date_end = (date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : date_end;
-                var url = "/mesas/book?date=" + date + "&date_end=" + date_end;
 
+                var url = "/mesas/book?date=" + date + "&date_end=" + date_end;
                 var params_url = paramsFilterReservation(false);
+
                 delete params_url.date_end;
                 delete params_url.date;
-                //console.log("loadConfigViewReservation " + angular.toJson(params_url, true));
                 url = url + "&" + getAsUriParameters(params_url);
 
                 $location.url(url);
@@ -870,6 +872,7 @@ angular.module('book.controller', [])
                 function success(response) {
                     vm.hoursTurns = response.hours;
                     generatedListBook(date, date_end);
+                    generatedHeaderInfoBook(date, date_end);
                 },
                 function error(response) {
                     console.error("getHours " + angular.toJson(response, true));
@@ -900,8 +903,6 @@ angular.module('book.controller', [])
 
             params = getAsUriParameters(params);
 
-            //console.log("generatedListBook " + params);
-
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
                     var listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
@@ -921,6 +922,42 @@ angular.module('book.controller', [])
                     if (vm.bookView === true) {
                         vm.changeBookView(false);
                     }
+                },
+                function error(response) {
+                    console.error("listReservationAndBlocks " + angular.toJson(response, true));
+                }
+            );
+        };
+
+        var generatedHeaderInfoBook = function(date, date_end) {
+            var params = {
+                date: date,
+                date_end: (date_end === null) ? date : date_end,
+            };
+
+            var params_url = paramsFilterReservation(false);
+
+            params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
+            params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
+            params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
+
+            if (params_url.search_text !== undefined) {
+                params.search_text = params_url.search_text;
+            }
+
+            params = getAsUriParameters(params);
+
+            console.log("paramas " + angular.toJson(params, true));
+
+            BookFactory.listReservationAndBlocks(true, params).then(
+                function success(response) {
+                    var listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
+
+                    console.log("generatedHeaderListBook " + angular.toJson(listBook, true));
+                    BookFactory.getResumenBook(listBook, vm.configReservation);
+                    /*   if (date == vm.fecha_actual) {
+                           vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
+                       }*/
                 },
                 function error(response) {
                     console.error("listReservationAndBlocks " + angular.toJson(response, true));
