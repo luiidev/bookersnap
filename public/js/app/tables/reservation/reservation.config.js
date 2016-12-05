@@ -1,4 +1,4 @@
-angular.module('reservation.app', ['reservation.controller', 'reservation.service'])
+angular.module('reservation.app', ['reservation.controller', 'reservation.service', 'reservation.filter'])
     .constant("screenSize", {
         minSize: 400,
         header: 120,
@@ -42,7 +42,7 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                     }
                 },
             })
-            .state('mesas.floor-reservation-edit', {
+            .state('mesas.book-reservation-edit', {
                 url: '/book/reservation/:date/edit/:id',
                 views: {
                     '@': {
