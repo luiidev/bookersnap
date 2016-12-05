@@ -1,0 +1,142 @@
+<div class="configuration-reservation-form">
+    <div class="card-header p-l-0 p-r-0">
+        <h2>
+            Configuración de campos de formulario
+            <small>
+            </small>
+        </h2>
+    </div>
+    <div class="card-body">
+        <form name="configurationBasicForm" novalidate="">
+            <div class="row">
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Tolerancia:
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.time_tolerance" ng-options="time.id as time.option for time in vm.timeList" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Restricción:
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.time_restriction" ng-options="time.id as time.option for time in vm.timeList" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Porcentaje de asistencia
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.res_percentage_id" ng-options="list.res_percentage as list.percentage for list in vm.percentageList" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Max. cantidad de usuarios
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_people" ng-options="person.id as person.option for person in vm.cantUserList" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Max. cantidad de mesas por reserva
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_table" ng-options="table.id as table.option for table in vm.cantTableList" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-b-20">
+                    <div class="form-group fg-line">
+                        <label>
+                            Max. cantidad de personas de pie
+                        </label>
+                        <div class="select">
+                            <select chosen="" class="form-control" data-placeholder="Elije una opción ..." ng-model="vm.configuration.max_people_standing" ng-options="person.id as person.option for person in vm.cantTableListPie" required="">
+                                <option value="">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group fg-line">
+                        <label>
+                            Tipos de personas que ingresan
+                        </label>
+                        <div class="checkbox">
+                            <label>
+                                <input ng-false-value="0" ng-model="vm.configuration.status_people_1" ng-true-value="1" type="checkbox">
+                                    <i class="input-helper">
+                                    </i>
+                                    Hombres
+                                </input>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input ng-false-value="0" ng-model="vm.configuration.status_people_2" ng-true-value="1" type="checkbox">
+                                    <i class="input-helper">
+                                    </i>
+                                    Mujeres
+                                </input>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input ng-false-value="0" ng-model="vm.configuration.status_people_3" ng-true-value="1" type="checkbox">
+                                    <i class="input-helper">
+                                    </i>
+                                    Niños
+                                </input>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 m-b-20 form-group">
+                    <button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationBasicForm$valid || vm.flagSaveConfiguration || vm.loadingConfiguration">
+                        <i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5">
+                        </i>
+                        Guardar Cambios
+                        <loading-box bg="blue" pls="white" size="xs" time="5000" wait="vm.flagSaveConfiguration">
+                        </loading-box>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
