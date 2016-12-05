@@ -701,12 +701,12 @@ angular.module('reservation.controller', [])
             };
 
             var isEditSate = function() {
-                editState = $state.is("mesas.reservation-edit");
+                editState = $state.is("mesas.floor.reservation.edit") || $state.is("mesas.book-reservation-edit");
             };
 
             var redirect = function() {
                 var state = $state.current.name;
-                if (state == "mesas.book-reservation-add" || state == "mesas.floor-reservation-edit") {
+                if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-edit") {
                     $state.go("mesas.book", $stateParams);
                 } else {
                     $state.go("mesas.floor.reservation");

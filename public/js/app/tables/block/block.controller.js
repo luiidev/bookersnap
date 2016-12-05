@@ -174,13 +174,21 @@ angular.module('block.controller', [])
                                     endTime: item.turn.hours_end
                                 },
                                 startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
-                                endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end),
+                                endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end, true),
                             });
 
                             // Se muestra el primer array para cuando se esta creando el bloqueo
                             $scope.shift = $scope.shifts[0];
                             $scope.startTimes = $scope.shifts[0].startTimes;
                             $scope.endTimes = $scope.shifts[0].endTimes;
+
+                            if ($scope.startTimes.length > 0) {
+                                $scope.startTime = $scope.startTimes[0];
+                            }
+
+                            if ($scope.endTimes.length > 0) {
+                                $scope.endTime = $scope.endTimes[0];
+                            }
                         }
                     });
                 },
@@ -400,6 +408,15 @@ angular.module('block.controller', [])
 
             $scope.startTimes = item.startTimes;
             $scope.endTimes = item.endTimes;
+
+
+            if ($scope.startTimes.length > 0) {
+                $scope.startTime = $scope.startTimes[0];
+            }
+
+            if ($scope.endTimes.length > 0) {
+                $scope.endTime = $scope.endTimes[0];
+            }
         };
 
         $scope.activarTableOptions = function(index, data) {

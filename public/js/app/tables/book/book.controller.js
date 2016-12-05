@@ -490,7 +490,7 @@ angular.module('book.controller', [])
             if (validaNumGuestClick === true) {
                 return;
             }
-            $state.go('mesas.floor-reservation-edit', {
+            $state.go('mesas.book-reservation-edit', {
                 id: item.reservation.id,
                 date: item.reservation.date_reservation
             });
