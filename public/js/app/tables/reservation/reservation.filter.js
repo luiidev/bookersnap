@@ -1,7 +1,8 @@
 angular.module("reservation.filter", [])
 .filter("zoneFilter", function() {
     return function(list, filter) {
-        console.log(filter);
-        return list;
+        return list.filter(function(item) {
+            return filter.indexOf(item.id) !== -1;
+        });
     }
 });

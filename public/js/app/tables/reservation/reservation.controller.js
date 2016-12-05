@@ -283,6 +283,12 @@ angular.module('reservation.controller', [])
                 angular.forEach(hour.zones, function(zone) {
                     vm.showZones.push(zone.id);
                 });
+
+                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                    return vm.nextZone();
+                } else {
+                    vm.zoneID = vm.zones[vm.zoneIndex].id;
+                }
             }
 
             vm.tablesSuggested = function(cant) {
@@ -397,7 +403,6 @@ angular.module('reservation.controller', [])
                         vm.hours = data.hours;
                         vm.reservation.hour = data.default;
                         vm.hour = data.objDefault;
-                        vm.changeHour (vm.hour);
                     }).finally(function() {
                         deferred.resolve();
                     });
@@ -466,6 +471,11 @@ angular.module('reservation.controller', [])
                         vm.zoneIndex++;
                     }
                 }
+                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                    return vm.nextZone();
+                } else {
+                    vm.zoneID = vm.zones[vm.zoneIndex].id;
+                }
             };
 
             vm.prevZone = function() {
@@ -475,6 +485,12 @@ angular.module('reservation.controller', [])
                     } else {
                         vm.zoneIndex = zoneIndexMax;
                     }
+                }
+                console.log(vm.showZones);
+                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                    return vm.prevZone();
+                } else {
+                    vm.zoneID = vm.zones[vm.zoneIndex].id;
                 }
             };
 
@@ -669,7 +685,8 @@ angular.module('reservation.controller', [])
                     loadTablesEdit(data[0], data[2]);
                     loadReservation();
                     vm.tablesBlockValid();
-                    showTimeCustom();
+                    showTimeCustom();  
+                    vm.changeHour(vm.hour);
 
                     vm.waitingResponse = false;
                 });
