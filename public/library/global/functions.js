@@ -163,7 +163,7 @@ var roundByDown = function(numero, factor) {
     Se recibe un rango de horas (12:00:00 - 16:00:00) y se devuelve un array con las horas seleccionadas en el mismo formato
     con un lapso de 15 minutos cada uno 
 */
-var getRangoHours = function(horaInicial, horaFinal) {
+var getRangoHours = function(horaInicial, horaFinal, final) {
     var hours = [];
 
     var date_ini = moment(horaInicial, "HH:mm:ss");
@@ -171,7 +171,15 @@ var getRangoHours = function(horaInicial, horaFinal) {
 
     for (var i = 0; i < 94; i++) {
         if (date_ini.format("HH:mm:ss") == date_end.format("HH:mm:ss")) {
-            break;
+            if (final){
+                hours.push({
+                    hour24: date_ini.format("HH:mm:ss"),
+                    hour12: date_ini.format("H:mm A")
+                });
+                break;
+            } else {
+                break;
+            }
         }
 
         hours.push({

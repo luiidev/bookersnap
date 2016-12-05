@@ -5,6 +5,12 @@ angular.module('reservation.controller', [])
             var vm = this;
 
             /**
+             * Zonas que se deben mostar
+             * @type {Array}
+             */
+            vm.showZones = []
+
+            /**
              * Entidad de reservacion
              * @type {Object}
              */
@@ -269,6 +275,16 @@ angular.module('reservation.controller', [])
                 vm.tablesSuggested(vm.reservation.covers);
             };
 
+            vm.changeHour = function(hour) {
+                if (!hour) return;
+                vm.reservation.hour = hour.time;
+                vm.showZones = [];
+
+                angular.forEach(hour.zones, function(zone) {
+                    vm.showZones.push(zone.id);
+                });
+            }
+
             vm.tablesSuggested = function(cant) {
                 vm.tableSuggested = $table.tablesSuggested(vm.zones, cant);
                 listTableSelected();
@@ -380,6 +396,8 @@ angular.module('reservation.controller', [])
                     .then(function(data) {
                         vm.hours = data.hours;
                         vm.reservation.hour = data.default;
+                        vm.hour = data.objDefault;
+                        vm.changeHour (vm.hour);
                     }).finally(function() {
                         deferred.resolve();
                     });
@@ -701,12 +719,12 @@ angular.module('reservation.controller', [])
             };
 
             var isEditSate = function() {
-                editState = $state.is("mesas.reservation-edit");
+                editState = $state.is("mesas.floor.reservation.edit") || $state.is("mesas.book-reservation-edit");
             };
 
             var redirect = function() {
                 var state = $state.current.name;
-                if (state == "mesas.book-reservation-add" || state == "mesas.floor-reservation-edit") {
+                if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-edit") {
                     $state.go("mesas.book", $stateParams);
                 } else {
                     $state.go("mesas.floor.reservation");
