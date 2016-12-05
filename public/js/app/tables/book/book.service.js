@@ -70,6 +70,8 @@ angular.module('book.service', [])
 
                 hours = (bookView === false) ? hours : self.generatedHoursAll();
 
+                console.log("hours " + bookView);
+
                 angular.forEach(hours, function(hour, key) {
                     var existsReservation = self.existsReservation(hour, reservations, bookView);
                     var existsBlocks = self.existsBlocks(hour, blocks);
@@ -352,7 +354,7 @@ angular.module('book.service', [])
                 if (typeTurn !== "all") {
                     if (filterTypeTurns.length > 0) {
                         var index = filterTypeTurns.indexOf(typeTurn.turn.id);
-
+                        console.log("entrea     AUI ", typeTurn.turn.id);
                         if (index == -1) {
                             filterTypeTurns.push(typeTurn.turn.id);
                             self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
@@ -362,6 +364,7 @@ angular.module('book.service', [])
                         }
 
                     } else {
+                        console.log("entre addNewReservation ", typeTurn.turn.id);
                         filterTypeTurns.push(typeTurn.turn.id);
                         self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
                     }
@@ -587,7 +590,7 @@ angular.module('book.service', [])
             //Genera la horas desde 00:00:00 hasta las 24:00:00 (solo para reservaciones)
             generatedHoursAll: function() {
                 var hoursBook = [];
-                var hours = getRangoHours("00:00:00", "24:00:00");
+                var hours = getRangoHours("00:00:00", "23:45:00");
 
                 angular.forEach(hours, function(hour, key) {
                     hoursBook.push({
@@ -598,8 +601,47 @@ angular.module('book.service', [])
                     });
                 });
 
-                return hoursBook;
+                console.log("entre aqui " + angular.toJson(hours, true));
 
+                return hoursBook;
+            },
+            //Obtenemos los turnos en el formato que acepta la funcion : addTurnsByFilter
+            parseTurnIdToObjectFilter: function(turns) {
+                var turnsData = [];
+
+                angular.forEach(turns, function(value, key) {
+                    turnsData.push({
+                        turn: {
+                            id: parseInt(value)
+                        }
+                    });
+                });
+
+                return turnsData;
+            },
+            //Obtenemos los colaboradores en el formato que acepta la funcion : addSourcesByFilter
+            parseSourceIdToObjectFilter: function(sources) {
+                var sourcesData = [];
+
+                angular.forEach(sources, function(value, key) {
+                    sourcesData.push({
+                        id: parseInt(value)
+                    });
+                });
+
+                return sourcesData;
+            },
+            //Obtenemos las zonas en el formato que acepta la funcion : addZonesByFilter
+            parseZoneIdToObjectFilter: function(zones) {
+                var zonesData = [];
+
+                angular.forEach(zones, function(value, key) {
+                    zonesData.push({
+                        id: parseInt(value)
+                    });
+                });
+
+                return zonesData;
             },
             init: function(scope) {
                 scopeMain = scope;

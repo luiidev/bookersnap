@@ -74,18 +74,19 @@
               wm.res_listado.canceled.length = 0;
 
               angular.forEach(wm.reservations.data, function(reservation) {
+
                   if (reservation.wait_list == 1) {
                       if (reservation.res_reservation_status_id != 6) {
                           var reservationCopy = angular.copy(reservation);
-                          reservationCopy.minutes = calculateMinutesTime("2016-11-08 " + reservationCopy.quote);
+                          reservationCopy.minutes = calculateMinutesTime(reservationCopy.date_reservation + " " + reservationCopy.quote);
                           reservationCopy.time_out = false;
 
                           var interval = function() {
                               var now = moment();
-                              var start_time = moment(reservationCopy.hours_reservation, "HH:mm:ss");
+                              var start_time = moment(reservationCopy.date_add);
                               reservationCopy.time_wait_list = moment.utc(now.diff(start_time)).format("HH:mm");
 
-                              var validaTime = calculateMinutesTime("2016-11-08 " + reservationCopy.time_wait_list);
+                              var validaTime = calculateMinutesTime(reservationCopy.date_reservation + " " + reservationCopy.time_wait_list);
 
                               if (validaTime >= reservationCopy.minutes) {
                                   reservationCopy.time_out = true;

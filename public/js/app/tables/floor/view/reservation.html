@@ -4,29 +4,37 @@
             <div class="fg-line">
                 <input class="form-control" id="fadeingEntrances2" ng-model="rm.busqueda" ng-show="!rm.search.show" placeholder="Buscar por nombre, mesa u horario" type="text">
                     <button class="btn btn-default-blue btn-block text-center waves-effect animated" id="fadeingEntrances" ng-show="rm.search.show" type="button" ui-sref="mesas.floor.reservation.add({date : '{{rm.fecha_actual}}'})">
-                        <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg"></i>
-                        <span>CREAR RESERVACIÓN</span>
+                        <i class="zmdi zmdi-notifications zmdi-hc-fw zmdi-hc-lg">
+                        </i>
+                        <span>
+                            CREAR RESERVACIÓN
+                        </span>
                     </button>
                 </input>
             </div>
             <span class="input-group-addon last">
                 <button class="btn waves-effect" ng-click="rm.searchReservation()" type="button">
-                    <i class="zmdi zmdi-search" ng-show="rm.search.show"></i>
-                    <i class="zmdi zmdi-close" ng-show="!rm.search.show"></i>
+                    <i class="zmdi zmdi-search" ng-show="rm.search.show">
+                    </i>
+                    <i class="zmdi zmdi-close" ng-show="!rm.search.show">
+                    </i>
                 </button>
             </span>
             <span class="input-group-addon last">
-                <button class="btn waves-effect" type="button" ui-sref="mesas.calendar" style="background-color: #575757;color: #fff;">
-                    <i class="zmdi zmdi-settings"></i>
+                <button class="btn waves-effect" style="background-color: #575757;color: #fff;" type="button" ui-sref="mesas.calendar">
+                    <i class="zmdi zmdi-settings">
+                    </i>
                 </button>
             </span>
         </div>
         <tabset justified="true">
-            <tab heading="Por llegar" ng-click="rm.filter_status = [1,2,3]" active="tab.active"></tab>
-            <tab heading="Sentados" ng-click="rm.filter_status = [4]"></tab>
-            <tab heading="Todos" ng-click="rm.filter_status.length = 0"></tab>
+            <tab active="tab.active" heading="Por llegar" ng-click="rm.filter_status = [1,2,3]">
+            </tab>
+            <tab heading="Sentados" ng-click="rm.filter_status = [4]">
+            </tab>
+            <tab heading="Todos" ng-click="rm.filter_status.length = 0">
+            </tab>
         </tabset>
-
         <div class="floor-reservations">
             <div class="header">
                 <table class="table-listado">
@@ -59,8 +67,8 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming ng-mousedown="vm.eventEstablish('sitReservation', value)"   ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
-                                    <td ng-if="!value.start_time" ng-click="rm.editReservation(value)">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming="" ng-mousedown="vm.eventEstablish('sitReservation', value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                    <td ng-click="rm.editReservation(value)" ng-if="!value.start_time">
                                         <table class="table-listado sub-table">
                                             <tr>
                                                 <td class="child-hour">
@@ -97,17 +105,23 @@
                                                     <ul class="actions p-0 m-0">
                                                         <li class="dropdown" uib-dropdown="">
                                                             <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" href="" ng-click="rm.disabledModal()" uib-dropdown-toggle="">
-                                                                <i class="zmdi zmdi-info-outline"></i>
+                                                                <i class="zmdi zmdi-info-outline">
+                                                                </i>
                                                             </a>
-                                                            <ul class="dropdown-menu dropdown-menu-left" ng-if="value.guest.emails.length> 0 || value.guest.phones.length > 0">
-                                                                <li>
-                                                                    <a href="" ng-if="value.guest.emails!=null">
+                                                            <ul class="dropdown-menu dropdown-menu-left">
+                                                                <li ng-if="value.guest.emails.length > 0">
+                                                                    <a href="">
                                                                         {{ value.guest.emails[0].email }}
                                                                     </a>
                                                                 </li>
-                                                                <li>
-                                                                    <a href="" value.guest.phones!="null">
+                                                                <li ng-if="value.guest.phones.length > 0">
+                                                                    <a href="">
                                                                         {{ value.guest.phones[0].number }}
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="">
+                                                                        {{ value.date_reservation }}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -147,7 +161,8 @@
                                                         </li>
                                                         <li class="icon-people">
                                                             <a href="" ng-click="rm.checkGuestList(value)">
-                                                                <i class="zmdi zmdi-file-text zmdi-hc-lg"></i>
+                                                                <i class="zmdi zmdi-file-text zmdi-hc-lg">
+                                                                </i>
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -173,7 +188,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td ng-show="value.start_time" ng-mousedown="$event.stopPropagation()" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id: value.id})"  >
+                                    <td ng-mousedown="$event.stopPropagation()" ng-show="value.start_time" ui-sref="mesas.floor.blockEdit({date : rm.fecha_actual,block_id: value.id})">
                                         <table class="table-listado p-0 m-0" style="height: 40px;">
                                             <tr>
                                                 <td>
@@ -218,11 +233,13 @@
         <ul class="dropdown-menu">
             <li ng-if="categoria.turn" ng-repeat="categoria in rm.categorias_type">
                 <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)" ng-if="$index == 0">
-                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked">
+                    </i>
                     {{categoria.name}}
                 </a>
                 <a href="" ng-class="{'sel_active':categoria.checked}" ng-click="rm.select_type(categoria,$event)" ng-if="categoria.turn && $index != 0">
-                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked"></i>
+                    <i class="zmdi zmdi-check zmdi-hc-fw" ng-show="categoria.checked">
+                    </i>
                     {{categoria.turn.name}}
                 </a>
             </li>

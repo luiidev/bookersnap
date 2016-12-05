@@ -245,7 +245,7 @@ angular.module('book.controller', [])
             }
         };
 
-        //Fechas formato string (2016-11-24)
+        //Fechas formato string (2016-11-24) , para los filtros
         vm.datesText = {
             start_date: '',
             end_date: ''
@@ -560,7 +560,7 @@ angular.module('book.controller', [])
 
             setDatesText(vm.startDate, vm.endDate);
 
-            var params_url = paramsFilterReservation();
+            var params_url = paramsFilterReservation(true);
 
             pushParamsUrl(params_url);
 
@@ -574,19 +574,20 @@ angular.module('book.controller', [])
             }
         };
 
-        var paramsFilterReservation = function() {
+        var paramsFilterReservation = function(filter) {
             var params_url = {
                 date: vm.datesText.start_date,
                 date_end: vm.datesText.end_date,
                 turns: ($stateParams.turns === undefined || $stateParams.turns === "") ? vm.bookFilter.typeTurn.toString() : $stateParams.turns,
                 zones: ($stateParams.zones === undefined || $stateParams.zones === "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
                 sources: ($stateParams.sources === undefined || $stateParams.sources === "") ? vm.bookFilter.sources.toString() : $stateParams.sources,
-                search_text: ($stateParams.search_text === undefined) ? vm.bookFilter.search_text : $stateParams.search_text
+                search_text: ($stateParams.search_text === undefined || vm.bookFilter.search_text !== "") ? vm.bookFilter.search_text : $stateParams.search_text
             };
 
             if (params_url.start_date === "") {
                 delete params_url.start_date;
             }
+
             if (params_url.search_text === "") {
                 delete params_url.search_text;
             }
@@ -597,11 +598,28 @@ angular.module('book.controller', [])
             if (params_url.zones === "") {
                 delete params_url.zones;
             }
+
             if (params_url.sources === "") {
                 delete params_url.sources;
             }
 
-            console.log("paramsFilterReservation " + angular.toJson(params_url, true));
+            if (filter === true) {
+                if (vm.bookFilter.search_text === "") {
+                    delete params_url.search_text;
+                }
+
+                if (vm.bookFilter.zones.length <= 0) {
+                    delete params_url.zones;
+                }
+
+                if (vm.bookFilter.sources.length <= 0) {
+                    delete params_url.sources;
+                }
+
+                if (vm.bookFilter.typeTurn.length <= 0) {
+                    delete params_url.turns;
+                }
+            }
 
             return params_url;
         };
@@ -612,7 +630,6 @@ angular.module('book.controller', [])
             url = url.substring(0, index);
 
             params = getAsUriParameters(params);
-            console.log(url + "?" + params);
             history.replaceState('', 'Pagina', url + "?" + params);
         };
 
@@ -756,11 +773,54 @@ angular.module('book.controller', [])
 
                 vm.startDate = ($stateParams.date !== undefined || $stateParams.date === "") ? vm.startDate : convertFechaToDate($stateParams.date);
                 vm.endDate = ($stateParams.date_end !== undefined || $stateParams.date_end === "") ? vm.endDate : convertFechaToDate($stateParams.date_end);
-                console.log("init startDate " + $stateParams.date);
+
                 setDatesText(vm.startDate, vm.endDate);
 
-                listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date, true);
+                listTurnAvailable(vm.datesText.start_date, vm.datesText.end_date, true, function() {
+                    setParamsUrlFilters();
+                });
+
                 listZones(vm.datesText.start_date, vm.datesText.end_date, true);
+
+            }
+        };
+
+        //Asigna los parametros del filtro ,obtenidos por la url
+        var setParamsUrlFilters = function() {
+            vm.bookFilter.search_text = ($stateParams.search_text !== undefined) ? $stateParams.search_text : "";
+
+            if ($stateParams.turns !== undefined && $stateParams.turns !== "") {
+
+                var turnsUrl = $stateParams.turns.split(",");
+                turnsUrl = BookFactory.parseTurnIdToObjectFilter(turnsUrl);
+
+                vm.bookFilter.options.turnAll = false;
+
+                angular.forEach(turnsUrl, function(value) {
+                    BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns, vm.bookFilter.options.turnAll);
+                });
+            }
+
+            if ($stateParams.sources !== undefined && $stateParams.sources !== "") {
+                var sourcesUrl = $stateParams.sources.split(",");
+                sourcesUrl = BookFactory.parseSourceIdToObjectFilter(sourcesUrl);
+
+                vm.bookFilter.options.sourcesAll = false;
+
+                angular.forEach(sourcesUrl, function(value) {
+                    BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources, vm.bookFilter.options.sourcesAll);
+                });
+            }
+
+            if ($stateParams.zones !== undefined && $stateParams.zones !== "") {
+                var zonesUrl = $stateParams.zones.split(",");
+                zonesUrl = BookFactory.parseZoneIdToObjectFilter(zonesUrl);
+
+                vm.bookFilter.options.zonesAll = false;
+
+                angular.forEach(zonesUrl, function(value) {
+                    BookFactory.addZonesByFilter(value, vm.bookFilter.zones, vm.zones, vm.bookFilter.options.zonesAll);
+                });
             }
         };
 
@@ -780,7 +840,7 @@ angular.module('book.controller', [])
                 date_end = (date_end === undefined) ? convertFechaYYMMDD(vm.endDate, "es-ES", {}) : date_end;
                 var url = "/mesas/book?date=" + date + "&date_end=" + date_end;
 
-                var params_url = paramsFilterReservation();
+                var params_url = paramsFilterReservation(false);
                 delete params_url.date_end;
                 delete params_url.date;
                 //console.log("loadConfigViewReservation " + angular.toJson(params_url, true));
@@ -790,13 +850,15 @@ angular.module('book.controller', [])
             }
         };
 
-        var listTurnAvailable = function(date, date_end, reload) {
+        var listTurnAvailable = function(date, date_end, reload, action) {
+            action = (typeof action == "function") ? action : function() {};
 
             BookDataFactory.getTypeTurns(date, reload).then(
                 function success(response) {
                     response = response;
                     vm.turns = response;
                     listHoursTurns(vm.turns, date, date_end);
+                    action();
                 },
                 function error(response) {
                     console.error("listTypeTurns " + angular.toJson(response, true));
@@ -824,7 +886,7 @@ angular.module('book.controller', [])
             if (vm.bookView === true) {
                 params.page_size = vm.paginate_reservation.page_size;
 
-                var params_url = paramsFilterReservation();
+                var params_url = paramsFilterReservation(false);
 
                 params.page = vm.paginate_reservation.page;
                 params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
