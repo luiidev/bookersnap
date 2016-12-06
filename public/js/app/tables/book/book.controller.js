@@ -408,7 +408,8 @@ angular.module('book.controller', [])
                     break;
             }
 
-            vm.resumenBook = BookFactory.getResumenBook(vm.listBook);
+            //BookFactory.getResumenBook(vm.listBook);
+            vm.resumenBook.ingresos = (type == "-") ? vm.resumenBook.ingresos - 1 : vm.resumenBook.ingresos + 1;
 
             validaUpdateBookRes = $timeout(function() {
                 var resUpdate = {
