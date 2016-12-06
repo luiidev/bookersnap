@@ -169,9 +169,9 @@ var getRangoHours = function(horaInicial, horaFinal, final) {
     var date_ini = moment(horaInicial, "HH:mm:ss");
     var date_end = moment(horaFinal, "HH:mm:ss");
 
-    for (var i = 0; i < 94; i++) {
+    for (var i = 0; i < 96; i++) {
         if (date_ini.format("HH:mm:ss") == date_end.format("HH:mm:ss")) {
-            if (final){
+            if (final) {
                 hours.push({
                     hour24: date_ini.format("HH:mm:ss"),
                     hour12: date_ini.format("H:mm A")
