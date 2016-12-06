@@ -44,7 +44,7 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming ng-repeat="value in wm.res_listado.actives | waitlistCondicion | filter: wm.busqueda" on-start-fn="wm.selectWaitlist(value)">
+                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-click="wm.createWait('edit',value)" ng-drag-up-coming="" ng-repeat="value in wm.res_listado.actives | waitlistCondicion | filter: wm.busqueda" on-start-fn="wm.selectWaitlist(value)">
                                     <td>
                                         <table class="table-listado">
                                             <tr>
@@ -71,15 +71,20 @@
                                                                 <i class="zmdi zmdi-info-outline">
                                                                 </i>
                                                             </a>
-                                                            <ul class="dropdown-menu dropdown-menu-left" ng-if="value.guest.emails.length> 0 || value.guest.phones.length >0">
-                                                                <li ng-if="value.guest.emails!=null">
+                                                            <ul class="dropdown-menu dropdown-menu-left">
+                                                                <li ng-if="value.guest.emails.length > 0">
                                                                     <a href="#">
                                                                         {{ value.guest.emails[0].email }}
                                                                     </a>
                                                                 </li>
-                                                                <li ng-if="value.guest.phones!=null">
+                                                                <li ng-if="value.guest.phones.length > 0">
                                                                     <a href="">
                                                                         {{ value.guest.phones[0].number }}
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="">
+                                                                        {{ value.date_add }}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -105,7 +110,7 @@
                         </div>
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" ng-repeat="item in wm.res_listado.canceled" ng-drag-up-coming on-start-fn="wm.selectWaitlist(item)">
+                                <tr class="listado-column" ng-drag-up-coming="" ng-repeat="item in wm.res_listado.canceled" on-start-fn="wm.selectWaitlist(item)">
                                     <td class="canceled-wail_list" style="width: 400px;">
                                         {{ item.guest.first_name || "Reservacion sin nombre."}} {{ item.guest.last_name || "" }}
                                         <br>

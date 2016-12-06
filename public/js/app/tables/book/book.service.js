@@ -352,7 +352,7 @@ angular.module('book.service', [])
                 if (typeTurn !== "all") {
                     if (filterTypeTurns.length > 0) {
                         var index = filterTypeTurns.indexOf(typeTurn.turn.id);
-
+                        console.log("entrea     AUI ", typeTurn.turn.id);
                         if (index == -1) {
                             filterTypeTurns.push(typeTurn.turn.id);
                             self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
@@ -362,6 +362,7 @@ angular.module('book.service', [])
                         }
 
                     } else {
+                        console.log("entre addNewReservation ", typeTurn.turn.id);
                         filterTypeTurns.push(typeTurn.turn.id);
                         self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
                     }
@@ -458,8 +459,9 @@ angular.module('book.service', [])
                 return exists;
             },
             //Calcula el resumen del book, n° reservaciones,invitados,ingresados,etc
-            getResumenBook: function(listBook) {
-                var resumen = BookResumenFactory.calculate(listBook, configReservation);
+            getResumenBook: function(listBook, config) {
+                config = (config !== undefined && config !== null) ? config : configReservation;
+                var resumen = BookResumenFactory.calculate(listBook, config);
                 scopeMain.$broadcast('resumenBookUpdate', resumen);
             },
             setConfigReservation: function(config) {
@@ -587,7 +589,7 @@ angular.module('book.service', [])
             //Genera la horas desde 00:00:00 hasta las 24:00:00 (solo para reservaciones)
             generatedHoursAll: function() {
                 var hoursBook = [];
-                var hours = getRangoHours("00:00:00", "24:00:00");
+                var hours = getRangoHours("00:00:00", "23:45:00", true);
 
                 angular.forEach(hours, function(hour, key) {
                     hoursBook.push({
@@ -599,7 +601,44 @@ angular.module('book.service', [])
                 });
 
                 return hoursBook;
+            },
+            //Obtenemos los turnos en el formato que acepta la funcion : addTurnsByFilter
+            parseTurnIdToObjectFilter: function(turns) {
+                var turnsData = [];
 
+                angular.forEach(turns, function(value, key) {
+                    turnsData.push({
+                        turn: {
+                            id: parseInt(value)
+                        }
+                    });
+                });
+
+                return turnsData;
+            },
+            //Obtenemos los colaboradores en el formato que acepta la funcion : addSourcesByFilter
+            parseSourceIdToObjectFilter: function(sources) {
+                var sourcesData = [];
+
+                angular.forEach(sources, function(value, key) {
+                    sourcesData.push({
+                        id: parseInt(value)
+                    });
+                });
+
+                return sourcesData;
+            },
+            //Obtenemos las zonas en el formato que acepta la funcion : addZonesByFilter
+            parseZoneIdToObjectFilter: function(zones) {
+                var zonesData = [];
+
+                angular.forEach(zones, function(value, key) {
+                    zonesData.push({
+                        id: parseInt(value)
+                    });
+                });
+
+                return zonesData;
             },
             init: function(scope) {
                 scopeMain = scope;
@@ -624,7 +663,7 @@ angular.module('book.service', [])
     .factory('BookResumenFactory', function($q) {
 
         return {
-            calculate: function(listBook, configReservation) {
+            calculate: function(listBook, configReservations) {
                 var self = this;
                 var resumenBook = {
                     reservations: 0,
@@ -639,7 +678,7 @@ angular.module('book.service', [])
                     if (book.reservation !== null) {
                         resumenBook.reservations += 1;
 
-                        resumenBook.ingresos += self.calculateIngresos(book, configReservation);
+                        resumenBook.ingresos += self.calculateIngresos(book, configReservations);
                         resumenBook.pax += book.reservation.num_guest;
 
                         if (book.reservation.status.id == 4 || book.reservation.status.id == 5) {
@@ -659,7 +698,9 @@ angular.module('book.service', [])
                 var ingresos = 0;
 
                 if (configRes !== null) {
+
                     if (configRes.status_people_1 === 1) {
+                        //console.log("calculate " + book.reservation.num_people_1);
                         ingresos += book.reservation.num_people_1;
                     }
                     if (configRes.status_people_2 === 1) {
