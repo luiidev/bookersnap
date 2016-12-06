@@ -13,13 +13,13 @@
                     <p>100 Queen St W, Toronto, ON M5H 2N2 (Downtown Core)</p>
                 </div>
                 <div class="info">
-                    <span>Tue, Nov 29 2016</span>
+                    <span ng-bind="'{{ $date }}' | dateBS"></span>
                 </div>
                 <div class="info">
-                    <span>11:30 AM</span>
+                    <span ng-bind="'{{ $hour }}' | hourFormat"></span>
                 </div>
                 <div class="info">
-                    <span>2 Guests</span>
+                    <span>{{ $num_guest }} Guests</span>
                 </div>
                 <div class="info">
                     <a href="javascript:void(0)">Change Reservation</a>
