@@ -68,11 +68,11 @@
 
 <script type="text/javascript">
 
-    var setAuthHeaders = function ($http) {
+/*var setAuthHeaders = function ($http) {
 //        $http.defaults.headers.common['type-admin'] = 2;
         $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
     };
-
+*/
 </script>
 </body>
 </html>

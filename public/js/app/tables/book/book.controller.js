@@ -661,6 +661,8 @@ angular.module('book.controller', [])
 
         $scope.$on('resumenBookUpdate', function(evt, data) {
             vm.resumenBook = data;
+
+            console.log("resumenBookUpdate " + angular.toJson(data, true));
         });
 
         $scope.$on("floorNotesReload", function(evt, note) {
@@ -947,17 +949,15 @@ angular.module('book.controller', [])
 
             params = getAsUriParameters(params);
 
-            console.log("paramas " + angular.toJson(params, true));
-
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
                     var listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
 
-                    console.log("generatedHeaderListBook " + angular.toJson(listBook, true));
+                    //console.log("generatedHeaderListBook " + angular.toJson(listBook, true));
                     BookFactory.getResumenBook(listBook, vm.configReservation);
-                    /*   if (date == vm.fecha_actual) {
-                           vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
-                       }*/
+                    if (date == vm.fecha_actual) {
+                        vm.mds = BookFactory.calculateMDS(listBook, vm.zones);
+                    }
                 },
                 function error(response) {
                     console.error("listReservationAndBlocks " + angular.toJson(response, true));

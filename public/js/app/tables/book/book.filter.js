@@ -13,7 +13,7 @@ angular.module('book.filter', [])
                 listBook = books;
             }
 
-            // BookFactory.getResumenBook(listBook);
+            BookFactory.getResumenBook(listBook);
 
             return listBook;
         };
@@ -33,7 +33,7 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
-            //BookFactory.getResumenBook(listBook);
+            BookFactory.getResumenBook(listBook);
             return listBook;
         };
     })
@@ -53,7 +53,7 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
-            //BookFactory.getResumenBook(listBook);
+            BookFactory.getResumenBook(listBook);
 
             return listBook;
         };

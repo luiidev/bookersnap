@@ -69,6 +69,7 @@ angular.module('book.service', [])
                 };
 
                 hours = (bookView === false) ? hours : self.generatedHoursAll();
+                //console.log("existsReservation ", angular.toJson(hours, true));
 
                 angular.forEach(hours, function(hour, key) {
                     var existsReservation = self.existsReservation(hour, reservations, bookView);
@@ -173,7 +174,8 @@ angular.module('book.service', [])
                     exists: false
                 };
 
-                reservations = (bookView === true) ? reservations.data : reservations;
+                var existPaginator = angular.toJson(reservations, true);
+                reservations = (bookView === true && existPaginator.indexOf('last_page') > -1) ? reservations.data : reservations;
 
                 angular.forEach(reservations, function(reservation, key) {
                     angular.forEach(reservation.tables, function(value, key) {
@@ -299,7 +301,8 @@ angular.module('book.service', [])
                     data: []
                 };
 
-                reservations = (bookView === true) ? reservations.data : reservations;
+                var existPaginator = angular.toJson(reservations, true);
+                reservations = (bookView === true && existPaginator.indexOf('last_page') > -1) ? reservations.data : reservations;
 
                 angular.forEach(reservations, function(reservation, key) {
                     if (hour.time === reservation.hours_reservation) {
@@ -677,7 +680,6 @@ angular.module('book.service', [])
                 angular.forEach(listBook, function(book, key) {
                     if (book.reservation !== null) {
                         resumenBook.reservations += 1;
-
                         resumenBook.ingresos += self.calculateIngresos(book, configReservations);
                         resumenBook.pax += book.reservation.num_guest;
 
@@ -700,7 +702,6 @@ angular.module('book.service', [])
                 if (configRes !== null) {
 
                     if (configRes.status_people_1 === 1) {
-                        //console.log("calculate " + book.reservation.num_people_1);
                         ingresos += book.reservation.num_people_1;
                     }
                     if (configRes.status_people_2 === 1) {
