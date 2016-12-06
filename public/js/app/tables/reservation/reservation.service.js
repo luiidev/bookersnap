@@ -214,7 +214,7 @@ angular.module('reservation.service', [])
                             var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
                             var date_end = moment(item.turn.hours_end, "HH:mm:ss");
 
-                            for (var i = 0; i < 94; i++) {
+                            for (var i = 0; i < 96; i++) {
                                 if (date_ini.format("HH:mm:ss") == date_end.format("HH:mm:ss")) {
                                     break;
                                 }
