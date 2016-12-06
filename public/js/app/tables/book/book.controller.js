@@ -271,7 +271,8 @@ angular.module('book.controller', [])
             page: 1,
             total_pages: 0,
             page_size: 2,
-            selected: 1
+            selected: 1,
+            max_size: 5
         };
 
         vm.filterBook = function(option, value) {
@@ -647,6 +648,8 @@ angular.module('book.controller', [])
             if (response === true) {
                 if (!reservationService.blackList.contains(data.key)) {
                     alertMultiple("Notificación", data.user_msg, "info", null);
+
+                    generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
                 }
             }
         });
@@ -662,8 +665,6 @@ angular.module('book.controller', [])
 
         $scope.$on('resumenBookUpdate', function(evt, data) {
             vm.resumenBook = data;
-
-            console.log("resumenBookUpdate " + angular.toJson(data, true));
         });
 
         $scope.$on("floorNotesReload", function(evt, note) {
@@ -875,7 +876,7 @@ angular.module('book.controller', [])
                 function success(response) {
                     vm.hoursTurns = response.hours;
                     generatedListBook(date, date_end);
-                    generatedHeaderInfoBook(date, date_end);
+                    //generatedHeaderInfoBook(date, date_end);
                 },
                 function error(response) {
                     console.error("getHours " + angular.toJson(response, true));
