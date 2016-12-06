@@ -19,49 +19,49 @@ angular.module("App")
          * HTTP
          */
 
-        var loadGuests = function() {
-            var deferred = $q.defer();
-            availabilityService.getGuests(10)
-                .then(function(response) {
-                    vm.guests = response;
-                    deferred.resolve(vm.guests);
-                })
-                .catch(function(error) {
-                    deferred.reject("Error de carga de invitados");
-                    console.log("Error de carga de invitados", error);
-                });
-            return deferred.promise;
-        };
+        // var loadGuests = function() {
+        //     var deferred = $q.defer();
+        //     availabilityService.getGuests(10)
+        //         .then(function(response) {
+        //             vm.guests = response;
+        //             deferred.resolve(vm.guests);
+        //         })
+        //         .catch(function(error) {
+        //             deferred.reject("Error de carga de invitados");
+        //             console.log("Error de carga de invitados", error);
+        //         });
+        //     return deferred.promise;
+        // };
 
-        var loadZones = function(date) {
-            var deferred = $q.defer();
-            availabilityService.getZones(date)
-                .then(function(response) {
-                    vm.zones = response.data.data;
-                    deferred.resolve(vm.zones);
-                })
-                .catch(function(error) {
-                    deferred.reject("Error de carga de zonas");
-                    console.log("Error de carga de zonas", error);
-                });
-            return deferred.promise;
-        };
+        // var loadZones = function(date) {
+        //     var deferred = $q.defer();
+        //     availabilityService.getZones(date)
+        //         .then(function(response) {
+        //             vm.zones = response.data.data;
+        //             deferred.resolve(vm.zones);
+        //         })
+        //         .catch(function(error) {
+        //             deferred.reject("Error de carga de zonas");
+        //             console.log("Error de carga de zonas", error);
+        //         });
+        //     return deferred.promise;
+        // };
 
-        var loadHours = function(date) {
-            var deferred = $q.defer();
-            availabilityService.getHours({
-                    date: date
-                })
-                .then(function(response) {
-                    vm.hours = response.data.data;
-                    deferred.resolve(vm.hours);
-                })
-                .catch(function(error) {
-                    deferred.reject("Error de carga de horas de disponibilidad");
-                    console.log("Error de carga de horas de disponibilidad", error);
-                });
-            return deferred.promise;
-        };
+        // var loadHours = function(date) {
+        //     var deferred = $q.defer();
+        //     availabilityService.getHours({
+        //             date: date
+        //         })
+        //         .then(function(response) {
+        //             vm.hours = response.data.data;
+        //             deferred.resolve(vm.hours);
+        //         })
+        //         .catch(function(error) {
+        //             deferred.reject("Error de carga de horas de disponibilidad");
+        //             console.log("Error de carga de horas de disponibilidad", error);
+        //         });
+        //     return deferred.promise;
+        // };
 
         vm.searchAvailability = function() {
             var deferred = $q.defer();
@@ -82,9 +82,50 @@ angular.module("App")
             return deferred.promise;
         };
 
+        var loadAvailability = function(data) {
+            var deferred = $q.defer();
+
+            vm.loadingInfo = true;
+
+            availabilityService.getFormatAvailability(data)
+                .then(function(response) {
+                    vm.form = response.data.data;
+                    deferred.resolve(vm.form);
+                    console.log(response.data.data);
+                })
+                .catch(function(error) {
+                    vm.loadingInfo = false;
+                    deferred.reject("Error en la busqueda de disponibilidad");
+                    console.log("Error en la busqueda de disponibilidad", error);
+                });
+
+            return deferred.promise;
+        }
+
         /**
          * HTTP
          */
+        
+        vm.disabled = function(date, mode){
+                    var isHoliday = false;
+                    for(var i = 0; i < vm.form.daysDisabled.length ; i++) {
+                      if(areDatesEqual(toDate(vm.form.daysDisabled[i]), date)){
+                        isHoliday = true;
+                      }
+                    }
+
+                    return ( mode === 'day' && isHoliday );
+       };
+
+      function areDatesEqual(date1, date2) {
+        return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0)
+      }
+
+      function toDate(date) {
+            // var ymd = date.split("-");
+            // return new Date(ymd[0], ymd[1] -1, ymd[2]);
+            return new Date(date.split("-"));
+      }
 
         var resultFormat = function(items) {
             angular.forEach(items, function(item) {
@@ -102,10 +143,9 @@ angular.module("App")
             vm.availability.date = date;
             vm.availability.num_guests = vm.availability.num_guests || 2;
             vm.availability.zone_id = vm.availability.zone_id || null;
-            vm.availability.hour = utiles.filterHour(vm.hours, vm.availability.hour);
+            vm.availability.hour = utiles.filterHour(vm.form.hours, vm.availability.hour);
             vm.infoDate = moment(date).format("dddd, D [de] MMMM");
             vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests + ' personas.';
-            // console.log(vm.availability);
             vm.searchAvailability();
         };
 
@@ -122,9 +162,10 @@ angular.module("App")
             vm.message = "Cargando ...";
 
             $q.all([
-                loadGuests(),
-                loadZones(date),
-                loadHours(date)
+                // loadGuests(),
+                // loadZones(date),
+                // loadHours(date),
+                loadAvailability(date)
             ]).then(function() {
                 defaultData(date);
 
