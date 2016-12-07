@@ -271,7 +271,8 @@ angular.module('book.controller', [])
             page: 1,
             total_pages: 0,
             page_size: 2,
-            selected: 1
+            selected: 1,
+            max_size: 5
         };
 
         vm.filterBook = function(option, value) {
@@ -408,7 +409,8 @@ angular.module('book.controller', [])
                     break;
             }
 
-            vm.resumenBook = BookFactory.getResumenBook(vm.listBook);
+            //BookFactory.getResumenBook(vm.listBook);
+            vm.resumenBook.ingresos = (type == "-") ? vm.resumenBook.ingresos - 1 : vm.resumenBook.ingresos + 1;
 
             validaUpdateBookRes = $timeout(function() {
                 var resUpdate = {
@@ -646,6 +648,8 @@ angular.module('book.controller', [])
             if (response === true) {
                 if (!reservationService.blackList.contains(data.key)) {
                     alertMultiple("Notificación", data.user_msg, "info", null);
+
+                    generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
                 }
             }
         });
@@ -872,7 +876,7 @@ angular.module('book.controller', [])
                 function success(response) {
                     vm.hoursTurns = response.hours;
                     generatedListBook(date, date_end);
-                    generatedHeaderInfoBook(date, date_end);
+                    //generatedHeaderInfoBook(date, date_end);
                 },
                 function error(response) {
                     console.error("getHours " + angular.toJson(response, true));
@@ -947,17 +951,15 @@ angular.module('book.controller', [])
 
             params = getAsUriParameters(params);
 
-            console.log("paramas " + angular.toJson(params, true));
-
             BookFactory.listReservationAndBlocks(true, params).then(
                 function success(response) {
                     var listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
 
-                    console.log("generatedHeaderListBook " + angular.toJson(listBook, true));
+                    //console.log("generatedHeaderListBook " + angular.toJson(listBook, true));
                     BookFactory.getResumenBook(listBook, vm.configReservation);
-                    /*   if (date == vm.fecha_actual) {
-                           vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
-                       }*/
+                    if (date == vm.fecha_actual) {
+                        vm.mds = BookFactory.calculateMDS(listBook, vm.zones);
+                    }
                 },
                 function error(response) {
                     console.error("listReservationAndBlocks " + angular.toJson(response, true));

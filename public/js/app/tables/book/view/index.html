@@ -283,7 +283,7 @@
             </br>
         </div>
         <div class="text-center" ng-show="vm.bookView && vm.listBook.length>0">
-            <uib-pagination items-per-page="vm.paginate_reservation.page_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
+            <uib-pagination boundary-links="true" class="pagination-sm" items-per-page="vm.paginate_reservation.page_size" max-size="vm.paginate_reservation.max_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
             </uib-pagination>
         </div>
         <footer class="container-footer-book" data-ng-include="'/js/app/tables/book/view/partials/footer-book.html'">

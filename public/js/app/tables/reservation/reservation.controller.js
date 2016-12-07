@@ -276,18 +276,21 @@ angular.module('reservation.controller', [])
             };
 
             vm.changeHour = function(hour) {
-                if (!hour) return;
-                vm.reservation.hour = hour.time;
-                vm.showZones = [];
-
-                angular.forEach(hour.zones, function(zone) {
-                    vm.showZones.push(zone.id);
-                });
-
-                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
-                    return vm.nextZone();
+                if (!hour) {
+                    vm.reservation.hour = null;
                 } else {
-                    vm.zoneID = vm.zones[vm.zoneIndex].id;
+                    vm.reservation.hour = hour.time;
+                    vm.showZones = [];
+
+                    angular.forEach(hour.zones, function(zone) {
+                        vm.showZones.push(zone.id);
+                    });
+
+                    if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                        return vm.nextZone();
+                    } else {
+                        vm.zoneID = vm.zones[vm.zoneIndex].id;
+                    }
                 }
             }
 
@@ -471,6 +474,7 @@ angular.module('reservation.controller', [])
                         vm.zoneIndex++;
                     }
                 }
+
                 if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
                     return vm.nextZone();
                 } else {
@@ -486,7 +490,7 @@ angular.module('reservation.controller', [])
                         vm.zoneIndex = zoneIndexMax;
                     }
                 }
-                console.log(vm.showZones);
+
                 if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
                     return vm.prevZone();
                 } else {
@@ -682,11 +686,11 @@ angular.module('reservation.controller', [])
                     listReservationTags(),
                     loadTurns(date),
                 ]).then(function(data) {
-                    loadTablesEdit(data[0], data[2]);
                     loadReservation();
+                    loadTablesEdit(data[0], data[2]);
                     vm.tablesBlockValid();
-                    showTimeCustom();  
                     vm.changeHour(vm.hour);
+                    showTimeCustom();  
 
                     vm.waitingResponse = false;
                 });
