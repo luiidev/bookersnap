@@ -17,12 +17,6 @@ class WidgetController extends Controller
 
     public function confirm(Request $request, $site)
     {
-        // $rules = [
-        //     "date"  => "required|date",
-        //     "hour" => "required|numeric|digits:4|hour",
-        //     "num"   => "required|integer|between:1,20"
-        // ];
-
         $validate = Validator::make($request->all(), ["key" => "required|string|max:124"]);
 
         if ($validate->fails()) {
@@ -31,12 +25,12 @@ class WidgetController extends Controller
 
         $url = "http://localhost:3004/v1/es/microsites/1/reservationtemporal/".$request->key;
 
-        $response = ApiRequestsHelper::SendRequest("POST", $url, []);
+        $response = ApiRequestsHelper::SendRequest("GET", $url, []);
 
         if (@$response["data"] === null) {
-            // return view("error_reservation");
-            return "La reservacion que busca no existe o ya expiro....";
+            return view("widget.error_reservation", ["message" => "La reservacion que busca no existe o ya expiro...."]);
         } else {
+            $response["data"]["reservation"] = (object) $response["data"]["reservation"];
             return view("widget.paso_2", $response["data"]);
         }
     }
