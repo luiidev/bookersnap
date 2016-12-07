@@ -1225,16 +1225,17 @@ angular.module('book.controller', [])
         };
 
         var save = function() {
+            vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
             reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
-                    vm.buttonText = 'Agregar a lista de espera';
+                    vm.waitingResponse = false;
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
                 },
                 function error(error) {
-                    vm.buttonText = 'Agregar a lista de espera';
+                    vm.waitingResponse = false;
                     message.apiError(error);
                 });
         };
@@ -1275,12 +1276,16 @@ angular.module('book.controller', [])
         };
 
         vm.redirectReservation = function() {
+            console.log(vm.reservation);
+            console.log(data);
             $uibModalInstance.dismiss('cancel');
-            $state.go("mesas.book-reservation-add", {
+            $state.go("mesas.book-reservation-add-params", {
                 date: date,
                 tables: [{
-                    id: vm.reservation.table_id
-                }]
+                    id: vm.reservation.tables[0]
+                }],
+                hour: data.time,
+                guest: vm.reservation.covers
             });
         };
 

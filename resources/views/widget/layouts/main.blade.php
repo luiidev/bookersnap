@@ -28,9 +28,11 @@
 <!-- Library Content  End-->
 
 <script type="text/javascript" src="{{ asset('widget/js/app/app.js') }}"></script>
-<script type="text/javascript" src="{{ asset('widget/js/app/controllers/availability.controller.js') }}"></script>
 <script type="text/javascript" src="{{ asset('widget/js/app/services/availability.service.js') }}"></script>
 <script type="text/javascript" src="{{ asset('widget/js/app/filters/availability.filter.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/directives/availability.directive.js') }}"></script>
+
+@yield("resources");
 
 </body>
 </html>

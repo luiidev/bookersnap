@@ -10,7 +10,8 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
             .state('mesas.floor.reservation.add', {
                 url: '/:date/add',
                 params: {
-                    tables: null
+                    tables: null,
+                    hour: null
                 },
                 views: {
                     '@': {
@@ -23,7 +24,20 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
             .state('mesas.book-reservation-add', {
                 url: '/book/reservation/:date/add',
                 params: {
-                    tables: null
+                    tables: null,
+                    hour: null
+                },
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
+                    }
+                },
+            }).state('mesas.book-reservation-add-params', {
+                url: '/book/reservation/:date/add/:hour/:guest',
+                params: {
+                    tables: null,
                 },
                 views: {
                     '@': {
