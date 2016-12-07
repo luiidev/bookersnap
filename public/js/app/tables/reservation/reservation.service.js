@@ -227,7 +227,7 @@ angular.module('reservation.service', [])
 
                     if (!timeDefault) {
                         if (hours.length) data.default = hours[hours.length - 1].time;
-                        data.objDefault = null;
+                        data.objDefault = hours[hours.length - 1];
                     } else {
                         data.default = timeDefault;
                         data.objDefault = objDefault;
