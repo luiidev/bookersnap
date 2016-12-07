@@ -120,7 +120,6 @@ angular.module('book.service', [])
 
                 //actualizar tablesAvailables con las reservaciones
                 self.durationsReservaAvailableBook(reservations, tablesAvailability, bookView);
-
                 //Asignamos las mesas disponibles a la hora
                 angular.forEach(book, function(value, key) {
                     if (value.block === null && value.reservation === null) {
@@ -139,30 +138,37 @@ angular.module('book.service', [])
                 angular.forEach(tablesAvailability, function(table, key) {
                     var exists = self.existsTableReservaInBook(reservations, table.id, bookView);
                     if (exists.exists === true) {
-                        self.updateTablesAvailability(table.id, tablesAvailability, exists.data);
+                        self.updateTablesAvailability(table.id, tablesAvailability[key], exists.data);
                         // console.log("la mesa esta reservada " + table.id);
                     }
                 });
             },
             //Actualiza la lista de Mesas - Disponibilidad  si tiene reservacion
-            updateTablesAvailability: function(tableId, tablesAvailability, reservation) {
-
-                angular.forEach(tablesAvailability, function(table, key) {
+            updateTablesAvailability: function(tableId, table, reservations) {
+                angular.forEach(reservations, function(reservation, key) {
                     if (tableId === table.id) {
+                        var date_res = moment(reservation.date_reservation);
+
+                        var hour_ini = moment(reservation.datetime_input).format("HH:mm:ss");
+                        var hour_end = moment(reservation.datetime_output).format("HH:mm:ss");
+                        var indexHourIni = getIndexHour(hour_ini, 0);
+                        var indexHourEnd = getIndexHour(hour_end, 0);
+
+                        var date_ini = moment(reservation.datetime_input).format("YYYY-mm-dd");
+                        var date_end = moment(reservation.datetime_output).format("YYYY-mm-dd");
+
+                        if (moment(reservation.date_reservation).isSameOrBefore(date_ini)) {
+                            indexHourIni += 96;
+                        }
+                        if (moment(reservation.date_reservation).isSameOrBefore(date_end)) {
+                            indexHourEnd += 96;
+                        }
+
                         var indexHour = getIndexHour(reservation.hours_reservation, 0);
 
-                        var hour_ini = reservation.hours_reservation;
-                        var hour_duration = reservation.hours_duration.split(":");
-
-                        var hour_end = moment(reservation.date_reservation + " " + reservation.hours_reservation).add(hour_duration[0], "hours").format("HH:mm:ss");
-                        hour_end = moment(reservation.date_reservation + " " + hour_end).add(hour_duration[1], "minutes").format("HH:mm:ss");
-
-                        angular.forEach(table.availability, function(time, key) {
-                            if (time.time >= hour_ini && time.time <= hour_end) {
-                                table.availability[key].reserva = true;
-                            }
-                        });
-
+                        for (var i = indexHourIni; i <= indexHourEnd; i++) {
+                            table.availability[i].reserva = true;
+                        }
                     }
                 });
             },
@@ -175,7 +181,7 @@ angular.module('book.service', [])
             existsTableReservaInBook: function(reservations, table, bookView) {
                 var self = this;
                 var exists = {
-                    data: {},
+                    data: [],
                     exists: false
                 };
 
@@ -185,8 +191,8 @@ angular.module('book.service', [])
                     angular.forEach(reservation.tables, function(value, key) {
                         if (table === value.id) {
                             exists.exists = true;
-                            exists.data = reservation;
-                            return exists;
+                            exists.data.push(reservation);
+                            //return exists;
                         }
                     });
                 });
@@ -194,11 +200,13 @@ angular.module('book.service', [])
                 return exists;
             },
             //Asignamos las mesas con disponibilidad
+
             assignTablesAvailabilityBook: function(book, tables, reservations, bookView) {
                 var self = this;
                 var indexHour = getIndexHour(book.time, 0);
 
                 angular.forEach(tables, function(table, key) {
+
                     if (table.availability[indexHour].time == book.time) {
 
                         if (table.availability[indexHour].rule_id > 0 && table.availability[indexHour].reserva === false) {
@@ -210,37 +218,13 @@ angular.module('book.service', [])
                                 max_cover: table.max_cover,
                                 name: table.name
                             });
+
+                            return;
                         }
                     }
                 });
 
-                if (book.tables.length > 0) {
-                    book.available = true;
-                }
-
-                return book;
-            },
-            //Asignamos si la mesa esta disponible (funcion final) , evalua si las mesas disponibles de cada hora tienen alguna reservación 
-            //EVALUANDO ESTA FUNCION (POSIBLEMENTE QUITARLA)
-            assignAvailabilityTable: function(book, reservations, bookView) {
-                var self = this;
-
-                angular.forEach(book, function(value, key) {
-                    var tablesTotal = value.tables.length;
-                    console.log(tablesTotal, value.time);
-
-                    angular.forEach(value.tables, function(table, key) {
-                        var existsReservation = self.existsTableReservaInBook(reservations, table.id, bookView);
-
-                        if (existsReservation.exists === true) {
-                            //console.log("assignAvailabilityTable " + angular.toJson(existsReservation.data, true), value.time);
-                        }
-
-                        //var existsReservation = self.existsReservation(book, reservations, bookView);
-
-                    });
-
-                });
+                book.available = (book.tables.length > 0) ? true : false;
 
                 return book;
             },
