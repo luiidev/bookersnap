@@ -13,10 +13,10 @@
 
 //Route principal : Lista de micrositios
 
-Route::get("/w/{site}/", "WidgetController@index");
+Route::get("/w/{site}/", "WidgetController@index")->name("widget");
 
 // Route::get("/w/{isite}/reserve/{date}/{hour}/{num}", "WidgetController@confirm");
-Route::get("/w/{isite}/reserve/", "WidgetController@confirm");
+Route::get("/w/{site}/reserve/", "WidgetController@confirm");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

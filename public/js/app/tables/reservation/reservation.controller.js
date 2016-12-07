@@ -272,17 +272,18 @@ angular.module('reservation.controller', [])
 
             vm.tablesBlockValid = function() {
                 $table.tablesBlockValid(vm.zones, blocks, vm.reservation, editState, $stateParams.id);
+                console.log(vm.reservation);
                 vm.tablesSuggested(vm.reservation.covers);
             };
 
-            vm.changeHour = function(hour) {
-                if (!hour) {
+            vm.changeHour = function() {
+                if (!vm.hour) {
                     vm.reservation.hour = null;
                 } else {
-                    vm.reservation.hour = hour.time;
+                    vm.reservation.hour = vm.hour.time;
                     vm.showZones = [];
 
-                    angular.forEach(hour.zones, function(zone) {
+                    angular.forEach(vm.hour.zones, function(zone) {
                         vm.showZones.push(zone.id);
                     });
 
@@ -291,6 +292,7 @@ angular.module('reservation.controller', [])
                     } else {
                         vm.zoneID = vm.zones[vm.zoneIndex].id;
                     }
+                    vm.tablesBlockValid ();
                 }
             }
 
@@ -630,12 +632,14 @@ angular.module('reservation.controller', [])
                     guest_id: reservation.res_guest_id,
                     status_id: reservation.res_reservation_status_id,
                     date: reservation.date_reservation,
-                    hour: reservation.hours_reservation,
+                    // hour: reservation.hours_reservation, //Ahora se maneja por filterHour - ya que la hora se maneja por objeto y escucha su cambio
                     duration: reservation.hours_duration,
                     covers: reservation.num_guest,
                     note: reservation.note,
                     server_id: reservation.res_server_id
                 };
+
+                vm.hour = filterHour(vm.hours, reservation.hours_reservation);
 
                 if (reservation.res_guest_id) {
                     vm.guest = reservation.guest;
@@ -672,6 +676,38 @@ angular.module('reservation.controller', [])
             /**
              * END Edit Reservation Case
              */
+            
+            var filterHour = function(hours, defaultItem) {
+                var timeDefault;
+
+                var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0).millisecond(0);
+                var timeDefaultIsEstablished = false;
+
+                var defaultHour = defaultItem ? moment(defaultItem, "HH:mm:ss") : null;
+
+                angular.forEach(hours, function(hour) {
+                    if (!timeDefaultIsEstablished) {
+                        var hourTime = moment(hour.time, "HH:mm:ss");
+                        if (hourTime.isSameOrAfter(now) && !timeDefaultIsEstablished) {
+                            timeDefault = hour;
+                            timeDefaultIsEstablished = true;
+                        }
+
+                        if (hourTime.isSame(defaultHour)) {
+                            timeDefault = hour;
+                            timeDefaultIsEstablished = true;
+                        }
+                    }
+                });
+
+                if (!timeDefault) {
+                    if (hours.length > 0) {
+                        timeDefault = hours[hours.length - 1];
+                    }
+                }
+
+                return timeDefault;
+            };
 
             var InitModule = function(date) {
                 vm.waitingResponse = true;
@@ -687,8 +723,10 @@ angular.module('reservation.controller', [])
                     loadTurns(date),
                 ]).then(function(data) {
                     loadReservation();
-                    loadTablesEdit(data[0], data[2]);
-                    vm.tablesBlockValid();
+                    loadTablesEdit(data[0], data[2])
+                        .then(function() {
+                            vm.tablesBlockValid();
+                        });
                     vm.changeHour(vm.hour);
                     showTimeCustom();  
 
@@ -704,14 +742,32 @@ angular.module('reservation.controller', [])
             $scope.$watch("zones", true);
 
             var loadTablesEdit = function(zones, reservations) {
+                var deferred = $q.defer();
+
                 vm.zones = helper.loadTableV2(zones, [{
                     name: "reservations",
                     data: reservations
                 }]);
+
                 if ($stateParams.tables) {
                     vm.zones.tablesSelected($stateParams.tables);
                 }
+
+                if ($stateParams.hour) {
+                    vm.hour = filterHour(vm.hours, $stateParams.hour);
+                }
+
+                if ($stateParams.guest) {
+                    if (~~Number($stateParams.guest) > 0) {
+                        vm.reservation.covers = parseInt($stateParams.guest);
+                    }
+                }
+
                 setMaxIndex();
+
+                deferred.resolve();
+
+                return deferred.promise;
             };
 
             vm.changeDate = function() {
@@ -745,7 +801,7 @@ angular.module('reservation.controller', [])
 
             var redirect = function() {
                 var state = $state.current.name;
-                if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-edit") {
+                if (state == "mesas.book-reservation-add" || state =="mesas.book-reservation-add-params" || state == "mesas.book-reservation-edit") {
                     $state.go("mesas.book", $stateParams);
                 } else {
                     $state.go("mesas.floor.reservation");
