@@ -18,6 +18,37 @@ angular.module('book.filter', [])
             return listBook;
         };
     })
+    .filter('numGuestFilter', function(BookFactory) {
+        return function(books, numGuest, bookView) {
+            var listBook = [];
+
+            if (bookView === false) {
+                angular.forEach(books, function(book, key) {
+                    if (book.tables.length > 0) {
+                        var numGuestsValidate = 0;
+
+                        angular.forEach(book.tables, function(table, key) {
+                            console.log("numGuestFilter " + numGuest);
+                            if (numGuest >= table.min_cover && numGuest <= table.max_cover) {
+                                numGuestsValidate += 1;
+                            }
+                        });
+
+                        books[key].available = (numGuestsValidate > 0) ? true : false;
+                    }
+                    //listBook.push(book);
+
+                });
+                listBook = books;
+            } else {
+                listBook = books;
+            }
+
+            // BookFactory.getResumenBook(listBook);
+
+            return listBook;
+        };
+    })
     .filter('sourcesFilter', function(BookFactory) {
         return function(books, sources, bookView) {
             var listBook = [];

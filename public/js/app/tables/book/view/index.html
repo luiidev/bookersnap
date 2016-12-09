@@ -47,6 +47,29 @@
                             </a>
                         </li>
                     </ul>
+                    <ul class="lv-actions actions pull-left m-0 m-l-25" ng-hide="vm.bookView">
+                        <li>
+                            <ul class="pagination-sm m-0 pagination num-guest-filter">
+                                <li ng-class="{'active' : vm.bookFilter.numGuest.selected === $index+1 }" ng-repeat="numGuest in vm.bookFilter.numGuest.data">
+                                    <a class="" href="" ng-click="vm.selectFilterNumGuest($index,'item')">
+                                        {{ numGuest }}
+                                    </a>
+                                </li>
+                                <li class="dropdown" uib-dropdown="">
+                                    <a class="dropdown-toggle" href="" title="" uib-dropdown-toggle="">
+                                        {{ vm.bookFilter.numGuest.textMore }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-left num-guest-filter-more">
+                                        <li ng-repeat="item in vm.bookFilter.numGuest.moreData">
+                                            <a href="" ng-click="vm.selectFilterNumGuest($index,'more',item)">
+                                                {{ item }} Invitados
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                     <ul class="lv-actions actions">
                         <li>
                             <div class="toggle-switch toggle-switch-demo">
@@ -64,7 +87,7 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
