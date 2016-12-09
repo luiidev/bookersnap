@@ -27,7 +27,7 @@
                 <div class="info watch">
                     <span>Time to Complete</span>
                     <div class="timer">
-                        <time-down expire="'2016-12-07 14:30:00'" start="'2016-12-07 14:35:00'"></time-down>
+                        <time-down expire="'{{ $time }}'"></time-down>
                     </div>
                 </div>
             </div>
@@ -35,14 +35,14 @@
 
         <div class="col-xs-12 col-sm-8 p-r-0">
             <h4 class="m-t-0 c-blue">Confirmar Reservación</h4>
-            <form  name="reserveForm" novalidate>
+            <form novalidate>
                 <div class="row">
 
                     <div class="col-sm-5">
                         <label>Nombres</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Ingrese su nombre" ng-model="reservation.first_name" required>
+                                <input type="text" class="form-control input-sm"  placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name">
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                         <label>Apellidos</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Ingrese sus apellidos" ng-model="reservation.last_name" required>
+                                <input type="text" class="form-control input-sm"  placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name">
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                         <label>Correo</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="email" class="form-control input-sm"  placeholder="usuario@bookersnap.com" ng-model="reservation.email" required>
+                                <input type="email" class="form-control input-sm"  placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email">
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <label>Telefono mobil</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.phone">
+                                <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.guest.phone">
                             </div>
                         </div>
                     </div>
@@ -88,9 +88,9 @@
                     @endif
 
                     @if ($forms[1]['status'] == 1)
-                    <div class="col-xs-12 ng-hide"  ng-show="reservation.guests.length">
+                    <div class="col-xs-12 ng-hide"  ng-show="reservation.guest_list.length">
                         <div class="form-group guest-list">
-                        <button class="btn btn-primary btn-xs" ng-repeat="guest in reservation.guests track by $index">  <span ng-bind="guest"></span> <i class="glyphicon glyphicon-remove" ng-click="removeGuest($index)"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-repeat="guest in reservation.guest_list track by $index">  <span ng-bind="guest"></span> <i class="glyphicon glyphicon-remove" ng-click="removeGuest($index)"></i></button>
                         </div>
                     </div>
 
@@ -109,7 +109,7 @@
                         <label>Profesión</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.job">
+                                <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.guest.profession">
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <label>Como te enteraste</label>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.inform">
+                                <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.guest.find_out">
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
 
                 <div class="row">
                     <div class="col-sm-12 m-b-20">
-                        <button class="btn btn-primary pull-right"  ng-disabled="!reserveForm.$valid">Confirmar reservación</button>
+                        <button type="submit" class="btn btn-primary pull-right" ng-click="save()" ng-disabled="loading">Confirmar reservación</button>
                     </div>
                 </div>
             </form>
@@ -143,8 +143,4 @@
 
     </div>
 </div>
-@endsection
-
-@section("resources")
-<script type="text/javascript" src="{{ asset('widget/js/app/controllers/reservation.controller.js') }}"></script>
 @endsection

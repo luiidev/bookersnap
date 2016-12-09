@@ -72,13 +72,14 @@ angular.module("App")
                 .then(function(response) {
                     vm.result = resultFormat(response.data.data);
                     deferred.resolve(vm.result);
-                    vm.loadingInfo = false;
-                })
-                .catch(function(error) {
-                    vm.loadingInfo = false;
+                    console.log(vm.result);
+                }).catch(function(error) {
                     deferred.reject("Error en la busqueda de disponibilidad");
                     console.log("Error en la busqueda de disponibilidad", error);
+                }).finally(function() {
+                    vm.loadingInfo = false;
                 });
+
             return deferred.promise;
         };
 

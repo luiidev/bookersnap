@@ -14,53 +14,15 @@ angular.module("App")
                         zone_id: data.zone_id
                     }
                 });
-                // date: config.date,
-                // hour: config.hour.option,
-                // next_day: config.hour.next_day,
-                // num_guests: config.num_guest,
-                // zone_id: config.zone_id
             },
-            // getZones: function(date) {
-            //     return $http.get(ApiUrlMesas + "/availability/zones", {
-            //         params: {
-            //             date: date
-            //         }
-            //     });
-            //     // date: config.date
-            // },
-            // getHours: function(data) {
-            //     return $http.get(ApiUrlMesas + "/availability/hours", {
-            //         params: data
-            //     });
-            //     // date: config.date,
-            //     // zone_id: config.zoneId
-            // },
             getEvents: function(data) {
                 return $http.get(ApiUrlMesas + "/availability/events", {
                     params: data
                 });
-                // date: config.date,
-                // hour: config.hour.option,
-                // next_day: config.hour.next_day,
-                // zone_id: config.zone
             },
-            // getGuests: function(cant) {
-            //     var deferred = $q.defer();
-
-            //     var guests = [];
-            //     guests.push({
-            //         id: 1,
-            //         name: "1 Persona"
-            //     });
-            //     for (var i = 2; i <= cant; i++) {
-            //         guests.push({
-            //             id: i,
-            //             name: (i + " Personas")
-            //         });
-            //     }
-            //     deferred.resolve(guests);
-            //     return deferred.promise;
-            // },
+            saveReservation: function(data) {
+                return $http.post(ApiUrlMesas + "/table/reservation/w", data);
+            }
         };
     }])
     .factory("utiles", [function() {
