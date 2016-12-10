@@ -8,7 +8,7 @@ angular.module('reservation.controller', [])
              * Zonas que se deben mostar
              * @type {Array}
              */
-            vm.showZones = []
+            vm.showZones = [];
 
             /**
              * Entidad de reservacion
@@ -287,12 +287,12 @@ angular.module('reservation.controller', [])
                         vm.showZones.push(zone.id);
                     });
 
-                    if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                    if (vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
                         return vm.nextZone();
                     } else {
                         vm.zoneID = vm.zones[vm.zoneIndex].id;
                     }
-                    vm.tablesBlockValid ();
+                    vm.tablesBlockValid();
                 }
             }
 
@@ -477,7 +477,7 @@ angular.module('reservation.controller', [])
                     }
                 }
 
-                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                if (vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
                     return vm.nextZone();
                 } else {
                     vm.zoneID = vm.zones[vm.zoneIndex].id;
@@ -493,7 +493,7 @@ angular.module('reservation.controller', [])
                     }
                 }
 
-                if (  vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                if (vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
                     return vm.prevZone();
                 } else {
                     vm.zoneID = vm.zones[vm.zoneIndex].id;
@@ -676,7 +676,7 @@ angular.module('reservation.controller', [])
             /**
              * END Edit Reservation Case
              */
-            
+
             var filterHour = function(hours, defaultItem) {
                 var timeDefault;
 
@@ -728,7 +728,7 @@ angular.module('reservation.controller', [])
                             vm.tablesBlockValid();
                         });
                     vm.changeHour(vm.hour);
-                    showTimeCustom();  
+                    showTimeCustom();
 
                     vm.waitingResponse = false;
                 });
@@ -801,7 +801,7 @@ angular.module('reservation.controller', [])
 
             var redirect = function() {
                 var state = $state.current.name;
-                if (state == "mesas.book-reservation-add" || state =="mesas.book-reservation-add-params" || state == "mesas.book-reservation-edit") {
+                if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-add-params" || state == "mesas.book-reservation-edit") {
                     $state.go("mesas.book", $stateParams);
                 } else {
                     $state.go("mesas.floor.reservation");

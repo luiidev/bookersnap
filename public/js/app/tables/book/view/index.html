@@ -2,45 +2,45 @@
     <section class="w-100 p-0">
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
-        <div class="card m-0">
+        <div class="card m-0 box-filter-order">
             <div class="listview lv-bordered lv-lg">
                 <div class="lv-header-alt clearfix">
                     <h2 class="lvh-label hidden-xs pull-left f-700">
                         Ordenar :
                     </h2>
                     <!-- ngIf: mactrl.listviewSearchStat -->
-                    <ul class="lv-actions actions pull-left">
-                        <li>
+                    <ul class="lv-actions actions pull-left actions-order-by">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'time' || vm.bookOrderBy.resBlock.value === '' }">
                             <a href="" ng-click="vm.orderBook('time')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Tiempo">
                                 <i class="zmdi zmdi-time">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'status'}">
                             <a href="" ng-click="vm.orderBook('status')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Estado">
                                 <i class="zmdi zmdi-fire zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'covers'}">
                             <a href="" ng-click="vm.orderBook('covers')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
                                 <i class="zmdi zmdi-accounts zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'guest'}">
                             <a href="" ng-click="vm.orderBook('guest')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Invitados">
                                 <i class="zmdi zmdi-account-o zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'table'}">
                             <a href="" ng-click="vm.orderBook('table')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Mesas">
                                 <i class="zmdi zmdi-collection-item zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'date'}" style="display: none">
                             <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Creacion">
                                 <i class="zmdi zmdi-calendar zmdi-hc-fw">
                                 </i>
@@ -131,7 +131,7 @@
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                     </i>
-                                    {{ item.reservation.num_guest }} invitados
+                                    {{ item.reservation.guest_list.length }} invitados
                                 </a>
                             </div>
                         </div>
