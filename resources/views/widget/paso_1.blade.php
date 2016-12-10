@@ -51,7 +51,3 @@
 
 </div>
 @endsection
-
-@section("resources")
-<script type="text/javascript" src="{{ asset('widget/js/app/controllers/availability.controller.js') }}"></script>
-@endsection
