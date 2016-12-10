@@ -55,6 +55,19 @@ angular.module("App")
                 }
 
                 return timeDefault;
+            },
+            errorTranslate: function(errors, translate) {
+                angular.forEach(translate, function(value, index) {
+                    console.log(value, index);
+                    if (errors.hasOwnProperty(index)) {
+                        angular.forEach(errors[index], function(message, msg_Index) {
+                            errors[index][msg_Index] = message.replace(message.match(/\{(.*)\}/).shift(), value);
+                            console.log(errors[index][msg_Index]);
+                        });
+                    }
+                });
+
+                return errors;
             }
         };
     }]);

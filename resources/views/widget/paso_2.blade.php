@@ -35,54 +35,48 @@
 
         <div class="col-xs-12 col-sm-8 p-r-0">
             <h4 class="m-t-0 c-blue">Confirmar Reservación</h4>
-            <form novalidate>
+            <form name="resForm" novalidate>
                 <div class="row">
 
                     <div class="col-sm-5">
-                        <label>Nombres</label>
-                        <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name">
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': resForm.first_name.$invalid && !resForm.first_name.$pristine}">
+                            <label>Nombres</label>
+                            <input type="text" name="first_name" class="form-control input-sm"  placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" required>
+                            <p ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine" class="help-block">El nombre es requerido.</p>
                         </div>
                     </div>
 
                     <div class="col-sm-7">
-                        <label>Apellidos</label>
-                        <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name">
-                            </div>
+                    <div class="form-group" ng-class="{ 'has-error': resForm.last_name.$invalid && !resForm.last_name.$pristine}">
+                            <label>Apellidos</label>
+                            <input type="text" name="last_name" class="form-control input-sm"  placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name" required>
+                            <p ng-show="resForm.last_name.$invalid && !resForm.last_name.$pristine" class="help-block">El apellido es requerido.</p>
                         </div>
                     </div>
 
                     <div class="col-xs-12">
-                        <label>Correo</label>
-                        <div class="form-group">
-                            <div class="fg-line">
-                                <input type="email" class="form-control input-sm"  placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email">
-                            </div>
+                    <div class="form-group" ng-class="{ 'has-error': resForm.email.$invalid && !resForm.email.$pristine}">
+                            <label>Correo</label>
+                            <input type="email" name="email" class="form-control input-sm"  placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email" required>
+                            <p ng-show="resForm.email.$invalid && !resForm.email.$pristine" class="help-block">Debe una direccion de correo valida.</p>
                         </div>
+                        <p class="help-block" ng-repeat="error in errors['guest.email']" ng-bind="error"></p>
                     </div>
 
                     @if ($forms[0]['status'] == 1)
                     <div class="col-xs-12">
-                        <label>Telefono mobil</label>
                         <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.guest.phone">
-                            </div>
+                            <label>Telefono mobil</label>
+                            <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.guest.phone">
                         </div>
                     </div>
                     @endif
 
                     @if ($forms[2]['status'] == 1)
                     <div class="col-xs-12">
-                        <label>Nota de reservación</label>
                         <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Alguna observacion" ng-model="reservation.note">
-                            </div>
+                            <label>Nota de reservación</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Alguna observacion" ng-model="reservation.note">
                         </div>
                     </div>
                     @endif
@@ -95,33 +89,27 @@
                     </div>
 
                     <div class="col-xs-12">
-                        <label>Invitados</label>
                         <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Añadir tecleando enter o espacio" ng-model="newGuest" ng-keyup="addGuest($event)">
-                            </div>
+                            <label>Invitados</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Añadir tecleando enter o espacio" ng-model="newGuest" ng-keyup="addGuest($event)">
                         </div>
                     </div>
                     @endif
 
                     @if ($forms[3]['status'] == 1)
                     <div class="col-xs-12">
-                        <label>Profesión</label>
                         <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.guest.profession">
-                            </div>
+                            <label>Profesión</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.guest.profession">
                         </div>
                     </div>
                     @endif
 
                     @if ($forms[4]['status'] == 1)
                     <div class="col-xs-12">
-                        <label>Como te enteraste</label>
                         <div class="form-group">
-                            <div class="fg-line">
-                                <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.guest.find_out">
-                            </div>
+                            <label>Como te enteraste</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.guest.find_out">
                         </div>
                     </div>
                     @endif
@@ -132,13 +120,13 @@
                             Yelp stores this information and sends it to restaurants for transactional and promotional purposes. We’ll text you with reservation status updates – to stop receiving them, just text back "4" at any time. Note that we’ll text you with reservation status updates.</p>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-sm-12 m-b-20">
-                        <button type="submit" class="btn btn-primary pull-right" ng-click="save()" ng-disabled="loading">Confirmar reservación</button>
-                    </div>
-                </div>
             </form>
+            <div class="row">
+                <div class="col-sm-12 m-b-20">
+                    <!-- <button type="submit" class="btn btn-primary pull-right" ng-click="save()" ng-disabled="loading || resForm.$invalid">Confirmar reservación</button> -->
+                    <button type="submit" class="btn btn-primary pull-right" ng-click="save()" ng-disabled="loading">Confirmar reservación</button>
+                </div>
+            </div>
         </div>
 
     </div>

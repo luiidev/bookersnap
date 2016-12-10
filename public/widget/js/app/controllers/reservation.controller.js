@@ -1,5 +1,5 @@
 angular.module("App")
-    .controller("reservationCtrl", ["$scope", "$location", "availabilityService", function(vm, $location, service) {
+    .controller("reservationCtrl", ["$scope", "$location", "availabilityService", "utiles", function(vm, $location, service, utiles) {
 
         vm.reservation= {};
         // vm.reservation.token = $location.search().key; //Nesecita domino para funcionar (.com ...)
@@ -8,7 +8,13 @@ angular.module("App")
         vm.reservation.guest_list = [];
         vm.newGuest = "";
 
+        vm.errors = {};
+
         vm.loading = false;
+
+        var translate = {
+            "guest.email": "correo"
+        };
 
         vm.addGuest =function(event) {
             if (event.keyCode == 13 || event.keyCode == 32) {
@@ -26,15 +32,21 @@ angular.module("App")
         vm.save = function() {
             console.log(vm.reservation);
             vm.loading = true;
+            vm.errors = {};
             service.saveReservation(vm.reservation)
                 .then(function(response) {
-                    alert("Se registro su reservacion")
+                    alert("Se registro su reservacion");
                     console.log(response.data);
                 }).catch(function(error) {
-                    console.log(error);
+                    errorTranslate(error.data.data);
+                    console.log(vm.errors);
                 }).finally(function() {
                     vm.loading = false;
                 });
+        };
+
+        var errorTranslate = function (errors) {
+            vm.errors = utiles.errorTranslate(errors, translate);
         };
 
         /**
