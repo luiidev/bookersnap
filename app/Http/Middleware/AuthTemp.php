@@ -33,13 +33,11 @@ class AuthTemp
             }else if(request()->server('HTTP_REFERER')){
                 return redirect($this->urlRedirect());
             }
-            
         }catch(HttpException $e){
 //            var_dump($e->getMessage());
         }catch(\Exception $e){
 //            var_dump($e->getMessage());
         }
-        
         return redirect($this->urlRedirectBookersnap());
     }
     
