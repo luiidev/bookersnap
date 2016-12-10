@@ -11,31 +11,31 @@
                     <!-- ngIf: mactrl.listviewSearchStat -->
                     <ul class="lv-actions actions pull-left actions-order-by">
                         <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'time' || vm.bookOrderBy.resBlock.value === '' }">
-                            <a href="" ng-click="vm.orderBook('time')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Tiempo">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.time)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Tiempo">
                                 <i class="zmdi zmdi-time">
                                 </i>
                             </a>
                         </li>
                         <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'status'}">
-                            <a href="" ng-click="vm.orderBook('status')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Estado">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.status)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Estado">
                                 <i class="zmdi zmdi-fire zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'covers'}">
-                            <a href="" ng-click="vm.orderBook('covers')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.covers)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
                                 <i class="zmdi zmdi-accounts zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'guest'}">
-                            <a href="" ng-click="vm.orderBook('guest')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Invitados">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.guest)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Invitados">
                                 <i class="zmdi zmdi-account-o zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
                         <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'table'}">
-                            <a href="" ng-click="vm.orderBook('table')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Mesas">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.table)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Mesas">
                                 <i class="zmdi zmdi-collection-item zmdi-hc-fw">
                                 </i>
                             </a>

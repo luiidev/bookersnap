@@ -216,6 +216,13 @@ angular.module('book.controller', [])
                 guest: '-reservation.guest_filter',
                 table: '-reservation.table_filter',
                 date: '-reservation.start_date'
+            },
+            reservation: {
+                time: 'time.desc',
+                status: 'status.desc',
+                covers: 'covers.desc',
+                guest: 'guest.desc',
+                table: 'table.desc'
             }
         };
 
@@ -656,14 +663,38 @@ angular.module('book.controller', [])
         });
 
         var init = function() {
-            console.log("init");
             BookFactory.init($scope);
             loadConfigViewReservation();
             listSources();
             listStatusReservation();
         };
 
+        var getSortByFilterReservation = function() {
+            var order = "";
+            switch (vm.bookOrderBy.resBlock.value) {
+                case 'time':
+                    order = vm.bookOrderBy.reservation.time;
+                    break;
+                case 'status':
+                    order = vm.bookOrderBy.reservation.status;
+                    break;
+                case 'covers':
+                    order = vm.bookOrderBy.reservation.covers;
+                    break;
+                case 'guest':
+                    order = vm.bookOrderBy.reservation.guest;
+                    break;
+                case 'table':
+                    order = vm.bookOrderBy.reservation.table;
+                    break;
+                default:
+                    break;
+            }
+            return order;
+        };
+
         var paramsFilterReservation = function(filter) {
+            var orderSortBy = getSortByFilterReservation();
             var params_url = {
                 date: vm.datesText.start_date,
                 date_end: vm.datesText.end_date,
@@ -671,7 +702,7 @@ angular.module('book.controller', [])
                 zones: ($stateParams.zones === undefined || vm.bookFilter.zones.toString() !== "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
                 sources: ($stateParams.sources === undefined || vm.bookFilter.sources.toString() !== "") ? vm.bookFilter.sources.toString() : $stateParams.sources,
                 search_text: ($stateParams.search_text === undefined || vm.bookFilter.search_text !== "") ? vm.bookFilter.search_text : $stateParams.search_text,
-                sort: ($stateParams.sort === undefined || vm.bookOrderBy.resBlock.value !== "") ? vm.bookOrderBy.resBlock.value : $stateParams.sort
+                sort: ($stateParams.sort === undefined || orderSortBy !== "") ? orderSortBy : $stateParams.sort
             };
 
             if (params_url.start_date === "") {
@@ -730,24 +761,34 @@ angular.module('book.controller', [])
         };
 
         var setOrderBookReservation = function(option, search) {
-            switch (option) {
+
+            var orderVal = validateOrderBy(option);
+            var order = orderVal.split(".");
+
+            var order_type = (order[1] === "asc") ? "desc" : "asc";
+            switch (order[0]) {
                 case 'time':
-                    vm.bookOrderBy.resBlock.value = 'time';
+                    vm.bookOrderBy.reservation.time = (search === true) ? order[0] + "." + order_type : orderVal;
+                    vm.bookOrderBy.resBlock.value = "time";
                     break;
                 case 'status':
+                    vm.bookOrderBy.reservation.status = (search === true) ? order[0] + "." + order_type : orderVal;
                     vm.bookOrderBy.resBlock.value = 'status';
                     break;
                 case 'covers':
+                    vm.bookOrderBy.reservation.covers = (search === true) ? order[0] + "." + order_type : orderVal;
                     vm.bookOrderBy.resBlock.value = "covers";
                     break;
                 case 'guest':
+                    vm.bookOrderBy.reservation.guest = (search === true) ? order[0] + "." + order_type : orderVal;
                     vm.bookOrderBy.resBlock.value = "guest";
                     break;
                 case 'table':
+                    vm.bookOrderBy.reservation.table = (search === true) ? order[0] + "." + order_type : orderVal;
                     vm.bookOrderBy.resBlock.value = "table";
                     break;
                 case 'date':
-                    vm.bookOrderBy.resBlock.value = "time";
+                    //vm.bookOrderBy.resBlock.value = (vm.bookOrderBy.resBlock.value === "time" || vm.bookOrderBy.resBlock.value === "time.asc") ? "time.desc" : "time.asc";
                     break;
             }
 
@@ -755,6 +796,16 @@ angular.module('book.controller', [])
                 vm.searchReservations();
             }
 
+        };
+
+        var validateOrderBy = function(value) {
+            var pos = value.indexOf(".");
+            console.log("valiodda ", pos);
+            if (pos < 0) {
+                value = value + ".asc";
+            }
+
+            return value;
         };
 
         var setDatesText = function(startDate, endDate) {
@@ -843,7 +894,7 @@ angular.module('book.controller', [])
 
                 //console.log("loadConfigViewReservation " + angular.toJson(vm.configUserDefault, true));
 
-                if ($stateParams.sort !== undefined && $stateParams.sort !== "") {
+                if ($stateParams.sort !== undefined) {
                     setOrderBookReservation($stateParams.sort, false);
                 }
 
