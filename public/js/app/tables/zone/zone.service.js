@@ -6,6 +6,10 @@ angular.module('zone.service', [])
 				zones = HttpFactory.get(ApiUrlMesas + "/zones?" + vOptions, {}, zones, reload);
 				return zones;
 			},
+			getZonesActivesByDate: function(vOptions, reload) {
+				zones = HttpFactory.get(ApiUrlMesas + "/zones/activesByDate?" + vOptions, {}, zones, reload);
+				return zones;
+			},
 			getZone: function(vId) {
 				return $http.get(ApiUrlMesas + "/zones/" + vId);
 			},

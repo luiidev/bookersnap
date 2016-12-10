@@ -13,7 +13,9 @@ angular.module('book.filter', [])
                 listBook = books;
             }
 
-            // BookFactory.getResumenBook(listBook);
+            if (bookView === false) {
+                BookFactory.getResumenBook(listBook);
+            }
 
             return listBook;
         };
@@ -28,7 +30,6 @@ angular.module('book.filter', [])
                         var numGuestsValidate = 0;
 
                         angular.forEach(book.tables, function(table, key) {
-                            console.log("numGuestFilter " + numGuest);
                             if (numGuest >= table.min_cover && numGuest <= table.max_cover) {
                                 numGuestsValidate += 1;
                             }
@@ -36,8 +37,6 @@ angular.module('book.filter', [])
 
                         books[key].available = (numGuestsValidate > 0) ? true : false;
                     }
-                    //listBook.push(book);
-
                 });
                 listBook = books;
             } else {
@@ -64,7 +63,11 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
-            //BookFactory.getResumenBook(listBook);
+
+            if (bookView === false) {
+                BookFactory.getResumenBook(listBook);
+            }
+
             return listBook;
         };
     })
@@ -84,7 +87,10 @@ angular.module('book.filter', [])
             } else {
                 listBook = books;
             }
-            //BookFactory.getResumenBook(listBook);
+
+            if (bookView === false) {
+                BookFactory.getResumenBook(listBook);
+            }
 
             return listBook;
         };

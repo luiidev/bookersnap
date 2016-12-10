@@ -188,6 +188,7 @@ angular.module('book.service', [])
                 reservations = self.parseReservations(reservations, bookView);
 
                 angular.forEach(reservations, function(reservation, key) {
+
                     angular.forEach(reservation.tables, function(value, key) {
                         if (table === value.id) {
                             exists.exists = true;
@@ -195,6 +196,8 @@ angular.module('book.service', [])
                             //return exists;
                         }
                     });
+
+
                 });
 
                 return exists;
@@ -335,7 +338,6 @@ angular.module('book.service', [])
                 if (typeTurn !== "all") {
                     if (filterTypeTurns.length > 0) {
                         var index = filterTypeTurns.indexOf(typeTurn.turn.id);
-                        console.log("entrea     AUI ", typeTurn.turn.id);
                         if (index == -1) {
                             filterTypeTurns.push(typeTurn.turn.id);
                             self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
@@ -345,7 +347,6 @@ angular.module('book.service', [])
                         }
 
                     } else {
-                        console.log("entre addNewReservation ", typeTurn.turn.id);
                         filterTypeTurns.push(typeTurn.turn.id);
                         self.setCheckedTypeTurn(turns, typeTurn.turn.id, true);
                     }
@@ -531,7 +532,8 @@ angular.module('book.service', [])
                         turn_id: hour.turn_id,
                         block: null,
                         reservation: reservation,
-                        available: false
+                        available: false,
+                        tables: []
                     });
                 }
             },
@@ -635,7 +637,6 @@ angular.module('book.service', [])
             },
             getConfig: function() {
                 var config = (localStorage.getItem("reservationConfig") !== null) ? JSON.parse(localStorage.getItem("reservationConfig")) : null;
-
                 return config;
             },
             clearConfig: function() {
