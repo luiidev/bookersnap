@@ -170,3 +170,12 @@ body {
 .c-blue {
 	color: #337ab7;
 }
+
+.guest-list button{
+	margin-right: 10px;
+}
+
+.guest-list button span{
+	padding-left: 5px;
+	padding-right: 5px;
+}

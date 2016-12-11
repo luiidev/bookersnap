@@ -72,13 +72,14 @@ angular.module("App")
                 .then(function(response) {
                     vm.result = resultFormat(response.data.data);
                     deferred.resolve(vm.result);
-                    vm.loadingInfo = false;
-                })
-                .catch(function(error) {
-                    vm.loadingInfo = false;
+                    console.log(vm.result);
+                }).catch(function(error) {
                     deferred.reject("Error en la busqueda de disponibilidad");
                     console.log("Error en la busqueda de disponibilidad", error);
+                }).finally(function() {
+                    vm.loadingInfo = false;
                 });
+
             return deferred.promise;
         };
 
@@ -100,12 +101,15 @@ angular.module("App")
                 });
 
             return deferred.promise;
-        }
+        };
 
         /**
          * HTTP
          */
         
+        /**
+         * Date picker filter
+         */
         vm.disabled = function(date, mode){
                     var isHoliday = false;
                     for(var i = 0; i < vm.form.daysDisabled.length ; i++) {
@@ -118,15 +122,19 @@ angular.module("App")
        };
 
       function areDatesEqual(date1, date2) {
-        return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0)
+        return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0);
       }
 
       function toDate(date) {
-            // var ymd = date.split("-");
-            // return new Date(ymd[0], ymd[1] -1, ymd[2]);
             return new Date(date.split("-"));
       }
-
+      /**
+       * END Date picker filter
+       */
+      
+       /**
+        * Format data
+        */
         var resultFormat = function(items) {
             angular.forEach(items, function(item) {
                 if (item.hour !== null) {
@@ -148,6 +156,9 @@ angular.module("App")
             vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests + ' personas.';
             vm.searchAvailability();
         };
+        /**
+         * END Format data
+         */
 
         vm.$watch('date', function(newValue, oldValue) {
             if (!moment(newValue).isSame(oldValue)) {

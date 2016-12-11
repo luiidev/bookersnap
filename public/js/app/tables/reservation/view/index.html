@@ -166,7 +166,7 @@
                                 <div class="col-xs-4">
                                     <div class="fg-line">
                                         <div class="select">
-                                            <select class="form-control" id="hour" ng-model="rc.hour" ng-options="hour as hour.name group by hour.turn for hour in rc.hours" ng-change="rc.tablesBlockValid(); rc.changeHour(rc.hour)">
+                                            <select class="form-control" id="hour" ng-model="rc.hour" ng-options="hour as hour.name group by hour.turn for hour in rc.hours" ng-change="rc.changeHour()">
                                             </select>
                                         </div>
                                     </div>

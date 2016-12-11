@@ -27,10 +27,17 @@
 <script type="text/javascript" src="{{ asset('widget/library/moment/locale/es.js') }}"></script>
 <!-- Library Content  End-->
 
+<script type="text/javascript">
+    var microsite = {{ $microsite }};
+</script>
+
 <script type="text/javascript" src="{{ asset('widget/js/app/app.js') }}"></script>
-<script type="text/javascript" src="{{ asset('widget/js/app/controllers/availability.controller.js') }}"></script>
 <script type="text/javascript" src="{{ asset('widget/js/app/services/availability.service.js') }}"></script>
-<script type="text/javascript" src="{{ asset('widget/js/app/filters/availability.filter.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/controllers/availability.controller.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/controllers/reservation.controller.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/filters/reservation.filter.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/directives/reservation.directive.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/controllers/error.controller.js') }}"></script>
 
 </body>
 </html>
