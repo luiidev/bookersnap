@@ -38,29 +38,39 @@
             <form name="resForm" novalidate>
                 <div class="row">
 
-                    <div class="col-sm-5">
-                        <div class="form-group" ng-class="{ 'has-error': resForm.first_name.$invalid && !resForm.first_name.$pristine}">
+<!--                     <div class="col-sm-12">
+                        <div class="form-group">
                             <label>Nombres</label>
-                            <input type="text" name="first_name" class="form-control input-sm"  placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" required>
-                            <p ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine" class="help-block">El nombre es requerido.</p>
+                            <input type="text" name="first_name2" class="form-control input-sm" placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" required>
+                            <p class="help-block">El nombre es obligatorio.</p>
+                        </div>
+                    </div> -->
+
+                    <div class="col-sm-5">
+                        <div class="form-group" ng-class="{ 'has-error': resForm.first_name.$invalid && !resForm.first_name.$pristine  && resForm.first_name.$untouched}">
+                            <label>Nombres</label>
+                            <input type="text" name="first_name" class="form-control input-sm" placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" required>
+                            <p ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine && !errors['guest.first_name'].length && resForm.first_name.$untouched" class="help-block">El nombre es obligatorio.</p>
+                            <p class="help-block" ng-repeat="error in errors['guest.first_name']" ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine && resForm.first_name.$untouched" ng-bind="error"></p>
                         </div>
                     </div>
 
                     <div class="col-sm-7">
-                    <div class="form-group" ng-class="{ 'has-error': resForm.last_name.$invalid && !resForm.last_name.$pristine}">
+                        <div class="form-group" ng-class="{ 'has-error': resForm.last_name.$invalid && !resForm.last_name.$pristine}">
                             <label>Apellidos</label>
-                            <input type="text" name="last_name" class="form-control input-sm"  placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name" required>
-                            <p ng-show="resForm.last_name.$invalid && !resForm.last_name.$pristine" class="help-block">El apellido es requerido.</p>
+                            <input type="text" name="last_name" class="form-control input-sm" placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name" required>
+                            <p ng-show="resForm.last_name.$invalid && !resForm.last_name.$pristine && !errors['guest.last_name'].length" class="help-block">El apellido es obligatorio.</p>
+                            <p class="help-block" ng-repeat="error in errors['guest.last_name']" ng-show="resForm.last_name.$invalid && !resForm.last_name.$pristine" ng-bind="error"></p>
                         </div>
                     </div>
 
                     <div class="col-xs-12">
-                    <div class="form-group" ng-class="{ 'has-error': resForm.email.$invalid && !resForm.email.$pristine}">
+                        <div class="form-group" ng-class="{ 'has-error': resForm.email.$invalid && !resForm.email.$pristine || errors['guest.email'].length}">
                             <label>Correo</label>
-                            <input type="email" name="email" class="form-control input-sm"  placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email" required>
-                            <p ng-show="resForm.email.$invalid && !resForm.email.$pristine" class="help-block">Debe una direccion de correo valida.</p>
+                            <input type="email" name="email" class="form-control input-sm" placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email">
+                            <p ng-show="resForm.email.$invalid && !resForm.email.$pristine && !errors['guest.email'].length" class="help-block">Debe una direccion de correo valida.</p>
+                            <p class="help-block" ng-repeat="error in errors['guest.email']" ng-show="resForm.email.$invalid && !resForm.email.$pristine" ng-bind="error"></p>
                         </div>
-                        <p class="help-block" ng-repeat="error in errors['guest.email']" ng-bind="error"></p>
                     </div>
 
                     @if ($forms[0]['status'] == 1)
