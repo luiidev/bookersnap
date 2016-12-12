@@ -14,16 +14,16 @@
          <link href="/css/app/reservation/app.bookersnap.library.reservation.min.css" rel="stylesheet">
         <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
          <!-- App Css -->
-       
+
         <link href="/css/app/reservation/style-reservation.min.css" rel="stylesheet">
-    
+
     </head>
     <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
 
         <data ui-view></data>
 
         <!-- Older IE warning message -->
-        <!--[if lt IE 9]>
+<!--         [if lt IE 9]>
             <div class="ie-warning">
                 <h1 class="c-white">Warning!!</h1>
                 <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
@@ -63,7 +63,7 @@
                 </div>
                 <p>Sorry for the inconvenience!</p>
             </div>
-        <![endif]-->
+        <![endif] -->
 
         <!-- Vendor Bookersnap-->
         <script src="/js/theme/dist/library.bower.min.js"></script>
@@ -77,6 +77,6 @@
         <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
         <script type="text/javascript" src="/js/dist.app/reservation/app.bookersnap.reservation.min.js"></script>
 
-   
+
     </body>
 </html>

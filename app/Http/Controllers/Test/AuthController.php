@@ -50,7 +50,7 @@ class AuthController extends Controller
 
                 $bsAuthToken = $this->generateBsAuthToken($user['id']);
 
-                return response()->redirectTo('/admin');
+                return response()->redirectTo('/auth/home');
                 /* return response()->redirectTo(route('microsite-home'))
             ->with('message', 'Bienvenido Usuario.')
             ->with("bsAuthToken", $bsAuthToken);*/

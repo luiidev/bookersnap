@@ -14,9 +14,9 @@
             </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div class="lienzo-v2" ng-drop="true" ng-style="{width: rc.size, height: rc.size, 'font-size': rc.fontSize}" ng-repeat="zone in rc.zones" ng-show="$index == rc.zoneIndex">
+                    <div class="lienzo-v2" ng-drop="true" ng-style="{width: rc.size, height: rc.size, 'font-size': rc.fontSize}" ng-repeat="zone in rc.zones | zoneFilter: rc.showZones" ng-show="zone.id == rc.zoneID">
                             <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left}" ng-click="rc.selectTable(obj)" ng-repeat="obj in zone.tables">
-                                <div class="table-label top">{{obj.name}}</div>
+                                <div class="table-label" ng-class="obj.position_text">{{obj.name}}</div>
                                 <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
                                 <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
                                 <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
@@ -33,9 +33,12 @@
 
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y: auto;">
-        <div class="card-header" style="text-align: center; line-height: 30px; color: #FFF;">
+        <div class="card-header p-l-15 p-r-15 text-center c-white">
             <button class="btn btn-danger pull-left" ng-click="rc.cancel()">Cancelar</button>
-            Agregar reservacion
+            <span class="f-16" style="line-height: 2">
+            <span ng-hide="rc.editState">NUEVA RESERVACIÓN</span>
+            <span ng-show="rc.editState">EDITAR RESERVACIÓN</span>
+            </span>
             <button class="btn btn-primary pull-right" ng-click="rc.save()" ng-disabled="rc.waitingResponse">Guardar</button>
         </div>
         <div class="card-body">
@@ -44,48 +47,50 @@
                     <form class="form-horizontal" role="form">
                         <div class="reservation-new-guest" >
                             <div class="form-group">
-                                <label class="col-xs-2 control-label" for="name">
-                                    Nombres
+                                <label class="col-xs-3 control-label" for="name">
+                                    <strong>NOMBRES</strong>
                                 </label>
-                                <div class="col-xs-10">
+                                <div class="col-xs-9">
                                     <div class="fg-line">
                                             <input type="text" class="form-control input" id="name" ng-model="rc.newGuest.first_name" ng-blur="rc.searchListHide = true" ng-change="rc.searchGuest(rc.newGuest.first_name)"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-2 control-label" for="last_name">
-                                    Apellidos
+                                <label class="col-xs-3 control-label" for="last_name">
+                                    <strong>APELLIDOS</strong>
                                 </label>
-                                <div class="col-xs-10">
+                                <div class="col-xs-9">
                                     <div class="fg-line">
                                             <input type="text" class="form-control input" id="last_name" ng-model="rc.newGuest.last_name"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-2 control-label" for="phone">
-                                    Telefono
+                                <label class="col-xs-3 control-label" for="phone">
+                                    <strong>TELÉFONO</strong>
                                 </label>
-                                <div class="col-xs-10">
+                                <div class="col-xs-9">
                                     <div class="fg-line">
                                             <input type="text" class="form-control input" id="phone" ng-model="rc.newGuest.phone"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-2 control-label" for="email">
-                                    Email
+                                <label class="col-xs-3 control-label" for="email">
+                                    <strong>E-MAIL</strong>
                                 </label>
-                                <div class="col-xs-10">
+                                <div class="col-xs-9">
                                     <div class="fg-line">
-                                            <input type="text" class="form-control input" id="email" ng-model="rc.newGuest.email"/>
+                                        <input type="text" class="form-control input" id="email" ng-model="rc.newGuest.email"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    <a href="javascript:void(0);" class="a-tittle" ng-click="rc.addGuest=!rc.addGuest">cancelar</a>
+                                    <a href="javascript:void(0);" class="a-tittle pull-right" ng-click="rc.addGuest=!rc.addGuest">
+                                        <strong>CANCELAR REGISTRO DE INVITADO</strong>
+                                    </a>
                                 </div>
                             </div>
 
@@ -104,7 +109,7 @@
            </div>
 
             <div class="card reservation-guest" ng-hide="rc.addGuest || rc.reservation.guest_id">
-                <div class="card-header bgm-blue"  ng-click="rc.addGuest=!rc.addGuest">
+                <div class="card-header bgm-blue text-uppercase"  ng-click="rc.addGuest=!rc.addGuest">
                     <h2>Agregar Invitado</h2>
                 </div>
            </div> 
@@ -122,36 +127,36 @@
                 <form class="form-horizontal" role="form">
                     <div class="card-body drag-border">
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="status">
-                                Estado
+                            <label class="col-xs-3 control-label" for="status">
+                                <strong>ESTADO</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="status" ng-model="rc.reservation.status_id" ng-options="status.id as status.name for status in rc.statuses">
+                                        <select class="form-control text-uppercase" id="status" ng-model="rc.reservation.status_id" ng-options="status.id as status.name for status in rc.statuses">
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="covers">
-                                Invitados
+                            <label class="col-xs-3 control-label" for="covers">
+                                <strong>INVITADOS</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="covers" ng-model="rc.reservation.covers" ng-options="cover.id as cover.name for cover in rc.covers" ng-change="rc.tablesSuggested(rc.reservation.covers)">
+                                        <select class="form-control text-uppercase" id="covers" ng-model="rc.reservation.covers" ng-options="cover.id as cover.name for cover in rc.covers" ng-change="rc.tablesSuggested(rc.reservation.covers)">
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="date">
-                                Fecha
+                            <label class="col-xs-3 control-label" for="date">
+                                <strong>FECHA</strong>
                             </label>
-                            <div class="col-xs-10 date-picker" ng-class="{ 'is-opened': opened == true }">
+                            <div class="col-xs-9 date-picker" ng-class="{ 'is-opened': opened == true }">
                                 <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
                                     <input class="form-control" close-text="Close" is-open="opened" min-date="minDate" ng-click="open($event, 'opened')" ng-model="rc.date" ng-change="rc.changeDate()" placeholder="Seleccione una fecha" show-weeks="false" type="text" uib-datepicker-popup="{{format}}"/>
                                 </div>
@@ -159,23 +164,21 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="border-right">
-                                <label class="col-xs-2 control-label" for="hour">
-                                    Hora
-                                </label>
-                                <div class="col-xs-4">
-                                    <div class="fg-line">
-                                        <div class="select">
-                                            <select class="form-control" id="hour" ng-model="rc.reservation.hour" ng-options="hour.time as hour.name group by hour.turn for hour in rc.hours" ng-change="rc.tablesBlockValid()">
-                                            </select>
-                                        </div>
+                            <label class="col-xs-3 control-label" for="hour">
+                                <strong>HORA</strong>
+                            </label>
+                            <div class="col-xs-3 p-r-0">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control" id="hour" ng-model="rc.hour" ng-options="hour as hour.name group by hour.turn for hour in rc.hours" ng-change="rc.changeHour()">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-xs-2 control-label" for="duration">
-                                Duracion
+                            <label class="col-xs-3 p-l-0 control-label" for="duration">
+                                <strong>DURACIÓN</strong>
                             </label>
-                            <div class="col-xs-4">
+                            <div class="col-xs-3 p-l-0">
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" id="duration" ng-model="rc.reservation.duration" ng-options="duration.time as duration.name for duration in rc.durations" ng-change="rc.tablesBlockValid()">
@@ -185,13 +188,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="server">
-                                Mozo
+                            <label class="col-xs-3 control-label" for="server">
+                                <strong>MOZO</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" id="server" ng-model="rc.reservation.server_id" ng-options="server.id as server.name for server in rc.servers">
+                                        <select class="form-control text-uppercase" id="server" ng-model="rc.reservation.server_id" ng-options="server.id as server.name for server in rc.servers">
                                             <option selected="true" value="">
                                                 Ninguno
                                             </option>
@@ -201,16 +204,16 @@
                             </div>
                         </div>
                         <div class="form-group" style="display: table; width: 100%;">
-                            <label class="col-xs-2 control-label" for="server">
-                                Mesas
+                            <label class="col-xs-3 control-label" for="server">
+                                <strong>MESAS</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div ng-if="!rc.isTablesSelected">
                                     <label class="control-label" for="server" style="color: #8c8c8c;">{{ rc.tableSuggested.name || "Sin mesas" }}</label>
                                     <a class="a-title pull-right" ng-show="rc.tableSuggested.name" style="padding-top: 7px">Sugerido</a>
                                 </div>
 
-                                <label class="control-label p-r-5" for="server" ng-repeat="table in  rc.tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
+                                <label class="control-label text-uppercase p-r-5 m-r-5" for="server" ng-repeat="table in  rc.tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
 
                             </div>
                         </div>

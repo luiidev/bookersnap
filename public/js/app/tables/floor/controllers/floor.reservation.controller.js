@@ -4,12 +4,15 @@ angular.module('floor.controller')
         var rm = this;
 
         rm.visits = {};
-        rm.typeRes = {};
+        rm.typeRes = [];
         rm.filter_status = [1, 2, 3];
         rm.filter_people = [];
         rm.filter_reserva = [];
         rm.filter_type = [];
         rm.zonesNumber = [];
+        rm.status = [];
+        rm.servers = [];
+        rm.tags = [];
 
         var blocks = [];
 
@@ -47,16 +50,12 @@ angular.module('floor.controller')
             checked: false,
         }];
 
-        var statistics = function() {
-
+        var statistics = function(action) {
             var total = 0;
             var men = 0;
             var women = 0;
             var children = 0;
-            var tWeb = 0;
-            var tTel = 0;
-            var tPor = 0;
-            var tRp = 0;
+            rm.typeRes = [];
 
             angular.forEach(rm.reservations.data, function(reservation, index) {
                 men += reservation.num_people_1;
@@ -65,19 +64,11 @@ angular.module('floor.controller')
                 total += reservation.num_guest;
 
                 var source_type = reservation.res_source_type_id;
-                switch (source_type) {
-                    case 1:
-                        tRp += 1;
-                        break;
-                    case 2:
-                        tPor += 1;
-                        break;
-                    case 3:
-                        tTel += 1;
-                        break;
-                    case 4:
-                        tWeb += 1;
-                        break;
+                var exist = rm.typeRes.hasOwnProperty(source_type);
+                if (exist) {
+                    rm.typeRes[source_type]++;
+                } else {
+                    rm.typeRes[source_type] = 1;
                 }
             });
 
@@ -88,23 +79,22 @@ angular.module('floor.controller')
             rm.total_visitas = rm.visits.total_people;
             visitsQuantity();
 
-            rm.typeRes.WEB = tWeb;
-            rm.typeRes.TELÉFONO = tTel;
-            rm.typeRes.PORTAL = tPor;
-            rm.typeRes.RP = tRp;
-            rm.typeRes.total_reservas = tWeb + tTel + tPor + tRp;
+            rm.typeRes.total_reservas = rm.typeRes.reduce(function(suma, value) {
+                return suma + value;
+            }, 0);
+
             rm.total_reservas = rm.typeRes.total_reservas;
 
-            rm.res_listado = Array.prototype.concat.call(rm.reservations.data, blocks);
+            rm.res_listado = Array.prototype.concat.call(angular.copy(rm.reservations.data), angular.copy(rm.blocks.data));
+            rm.getZone();
         };
 
-        reservationService.getBlocks().then(function(response) {
-            blocks = response.data.data;
-            statistics();
-        });
-
         rm.getZone = function(reservation) {
-            if (global.lienzo.data.getZoneForTables) return global.lienzo.data.getZoneForTables(reservation.tables);
+            if (rm.lienzo.data.getZoneForTables) {
+                angular.forEach(rm.res_listado, function(item) {
+                    item.zone = rm.lienzo.data.getZoneForTables(item.tables);
+                });
+            }
         };
 
         var customSelect = function(categoria, event, collection, filter, index_all, callback) {
@@ -173,7 +163,7 @@ angular.module('floor.controller')
                 rm.total_reservas = 0;
                 angular.forEach(rm.categorias_reserva, function(categoria) {
                     if (categoria.id !== 0 && categoria.checked === true) {
-                        rm.total_reservas += rm.typeRes[categoria.name];
+                        rm.total_reservas += rm.typeRes[categoria.id] || 0;
                     }
                 });
             }
@@ -197,7 +187,6 @@ angular.module('floor.controller')
             if (validaModal === true) {
                 return;
             }
-
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalEditReservation.html',
                 controller: 'editReservationCtrl',
@@ -206,12 +195,35 @@ angular.module('floor.controller')
                 resolve: {
                     content: function() {
                         return {
-                            reservation: reservation
+                            reservation: reservation,
+                            tags: rm.tags,
+                            status: rm.status,
+                            servers: rm.servers,
+                            config: rm.configuracion
                         };
                     }
                 }
             });
 
+        };
+
+        rm.checkGuestList = function(reservation) {
+            rm.disabledModal();
+
+            var modalInstance = $uibModal.open({
+                templateUrl: 'ModalCheckGuestList.html',
+                controller: 'ModallCheckGuestListCtrl',
+                controllerAs: 'gl',
+                size: 'md',
+                resolve: {
+                    reservation: function() {
+                        return reservation;
+                    },
+                    configuration: function() {
+                        return rm.configuracion;
+                    }
+                }
+            });
         };
 
         // rm.infoReservationShow = function() {
@@ -238,7 +250,7 @@ angular.module('floor.controller')
 
         rm.disabledModal = function() {
             validaModal = true;
-            console.log("disabledModal");
+            //console.log("disabledModal");
             $timeout(function() {
                 validaModal = false;
             }, 600);
@@ -246,8 +258,10 @@ angular.module('floor.controller')
 
         var listTypeTurns = function() {
             FloorFactory.listTurnosActivos(rm.fecha_actual).then(function success(response) {
+                    //console.log(response);
                     TypeFilterDataFactory.setTypeTurnItems(response);
                     rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+                    console.log(rm.categorias_type);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -274,6 +288,35 @@ angular.module('floor.controller')
             });
         };
 
+        /* INICIALIZAR TODOS LOS DATOS DE FLOOR */
+
+        var loadDataFloor = function() {
+
+            FloorFactory.getDataFloor(null).then(function(response) {
+                rm.status = response.status;
+                rm.servers = response.servers;
+                rm.tags = response.tags;
+                setConfiguration(response.config);
+                setCategoriasReserva(response.sourceTypes);
+                setCategoriasType(response.shifts);
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+        };
+
+        var setConfiguration = function(configuration) {
+            rm.configuracion = configuration;
+        }
+        var setCategoriasReserva = function(sourceTypes) {
+            TypeFilterDataFactory.setSourceTypesItems(sourceTypes);
+            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+        };
+        var setCategoriasType = function(shifts) {
+            TypeFilterDataFactory.setTypeTurnItems(shifts);
+            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+        };
+        /* FIN INICIALIZAR TODOS LOS DATOS DE FLOOR */
+
         var clearState = function() {
             $rootScope.$broadcast("floorClearSelected");
             angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -284,11 +327,16 @@ angular.module('floor.controller')
             clearState();
 
             rm.reservations = global.reservations;
-            $scope.$watch("rm.reservations", statistics, true);
+            rm.blocks = global.blocks;
+            rm.lienzo = global.lienzo;
 
-            loadConfiguration();
-            listSourceTypes();
-            listTypeTurns();
+            loadDataFloor();
+
+            $scope.$watch("rm.lienzo", statistics, true);
+
+            //loadConfiguration();
+            //listSourceTypes();
+            //listTypeTurns();
         })();
     })
     .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
@@ -307,10 +355,12 @@ angular.module('floor.controller')
              * @type {Object}
              */
             er.selectTags = {};
+            er.existTagsReservations = false;
 
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
                 totalGuests();
+                guest_list_valid(guest);
             };
 
             er.restar = function(guest) {
@@ -319,7 +369,59 @@ angular.module('floor.controller')
                     er.reservation.guests[guest]--;
                     totalGuests();
                 }
+                guest_list_valid(guest);
             };
+
+            /**
+             * Validacion de cantidad invitados  vs cantidad en lista de invitados 
+             */
+            er.guestMessage = {
+                men: {
+                    text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                    active: false
+                },
+                women: {
+                    text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                    active: false
+                },
+                children: {
+                    text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                    active: false
+                }
+            };
+
+            var guest_list;
+            var guest_list_count = function(reservation) {
+                guest_list = reservation.guest_list.reduce(function(count, item) {
+                    if (item.type_person === 1) {
+                        count.men++;
+                    } else if (item.type_person === 2) {
+                        count.women++;
+                    } else if (item.type_person === 3) {
+                        count.children++;
+                    }
+                    return count;
+                }, {
+                    men: 0,
+                    women: 0,
+                    children: 0
+                });
+
+                guest_list_valid("men");
+                guest_list_valid("women");
+                guest_list_valid("children");
+            };
+
+            var guest_list_valid = function(guest) {
+                if (er.reservation.guests[guest] < guest_list[guest]) {
+                    er.guestMessage[guest].active = true;
+                } else {
+                    er.guestMessage[guest].active = false;
+                }
+            };
+            /**
+             * END
+             */
 
             var totalGuests = function() {
                 er.reservation.guests.total = er.reservation.guests.men + er.reservation.guests.women + er.reservation.guests.children;
@@ -348,9 +450,10 @@ angular.module('floor.controller')
                         men: men,
                         women: women,
                         children: children
-                    }
+                    },
+                    date_reservation: reservation.date_reservation,
+                    hours_reservation: reservation.hours_reservation
                 };
-
                 totalGuests();
             }
 
@@ -358,7 +461,7 @@ angular.module('floor.controller')
                 er.info = {
                     first_name: reservation.guest ? reservation.guest.first_name : "Reservacion sin nombre.",
                     last_name: reservation.guest ? reservation.guest.last_name : "",
-                    date: moment(reservation.date_reservation).format("dddd, d [de] MMMM"),
+                    date: moment(reservation.date_reservation).format("dddd, D [de] MMMM"),
                     time: moment(reservation.hours_reservation, "HH:mm:ss").format("H:mm A"),
                     tables: getTables(reservation.tables)
                 };
@@ -377,6 +480,7 @@ angular.module('floor.controller')
                 var deferred = $q.defer();
                 service.getGuest()
                     .then(function(guests) {
+
                         er.covers = guests;
                     }).catch(function(error) {
                         message.apiError(error);
@@ -446,9 +550,10 @@ angular.module('floor.controller')
 
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
-                $state.go('mesas.reservation-edit', {
+                console.log(er.reservation);
+                $state.go('mesas.floor.reservation.edit', {
                     id: er.reservation.id,
-                    date: moment().format("YYYY-MM-DD")
+                    date: er.reservation.date_reservation
                 });
             };
 
@@ -502,15 +607,15 @@ angular.module('floor.controller')
                 });
             };
 
-            function listResource() {
+            /*function listResource() {
                 return $q.all([
                     listGuest(),
-                    listStatuses(),
-                    listServers(),
-                    loadConfiguration(),
-                    listReservationTags()
+                    //listStatuses(),
+                    //listServers(),
+                    //loadConfiguration(),
+                    //listReservationTags()
                 ]);
-            }
+            }*/
 
             /**
              * Select tags
@@ -555,13 +660,19 @@ angular.module('floor.controller')
             (function Init() {
                 var date = getFechaActual();
 
-                listResource().then(function() {
-                    resetTags();
-                    parseInfo(content.reservation);
-                    parseData(content.reservation);
-                    paintTags(content.reservation.tags);
+                service.getGuest().then(function(guests) {
+                    er.covers = guests;
                 });
-                console.log(content.reservation);
+                er.statuses = content.status;
+                er.servers = content.servers;
+                er.tags = content.tags;
+                er.configuration = content.config;
+                resetTags();
+                parseInfo(content.reservation);
+                parseData(content.reservation);
+                paintTags(content.reservation.tags);
+                guest_list_count(content.reservation);
+
             })();
         }
     ])
@@ -572,16 +683,18 @@ angular.module('floor.controller')
             date: '',
             time: '',
             email: '',
-            nombre: ''
+            nombre: '',
+            messages: []
         };
 
         vm.mailData = {
             message: '',
-            subject: ''
+            subject: '',
+            email: ''
         };
 
         var init = function() {
-            // console.log(angular.toJson(reservation, true));
+            //console.log(angular.toJson(reservation, true));
             vm.reservation.date = reservation.date_reservation;
             vm.reservation.time = reservation.hours_reservation;
             vm.reservation.email = reservation.email;
@@ -589,6 +702,9 @@ angular.module('floor.controller')
             var last_name = reservation.guest ? reservation.guest.last_name : "";
             vm.reservation.nombre = first_name + " - " + last_name;
             vm.reservation.note = reservation.note;
+            vm.reservation.messages = reservation.emails;
+            vm.mailData.email = reservation.email;
+
         };
 
         vm.sendMail = function() {
@@ -632,4 +748,193 @@ angular.module('floor.controller')
         };
 
         init();
-    });
+    })
+    .controller("ModallCheckGuestListCtrl", ["$uibModalInstance", "$q", "reservationService", "reservation", "configuration", function($uibModalInstance, $q, reservationService, reservation, configuration) {
+
+        var vm = this;
+        vm.guestListAdd = [];
+        vm.person = {
+            man: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            woman: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            children: {
+                quantity: 0,
+                auxiliar: 0,
+                min: 0
+            },
+            total: 0
+        };
+
+        var person = {
+            man: 1,
+            woman: 2,
+            children: 3
+        };
+
+        vm.changeArrived = function(item) {
+            if (!item.arrived) item.type_person = null;
+            vm.countPerson();
+        };
+
+        vm.addGuest = function() {
+            var guest = {
+                name: vm.newGuest,
+                arrived: 0,
+                type_person: null
+            };
+            vm.guestListAdd.push(guest);
+            vm.newGuest = null;
+        };
+
+        vm.countPerson = function(item, key) {
+            vm.person.man.quantity = 0;
+            vm.person.woman.quantity = 0;
+            vm.person.children.quantity = 0;
+            vm.person.man.auxiliar = vm.person.man.min;
+            vm.person.woman.auxiliar = vm.person.woman.min;
+            vm.person.children.auxiliar = vm.person.children.min;
+            vm.person.total = 0;
+
+            angular.forEach(vm.guestList, function(item) {
+                if (!item.status) return;
+                if (item.type_person === 1) {
+                    vm.person.man.quantity++;
+                    if (vm.person.man.quantity > vm.person.man.min) {
+                        vm.person.man.auxiliar = vm.person.man.quantity;
+                    }
+                } else if (item.type_person === 2) {
+                    vm.person.woman.quantity++;
+                    if (vm.person.woman.quantity > vm.person.woman.min) {
+                        vm.person.woman.auxiliar = vm.person.woman.quantity;
+                    }
+                } else if (item.type_person === 3) {
+                    vm.person.children.quantity++;
+                    if (vm.person.children.quantity > vm.person.children.min) {
+                        vm.person.children.auxiliar = vm.person.children.quantity;
+                    }
+                }
+
+                vm.person.total += item.arrived;
+            });
+
+            angular.forEach(vm.guestListAdd, function(item) {
+                if (item.type_person === 1) {
+                    vm.person.man.quantity++;
+                    if (vm.person.man.quantity > vm.person.man.min) {
+                        vm.person.man.auxiliar = vm.person.man.quantity;
+                    }
+                } else if (item.type_person === 2) {
+                    vm.person.woman.quantity++;
+                    if (vm.person.woman.quantity > vm.person.woman.min) {
+                        vm.person.woman.auxiliar = vm.person.woman.quantity;
+                    }
+                } else if (item.type_person === 3) {
+                    vm.person.children.quantity++;
+                    if (vm.person.children.quantity > vm.person.children.min) {
+                        vm.person.children.auxiliar = vm.person.children.quantity;
+                    }
+                }
+
+                vm.person.total += item.arrived;
+            });
+        };
+
+        vm.changePerson = function(item, key) {
+            var auxiliar = item[key];
+
+            item.man = 0;
+            item.woman = 0;
+            item.children = 0;
+            item[key] = auxiliar;
+
+            if (item[key] === 0) {
+                item.type_person = null;
+                item.arrived = 0;
+            } else {
+                item.type_person = person[key];
+                item.arrived = 1;
+            }
+
+            vm.countPerson();
+        };
+
+        var initList = function() {
+            angular.forEach(vm.guestList, function(item) {
+                if (item.type_person === 1) {
+                    item.man = 1;
+                } else if (item.type_person === 2) {
+                    item.woman = 1;
+                } else if (item.type_person === 3) {
+                    item.children = 1;
+                }
+            });
+
+            angular.forEach(vm.guestListAdd, function(item) {
+                if (item.type_person === 1) {
+                    item.man = 1;
+                } else if (item.type_person === 2) {
+                    item.woman = 1;
+                } else if (item.type_person === 3) {
+                    item.children = 1;
+                }
+            });
+
+            vm.countPerson();
+        };
+
+        vm.removeGuestListAdd = function(i) {
+            vm.guestListAdd.splice(i, 1);
+            vm.countPerson();
+        };
+
+        vm.removeGuestList = function(item) {
+            item.status = 0;
+            vm.countPerson();
+        };
+
+        vm.save = function() {
+            vm.waitingResponse = true;
+            reservationService.guestList(reservation.id, {
+                guest_list: vm.guestList,
+                guest_list_add: vm.guestListAdd
+            }).then(
+                function success(response) {
+                    angular.forEach(response.data.data, function(value, key) {
+                        reservation[key] = value;
+                    });
+                    message.success("Se actualizo lista de invitados");
+                    vm.waitingResponse = false;
+                    vm.cancel();
+                },
+                function error(error) {
+                    message.apiError(error);
+                    vm.waitingResponse = false;
+                });
+        };
+
+        vm.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        var initModule = function() {
+            vm.configPeople = configuration.status_people_1 + configuration.status_people_2 + configuration.status_people_3;
+            vm.configuration = configuration;
+            vm.person.man.min = reservation.num_people_1 * 1;
+            vm.person.woman.min = reservation.num_people_2 * 1;
+            vm.person.children.min = reservation.num_people_3 * 1;
+
+            vm.guestList = angular.copy(reservation.guest_list);
+            initList();
+        };
+
+        (function init() {
+            initModule();
+        })();
+    }]);

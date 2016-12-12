@@ -1,50 +1,73 @@
 <section id="main">
-    <section class="w-100 p-0" id="content">
+    <section class="w-100 p-0">
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
-        <div class="card m-0">
+        <div class="card m-0 box-filter-order">
             <div class="listview lv-bordered lv-lg">
                 <div class="lv-header-alt clearfix">
                     <h2 class="lvh-label hidden-xs pull-left f-700">
                         Ordenar :
                     </h2>
                     <!-- ngIf: mactrl.listviewSearchStat -->
-                    <ul class="lv-actions actions pull-left">
-                        <li>
-                            <a href="" ng-click="vm.orderBook('time')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Tiempo">
+                    <ul class="lv-actions actions pull-left actions-order-by">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'time' || vm.bookOrderBy.resBlock.value === '' }">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.time)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Tiempo">
                                 <i class="zmdi zmdi-time">
                                 </i>
                             </a>
                         </li>
-                        <li>
-                            <a href="" ng-click="vm.orderBook('status')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Estado">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'status'}">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.status)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Estado">
                                 <i class="zmdi zmdi-fire zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
-                            <a href="" ng-click="vm.orderBook('covers')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'covers'}">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.covers)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Covers">
                                 <i class="zmdi zmdi-accounts zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
-                            <a href="" ng-click="vm.orderBook('guest')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Invitados">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'guest'}">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.guest)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Invitados">
                                 <i class="zmdi zmdi-account-o zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
-                            <a href="" ng-click="vm.orderBook('table')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Mesas">
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'table'}">
+                            <a href="" ng-click="vm.orderBook(vm.bookOrderBy.reservation.table)" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Mesas">
                                 <i class="zmdi zmdi-collection-item zmdi-hc-fw">
                                 </i>
                             </a>
                         </li>
-                        <li>
+                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'date'}" style="display: none">
                             <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Creacion">
                                 <i class="zmdi zmdi-calendar zmdi-hc-fw">
                                 </i>
                             </a>
+                        </li>
+                    </ul>
+                    <ul class="lv-actions actions pull-left m-0 m-l-25" ng-hide="vm.bookView">
+                        <li>
+                            <ul class="pagination-sm m-0 pagination num-guest-filter">
+                                <li ng-class="{'active' : vm.bookFilter.numGuest.selected === $index+1 }" ng-repeat="numGuest in vm.bookFilter.numGuest.data">
+                                    <a class="" href="" ng-click="vm.selectFilterNumGuest($index,'item')">
+                                        {{ numGuest }}
+                                    </a>
+                                </li>
+                                <li class="dropdown" uib-dropdown="">
+                                    <a class="dropdown-toggle" href="" title="" uib-dropdown-toggle="">
+                                        {{ vm.bookFilter.numGuest.textMore }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-left num-guest-filter-more">
+                                        <li ng-repeat="item in vm.bookFilter.numGuest.moreData">
+                                            <a href="" ng-click="vm.selectFilterNumGuest($index,'more',item)">
+                                                {{ item }} Invitados
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                     <ul class="lv-actions actions">
@@ -53,7 +76,7 @@
                                 <label class="ts-label reservation" for="ts1">
                                     Reservaciones
                                 </label>
-                                <input hidden="hidden" id="ts1" type="checkbox">
+                                <input hidden="hidden" id="ts1" ng-change="vm.changeBookView(true)" ng-model="vm.bookView" type="checkbox">
                                     <label class="ts-helper" for="ts1">
                                     </label>
                                 </input>
@@ -64,46 +87,57 @@
             </div>
         </div>
         <div class="content-book">
-            <div class="reservation-item col-lg-12" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text">
-                <div class="item row" ng-class="{'block' : item.block !=null}" ng-show="item.reservation == null" ng-click="vm.createReservation(item)">
-                    <span class="title" ng-if="item.block != null">
-                        MANAGER BLOCK
-                    </span>
-                    <span class="title" ng-if="item.available">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView">
+                <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
+                    <span class="title">
                         DISPONIBLE
                     </span>
                     {{ item.time | limitTo:5 }}
-                    <span ng-if="item.block != null">
-                        - {{ item.block.end_time | limitTo:5 }}
+                </div>
+                <div class="item no-available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available == false">
+                    <span class="title">
+                        NO HAY MESAS
+                    </span>
+                    {{ item.time | limitTo:5 }}
+                </div>
+                <div class="item block" ng-if="item.block != null" ui-sref="mesas.book.blockEdit({date : item.block.start_date,block_id: item.block.id})">
+                    <span class="title">
+                        MANAGER BLOCK
+                    </span>
+                    {{ item.time | limitTo:5 }} -
+                    <span>
+                        {{ item.block.end_time | limitTo:5 }}
                     </span>
                 </div>
-                <div class="row bg-white" ng-if="item.reservation != null" ng-click="vm.editReservation(item)">
+                <div class="item reservation" ng-if="item.reservation != null">
                     <div class="box-guest">
-                        <div class="picture">
-                            <img alt="" src="/images/avatar.jpg">
-                            </img>
+                        <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
                         </div>
                         <div class="info">
-                            <div class="name" ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                            <div class="name">
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                </span>
+                                <span ng-bind="item.reservation.guest.last_name">
+                                </span>
                             </div>
                             <div class="list">
-                                <a class="item note">
+                                <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
                                     <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                     </i>
                                     nota
                                     <span ng-if="item.reservation.note != null">
                                     </span>
                                 </a>
-                                <a class="item list-guest">
+                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
                                     </i>
-                                    {{ item.reservation.num_guest }} invitados
+                                    {{ item.reservation.guest_list.length }} invitados
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="box-reservation">
-                        <div class="datetime">
+                        <div class="datetime"  ng-click="vm.editReservation(item)">
                             <div class="time">
                                 {{ item.time_text }}
                             </div>
@@ -112,18 +146,21 @@
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label" style="background-color : {{item.reservation.status.color}}">
+                            <label class="label" ng-if="item.reservation.status.color != 'white'" style="background-color : {{item.reservation.status.color}}">
+                                {{ item.reservation.status.name }}
+                            </label>
+                            <label class="label" ng-if="item.reservation.status.color == 'white'" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
                         <div class="people">
-                            <div class="actions">
+                            <div class="actions" ng-if="vm.configReservation.status_people_1 == 1">
                                 <div aria-label="..." class="btn-toolbar " role="toolbar">
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','men',item)" role="group">
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_1 < item.reservation.men}" popover="{{ item.reservation.num_people_1 < item.reservation.men ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-male-alt zmdi-hc-fw">
                                             </i>
@@ -132,19 +169,19 @@
                                             {{ item.reservation.num_people_1  || 0}}
                                         </div>
                                     </div>
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','men',item)" role="group">
                                         <i class="zmdi zmdi-plus zmdi-hc-fw">
                                         </i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="actions">
+                            <div class="actions" ng-if="vm.configReservation.status_people_2 == 1">
                                 <div aria-label="..." class="btn-toolbar " role="toolbar">
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','women',item)" role="group">
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-female zmdi-hc-fw">
                                             </i>
@@ -153,19 +190,19 @@
                                             {{ item.reservation.num_people_2  || 0}}
                                         </div>
                                     </div>
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','women',item)" role="group">
                                         <i class="zmdi zmdi-plus zmdi-hc-fw">
                                         </i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="actions">
+                            <div class="actions" ng-if="vm.configReservation.status_people_3 == 1">
                                 <div aria-label="..." class="btn-toolbar " role="toolbar">
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','child',item)" role="group">
                                         <i class="zmdi zmdi-minus zmdi-hc-fw">
                                         </i>
                                     </div>
-                                    <div aria-label="..." class="btn-group" role="group">
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
                                         <div class="icon">
                                             <i class="zmdi zmdi-mood zmdi-hc-fw">
                                             </i>
@@ -174,7 +211,7 @@
                                             {{ item.reservation.num_people_3  || 0}}
                                         </div>
                                     </div>
-                                    <div aria-label="..." class="btn-group action" role="group">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','child',item)" role="group">
                                         <i class="zmdi zmdi-plus zmdi-hc-fw">
                                         </i>
                                     </div>
@@ -188,14 +225,13 @@
                         </div>
                         <div class="consume">
                             <div class="fg-line">
-                                <input class="form-control" name="" placeholder="S/0.00" type="text" value="{{ reservation.consume }}">
-                                </input>
+                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text"/>
                             </div>
                         </div>
                     </div>
                     <div class="config">
                         <div class="dropdown" uib-dropdown="">
-                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" uib-dropdown-toggle="">
+                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" ng-click="vm.blockClickBook()" uib-dropdown-toggle="">
                                 <i class="zmdi zmdi-settings zmdi-hc-fw">
                                 </i>
                                 <span class="caret">
@@ -204,27 +240,81 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="#">
-                                        Dropdown link
+                                        <i class="zmdi zmdi-smartphone-iphone zmdi-hc-fw">
+                                        </i>
+                                        SMS
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        Dropdown link
+                                        <i class="zmdi zmdi-phone-forwarded zmdi-hc-fw">
+                                        </i>
+                                        Llamada telefonica
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" ng-click="vm.mailReservartion(item.reservation)">
+                                        <i class="zmdi zmdi-email zmdi-hc-fw">
+                                        </i>
+                                        Enviar correo
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" ng-click="vm.checkGuestList(item.reservation)">
+                                        <i class="zmdi zmdi-file-text zmdi-hc-fw">
+                                        </i>
+                                        {{ item.reservation.guest_list.length }} invitado{{item.reservation.guest_list.length == 1 ? '':'s'}}
+                                    </a>
+                                </li>
+                                <li ng-if="item.reservation.res_reservation_status_id === 4">
+                                    <a href="" ng-click="vm.updateStatusReservation(item.reservation,'5')">
+                                        <i class="zmdi zmdi-lock-open zmdi-hc-fw">
+                                        </i>
+                                        Liberar reserva
+                                    </a>
+                                </li>
+                                <li ng-if="item.reservation.res_reservation_status_id != 6">
+                                    <a href="" ng-click="vm.updateStatusReservation(item.reservation,'6')">
+                                        <i class="zmdi zmdi-close-circle zmdi-hc-fw">
+                                        </i>
+                                        Cancelar reserva
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="tables">
-                        <div class="item">
+                    <div class="tables"  ng-click="vm.editReservation(item)">
+                        <div class="item web">
                             {{ item.reservation.tables[0].name }}
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
+                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
+                            <span class="table-name">
+                                {{ item.reservation.tables[0].name }}
+                                <span ng-if="item.reservation.tables.length >1">
+                                    +
+                                </span>
+                            </span>
+                            <span class="status-name">
+                                {{ item.reservation.status.name || 'Desconocido' }}
+                            </span>
+                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} ">
+                                {{ item.reservation.source.name || 'Desconocido' }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="text-center" ng-hide="vm.bookView">
+            <br>
+            </br>
+        </div>
+        <div class="text-center" ng-show="vm.bookView && vm.listBook.length>0">
+            <uib-pagination boundary-links="true" class="pagination-sm" items-per-page="vm.paginate_reservation.page_size" max-size="vm.paginate_reservation.max_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
+            </uib-pagination>
         </div>
         <footer class="container-footer-book" data-ng-include="'/js/app/tables/book/view/partials/footer-book.html'">
         </footer>
@@ -293,127 +383,306 @@
    
   </div>
 </script>
-
 <script id="ModalCreateBookReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
-            <h4 style="display: inline;">Nueva Reservacion</h4>
+            <h4 style="display: inline;">NUEVA RESERVACIÓN DE 1 MESA</h4>
             <button class="btn btn-danger pull-right" ng-click="br.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
-        <div class="modal-body p-t-20" style="background: #ddd;">
-
-            <div class="card reservation-guest-form m-b-20 p-b-5 p-t-10" style="border: 1px solid #eaeaea;" ng-show="br.addGuest">
-                <form class="form-horizontal" role="form" autocomplete="off">
-                        <div class="reservation-new-guest" >
-                            <div class="form-group">
-                                <label class="col-xs-2 control-label" for="name">
-                                    Nombres
-                                </label>
-                                <div class="col-xs-10 p-r-30">
-                                    <div class="fg-line">
-                                            <input type="text" class="form-control input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-2 control-label" for="last_name">
-                                    Apellidos
-                                </label>
-                                <div class="col-xs-10 p-r-30">
-                                    <div class="fg-line">
-                                            <input type="text" class="form-control input" id="last_name" ng-model="br.newGuest.last_name"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-2 control-label" for="phone">
-                                    Telefono
-                                </label>
-                                <div class="col-xs-10 p-r-30">
-                                    <div class="fg-line">
-                                            <input type="text" class="form-control input" id="phone" ng-model="br.newGuest.phone"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-2 control-label" for="email">
-                                    Email
-                                </label>
-                                <div class="col-xs-10 p-r-30">
-                                    <div class="fg-line">
-                                            <input type="text" class="form-control input" id="email" ng-model="br.newGuest.email"/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="guest-search-list">
-                                <div class="card m-0">
-                                    <div class="card-header bgm-amber" ng-repeat="guest in br.guestList" ng-click="br.selectGuest(guest)">
-                                        <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
-                                        <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
-                                        <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="modal-body">
+            
+            <form class="form-horizontal m-b-10" role="form"  ng-show="br.addGuest" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="name">
+                        <strong>NOMBRES</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
                         </div>
-                </form>
-            </div>
+                    </div>
+                </div>
+                <div class="guest-search-list">
+                    <div class="card m-0">
+                        <div class="card-header" ng-repeat="guest in br.guestList" ng-click="br.selectGuest(guest)">
+                            <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
+                            <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                            <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="last_name">
+                        <strong>APELLIDOS</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="last_name" ng-model="br.newGuest.last_name"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="phone">
+                        <strong>TELÉFONO</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="phone" ng-model="br.newGuest.phone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="email">
+                        <strong>E-MAIL</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="email" ng-model="br.newGuest.email"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-             <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
-                 <div class="card-header bgm-indigo" ng-click="br.removeGuest()">
+            <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
+                 <div class="card-header" ng-click="br.removeGuest()">
                      <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
                      <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
                      <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
-                     <span class="remove-guest">click para elejir nuevo invitado</span>
+                     <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
                  </div>
             </div> 
 
-            <div class="card m-b-5 p-b-5 p-t-10" style="border: 1px solid #eaeaea;">
-                <form class="form-horizontal" role="form">
-                     <div class="card-body drag-border">
-                         <div class="form-group" style="cursor: pointer;" ng-click="br.redirectReservation()">
-                             <div class="col-xs-12" style="text-align: center;padding: 15px;">
-                                 <label class="col-xs-4 control-label pull-left" style="text-align: left;">{{ br.info.date }}</label>
-                                 <label class="col-xs-4 control-label" style="text-align: center">{{ br.info.time }}</label>
-                                 <label class="col-xs-4 control-label pull-right" ng-style="!br.info.table && {'color': 'red'}">{{ br.info.tableName }}</label>
-                             </div>
+            <form class="form-horizontal" role="form">
+                     <div class="resum-reservation"  ng-click="br.redirectReservation()">
+                         <div class="row">
+                             <div class="col-xs-4" >{{ br.info.date }}</div>
+                             <div class="col-xs-4 text-center">{{ br.info.time }}</div>
+                             <div class="col-xs-4 " ng-style="!br.info.table && {'color': 'red'}"><span class="pull-right">{{ br.info.tableName }}</span></div>
                          </div>
-                         <div class="form-group">
-                             <label class="col-xs-2 control-label" for="covers">
-                                 Invitados
-                             </label>
-                             <div class="col-xs-10 p-r-30">
-                                 <div class="fg-line">
-                                     <div class="select">
-                                         <select class="form-control" id="covers" ng-model="br.reservation.covers" ng-options="cover.id as cover.name for cover in br.covers" ng-change="br.suggestTables()"></select>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-
-                         <div class="form-group">
-                             <label class="col-xs-2 control-label" for="note">
-                                 Nota
-                             </label>
-                             <div class="col-xs-10 p-r-30">
-                                 <div class="fg-line">
-                                     <textarea class="form-control input-sm" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="br.reservation.note"></textarea>
-                                 </div>
-                             </div>
-                         </div>
-
                      </div>
-                 </form>
-             </div>
+                     <div class="form-group">
+                         <label class="col-xs-2 control-label" for="covers">
+                             <strong>INVITADOS</strong>
+                         </label>
+                         <div class="col-xs-10 p-r-30">
+                             <div class="fg-line">
+                                 <div class="select">
+                                     <select class="form-control" id="covers" ng-model="br.reservation.covers" ng-options="cover.id as cover.name for cover in br.covers" ng-change="br.suggestTables()"></select>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <div class="form-group">
+                         <label class="col-xs-2 control-label" for="note">
+                             <strong>NOTA</strong>
+                         </label>
+                         <div class="col-xs-10 p-r-30">
+                             <div class="fg-line">
+                                 <textarea class="form-control input-sm" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="br.reservation.note"></textarea>
+                             </div>
+                         </div>
+                     </div>
+            </form>
 
        </div>
 
-        <div class="modal-footer" style="padding: 10px 26px; background: #ddd;">
-            <div class="text-center">
-                <button class="btn btn-primary btn-block" ng-click="br.save()" ng-disabled="br.waitingResponse">
+        <div class="modal-footer" >
+            <div class="text-center" ng-if="br.info.table">
+                <button class="btn btn-primary btn-block btn-lg" ng-click="br.save()" ng-disabled="br.waitingResponse">
                         Crear Reservacion
                 </button>
             </div>
         </div>
+    </div>
+</script>
+<script id="ModalCheckGuestList.html" type="text/ng-template">
+    <div class="reservation-short-edit">
+        <div class="modal-header" style="line-height: 30px;">
+            <h4 style="display: inline;">LISTA DE INVITADOS</h4>
+            <button class="btn btn-danger pull-right" ng-click="gl.cancel()"><i class="zmdi zmdi-close"></i></button>
+        </div>
+        <div class="modal-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <form class="fg-line">
+                                <input type="text" class="form-control input" placeholder="Nombre del invitado" ng-model="gl.newGuest"/>
+                                <button class="btn btn-primary btn-block hidden" ng-click="gl.addGuest()" ng-disabled="!gl.newGuest">Agregar</button>
+                           </form>
+                            
+                        </th>
+                        <th style="width: 50px" ng-if="gl.configuration.status_people_1 && gl.configPeople">
+                            <div class="">
+                                <div class="guest-count">
+                                    <i class="zmdi zmdi-male-alt guest-icon zmdi-hc-lg"></i>
+                                    <label>{{ gl.person.man.quantity }}/{{  gl.person.man.auxiliar }}</label>
+                                </div>
+                            </div>
+                        </th>
+                        <th style="width: 50px" ng-if="gl.configuration.status_people_2 && gl.configPeople">
+                            <div class="">
+                                <div class="guest-count">
+                                    <i class="zmdi zmdi-female guest-icon zmdi-hc-lg"></i>
+                                    <label>{{ gl.person.woman.quantity }}/{{  gl.person.woman.auxiliar }}</label>
+                                </div>
+                            </div>
+                        </th>
+                        <th style="width: 50px" ng-if="gl.configuration.status_people_3 && gl.configPeople">
+                            <div class="">
+                                <div class="guest-count">
+                                    <i class="zmdi zmdi-face guest-icon zmdi-hc-lg"></i>
+                                    <label>{{ gl.person.children.quantity }}/{{  gl.person.children.auxiliar }}</label>
+                                </div>
+                            </div>
+                        </th>
+                        <th style="width: 50px"  ng-if="!gl.configPeople">
+                            Asistencias: {{ gl.person.total }}
+                        </th>
+                        <th style="width: 50px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in gl.guestList">
+                        <td>
+                            {{ item.name }}
+                        </td>
+                        <td ng-if="gl.configuration.status_people_1 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20" >
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.man"  ng-click="gl.changePerson(item, 'man')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-male-alt guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="gl.configuration.status_people_2 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20">
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.woman"  ng-click="gl.changePerson(item, 'woman')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-female guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="gl.configuration.status_people_3 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20">
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.children"  ng-click="gl.changePerson(item, 'children')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-face guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="!gl.configPeople">
+                            <div class="checkbox text-center">
+                                <label class="p-l-15">
+                                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.arrived" ng-change="gl.changeArrived(item)">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger pull-right" ng-click="gl.removeGuestList(item)"><i class="zmdi zmdi-delete zmdi-hc-fw"></i></button>
+                        </td>
+                    </tr>
+
+                    <tr ng-repeat="item in gl.guestListAdd">
+                        <td>
+                            {{ item.name }}
+                        </td>
+                        <td ng-if="gl.configuration.status_people_1 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20" >
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.man"  ng-click="gl.changePerson(item, 'man')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-male-alt guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="gl.configuration.status_people_2 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20">
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.woman"  ng-click="gl.changePerson(item, 'woman')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-female guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="gl.configuration.status_people_3 && gl.configPeople">
+                            <label class="checkbox checkbox-inline m-r-20">
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.children"  ng-click="gl.changePerson(item, 'children')">
+                                <i class="input-helper"></i>
+                                <!-- <i class="zmdi zmdi-face guest-icon zmdi-hc-lg"></i> -->
+                            </label>
+                        </td>
+                        <td ng-if="!gl.configPeople">
+                            <div class="checkbox text-center">
+                                <label class="p-l-15">
+                                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.arrived" ng-change="gl.changeArrived(item)">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger pull-right"  ng-click="gl.removeGuestListAdd($index)"><i class="zmdi zmdi-delete zmdi-hc-fw"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+       </div>
+
+        <div class="modal-footer">
+            <div class="text-center">
+                <button class="btn btn-primary btn-block btn-lg" ng-click="gl.save()" ng-disabled="gl.waitingResponse">
+                       GUARDAR LISTA
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="ModalMailReservation.html" type="text/ng-template">
+    <div class="modal-header">
+        <h3 class="modal-title">Enviar mensaje Reservación</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.date }}  - {{ vm.reservation.time }}</h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                    <h5>{{ vm.reservation.nombre }} </h5>
+            </div>
+
+            <div class="col-xs-12 text-center">
+                <h5>{{ vm.reservation.note }}</h5>
+            </div>
+
+            <div class="col-xs-12">
+                <h5>Correo</h5>
+                <div class="fg-line">
+                    <input type="text" name=""  class="form-control" ng-model="vm.mailData.email" />
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <h5>Asunto</h5>
+                <div class="fg-line">
+                    <input type="text" name=""  class="form-control" ng-model="vm.mailData.subject" />
+                </div>
+            </div>
+       
+            <div class="col-xs-12">
+                <h5>Mensaje</h5>
+                <div class="fg-line">
+                    <textarea class="form-control" rows="4" ng-model="vm.mailData.message"></textarea>
+                </div>
+                
+            </div>
+
+            <div class="col-xs-12 m-t-10">
+                <p ng-repeat="message in vm.reservation.messages">
+                    "{{  message.message }}"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="vm.closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="vm.validateSendMail()">Enviar</button>
     </div>
 </script>

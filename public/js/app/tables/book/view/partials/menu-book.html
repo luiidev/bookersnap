@@ -1,12 +1,15 @@
-
 <section class="header-book">
     <ul class="stadistics">
         <li>
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">RES</span>
-                <span class="title-short">RES</span>
+                <span class="title">
+                    RES
+                </span>
+                <span class="title-short">
+                    RES
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.reservations }}
                 </span>
@@ -16,8 +19,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">PAX</span>
-                <span class="title-short">PAX</span>
+                <span class="title">
+                    PAX
+                </span>
+                <span class="title-short">
+                    PAX
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.pax }}
                 </span>
@@ -27,8 +34,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">PAX INGRESO</span>
-                <span class="title-short">PAXI</span>
+                <span class="title">
+                    PAX INGRESO
+                </span>
+                <span class="title-short">
+                    PAXI
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.ingresos }}
                 </span>
@@ -38,8 +49,12 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">CONVERSIÓN</span>
-                <span class="title-short">CONV</span>
+                <span class="title">
+                    CONVERSIÓN
+                </span>
+                <span class="title-short">
+                    CONV
+                </span>
                 <span class="count">
                     {{ vm.resumenBook.conversion }}%
                 </span>
@@ -49,10 +64,14 @@
             <div class="box">
                 <i class="icon zmdi zmdi-chart zmdi-hc-fw">
                 </i>
-                <span class="title">MDS</span>
-                <span class="title-short">MDS</span>
+                <span class="title">
+                    MDS
+                </span>
+                <span class="title-short">
+                    MDS
+                </span>
                 <span class="count">
-                    120/121
+                    {{ vm.mds }}
                 </span>
             </div>
         </li>
@@ -64,8 +83,12 @@
                     <i class="zmdi zmdi-accounts zmdi-hc-fw">
                     </i>
                 </span>
-                <div class="fg-line">
+                <div class="fg-line" ng-hide="vm.bookView">
                     <input class="form-control bg-transparent" ng-model="vm.bookFilter.text" placeholder="Nombre / Apellido" type="text">
+                    </input>
+                </div>
+                <div class="fg-line" ng-show="vm.bookView">
+                    <input class="form-control bg-transparent" ng-enter="vm.searchReservations()" ng-model="vm.bookFilter.search_text" placeholder="Nombre / Apellido" type="text">
                     </input>
                 </div>
             </div>
@@ -76,10 +99,62 @@
                     <i class="zmdi zmdi-calendar-note zmdi-hc-fw">
                     </i>
                 </span>
-                <div class="date-picker" ng-class="{ 'is-opened': vm.calendar == true }">
+                <div class="fg-line" ng-show="vm.bookView">
+                    <input bs-toggle-click="" class="form-control bg-transparent" ng-change="vm.clearDateInfo()" ng-model="vm.date_info" placeholder="{{ vm.startDate | date:'dd-MM-yyyy'}} - {{  vm.endDate | date:'dd-MM-yyyy' }}" type="text"/>
+                </div>
+                <div class="date-picker" ng-class="{ 'is-opened': vm.calendar == true }" ng-hide="vm.bookView">
                     <div class="fg-line">
                         <input class="form-control bg-transparent" is-open="vm.calendar" ng-click="vm.openCalendar($event, 'opened')" ng-model="vm.bookFilter.date" placeholder="2016-11-11" show-weeks="false" type="text" uib-datepicker-popup="{{vm.format}}">
                         </input>
+                    </div>
+                </div>
+                <div bs-toggle-show="" class="date-picker dp-range-book">
+                    <div class="dp-custom-date">
+                        <div class="dp-content">
+                            <uib-datepicker max-date="vm.endDate" ng-model="vm.startDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            </uib-datepicker>
+                            <uib-datepicker max-date="vm.maxDate" ng-change="vm.changeDateEnd(1)" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            </uib-datepicker>
+                            <div class="dp-menu">
+                                <div class="list-group">
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.hoy}" ng-click="vm.changeDateCustom(0, 0, $event,true)">
+                                        Hoy
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.hoy">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.week}" ng-click="vm.changeDateBlock('week',$event,true)">
+                                        Esta Semana
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.week">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastSevenDays}" ng-click="vm.changeDateCustom(0, -7, $event,true)">
+                                        Ultimos 7 días
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastSevenDays">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastThirtyDays}" ng-click="vm.changeDateCustom(0, -30, $event,true)">
+                                        Ultimos 30 días
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastThirtyDays">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.thisMonth}" ng-click="vm.changeDateBlock('month',$event,true)">
+                                        Este mes
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.thisMonth">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.lastMonth}" ng-click="vm.changeDateLastMonth($event,true)">
+                                        Mes pasado
+                                        <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.lastMonth">
+                                        </i>
+                                    </a>
+                                    <a class="list-group-item" href="javascript:void(0)" ng-class="{'active' : vm.configUserDefault.rangeDate.range}" ng-click="vm.showDateRange($event,true)">
+                                        Rango de fechas
+                                        <!--<i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.range">
+                                        </i>-->
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,9 +172,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
-                        <li ng-class="[{'active' : item.checked},{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.turnAll }">
+                            <a href="" ng-click="vm.filterBook('turn','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.turnAll">
+                                </i>
+                            </a>
+                        </li>
+                        <li ng-class="[{'active' : item.checked },{'disabled' : item.turn==null}]" ng-repeat="item in vm.turns">
                             <a href="" ng-click="vm.filterBook('turn',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>
@@ -119,9 +203,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.sourcesAll }">
+                            <a href="" ng-click="vm.filterBook('source','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.sourcesAll">
+                                </i>
+                            </a>
+                        </li>
                         <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.sources">
                             <a href="" ng-click="vm.filterBook('source',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>
@@ -141,9 +234,18 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
+                        <li ng-class="{ 'active' : vm.bookFilter.options.zonesAll }">
+                            <a href="" ng-click="vm.filterBook('zones','all')">
+                                TODOS
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="vm.bookFilter.options.zonesAll">
+                                </i>
+                            </a>
+                        </li>
                         <li ng-class="{'active' : item.checked}" ng-repeat="item in vm.zones">
                             <a href="" ng-click="vm.filterBook('zones',item)">
                                 {{ item.name }}
+                                <i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-show="item.checked">
+                                </i>
                             </a>
                         </li>
                     </ul>

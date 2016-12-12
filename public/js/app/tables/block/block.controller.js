@@ -1,6 +1,6 @@
 angular.module('block.controller', [])
     .controller('blockCtr', function($scope, $http, $state, $sce, $stateParams, $document, $window, screenHelper, screenSizeBlock,
-        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio, PreviousState) {
+        ApiUrlMesas, BlockFactory, ZoneFactory, ZoneLienzoFactory, TableFactory, CalendarService, reservationService, $uibModal, IdMicroSitio) {
 
         $scope.date = null;
         $scope.zoneIndexShow = 0;
@@ -174,13 +174,21 @@ angular.module('block.controller', [])
                                     endTime: item.turn.hours_end
                                 },
                                 startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
-                                endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end),
+                                endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end, true),
                             });
 
                             // Se muestra el primer array para cuando se esta creando el bloqueo
                             $scope.shift = $scope.shifts[0];
                             $scope.startTimes = $scope.shifts[0].startTimes;
                             $scope.endTimes = $scope.shifts[0].endTimes;
+
+                            if ($scope.startTimes.length > 0) {
+                                $scope.startTime = $scope.startTimes[0];
+                            }
+
+                            if ($scope.endTimes.length > 0) {
+                                $scope.endTime = $scope.endTimes[0];
+                            }
                         }
                     });
                 },
@@ -264,11 +272,11 @@ angular.module('block.controller', [])
                         messageAlert("Success", response.data.msg, "success", 0, true);
                         redirect();
                     } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 0, true);
+                        messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
                     }
                 },
                 function error(response) {
-                    messageErrorApi(response, "Error", "warning", 2000, true);
+                    messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
                 }
             );
 
@@ -279,10 +287,10 @@ angular.module('block.controller', [])
             BlockFactory.editBlock(id, blockData).then(
                 function success(response) {
                     if (response.data.success === true) {
-                        messageAlert("Success", response.data.msg, "success", 3000);
+                        messageAlert("Success", response.data.msg, "success", 3000, true);
                         redirect();
                     } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 2000);
+                        messageAlert("Warning", response.data.jsonError, "warning", 2000, true);
                     }
                 },
                 function error(response) {
@@ -302,10 +310,10 @@ angular.module('block.controller', [])
                 BlockFactory.deleteBlock($stateParams.block_id).then(
                     function success(response) {
                         if (response.data.success === true) {
-                            messageAlert("Success", response.data.msg, "success", 3000);
+                            messageAlert("Success", response.data.msg, "success", 3000, true);
                             redirect();
                         } else if (response.data.response === false) {
-                            messageAlert("Warning", response.data.jsonError, "warning", 2000);
+                            messageAlert("Warning", response.data.jsonError, "warning", 2000, true);
                         }
                     },
                     function error(response) {
@@ -400,6 +408,15 @@ angular.module('block.controller', [])
 
             $scope.startTimes = item.startTimes;
             $scope.endTimes = item.endTimes;
+
+
+            if ($scope.startTimes.length > 0) {
+                $scope.startTime = $scope.startTimes[0];
+            }
+
+            if ($scope.endTimes.length > 0) {
+                $scope.endTime = $scope.endTimes[0];
+            }
         };
 
         $scope.activarTableOptions = function(index, data) {
@@ -418,11 +435,29 @@ angular.module('block.controller', [])
             $scope.opened = true;
         };
 
+        var messages = [];
+
         $scope.saveZone = function(option) {
+            var messages = [];
+            if ($scope.date === undefined) {
+                messages.push("Seleccione Fecha de reservacion");
+            }
 
-            if ($scope.startTime === undefined || $scope.endTime === undefined || $scope.date === undefined) {
+            if (!$scope.startTime) {
+                messages.push("Seleccione Hora de inicio");
+            }
 
-                messageAlert("Warning", "Tienes que seleccionar \"Start Time\", \"End Time\" y \"date\" ", "warning", 3000);
+            if (!$scope.endTime) {
+                messages.push("Seleccione Hora final");
+            }
+
+            if (!$scope.mesasBloqueadas.length) {
+                messages.push("Seleccione al menos una mesa a bloquear");
+            }
+
+            if (messages.length) {
+
+                messageAlert("Alerta", messages.join("\n"), "warning", 3000, true);
 
             } else {
 
@@ -463,7 +498,11 @@ angular.module('block.controller', [])
         };
 
         var redirect = function() {
-            $state.go(PreviousState.name || "mesas.floor.reservation");
+            if ($state.is("mesas.book.block") || $state.is("mesas.book.blockEdit")) {
+                $state.go("mesas.book", $stateParams);
+            } else {
+                $state.go("mesas.floor.reservation");
+            }
         };
 
         (function Init() {

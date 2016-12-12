@@ -13,17 +13,22 @@
 
 //Route principal : Lista de micrositios
 
+Route::get("/w/{site}/", "WidgetController@index")->name("widget");
+
+Route::get("/w/{site}/reserve/", "WidgetController@confirm");
+Route::post("/w/{site}/reserve/", "WidgetController@store");
+
 Route::get('/admin', function () {
     return view('dashboard.admin.index');
 });
 
 Route::get('/admin/auth', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'authTemp'*/]);
 
 
 Route::get('/admin/ms/{id}/reservation', function () {
-    return view('reservation');
+    return view('dashboard.admin.reservation');
 });
 
 Route::get('/', function () {

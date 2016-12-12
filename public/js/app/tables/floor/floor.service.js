@@ -2,6 +2,10 @@ angular.module('floor.service', [])
     .factory('FloorDataFactory', function($http, HttpFactory, ApiUrlMesas, ApiUrlRoot) {
         var reservations, tables, sourceTypes;
         return {
+            getDataFloor: function(date) {
+                var params = (date == undefined) ? '' : '?date=' + date;
+                return $http.get(ApiUrlMesas + "/web-app/floor" + params, null);
+            },
             getBloqueos: function(reload) {
                 tables = HttpFactory.get(ApiUrlMesas + "/blocks", null, tables, reload);
                 return tables;
@@ -173,6 +177,20 @@ angular.module('floor.service', [])
 
         var turns_notes;
         return {
+            getDataFloor: function(date) {
+                var defered = $q.defer();
+                FloorDataFactory.getDataFloor(date).then(
+                    function success(response) {
+                        response = response.data.data;
+                        defered.resolve(response);
+                    },
+                    function error(response) {
+                        response = response.data;
+                        defered.reject(response);
+                    }
+                );
+                return defered.promise;
+            },
             getZones: function(date, reload) {
                 var defered = $q.defer();
                 reservationService.getZones(date, reload)
@@ -674,13 +692,16 @@ angular.module('floor.service', [])
                 });
                 return defered.promise;
             },*/
-            listTurnosActivos: function(date) {
+            listTurnosActivos: function(date, reload) {
                 var defered = $q.defer();
-                if (turns_notes) {
+                var self = this;
+
+                reload = (reload === undefined) ? false : reload;
+
+                if (turns_notes && reload === false) {
                     defered.resolve(turns_notes);
                     return defered.promise;
                 }
-                var self = this;
 
                 CalendarService.GetShiftByDate(date).then(
                     function success(response) {

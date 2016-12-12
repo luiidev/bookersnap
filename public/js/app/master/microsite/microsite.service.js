@@ -2,9 +2,9 @@ angular.module('microsite.service', [])
     //--------------------------------------
     // SERVICIO LISTAR MICROSITIO
     //--------------------------------------
-    .factory('MicrositeService', function(Ajax, ApiAdminROOT) {
+    .factory('MicrositeService', function(Ajax, UrlApiAdmin) {
         var base_url = '/master/ajax/';
-        var api_admin_url = ApiAdminROOT;
+        var api_admin_url = UrlApiAdmin;
         return {
             GetPage: function($data, $listener) {
                 var $url = base_url + 'microsite';

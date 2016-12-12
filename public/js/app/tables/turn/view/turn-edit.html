@@ -54,7 +54,7 @@
                                         Hora cierre
                                     </label>
                                     <div class="select">
-                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
+                                        <select chosen="" class="form-control" data-placeholder="Elije una hora ..." ng-change="generatedTimeTable(false,'create')" ng-model="turnForm.hours_end" ng-options="item as item.time for item in formDataDefault.hours_end track by item.index">
                                             <option value="">
                                             </option>
                                         </select>
@@ -409,9 +409,9 @@
         </div>
     </div>
 
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="saveRules()">Guardar</button>
+    <div class="modal-footer">        
         <button class="btn btn-warning" type="button" ng-click="closeModal()">Cerrar</button>
+        <button class="btn btn-primary" type="button" ng-click="saveRules()">Guardar</button>
     </div>
 </script>
 <script id="myModalTurnTime.html" type="text/ng-template">

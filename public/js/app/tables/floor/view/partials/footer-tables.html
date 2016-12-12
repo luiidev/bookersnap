@@ -5,7 +5,7 @@
         </img>
     </li> 
     <li class="item-nav">
-        <button class="item-action btn btn-default-red btn-sm" type="button" ui-sref="mesas.reservation-new({date : '{{vm.fecha_actual}}'})">
+        <button class="item-action btn btn-default-red btn-sm" type="button" ui-sref="mesas.floor.reservation.add({date : '{{vm.fecha_actual}}'})">
             <div class="icon tm-icon zmdi zmdi-notifications zmdi-hc-2x"></div>
             <div class="title">
                 Reservación
@@ -38,8 +38,12 @@
         </button>
     </li>
     <li class="item-date">
-        <div class="day">Miercole 16</div>
-        <div class="month">Setiembre del 2016</div>
+        <div class="day">
+            {{ vm.fecha_actual | date : 'EEEE d' : 'America/Lima'}}
+        </div>
+        <div class="month">
+            {{ vm.fecha_actual | date : ' MMMM y' : 'America/Lima'}}
+        </div>
     </li>
     <li class="item-nav dropdown dropup num-guests" uib-dropdown="">
         <button aria-expanded="false" aria-haspopup="true" class="item-action btn last-child btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">

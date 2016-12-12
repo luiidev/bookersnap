@@ -16,7 +16,7 @@
     <link href="/css/app/tables/app.bookersnap.library.tables.min.css" rel="stylesheet">
     <!-- CSS -->
     <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
-    <!-- App Css -->
+    <!-- App Css HOLA -->
     <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
 
 </head>

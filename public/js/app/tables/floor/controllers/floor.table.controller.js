@@ -24,7 +24,13 @@ angular.module('floor.controller')
         vm.zones = global.lienzo;
         var reservations = global.reservations;
         var servers = global.servers;
-        var blocks = [];
+        var blocks = global.blocks;
+        var shifts = global.shifts;
+        var config = global.config;
+        var sourceTypes = global.sourceTypes;
+        var status = global.status;
+        var tags = global.tags;
+        var schedule = global.schedule;
         var zones = [];
         /**
          * END Variables de manejo general de informacion
@@ -61,6 +67,7 @@ angular.module('floor.controller')
                 angular.forEach(vm.typeTurns, function(typeTurn) {
                     if (typeTurn.turn) {
                         if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes = typeTurn.notes ? typeTurn.notes : {};
                             typeTurn.notes.texto = note.data.texto;
                         }
                     }
@@ -76,17 +83,6 @@ angular.module('floor.controller')
             // var index = $table.getZoneIndexForTable(vm.zones.data, tables);
             // if (index !== null) vm.tabSelectedZone(index);
             vm.findTableForServer(tables);
-        });
-
-        $scope.$on("NotifyFloorBlock", function(evt, data) {
-            var blockTest = FloorFactory.parseDataBlock(data.data);
-            FloorFactory.asingBlockTables(blockTest, vm.zones.data);
-
-            var blockParsear = FloorFactory.parseDataBloqueos(data.data);
-            FloorFactory.addServicioReservacionesAndBloqueos(blockParsear);
-            $scope.$apply();
-            alertMultiple("Bloqueos: ", data.user_msg, "inverse", null, 'top', 'left', 10000, 20, 150);
-            // console.log("NotifyFloorBlock " + angular.toJson(data, true));
         });
 
         $scope.$on("floorReload", function(evt, data, action) {
@@ -240,7 +236,7 @@ angular.module('floor.controller')
         var loadBlocks = function(date) {
             var deferred = $q.defer();
 
-            reservationService.getBlocks(date)
+            reservationService.getTBlocks(date, true)
                 .then(function(response) {
                     blocks.data = response.data.data;
                     deferred.resolve(blocks.data);
@@ -279,20 +275,56 @@ angular.module('floor.controller')
             return deferred.promise;
         };
 
+
         var InitModule = function() {
+
             var date = fecha_actual;
-            $q.all([
+
+            FloorFactory.getDataFloor(date).then(function(response) {
+
+                zones.data = response.zones;
+                blocks.data = response.blocks;
+                reservations.data = response.reservations;
+                servers.data = response.servers;
+                shifts.data = response.shifts;
+                sourceTypes.data = response.sourceTypes;
+                config = response.config;
+                tags = response.tags;
+                status = response.status;
+                schedule = response.schedule;
+
+                loadTablesEdit(response.zones, response.blocks, response.reservations, response.servers);
+                showTimeCustom();
+
+                vm.typeTurns = shifts.data;
+                TypeFilterDataFactory.setTypeTurnItems(shifts.data);
+                vm.configuracion = config;
+
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+
+
+            /*$q.all([
                 loadZones(date),
                 loadBlocks(date),
                 loadReservations(),
                 loadServers(),
-                FloorDataFactory.getSourceTypes()
+                //FloorDataFactory.getSourceTypes()
             ]).then(function(data) {
+                console.log(data);
                 loadTablesEdit(data[0], data[1], data[2], data[3]);
 
                 showTimeCustom();
 
-            });
+            });*/
+        };
+
+        vm.showTimeColor = {
+            "seated": "#33c200",
+            "complete": "#e6c610",
+            "nextTime": "#ed615b",
+            "nextTimeAll": "#3a99d8"
         };
 
         var showTimeCustom = function() {
@@ -386,22 +418,33 @@ angular.module('floor.controller')
          * Eventos de Web Socket
          */
         var reservationEvents = {};
-        reservationEvents.update = function(data) {
-            reservations.update(data);
+        reservationEvents.update = function(data, callback) {
+            reservations.update(data, callback);
         };
-        reservationEvents.create = function(data) {
-            reservations.add(data);
+        reservationEvents.create = function(data, callback) {
+            reservations.add(data, callback);
         };
 
         var serverEvents = {};
-        serverEvents.update = function(data) {
-            servers.update(data);
+        serverEvents.update = function(data, callback) {
+            servers.update(data, callback);
         };
-        serverEvents.create = function(data) {
-            servers.add(data);
+        serverEvents.create = function(data, callback) {
+            servers.add(data, callback);
         };
-        serverEvents.delete = function(data) {
-            servers.delete(data);
+        serverEvents.delete = function(data, callback) {
+            servers.delete(data, callback);
+        };
+
+        var blockEvents = {};
+        blockEvents.update = function(data, callback) {
+            blocks.update(data, callback);
+        };
+        blockEvents.create = function(data, callback) {
+            blocks.add(data, callback);
+        };
+        blockEvents.delete = function(data, callback) {
+            blocks.delete(data, callback);
         };
         /**
          * END
@@ -410,9 +453,12 @@ angular.module('floor.controller')
         $scope.$on("NotifyFloorTableReservationReload", function(evt, data) {
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof reservationEvents[data.action] == "function") {
-                    reservationEvents[data.action](data.data);
-                    alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
-                    $scope.$apply();
+                    reservationEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             }
         });
@@ -420,8 +466,25 @@ angular.module('floor.controller')
         $scope.$on("NotifyFloorTableServerReload", function(evt, data) {
             if (!reservationService.blackList.contains(data.key)) {
                 if (typeof serverEvents[data.action] == "function") {
-                    serverEvents[data.action](data.data);
-                    $scope.$apply();
+                    serverEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
+                }
+            }
+        });
+
+        $scope.$on("NotifyFloorBlock", function(evt, data) {
+            if (!reservationService.blackList.contains(data.key)) {
+                if (typeof blockEvents[data.action] == "function") {
+                    blockEvents[data.action](data.data, function() {
+                        if (data.user_msg) alertMultiple("Notificación: ", data.user_msg, "inverse", null, 'top', 'left', 5000, 20, 150);
+                    });
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             }
         });
@@ -449,6 +512,10 @@ angular.module('floor.controller')
                         return {
                             zoneName: vm.zones.data[index].name,
                             table: table,
+                            status: status,
+                            config: config,
+                            tags: tags,
+                            schedule: schedule
                         };
                     }
                 }
@@ -480,6 +547,12 @@ angular.module('floor.controller')
                 }
 
             } else {
+                if (eventEstablished.event == "sit") {
+                    if (eventEstablished.data.res_reservation_status_id == 4) {
+                        return sit(obj);
+                    }
+                }
+
                 modalInstancesConfiguration(vm.cantidades, obj, vm.configuracion);
             }
 
@@ -514,9 +587,10 @@ angular.module('floor.controller')
         };
 
         var sit = function(obj) {
-            var id = eventEstablished.data.reservation_id;
-            var reservation = parseReservation(obj);
-            reservationService.sit(id, reservation)
+            var id = eventEstablished.data.id;
+            reservationService.sit(id, {
+                    table_id: obj.id
+                })
                 .then(function(response) {
                     reservations.update(response.data.data);
                 }).catch(function(error) {
@@ -626,10 +700,11 @@ angular.module('floor.controller')
 
         var init = function() {
             InitModule();
-            listTypeTurns();
+            //listTypeTurns();
             sizeLienzo();
-            // closeNotes();
-            loadConfigurationPeople();
+            //closeNotes();
+            //loadConfigurationPeople();
+
         };
 
         init();
@@ -649,14 +724,18 @@ angular.module('floor.controller')
         vmc.flagSelectedNumChildren = num.children;
         vmc.resultado = num.men + num.women + num.children;
 
+        vmc.colectionNum = []; //N° de casillas
+
         //Creando numero de casillas
-        var vNumpeople = [];
-        for (var i = 0; i <= 12; i++) {
-            vNumpeople.push({
-                num: i
-            });
-        }
-        vmc.colectionNum = vNumpeople;
+        var createNumCollection = function() {
+            var vNumpeople = [];
+            for (var i = 0; i <= 12; i++) {
+                vNumpeople.push({
+                    num: i
+                });
+            }
+            vmc.colectionNum = vNumpeople;
+        };
 
         //Al pulsar numero 13 o mayor
         vmc.numThirteen = function(value, person) {
@@ -709,52 +788,57 @@ angular.module('floor.controller')
         };
 
         //Automarcar mayores que 13 segun datos traidos por defecto
-        if (num.men > 12) {
-            vmc.numdinamicoMen = num.men;
-            vmc.flagSelectedCountNumMen = num.men;
-        } else {
-            vmc.numdinamicoMen = 13;
-        }
+        var defaultNumGuest = function() {
+            if (num.men > 12) {
+                vmc.numdinamicoMen = num.men;
+                vmc.flagSelectedCountNumMen = num.men;
+            } else {
+                vmc.numdinamicoMen = 13;
+            }
 
-        if (num.women > 12) {
-            vmc.numdinamicoWomen = num.women;
-            vmc.flagSelectedCountNumWomen = num.women;
-        } else {
-            vmc.numdinamicoWomen = 13;
-        }
+            if (num.women > 12) {
+                vmc.numdinamicoWomen = num.women;
+                vmc.flagSelectedCountNumWomen = num.women;
+            } else {
+                vmc.numdinamicoWomen = 13;
+            }
 
-        if (num.children > 12) {
-            vmc.numdinamicoChildren = num.children;
-            vmc.flagSelectedCountNumChildren = num.children;
+            if (num.children > 12) {
+                vmc.numdinamicoChildren = num.children;
+                vmc.flagSelectedCountNumChildren = num.children;
 
-        } else {
-            vmc.numdinamicoChildren = 13;
-        }
+            } else {
+                vmc.numdinamicoChildren = 13;
+            }
+        };
 
         //Al pulsar boton plus
         vmc.sumar = function(person) {
             if (person == 'men') {
                 vmc.numdinamicoMen++;
                 vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                vmc.flagSelectedNumMen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
-                //console.log('Datos ' + angular.toJson(vmc.numperson));
+
+                vmc.flagSelectedNumMen = vmc.numperson.men;
+                console.log('Datos ' + angular.toJson(vmc.numperson));
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'women') {
                 vmc.numdinamicoWomen++;
                 vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                vmc.flagSelectedNumWomen = -1;
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+
+                vmc.flagSelectedNumWomen = vmc.numperson.women;
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
 
             if (person == 'children') {
                 vmc.numdinamicoChildren++;
                 vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                vmc.flagSelectedNumChildren = -1;
+
                 OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                vmc.flagSelectedNumChildren = vmc.numperson.children;
                 vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
             }
         };
@@ -764,8 +848,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoMen > 13) {
                     vmc.numdinamicoMen--;
                     vmc.flagSelectedCountNumMen = vmc.numdinamicoMen;
-                    vmc.flagSelectedNumMen = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoMen);
+                    vmc.flagSelectedNumMen = vmc.numperson.men;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -773,8 +858,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoWomen > 13) {
                     vmc.numdinamicoWomen--;
                     vmc.flagSelectedCountNumWomen = vmc.numdinamicoWomen;
-                    vmc.flagSelectedNumWomen = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoWomen);
+                    vmc.flagSelectedNumWomen = vmc.numperson.women;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -782,8 +868,9 @@ angular.module('floor.controller')
                 if (vmc.numdinamicoChildren > 13) {
                     vmc.numdinamicoChildren--;
                     vmc.flagSelectedCountNumChildren = vmc.numdinamicoChildren;
-                    vmc.flagSelectedNumChildren = -1;
+
                     OperationFactory.setNumPerson(vmc.numperson, person, vmc.numdinamicoChildren);
+                    vmc.flagSelectedNumChildren = vmc.numperson.children;
                     vmc.resultado = OperationFactory.getTotalPerson(vmc.numperson);
                 }
             }
@@ -794,18 +881,13 @@ angular.module('floor.controller')
         };
 
         function parseReservation() {
-            var now = moment();
-            var date = now.format("YYYY-MM-DD");
-            var start_time = now.clone().add(-(now.minutes() % 15), "minutes").second(0).format("HH:mm:ss");
             return {
                 table_id: table.id,
                 guests: {
                     men: vmc.flagSelectedNumMen,
                     women: vmc.flagSelectedNumWomen,
                     children: vmc.flagSelectedNumChildren
-                },
-                date: date,
-                hour: start_time
+                }
             };
         }
 
@@ -857,6 +939,13 @@ angular.module('floor.controller')
                     vmc.waitingResponse = false;
                 });
         };
+
+        var init = function() {
+            createNumCollection();
+            defaultNumGuest();
+        };
+
+        init();
     })
     .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
         var vmd = this;
@@ -877,29 +966,49 @@ angular.module('floor.controller')
             name_zona: content.zoneName,
             name: content.table.name
         };
-
+        vmd.existTagsReservations = false;
+        vmd.existPoximasReservationsBlocks = false;
         vmd.reservations = content.table.reservations;
         vmd.blocks = content.table.blocks;
         vmd.reservation = {};
+        vmd.status = content.status;
+        vmd.servers = content.servers;
+        vmd.config = content.config;
+        vmd.schedule = content.schedule;
 
         vmd.reservationEditAll = function() {
             $uibModalInstance.dismiss('cancel');
-            $state.go('mesas.reservation-edit', {
+            $state.go('mesas.floor.reservation.edit', {
                 id: vmd.reservation.id,
-                date: getFechaActual()
+                date: vmd.reservation.date_reservation
             });
         };
 
         var originalReservation = {};
+
         vmd.reservationEdit = function(reservation) {
+            reservationService.getGuest().then(function(guests) {
+                vmd.covers = guests;
+            });
+            vmd.statuses = content.status;
+            vmd.servers = content.servers;
+            vmd.tags = content.tags;
+            vmd.configuration = content.config;
             resetTags();
             originalReservation = reservation;
-            listResource().then(function() {
-                parseData(reservation);
-                paintTags(reservation.tags);
-            });
+            parseData(reservation);
+            paintTags(reservation.tags);
+            guest_list_count(reservation);
 
             vmd.EditContent = true;
+        };
+
+        vmd.blockEdit = function(date, blockId) {
+            $uibModalInstance.dismiss('cancel');
+            $state.go('mesas.floor.blockEdit', {
+                date: date,
+                block_id: blockId,
+            });
         };
 
         vmd.infoName = function() {
@@ -908,10 +1017,11 @@ angular.module('floor.controller')
             return first_name + " " + last_name;
         };
         vmd.infoDate = function() {
-            return moment(originalReservation.date_reservation).format("dddd, d [de] MMMM");
+            return moment(originalReservation.date_reservation).format("dddd, D [de] MMMM");
         };
-        vmd.infoTime = function() {
-            return moment(originalReservation.hours_reservation, "HH:mm:ss").format("H:mm A");
+        vmd.infoTime = function(hour) {
+            var hour_eval = hour || originalReservation.hours_reservation;
+            return moment(hour_eval, "HH:mm:ss").format("H:mm A");
         };
         vmd.infoTables = function() {
             return getTables(originalReservation.tables);
@@ -949,7 +1059,9 @@ angular.module('floor.controller')
                     men: men,
                     women: women,
                     children: children
-                }
+                },
+                date_reservation: reservation.date_reservation,
+                hours_reservation: reservation.hours_reservation,
             };
 
             totalGuests();
@@ -968,6 +1080,7 @@ angular.module('floor.controller')
         vmd.sumar = function(guest) {
             vmd.reservation.guests[guest]++;
             totalGuests();
+            guest_list_valid(guest);
         };
 
         vmd.restar = function(guest) {
@@ -976,7 +1089,59 @@ angular.module('floor.controller')
                 vmd.reservation.guests[guest]--;
                 totalGuests();
             }
+            guest_list_valid(guest);
         };
+
+        /**
+         * Validacion de cantidad invitados  vs cantidad en lista de invitados 
+         */
+        vmd.guestMessage = {
+            men: {
+                text: "• La  cantidad de  hombres es menor a la cantidad de hombres en la lista de invitados.",
+                active: false
+            },
+            women: {
+                text: "• La  cantidad de  mujeres es menor a la cantidad de mujeres en la lista de invitados.",
+                active: false
+            },
+            children: {
+                text: "• La  cantidad de  niños es menor a la cantidad de niños en la lista de invitados.",
+                active: false
+            }
+        };
+
+        var guest_list;
+        var guest_list_count = function(reservation) {
+            guest_list = reservation.guest_list.reduce(function(count, item) {
+                if (item.type_person === 1) {
+                    count.men++;
+                } else if (item.type_person === 2) {
+                    count.women++;
+                } else if (item.type_person === 3) {
+                    count.children++;
+                }
+                return count;
+            }, {
+                men: 0,
+                women: 0,
+                children: 0
+            });
+
+            guest_list_valid("men");
+            guest_list_valid("women");
+            guest_list_valid("children");
+        };
+
+        var guest_list_valid = function(guest) {
+            if (vmd.reservation.guests[guest] < guest_list[guest]) {
+                vmd.guestMessage[guest].active = true;
+            } else {
+                vmd.guestMessage[guest].active = false;
+            }
+        };
+        /**
+         * END
+         */
 
         var totalGuests = function() {
             vmd.reservation.guests.total = vmd.reservation.guests.men + vmd.reservation.guests.women + vmd.reservation.guests.children;
@@ -1057,6 +1222,10 @@ angular.module('floor.controller')
             vmd.EditContent = false;
             vmd.reservation = {};
             vmd.info = {};
+
+            vmd.guestMessage.men.active = false;
+            vmd.guestMessage.women.active = false;
+            vmd.guestMessage.children.active = false;
         };
 
         $scope.cancel = function() {
@@ -1112,7 +1281,7 @@ angular.module('floor.controller')
         vmd.redirect = function() {
             $uibModalInstance.dismiss('cancel');
             var fecha_actual = getFechaActual();
-            $state.go("mesas.reservation-new", {
+            $state.go("mesas.floor.reservation.add", {
                 date: fecha_actual,
                 tables: [{
                     id: content.table.id

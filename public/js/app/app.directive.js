@@ -63,7 +63,7 @@ angular.module("bookersnap.directives", [])
                 bsOpen: "&"
             },
             link: function(scope, element, attrs) {
-                var parent = $(element).closest("[bs-toggle-click]").parent();
+                var parent = $(element).closest("[bs-toggle-click]").parent().parent();
                 var children = parent.find("[bs-toggle-show]");
 
                 var closeChildren = function(evt) {
@@ -74,7 +74,9 @@ angular.module("bookersnap.directives", [])
                         children.addClass("ng-hide");
                         $document.unbind('click');
                         scope.bsClose();
-                        scope.$apply();
+                        if (!scope.$$phase && !scope.$root.$$phase) {
+                            scope.$apply();
+                        }
                     }
                 };
 
@@ -89,7 +91,9 @@ angular.module("bookersnap.directives", [])
                             scope.bsOpen();
                             $document.bind('click', closeChildren);
                         }
-                        scope.$apply();
+                        if (!scope.$$phase && !scope.$root.$$phase) {
+                            scope.$apply();
+                        }
                     }
                 });
 

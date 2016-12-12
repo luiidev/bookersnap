@@ -13,7 +13,8 @@
             'reservation.app',
             'bookersnap.services',
             "customtag.app",
-            "configuration.app"
+            "configuration.app",
+            'availability.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
         .constant("UrlServerNotify", "http://localhost:1337")
@@ -29,10 +30,9 @@
                     templateUrl: ''
                 });
         })
-
-    .run(function($http, ServerNotification, IdMicroSitio) {
-        setAuthHeaders($http);
-        ServerNotification.createConnection();
-        ServerNotification.createRoom("microsites" + IdMicroSitio);
-    });
+        .run(function($http, ServerNotification, IdMicroSitio) {
+            //setAuthHeaders($http);
+            ServerNotification.createConnection();
+            ServerNotification.createRoom("microsites" + IdMicroSitio);
+        });
 })();

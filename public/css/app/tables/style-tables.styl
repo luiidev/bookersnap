@@ -2,8 +2,7 @@
 .modal-header
 	text-align center
 .modal-footer
-	text-align center
-	
+	text-align center	
 .list-table
 	padding 0 25px
 	& .table-responsive
@@ -51,42 +50,38 @@
 		background #aaaaaa
 				
 	& .selected-table
-		border 2px solid #2196f3!important
-		background-color #57b3f1!important
+		border 2px solid #2196f3 !important
+		background-color #57b3f1 !important
 	& .selected-table-2
 		& .border
-			border 5px solid red!important
+			border 5px solid red !important
 			opacity 0.3		
 	& .round
 		border-radius 50%
 	& .rt45
 		transform rotate(45deg)
 		&.recta
-			transform-origin bottom left
-			-moz-transform translateY(-14.64466px) rotate(45deg)
-			-ms-transform translateY(-14.64466px) rotate(45deg)
-			-webkit-transform translateY(-14.64466px) rotate(45deg)
-			transform translateY(-14.64466px) rotate(45deg)
-			
+			-moz-transform translateY(0) rotate(45deg)
+			-ms-transform translateY(0) rotate(45deg)
+			-webkit-transform translateY(0) rotate(45deg)
+			transform translateY(0) rotate(45deg)			
 	& .rt90 
 		transform rotate(90deg)
-		&.recta 
-			transform none
-			height 10.13513513513514% !important
-			width 6.486486486486486% !important
+		&.recta
+			-moz-transform translateY(0) rotate(90deg)
+			-ms-transform translateY(0) rotate(90deg)
+			-webkit-transform translateY(0) rotate(90deg)
+			transform translateY(0) rotate(90deg)
 	& .rt135
 		-moz-transform rotate(135deg)
 		-ms-transform rotate(135deg)
 		-webkit-transform rotate(135deg)
 		transform rotate(135deg)
 		&.recta
-			transform-origin bottom left
-			-moz-transform translateY(-50%) rotate(45deg)
-			-ms-transform translateY(-50%) rotate(45deg)
-			-webkit-transform translateY(-50%) rotate(45deg)
-			transform translateY(-50%) rotate(45deg)
-			height 10.13513513513514% !important
-			width 6.486486486486486% !important
+			-moz-transform translateY(0) rotate(135deg)
+			-ms-transform translateY(0) rotate(135deg)
+			-webkit-transform translateY(0) rotate(135deg)
+			transform translateY(0) rotate(135deg)
 	& .table-zone
 		position absolute
 		cursor pointer
@@ -147,47 +142,55 @@
 				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
 				transform: translate(-50%,-50%) rotate(-45deg)
 		&.rt90
+			& .box-icon
+				left: 50%
+				top: 50%
+				-moz-transform: translate(-50%,-50%) rotate(-90deg)
+				-ms-transform: translate(-50%,-50%) rotate(-90deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)		
 			& .item-drag-cover
-				-moz-transform: translate(-50%,-50%)
-				-ms-transform: translate(-50%,-50%)
-				-webkit-transform: translate(-50%,-50%)
-				transform: translate(-50%,-50%)
+				-moz-transform: translate(-50%,-50%) rotate(-90deg)
+				-ms-transform: translate(-50%,-50%) rotate(-90deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-90deg)
+				transform: translate(-50%,-50%) rotate(-90deg)
 				top: 50%
 				left: 50%
+			& .item-drag-time
+				transform: translate(-50%,-50%) rotate(-90deg)
+				top: 50%
+				left: 50%
+			& .table-label
+				&.top
+					transform translate(-50%,-100%)	rotate(-90deg) !important	
+				&.right
+					transform translate(100%,-50%) rotate(-90deg) !important
+				&.left
+					transform translate(-100%,-50%) rotate(-90deg) !important
+				&.bottom
+					transform translate(-50%,100%) rotate(-90deg) !important
 		&.rt135
 			& .box-icon
 				left: 50%
 				top: 50%
-				-moz-transform: translate(-50%,-50%) rotate(-45deg)
-				-ms-transform: translate(-50%,-50%) rotate(-45deg)
-				-webkit-transform: translate(-50%,-50%) rotate(-45deg)
-				transform: translate(-50%,-50%) rotate(-45deg)
+				-moz-transform: translate(-50%,-50%) rotate(-135deg)
+				-ms-transform: translate(-50%,-50%) rotate(-135deg)
+				-webkit-transform: translate(-50%,-50%) rotate(-135deg)
+				transform: translate(-50%,-50%) rotate(-135deg)
 			& .item-drag-cover
 			& .item-drag-time
-				transform: translate(-50%,-50%) rotate(-45deg)
+				transform: translate(-50%,-50%) rotate(-135deg)
 				top: 50%
 				left: 50%
-			& .table-label.top
-				-moz-transform translate(-50%,-100%) rotate(-45deg)
-				-ms-transform translate(-50%,-100%) rotate(-45deg)
-				-webkit-transform translate(-50%,-100%) rotate(-45deg)
-				transform translate(-50%,-100%) rotate(-45deg)
-			& .table-label.left
-				-moz-transform translate(-100%,-50%) rotate(-45deg)
-				-ms-transform translate(-100%,-50%) rotate(-45deg)
-				-webkit-transform translate(-100%,-50%) rotate(-45deg)
-				transform translate(-100%,-50%) rotate(-45deg)
-			& .table-label.bottom
-				-moz-transform translate(-50%,100%) rotate(-45deg)
-				-ms-transform translate(-50%,100%) rotate(-45deg)
-				-webkit-transform translate(-50%,100%) rotate(-45deg)
-				transform translate(-50%,100%) rotate(-45deg)
-			& .table-label.right
-				-moz-transform translate(100%,-50%) rotate(-45deg)
-				-ms-transform translate(100%,-50%) rotate(-45deg)
-				-webkit-transform translate(100%,-50%) rotate(-45deg)
-				transform translate(100%,-50%) rotate(-45deg)
-				
+			& .table-label
+				&.top
+					transform translate(-50%,-100%)	rotate(-135deg) !important	
+				&.right
+					transform translate(100%,-50%) rotate(-135deg) !important
+				&.left
+					transform translate(-100%,-50%) rotate(-135deg) !important
+				&.bottom
+					transform translate(-50%,100%) rotate(-135deg) !important				
 		& .table-label
 			position absolute
 			font-weight bold
@@ -196,7 +199,6 @@
 			-moz-user-select -moz-none
 			-ms-user-select none
 			-webkit-user-select none
-			
 			//width 100% 
 			//text-align center
 			&.top
@@ -219,64 +221,64 @@
 				transform translate(-50%,100%)
 							
 	& .table-zone.round.small-relative
-		width 4.054055054054054%
-		height  4.054055054054054%
+		width 5.185185185185185%
+		height  5.185185185185185%
 	& .table-zone.round.medium-relative
-		width 6.756756756756757%
-		height 6.756756756756757%
+		width 8%
+		height 8%
 	& .table-zone.round.large-relative
-		width 10.13513513513514%
-		height 10.13513513513514%
+		width 10.66666666666667%
+		height 10.66666666666667%
 	& .table-zone.square.small-relative
-		width  4.054055054054054%
-		height  4.054055054054054%
+		width  5.185185185185185%
+		height  5.185185185185185%
 	& .table-zone.square.medium-relative
-		width 6.756756756756757%
-		height 6.756756756756757%
+		width 8%
+		height 8%
 	& .table-zone.square.large-relative
-		width 10.13513513513514%
-		height 10.13513513513514%
+		width 10.66666666666667%
+		height 10.66666666666667%
 	& .table-zone.recta.small-relative
-		width 6.081081081081081%
-		height 3.648648648648649%
+		width 8%
+		height 5.185185185185185%
 	& .table-zone.recta.medium-relative
-		width 8.108108108108108% 
-		height 4.324324324324324% 
+		width 13.33333333333333% 
+		height 8% 
 	& .table-zone.recta.large-relative
-		width 10.13513513513514%
-		height 6.486486486486486%
+		width 18.66666666666667%
+		height 10.66666666666667%
 	& .shape-table
 		background-color #fff
 	& .border
 		border 1px solid #ccc
 		//z-index 100
 		&.round.small
-			width 30px
-			height 30px
+			width 35px
+			height 36px
 		&.round.medium
-			width 50px 
-			height 50px
-		&.round.large
-			width 75px
-			height 75px
-		&.square.small
-			width 30px
-			height 30px
-		&.square.medium
-			width 50px 
-			height 50px
-		&.square.large
-			width 75px
-			height 75px
-		&.recta.small
-			width 45px
-			height 27px
-		&.recta.medium
 			width 60px 
-			height 32px 
+			height 60px
+		&.round.large
+			width 80px
+			height 80px
+		&.square.small
+			width 35px
+			height 35px
+		&.square.medium
+			width 60px 
+			height 60px
+		&.square.large
+			width 80px
+			height 80px
+		&.recta.small
+			width 60px
+			height 35px
+		&.recta.medium
+			width 100px 
+			height 60px 
 		&.recta.large
-			width 75px
-			height 48px			
+			width 140px
+			height 80px			
 	& .header-zone-create
 		padding 8px
 		border 1px solid #DEDEDE
@@ -343,15 +345,33 @@
 			position absolute
 		& .table-label
 			font-weight normal
-			font-size 0.6em
+			font-size 14px
+			position absolute
+			text-decoration none
+			text-transform none
+			-moz-user-select -moz-none
+			-ms-user-select none
+			-webkit-user-select none
+			//width 100% 
+			//text-align center
 			&.top
-				top -5px	
+				left 50%
+				top -2px
+				transform translate(-50%,-100%)		
 			&.right 
-				right -5px
+				right -2px
+				top 50% 
+				transform translate(100%,-50%)
+				text-align left	
 			&.left
-				left -5px
+				left -2px
+				top 50%
+				transform translate(-100%,-50%)
+				text-align right
 			&.bottom 
-				bottom -5px 
+				bottom -2px 
+				left 50%
+				transform translate(-50%,100%)
 		& .item-drag-cover
 			background-color #ccc
 			color #000
@@ -385,9 +405,9 @@
 				top 82%
 		& .box-icon
 			background-repeat no-repeat
-			width 1em
-			height 1em
-			background-size 1em 1em
+			width 36px
+			height 36px
+			background-size 36px
 			position absolute
 			left: 50%
 			top: 50%
@@ -420,7 +440,109 @@
 		& .block-table-permanent
 			background #424242
 				
-
+/* -------------MODAL FLOOR RESERVATION-----------------*/
+.modal-content .reservation-list-content
+	& .modal-title
+		font-weight 700
+		padding-bottom 5px
+	& .listview
+		& .lv-body
+			& .not-information
+				height 100px
+				padding-top 40px
+				text-align center					
+			& .lv-item
+				border-top 1px solid #E5E5E5
+				&:not(:last-child)
+					border-bottom 1px solid #E5E5E5 !important
+				&.item-reservation
+					background-color #eee
+					cursor pointer
+					&:hover
+						background-color #b6e2e2						
+				&.item-block
+					background-color #828282
+					cursor pointer
+					&:hover
+						background-color #5a5a5a
+					& .media-body
+						& .lv-title
+							color #fff
+						& .lv-attrs
+							& li
+								background-color transparent
+								border-color #777
+								color #fff
+				& .media-body
+					& .lv-attrs
+						& .hours
+							width 90px
+						& .guests
+							width 100px
+						& .status
+							width 90px				
+				& .label 
+					font-size 85%
+.modal-content .reservation-short-edit
+	& .resum-reservation
+		background-color #eee
+		cursor pointer
+		display inline-block
+		width 100%
+		padding 10px 15px
+		margin-bottom 10px
+		-webkit-box-shadow 0px 1px 5px 1px #bfbfbf
+		box-shadow 0px 1px 5px 1px #bfbfbf
+		&:hover
+			background-color #b6e2e2
+	& .form-horizontal
+		& .form-group
+			border-top 1px solid #e6e6e6
+			border-left 1px solid #e6e6e6
+			border-right 1px solid #e6e6e6
+			padding 5px 0px
+			margin 0px
+			& .form-control
+				padding-left 10px
+				padding-right 10px
+			& textarea
+				padding 10px
+			&:hover
+				background-color #eee
+			&:last-child
+				border-bottom 1px solid #e6e6e6
+		& .guest-search-list
+			width 100%
+			top 61px
+			& .card
+				margin 0 !important
+				& .card-header
+					cursor pointer
+					background-color rgba(170, 221, 221, 0.36)
+					border-bottom 1px solid rgba(170, 221, 221, 0.5)
+					margin-bottom 0
+					padding 10px 15px
+					cursor pointer
+					&:hover
+						background-color rgba(170, 221, 221, 0.75)
+						border-bottom 1px solid rgba(170, 221, 221, 0.9)
+					&:last-child
+						border-bottom 0
+	& .card
+		margin 0 !important
+		&.reservation-guest-selected
+			cursor pointer
+			background-color #eee
+			border 1px solid #ccc
+			margin-bottom 10px !important
+			&:hover
+				background-color rgba(170, 221, 221, 0.75)
+				border-bottom 1px solid rgba(170, 221, 221, 0.9)
+	& .label.tag-reservation
+		display inline-block
+		font-size 14px
+		margin-right 5px
+		padding 8px
 /*Create zone drag and drop*/
 [ng-drag]
 	-moz-user-select -moz-none
@@ -446,6 +568,15 @@
 		z-index 2
 		
 /*--------------BOOK------------------*/
+
+.box-filter-order
+	& .lv-actions.actions-order-by 
+		& li
+			&.active
+				& > a
+					background-color #eee
+					border-radius 50%
+					
 .ts-label.reservation
 	min-width inherit
 .menu-book 
@@ -607,46 +738,76 @@
 			margin 25px 0
 			color #fff
 .content-book
-	font-size 1em
+	font-size 14px
 	margin 0
 	& h5 
 		margin 0 0 2px 0
-	& .reservation-item 
-		background-color #e6f3dc
+	& .item-book		
 		border-bottom 1px solid #ccc
 		color #000
-		& .block 
-			background-color $color_principal
-			color #fff
+		cursor pointer
+		width 100%
+		padding 0		
+		& .item
+			height 60px
+			width 100%
+			& .title 
+				display block
+			&.available
+				background-color #e6f3dc
+				padding 10px 15px		
+				&:hover
+					background-color #bfdea6
+			&.no-available
+				background-color #FFA5A5
+				padding 10px 15px
+				color #fff
+				&:hover
+					background-color #fb7c7c
+			&.block
+				background-color #84868d
+				padding 10px 15px
+				color #fff
+				&:hover
+					background-color #6d6d6d
+			&.reservation
+				background-color #fff
+				color #000
+				cursor default
+				&:hover
+					background-color #eee
 		& .resv-data
 			border-bottom 1px solid #ccc
 		& .box-guest
-			width 20%
+			width 25%
 			float left
 			& .picture
+				background-color #ccc
 				float left
-				height 48px
-				width 48px
-				& img
-					width 48px
-					height 48px
+				height 60px
+				width 60px
+				background-repeat no-repeat
+				background-size contain
+				background-position center center
 			& .info
 				z-index 1
-				padding-left 55px
+				padding-left 65px
 				padding-right 0px
-				height 48px
+				height 60px
 				width 100%
 				position relative
 				top 50%
 				& .name
-					position absolute
-					top 2px
+					padding-top 8px
+					padding-bottom 8px
+					display inline-block
 					width 100%
-					font-size 1.2em
+					font-size 1.1em
 					font-weight 500
 				& .list
-					position absolute
+					display inline-block
 					bottom 2px
+					font-size .9em
 					& .item
 						float left
 						padding 0px
@@ -662,19 +823,20 @@
 						& .zmdi
 							font-size 1.6em
 		& .box-reservation
-			width 80%
+			width 75%
 			float left
-			padding-right 110px
+			padding-right 120px
 			& .datetime
 				float left
 				width 10%
 				text-align center
 				font-weight 500
-				margin-top 6px
+				margin-top 10px
+				cursor pointer
 				& .date
-					font-size 10px
+					font-size .8em
 				& .time
-					font-size 14px
+					font-size 1em
 			& .status
 				float left
 				width 10%
@@ -698,9 +860,13 @@
 			& .consume
 				float right
 				width 10%
-				height 45px
+				height 60px
 				padding-top 6px
 				padding-left 10px
+				& .form-control
+					height 48px
+					font-size 16px
+					padding-left 5px
 			& .people
 				float left
 				width 60%
@@ -714,19 +880,20 @@
 					padding-left 0px
 					& .btn-group
 						margin-left 0px
-						height 35px
+						height 48px
 						width 30px
 						text-align center
 						font-weight 600
 						&.action
 							cursor pointer
+							padding-top 8px
 							&:hover
 								background-color #575757
 								color #fff
 						& .icon
 							& .zmdi
-								color #ffa500
-								font-size 16px
+								color #ffa829
+								font-size 24px
 								padding-top 2px
 						& .count
 							font-size 13px
@@ -735,37 +902,70 @@
 							font-size 14px
 		& .tables
 			right 0px
-			width 45px
-			height 45px
+			width 60px
 			text-align center
 			position absolute
+			cursor pointer
 			& .item
 				float right
 				background-color #ffeed3
-				width 50px
-				height 48px
+				width 60px
+				height 60px
 				font-size 14px
 				font-weight 500
 				color #f98e00
 				padding 0
-				padding-top 15px
+				padding-top 20px
+				&.web
+					display block
+				&.movil
+					display none
+					color #fff
+					padding-top 0px
+					& .table-name
+						height 30px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 5px 0 0 0
+					& .status-name
+						height 15px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 0
+						font-size .6em
+						text-transform uppercase
+						font-size .7em
+						padding-left 3px
+						padding-right 3px						
+					& .source-name
+						height 15px
+						width 100%
+						display block
+						position relative
+						margin 0
+						padding 0
+						font-size .7em
+						padding-left 3px
+						padding-right 3px
+						text-transform uppercase
+						color rgba(255, 255, 255, 0.75)
 		& .config
-			right 45px
+			right 60px
 			width 60px
 			text-align center
 			position absolute
 			background-color rgba(204, 204, 204, 0.46)
 			& .settings-reservation
-				height 48px
+				height 60px
 				display block
 				color #000
 				font-size 20px
 				cursor pointer
-				padding-top 10px
-		& .item 
-			padding 6px 15px
-			& .title 
-				display block
+				padding-top 15px
 .footer-book
 	position fixed !important
 	z-index 8
@@ -779,12 +979,27 @@
 		& .box-option
 			font-size 0.9em
 	.content-book
-		font-size .8em
-		& .reservation-item
+		& .item-book
 			& .box-guest
-				width 25%
+				width 30%
 			& .box-reservation
-				width 75%					
+				width 70%
+				& .datetime
+					width initial
+					margin-right 10px
+					min-width initial
+				& .status
+					display none
+				& .source
+					display none
+				& .consume
+					width 20%
+			& .tables
+				& .item
+					&.web
+						display none
+					&.movil
+						display block	
 @media (min-width:768px) and (max-width: 1023px)
 	.footer-blook
 		& .btn 
@@ -800,11 +1015,11 @@
 		& .box-option
 			font-size 0.8em
 	.content-book
-		& .reservation-item
+		& .item-book
 			& .box-guest
-				width 25%
+				width 30%
 			& .box-reservation
-				width 75%
+				width 70%
 				padding-right 75px
 				& .datetime
 					width initial
@@ -823,21 +1038,10 @@
 						margin-top 14px
 				& .people
 					padding-left 0px
-			& .tables
-				right 0px
-				width 30px
-				& .item
-					width 30px
-					height 48px
-					font-size 12px
-					font-weight 500
-			& .config
-				right 30px
-				width 40px
-				& .settings-reservation
-					font-size 14px
-					cursor pointer
-					padding-top 14px
+				& .source
+					display none
+				& .consume
+					display none
 @media (max-width:767px)
 	.menu-book 
 		padding 9px 0 2px 9px
@@ -859,9 +1063,25 @@
 	.ts-label.reservation
 		display none
 	.content-book
-		& .reservation-item
+		& .item-book
 			& .box-guest
 				width 50%
+				& .picture
+					display none
+				& .info
+					z-index 0
+					padding-left 5px
+					width 100%
+					& .name
+						padding-top 8px
+						padding-bottom 8px
+						display inline-block
+						width 100%
+						font-size 1.1em
+						font-weight 500
+					& .list
+						display inline-block
+					
 			& .box-reservation
 				width 50%
 				padding-right 75px
@@ -886,21 +1106,6 @@
 					display none
 				& .consume
 					display none
-			& .tables
-				right 0px
-				width 30px
-				& .item
-					width 30px
-					height 48px
-					font-size 12px
-					font-weight 500
-			& .config
-				right 30px
-				width 40px
-				& .settings-reservation
-					font-size 14px
-					cursor pointer
-					padding-top 14px
 /*--------------GUEST------------------*/
 .p-section-guest 
 	padding-left 400px
@@ -926,11 +1131,11 @@
 	& .header-list-reservation
 		padding 0 53px
 	& .listview
-		& .lv-item
+		& .lv-item			
 			& .media-body
 				//border-bottom 1px solid #E5E5E5
 				& .lv-title
-					color #fff!important
+					color #fff !important				
 			& .notes 
 				padding 10px 15px
 			&:not(:last-child)
@@ -1346,7 +1551,8 @@ footer
 				& .dropdown-menu:not(.pull-right):not(.dropdown-menu-right)
 					background #f12929
 					& .listado-table
-						display table
+						display block
+						padding-left 1px
 						text-align center
 						margin 0 auto
 						& .listado-row
@@ -2143,9 +2349,6 @@ li.divider
 				display block
 				color #bbbbbb
 				text-transform uppercase
-		& span
-			margin-right 10px
-			color #ccc
 	&.reservation-guest
 		& .card-header
 			cursor pointer
@@ -2159,10 +2362,15 @@ li.divider
 			width 100%
 			top 61px
 			z-index 10
-			& .card-header
-				margin-bottom 0
-				padding 10px 15px
-				cursor pointer
+			& .card
+				margin 0 !important
+				& .card-header
+					cursor pointer
+					background-color #ccc
+					margin-bottom 0
+					padding 10px 15px
+					cursor pointer
+
 /*.scrolltablef
 	overflow-y auto
 	overflow-x hidden
@@ -2284,6 +2492,55 @@ li.divider
 
 .listado-servers
 	.badge 
-		width: 25px;
-		height: 25px;
-		display: block;
+		width 25px
+		height 25px
+		display block
+
+.dp-range-book
+	position absolute
+	z-index 5
+	background #fff
+
+.dp-content
+	display inline-flex
+
+.dp-menu
+	width 160px
+	.list-group
+		margin-bottom 0px
+
+.guest-list
+	.form-group
+		label
+			text-align center
+		.guest-icon
+			position absolute
+			padding-left 25px
+			top -4px
+			font-size 25px
+		.guest-gender
+			padding-top 7px
+			 text-align center
+
+.t-left
+	text-align left !important
+
+.guest-count-header
+	width 210px
+	margin 0 auto
+	.guest-count
+		display inline-block
+		width 65px
+		height 30px
+		i
+			padding 0 !important
+			top 0 !important
+			font-size 35px !important
+		label
+			padding 0 10px
+			font-weight 600
+			height 35px
+			line-height 35px
+
+#lienzo .dropTable 
+	background-color: rgb(76, 175, 80) !important
