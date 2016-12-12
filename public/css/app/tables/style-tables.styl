@@ -221,64 +221,64 @@
 				transform translate(-50%,100%)
 							
 	& .table-zone.round.small-relative
-		width 4.054055054054054%
-		height  4.054055054054054%
+		width 5.185185185185185%
+		height  5.185185185185185%
 	& .table-zone.round.medium-relative
-		width 6.756756756756757%
-		height 6.756756756756757%
+		width 8%
+		height 8%
 	& .table-zone.round.large-relative
-		width 10.13513513513514%
-		height 10.13513513513514%
+		width 10.66666666666667%
+		height 10.66666666666667%
 	& .table-zone.square.small-relative
-		width  4.054055054054054%
-		height  4.054055054054054%
+		width  5.185185185185185%
+		height  5.185185185185185%
 	& .table-zone.square.medium-relative
-		width 6.756756756756757%
-		height 6.756756756756757%
+		width 8%
+		height 8%
 	& .table-zone.square.large-relative
-		width 10.13513513513514%
-		height 10.13513513513514%
+		width 10.66666666666667%
+		height 10.66666666666667%
 	& .table-zone.recta.small-relative
-		width 6.081081081081081%
-		height 3.648648648648649%
+		width 8%
+		height 5.185185185185185%
 	& .table-zone.recta.medium-relative
-		width 8.108108108108108% 
-		height 4.324324324324324% 
+		width 13.33333333333333% 
+		height 8% 
 	& .table-zone.recta.large-relative
-		width 10.13513513513514%
-		height 6.486486486486486%
+		width 18.66666666666667%
+		height 10.66666666666667%
 	& .shape-table
 		background-color #fff
 	& .border
 		border 1px solid #ccc
 		//z-index 100
 		&.round.small
-			width 30px
-			height 30px
+			width 35px
+			height 36px
 		&.round.medium
-			width 50px 
-			height 50px
-		&.round.large
-			width 75px
-			height 75px
-		&.square.small
-			width 30px
-			height 30px
-		&.square.medium
-			width 50px 
-			height 50px
-		&.square.large
-			width 75px
-			height 75px
-		&.recta.small
-			width 45px
-			height 27px
-		&.recta.medium
 			width 60px 
-			height 32px 
+			height 60px
+		&.round.large
+			width 80px
+			height 80px
+		&.square.small
+			width 35px
+			height 35px
+		&.square.medium
+			width 60px 
+			height 60px
+		&.square.large
+			width 80px
+			height 80px
+		&.recta.small
+			width 60px
+			height 35px
+		&.recta.medium
+			width 100px 
+			height 60px 
 		&.recta.large
-			width 75px
-			height 48px			
+			width 140px
+			height 80px			
 	& .header-zone-create
 		padding 8px
 		border 1px solid #DEDEDE
@@ -356,20 +356,20 @@
 			//text-align center
 			&.top
 				left 50%
-				top -.2em
+				top -2px
 				transform translate(-50%,-100%)		
 			&.right 
-				right -11px
+				right -2px
 				top 50% 
 				transform translate(100%,-50%)
 				text-align left	
 			&.left
-				left -11px
+				left -2px
 				top 50%
 				transform translate(-100%,-50%)
 				text-align right
 			&.bottom 
-				bottom -11px 
+				bottom -2px 
 				left 50%
 				transform translate(-50%,100%)
 		& .item-drag-cover
@@ -490,7 +490,7 @@
 		display inline-block
 		width 100%
 		padding 10px 15px
-		margin-bottom 15px
+		margin-bottom 10px
 		-webkit-box-shadow 0px 1px 5px 1px #bfbfbf
 		box-shadow 0px 1px 5px 1px #bfbfbf
 		&:hover
@@ -500,7 +500,7 @@
 			border-top 1px solid #e6e6e6
 			border-left 1px solid #e6e6e6
 			border-right 1px solid #e6e6e6
-			padding 10px 0px
+			padding 5px 0px
 			margin 0px
 			& .form-control
 				padding-left 10px
@@ -511,6 +511,33 @@
 				background-color #eee
 			&:last-child
 				border-bottom 1px solid #e6e6e6
+		& .guest-search-list
+			width 100%
+			top 61px
+			& .card
+				margin 0 !important
+				& .card-header
+					cursor pointer
+					background-color rgba(170, 221, 221, 0.36)
+					border-bottom 1px solid rgba(170, 221, 221, 0.5)
+					margin-bottom 0
+					padding 10px 15px
+					cursor pointer
+					&:hover
+						background-color rgba(170, 221, 221, 0.75)
+						border-bottom 1px solid rgba(170, 221, 221, 0.9)
+					&:last-child
+						border-bottom 0
+	& .card
+		margin 0 !important
+		&.reservation-guest-selected
+			cursor pointer
+			background-color #eee
+			border 1px solid #ccc
+			margin-bottom 10px !important
+			&:hover
+				background-color rgba(170, 221, 221, 0.75)
+				border-bottom 1px solid rgba(170, 221, 221, 0.9)
 	& .label.tag-reservation
 		display inline-block
 		font-size 14px
@@ -755,6 +782,7 @@
 			&.reservation
 				background-color #fff
 				color #000
+				cursor default
 				&:hover
 					background-color #eee
 		& .resv-data
@@ -813,6 +841,7 @@
 				text-align center
 				font-weight 500
 				margin-top 10px
+				cursor pointer
 				& .date
 					font-size .8em
 				& .time
@@ -885,6 +914,7 @@
 			width 60px
 			text-align center
 			position absolute
+			cursor pointer
 			& .item
 				float right
 				background-color #ffeed3
@@ -2328,9 +2358,6 @@ li.divider
 				display block
 				color #bbbbbb
 				text-transform uppercase
-		& span
-			margin-right 10px
-			color #ccc
 	&.reservation-guest
 		& .card-header
 			cursor pointer
@@ -2344,10 +2371,15 @@ li.divider
 			width 100%
 			top 61px
 			z-index 10
-			& .card-header
-				margin-bottom 0
-				padding 10px 15px
-				cursor pointer
+			& .card
+				margin 0 !important
+				& .card-header
+					cursor pointer
+					background-color #ccc
+					margin-bottom 0
+					padding 10px 15px
+					cursor pointer
+
 /*.scrolltablef
 	overflow-y auto
 	overflow-x hidden

@@ -54,11 +54,11 @@
 </section>
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
-        <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
+        <div class="card-header p-l-10 p-r-10 text-center c-white" >
             <button class="btn btn-default pull-left"  ng-click="cancel()">
                 Cancelar
             </button>
-            Crear Bloqueo
+            <strong class="f-16" style="line-height: 2">CREAR BLOQUEO</strong>
             <button class="btn btn-primary pull-right" ng-click="saveZone('create')">
                 Guardar
             </button>
@@ -68,20 +68,20 @@
                 <form class="form-horizontal" role="form">
                     <div class="card-body drag-border">
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="date">
-                                Fecha
+                            <label class="col-xs-3 control-label" for="date">
+                                <strong>FECHA</strong>
                             </label>
-                            <div class="col-xs-10 date-picker" ng-class="{ 'is-opened': opened == true }">
+                            <div class="col-xs-9 date-picker" ng-class="{ 'is-opened': opened == true }">
                                 <div class="fg-line" ng-class="{'fg-toggled': opened == true}">
                                     <input class="form-control" close-text="Close" is-open="opened" min-date="minDate" ng-click="openCalendar($event, 'opened')" ng-model="date" ng-required="true" placeholder="Select Date" show-weeks="false" type="text" uib-datepicker-popup="{{format}}"/>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="shift">
-                                Turno
+                            <label class="col-xs-3 control-label" for="shift">
+                                <strong>TURNO</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" ng-change="changueRange(shift)" ng-model="shift" ng-options=" shift.name for shift in shifts">
@@ -94,10 +94,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="startTime">
-                                Inicia
+                            <label class="col-xs-3 control-label" for="startTime">
+                                <strong>INICIA</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes">
@@ -110,10 +110,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2 control-label" for="endTime">
-                                Termina
+                            <label class="col-xs-3 control-label" for="endTime">
+                                <strong>TERMINA</strong>
                             </label>
-                            <div class="col-xs-10">
+                            <div class="col-xs-9">
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="form-control" ng-change="loadBlockTables()" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes | blockHour:startTime:endTime">
@@ -126,10 +126,10 @@
                             </div>
                         </div>
                         <div class="form-group tables-selected">
-                            <label class="col-xs-2 control-label">
-                                Mesas
+                            <label class="col-xs-3 control-label">
+                                <strong>MESAS</strong>
                             </label>
-                            <div class="col-xs-10 control-label">
+                            <div class="col-xs-9 control-label">
                                 <div class="tags" data-ng-bind-html="someSafeContent">
                                 </div>
                             </div>

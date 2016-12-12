@@ -9,4 +9,5 @@ angular.module('master.app', [
         'role.app',
         'auth.app'
     ])
+    .constant("ApiAdminROOT", 'http://apiadmin.studework.vm/v1/es')
     .constant("UrlApiAdmin", 'http://apiadmin.studework.vm/v1/es');

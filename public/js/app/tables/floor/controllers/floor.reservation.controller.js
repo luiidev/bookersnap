@@ -10,6 +10,9 @@ angular.module('floor.controller')
         rm.filter_reserva = [];
         rm.filter_type = [];
         rm.zonesNumber = [];
+        rm.status = [];
+        rm.servers = [];
+        rm.tags = [];
 
         var blocks = [];
 
@@ -184,7 +187,6 @@ angular.module('floor.controller')
             if (validaModal === true) {
                 return;
             }
-
             var modalInstance = $uibModal.open({
                 templateUrl: 'ModalEditReservation.html',
                 controller: 'editReservationCtrl',
@@ -193,7 +195,11 @@ angular.module('floor.controller')
                 resolve: {
                     content: function() {
                         return {
-                            reservation: reservation
+                            reservation: reservation,
+                            tags: rm.tags,
+                            status: rm.status,
+                            servers: rm.servers,
+                            config: rm.configuracion
                         };
                     }
                 }
@@ -208,7 +214,7 @@ angular.module('floor.controller')
                 templateUrl: 'ModalCheckGuestList.html',
                 controller: 'ModallCheckGuestListCtrl',
                 controllerAs: 'gl',
-                size: 'lg',
+                size: 'md',
                 resolve: {
                     reservation: function() {
                         return reservation;
@@ -244,7 +250,7 @@ angular.module('floor.controller')
 
         rm.disabledModal = function() {
             validaModal = true;
-            console.log("disabledModal");
+            //console.log("disabledModal");
             $timeout(function() {
                 validaModal = false;
             }, 600);
@@ -252,8 +258,10 @@ angular.module('floor.controller')
 
         var listTypeTurns = function() {
             FloorFactory.listTurnosActivos(rm.fecha_actual).then(function success(response) {
+                    //console.log(response);
                     TypeFilterDataFactory.setTypeTurnItems(response);
                     rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+                    console.log(rm.categorias_type);
                 },
                 function error(error) {
                     message.apiError(error);
@@ -280,6 +288,35 @@ angular.module('floor.controller')
             });
         };
 
+        /* INICIALIZAR TODOS LOS DATOS DE FLOOR */
+
+        var loadDataFloor = function() {
+
+            FloorFactory.getDataFloor(null).then(function(response) {
+                rm.status = response.status;
+                rm.servers = response.servers;
+                rm.tags = response.tags;
+                setConfiguration(response.config);
+                setCategoriasReserva(response.sourceTypes);
+                setCategoriasType(response.shifts);
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+        };
+
+        var setConfiguration = function(configuration) {
+            rm.configuracion = configuration;
+        }
+        var setCategoriasReserva = function(sourceTypes) {
+            TypeFilterDataFactory.setSourceTypesItems(sourceTypes);
+            rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
+        };
+        var setCategoriasType = function(shifts) {
+            TypeFilterDataFactory.setTypeTurnItems(shifts);
+            rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
+        };
+        /* FIN INICIALIZAR TODOS LOS DATOS DE FLOOR */
+
         var clearState = function() {
             $rootScope.$broadcast("floorClearSelected");
             angular.element('.bg-window-floor').removeClass('drag-dispel');
@@ -292,11 +329,14 @@ angular.module('floor.controller')
             rm.reservations = global.reservations;
             rm.blocks = global.blocks;
             rm.lienzo = global.lienzo;
+
+            loadDataFloor();
+
             $scope.$watch("rm.lienzo", statistics, true);
 
-            loadConfiguration();
-            listSourceTypes();
-            listTypeTurns();
+            //loadConfiguration();
+            //listSourceTypes();
+            //listTypeTurns();
         })();
     })
     .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
@@ -315,6 +355,11 @@ angular.module('floor.controller')
              * @type {Object}
              */
             er.selectTags = {};
+            er.existTagsReservations = false;
+
+            er.countKeys = function(obj){
+                return Object.keys(obj).length;
+            };
 
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
@@ -409,9 +454,10 @@ angular.module('floor.controller')
                         men: men,
                         women: women,
                         children: children
-                    }
+                    },
+                    date_reservation: reservation.date_reservation,
+                    hours_reservation: reservation.hours_reservation
                 };
-
                 totalGuests();
             }
 
@@ -438,6 +484,7 @@ angular.module('floor.controller')
                 var deferred = $q.defer();
                 service.getGuest()
                     .then(function(guests) {
+
                         er.covers = guests;
                     }).catch(function(error) {
                         message.apiError(error);
@@ -507,9 +554,10 @@ angular.module('floor.controller')
 
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
+                console.log(er.reservation);
                 $state.go('mesas.floor.reservation.edit', {
                     id: er.reservation.id,
-                    date: moment().format("YYYY-MM-DD")
+                    date: er.reservation.date_reservation
                 });
             };
 
@@ -563,15 +611,15 @@ angular.module('floor.controller')
                 });
             };
 
-            function listResource() {
+            /*function listResource() {
                 return $q.all([
                     listGuest(),
-                    listStatuses(),
-                    listServers(),
-                    loadConfiguration(),
-                    listReservationTags()
+                    //listStatuses(),
+                    //listServers(),
+                    //loadConfiguration(),
+                    //listReservationTags()
                 ]);
-            }
+            }*/
 
             /**
              * Select tags
@@ -616,13 +664,19 @@ angular.module('floor.controller')
             (function Init() {
                 var date = getFechaActual();
 
-                listResource().then(function() {
-                    resetTags();
-                    parseInfo(content.reservation);
-                    parseData(content.reservation);
-                    paintTags(content.reservation.tags);
-                    guest_list_count(content.reservation);
+                service.getGuest().then(function(guests) {
+                    er.covers = guests;
                 });
+                er.statuses = content.status;
+                er.servers = content.servers;
+                er.tags = content.tags;
+                er.configuration = content.config;
+                resetTags();
+                parseInfo(content.reservation);
+                parseData(content.reservation);
+                paintTags(content.reservation.tags);
+                guest_list_count(content.reservation);
+
             })();
         }
     ])
@@ -644,7 +698,7 @@ angular.module('floor.controller')
         };
 
         var init = function() {
-            console.log(angular.toJson(reservation, true));
+            //console.log(angular.toJson(reservation, true));
             vm.reservation.date = reservation.date_reservation;
             vm.reservation.time = reservation.hours_reservation;
             vm.reservation.email = reservation.email;
@@ -876,9 +930,9 @@ angular.module('floor.controller')
         var initModule = function() {
             vm.configPeople = configuration.status_people_1 + configuration.status_people_2 + configuration.status_people_3;
             vm.configuration = configuration;
-            vm.person.man.min = reservation.num_people_1;
-            vm.person.woman.min = reservation.num_people_2;
-            vm.person.children.min = reservation.num_people_3;
+            vm.person.man.min = reservation.num_people_1 * 1;
+            vm.person.woman.min = reservation.num_people_2 * 1;
+            vm.person.children.min = reservation.num_people_3 * 1;
 
             vm.guestList = angular.copy(reservation.guest_list);
             initList();

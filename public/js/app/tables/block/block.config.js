@@ -50,5 +50,20 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                         return 'Editar Bloqueo';
                     },
                 }
-            });
+            })
+            .state('mesas.book.blockEdit', {
+                url: '/:date/block/:block_id',
+
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/block/view/edit.new.html',
+                        controller: "blockCtr",
+                    }
+                },
+                resolve: {
+                    $title: function() {
+                        return 'Editar Bloqueo';
+                    },
+                }
+            });;
     });

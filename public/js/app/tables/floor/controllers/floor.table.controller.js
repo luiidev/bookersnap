@@ -25,6 +25,12 @@ angular.module('floor.controller')
         var reservations = global.reservations;
         var servers = global.servers;
         var blocks = global.blocks;
+        var shifts = global.shifts;
+        var config = global.config;
+        var sourceTypes = global.sourceTypes;
+        var status = global.status;
+        var tags = global.tags;
+        var schedule = global.schedule;
         var zones = [];
         /**
          * END Variables de manejo general de informacion
@@ -269,20 +275,49 @@ angular.module('floor.controller')
             return deferred.promise;
         };
 
+
         var InitModule = function() {
+
             var date = fecha_actual;
-            $q.all([
+
+            FloorFactory.getDataFloor(date).then(function(response) {
+
+                zones.data = response.zones;
+                blocks.data = response.blocks;
+                reservations.data = response.reservations;
+                servers.data = response.servers;
+                shifts.data = response.shifts;
+                sourceTypes.data = response.sourceTypes;
+                config = response.config;
+                tags = response.tags;
+                status = response.status;
+                schedule = response.schedule;
+
+                loadTablesEdit(response.zones, response.blocks, response.reservations, response.servers);
+                showTimeCustom();
+
+                vm.typeTurns = shifts.data;
+                TypeFilterDataFactory.setTypeTurnItems(shifts.data);
+                vm.configuracion = config;
+
+            }).catch(function(error) {
+                message.apiError(error);
+            });
+
+
+            /*$q.all([
                 loadZones(date),
                 loadBlocks(date),
                 loadReservations(),
                 loadServers(),
-                FloorDataFactory.getSourceTypes()
+                //FloorDataFactory.getSourceTypes()
             ]).then(function(data) {
+                console.log(data);
                 loadTablesEdit(data[0], data[1], data[2], data[3]);
 
                 showTimeCustom();
 
-            });
+            });*/
         };
 
         vm.showTimeColor = {
@@ -477,6 +512,10 @@ angular.module('floor.controller')
                         return {
                             zoneName: vm.zones.data[index].name,
                             table: table,
+                            status: status,
+                            config: config,
+                            tags: tags,
+                            schedule: schedule
                         };
                     }
                 }
@@ -661,10 +700,11 @@ angular.module('floor.controller')
 
         var init = function() {
             InitModule();
-            listTypeTurns();
+            //listTypeTurns();
             sizeLienzo();
-            // closeNotes();
-            loadConfigurationPeople();
+            //closeNotes();
+            //loadConfigurationPeople();
+
         };
 
         init();
@@ -926,30 +966,53 @@ angular.module('floor.controller')
             name_zona: content.zoneName,
             name: content.table.name
         };
-
+        vmd.existTagsReservations = false;
+        vmd.existPoximasReservationsBlocks = false;
         vmd.reservations = content.table.reservations;
         vmd.blocks = content.table.blocks;
         vmd.reservation = {};
+        vmd.status = content.status;
+        vmd.servers = content.servers;
+        vmd.config = content.config;
+        vmd.schedule = content.schedule;
+
+        vmd.countKeys = function(obj){
+            return Object.keys(obj).length;
+        };
 
         vmd.reservationEditAll = function() {
             $uibModalInstance.dismiss('cancel');
             $state.go('mesas.floor.reservation.edit', {
                 id: vmd.reservation.id,
-                date: getFechaActual()
+                date: vmd.reservation.date_reservation
             });
         };
 
         var originalReservation = {};
+
         vmd.reservationEdit = function(reservation) {
+            reservationService.getGuest().then(function(guests) {
+                vmd.covers = guests;
+            });
+            vmd.statuses = content.status;
+            vmd.servers = content.servers;
+            vmd.tags = content.tags;
+            vmd.configuration = content.config;
             resetTags();
             originalReservation = reservation;
-            listResource().then(function() {
-                parseData(reservation);
-                paintTags(reservation.tags);
-                guest_list_count(reservation);
-            });
+            parseData(reservation);
+            paintTags(reservation.tags);
+            guest_list_count(reservation);
 
             vmd.EditContent = true;
+        };
+
+        vmd.blockEdit = function(date, blockId) {
+            $uibModalInstance.dismiss('cancel');
+            $state.go('mesas.floor.blockEdit', {
+                date: date,
+                block_id: blockId,
+            });
         };
 
         vmd.infoName = function() {
@@ -1000,7 +1063,9 @@ angular.module('floor.controller')
                     men: men,
                     women: women,
                     children: children
-                }
+                },
+                date_reservation: reservation.date_reservation,
+                hours_reservation: reservation.hours_reservation,
             };
 
             totalGuests();

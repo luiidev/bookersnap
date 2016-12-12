@@ -29,7 +29,21 @@ angular.module("App")
             vm.reservation.guest_list.splice(i, 1);
         };
 
+        vm.clear = function(key) {
+            console.log(vm.errors, true);
+            vm.errors[key].length = 0;
+        };
+
         vm.save = function() {
+            // vm.resForm.$setSubmitted();
+            // vm.resForm.$setPristine();
+            // vm.resForm.$setDirty();
+            // vm.resForm.last_name.$setDirty();
+            // vm.resForm.$setValidity();
+            // vm.resForm.first_name.$setSubmitted();
+            // vm.resForm.$setDirty();
+            console.log(vm.resForm);
+            // if (vm.resForm.$invalid) return;
             console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};
@@ -38,15 +52,11 @@ angular.module("App")
                     alert("Se registro su reservacion");
                     console.log(response.data);
                 }).catch(function(error) {
-                    errorTranslate(error.data.data);
+                    vm.errors = error.data.data;
                     console.log(vm.errors);
                 }).finally(function() {
                     vm.loading = false;
                 });
-        };
-
-        var errorTranslate = function (errors) {
-            vm.errors = utiles.errorTranslate(errors, translate);
         };
 
         /**
