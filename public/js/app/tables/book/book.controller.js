@@ -282,7 +282,7 @@ angular.module('book.controller', [])
         vm.paginate_reservation = {
             page: 1,
             total_pages: 0,
-            page_size: 2,
+            page_size: 30,
             selected: 1,
             max_size: 5
         };
@@ -1341,8 +1341,8 @@ angular.module('book.controller', [])
         };
 
         vm.redirectReservation = function() {
-        /*console.log(vm.reservation);
-        console.log(data);*/
+            /*console.log(vm.reservation);
+            console.log(data);*/
             $uibModalInstance.dismiss('cancel');
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
