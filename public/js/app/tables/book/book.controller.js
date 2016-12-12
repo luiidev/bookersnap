@@ -1335,7 +1335,7 @@ angular.module('book.controller', [])
                 vm.info.table = false;
             }
 
-            vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.covers;
+            vm.info.tableName = table ? "MESA " + table.name : "No hay mesas para " + vm.reservation.covers;
 
             console.log("suggestTables " + angular.toJson(tables, true));
         };
@@ -1538,9 +1538,9 @@ angular.module('book.controller', [])
         var initModule = function() {
             vm.configPeople = configuration.status_people_1 + configuration.status_people_2 + configuration.status_people_3;
             vm.configuration = configuration;
-            vm.person.man.min = reservation.num_people_1;
-            vm.person.woman.min = reservation.num_people_2;
-            vm.person.children.min = reservation.num_people_3;
+            vm.person.man.min = reservation.num_people_1 * 1;
+            vm.person.woman.min = reservation.num_people_2 * 1;
+            vm.person.children.min = reservation.num_people_3 * 1;
 
             vm.guestList = angular.copy(reservation.guest_list);
             initList();

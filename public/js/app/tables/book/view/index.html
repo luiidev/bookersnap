@@ -239,6 +239,13 @@
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
+                                    <a href="#"  ng-click="vm.editReservation(item)">
+                                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+                                        </i>
+                                        Editar Reservación
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="#">
                                         <i class="zmdi zmdi-smartphone-iphone zmdi-hc-fw">
                                         </i>
@@ -386,7 +393,7 @@
 <script id="ModalCreateBookReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
-            <h4 style="display: inline;">NUEVA RESERVACIÓN DE 1 MESA</h4>
+            <h4 style="display: inline;">RESERVAR MESA PARA {{br.reservation.covers}}</h4>
             <button class="btn btn-danger pull-right" ng-click="br.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
