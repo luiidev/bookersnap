@@ -47,10 +47,10 @@
                     </div> -->
 
                     <div class="col-sm-5">
-                        <div class="form-group" ng-class="{ 'has-error': resForm.first_name.$invalid && !resForm.first_name.$pristine  && resForm.first_name.$untouched}">
+                        <div class="form-group" ng-class="{ 'has-error': resForm.first_name.$invalid && !resForm.first_name.$pristine}">
                             <label>Nombres</label>
                             <input type="text" name="first_name" class="form-control input-sm" placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" required>
-                            <p ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine && !errors['guest.first_name'].length && resForm.first_name.$untouched" class="help-block">El nombre es obligatorio.</p>
+                            <p ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine && !errors['guest.first_name'].length" class="help-block">El nombre es obligatorio.</p>
                             <p class="help-block" ng-repeat="error in errors['guest.first_name']" ng-show="resForm.first_name.$invalid && !resForm.first_name.$pristine && resForm.first_name.$untouched" ng-bind="error"></p>
                         </div>
                     </div>

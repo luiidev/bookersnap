@@ -38,8 +38,12 @@
         </button>
     </li>
     <li class="item-date">
-        <div class="day">Miercole 16</div>
-        <div class="month">Setiembre del 2016</div>
+        <div class="day">
+            {{ vm.fecha_actual | date : 'EEEE d' : 'America/Lima'}}
+        </div>
+        <div class="month">
+            {{ vm.fecha_actual | date : ' MMMM y' : 'America/Lima'}}
+        </div>
     </li>
     <li class="item-nav dropdown dropup num-guests" uib-dropdown="">
         <button aria-expanded="false" aria-haspopup="true" class="item-action btn last-child btn-default-red btn-sm text-center dropdown-toggle waves-effect" type="button" uib-dropdown-toggle="">

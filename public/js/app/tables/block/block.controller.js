@@ -498,7 +498,7 @@ angular.module('block.controller', [])
         };
 
         var redirect = function() {
-            if ($state.is("mesas.book.block")) {
+            if ($state.is("mesas.book.block") || $state.is("mesas.book.blockEdit")) {
                 $state.go("mesas.book", $stateParams);
             } else {
                 $state.go("mesas.floor.reservation");

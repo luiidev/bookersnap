@@ -160,7 +160,6 @@ return [
         App\Providers\ComposerServiceProvider::class,
 
         //Ixudra\Curl\CurlServiceProvider::class,
-
         Intervention\Image\ImageServiceProvider::class,
 
     ],

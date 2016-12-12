@@ -282,7 +282,7 @@ angular.module('book.controller', [])
         vm.paginate_reservation = {
             page: 1,
             total_pages: 0,
-            page_size: 2,
+            page_size: 30,
             selected: 1,
             max_size: 5
         };
@@ -568,7 +568,7 @@ angular.module('book.controller', [])
                 templateUrl: 'ModalCheckGuestList.html',
                 controller: 'ModalCheckGuestListBookCtrl',
                 controllerAs: 'gl',
-                size: 'lg',
+                size: 'md',
                 resolve: {
                     reservation: function() {
                         return reservation;
@@ -1335,14 +1335,14 @@ angular.module('book.controller', [])
                 vm.info.table = false;
             }
 
-            vm.info.tableName = table ? table.name : "No hay mesas para " + vm.reservation.covers;
+            vm.info.tableName = table ? "MESA " + table.name : "No hay mesas para " + vm.reservation.covers;
 
             console.log("suggestTables " + angular.toJson(tables, true));
         };
 
         vm.redirectReservation = function() {
-            console.log(vm.reservation);
-            console.log(data);
+            /*console.log(vm.reservation);
+            console.log(data);*/
             $uibModalInstance.dismiss('cancel');
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
@@ -1538,9 +1538,9 @@ angular.module('book.controller', [])
         var initModule = function() {
             vm.configPeople = configuration.status_people_1 + configuration.status_people_2 + configuration.status_people_3;
             vm.configuration = configuration;
-            vm.person.man.min = reservation.num_people_1;
-            vm.person.woman.min = reservation.num_people_2;
-            vm.person.children.min = reservation.num_people_3;
+            vm.person.man.min = reservation.num_people_1 * 1;
+            vm.person.woman.min = reservation.num_people_2 * 1;
+            vm.person.children.min = reservation.num_people_3 * 1;
 
             vm.guestList = angular.copy(reservation.guest_list);
             initList();

@@ -15,7 +15,21 @@ angular.module('global.service', [])
             },
             lienzo = {
                 data: []
-            };
+            },
+            tags = {
+                data: []
+            },
+            status = {
+                data: []
+            },
+            shifts = {
+                data: []
+            },
+            sourceTypes = {
+                data: []
+            },
+            schedule = {},
+            config = {};
 
         /**
          * Funcion de actualizacion de objeco
@@ -26,17 +40,17 @@ angular.module('global.service', [])
                 angular.forEach(this.data, function(reservation, index) {
                     angular.forEach(updateList, function(item) {
                         if (reservation.id == item.id) {
-                            angular.forEach(lienzo.data.tables, function(table) {
-                                angular.forEach(reservation.tables, function(obj_table) {
-                                    if (table.id == obj_table.id) {
+                            // angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(lienzo.data.tables, function(table) {
+                                    // if (table.id == obj_table.id) {
                                         table.reservations.remove(reservation);
-                                    }
+                                    // }
                                 });
-                            });
+                            // });
                             if (item.date_reservation == dateNow) {
                                 Object.assign(reservation, item);
-                                angular.forEach(lienzo.data.tables, function(table) {
-                                    angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(reservation.tables, function(obj_table) {
+                                    angular.forEach(lienzo.data.tables, function(table) {
                                         if (table.id == obj_table.id) {
                                             table.reservations.add(reservation);
                                         }
@@ -215,6 +229,12 @@ angular.module('global.service', [])
             reservations: reservations,
             servers: servers,
             lienzo: lienzo,
-            blocks: blocks
+            blocks: blocks,
+            shifts: shifts,
+            config: config,
+            schedule: schedule,
+            tags: tags,
+            status: status,
+            sourceTypes: sourceTypes
         };
     }]);
