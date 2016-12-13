@@ -323,14 +323,6 @@ angular.module('floor.controller')
             FloorFactory.isEditServer(false);
         };
 
-        $scope.$on("NotifyFloorReservationApply", function(evt, data) {
-            console.log("=O");
-            if (!$scope.$$phase && !$scope.$root.$$phase) {
-                console.log("=D");
-                $scope.$apply();
-            }
-        });
-
         (function Init() {
             clearState();
 
@@ -342,7 +334,7 @@ angular.module('floor.controller')
 
             /**
              * No reflejan cambio en real time, debe estar
-             * referenciado aun objeto no a un array
+             * referenciado aun objeto, y no a un array
              * por adaptar codigo
              */
             rm.status = global.status.data;
@@ -579,7 +571,6 @@ angular.module('floor.controller')
 
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
-                console.log(er.reservation);
                 $state.go('mesas.floor.reservation.edit', {
                     id: er.reservation.id,
                     date: er.reservation.date_reservation

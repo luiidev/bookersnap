@@ -459,8 +459,6 @@ angular.module('floor.controller')
                     if (!$scope.$$phase && !$scope.$root.$$phase) {
                         $scope.$apply();
                     }
-                    console.log("o_o");
-                    $scope.$broadcast("NotifyFloorReservationApply");
                 }
             }
         });

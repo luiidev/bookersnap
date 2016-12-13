@@ -76,6 +76,12 @@ angular.module('reservation.controller', [])
              */
             vm.guest = {};
 
+            /**
+             * Horas filtradas por turnos
+             * @type {Array}
+             */
+            vm.hours = [];
+
             ///////////////////////////////////////////////////////////////
             //  Variables internas de apoyo
             ///////////////////////////////////////////////////////////////
@@ -627,7 +633,13 @@ angular.module('reservation.controller', [])
                         vm.tags = response.data.data.tags;
                         var turns = response.data.data.shifts;
 
-                        listHours(turns);
+                        listHours(turns)
+                            .then(function() {
+                                if ($stateParams.hour) {
+                                    vm.hour = filterHour(vm.hours, $stateParams.hour);
+                                }
+                            });
+
                         listDurations();
 
                         var reserveEdit = response.data.data.reservation;
@@ -665,10 +677,6 @@ angular.module('reservation.controller', [])
 
                 if ($stateParams.tables) {
                     vm.zones.tablesSelected($stateParams.tables);
-                }
-
-                if ($stateParams.hour) {
-                    vm.hour = filterHour(vm.hours, $stateParams.hour);
                 }
 
                 if ($stateParams.guest) {
@@ -710,7 +718,8 @@ angular.module('reservation.controller', [])
             };
 
             var isEditSate = function() {
-                editState = $state.is("mesas.floor.reservation.edit") || $state.is("mesas.book-reservation-edit");
+                var state = $state.current.name;
+                editState = state == "mesas.floor.reservation.edit" || state == "mesas.book-reservation-edit" || state == "mesas.guest.view.reservation-edit";
                 vm.editState = editState;
             };
 
@@ -718,6 +727,8 @@ angular.module('reservation.controller', [])
                 var state = $state.current.name;
                 if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-add-params" || state == "mesas.book-reservation-edit") {
                     $state.go("mesas.book", $stateParams);
+                } else if (state == "mesas.guest.view.reservation-edit"){
+                    $state.go("mesas.guest.view");
                 } else {
                     $state.go("mesas.floor.reservation");
                 }
