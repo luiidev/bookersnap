@@ -214,10 +214,10 @@
                                 <strong>MESAS</strong>
                             </label>
                             <div class="col-xs-9">
-                                <div ng-if="!rc.isTablesSelected">
+<!--                                 <div ng-if="!rc.isTablesSelected">
                                     <label class="control-label" for="server" style="color: #8c8c8c;">{{ rc.tableSuggested.name || "Sin mesas" }}</label>
                                     <a class="a-title pull-right" ng-show="rc.tableSuggested.name" style="padding-top: 7px">Sugerido</a>
-                                </div>
+                                </div> -->
 
                                 <label class="control-label text-uppercase p-r-5 m-r-5" for="server" ng-repeat="table in  rc.tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
 
@@ -261,7 +261,7 @@
                 </div>
             </div>
 
-             <div class="card" ng-show="rc.isEdit">
+             <div class="card" ng-show="rc.editState">
                  <div class="card-header bgm-red"  ng-click="rc.cancelReservation()" style="
                     cursor: pointer;
                     padding: 15px 25px;
