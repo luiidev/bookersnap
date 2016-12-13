@@ -39,6 +39,9 @@ angular.module('reservation.service', [])
                 reservationMaster: function(date, reservation) {
                     return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/" + reservation : ""), { params : {date: date}});
                 },
+                blockMaster: function(date, block) {
+                    return http.get(ApiUrlMesas + "/web-app/block" + (block ? "/" + block : ""), { params : {date: date}});
+                },
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
                 },
