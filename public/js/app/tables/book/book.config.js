@@ -13,6 +13,11 @@ angular.module('book.app', ['book.controller', 'book.service', 'book.directive',
                         controller: 'BookCtrl',
                         controllerAs: 'vm'
                     },
+                },
+                resolve: {
+                    $title: function() {
+                        return 'Book';
+                    }
                 }
             });
 

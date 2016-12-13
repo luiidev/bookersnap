@@ -40,12 +40,6 @@
                                 </i>
                             </a>
                         </li>
-                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'date'}" style="display: none">
-                            <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Creacion">
-                                <i class="zmdi zmdi-calendar zmdi-hc-fw">
-                                </i>
-                            </a>
-                        </li>
                     </ul>
                     <ul class="lv-actions actions box-mode-reservation">
                         <li>
@@ -111,7 +105,7 @@
                                 </span>
                             </div>
                             <div class="list">
-                                <a  class="item list-guest" >
+                                <a class="item list-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
@@ -123,7 +117,8 @@
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i> Lista
+                                    </i>
+                                    Lista
                                 </a>
                             </div>
                         </div>
@@ -321,7 +316,7 @@
                                 </span>
                             </div>
                             <div class="list">
-                                <a  class="item list-guest" >
+                                <a class="item list-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
@@ -333,7 +328,8 @@
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i> Lista
+                                    </i>
+                                    Lista
                                 </a>
                             </div>
                         </div>
