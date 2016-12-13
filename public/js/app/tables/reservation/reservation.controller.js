@@ -147,13 +147,14 @@ angular.module('reservation.controller', [])
                     result.push(parseInt(value));
                     return result;
                 }, []);
-                if (vm.reservation.tables.length === 0) {
-                    if (vm.tableSuggested) {
-                        vm.reservation.tables.push(vm.tableSuggested.id);
-                    // } else {
-                    //     return message.alert("Debe elegir mesas para la reservacion");
-                    }
-                }
+                // Se retira autoenvio de mesa sugerida, se puede reservar sin mesas.
+                // if (vm.reservation.tables.length === 0) {
+                //     if (vm.tableSuggested) {
+                //         vm.reservation.tables.push(vm.tableSuggested.id);
+                //     } else {
+                //         return message.alert("Debe elegir mesas para la reservacion");
+                //     }
+                // }
 
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tags
@@ -295,7 +296,7 @@ angular.module('reservation.controller', [])
                 }
             };
 
-            vm.tablesSuggested = function(cant) {
+            vm.tablesSuggested = function(cant, a) {
                 var count = Object.keys(vm.tablesSelected).length;
                 if (count  <= 1) {
                     vm.zones.clearSelected();
@@ -376,10 +377,8 @@ angular.module('reservation.controller', [])
                     }
                 }
 
-                if (vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                if (validZoneShow()) {
                     return vm.nextZone();
-                } else {
-                    vm.zoneID = vm.zones[vm.zoneIndex].id;
                 }
 
                 vm.tablesSuggested(vm.reservation.covers);
@@ -394,13 +393,19 @@ angular.module('reservation.controller', [])
                     }
                 }
 
-                if (vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) === -1) {
+                if (validZoneShow()) {
                     return vm.prevZone();
-                } else {
-                    vm.zoneID = vm.zones[vm.zoneIndex].id;
                 }
 
                 vm.tablesSuggested(vm.reservation.covers);
+            };
+
+            var validZoneShow = function() {
+                var exists = vm.showZones.indexOf(vm.zones[vm.zoneIndex].id) !== -1;
+                if (exists) {
+                    vm.zoneID = vm.zones[vm.zoneIndex].id;
+                }
+                return !exists;
             };
 
             angular.element($window).bind('resize', function() {
@@ -629,7 +634,6 @@ angular.module('reservation.controller', [])
                         
                         loadTablesEdit(zones, reservations)
                             .then(function() {
-                                vm.tablesBlockValid();
                                 if (vm.editState) loadReservation(reserveEdit);
                             });
 

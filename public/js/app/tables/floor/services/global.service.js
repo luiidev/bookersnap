@@ -32,7 +32,7 @@ angular.module('global.service', [])
             config = {};
 
         /**
-         * Funcion de actualizacion de objeco
+         * Funcion de actualizacion de objecto
          */
         reservations.update = function(updateList, callback) {
             try {
@@ -72,6 +72,7 @@ angular.module('global.service', [])
                 var dateNow = moment().format("YYYY-MM-DD");
                 if (reservation.date_reservation == dateNow) {
                     this.data.push(reservation);
+                    console.log(this.data);
                     angular.forEach(lienzo.data.tables, function(table) {
                         angular.forEach(reservation.tables, function(obj_table) {
                             if (table.id == obj_table.id) {
