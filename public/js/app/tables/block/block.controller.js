@@ -45,7 +45,7 @@ angular.module('block.controller', [])
                 function success(response) {
                     $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
                     zoneIndexMax = $scope.zones.length;
-
+                    $scope.zone = $scope.zones[0];
                     getAllTablesBlockFuture(fecha, true);
 
                 },
@@ -260,8 +260,9 @@ angular.module('block.controller', [])
         };
 
         var setZoneName = function(i) {
-            if (vm.zones.length)
-                vm.zoneName = vm.zones[i].name;
+            if ($scope.zones.length){
+                $scope.zoneName = $scope.zones[i].name;
+            }
         };
 
         var saveBlock = function(blockData) {

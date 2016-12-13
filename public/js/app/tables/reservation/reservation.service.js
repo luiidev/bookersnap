@@ -327,7 +327,7 @@ angular.module('reservation.service', [])
                     }
                 });
                 item.name = zone.name;
-                item.id = zone.id
+                item.id = zone.id;
                 item.tables = tables;
                 dataZones.push(item);
                 Array.prototype.push.apply(dataZones.tables, tables);

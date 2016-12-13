@@ -131,6 +131,25 @@ angular.module('book.service', [])
                 //console.log("books " + angular.toJson(book, true));
                 return book;
             },
+            listBookReservation: function(reservations) {
+                var book = [];
+                var self = this;
+
+                reservations = self.parseReservations(reservations, true);
+                angular.forEach(reservations, function(reserva, key) {
+                    book.push({
+                        time: reserva.hours_reservation,
+                        time_text: reserva.hours_reservation,
+                        turn_id: 0,
+                        block: null,
+                        reservation: reserva,
+                        available: false,
+                        tables: []
+                    });
+                });
+
+                return book;
+            },
             //Asignamos disponibilidad si hay reservas,analizamos el tiempo de duración
             durationsReservaAvailableBook: function(reservations, tablesAvailability, bookView) {
                 var self = this;
