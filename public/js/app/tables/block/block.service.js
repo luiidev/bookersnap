@@ -160,7 +160,7 @@ angular.module('block.service', [])
                     if (data.status == 1) {
                         scope.itemTables.push(dataTable);
                     } else {
-                        scope.itemTablesDeleted.push(dataTable);
+                        //scope.itemTablesDeleted.push(dataTable);
                     }
 
                 });

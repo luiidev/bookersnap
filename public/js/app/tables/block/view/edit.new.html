@@ -12,7 +12,7 @@
                         </i>
                     </button>
                     <label class="control-label">
-                        {{ zoneName }}
+                        {{ zone.name }}
                     </label>
                 </div>
                 <div class="pull-right">
@@ -31,6 +31,12 @@
                             <div class="table-label top" ng-bind="obj.name" ng-click="$event.stopPropagation()">
                             </div>
                         </div>
+                        <div ng-if="itemTables.length == 0" class="empty-tables">
+                            <div>
+                                <strong ng-bind="zone.name"></strong>
+                                <p>sin mesas</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,11 +45,11 @@
 </section>
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
-        <div class="card-header p-l-10 p-r-10" style="text-align: center; line-height: 30px; color: #FFF;">
-            <button class="btn btn-default pull-left" ng-click="cancel()">
+        <div class="card-header p-l-10 p-r-10 text-center c-white" >
+            <button class="btn btn-default pull-left"  ng-click="cancel()">
                 Cancelar
             </button>
-            Editar Bloqueo
+            <strong class="f-16" style="line-height: 2">EDITAR BLOQUEO</strong>
             <button class="btn btn-primary pull-right" ng-click="saveZone('edit')">
                 Guardar
             </button>

@@ -121,17 +121,19 @@
                                 </span>
                             </div>
                             <div class="list">
+                                <a  class="item list-guest" >
+                                    {{ item.reservation.num_guest }} invitados
+                                </a>
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
                                     <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
                                     </i>
-                                    nota
+                                    Nota
                                     <span ng-if="item.reservation.note != null">
                                     </span>
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i>
-                                    {{ item.reservation.guest_list.length }} invitados
+                                    </i> Lista
                                 </a>
                             </div>
                         </div>
@@ -270,7 +272,7 @@
                                     <a href="" ng-click="vm.checkGuestList(item.reservation)">
                                         <i class="zmdi zmdi-file-text zmdi-hc-fw">
                                         </i>
-                                        {{ item.reservation.guest_list.length }} invitado{{item.reservation.guest_list.length == 1 ? '':'s'}}
+                                        {{ item.reservation.guest_list.length }} en lista
                                     </a>
                                 </li>
                                 <li ng-if="item.reservation.res_reservation_status_id === 4">
