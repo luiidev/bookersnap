@@ -331,7 +331,8 @@ angular.module('book.controller', [])
             }
 
             var reservations = BookFactory.filterReservationsAndBlocks(vm.listBook, vm.bookView);
-
+            var pos = value.indexOf(".");
+            value = value.substring(0, pos);
             switch (value) {
                 case 'time':
                     vm.bookOrderBy.general.reverse = (vm.bookOrderBy.general.value == value) ? !vm.bookOrderBy.general.reverse : false;

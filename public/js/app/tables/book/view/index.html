@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="content-book" ng-if="!vm.bookView">
-            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div class="box-reservation">
-                        <div class="datetime"  ng-click="vm.editReservation(item)">
+                        <div class="datetime" ng-click="vm.editReservation(item)">
                             <div class="time">
                                 {{ item.time_text }}
                             </div>
@@ -229,7 +229,7 @@
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
-                                    <a href="#"  ng-click="vm.editReservation(item)">
+                                    <a href="#" ng-click="vm.editReservation(item)">
                                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                                         </i>
                                         Editar Reservación
@@ -280,7 +280,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="tables"  ng-click="vm.editReservation(item)">
+                    <div class="tables" ng-click="vm.editReservation(item)">
                         <div class="item web">
                             {{ item.reservation.tables[0].name }}
                             <span ng-if="item.reservation.tables.length >1">
