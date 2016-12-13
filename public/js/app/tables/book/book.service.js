@@ -13,6 +13,15 @@ angular.module('book.service', [])
             getZones: function(params) {
                 zones = CalendarService.GetZones(params.date_ini, params.date_end, params.reload);
                 return zones;
+            },
+            getBook: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book?" + params);
+            },
+            getBookReservations: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book/history/reservations?" + params);
+            },
+            getBookHistory: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book/history?" + params);
             }
         };
     })
@@ -222,7 +231,6 @@ angular.module('book.service', [])
                 return exists;
             },
             //Asignamos las mesas con disponibilidad
-
             assignTablesAvailabilityBook: function(book, tables, reservations, bookView) {
                 var self = this;
                 var indexHour = getIndexHour(book.time, 0);
