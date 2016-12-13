@@ -976,6 +976,10 @@ angular.module('floor.controller')
         vmd.config = content.config;
         vmd.schedule = content.schedule;
 
+        vmd.countKeys = function(obj){
+            return Object.keys(obj).length;
+        };
+
         vmd.reservationEditAll = function() {
             $uibModalInstance.dismiss('cancel');
             $state.go('mesas.floor.reservation.edit', {

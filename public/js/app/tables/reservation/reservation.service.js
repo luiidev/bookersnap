@@ -36,12 +36,8 @@ angular.module('reservation.service', [])
 
             return {
                 blackList: blackListMethods,
-                formReservation: function(date) {
-                    var params = (date == undefined) ? '' : '?date=' + date;
-                    return http.get(ApiUrlMesas + "/web-app/reservation/form" + params, null);
-                },
-                formEditReservation: function(reservationId) {
-                    return http.get(ApiUrlMesas + "/web-app/reservation/" + reservationId, null);
+                reservationMaster: function(date, reservation) {
+                    return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/"+ reservation : ""), { params : {date: date}});
                 },
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
@@ -856,11 +852,16 @@ angular.module('reservation.service', [])
                     });
                 });
             },
-            tablesSuggested: function(zones, cant) {
+            tablesSuggested: function(zones, cant, index) {
                 var tableSuggested = null;
-                angular.forEach(zones, function(zone) {
+                angular.forEach(zones, function(zone, i) {
+                    if (index) if (i != index) return;
+                    console.log(index);
+                    console.log(zone.tables, cant);
                     angular.forEach(zone.tables, function(table) {
+                        console.log(cant >= table.minCover && cant <= table.maxCover);
                         if (cant >= table.minCover && cant <= table.maxCover) {
+                            console.log( table.minCover,  table.maxCover);
                             if (!table.occupied && !table.block) {
                                 if (!tableSuggested) tableSuggested = angular.copy(table);
                                 table.suggested = true;

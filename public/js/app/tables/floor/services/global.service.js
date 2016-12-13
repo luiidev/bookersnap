@@ -40,17 +40,17 @@ angular.module('global.service', [])
                 angular.forEach(this.data, function(reservation, index) {
                     angular.forEach(updateList, function(item) {
                         if (reservation.id == item.id) {
-                            angular.forEach(lienzo.data.tables, function(table) {
-                                angular.forEach(reservation.tables, function(obj_table) {
-                                    if (table.id == obj_table.id) {
+                            // angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(lienzo.data.tables, function(table) {
+                                    // if (table.id == obj_table.id) {
                                         table.reservations.remove(reservation);
-                                    }
+                                    // }
                                 });
-                            });
+                            // });
                             if (item.date_reservation == dateNow) {
                                 Object.assign(reservation, item);
-                                angular.forEach(lienzo.data.tables, function(table) {
-                                    angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(reservation.tables, function(obj_table) {
+                                    angular.forEach(lienzo.data.tables, function(table) {
                                         if (table.id == obj_table.id) {
                                             table.reservations.add(reservation);
                                         }

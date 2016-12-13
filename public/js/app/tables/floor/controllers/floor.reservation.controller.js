@@ -357,6 +357,10 @@ angular.module('floor.controller')
             er.selectTags = {};
             er.existTagsReservations = false;
 
+            er.countKeys = function(obj){
+                return Object.keys(obj).length;
+            };
+
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
                 totalGuests();

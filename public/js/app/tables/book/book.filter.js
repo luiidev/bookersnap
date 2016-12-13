@@ -30,7 +30,7 @@ angular.module('book.filter', [])
                         var numGuestsValidate = 0;
 
                         angular.forEach(book.tables, function(table, key) {
-                            if (numGuest >= table.min_cover && numGuest <= table.max_cover) {
+                            if (numGuest.id >= table.min_cover && numGuest.id <= table.max_cover || numGuest.id === 0) {
                                 numGuestsValidate += 1;
                             }
                         });
