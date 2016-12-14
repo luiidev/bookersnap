@@ -2561,3 +2561,71 @@ li.divider
 
 #lienzo .dropTable 
 	background-color: rgb(76, 175, 80) !important
+	
+/*--------------GRID--------------*/
+.grid-container 
+	position relative 
+	flex 1 
+	z-index 1
+	& .grid-inner-container
+		& .grid-header
+			background #efefef
+			border-bottom 1px solid #ccc
+			font-size 12px
+			height 35px
+			overflow hidden
+			position relative
+			z-index 2
+			& .grid-time-label-out
+				left 62px
+				position absolute
+				right 0
+				height 36px
+				overflow visible
+				white-space nowrap
+				top 0
+			& .grid-time-label-in 
+				& .grid-time-label-cell
+					max-width 61px
+					min-width 61px
+					width 61px
+					display table-cell
+					border-left 1px solid transparent
+					height 36px;
+					vertical-align middle
+					& .grid-time-label-text
+						margin-left -14px
+					& .grid-time-label-divider
+						background #adadad
+						display inline-block
+						vertical-align middle
+					& .grid-time-label-divider-quarter
+						-moz-border-radius 1.5px
+						-webkit-border-radius 1.5px
+						border-radius 1.5px
+						height 3px
+						margin-left -3px
+						width 3px
+
+		& .grid-column-tables
+			left 0
+			overflow hidden
+			position absolute
+			width 61px
+			background #efefef
+			border-right 1px solid #ccc
+			bottom 0
+			text-align center
+			top 36px
+		& .grid-body
+			bottom 0
+			overflow auto
+			top 36px
+			left 62px
+			right 0
+			position absolute
+			background #e4e4e4
+			z-index 96
+			
+			
+			
