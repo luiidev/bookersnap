@@ -29,21 +29,13 @@ angular.module("App")
             vm.reservation.guest_list.splice(i, 1);
         };
 
-        vm.clear = function(key) {
-            console.log(vm.errors, true);
-            vm.errors[key].length = 0;
+        vm.clearErrors = function(key) {
+            if (Object.prototype.toString.call(vm.errors[key]) == "[object Array]") {
+                vm.errors[key].length = 0;
+            }
         };
 
         vm.save = function() {
-            // vm.resForm.$setSubmitted();
-            // vm.resForm.$setPristine();
-            // vm.resForm.$setDirty();
-            // vm.resForm.last_name.$setDirty();
-            // vm.resForm.$setValidity();
-            // vm.resForm.first_name.$setSubmitted();
-            // vm.resForm.$setDirty();
-            console.log(vm.resForm);
-            // if (vm.resForm.$invalid) return;
             console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};

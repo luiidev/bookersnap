@@ -1,8 +1,8 @@
 angular.module("App")
     .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", function($http, $q, ApiUrlMesas) {
         return {
-            getFormatAvailability: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/formatAvailability", data);
+            getFormatAvailability: function(date) {
+                return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
             },
             getAvailability: function(data) {
                 return $http.get(ApiUrlMesas + "/availability/basic", {
