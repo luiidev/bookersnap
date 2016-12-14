@@ -37,7 +37,10 @@ angular.module('reservation.service', [])
             return {
                 blackList: blackListMethods,
                 reservationMaster: function(date, reservation) {
-                    return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/"+ reservation : ""), { params : {date: date}});
+                    return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/" + reservation : ""), { params : {date: date}});
+                },
+                blockMaster: function(date, block) {
+                    return http.get(ApiUrlMesas + "/web-app/block" + (block ? "/" + block : ""), { params : {date: date}});
                 },
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
@@ -188,7 +191,8 @@ angular.module('reservation.service', [])
                     var objDefault;
                     var data = {};
 
-                    var now = moment().add((15 - (parseInt(moment().format("mm")) % 15)), "minutes").second(0);
+                    var minutes = parseInt(moment().format("mm"));
+                    var now = moment().add(-(minutes % 15), "minutes").second(0).millisecond(0);
                     var timeDefaultIsEstablished = false;
 
                     var addHour = function(date_ini, item, minutes) {
@@ -202,7 +206,7 @@ angular.module('reservation.service', [])
                         hours.push(hour);
 
                         if (!timeDefaultIsEstablished) {
-                            if (date_ini.isAfter(now)) {
+                            if (date_ini.isSameOrAfter(now)) {
                                 timeDefault = hour.time;
                                 objDefault = hour;
                                 timeDefaultIsEstablished = true;
@@ -326,7 +330,7 @@ angular.module('reservation.service', [])
                     }
                 });
                 item.name = zone.name;
-                item.id = zone.id
+                item.id = zone.id;
                 item.tables = tables;
                 dataZones.push(item);
                 Array.prototype.push.apply(dataZones.tables, tables);
@@ -855,13 +859,13 @@ angular.module('reservation.service', [])
             tablesSuggested: function(zones, cant, index) {
                 var tableSuggested = null;
                 angular.forEach(zones, function(zone, i) {
-                    if (index) if (i != index) return;
-                    console.log(index);
-                    console.log(zone.tables, cant);
+                    if (index >= 0) {
+                        if (i != index) {
+                            return;
+                        }
+                    }
                     angular.forEach(zone.tables, function(table) {
-                        console.log(cant >= table.minCover && cant <= table.maxCover);
                         if (cant >= table.minCover && cant <= table.maxCover) {
-                            console.log( table.minCover,  table.maxCover);
                             if (!table.occupied && !table.block) {
                                 if (!tableSuggested) tableSuggested = angular.copy(table);
                                 table.suggested = true;

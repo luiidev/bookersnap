@@ -40,12 +40,6 @@
                                 </i>
                             </a>
                         </li>
-                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'date'}" style="display: none">
-                            <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Creacion">
-                                <i class="zmdi zmdi-calendar zmdi-hc-fw">
-                                </i>
-                            </a>
-                        </li>
                     </ul>
                     <ul class="lv-actions actions box-mode-reservation">
                         <li>
@@ -111,7 +105,7 @@
                                 </span>
                             </div>
                             <div class="list">
-                                <a  class="item list-guest" >
+                                <a class="item list-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
@@ -123,7 +117,8 @@
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i> Lista
+                                    </i>
+                                    Lista
                                 </a>
                             </div>
                         </div>
@@ -284,14 +279,20 @@
                     </div>
                     <div class="tables" ng-click="vm.editReservation(item)">
                         <div class="item web">
-                            {{ item.reservation.tables[0].name }}
+                            <span ng-if="item.reservation.tables.length > 0">
+                                {{ item.reservation.tables[0].name }}
+                            </span>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
                         <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
                             <span class="table-name">
-                                {{ item.reservation.tables[0].name }}
+                                <span ng-if="item.reservation.tables.length > 0">
+                                    {{ item.reservation.tables[0].name }}
+                                </span>
+                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
@@ -309,7 +310,7 @@
         </div>
         <div class="content-book" ng-if="vm.bookView">
             <div class="item-book" item="item" ng-repeat="item in vm.listBookReserva">
-                <div class="item reservation" ng-click="vm.editReservation(item)">
+                <div class="item reservation" >
                     <div class="box-guest">
                         <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
                         </div>
@@ -321,7 +322,7 @@
                                 </span>
                             </div>
                             <div class="list">
-                                <a  class="item list-guest" >
+                                <a class="item list-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
@@ -333,13 +334,14 @@
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
                                     <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i> Lista
+                                    </i>
+                                    Lista
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="box-reservation">
-                        <div class="datetime">
+                        <div class="datetime" ng-click="vm.editReservation(item)">
                             <div class="time">
                                 {{ item.time_text }}
                             </div>
@@ -441,6 +443,13 @@
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
+                                    <a href="#" ng-click="vm.editReservation(item)">
+                                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+                                        </i>
+                                        Editar Reservación
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="#">
                                         <i class="zmdi zmdi-smartphone-iphone zmdi-hc-fw">
                                         </i>
@@ -478,16 +487,22 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="tables">
+                    <div class="tables" ng-click="vm.editReservation(item)">
                         <div class="item web">
-                            {{ item.reservation.tables[0].name }}
+                            <span ng-if="item.reservation.tables.length > 0">
+                                {{ item.reservation.tables[0].name }}
+                            </span>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
                         <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
                             <span class="table-name">
-                                {{ item.reservation.tables[0].name }}
+                                <span ng-if="item.reservation.tables.length > 0">
+                                    {{ item.reservation.tables[0].name }}
+                                </span>
+                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
