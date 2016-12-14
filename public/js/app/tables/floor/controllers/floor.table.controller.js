@@ -288,9 +288,9 @@ angular.module('floor.controller')
                 servers.data = response.servers;
                 shifts.data = response.shifts;
                 sourceTypes.data = response.sourceTypes;
+                tags.data = response.tags;
+                status.data = response.status;
                 config = response.config;
-                tags = response.tags;
-                status = response.status;
                 schedule = response.schedule;
 
                 loadTablesEdit(response.zones, response.blocks, response.reservations, response.servers);
