@@ -22,6 +22,9 @@ angular.module("App")
             },
             saveReservation: function(data) {
                 return $http.post(ApiUrlMesas + "/table/reservation/w", data);
+            },
+            cancelReservation: function(data) {
+                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + data);
             }
         };
     }])

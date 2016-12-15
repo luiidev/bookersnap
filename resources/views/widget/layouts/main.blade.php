@@ -38,6 +38,7 @@
 <script type="text/javascript" src="{{ asset('widget/js/app/filters/reservation.filter.js') }}"></script>
 <script type="text/javascript" src="{{ asset('widget/js/app/directives/reservation.directive.js') }}"></script>
 <script type="text/javascript" src="{{ asset('widget/js/app/controllers/error.controller.js') }}"></script>
+<script type="text/javascript" src="{{ asset('widget/js/app/controllers/confirmed.controller.js') }}"></script>
 
 </body>
 </html>

@@ -1,9 +1,8 @@
 angular.module("App")
-    .controller("reservationCtrl", ["$scope", "$location", "availabilityService", "utiles", function(vm, $location, service, utiles) {
+    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", function(vm, $window, $location, service, utiles) {
 
         vm.reservation= {};
         // vm.reservation.token = $location.search().key; //Nesecita domino para funcionar (.com ...)
-        vm.reservation.token = 123456789;
         vm.reservation.guest= {};
         vm.reservation.guest_list = [];
         vm.newGuest = "";
@@ -11,10 +10,6 @@ angular.module("App")
         vm.errors = {};
 
         vm.loading = false;
-
-        var translate = {
-            "guest.email": "correo"
-        };
 
         vm.addGuest =function(event) {
             if (event.keyCode == 13 || event.keyCode == 32) {
@@ -35,17 +30,20 @@ angular.module("App")
             }
         };
 
+        var redirect = function(key) {
+            $window.location.href = $location.protocol() + "://" + $location.host() + "/w/"+ microsite +"/confirmed?key=" + key;
+        };
+
         vm.save = function() {
             console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};
             service.saveReservation(vm.reservation)
                 .then(function(response) {
-                    alert("Se registro su reservacion");
-                    console.log(response.data);
+                    console.log(response.data.data);
+                    redirect(response.data.data);
                 }).catch(function(error) {
                     vm.errors = error.data.data;
-                    console.log(vm.errors);
                 }).finally(function() {
                     vm.loading = false;
                 });

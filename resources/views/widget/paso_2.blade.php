@@ -3,7 +3,7 @@
 @section("title", "Paramontino | Confirmar")
 
 @section("content")
-<div class="card" ng-controller="reservationCtrl">
+<div class="card" ng-controller="reservationCtrl" ng-model="reservation.token = '{{ $token or '' }}'">
     <div class="card-body card-padding">
 
         <div class="col-xs-12 col-sm-4 content-info">

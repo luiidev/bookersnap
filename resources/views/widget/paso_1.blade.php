@@ -43,7 +43,7 @@
                     <button class="btn btn-default btn-block" ng-hide="!loadingData" disabled="disabled" ng-bind="message"></button>
                 </div>
                 <div class="form-group col-xs-12 col-sm-6 col-md-4" ng-show="result && !loadingData" ng-repeat="item in result">
-                    <button class="btn btn-default btn-block" ng-disabled="item.availability" ng-bind="item.hour_format" ng-click="saveReservation(item)"></button>
+                    <button class="btn btn-default btn-block" ng-disabled="!item.availability" ng-bind="item.hour_format" ng-click="saveReservation(item)"></button>
                 </div>
             </form>
         </div>
