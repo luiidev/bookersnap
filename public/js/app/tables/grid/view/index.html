@@ -72,18 +72,18 @@
                         <div class="grid-body-container">
                             <div class="grid-body-rows-container">
                                 <div class="grid-body-rows-table" ng-repeat="item in [1,2,3,4,5,6,7,8,9]">
-                                    <span class="selectable">
-                                        <div class="grid-body-cell grid-time-divider-half" ng-click="vm.initReservationCreate('8:00')" ng-mouseover="vm.selectTimeReservationCreate()">
+                                    <span>
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:00',$index,'0')" ng-mousemove="vm.selectTimeReservationCreate('move','8:00',$index,'0')" ng-mouseup="vm.selectTimeReservationCreate('end','8:00',$index,'0')">
                                         </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter" ng-click="vm.initReservationCreate('8:15')" ng-mouseover="vm.selectTimeReservationCreate()">
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate('init','8:15',$index,'62')" ng-mousemove="vm.selectTimeReservationCreate('move','8:15',$index,'62')" ng-mouseup="vm.selectTimeReservationCreate('end','8:15',$index,'62')">
                                         </div>
-                                        <div class="grid-body-cell grid-time-divider-half" ng-click="vm.initReservationCreate('8:30')" ng-mouseover="vm.selectTimeReservationCreate()">
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:30',$index,'124')" ng-mousemove="vm.selectTimeReservationCreate('move','8:30',$index,'124')" ng-mouseup="vm.selectTimeReservationCreate('end','8:30',$index,'124')">
                                         </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter" ng-click="vm.initReservationCreate('8:45')" ng-mouseover="vm.selectTimeReservationCreate()">
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.initReservationCreate('init','8:45',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','8:45',$index)">
                                         </div>
-                                        <div class="grid-body-cell grid-time-divider-half" ng-click="vm.initReservationCreate('89:00')" ng-mouseover="vm.selectTimeReservationCreate()">
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','9:00',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','9:00',$index)">
                                         </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mouseover="vm.selectTimeReservationCreate()">
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate()">
                                         </div>
                                         <div class="grid-body-cell grid-time-divider-half">
                                         </div>
@@ -91,27 +91,23 @@
                                         </div>
                                         <div class="grid-body-cell grid-time-divider-half">
                                         </div>
-                                        <!-- hover reservation
-                                        <div class="grid-cell cell" style="transform: translateX(0px); z-index: 98;">
-                                            <div class="grid-cell-inner grid-cell-info grid-cell-info-creation" style="width: 249px">
+                                        <!-- hover reservation-->
+                                        <div class="grid-cell cell cell-item{{$index}}" style="z-index: 98;display: none">
+                                            <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation" style="z-index: 1;float: left">
+                                                <div class="grid-cell-quarter-hour" ng-mousemove="vm.moveQuarterHour(item)" ng-mouseup="vm.moveQuarterUp()" ng-repeat="item in vm.reservationCreate.timeTotal" style="background: none;">
+                                                </div>
+                                            </div>
+                                            <div class="grid-cell-inner grid-cell-info grid-cell-info-creation" style="background: #2c3e50;z-index: -1">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title">
                                                         New Reservation
                                                     </div>
                                                     <div class="cell-item-info-subtitle">
-                                                        8:00 AM
+                                                        {{ vm.reservationCreate.hourIni}}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation">
-                                                <div class="grid-cell-quarter-hour">
-                                                </div>
-                                                <div class="grid-cell-quarter-hour">
-                                                </div>
-                                                <div class="grid-cell-quarter-hour">
-                                                </div>
-                                            </div>
-                                        </div> -->
+                                        </div>
                                     </span>
                                 </div>
                             </div>
@@ -122,9 +118,3 @@
         </div>
     </section>
 </section>
-<style>
-    .selectable .ui-selecting { background: #FECA40; }
-  .selectable .ui-selected { background: #F39814; color: white; }
-  .selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  .selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
-</style>
