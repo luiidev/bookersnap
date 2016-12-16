@@ -824,21 +824,57 @@
 				& .list
 					display inline-block
 					bottom 2px
-					font-size .9em
+					font-size 1em
 					& .item
 						float left
 						padding 0px
 						padding-right 10px
 						color #adadad
 						cursor pointer
+						height 20px						
 						&:hover
 							color #000
+						&.num-guest
+							width initial
+							font-size 1em
+						&.emails
+							width initial
+							position relative		
+							& .icon
+								font-size 1.7em
+								float left
+								display inline-block
+								margin-right 10px
+							& .count
+								position absolute
+								background-color #fff
+								border 1px solid #adadad								
+								border-radius 5px
+								padding 0 5px
+								font-size .8em
+								color #000
+								left 1.2em
+								bottom -1px
 						&.note
 							width initial
 						&.list-guest
 							width initial
-						& .zmdi
-							font-size 1.6em
+							position relative
+							& .icon
+								font-size 1.7em
+								float left
+								display inline-block
+								margin-right 5px
+							& .count
+								position absolute
+								background-color #fff
+								border 1px solid #adadad								
+								border-radius 5px
+								padding 0 5px
+								font-size .8em
+								color #000
+								left 1.2em
+								bottom -1px
 		& .box-reservation
 			width 75%
 			float left
@@ -998,7 +1034,7 @@
 	.content-book
 		& .item-book
 			& .box-guest
-				width 30%
+				width 30%				
 			& .box-reservation
 				width 70%
 				& .datetime
@@ -1098,7 +1134,7 @@
 						font-weight 500
 					& .list
 						display inline-block
-					
+						font-size .9em					
 			& .box-reservation
 				width 50%
 				padding-right 75px
