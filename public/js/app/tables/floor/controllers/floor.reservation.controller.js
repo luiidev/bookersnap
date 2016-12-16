@@ -356,8 +356,8 @@ angular.module('floor.controller')
             //listTypeTurns();
         })();
     })
-    .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
-        function($rootScope, $state, $uibModalInstance, content, service, $q) {
+    .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q", "global",
+        function($rootScope, $state, $uibModalInstance, content, service, $q, global) {
 
             var er = this;
 
@@ -683,10 +683,10 @@ angular.module('floor.controller')
                 service.getGuest().then(function(guests) {
                     er.covers = guests;
                 });
-                er.statuses = content.status;
-                er.servers = content.servers;
-                er.tags = content.tags;
-                er.configuration = content.config;
+                er.statuses = global.status.data;
+                er.servers = global.servers.data;
+                er.tags = global.tags.data;
+                er.configuration = global.config;
                 resetTags();
                 parseInfo(content.reservation);
                 parseData(content.reservation);

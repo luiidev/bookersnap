@@ -1,9 +1,8 @@
 angular.module("App")
-    .controller("confirmedCtrl", ["$scope", "$window", "$location", "availabilityService", function(vm, $window, $location, availabilityService) {
-        // vm.token = $location.search().key; //Nesecita domino para funcionar (.com ...)
-
+    .controller("confirmedCtrl", ["$scope", "$window", "$location", "availabilityService", "_base_url", function(vm, $window, $location, availabilityService, _base_url) {
+ 
         vm.cancel = function() {
-            availabilityService.cancelReservation(vm.token)
+            availabilityService.cancelReservation(token)
                 .then(function() {
                     redirect();
                 }).catch(function() {
@@ -12,6 +11,6 @@ angular.module("App")
         };
 
         var redirect = function() {
-            $window.location.href = $location.protocol() + "://" + $location.host() + "/w/" + microsite;
+            $window.location.href = _base_url;
         };
     }]);
