@@ -4,6 +4,7 @@ angular.module('book.controller', [])
 
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
+        vm.btnRageCalendar = false;
 
         /**
          * Manejo de rango de fechas
@@ -94,6 +95,7 @@ angular.module('book.controller', [])
         vm.showDateRange = function(event) {
             setConfigUserDate('range');
             initDateEvent(event.currentTarget, true);
+            vm.btnRageCalendar = true;
         };
 
         /**
@@ -254,7 +256,8 @@ angular.module('book.controller', [])
                 thisMonth: false, //este mes
                 lastMonth: false, //mes pasado
                 range: false //rango de fechas
-            }
+            },
+            url: null
         };
 
         //Fechas formato string (2016-11-24) , para los filtros
@@ -588,8 +591,9 @@ angular.module('book.controller', [])
             var params_url = paramsFilterReservation(true);
             pushParamsUrl(params_url);
 
+            setUrlNavigationConfig(null);
+
             generatedListBookPagination(vm.datesText.start_date, vm.datesText.end_date);
-            // generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
         };
 
         vm.searchReservations = function() {
@@ -651,6 +655,14 @@ angular.module('book.controller', [])
             BookFactory.init($scope);
             loadConfigViewReservation();
             listNumGuest();
+        };
+
+        var setUrlNavigationConfig = function(url) {
+
+            url = paramsFilterReservation(true);
+            vm.configUserDefault.url = url;
+
+            BookConfigFactory.setConfig(vm.configUserDefault);
         };
 
         var listNumGuest = function() {
@@ -851,6 +863,7 @@ angular.module('book.controller', [])
         };
 
         var loadConfigViewReservation = function() {
+
             var config = BookConfigFactory.getConfig();
 
             vm.configUserDefault = (config === null) ? vm.configUserDefault : config;
@@ -971,6 +984,12 @@ angular.module('book.controller', [])
             }
         };
 
+        var reloadPageByUrl = function(params) {
+            console.log("reloadPageByUrl", params);
+            //setUrlNavigationConfig("");
+            $location.url("/mesas/book?" + params);
+        };
+
         var listTurnAvailable = function(date, date_end, reload, action) {
             action = (typeof action == "function") ? action : function() {};
 
@@ -1009,7 +1028,6 @@ angular.module('book.controller', [])
         var generatedListBookHistory = function(params, action) {
 
             params.page_size = vm.paginate_reservation.page_size;
-            //var params_url = paramsFilterReservation(false);
             var params_url = (vm.bookFilter.params_url === null) ? paramsFilterReservation(false) : vm.bookFilter.params_url;
 
             params.page = vm.paginate_reservation.page;
@@ -1086,7 +1104,6 @@ angular.module('book.controller', [])
                     if (vm.bookView === true) {
                         listBook = BookFactory.listBookReservation(data.reservations);
                         vm.listBookReserva = listBook;
-                        console.log("estadisticas ", angular.toJson(data.stadistics, true));
                     } else {
                         listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, data.reservations, data.blocks, data.availabilityTables);
                         vm.listBook = listBook;
@@ -1111,12 +1128,6 @@ angular.module('book.controller', [])
         };
 
         var generatedListBookP = function(params) {
-            /*  var params = {
-                  date: date,
-                  date_end: (date_end === null) ? date : date_end,
-              };*/
-
-            //console.log("generatedListBook ", angular.toJson(vm.bookFilter.params_url, true));
 
             if (vm.bookView === true) {
                 params.page_size = vm.paginate_reservation.page_size;
