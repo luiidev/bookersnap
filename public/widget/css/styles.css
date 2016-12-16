@@ -183,3 +183,16 @@ body {
 .help-block {
 	font-size: 12px;
 }
+
+.confirmed h2 {
+	font-size: 24px;
+	font-weight: 600;
+}
+
+.bs-detail {
+	margin-bottom: 15px;
+}
+
+.bs-detail span {
+	display: block;
+}

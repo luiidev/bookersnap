@@ -275,8 +275,8 @@ angular.module('block.controller', [])
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 0, true);
                         redirect();
-                    } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
+                    } else if (response.data.success === false) {
+                        messageAlert("Warning", response.data.msg.join("\n"), "warning", 0, true);
                     }
                 },
                 function error(response) {

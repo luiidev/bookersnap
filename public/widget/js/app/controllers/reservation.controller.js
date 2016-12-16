@@ -1,9 +1,8 @@
 angular.module("App")
-    .controller("reservationCtrl", ["$scope", "$location", "availabilityService", "utiles", function(vm, $location, service, utiles) {
+    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", function(vm, $window, $location, service, utiles) {
 
         vm.reservation= {};
         // vm.reservation.token = $location.search().key; //Nesecita domino para funcionar (.com ...)
-        vm.reservation.token = 123456789;
         vm.reservation.guest= {};
         vm.reservation.guest_list = [];
         vm.newGuest = "";
@@ -11,10 +10,6 @@ angular.module("App")
         vm.errors = {};
 
         vm.loading = false;
-
-        var translate = {
-            "guest.email": "correo"
-        };
 
         vm.addGuest =function(event) {
             if (event.keyCode == 13 || event.keyCode == 32) {
@@ -29,31 +24,26 @@ angular.module("App")
             vm.reservation.guest_list.splice(i, 1);
         };
 
-        vm.clear = function(key) {
-            console.log(vm.errors, true);
-            vm.errors[key].length = 0;
+        vm.clearErrors = function(key) {
+            if (Object.prototype.toString.call(vm.errors[key]) == "[object Array]") {
+                vm.errors[key].length = 0;
+            }
+        };
+
+        var redirect = function(key) {
+            $window.location.href = $location.protocol() + "://" + $location.host() + "/w/"+ microsite +"/confirmed?key=" + key;
         };
 
         vm.save = function() {
-            // vm.resForm.$setSubmitted();
-            // vm.resForm.$setPristine();
-            // vm.resForm.$setDirty();
-            // vm.resForm.last_name.$setDirty();
-            // vm.resForm.$setValidity();
-            // vm.resForm.first_name.$setSubmitted();
-            // vm.resForm.$setDirty();
-            console.log(vm.resForm);
-            // if (vm.resForm.$invalid) return;
             console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};
             service.saveReservation(vm.reservation)
                 .then(function(response) {
-                    alert("Se registro su reservacion");
-                    console.log(response.data);
+                    console.log(response.data.data);
+                    redirect(response.data.data);
                 }).catch(function(error) {
                     vm.errors = error.data.data;
-                    console.log(vm.errors);
                 }).finally(function() {
                     vm.loading = false;
                 });
