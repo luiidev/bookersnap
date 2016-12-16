@@ -2564,6 +2564,10 @@ li.divider
 	width 160px
 	.list-group
 		margin-bottom 0px
+	& .box-search-calendar-rg
+		display inherit 
+		text-align center 
+		margin-top 8px
 
 .guest-list
 	.form-group
@@ -2600,3 +2604,207 @@ li.divider
 
 #lienzo .dropTable 
 	background-color: rgb(76, 175, 80) !important
+	
+/*--------------GRID--------------*/
+.grid-layout
+	height 100%
+	margin 0
+	//overflow-x hidden
+	padding 0
+	position relative
+	-moz-user-select -moz-none
+	-ms-user-select none
+	-webkit-user-select none
+	user-select none
+
+    & .grid-container 
+		position relative 
+		flex 1 
+		z-index 1
+	& .grid-inner-container
+		& .grid-header
+			background #efefef
+			border-bottom 1px solid #ccc
+			font-size 12px
+			height 35px
+			overflow hidden
+			position relative
+			z-index 2
+			& .grid-time-label-out
+				left 62px
+				position absolute
+				right 0
+				height 36px
+				overflow visible
+				white-space nowrap
+				top 0
+			& .grid-time-label-in 
+				& .grid-time-label-cell
+					max-width 62px
+					min-width 62px
+					width 62px
+					display table-cell
+					border-left 1px solid transparent
+					height 36px;
+					vertical-align middle
+					& .grid-time-label-text
+						margin-left -14px
+					& .grid-time-label-divider
+						background #adadad
+						display inline-block
+						vertical-align middle
+					& .grid-time-label-divider-quarter
+						-moz-border-radius 1.5px
+						-webkit-border-radius 1.5px
+						border-radius 1.5px
+						height 3px
+						margin-left -3px
+						width 3px
+					& .grid-time-label-divider-half
+						-moz-border-radius 2.5px
+						-webkit-border-radius 2.5px
+						border-radius 2.5px
+						height 5px
+						margin-left -4px
+						width 5px
+
+		& .grid-column-tables
+			left 0
+			//overflow hidden
+			position relative
+			width 61px
+			background #efefef
+			border-right 1px solid #ccc
+			bottom 0
+			text-align center
+			top 0
+			& .grid-column-tables-inner
+				width 62px
+				& .grid-column-tables-column
+					width 100%
+					border-bottom solid #d0d0d0 2px
+					& .grid-column-tables-cell
+						border-bottom 1px solid #ccc
+						width 62px
+						display table
+						& .grid-column-tables-cell-text
+							text-align center
+							height 62px
+							width 62px
+							display table-cell
+							vertical-align middle
+							& .grid-table-name
+								font-size 14px
+								font-weight bold
+							& .grid-table-size 
+								font-size 11px
+								margin-top 2px
+														
+		& .grid-body
+			bottom 0
+			//overflow auto
+			top 35px
+			left 61px
+			right 0
+			position absolute
+			background #e4e4e4
+			z-index 96
+			& .grid-time-divider-half
+				border-left 1px #e4e4e4 solid
+			& .grid-time-divider-quarter
+				border-left 1px dashed #eee
+			& .grid-body-container
+				background #fff
+				border-right solid #d0d0d0 2px
+				border-bottom solid #d0d0d0 2px
+				position absolute
+				white-space nowrap
+				& .grid-body-rows-container
+					position relative
+					& .grid-body-rows-table
+						position relative
+						height 63px
+						& .grid-body-cell
+							border-bottom 1px solid #e4e4e4
+							text-align center
+							max-width 62px
+							min-width 62px
+							width 62px
+							height 63px
+							cursor pointer
+							display inline-block
+							-moz-box-sizing border-box
+							-webkit-box-sizing border-box
+							box-sizing border-box
+							float left
+							&:hover
+								background-color #eee
+				
+							
+						
+				
+			
+			
+			
+	& .grid-cell 
+		height 62px
+		top 0
+		cursor pointer
+		& .grid-cell-inner
+			-moz-box-sizing border-box
+			-webkit-box-sizing border-box
+			box-sizing border-box
+			height 100%
+			width 100%
+			position absolute
+		& .grid-cell-quarter-hour
+			height 100%
+			width 62px
+			float left
+		& .grid-cell-underlay-creation 
+			& .grid-cell-quarter-hour
+				background #2c3e50
+				
+		& .grid-cell-layer
+			width 100%
+			height 100%
+				
+		& .grid-cell-underlay 
+			z-index 0
+			overflow hidden
+		& .grid-cell-info
+			z-index 5
+			padding 5px 0
+			& .cell-item-info
+				padding-left 10px
+				& .cell-item-info-title
+					white-space nowrap
+					overflow hidden
+					-ms-text-overflow ellipsis
+					-o-text-overflow ellipsis
+					text-overflow ellipsis
+					font-weight 500
+					max-width 250px
+					padding-right 55px
+				& .cell-item-info-subtitle
+					white-space nowrap
+					overflow hidden
+					-ms-text-overflow ellipsis
+					-o-text-overflow ellipsis
+					text-overflow ellipsis
+					color #fff
+					font-size 16px
+					padding-top 6px
+		& .grid-cell-info-creation
+			color #fff
+			border-color #2c3e50		
+	& .cell
+		-moz-user-select -moz-none
+		-ms-user-select none
+		-webkit-user-select none
+		user-select none
+		position absolute
+		color #333
+		font-size 17px
+		height 63px
+		line-height normal
