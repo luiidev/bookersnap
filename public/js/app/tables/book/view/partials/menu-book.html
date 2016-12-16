@@ -113,7 +113,7 @@
                         <div class="dp-content">
                             <uib-datepicker max-date="vm.endDate" ng-model="vm.startDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
                             </uib-datepicker>
-                            <uib-datepicker min-date="vm.startDate" ng-change="vm.changeDateEnd(1)" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
+                            <uib-datepicker min-date="vm.startDate" ng-model="vm.endDate" ng-show="vm.dp_range" show-weeks="false" starting-day="1">
                             </uib-datepicker>
                             <div class="dp-menu">
                                 <div class="list-group">
@@ -151,6 +151,11 @@
                                         Rango de fechas
                                         <!--<i class="zmdi zmdi-check zmdi-hc-fw pull-right" ng-if="vm.configUserDefault.rangeDate.range">
                                         </i>-->
+                                    </a>
+                                    <a class="box-search-calendar-rg" href="javascript:void(0)" ng-show="vm.btnRageCalendar">
+                                        <button class="btn btn-primary" ng-click="vm.changeDateEnd(1)">
+                                            Buscar
+                                        </button>
                                     </a>
                                 </div>
                             </div>

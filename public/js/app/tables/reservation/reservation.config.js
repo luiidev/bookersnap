@@ -56,7 +56,7 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                     }
                 },
             }).state('mesas.book-reservation-edit', {
-                url: '/book/reservation/:date/edit/:id',
+                url: '/book/reservation/:date/edit/:id?date_end&turns&zones&sources&search_text&sort',
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/reservation/view/index.html',

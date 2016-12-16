@@ -624,3 +624,12 @@ var calculateMinutesTime = function(date) {
 
     return minutes;
 };
+
+//Return parametros de la url despues de ? ejemplo : date=2016-12-12&date_end=2016-12-18&turns=6,26,1
+var subtractParamsUrl = function(url) {
+    var index = url.indexOf("?");
+    url = url.substring(index);
+    url = url.replace("?", "");
+
+    return url;
+};
