@@ -117,7 +117,7 @@ angular.module('book.service', [])
                             var hoursTest = moment(reservation.date_reservation +' '+reservation.hours_reservation);
                             book.push({
                                 time: hour.time,
-                                time_text: hoursTest.format("hh:mm a"),
+                                time_text: hoursTest.format("HH:MM"),
                                 date_text: hoursTest.format("L"),
                                 turn_id: hour.turn_id,
                                 block: null,
@@ -152,7 +152,7 @@ angular.module('book.service', [])
                     var hoursTest = moment(reserva.date_reservation +' '+reserva.hours_reservation);
                     book.push({
                         time: reserva.hours_reservation,
-                        time_text: hoursTest.format("hh:mm a"),
+                        time_text: hoursTest.format("hh:mm A"),
                         date_text: hoursTest.format("L"),
                         turn_id: 0,
                         block: null,
