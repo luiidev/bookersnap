@@ -3,9 +3,11 @@
 @section("title", "Paramontino | Confirmar")
 
 @section("content")
-<div class="card" ng-controller="reservationCtrl" ng-model="reservation.token = '{{ $token or '' }}'">
+<script type="text/javascript">
+    var token = "{{ $token or '' }}";
+</script>
+<div class="card" ng-controller="reservationCtrl">
     <div class="card-body card-padding">
-
         <div class="col-xs-12 col-sm-4 content-info">
             <div class="reservation-info">
                 <div class="site-info">
@@ -22,12 +24,12 @@
                     <span>{{ $reservation->num_guest }} Invitados</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:void(0)">Editar Reservación</a>
+                    <a href="javascript:void(0)" ng-click="redirectBase()">Editar Reservación</a>
                 </div>
                 <div class="info watch">
                     <span>Tiempo para completar</span>
                     <div class="timer">
-                        <time-down expire="'{{ $time }}'"></time-down>
+                        <time-down expire="'{{ $time }}'" on-finish="redirectBase()"></time-down>
                     </div>
                 </div>
             </div>

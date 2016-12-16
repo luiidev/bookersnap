@@ -1,8 +1,8 @@
 angular.module("App")
-    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", function(vm, $window, $location, service, utiles) {
+    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", "_base_url", function(vm, $window, $location, service, utiles, _base_url) {
 
         vm.reservation= {};
-        // vm.reservation.token = $location.search().key; //Nesecita domino para funcionar (.com ...)
+        vm.reservation.token = token;
         vm.reservation.guest= {};
         vm.reservation.guest_list = [];
         vm.newGuest = "";
@@ -31,7 +31,11 @@ angular.module("App")
         };
 
         var redirect = function(key) {
-            $window.location.href = $location.protocol() + "://" + $location.host() + "/w/"+ microsite +"/confirmed?key=" + key;
+            $window.location.href = _base_url  +"/confirmed?key=" + key;
+        };
+
+        vm.redirectBase = function() {
+            $window.location.href = _base_url;
         };
 
         vm.save = function() {
@@ -49,11 +53,4 @@ angular.module("App")
                 });
         };
 
-        /**
-         * Init
-         * @return Void
-         */
-        (function() {
-
-        })();
     }]);
