@@ -48,33 +48,115 @@
         </button>
     </li>
     <li class="item-date">
-        <div class="m-l-15" ng-class="{'pull-left' : vm.bookView}">
-            <div class="day">
+        <div class="m-l-15" ng-class="{'pull-left' : vm.bookView}" ng-hide="vm.bookView">
+            <div class="day text-uppercase">
                 {{ vm.datesText.start_date | date : 'EEEE d' : 'America/Lima'}}
             </div>
-            <div class="month">
+            <div class="month text-uppercase">
                 {{ vm.datesText.start_date | date : ' MMMM y' : 'America/Lima'}}
             </div>
         </div>
-        <div class="pull-right m-r-15" ng-if="vm.bookView">
+        <!-- <div class="pull-right m-r-15" ng-if="vm.bookView">
             <div class="day">
                 {{ vm.datesText.end_date | date : 'EEEE d' : 'America/Lima'}}
             </div>
             <div class="month">
                 {{ vm.datesText.end_date | date : ' MMMM y' : 'America/Lima'}}
             </div>
-        </div>
+        </div> -->
     </li>
-    <li class="item-nav pull-right">
-        <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
+    <li class="item-nav pull-right dropdown dropup" uib-dropdown="">
+        <button  class="item-action btn btn-default-blue btn-sm text-center" aria-expanded="false" aria-haspopup="true" type="button" uib-dropdown-toggle="">
             <span class="icon zmdi zmdi-settings zmdi-hc-2x">
             </span>
             <div class="title">
                 Ajustes
             </div>
-        </button>
+        </button>        
+        <ul class="dropdown-menu">
+            <li>
+                <a><strong>AJUSTES</strong></a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()">
+                    <label class="ts-label reservation" for="ts100">
+                        Reservas Liberadas
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Reservas Cancelada
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Bloqueos
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Origen de reservación
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Consumo de reservación
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Mensajes Enviados
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <label class="ts-label reservation" for="ts100">
+                        Lista de invitados
+                    </label>
+                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts100">
+                        </label>
+                    </input>
+                </a>
+            </li>
+        </ul>
     </li>
-    <li class="item-nav pull-right">
+    <li class="item-nav pull-right" >
         <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
             <span class="icon zmdi zmdi-local-printshop zmdi-hc-2x">
             </span>
@@ -83,13 +165,36 @@
             </div>
         </button>
     </li>
-    <li class="item-nav pull-right">
-        <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
+    <li class="item-nav pull-right dropdown dropup" uib-dropdown="">
+        <button class="item-action btn btn-default-blue btn-sm text-center" aria-expanded="false" aria-haspopup="true" type="button" uib-dropdown-toggle="">
             <span class="icon zmdi zmdi-alert-circle-o zmdi-hc-2x">
             </span>
             <div class="title">
                 Leyenda
             </div>
         </button>
+        <ul class="dropdown-menu">          
+            <li>
+                <a><strong>LEYENDA</strong></a>
+            </li>
+            <li>
+                <a><i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres</a>
+            </li>
+            <li>
+                <a><i class="zmdi zmdi-female zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Mujeres</a>
+            </li>
+            <li>
+                <a><i class="zmdi zmdi-face zmdi-hc-fw zmdi-hc-lg" style="color:#ffa829"></i> Niños</a>
+            </li>
+            <li>
+                <a><i class="tm-icon zmdi zmdi-email zmdi-hc-fw  zmdi-hc-lg"></i> Mensajes enviados</a>
+            </li>
+            <li>
+                <a><i class="zmdi zmdi-file-text zmdi-hc-fw  zmdi-hc-lg"></i> Lista de invitados</a>
+            </li>
+            <li>
+                <a><i class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red"></i> Reservas de PIE</a>
+            </li>
+        </ul>
     </li>
 </ul>
