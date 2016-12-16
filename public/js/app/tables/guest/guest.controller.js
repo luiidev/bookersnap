@@ -4,17 +4,24 @@ angular.module('guest.controller', [])
         var vm = this;
 
         vm.guestList = [];
+        vm.name = "";
 
         vm.init = function() {
-            vm.guestAll();
+            vm.guestAll(null);
         };
 
         vm.configScrollBar = optionsScrollBarPLugin('y', 'light', '100%');
 
-        vm.guestAll = function() {
-            GuestFactory.guestList().then(function success(response) {
+        vm.guestAll = function(params) {
+
+            params = (params !== null) ? params : "";
+            params = getAsUriParameters(params);
+
+            GuestFactory.guestList(params).then(function success(response) {
 
                 vm.guestList = response;
+
+                console.log("guestAll", angular.toJson(vm.guestList, true));
 
                 vm.showGuest(vm.guestList);
 
@@ -27,6 +34,15 @@ angular.module('guest.controller', [])
             $state.go("mesas.guest.view", {
                 'guest': guestData[0].id
             });
+        };
+
+        vm.searchGuest = function() {
+
+            var params = {
+                name: vm.name
+            };
+
+            vm.guestAll(params);
         };
 
         vm.init();

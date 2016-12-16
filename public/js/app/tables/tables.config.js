@@ -11,7 +11,6 @@
             'calendar.app',
             'floor.app',
             'reservation.app',
-            'bookersnap.services',
             'customtag.app',
             'configuration.app',
             'availability.app',
@@ -22,9 +21,9 @@
         /*.constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
         .constant("ApiUrlMesas", 'http://weblaravel.studework.com/v1/es/microsites/' + idMicrositio)
         .constant("ApiUrlRoot", 'http://weblaravel.studework.com/v1/es')*/
-        .constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
-        .constant("ApiUrlMesas", 'http://apimesas.studework.info/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://apimesas.studework.info/v1/es')
+        .constant("UrlServerNotify", "http://localhost:1337")
+        .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
+        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
