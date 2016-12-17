@@ -751,8 +751,8 @@ angular.module('book.controller', [])
             var params_url = {
                 date: vm.datesText.start_date,
                 date_end: vm.datesText.end_date,
-                status: ($stateParams.status === undefined || vm.bookFilter.status.toString() !== "") ? vm.bookFilter.status.toString() : $stateParams.status,
-                blocks: ($stateParams.blocks === undefined || vm.bookFilter.blocks == true) ? vm.bookFilter.blocks.toString() : $stateParams.blocks,
+                /*status: ($stateParams.status === undefined || vm.bookFilter.status.toString() !== "") ? vm.bookFilter.status.toString() : $stateParams.status,
+                blocks: ($stateParams.blocks === undefined || vm.bookFilter.blocks == true) ? vm.bookFilter.blocks.toString() : $stateParams.blocks,*/
                 turns: ($stateParams.turns === undefined || vm.bookFilter.typeTurn.toString() !== "") ? vm.bookFilter.typeTurn.toString() : $stateParams.turns,
                 zones: ($stateParams.zones === undefined || vm.bookFilter.zones.toString() !== "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
                 sources: ($stateParams.sources === undefined || vm.bookFilter.sources.toString() !== "") ? vm.bookFilter.sources.toString() : $stateParams.sources,

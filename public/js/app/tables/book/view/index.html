@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="content-book" ng-if="!vm.bookView">
-            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView | blocksFilter:vm.bookFilter.blocks:vm.bookView">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE

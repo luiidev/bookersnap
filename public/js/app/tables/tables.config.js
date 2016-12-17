@@ -11,12 +11,10 @@
             'calendar.app',
             'floor.app',
             'reservation.app',
-            'bookersnap.services',
             'customtag.app',
             'configuration.app',
             'availability.app',
             'grid.app'
-
         ])
         .constant("IdMicroSitio", idMicrositio)
         /*.constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
