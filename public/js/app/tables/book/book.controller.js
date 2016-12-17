@@ -266,7 +266,27 @@ angular.module('book.controller', [])
                 lastMonth: false, //mes pasado
                 range: false //rango de fechas
             },
-            url: null
+            url: null,
+            showInfo: {
+                reservation: {
+                    consume:{
+                        selected: true,
+                    },
+                    messages:{
+                        selected: true,
+                    },
+                    listguests: {
+                        selected: true,
+                    },
+                    source: {
+                        selected: true,
+                    }                    
+                },
+                menu: {
+                    stadistics: true,
+                    filters: true,
+                }                
+            }
         };
 
         //Fechas formato string (2016-11-24) , para los filtros
@@ -341,6 +361,7 @@ angular.module('book.controller', [])
                         status.push(6);
                     }
                     vm.bookFilter.noStatus = status;
+                    BookFactory.addNoStatusByFilter(value, vm.bookFilter.noStatus, vm.status);
                     break;
                 case 'blocks':
                     vm.bookFilter.options.blocks = !vm.bookFilter.options.blocks;
@@ -1065,6 +1086,7 @@ angular.module('book.controller', [])
                 function success(response) {
                     response = response.data;
 
+                    vm.status = response.data.status;
                     vm.turns = response.data.shifts;
                     vm.sources = response.data.sourceTypes;
                     vm.zones = response.data.zones;

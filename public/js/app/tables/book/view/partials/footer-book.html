@@ -182,16 +182,44 @@
                 Leyenda
             </div>
         </button>
-        <ul class="dropdown-menu drag leyend">
+        <ul class="dropdown-menu drag">
+            <li>
+                <a ng-click="$event.stopPropagation()">
+                    <strong>ESTADOS  DE RESERVACIONES</strong>
+                </a>
+            </li>
+            <li>
+                <a ng-click="$event.stopPropagation()">
+                    <i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres
+                </a>
+            </li>
             <li>
                 <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
-                    <div class="title"><strong>ESTADOS  DE RESERVACIONES</strong></div>
-                   <span class="item"> <i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres</span>
-                   <span class="item"> <i class="zmdi zmdi-female zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Mujeres</span>
-                   <span class="item"> <i class="zmdi zmdi-face zmdi-hc-fw zmdi-hc-lg" style="color:#ffa829"></i> Niños</span>
-                   <span class="item"><i class="tm-icon zmdi zmdi-email zmdi-hc-fw  zmdi-hc-lg"></i> Mensajes enviados</span>
-                   <span class="item"><i class="zmdi zmdi-file-text zmdi-hc-fw  zmdi-hc-lg"></i> Lista de invitados</span>
-                   <span class="item"><i class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red"></i> Reservas de PIE</span>
+                    <i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="zmdi zmdi-female zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Mujeres
+                </a>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="zmdi zmdi-face zmdi-hc-fw zmdi-hc-lg" style="color:#ffa829"></i> Niños
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="tm-icon zmdi zmdi-email zmdi-hc-fw  zmdi-hc-lg"></i> Mensajes enviados
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                   <i class="zmdi zmdi-file-text zmdi-hc-fw  zmdi-hc-lg"></i> Lista de invitados
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                   <i class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red"></i> Reservas de PIE
                 </a>
             </li>
         </ul>

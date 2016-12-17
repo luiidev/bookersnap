@@ -1,5 +1,5 @@
 angular.module('floor.controller')
-    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory,
+    .controller('reservationController', function($scope, $rootScope, $uibModal, $interval, $timeout, FloorFactory, ServerDataFactory,
         TypeFilterDataFactory, FloorDataFactory, global, reservationService) {
         var rm = this;
 
@@ -50,6 +50,27 @@ angular.module('floor.controller')
             checked: false,
         }];
 
+
+        var inspectToleranceReservation = function(reservation){
+            if(rm.configuracion && reservation.status.id < 4){
+                var nowdate = moment();
+                var horareservacion = moment(reservation.datetime_input);
+                var diferece = horareservacion.diff(nowdate)/60000; // DIFERENCIA EN MINUTOS
+
+                var time_tolerance = rm.configuracion.time_tolerance;
+
+                if(diferece >= 0){
+                    reservation.class = 'success';
+                }else {
+                    if(-diferece < time_tolerance){
+                        reservation.class = 'warning';
+                    }else{
+                        reservation.class = 'danger';
+                    }
+                }
+            }
+        };
+
         var statistics = function(action) {
             var total = 0;
             var men = 0;
@@ -57,7 +78,17 @@ angular.module('floor.controller')
             var children = 0;
             rm.typeRes = [];
 
-            angular.forEach(rm.reservations.data, function(reservation, index) {
+
+            var reservations = rm.reservations.data;
+            angular.forEach(reservations, function(reservation, index) {
+
+                reservation.class = 'success';
+                inspectToleranceReservation(reservation);
+
+                $interval(function() {
+                    inspectToleranceReservation(reservation);
+                }, 60000);
+
                 men += reservation.num_people_1;
                 women += reservation.num_people_2;
                 children += reservation.num_people_3;
@@ -85,7 +116,7 @@ angular.module('floor.controller')
 
             rm.total_reservas = rm.typeRes.total_reservas;
 
-            rm.res_listado = Array.prototype.concat.call(angular.copy(rm.reservations.data), angular.copy(rm.blocks.data));
+            rm.res_listado = Array.prototype.concat.call(reservations, angular.copy(rm.blocks.data));
             rm.getZone();
         };
 

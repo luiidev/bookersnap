@@ -349,6 +349,14 @@ angular.module('book.service', [])
                 });
             },
             //Habilita en la vista los sources que hallamos marcados
+            setCheckedNoStatus: function(status, statusId, checked) {
+                angular.forEach(status, function(state, key) {
+                    if (state.id == statusId) {
+                        state.checked = checked;
+                    }
+                });
+            },
+            //Habilita en la vista los sources que hallamos marcados
             setCheckedSource: function(sources, sourceId, checked) {
                 angular.forEach(sources, function(source, key) {
                     if (source.id == sourceId) {
@@ -399,6 +407,20 @@ angular.module('book.service', [])
                     });
                 }
             },
+
+            //Agrega los sources (id) a la lista de marcados
+            addNoStatusByFilter: function(statusId, filterNoStatus, statusList) {
+                var self = this;
+                console.log(':D ', status, filterNoStatus, statusList);
+                var index = filterNoStatus.indexOf(statusId);
+                if (index == -1) {
+                    self.setCheckedNoStatus(statusList, statusId, false);
+                } else {
+                    filterNoStatus.push(statusId);
+                    self.setCheckedNoStatus(statusList, statusId, true);
+                }
+            },
+
             //Agrega los sources (id) a la lista de marcados
             addSourcesByFilter: function(source, filterSources, sources, sourceAll) {
                 var self = this;
