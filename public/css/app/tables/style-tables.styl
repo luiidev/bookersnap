@@ -900,6 +900,28 @@
 					display block
 					margin-top 16px
 					padding 5px 0px
+					&.reserved
+						background-color orange
+						color #fff
+					&.confirmed
+						background-color brown
+						color #fff
+					&.waiting
+						background-color green
+						color #fff
+					&.sitting
+						background-color blue
+						color #fff
+					&.released
+						background-color white
+						border 1px solid #000
+						color #000
+					&.canceled
+						background-color red
+						color #fff
+					&.absent
+						background-color red
+						color #fff
 			& .source
 				float right
 				width 10%
@@ -975,6 +997,32 @@
 					display none
 					color #fff
 					padding-top 0px
+					&.reserved
+						background-color orange
+						color #fff
+					&.confirmed
+						background-color brown
+						color #fff
+					&.waiting
+						background-color green
+						color #fff
+					&.sitting
+						background-color blue
+						color #fff
+					&.released
+						background-color white
+						border 1px solid #000
+						color #000
+					&.canceled
+						background-color red
+						color #fff
+					&.absent
+						background-color red
+						color #fff
+					& .standing-people
+						color red
+						&.canceled,.absent
+							color #fff
 					& .table-name
 						height 30px
 						width 100%
@@ -1544,25 +1592,39 @@ $background-tables-head = #eee
 	bottom 0px
 	background-color #424242
 	& .item-date
-		width: 100%
-		position: absolute
-		float: left
-		text-align: center
-		margin-left: -445px
-		padding-left: 445px
-		padding-right: 300px
-		margin-top: 10px
-		color: #fff
-		height: 100%
+		width 100%
+		position absolute
+		float left
+		text-align center
+		margin-left -445px
+		padding-left 445px
+		padding-right 300px
+		margin-top 10px
+		color #fff
+		height 100%
 		z-index -1
 	& ul.nav
 		& .item-nav
 			& .dropdown-menu
 				&:not([class*=bgm-])>li>a
 					color #fff
-				&.setings
+					&.items-ws-normal
+						white-space normal
+						& .title
+							width 100%
+							margin-bottom 10px
+							display inline-block
+						& .item
+							margin-right 10px
+							margin-bottom 10px
+							display inline-block
+				&.drag
 					background-color #424242
 					color #fff
+					&.leyend
+						position fixed
+						bottom 58px
+						width 100%						
 footer
 	ul.nav
 		height 100%

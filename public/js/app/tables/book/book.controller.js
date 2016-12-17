@@ -195,8 +195,8 @@ angular.module('book.controller', [])
                 turnAll: false,
                 sourcesAll: false,
                 zonesAll: false,
-                noStatusFree:true,
-                noStatusCancel:true,
+                noStatusFree: true,
+                noStatusCancel: true,
                 blocks: true,
             },
             text: '',
@@ -231,6 +231,10 @@ angular.module('book.controller', [])
                 guest: 'guest.desc',
                 table: 'table.desc'
             }
+        };
+
+        vm.hideFields = {
+
         };
 
         //Book View (Reservaciones)
@@ -296,7 +300,7 @@ angular.module('book.controller', [])
         };
 
         /*Filtros de ajustes en footer */
-        vm.filterAjustes = function(option){
+        vm.filterAjustes = function(option) {
             switch (option) {
                 case 'free':
                     vm.filterBook('noStatus', 5);
@@ -306,7 +310,7 @@ angular.module('book.controller', [])
                     break;
                 case 'blocks':
                     vm.filterBook('blocks', null);
-                break;
+                    break;
             }
         }
 
@@ -324,18 +328,18 @@ angular.module('book.controller', [])
                     break;
                 case 'noStatus':
                     var status = [];
-                    if(value == 5){
-                        vm.bookFilter.options.noStatusFree = !vm.bookFilter.options.noStatusFree;                        
+                    if (value == 5) {
+                        vm.bookFilter.options.noStatusFree = !vm.bookFilter.options.noStatusFree;
                     }
-                    if(value == 6){
-                        vm.bookFilter.options.noStatusCancel = !vm.bookFilter.options.noStatusCancel;                        
+                    if (value == 6) {
+                        vm.bookFilter.options.noStatusCancel = !vm.bookFilter.options.noStatusCancel;
                     }
-                    if(!vm.bookFilter.options.noStatusFree){
+                    if (!vm.bookFilter.options.noStatusFree) {
                         status.push(5);
                     }
-                    if(!vm.bookFilter.options.noStatusCancel){
+                    if (!vm.bookFilter.options.noStatusCancel) {
                         status.push(6);
-                    }                    
+                    }
                     vm.bookFilter.noStatus = status;
                     break;
                 case 'blocks':
@@ -701,7 +705,7 @@ angular.module('book.controller', [])
         var setUrlNavigationConfig = function(url) {
 
             url = paramsFilterReservation(true);
-            vm.configUserDefault.url = url;            
+            vm.configUserDefault.url = url;
             BookConfigFactory.setConfig(vm.configUserDefault);
         };
 
