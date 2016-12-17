@@ -17,6 +17,7 @@ Route::get("/w/{site}/", "WidgetController@index")->name("widget");
 
 Route::get("/w/{site}/reserve/", "WidgetController@confirm");
 Route::post("/w/{site}/reserve/", "WidgetController@store");
+Route::get("/w/{site}/confirmed/", "WidgetController@confirmed");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

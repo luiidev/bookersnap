@@ -13,6 +13,15 @@ angular.module('book.service', [])
             getZones: function(params) {
                 zones = CalendarService.GetZones(params.date_ini, params.date_end, params.reload);
                 return zones;
+            },
+            getBook: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book?" + params);
+            },
+            getBookReservations: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book/history/reservations?" + params);
+            },
+            getBookHistory: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/book/history?" + params);
             }
         };
     })
@@ -105,9 +114,11 @@ angular.module('book.service', [])
                         }
 
                         angular.forEach(existsReservation.data, function(reservation, key) {
+                            var hoursTest = moment(reservation.date_reservation +' '+reservation.hours_reservation);
                             book.push({
                                 time: hour.time,
-                                time_text: hour.name,
+                                time_text: hoursTest.format("hh:mm A"),
+                                date_text: hoursTest.format("L"),
                                 turn_id: hour.turn_id,
                                 block: null,
                                 reservation: reservation,
@@ -129,6 +140,28 @@ angular.module('book.service', [])
                 //console.log("books " + angular.toJson(tablesAvailability, true));
                 //book = self.assignAvailabilityTable(book, reservations, bookView);
                 //console.log("books " + angular.toJson(book, true));
+                return book;
+            },
+            listBookReservation: function(reservations) {
+                var book = [];
+                var self = this;
+
+                reservations = self.parseReservations(reservations, true);
+                angular.forEach(reservations, function(reserva, key) {
+
+                    var hoursTest = moment(reserva.date_reservation +' '+reserva.hours_reservation);
+                    book.push({
+                        time: reserva.hours_reservation,
+                        time_text: hoursTest.format("hh:mm A"),
+                        date_text: hoursTest.format("L"),
+                        turn_id: 0,
+                        block: null,
+                        reservation: reserva,
+                        available: false,
+                        tables: []
+                    });
+                });
+
                 return book;
             },
             //Asignamos disponibilidad si hay reservas,analizamos el tiempo de duración
@@ -203,7 +236,6 @@ angular.module('book.service', [])
                 return exists;
             },
             //Asignamos las mesas con disponibilidad
-
             assignTablesAvailabilityBook: function(book, tables, reservations, bookView) {
                 var self = this;
                 var indexHour = getIndexHour(book.time, 0);

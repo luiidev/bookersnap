@@ -1,8 +1,9 @@
 angular.module("App")
     .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", function($http, $q, ApiUrlMesas) {
+        var token = "abcdefghijklmnopqrstuvwyz";
         return {
-            getFormatAvailability: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/formatAvailability", data);
+            getFormatAvailability: function(date) {
+                return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
             },
             getAvailability: function(data) {
                 return $http.get(ApiUrlMesas + "/availability/basic", {
@@ -15,13 +16,20 @@ angular.module("App")
                     }
                 });
             },
-            getEvents: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/events", {
-                    params: data
-                });
+            saveTemporalReserve: function(data) {
+                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": token}});
             },
             saveReservation: function(data) {
                 return $http.post(ApiUrlMesas + "/table/reservation/w", data);
+            },
+            cancelReservation: function(token) {
+                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + token);
+            },
+            cancelTemporalReservation: function(token) {
+                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + token);
+            },
+            searchTemporalReserve: function() {
+                return $http.get(ApiUrlMesas + "/reservationtemporal/" + token);
             }
         };
     }])
@@ -55,19 +63,12 @@ angular.module("App")
                 }
 
                 return timeDefault;
-            },
-            errorTranslate: function(errors, translate) {
-                angular.forEach(translate, function(value, index) {
-                    console.log(value, index);
-                    if (errors.hasOwnProperty(index)) {
-                        angular.forEach(errors[index], function(message, msg_Index) {
-                            errors[index][msg_Index] = message.replace(message.match(/\{(.*)\}/).shift(), value);
-                            console.log(errors[index][msg_Index]);
-                        });
-                    }
-                });
-
-                return errors;
             }
         };
+    }])
+    .factory("_base_url", ["$location", function($location) {
+
+        var _base_url = $location.protocol() + "://" + $location.host() + "/w/" + microsite;
+
+        return _base_url;
     }]);

@@ -40,37 +40,8 @@
                                 </i>
                             </a>
                         </li>
-                        <li ng-class="{'active' : vm.bookOrderBy.resBlock.value === 'date'}" style="display: none">
-                            <a href="" ng-click="vm.orderBook('date')" tooltip-class="tooltip-red" tooltip-placement="bottom" uib-tooltip="Creacion">
-                                <i class="zmdi zmdi-calendar zmdi-hc-fw">
-                                </i>
-                            </a>
-                        </li>
                     </ul>
-                    <ul class="lv-actions actions pull-left m-0 m-l-25" ng-hide="vm.bookView">
-                        <li>
-                            <ul class="pagination-sm m-0 pagination num-guest-filter">
-                                <li ng-class="{'active' : vm.bookFilter.numGuest.selected === $index+1 }" ng-repeat="numGuest in vm.bookFilter.numGuest.data">
-                                    <a class="" href="" ng-click="vm.selectFilterNumGuest($index,'item')">
-                                        {{ numGuest }}
-                                    </a>
-                                </li>
-                                <li class="dropdown" uib-dropdown="">
-                                    <a class="dropdown-toggle" href="" title="" uib-dropdown-toggle="">
-                                        {{ vm.bookFilter.numGuest.textMore }}
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-left num-guest-filter-more">
-                                        <li ng-repeat="item in vm.bookFilter.numGuest.moreData">
-                                            <a href="" ng-click="vm.selectFilterNumGuest($index,'more',item)">
-                                                {{ item }} Invitados
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="lv-actions actions">
+                    <ul class="lv-actions actions box-mode-reservation">
                         <li>
                             <div class="toggle-switch toggle-switch-demo">
                                 <label class="ts-label reservation" for="ts1">
@@ -83,11 +54,24 @@
                             </div>
                         </li>
                     </ul>
+                    <ul class="lv-actions actions box-filter-num-guests" ng-hide="vm.bookView">
+                        <li class="m-r-20">
+                            Mesas para :
+                        </li>
+                        <li class="flex">
+                            <div class="fg-line">
+                                <div class="select">
+                                    <select class="form-control text" ng-model="vm.bookFilter.numGuest.selected" ng-options="item as item.text  for item in vm.bookFilter.numGuest.data track by item.id">
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <div class="content-book">
-            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources | zonesFilter:vm.bookFilter.zones | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView">
+        <div class="content-book" ng-if="!vm.bookView">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView | blocksFilter:vm.bookFilter.blocks:vm.bookView">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
                         DISPONIBLE
@@ -121,28 +105,28 @@
                                 </span>
                             </div>
                             <div class="list">
-                                <a class="item note" ng-click="vm.mailReservartion(item.reservation)">
-                                    <i class="tm-icon zmdi zmdi-email zmdi-hc-lg">
-                                    </i>
-                                    nota
-                                    <span ng-if="item.reservation.note != null">
-                                    </span>
+                                <a class="item num-guest">
+                                    {{ item.reservation.num_guest }} invitados
+                                </a>
+                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)">
+                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
+                                    <span class="count">{{item.reservation.emails.length}}</span>
+                                    <span ng-if="item.reservation.note != null"></span>
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
-                                    <i class="zmdi zmdi-file-text zmdi-hc-lg">
-                                    </i>
-                                    {{ item.reservation.guest_list.length }} invitados
+                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
+                                    <span class="count">{{item.reservation.guest_list.length}}</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="box-reservation">
-                        <div class="datetime"  ng-click="vm.editReservation(item)">
+                        <div class="datetime" ng-click="vm.editReservation(item)">
                             <div class="time">
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ item.reservation.date_reservation }}
+                                {{ item.date_text }}
                             </div>
                         </div>
                         <div class="status">
@@ -239,7 +223,7 @@
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
-                                    <a href="#"  ng-click="vm.editReservation(item)">
+                                    <a href="" ng-click="vm.editReservation(item)">
                                         <i class="zmdi zmdi-edit zmdi-hc-fw">
                                         </i>
                                         Editar Reservación
@@ -270,7 +254,7 @@
                                     <a href="" ng-click="vm.checkGuestList(item.reservation)">
                                         <i class="zmdi zmdi-file-text zmdi-hc-fw">
                                         </i>
-                                        {{ item.reservation.guest_list.length }} invitado{{item.reservation.guest_list.length == 1 ? '':'s'}}
+                                        {{ item.reservation.guest_list.length }} en lista
                                     </a>
                                 </li>
                                 <li ng-if="item.reservation.res_reservation_status_id === 4">
@@ -290,16 +274,229 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="tables"  ng-click="vm.editReservation(item)">
+                    <div class="tables" ng-click="vm.editReservation(item)">
                         <div class="item web">
-                            {{ item.reservation.tables[0].name }}
+                            <span ng-if="item.reservation.tables.length > 0">
+                                {{ item.reservation.tables[0].name }}
+                            </span>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
                         <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
                             <span class="table-name">
+                                <span ng-if="item.reservation.tables.length > 0">
+                                    {{ item.reservation.tables[0].name }}
+                                </span>
+                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                                <span ng-if="item.reservation.tables.length >1">
+                                    +
+                                </span>
+                            </span>
+                            <span class="status-name">
+                                {{ item.reservation.status.name || 'Desconocido' }}
+                            </span>
+                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} ">
+                                {{ item.reservation.source.name || 'Desconocido' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-book" ng-if="vm.bookView">
+            <div class="item-book" item="item" ng-repeat="item in vm.listBookReserva">
+                <div class="item reservation" >
+                    <div class="box-guest">
+                        <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
+                        </div>
+                        <div class="info">
+                            <div class="name">
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                </span>
+                                <span ng-bind="item.reservation.guest.last_name">
+                                </span>
+                            </div>
+                            <div class="list">
+                                <a class="item num-guest">
+                                    {{ item.reservation.num_guest }} invitados
+                                </a>
+                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)">
+                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
+                                    <span class="count">{{item.reservation.emails.length}}</span>
+                                    <span ng-if="item.reservation.note != null"></span>
+                                </a>
+                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
+                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
+                                    <span class="count">{{item.reservation.guest_list.length}}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-reservation">
+                        <div class="datetime" ng-click="vm.editReservation(item)">
+                            <div class="time">
+                                {{ item.time_text }}
+                            </div>
+                            <div class="date">
+                                {{ item.date_text }}
+                            </div>
+                        </div>
+                        <div class="status">
+                            <label class="label" ng-if="item.reservation.status.color != 'white'" style="background-color : {{item.reservation.status.color}}">
+                                {{ item.reservation.status.name }}
+                            </label>
+                            <label class="label" ng-if="item.reservation.status.color == 'white'" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
+                                {{ item.reservation.status.name }}
+                            </label>
+                        </div>
+                        <div class="people">
+                            <div class="actions" ng-if="vm.configReservation.status_people_1 == 1">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','men',item)" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_1 < item.reservation.men}" popover="{{ item.reservation.num_people_1 < item.reservation.men ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-male-alt zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_1  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','men',item)" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions" ng-if="vm.configReservation.status_people_2 == 1">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','women',item)" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_2 < item.reservation.women}" popover="{{ item.reservation.num_people_2 < item.reservation.women ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-female zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_2  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','women',item)" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions" ng-if="vm.configReservation.status_people_3 == 1">
+                                <div aria-label="..." class="btn-toolbar " role="toolbar">
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('-','child',item)" role="group">
+                                        <i class="zmdi zmdi-minus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                    <div aria-label="..." class="btn-group" ng-class="{'bgm-yellow': item.reservation.num_people_3 < item.reservation.children}" popover="{{ item.reservation.num_people_3 < item.reservation.children ? 'La  cantidad es menor que la lista de invitados' : '' }}" popover-placement="top" popover-trigger="mouseenter" role="group">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-mood zmdi-hc-fw">
+                                            </i>
+                                        </div>
+                                        <div class="count">
+                                            {{ item.reservation.num_people_3  || 0}}
+                                        </div>
+                                    </div>
+                                    <div aria-label="..." class="btn-group action" ng-click="vm.numGuestChange('+','child',item)" role="group">
+                                        <i class="zmdi zmdi-plus zmdi-hc-fw">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="source">
+                            <label class="label label-success">
+                                {{ item.reservation.source.name }}
+                            </label>
+                        </div>
+                        <div class="consume">
+                            <div class="fg-line">
+                                <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="config">
+                        <div class="dropdown" uib-dropdown="">
+                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle settings-reservation" ng-click="vm.blockClickBook()" uib-dropdown-toggle="">
+                                <i class="zmdi zmdi-settings zmdi-hc-fw">
+                                </i>
+                                <span class="caret">
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="#" ng-click="vm.editReservation(item)">
+                                        <i class="zmdi zmdi-edit zmdi-hc-fw">
+                                        </i>
+                                        Editar Reservación
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="zmdi zmdi-smartphone-iphone zmdi-hc-fw">
+                                        </i>
+                                        SMS
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="zmdi zmdi-phone-forwarded zmdi-hc-fw">
+                                        </i>
+                                        Llamada telefonica
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" ng-click="vm.mailReservartion(item.reservation)">
+                                        <i class="zmdi zmdi-email zmdi-hc-fw">
+                                        </i>
+                                        Enviar correo
+                                    </a>
+                                </li>
+                                <li ng-if="item.reservation.res_reservation_status_id === 4">
+                                    <a href="" ng-click="vm.updateStatusReservation(item.reservation,'5')">
+                                        <i class="zmdi zmdi-lock-open zmdi-hc-fw">
+                                        </i>
+                                        Liberar reserva
+                                    </a>
+                                </li>
+                                <li ng-if="item.reservation.res_reservation_status_id != 6">
+                                    <a href="" ng-click="vm.updateStatusReservation(item.reservation,'6')">
+                                        <i class="zmdi zmdi-close-circle zmdi-hc-fw">
+                                        </i>
+                                        Cancelar reserva
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tables" ng-click="vm.editReservation(item)">
+                        <div class="item web">
+                            <span ng-if="item.reservation.tables.length > 0">
                                 {{ item.reservation.tables[0].name }}
+                            </span>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                            <span ng-if="item.reservation.tables.length >1">
+                                +
+                            </span>
+                        </div>
+                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
+                            <span class="table-name">
+                                <span ng-if="item.reservation.tables.length > 0">
+                                    {{ item.reservation.tables[0].name }}
+                                </span>
+                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
@@ -319,7 +516,7 @@
             <br>
             </br>
         </div>
-        <div class="text-center" ng-show="vm.bookView && vm.listBook.length>0">
+        <div class="text-center" ng-show="vm.bookView && vm.listBookReserva.length>0">
             <uib-pagination boundary-links="true" class="pagination-sm" items-per-page="vm.paginate_reservation.page_size" max-size="vm.paginate_reservation.max_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
             </uib-pagination>
         </div>

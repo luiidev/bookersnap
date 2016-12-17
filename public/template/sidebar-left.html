@@ -48,31 +48,41 @@
             <a href="" toggle-submenu="">
                 <i class="zmdi zmdi-labels zmdi-hc-fw">
                 </i>
-                Mesas
+                SISTEMA DE RESERVACIONES
             </a>
             <ul>
                 <li>
                     <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.calendar" data-ui-sref-active="active">
-                        Configuración
+                        CONFIGURACIÓN
                     </a>
                     <li>
                         <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.guest" data-ui-sref-active="active">
-                            Huesped
+                            CLIENTES
                         </a>
                     </li>
                     <li>
                         <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.book" data-ui-sref-active="active">
-                            Book
+                            LIBRO DE RESERVACIONES
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.grid" data-ui-sref-active="active">
+                            Grid
+                        </a>
+                    </li> -->
+                    <li>
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.grid" data-ui-sref-active="active">
+                            Grid
                         </a>
                     </li>
                     <li>
                         <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation" data-ui-sref-active="active">
-                            Floor
+                            ZONAS Y MESAS
                         </a>
                     </li>
                     <li>
                         <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation.add({date : mactrl.fecha_actual})">
-                            Reservation
+                            RESERVAR
                         </a>
                     </li>
                 </li>
@@ -82,12 +92,12 @@
             <a href="" toggle-submenu="">
                 <i class="zmdi zmdi-view-compact">
                 </i>
-                Reservaciones
+                EVENTOS
             </a>
             <ul>
                 <li>
                     <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="reservation.promotion" data-ui-sref-active="active">
-                        Promociones
+                        PROMOCIONES
                     </a>
                 </li>
             </ul>

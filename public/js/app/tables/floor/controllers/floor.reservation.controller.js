@@ -290,29 +290,29 @@ angular.module('floor.controller')
 
         /* INICIALIZAR TODOS LOS DATOS DE FLOOR */
 
-        var loadDataFloor = function() {
+        // var loadDataFloor = function() {
 
-            FloorFactory.getDataFloor(null).then(function(response) {
-                rm.status = response.status;
-                rm.servers = response.servers;
-                rm.tags = response.tags;
-                setConfiguration(response.config);
-                setCategoriasReserva(response.sourceTypes);
-                setCategoriasType(response.shifts);
-            }).catch(function(error) {
-                message.apiError(error);
-            });
-        };
+        //     FloorFactory.getDataFloor(null).then(function(response) {
+        //         rm.status = response.status;
+        //         rm.servers = response.servers;
+        //         rm.tags = response.tags;
+        //         setConfiguration(response.config);
+        //         setCategoriasReserva(response.sourceTypes);
+        //         setCategoriasType(response.shifts);
+        //     }).catch(function(error) {
+        //         message.apiError(error);
+        //     });
+        // };
 
-        var setConfiguration = function(configuration) {
-            rm.configuracion = configuration;
-        }
-        var setCategoriasReserva = function(sourceTypes) {
-            TypeFilterDataFactory.setSourceTypesItems(sourceTypes);
+        // var setConfiguration = function(configuration) {
+        //     rm.configuracion = configuration;
+        // };
+        var setCategoriasReserva = function() {
+            TypeFilterDataFactory.setSourceTypesItems(rm.sourceTypes.data);
             rm.categorias_reserva = TypeFilterDataFactory.getSourceTypesItems();
         };
-        var setCategoriasType = function(shifts) {
-            TypeFilterDataFactory.setTypeTurnItems(shifts);
+        var setCategoriasType = function() {
+            TypeFilterDataFactory.setTypeTurnItems(rm.shifts.data);
             rm.categorias_type = TypeFilterDataFactory.getTypeTurnItems();
         };
         /* FIN INICIALIZAR TODOS LOS DATOS DE FLOOR */
@@ -330,17 +330,34 @@ angular.module('floor.controller')
             rm.blocks = global.blocks;
             rm.lienzo = global.lienzo;
 
-            loadDataFloor();
+            rm.configuracion = global.config;
 
-            $scope.$watch("rm.lienzo", statistics, true);
+            /**
+             * No reflejan cambio en real time, debe estar
+             * referenciado aun objeto, y no a un array
+             * por adaptar codigo
+             */
+            rm.status = global.status.data;
+            rm.servers = global.servers.data;
+            rm.tags = global.tags.data;
+
+            /**
+             * Variables de apollo para escuchar los cambios
+             */
+            rm.sourceTypes = global.sourceTypes;
+            rm.shifts = global.shifts;
+
+            $scope.$watch("rm.reservations", statistics, true);
+            $scope.$watch("rm.sourceTypes", setCategoriasReserva, true);
+            $scope.$watch("rm.shifts", setCategoriasType, true);
 
             //loadConfiguration();
             //listSourceTypes();
             //listTypeTurns();
         })();
     })
-    .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q",
-        function($rootScope, $state, $uibModalInstance, content, service, $q) {
+    .controller("editReservationCtrl", ["$rootScope", "$state", "$uibModalInstance", "content", "reservationService", "$q", "global",
+        function($rootScope, $state, $uibModalInstance, content, service, $q, global) {
 
             var er = this;
 
@@ -356,6 +373,10 @@ angular.module('floor.controller')
              */
             er.selectTags = {};
             er.existTagsReservations = false;
+
+            er.countKeys = function(obj){
+                return Object.keys(obj).length;
+            };
 
             er.sumar = function(guest) {
                 er.reservation.guests[guest]++;
@@ -550,7 +571,6 @@ angular.module('floor.controller')
 
             er.reservationEditAll = function() {
                 $uibModalInstance.dismiss('cancel');
-                console.log(er.reservation);
                 $state.go('mesas.floor.reservation.edit', {
                     id: er.reservation.id,
                     date: er.reservation.date_reservation
@@ -663,10 +683,10 @@ angular.module('floor.controller')
                 service.getGuest().then(function(guests) {
                     er.covers = guests;
                 });
-                er.statuses = content.status;
-                er.servers = content.servers;
-                er.tags = content.tags;
-                er.configuration = content.config;
+                er.statuses = global.status.data;
+                er.servers = global.servers.data;
+                er.tags = global.tags.data;
+                er.configuration = global.config;
                 resetTags();
                 parseInfo(content.reservation);
                 parseData(content.reservation);

@@ -1,0 +1,120 @@
+<section id="main">
+    <section class="w-100 p-0">
+        <div class="grid-layout">
+            <div class="grid-container">
+                <div class="grid-inner-container">
+                    <div class="grid-header">
+                        <div class="grid-time-label-out">
+                            <div class="grid-time-label-in">
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-text">
+                                        8 AM
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-half">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-text">
+                                        9 AM
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-half">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-text">
+                                        10 AM
+                                    </div>
+                                </div>
+                                <div class="grid-time-label-cell">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-column-tables">
+                        <div class="grid-column-tables-inner">
+                            <div class="grid-column-tables-column">
+                                <div class="grid-column-tables-cell" ng-repeat="item in [1,2,3,4,5,6,7,8,9]">
+                                    <div class="grid-column-tables-cell-text">
+                                        <div class="grid-table-name">
+                                            11
+                                        </div>
+                                        <div class="grid-table-size">
+                                            (1 - 2)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-body">
+                        <div class="grid-body-container">
+                            <div class="grid-body-rows-container">
+                                <div class="grid-body-rows-table" ng-repeat="item in [1,2,3,4,5,6,7,8,9]">
+                                    <span>
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:00',$index,'0')" ng-mousemove="vm.selectTimeReservationCreate('move','8:00',$index,'0')" ng-mouseup="vm.selectTimeReservationCreate('end','8:00',$index,'0')">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate('init','8:15',$index,'62')" ng-mousemove="vm.selectTimeReservationCreate('move','8:15',$index,'62')" ng-mouseup="vm.selectTimeReservationCreate('end','8:15',$index,'62')">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:30',$index,'124')" ng-mousemove="vm.selectTimeReservationCreate('move','8:30',$index,'124')" ng-mouseup="vm.selectTimeReservationCreate('end','8:30',$index,'124')">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.initReservationCreate('init','8:45',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','8:45',$index)">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','9:00',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','9:00',$index)">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate()">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-half">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-quarter">
+                                        </div>
+                                        <div class="grid-body-cell grid-time-divider-half">
+                                        </div>
+                                        <!-- hover reservation-->
+                                        <div class="grid-cell cell cell-item{{$index}}" style="z-index: 98;display: none">
+                                            <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation" style="z-index: 1;float: left">
+                                                <div class="grid-cell-quarter-hour" ng-mousemove="vm.moveQuarterHour(item)" ng-mouseup="vm.moveQuarterUp()" ng-repeat="item in vm.reservationCreate.timeTotal" style="background: none;">
+                                                </div>
+                                            </div>
+                                            <div class="grid-cell-inner grid-cell-info grid-cell-info-creation" style="background: #2c3e50;z-index: -1">
+                                                <div class="cell-item-info">
+                                                    <div class="cell-item-info-title">
+                                                        New Reservation
+                                                    </div>
+                                                    <div class="cell-item-info-subtitle">
+                                                        {{ vm.reservationCreate.hourIni}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

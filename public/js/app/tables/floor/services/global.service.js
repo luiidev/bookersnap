@@ -32,7 +32,7 @@ angular.module('global.service', [])
             config = {};
 
         /**
-         * Funcion de actualizacion de objeco
+         * Funcion de actualizacion de objecto
          */
         reservations.update = function(updateList, callback) {
             try {
@@ -40,8 +40,8 @@ angular.module('global.service', [])
                 angular.forEach(this.data, function(reservation, index) {
                     angular.forEach(updateList, function(item) {
                         if (reservation.id == item.id) {
-                            angular.forEach(lienzo.data.tables, function(table) {
-                                angular.forEach(reservation.tables, function(obj_table) {
+                            angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(lienzo.data.tables, function(table) {
                                     if (table.id == obj_table.id) {
                                         table.reservations.remove(reservation);
                                     }
@@ -49,8 +49,8 @@ angular.module('global.service', [])
                             });
                             if (item.date_reservation == dateNow) {
                                 Object.assign(reservation, item);
-                                angular.forEach(lienzo.data.tables, function(table) {
-                                    angular.forEach(reservation.tables, function(obj_table) {
+                                angular.forEach(reservation.tables, function(obj_table) {
+                                    angular.forEach(lienzo.data.tables, function(table) {
                                         if (table.id == obj_table.id) {
                                             table.reservations.add(reservation);
                                         }

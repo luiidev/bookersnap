@@ -14,16 +14,22 @@
             </div>
             <div class="box-zone-create p-t-15 p-b-15">
                 <div class="box-lienzo-zone-v2">
-                    <div class="lienzo-v2" ng-drop="true" ng-style="{width: rc.size, height: rc.size, 'font-size': rc.fontSize}" ng-repeat="zone in rc.zones | zoneFilter: rc.showZones" ng-show="zone.id == rc.zoneID">
-                            <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left}" ng-click="rc.selectTable(obj)" ng-repeat="obj in zone.tables">
-                                <div class="table-label" ng-class="obj.position_text">{{obj.name}}</div>
-                                <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
-                                <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
-                                <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
-                                <div class="item-drag-time" ng-style="{background: obj.time[rc.zones.tActive].color}"
-                                 ng-if="rc.zones.tActive && rc.zones.tActive != 'nextTimeAll' && obj.time[rc.zones.tActive].text">{{ obj.time[rc.zones.tActive].text }}</div>
-                                <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && rc.zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
+                    <div ng-if="rc.zones.length > 0" class="lienzo-v2" ng-drop="true" ng-style="{width: rc.size, height: rc.size, 'font-size': rc.fontSize}" ng-repeat="zone in rc.zones | zoneFilter: rc.showZones" ng-show="zone.id == rc.zoneID">
+                        <div class="item-drag-table rt{{obj.rotate}} shape-table table-zone" ng-class="[obj.shape, obj.size, {'selected-table': obj.selected, 'block-table': obj.block, 'block-table-permanent': obj.blocksPermanent.active}]" ng-style="{top: obj.top, left: obj.left}" ng-click="rc.selectTable(obj)" ng-repeat="obj in zone.tables">
+                            <div class="table-label" ng-class="obj.position_text">{{obj.name}}</div>
+                            <div class="item-drag-cover" ng-hide="obj.suggested || obj.occupied">{{ obj.minCover }}-{{ obj.maxCover }}</div>
+                            <div class="box-icon item-suggested" ng-show="obj.suggested"></div>
+                            <div class="box-icon item-occupied" ng-show="obj.occupied"></div>
+                            <div class="item-drag-time" ng-style="{background: obj.time[rc.zones.tActive].color}"
+                             ng-if="rc.zones.tActive && rc.zones.tActive != 'nextTimeAll' && obj.time[rc.zones.tActive].text">{{ obj.time[rc.zones.tActive].text }}</div>
+                            <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && rc.zones.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
+                        </div>
+                        <div ng-if="zone.tables.length == 0" class="empty-tables">
+                            <div>
+                                <strong ng-bind="zone.name"></strong>
+                                <p>sin mesas</p>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,13 +214,7 @@
                                 <strong>MESAS</strong>
                             </label>
                             <div class="col-xs-9">
-                                <div ng-if="!rc.isTablesSelected">
-                                    <label class="control-label" for="server" style="color: #8c8c8c;">{{ rc.tableSuggested.name || "Sin mesas" }}</label>
-                                    <a class="a-title pull-right" ng-show="rc.tableSuggested.name" style="padding-top: 7px">Sugerido</a>
-                                </div>
-
                                 <label class="control-label text-uppercase p-r-5 m-r-5" for="server" ng-repeat="table in  rc.tablesSelected track by $index">{{ table.name + ($last ? '' : ', ') }}</label>
-
                             </div>
                         </div>
                         <div class="form-group">
@@ -255,7 +255,7 @@
                 </div>
             </div>
 
-             <div class="card" ng-show="rc.isEdit">
+             <div class="card" ng-show="rc.editState">
                  <div class="card-header bgm-red"  ng-click="rc.cancelReservation()" style="
                     cursor: pointer;
                     padding: 15px 25px;

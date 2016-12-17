@@ -5,10 +5,12 @@ angular.module('block.controller', [])
         $scope.date = null;
         $scope.zoneIndexShow = 0;
 
+        $scope.itemTables = [];
+
         $scope.coversList = BlockFactory.coverList();
         $scope.boxTables = BlockFactory.boxTables();
 
-        $scope.object = [];
+        $scope.object = {};
         $scope.zones = [];
 
         //Carga la informacion de la pantalla add Block
@@ -34,44 +36,45 @@ angular.module('block.controller', [])
             var fechaOld = convertFechaYYMMDD(oldValue, "es-ES", {});
 
             if (fecha !== fechaOld) {
-                listFormData(fecha);
-                listZones(fecha);
+                    InitModule(fecha);
+                // listFormData(fecha);
+                // listZones(fecha);
             }
         });
 
-        var listZones = function(fecha) {
-            //Listado array de zonas incluyendo sus zonas
-            reservationService.getZones(fecha, true).then(
-                function success(response) {
-                    $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
-                    zoneIndexMax = $scope.zones.length;
+        // var listZones = function(fecha) {
+        //     //Listado array de zonas incluyendo sus zonas
+        //     reservationService.getZones(fecha, true).then(
+        //         function success(response) {
+        //             $scope.zones = response.data.data; // Lista de Zonas que contienen mesas
+        //             zoneIndexMax = $scope.zones.length;
+        //             $scope.zone = $scope.zones[0];
+        //             getAllTablesBlockFuture(fecha, true);
 
-                    getAllTablesBlockFuture(fecha, true);
+        //         },
+        //         function error(response) {
+        //             console.error("error " + angular.toJson(response, true));
+        //         }
+        //     );
+        // };
 
-                },
-                function error(response) {
-                    console.error("error " + angular.toJson(response, true));
-                }
-            );
-        };
+        // var getAllTablesBlockFuture = function(fecha, reload) {
+        //     // Se obtiene de array de las mesas que estan en ese rango de fecha
+        //     BlockFactory.getAllBlock("date=" + fecha, reload).then(
+        //         function success(response) {
+        //             mesasFuturasBloqueadas = response.data.data;
+        //             $scope.selectZone($scope.zones[0]);
 
-        var getAllTablesBlockFuture = function(fecha, reload) {
-            // Se obtiene de array de las mesas que estan en ese rango de fecha
-            BlockFactory.getAllBlock("date=" + fecha, reload).then(
-                function success(response) {
-                    mesasFuturasBloqueadas = response.data.data;
-                    $scope.selectZone($scope.zones[0]);
-
-                    if ($stateParams.block_id !== undefined) {
-                        block_id = $stateParams.block_id;
-                        listTablesBlock();
-                    }
-                },
-                function error(response) {
-                    console.error("error " + angular.toJson(response, true));
-                }
-            );
-        };
+        //             if ($stateParams.block_id !== undefined) {
+        //                 block_id = $stateParams.block_id;
+        //                 listTablesBlock();
+        //             }
+        //         },
+        //         function error(response) {
+        //             console.error("error " + angular.toJson(response, true));
+        //         }
+        //     );
+        // };
 
         var exitsReservationTable = function(tableId) {
             var validate = false;
@@ -87,44 +90,44 @@ angular.module('block.controller', [])
             return validate;
         };
 
-        var listTablesBlock = function() {
-            BlockFactory.getBlock(block_id).then(function success(response) {
+        // var listTablesBlock = function() {
+        //     BlockFactory.getBlock(block_id).then(function success(response) {
 
-                    $scope.tableBlock = response.data.data;
+        //             $scope.tableBlock = response.data.data;
 
-                    angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
-                        $scope.mesasBloqueadas.push(mesa.id);
-                    });
+        //             angular.forEach(response.data.data.tables, function(mesa, indexMesa) {
+        //                 $scope.mesasBloqueadas.push(mesa.id);
+        //             });
 
-                    BlockFactory.updateTablesBlocked($scope, $sce);
+        //             BlockFactory.updateTablesBlocked($scope, $sce);
 
-                    angular.forEach($scope.zones, function(zona, key) {
-                        angular.forEach(zona.tables, function(mesa, i) {
+        //             angular.forEach($scope.zones, function(zona, key) {
+        //                 angular.forEach(zona.tables, function(mesa, i) {
 
-                            for (var p = 0; p < $scope.mesasBloqueadas.length; p++) {
+        //                     for (var p = 0; p < $scope.mesasBloqueadas.length; p++) {
 
-                                var exitsReservation = exitsReservationTable(mesa.id);
+        //                         var exitsReservation = exitsReservationTable(mesa.id);
 
-                                if (mesa.id === $scope.mesasBloqueadas[p] && exitsReservation === false) {
-                                    $scope.zones[key].tables[i].class = "selected-table";
-                                }
-                            }
+        //                         if (mesa.id === $scope.mesasBloqueadas[p] && exitsReservation === false) {
+        //                             $scope.zones[key].tables[i].class = "selected-table";
+        //                         }
+        //                     }
 
-                        });
+        //                 });
 
-                        $scope.selectZone($scope.zones[0]);
+        //                 $scope.selectZone($scope.zones[0]);
 
-                    });
+        //             });
 
-                    timesSelectedDefault($scope.tableBlock);
-                    $scope.loadBlockTables();
+        //             timesSelectedDefault($scope.tableBlock);
+        //             $scope.loadBlockTables();
 
-                },
-                function error(response) {
-                    console.log("error " + angular.toJson(response, true));
-                }
-            );
-        };
+        //         },
+        //         function error(response) {
+        //             console.log("error " + angular.toJson(response, true));
+        //         }
+        //     );
+        // };
 
         // selecciona turno,start_time y end_time  al cargar el bloqueo
         var timesSelectedDefault = function(blockData) {
@@ -158,45 +161,45 @@ angular.module('block.controller', [])
             };
         };
 
-        var listFormData = function(fecha) {
-            clearForm();
-            CalendarService.GetShiftByDate(fecha).then(
-                function OnSuccess(Response) {
-                    var data = Response.data;
-                    angular.forEach(data.data, function(item, i) {
-                        if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
+        // var listFormData = function(fecha) {
+        //     clearForm();
+        //     CalendarService.GetShiftByDate(fecha).then(
+        //         function OnSuccess(Response) {
+        //             var data = Response.data;
+        //             angular.forEach(data.data, function(item, i) {
+        //                 if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
 
-                            $scope.shifts.push({
-                                id: item.id,
-                                name: item.name,
-                                times: {
-                                    startTime: item.turn.hours_ini,
-                                    endTime: item.turn.hours_end
-                                },
-                                startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
-                                endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end, true),
-                            });
+        //                     $scope.shifts.push({
+        //                         id: item.id,
+        //                         name: item.name,
+        //                         times: {
+        //                             startTime: item.turn.hours_ini,
+        //                             endTime: item.turn.hours_end
+        //                         },
+        //                         startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
+        //                         endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end, true),
+        //                     });
 
-                            // Se muestra el primer array para cuando se esta creando el bloqueo
-                            $scope.shift = $scope.shifts[0];
-                            $scope.startTimes = $scope.shifts[0].startTimes;
-                            $scope.endTimes = $scope.shifts[0].endTimes;
+        //                     // Se muestra el primer array para cuando se esta creando el bloqueo
+        //                     $scope.shift = $scope.shifts[0];
+        //                     $scope.startTimes = $scope.shifts[0].startTimes;
+        //                     $scope.endTimes = $scope.shifts[0].endTimes;
 
-                            if ($scope.startTimes.length > 0) {
-                                $scope.startTime = $scope.startTimes[0];
-                            }
+        //                     if ($scope.startTimes.length > 0) {
+        //                         $scope.startTime = $scope.startTimes[0];
+        //                     }
 
-                            if ($scope.endTimes.length > 0) {
-                                $scope.endTime = $scope.endTimes[0];
-                            }
-                        }
-                    });
-                },
-                function OnError(Response) {
-                    console.log("error " + angular.toJson(Response, true));
-                }
-            );
-        };
+        //                     if ($scope.endTimes.length > 0) {
+        //                         $scope.endTime = $scope.endTimes[0];
+        //                     }
+        //                 }
+        //             });
+        //         },
+        //         function OnError(Response) {
+        //             console.log("error " + angular.toJson(Response, true));
+        //         }
+        //     );
+        // };
 
         var clearForm = function() {
             $scope.shifts.length = 0;
@@ -260,8 +263,9 @@ angular.module('block.controller', [])
         };
 
         var setZoneName = function(i) {
-            if (vm.zones.length)
-                vm.zoneName = vm.zones[i].name;
+            if ($scope.zones.length){
+                $scope.zoneName = $scope.zones[i].name;
+            }
         };
 
         var saveBlock = function(blockData) {
@@ -271,8 +275,8 @@ angular.module('block.controller', [])
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 0, true);
                         redirect();
-                    } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError.join("\n"), "warning", 0, true);
+                    } else if (response.data.success === false) {
+                        messageAlert("Warning", response.data.msg.join("\n"), "warning", 0, true);
                     }
                 },
                 function error(response) {
@@ -289,8 +293,8 @@ angular.module('block.controller', [])
                     if (response.data.success === true) {
                         messageAlert("Success", response.data.msg, "success", 3000, true);
                         redirect();
-                    } else if (response.data.response === false) {
-                        messageAlert("Warning", response.data.jsonError, "warning", 2000, true);
+                    } else if (response.data.success === false) {
+                        messageAlert("Warning", response.data.msg, "warning", 2000, true);
                     }
                 },
                 function error(response) {
@@ -505,20 +509,142 @@ angular.module('block.controller', [])
             }
         };
 
-        (function Init() {
-
-            $scope.date = convertFechaToDate($stateParams.date);
+        var resize = function() {
             $scope.size = screenHelper.size(screenSizeBlock);
-
-            listZones($stateParams.date);
-            listFormData($stateParams.date);
 
             angular.element($window).bind('resize', function() {
                 var size = screenHelper.size(screenSizeBlock);
                 $scope.size = size;
                 $scope.$digest();
             });
+        };
 
+        var clearData = function() {
+            $scope.itemTables.length = 0;
+
+            $scope.object = {};
+            $scope.zones.length = 0;
+
+            $scope.shifts.length = 0;
+            $scope.startTimes.length = 0;
+            $scope.endTimes.length = 0;
+
+            $scope.zone = null;
+
+            var zoneIndexMax = 0;
+            var zoneIndex = 0;
+
+            var mesasFuturasBloqueadas = null;
+
+            $scope.mesasBloqueadas.length = 0;
+            $scope.someSafeContent = "";
+        };
+
+        var InitModule = function(date) {
+            if ($stateParams.block_id !== undefined) {
+                block_id = $stateParams.block_id;
+            }
+
+            clearData();
+            reservationService.blockMaster(date, block_id)
+                .then(function(response) {
+                    runZones(response.data.data.zones);
+                    runShifts(response.data.data.shifts);
+                    runBlocks(response.data.data.blockTables);
+                    runBlock(response.data.data.block);
+                }).catch(function(error) {
+                    message.apiError(error);
+                });
+        };
+
+        var runZones = function(zones) {
+            $scope.zones = zones; // Lista de Zonas que contienen mesas
+            zoneIndexMax = $scope.zones.length;
+            $scope.zone = $scope.zones[0];
+        };
+
+        var runBlocks = function(blocks) {
+            mesasFuturasBloqueadas = blocks;
+            $scope.selectZone($scope.zones[0]);
+        };
+
+        var runBlock = function(block) {
+            if (block === null) {
+                return;
+                // evaluar si el estado es editar, redireccionar.
+            }
+
+            $scope.tableBlock = block;
+
+            angular.forEach($scope.tableBlock.tables, function(mesa, indexMesa) {
+                $scope.mesasBloqueadas.push(mesa.id);
+            });
+
+            BlockFactory.updateTablesBlocked($scope, $sce);
+
+            angular.forEach($scope.zones, function(zona, key) {
+                angular.forEach(zona.tables, function(mesa, i) {
+
+                    for (var p = 0; p < $scope.mesasBloqueadas.length; p++) {
+
+                        var exitsReservation = exitsReservationTable(mesa.id);
+
+                        if (mesa.id === $scope.mesasBloqueadas[p] && exitsReservation === false) {
+                            $scope.zones[key].tables[i].class = "selected-table";
+                        }
+                    }
+
+                });
+
+                $scope.selectZone($scope.zones[0]);
+
+            });
+
+            timesSelectedDefault($scope.tableBlock);
+            $scope.loadBlockTables();
+        };
+
+        runShifts = function(shifts) {
+            clearForm();
+            angular.forEach(shifts, function(item, i) {
+                if (item.turn !== null) { // Se obtienes los Shifts que contienen datos
+
+                    $scope.shifts.push({
+                        id: item.id,
+                        name: item.name,
+                        times: {
+                            startTime: item.turn.hours_ini,
+                            endTime: item.turn.hours_end
+                        },
+                        startTimes: getRangoHours(item.turn.hours_ini, item.turn.hours_end),
+                        endTimes: getRangoHours(addHourByMin(item.turn.hours_ini), item.turn.hours_end, true),
+                    });
+
+                    // Se muestra el primer array para cuando se esta creando el bloqueo
+                    $scope.shift = $scope.shifts[0];
+                    $scope.startTimes = $scope.shifts[0].startTimes;
+                    $scope.endTimes = $scope.shifts[0].endTimes;
+
+                    if ($scope.startTimes.length > 0) {
+                        $scope.startTime = $scope.startTimes[0];
+                    }
+
+                    if ($scope.endTimes.length > 0) {
+                        $scope.endTime = $scope.endTimes[0];
+                    }
+                }
+            });
+        };
+
+        (function Init() {
+            resize();
+
+            $scope.date = convertFechaToDate($stateParams.date);
+
+            InitModule($scope.date);
+
+            // listZones($stateParams.date);
+            // listFormData($stateParams.date);
         })();
 
 

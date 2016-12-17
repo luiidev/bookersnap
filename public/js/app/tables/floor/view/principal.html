@@ -85,6 +85,12 @@
                  ng-if="vm.zones.data.tActive && vm.zones.data.tActive != 'nextTimeAll' && obj.time[vm.zones.data.tActive].text">{{ obj.time[vm.zones.data.tActive].text }}</div>
                 <div class="item-drag-time next-time-all"  ng-class="{'nex-time-top' : obj.time.nextTimeAll.length > 1}" ng-if="obj.time.nextTimeAll.length && vm.zones.data.tActive == 'nextTimeAll' " ng-repeat="time in obj.time.nextTimeAll">{{ time.text }}</div>
             </div>
+            <div ng-if="tab.tables.length == 0" class="empty-tables">
+                <div>
+                    <strong ng-bind="tab.name"></strong>
+                    <p>sin mesas</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
