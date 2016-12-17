@@ -55,13 +55,13 @@
                     <div class="grid-column-tables">
                         <div class="grid-column-tables-inner">
                             <div class="grid-column-tables-column">
-                                <div class="grid-column-tables-cell" ng-repeat="item in [1,2,3,4,5,6,7,8,9]">
+                                <div class="grid-column-tables-cell" ng-repeat="table in vm.tablesAvailability">
                                     <div class="grid-column-tables-cell-text">
                                         <div class="grid-table-name">
-                                            11
+                                            {{ table.name }}
                                         </div>
                                         <div class="grid-table-size">
-                                            (1 - 2)
+                                            ( {{ table.min_cover }}  -  {{ table.max_cover }})
                                         </div>
                                     </div>
                                 </div>
@@ -116,5 +116,9 @@
                 </div>
             </div>
         </div>
+        <br>
+        </br>
+        <footer class="container-footer-book" data-ng-include="'/js/app/tables/grid/view/partials/footer-grid.html'">
+        </footer>
     </section>
 </section>

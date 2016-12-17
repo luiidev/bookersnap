@@ -1,5 +1,5 @@
 angular.module('grid.controller', [])
-    .controller('GridCtrl', function($scope) {
+    .controller('GridCtrl', function($scope, gridFactory) {
         var vm = this;
 
         vm.reservationCreate = {
@@ -14,7 +14,12 @@ angular.module('grid.controller', [])
             index: null
         };
 
-        var init = function() {};
+        vm.tablesAvailability = [];
+
+        var init = function() {
+            getTablesAvailability();
+            getTurnsActives();
+        };
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
 
@@ -53,7 +58,6 @@ angular.module('grid.controller', [])
                 //vm.reservationCreate.timeTotal = [];
                 // angular.element(".cell-item" + index).css("display", "none");
             }
-
         };
 
         vm.moveQuarterHour = function(value) {
@@ -97,6 +101,31 @@ angular.module('grid.controller', [])
                 }
             }
             return index;
+        };
+
+        var getTablesAvailability = function() {
+            var params = "";
+
+            gridFactory.getTablesAvailability(params).then(
+                function success(response) {
+                    vm.tablesAvailability = response.data;
+                    //console.log("getTablesAvailability", angular.toJson(vm.tablesAvailability, true));
+                },
+                function error(response) {
+                    console.error("getTablesAvailability", angular.toJson(response, true));
+                }
+            );
+        };
+
+        var getTurnsActives = function() {
+            gridFactory.getTurnsActives("2016-12-17", true).then(
+                function success(response) {
+                    console.log("getTurnsActives", angular.toJson(response, true));
+                },
+                function error(response) {
+                    console.error("getTurnsActives", angular.toJson(response, true));
+                }
+            );
         };
 
         init();
