@@ -39,7 +39,7 @@
             </div>
             <div class="listview lv-user m-t-20" ng-scrollbars="" ng-scrollbars-config="vm.configScrollBar" style="height: 1000px">
                 <div style="min-height: 800px;">
-                    <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
+                    <div class="lv-item media" ng-repeat="item in vm.guestList">
                         <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
                             <div class="lv-avatar bgm-orange pull-left">
                                 m

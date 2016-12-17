@@ -15,7 +15,6 @@
             'configuration.app',
             'availability.app',
             'grid.app'
-
         ])
         .constant("IdMicroSitio", idMicrositio)
         /*.constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
