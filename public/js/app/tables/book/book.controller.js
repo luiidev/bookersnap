@@ -182,17 +182,22 @@ angular.module('book.controller', [])
         vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
         vm.sources = [];
         vm.zones = [];
-        vm.statusReservation = []; //Listado de status para reservaciones
+        vm.statusReservation = []; //Listado de status para reservaciones       
 
         vm.bookFilter = {
             typeTurn: [],
             sources: [],
             zones: [],
+            noStatus: [],
+            blocks: true,
             date: '',
             options: {
                 turnAll: false,
                 sourcesAll: false,
-                zonesAll: false
+                zonesAll: false,
+                noStatusFree:true,
+                noStatusCancel:true,
+                blocks: true,
             },
             text: '',
             search_text: '',
@@ -290,7 +295,23 @@ angular.module('book.controller', [])
             max_size: 5
         };
 
+        /*Filtros de ajustes en footer */
+        vm.filterAjustes = function(option){
+            switch (option) {
+                case 'free':
+                    vm.filterBook('noStatus', 5);
+                    break;
+                case 'cancel':
+                    vm.filterBook('noStatus', 6);
+                    break;
+                case 'blocks':
+                    vm.filterBook('blocks', null);
+                break;
+            }
+        }
+
         vm.filterBook = function(option, value) {
+
             switch (option) {
                 case 'turn':
                     if (value !== "all") {
@@ -300,6 +321,26 @@ angular.module('book.controller', [])
                     }
                     vm.bookFilter.options.turnAll = (value == "all") ? !vm.bookFilter.options.turnAll : vm.bookFilter.options.turnAll;
                     BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns, vm.bookFilter.options.turnAll);
+                    break;
+                case 'noStatus':
+                    var status = [];
+                    if(value == 5){
+                        vm.bookFilter.options.noStatusFree = !vm.bookFilter.options.noStatusFree;                        
+                    }
+                    if(value == 6){
+                        vm.bookFilter.options.noStatusCancel = !vm.bookFilter.options.noStatusCancel;                        
+                    }
+                    if(!vm.bookFilter.options.noStatusFree){
+                        status.push(5);
+                    }
+                    if(!vm.bookFilter.options.noStatusCancel){
+                        status.push(6);
+                    }                    
+                    vm.bookFilter.noStatus = status;
+                    break;
+                case 'blocks':
+                    vm.bookFilter.options.blocks = !vm.bookFilter.options.blocks;
+                    vm.bookFilter.blocks = vm.bookFilter.options.blocks;
                     break;
                 case 'source':
                     vm.bookFilter.options.sourcesAll = (value == "all") ? !vm.bookFilter.options.sourcesAll : vm.bookFilter.options.sourcesAll;
@@ -660,8 +701,7 @@ angular.module('book.controller', [])
         var setUrlNavigationConfig = function(url) {
 
             url = paramsFilterReservation(true);
-            vm.configUserDefault.url = url;
-
+            vm.configUserDefault.url = url;            
             BookConfigFactory.setConfig(vm.configUserDefault);
         };
 
@@ -711,6 +751,8 @@ angular.module('book.controller', [])
             var params_url = {
                 date: vm.datesText.start_date,
                 date_end: vm.datesText.end_date,
+                status: ($stateParams.status === undefined || vm.bookFilter.status.toString() !== "") ? vm.bookFilter.status.toString() : $stateParams.status,
+                blocks: ($stateParams.blocks === undefined || vm.bookFilter.blocks == true) ? vm.bookFilter.blocks.toString() : $stateParams.blocks,
                 turns: ($stateParams.turns === undefined || vm.bookFilter.typeTurn.toString() !== "") ? vm.bookFilter.typeTurn.toString() : $stateParams.turns,
                 zones: ($stateParams.zones === undefined || vm.bookFilter.zones.toString() !== "") ? vm.bookFilter.zones.toString() : $stateParams.zones,
                 sources: ($stateParams.sources === undefined || vm.bookFilter.sources.toString() !== "") ? vm.bookFilter.sources.toString() : $stateParams.sources,
@@ -724,6 +766,13 @@ angular.module('book.controller', [])
 
             if (params_url.search_text === "") {
                 delete params_url.search_text;
+            }
+
+            if (params_url.status === "") {
+                delete params_url.status;
+            }
+            if (params_url.blocks === "") {
+                delete params_url.blocks;
             }
 
             if (params_url.turns === "") {

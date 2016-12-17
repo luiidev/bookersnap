@@ -1484,17 +1484,14 @@ $background-tables-head = #eee
 					display none
 				&.item-nav
 					display inline-block
-					width 14.2857142857%
+					width 14.2857142857%					
 					& .btn
 						& .icon
 							height 80%
 							font-size 30px
 						& .title
 							height 20%
-							font-size 8px
-					& .dropdown-menu
-						&.setings
-							color #ccc
+							font-size 8px					
 .container-zones
 	position relative
 	width 100%
@@ -1558,6 +1555,14 @@ $background-tables-head = #eee
 		color: #fff
 		height: 100%
 		z-index -1
+	& ul.nav
+		& .item-nav
+			& .dropdown-menu
+				&:not([class*=bgm-])>li>a
+					color #fff
+				&.setings
+					background-color #424242
+					color #fff
 footer
 	ul.nav
 		height 100%

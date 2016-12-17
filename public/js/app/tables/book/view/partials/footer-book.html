@@ -78,67 +78,67 @@
                 <a ng-click="$event.stopPropagation()" class="" ><strong>AJUSTES</strong></a>
             </li>
             <li>
-                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()">
+                <a ng-click="$event.stopPropagation()">
+                    <div class="toggle-switch toggle-switch-demo">
                     <label class="ts-label reservation" for="ts100">
                         Reservas Liberadas
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
-                        </label>
-                    </input>
+                    <input hidden="hidden" id="ts100"  ng-model="vm.bookFilter.options.noStatusFree" type="checkbox" />
+                    <label class="ts-helper" for="ts100" ng-click="vm.filterAjustes('free')" ></label>
+                    </div>
                 </a>
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts101">
                         Reservas Cancelada
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
+                    <input hidden="hidden" id="ts101" ng-model="vm.bookFilter.options.noStatusCancel" type="checkbox">
+                        <label class="ts-helper" for="ts101" ng-click="vm.filterAjustes('cancel')">
                         </label>
                     </input>
                 </a>
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts102">
                         Bloqueos
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
+                    <input hidden="hidden" id="ts102" ng-model="vm.bookFilter.options.blocks" type="checkbox">
+                        <label class="ts-helper" for="ts102" ng-click="vm.filterAjustes('blocks')">
                         </label>
                     </input>
                 </a>
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts103">
                         Origen de reservación
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
+                    <input hidden="hidden" id="ts103" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts103">
                         </label>
                     </input>
                 </a>
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts104">
                         Consumo de reservación
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
+                    <input hidden="hidden" id="ts104" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts104">
                         </label>
                     </input>
                 </a>
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts105">
                         Mensajes Enviados
                     </label>
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper" for="ts100">
+                    <input hidden="hidden" id="ts105" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
+                        <label class="ts-helper" for="ts105">
                         </label>
                     </input>
                 </a>
