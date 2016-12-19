@@ -77,11 +77,21 @@
             <li>
                 <a ng-click="$event.stopPropagation()" class="" ><strong>ESTADOS DE RESERVAS</strong></a>
             </li>
+            <li ng-show="vm.bookView">
+                <a ng-click="$event.stopPropagation()">
+                    <div class="fg-line">
+                        <div class="select">
+                            <select class="form-control text p-l-10" ng-change="vm.changeResultPagination(item)" ng-model="vm.paginate_reservation.selectedPageSize" ng-options="item as item.text  for item in vm.paginate_reservation.optionsPageSise track by item.id">
+                            </select>
+                        </div>
+                    </div>
+                </a>
+            </li>
             <li>
                 <a ng-click="$event.stopPropagation()">
                     <div class="toggle-switch toggle-switch-demo">
-                        <input hidden="hidden" id="ts100"  ng-model="vm.bookFilter.options.noStatusFree" type="checkbox" >
-                            <label class="ts-helper m-r-10" for="ts100" ng-click="vm.filterAjustes('free')" ></label>
+                        <input hidden="hidden" id="ts100"  ng-model="vm.configUserDefault.show.released" type="checkbox" >
+                            <label class="ts-helper m-r-10" for="ts100" ng-click="vm.filterAjustes('show.released')" ></label>
                         </input>
                         <label class="ts-label reservation" for="ts100">
                             Liberadas
@@ -91,8 +101,8 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts101" ng-model="vm.bookFilter.options.noStatusCancel" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts101" ng-click="vm.filterAjustes('cancel')">
+                    <input hidden="hidden" id="ts101" ng-model="vm.configUserDefault.show.canceled" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts101" ng-click="vm.filterAjustes('show.canceled')">
                         </label>
                     </input>
                     <label class="ts-label reservation" for="ts101">
@@ -102,8 +112,8 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts102" ng-model="vm.bookFilter.options.blocks" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts102" ng-click="vm.filterAjustes('blocks')">
+                    <input hidden="hidden" id="ts102" ng-model="vm.configUserDefault.show.blocks" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts102" ng-click="vm.filterAjustes('show.blocks')">
                         </label>
                     </input>
                     <label class="ts-label reservation" for="ts102">
@@ -117,11 +127,11 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts103" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts103">
+                    <input hidden="hidden" id="ts103" ng-model="vm.configUserDefault.fields.source" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts103" ng-click="vm.filterAjustes('fields.source')">
                         </label>
                     </input>
-                    <label class="ts-label reservation" for="ts103">
+                    <label class="ts-label reservation" for="ts103" >
                         Origen de reservación
                     </label>
                     
@@ -129,11 +139,11 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts104" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts104">
+                    <input hidden="hidden" id="ts104"  ng-model="vm.configUserDefault.fields.consume" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts104" ng-click="vm.filterAjustes('fields.consume')">
                         </label>
                     </input>
-                    <label class="ts-label reservation" for="ts104">
+                    <label class="ts-label reservation" for="ts104" >
                         Consumo de reservación
                     </label>
                     
@@ -141,11 +151,11 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts105" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts105">
+                    <input hidden="hidden" id="ts105" ng-model="vm.configUserDefault.fields.messages" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts105" ng-click="vm.filterAjustes('fields.messages')">
                         </label>
                     </input>
-                    <label class="ts-label reservation" for="ts105">
+                    <label class="ts-label reservation" for="ts105" >
                         Mensajes Enviados
                     </label>
                     
@@ -153,11 +163,11 @@
             </li>
             <li>
                 <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
-                    <input hidden="hidden" id="ts100" ng-change="!vm.liberada" ng-model="vm.liberada" type="checkbox">
-                        <label class="ts-helper m-r-10" for="ts100">
+                    <input hidden="hidden" id="ts100" ng-model="vm.configUserDefault.fields.listguests" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts100" ng-click="vm.filterAjustes('fields.listguests')">
                         </label>
                     </input>
-                    <label class="ts-label reservation" for="ts100">
+                    <label class="ts-label reservation" for="ts100" >
                         Lista de invitados
                     </label>
                     
