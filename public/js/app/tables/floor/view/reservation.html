@@ -28,11 +28,11 @@
             </span>
         </div>
         <tabset justified="true">
-            <tab active="tab.active" heading="Por llegar" ng-click="rm.filter_status = [1,2,3]">
+            <tab active="tab.active"  heading="Por llegar" ng-click="rm.filter_status = [1,2,3]">
             </tab>
-            <tab heading="Sentados" ng-click="rm.filter_status = [4]">
+            <tab heading="Sentados"  ng-click="rm.filter_status = [4]">
             </tab>
-            <tab heading="Todos" ng-click="rm.filter_status.length = 0">
+            <tab heading="Todos"  ng-click="rm.filter_status.length = 0">
             </tab>
         </tabset>
         <div class="floor-reservations">
@@ -283,4 +283,13 @@
             </li>
         </ul>
     </li>
+    <!-- <li class="dropdown">
+        <button class="item-action btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
+            <span class="icon zmdi zmdi-widgets zmdi-hc-2x">
+            </span>
+            <div class="title">
+                Mesas
+            </div>
+        </button>
+    </li> -->
 </ul>

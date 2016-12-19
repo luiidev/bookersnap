@@ -290,9 +290,8 @@ angular.module('floor.controller')
                 sourceTypes.data = response.sourceTypes;
                 tags.data = response.tags;
                 status.data = response.status;
-                Object.assign(config,  response.config);
+                Object.assign(config, response.config);
                 schedule = response.schedule;
-
                 loadTablesEdit(response.zones, response.blocks, response.reservations, response.servers);
                 showTimeCustom();
 
@@ -978,13 +977,13 @@ angular.module('floor.controller')
         // vmd.config = content.config;
         // vmd.schedule = content.schedule;
         // 
-        
+
         vmd.statuses = global.status.data;
         vmd.servers = global.servers.data;
         vmd.tags = global.tags.data;
         vmd.configuration = global.config;
 
-        vmd.countKeys = function(obj){
+        vmd.countKeys = function(obj) {
             return Object.keys(obj).length;
         };
 

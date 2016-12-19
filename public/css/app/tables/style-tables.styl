@@ -1993,11 +1993,16 @@ footer
 		li
 			background #575757
 			border-left 5px solid #424242
+			width 33.333333%
 			a
 				font-size 12px
 				color rgba(255,255,255,0.6)
 				padding 8px 0px
-				width 127px
+				width 100%
+	& .tab-nav:not(.tn-vertical).tn-justified>li
+		width 33.333333%
+		display inline
+		float left
 	& .tab-nav:not(.tn-vertical) > li.active > a
 		color rgba(255,255,255,0.6)
 	& .tab-nav:not(.tn-vertical) > li.active
@@ -2127,8 +2132,7 @@ ul.listado-servers
 		padding 5px
 		background #575757
 		color #fefefe
-	
-	
+
 ul.listado-filtros
 	position fixed
 	bottom 0px
@@ -2156,16 +2160,27 @@ ul.listado-filtros
 				padding 4px 5px
 		& .dropdown-menu
 			margin-bottom 6px
-			min-width 120px
+			min-width 100%
 			background #575757
 			li
 				border-bottom 1px solid #727272
 				a
 					text-transform uppercase
 					color #fefefe
-					padding 6px 10px
+					padding 10px 10px
 					&.sel_active
 						background #005581
+@media (max-width:768px)
+	ul.listado-filtros
+		> li
+			display block
+			float left
+			width 33.3333333333%
+			& .btn
+				width 100%
+	.container-zones
+		width: 100%
+		padding-right: 0px		
 li.divider
 	width 2px
 	background #575757

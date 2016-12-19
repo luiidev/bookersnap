@@ -13,6 +13,7 @@ angular.module('floor.controller')
         rm.status = [];
         rm.servers = [];
         rm.tags = [];
+        rm.schedule = {};
 
         var blocks = [];
 
@@ -51,20 +52,22 @@ angular.module('floor.controller')
         }];
 
 
-        var inspectToleranceReservation = function(reservation){
-            if(rm.configuracion && reservation.status.id < 4){
+        var inspectToleranceReservation = function(reservation) {
+            if (rm.configuracion && reservation.status.id < 4) {
                 var nowdate = moment();
                 var horareservacion = moment(reservation.datetime_input);
-                var diferece = horareservacion.diff(nowdate)/60000; // DIFERENCIA EN MINUTOS
+                var diferece = horareservacion.diff(nowdate) / 60000; // DIFERENCIA EN MINUTOS
 
                 var time_tolerance = rm.configuracion.time_tolerance;
 
-                if(diferece >= 0){
+                //console.log('reservation: ', reservation.id, ' reservation.datetime_input: ', reservation.datetime_input, ' diferece: ', diferece);
+
+                if (diferece >= 0) {
                     reservation.class = 'success';
-                }else {
-                    if(-diferece < time_tolerance){
+                } else {
+                    if (-diferece < time_tolerance) {
                         reservation.class = 'warning';
-                    }else{
+                    } else {
                         reservation.class = 'danger';
                     }
                 }
@@ -371,6 +374,7 @@ angular.module('floor.controller')
             rm.status = global.status.data;
             rm.servers = global.servers.data;
             rm.tags = global.tags.data;
+            rm.schedule = global.schedule;
 
             /**
              * Variables de apollo para escuchar los cambios
@@ -405,7 +409,7 @@ angular.module('floor.controller')
             er.selectTags = {};
             er.existTagsReservations = false;
 
-            er.countKeys = function(obj){
+            er.countKeys = function(obj) {
                 return Object.keys(obj).length;
             };
 
