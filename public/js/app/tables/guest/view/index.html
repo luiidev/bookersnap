@@ -33,13 +33,13 @@
         <div class="ms-menu" style="height: 100vh;">
             <div class="ms-block">
                 <div class="fg-line">
-                    <input class="form-control txt-search" ng-model="vm.name" placeholder="Buscar por nombre" type="text">
+                    <input class="form-control txt-search" ng-enter="vm.searchGuest()" ng-model="vm.name" placeholder="Buscar por nombre" type="text">
                     </input>
                 </div>
             </div>
             <div class="listview lv-user m-t-20" ng-scrollbars="" ng-scrollbars-config="vm.configScrollBar" style="height: 1000px">
                 <div style="min-height: 800px;">
-                    <div class="lv-item media" ng-repeat="item in vm.guestList | filter: vm.name | orderBy: 'first_name'">
+                    <div class="lv-item media" ng-repeat="item in vm.guestList">
                         <a href="" ui-sref="mesas.guest.view({ guest : '{{item.id}}'})">
                             <div class="lv-avatar bgm-orange pull-left">
                                 m
