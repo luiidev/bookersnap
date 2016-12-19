@@ -12,6 +12,11 @@ class WidgetController extends Controller
 {
     const _domain = "http://localhost:3004";
 
+    public function v2($site)
+    {
+        return view("widget.v2", ["microsite" => $site]);
+    }
+
     public function index($site)
     {
         return view("widget.paso_1", ["microsite" => $site]);
