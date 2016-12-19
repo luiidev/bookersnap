@@ -338,10 +338,7 @@
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label" ng-if="item.reservation.status.color != 'white'" style="background-color : {{item.reservation.status.color}}">
-                                {{ item.reservation.status.name }}
-                            </label>
-                            <label class="label" ng-if="item.reservation.status.color == 'white'" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
+                            <label class="label {{item.reservation.status.tag}}" >
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -480,17 +477,17 @@
                             <span ng-if="item.reservation.tables.length > 0">
                                 {{ item.reservation.tables[0].name }}
                             </span>
-                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
-                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
+                        <div class="item movil {{item.reservation.status.tag}}">
                             <span class="table-name">
                                 <span ng-if="item.reservation.tables.length > 0">
                                     {{ item.reservation.tables[0].name }}
                                 </span>
-                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                                <stron ng-if="item.reservation.tables.length == 0" class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
@@ -498,7 +495,7 @@
                             <span class="status-name">
                                 {{ item.reservation.status.name || 'Desconocido' }}
                             </span>
-                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} ">
+                            <span class="source-name">
                                 {{ item.reservation.source.name || 'Desconocido' }}
                             </span>
                         </div>
