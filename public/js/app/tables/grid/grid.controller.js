@@ -1,5 +1,34 @@
 angular.module('grid.controller', [])
-    .controller('GridCtrl', function($scope, gridFactory) {
+    .controller('GridCtrl', function($scope, $state, gridDataFactory, gridFactory) {
+        var vm = this;
+        vm.turns = []; //Listado de turnos activos segun fecha
+        vm.fecha_actual = moment().format('YYYY-MM-DD');
+
+        var getTurnsActives = function() {
+            gridDataFactory.getTurnsActives(vm.fecha_actual, true).then(
+                function success(response) {
+                    vm.turns = gridFactory.parseShiftsActives(response);
+
+                    $state.go("mesas.grid.index", {
+                        date: vm.fecha_actual,
+                        shift: vm.turns[0].name,
+                    });
+                },
+                function error(response) {
+                    console.error("getTurnsActives", angular.toJson(response, true));
+                }
+            );
+        };
+
+        var init = function() {
+            getTurnsActives();
+        };
+
+        init();
+
+    })
+    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, gridDataFactory, gridFactory) {
+
         var vm = this;
 
         vm.reservationCreate = {
@@ -15,10 +44,25 @@ angular.module('grid.controller', [])
         };
 
         vm.tablesAvailability = [];
+        vm.turns = []; //Listado de turnos activos segun fecha
+        vm.fecha_actual = moment().format('YYYY-MM-DD');
+        vm.fecha_selected = {
+            date: moment(vm.fecha_actual),
+            text: ''
+        };
+
+        vm.btnCalendarShift = {
+            turns: [],
+            turn_selected: {},
+            date_text: ''
+        };
 
         var init = function() {
             getTablesAvailability();
+            initCalendarSelectedShift();
             getTurnsActives();
+
+            //history.pushState("", "page 2", "bar.html");
         };
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
@@ -73,6 +117,47 @@ angular.module('grid.controller', [])
             alert("moveQuarterUp");
         };
 
+        vm.selectedDate = function() {
+            vm.fecha_selected.text = moment(vm.fecha_selected.date).format('YYYY-MM-DD');
+
+            _setUrlReload(vm.btnCalendarShift.turn_selected.name);
+        };
+
+        vm.selectedShift = function(shift) {
+            vm.btnCalendarShift.turn_selected = shift;
+            _setUrlReload(vm.btnCalendarShift.turn_selected.name);
+            console.log("selectedShift", shift);
+        };
+
+        var initCalendarSelectedShift = function() {
+            var date = ($stateParams.date === undefined) ? vm.fecha_actual : $stateParams.date;
+            vm.fecha_selected.text = date;
+            vm.fecha_selected.date = moment(date);
+        };
+
+        var setSelectedShift = function(shiftName) {
+            var turnSelected = gridFactory.setActiveShiftSelected(shiftName, vm.btnCalendarShift.turns);
+            if (turnSelected === null) {
+                vm.btnCalendarShift.turns[0].active = true;
+                _setUrlReload(null);
+            } else {
+                vm.btnCalendarShift.turn_selected = turnSelected;
+            }
+        };
+
+        var _setUrlReload = function(shiftName) {
+            console.log("_setUrlReload", shiftName);
+            shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
+            //$location.url('mesas/grid/2016-12-22/Desayuno');
+            history.pushState("", "page 2", "http://web.aplication.bookersnap/admin/ms/1/mesas#/mesas/grid/2016-12-22/Desayuno");
+            $state.go("mesas.grid.index", {
+                date: vm.fecha_selected.text,
+                shift: shiftName
+            }, {
+                reload: false
+            });
+        };
+
         var calculateQuarterHour = function(posIni) {
             posIni = parseInt(posIni);
 
@@ -106,7 +191,7 @@ angular.module('grid.controller', [])
         var getTablesAvailability = function() {
             var params = "";
 
-            gridFactory.getTablesAvailability(params).then(
+            gridDataFactory.getTablesAvailability(params).then(
                 function success(response) {
                     vm.tablesAvailability = response.data;
                     //console.log("getTablesAvailability", angular.toJson(vm.tablesAvailability, true));
@@ -118,9 +203,12 @@ angular.module('grid.controller', [])
         };
 
         var getTurnsActives = function() {
-            gridFactory.getTurnsActives("2016-12-17", true).then(
+            gridDataFactory.getTurnsActives(vm.fecha_selected.text, true).then(
                 function success(response) {
-                    console.log("getTurnsActives", angular.toJson(response, true));
+                    vm.turns = gridFactory.parseShiftsActives(response);
+                    vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(response);
+                    setSelectedShift($stateParams.shift);
+                    //console.log("getTurnsActives", angular.toJson(vm.turns, true));
                 },
                 function error(response) {
                     console.error("getTurnsActives", angular.toJson(response, true));

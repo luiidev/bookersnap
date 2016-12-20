@@ -2771,13 +2771,27 @@ li.divider
 		line-height normal
 
 .box-layout-center-grid
-	z-index 100 !important
+	width 500px!important
+	& .popover 
+		max-width 360px
+		& .popover-content 
+			padding 0 0 15px 0
 	& .nav-date 
 		cursor pointer
-		margin-top 8px
-		&:hover
+		display inline-block
+		&:hover,&:focus,&:active,&:visited
 			background-color transparent
+			
 	& .btn-date-selected-shift
 		height 60px
-		width 200px
-		float left
+		width 200px!important
+		display inline-block
+	& .box-shift-options 
+		text-align center
+		& .shift-option 
+			padding 10px
+			margin-bottom 5px
+			cursor pointer
+			&.active
+				background-color #01567f
+				color #fff

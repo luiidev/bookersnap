@@ -38,22 +38,35 @@
             </div>
         </button>
     </li>
-    <li class="item-date m-t-0 box-layout-center-grid">
-        <a class="pull-left nav-date prev-date" href="">
+    <li class="item-nav box-layout-center-grid">
+        <a class="nav-date prev-date" href="">
             <img src="/images/left-arrow.svg" width="30">
             </img>
         </a>
-        <button class="item-action btn btn-default-blue btn-sm btn-date-selected-shift" type="button">
+        <button class="item-action btn btn-default-blue btn-sm btn-date-selected-shift" popover-template="'myCalendarShiftTemplate.html'" popover-title="" type="button">
             <div class="text-date-selected">
-                Sat, December 17
+                {{ vm.fecha_selected.text | date : 'EEEE d' : 'America/Lima'}}
             </div>
             <div class="title">
-                Brunch - 0 Covers
+                {{ vm.btnCalendarShift.turn_selected.name }} 0 Covers
             </div>
         </button>
-        <a class="pull-left nav-date next-date" href="">
+        <a class="nav-date next-date" href="">
             <img src="/images/right-arrow.svg" width="30">
             </img>
         </a>
     </li>
 </ul>
+<script id="myCalendarShiftTemplate.html" type="text/ng-template">
+    <div class="date-picker">
+        <uib-datepicker ng-model="vm.fecha_selected.date" show-weeks="false" starting-day="1" ng-change="vm.selectedDate()">
+        </uib-datepicker>
+    </div>
+    <div class="form-group fg-line m-b-0 m-t-5">
+        <div class="box-shift-options">
+            <div class="shift-option" ng-repeat="shifts in vm.btnCalendarShift.turns" ng-class="{'active':shifts.active}" ng-click="vm.selectedShift(shifts)">
+            {{ shifts.name }}
+            </div>
+        </div>
+    </div>
+</script>

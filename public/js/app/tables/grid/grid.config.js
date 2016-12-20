@@ -9,7 +9,6 @@ angular.module('grid.app', ['grid.controller', 'grid.service', 'grid.directive']
                         controller: 'GridNotificationCtrl'
                     },
                     'index@mesas.grid': {
-                        templateUrl: '/js/app/tables/grid/view/index.html',
                         controller: 'GridCtrl',
                         controllerAs: 'vm'
                     },
@@ -17,6 +16,17 @@ angular.module('grid.app', ['grid.controller', 'grid.service', 'grid.directive']
                 resolve: {
                     $title: function() {
                         return 'Grid';
+                    }
+                }
+            })
+            .state('mesas.grid.index', {
+                url: '/:date/:shift',
+                //reloadOnSearch: false,
+                views: {
+                    "@": {
+                        templateUrl: '/js/app/tables/grid/view/index.html',
+                        controller: 'GridMainCtrl',
+                        controllerAs: 'vm'
                     }
                 }
             });
