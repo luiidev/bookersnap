@@ -99,10 +99,22 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
-                                </span>
-                                <span ng-bind="item.reservation.guest.last_name">
-                                </span>
+                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
+                                    <span ng-bind="item.reservation.guest.last_name"></span>
+                                    
+
+                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
+                                        <div class="arrow"></div>
+                                        <div ng-show="item.reservation.event" >
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                            <div class="popover-content">
+                                                <div class="event-image" ng-style="{'background-image': 'url(http://bookersnap.com/archivo/eventos/160x160/{{item.reservation.event.image}})'}"></div>
+                                                <p ng-bind="item.reservation.event.description"></p>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </span>                               
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
@@ -307,10 +319,21 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
-                                </span>
-                                <span ng-bind="item.reservation.guest.last_name">
-                                </span>
+                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
+                                    <span ng-bind="item.reservation.guest.last_name"></span>
+                                    <i class="zmdi zmdi-label-alt zmdi-hc-fw"></i>
+                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
+                                        <div class="arrow"></div>
+                                        <div ng-show="item.reservation.event" >
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                            <div class="popover-content">
+                                                <div class="event-image" ng-style="{'background-image': 'url(http://bookersnap.com/archivo/eventos/160x160/{{item.reservation.event.image}})'}"></div>
+                                                <p ng-bind="item.reservation.event.description"></p>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </span>                               
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
@@ -325,8 +348,9 @@
                                     <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
                                     <span class="count">{{item.reservation.guest_list.length}}</span>
                                 </a>
-                            </div>
+                            </div>                                                       
                         </div>
+
                     </div>
                     <div class="box-reservation">
                         <div class="datetime" ng-click="vm.editReservation(item)">
@@ -585,15 +609,78 @@
             <button class="btn btn-danger pull-right" ng-click="br.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
+            <!-- <form class="form p-relative">
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
+                        <label class="fg-label">Nombres</label>
+                    </div>
+                </div>
+                <div class="guest-search-list">
+                    <div class="card m-0">
+                        <div class="card-header" ng-repeat="guest in br.guestList" ng-click="br.selectGuest(guest)">
+                            <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
+                            <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                            <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="last_name" ng-model="br.newGuest.last_name"/>
+                        <label class="fg-label">Apellidos</label>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="phone" ng-model="br.newGuest.phone"/>
+                        <label class="fg-label">Teléfono</label>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="email" ng-model="br.newGuest.email"/>
+                        <label class="fg-label">Email</label>
+                    </div>
+                </div>
+            </form>
+             
+            <form class="form p-relative">
+                <div class="form-group  m-b-25">
+                    <div class="fg-line">
+                        <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
+                            <div class="card-header" ng-click="br.removeGuest()">
+                                <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
+                                <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
+                                <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                                <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <div class="select">
+                            <select class="form-control" id="covers" ng-model="br.reservation.covers" ng-options="cover.id as cover.name for cover in br.covers" ng-change="br.suggestTables()"></select>
+                        </div>                    
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <textarea class="form-control fg-input" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="br.reservation.note"></textarea>
+                        <label class="fg-label">Nota</label>
+                    </div>
+                </div>
+            </form> -->
             
             <form class="form-horizontal m-b-10" role="form"  ng-show="br.addGuest" autocomplete="off">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <label class="col-xs-2 control-label" for="name">
                         <strong>NOMBRES</strong>
                     </label>
                     <div class="col-xs-10 p-r-30">
                         <div class="fg-line">
-                                <input type="text" class="form-control input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
+                            <input type="text" class="form-control fg-input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
                         </div>
                     </div>
                 </div>
@@ -637,18 +724,16 @@
                     </div>
                 </div>
             </form>
-
             <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
-                 <div class="card-header" ng-click="br.removeGuest()">
-                     <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
-                     <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
-                     <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
-                     <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
-                 </div>
-            </div> 
-
+                <div class="card-header" ng-click="br.removeGuest()">
+                    <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
+                    <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
+                    <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                    <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
+                </div>
+            </div>
             <form class="form-horizontal" role="form">
-                     <div class="resum-reservation"  ng-click="br.redirectReservation()">
+                     <div class="resum-reservation p-t-20 p-b-20"  ng-click="br.redirectReservation()">
                          <div class="row">
                              <div class="col-xs-4" >{{ br.info.date }}</div>
                              <div class="col-xs-4 text-center">{{ br.info.time }}</div>
