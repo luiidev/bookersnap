@@ -23,8 +23,8 @@ angular.module('grid.controller', [])
         var init = function() {
             getTurnsActives();
         };
-
         init();
+
 
     })
     .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, gridDataFactory, gridFactory) {
@@ -57,11 +57,12 @@ angular.module('grid.controller', [])
             date_text: ''
         };
 
-        var init = function() {
-            getTablesAvailability();
-            initCalendarSelectedShift();
-            getTurnsActives();
+        //Informacion general para el grid (reservaciones,bloqueos,disponibilidad,config,etc)
+        vm.gridData = {};
 
+        var init = function() {
+            initCalendarSelectedShift();
+            getDataGrid();
             //history.pushState("", "page 2", "bar.html");
         };
 
@@ -125,8 +126,40 @@ angular.module('grid.controller', [])
 
         vm.selectedShift = function(shift) {
             vm.btnCalendarShift.turn_selected = shift;
+            gridFactory.getRangoHoursShift(shift);
             _setUrlReload(vm.btnCalendarShift.turn_selected.name);
             console.log("selectedShift", shift);
+        };
+
+        vm.prevDateCalendarShift = function() {
+            var date = moment(vm.fecha_selected.text).subtract(1, 'days').format('YYYY-MM-DD');
+            vm.fecha_selected.text = date;
+            _setUrlReload(null);
+        };
+
+        vm.nextDateCalendarShift = function() {
+            var date = moment(vm.fecha_selected.text).add(1, 'days').format('YYYY-MM-DD');
+            vm.fecha_selected.text = date;
+            _setUrlReload(null);
+        };
+
+        var getDataGrid = function() {
+            var params = {
+                date: vm.fecha_selected.text
+            };
+            gridDataFactory.getGrid(params).then(
+                function success(response) {
+                    vm.gridData = response.data.data;
+                    vm.tablesAvailability = vm.gridData.availabilityTables;
+
+                    vm.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
+                    vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
+                    setSelectedShift($stateParams.shift);
+                },
+                function error(response) {
+                    console.error("getDataGrid", angular.toJson(response.data, true));
+                }
+            );
         };
 
         var initCalendarSelectedShift = function() {
@@ -149,7 +182,7 @@ angular.module('grid.controller', [])
             console.log("_setUrlReload", shiftName);
             shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
             //$location.url('mesas/grid/2016-12-22/Desayuno');
-            history.pushState("", "page 2", "http://web.aplication.bookersnap/admin/ms/1/mesas#/mesas/grid/2016-12-22/Desayuno");
+            // history.pushState("", "page 2", "http://web.aplication.bookersnap/admin/ms/1/mesas#/mesas/grid/2016-12-22/Desayuno");
             $state.go("mesas.grid.index", {
                 date: vm.fecha_selected.text,
                 shift: shiftName
@@ -186,34 +219,6 @@ angular.module('grid.controller', [])
                 }
             }
             return index;
-        };
-
-        var getTablesAvailability = function() {
-            var params = "";
-
-            gridDataFactory.getTablesAvailability(params).then(
-                function success(response) {
-                    vm.tablesAvailability = response.data;
-                    //console.log("getTablesAvailability", angular.toJson(vm.tablesAvailability, true));
-                },
-                function error(response) {
-                    console.error("getTablesAvailability", angular.toJson(response, true));
-                }
-            );
-        };
-
-        var getTurnsActives = function() {
-            gridDataFactory.getTurnsActives(vm.fecha_selected.text, true).then(
-                function success(response) {
-                    vm.turns = gridFactory.parseShiftsActives(response);
-                    vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(response);
-                    setSelectedShift($stateParams.shift);
-                    //console.log("getTurnsActives", angular.toJson(vm.turns, true));
-                },
-                function error(response) {
-                    console.error("getTurnsActives", angular.toJson(response, true));
-                }
-            );
         };
 
         init();

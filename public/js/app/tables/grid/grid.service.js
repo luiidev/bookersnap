@@ -1,22 +1,11 @@
 angular.module('grid.service', [])
-    .factory('gridDataFactory', function($http, $q, TablesDataFactory, FloorFactory) {
+    .factory('gridDataFactory', function($http, $q, TablesDataFactory, FloorFactory, ApiUrlMesas) {
 
         return {
-            getTablesAvailability: function(params) {
-                var defered = $q.defer();
-
-                TablesDataFactory.getAvailability(params).then(
-                    function success(response) {
-                        defered.resolve(response.data);
-                    },
-                    function error(response) {
-                        defered.reject(response.data);
-                    }
-                );
-                return defered.promise;
-            },
-            getTurnsActives: function(date, reload) {
-                return FloorFactory.listTurnosActivos(date, reload);
+            getGrid: function(params) {
+                return $http.get(ApiUrlMesas + "/web-app/grid", {
+                    params: params
+                });
             }
         };
     })
@@ -47,6 +36,10 @@ angular.module('grid.service', [])
                 });
 
                 return shiftData;
+            },
+            getRangoHoursShift: function(shift) {
+                var hours = getRangoHours(shift.turn.hours_ini, shift.turn.hours_end, true);
+                console.log("getRangoHoursShift", angular.toJson(hours, true));
             }
 
         };
