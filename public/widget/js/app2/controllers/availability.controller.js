@@ -1,25 +1,70 @@
 angular.module("App")
-    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", function(vm, $q, availabilityService) {
+    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles",function(vm, $q, availabilityService, utiles) {
 
         vm.form = {};
         vm.result = [];
         vm.availability = {};
         vm.loadingInfo = false;
         vm.message = "";
-        vm.dateOptions = {
-            showWeeks: false,
-            startingDay: 1
-        };
 
         vm.selectedPeople = {};
         vm.selectedZone = {};
+        vm.selectedHour = {};
+        vm.selectedEvent= {};
 
         vm.minDate = new Date();
         vm.date = new Date();
 
-      /**
-       * Date picker filter
-       */
+        /**
+         * Variables de apollo
+         */
+         var zoneColapse = true;
+         vm.case = 1;
+
+        /**
+         *  HTTP 
+         */
+         vm.searchAvailability = function() {
+            var deferred = $q.defer();
+
+            vm.loadingInfo = true;
+            // vm.result.length = 0;
+            availabilityService.getAvailability(vm.availability)
+                .then(function(response) {
+                    vm.result = resultFormat(response.data.data);
+                    showResult();
+                    deferred.resolve(vm.result);
+                }).catch(function(error) {
+                    deferred.reject("Error en la busqueda de disponibilidad");
+                    console.log("Error en la busqueda de disponibilidad", error);
+                }).finally(function() {
+                    vm.loadingInfo = false;
+                    vm.infoAvailability = 'Reservaciones disponibles al ' + vm.infoDate + ' a las ' + vm.availability.hour.option_user + ' para ' + vm.availability.num_guests + ' personas.';
+                });
+
+             return deferred.promise;
+         };
+        /**
+         * end HTTP
+         */
+        
+        var showResult = function() {
+            $("#first").fadeOut(100, function() {
+                $("#two").fadeIn(100);
+            });
+            vm.case = 2;
+        };
+        
+        vm.returnSearch = function() {
+            $("#two").fadeOut(100, function() {
+                $("#first").fadeIn(100);
+            });
+            vm.case = 1;
+        };
+
+       /**
+        * Date picker filter
+        */
         vm.disabled = function(date, mode){
             if(! vm.form.daysDisabled ) return;
             var isHoliday = false;
@@ -46,27 +91,42 @@ angular.module("App")
         /**
          * Selects
          */
+        
+        vm.zoneColapse = function(event) {
+            if (!zoneColapse) {
+                event.stopPropagation();
+            }
+        };
+
         vm.selectPeople = function(guest) {
             vm.availability.num_guests = guest.value;
             vm.selectedPeople = guest;
         };
 
         vm.selectZone  = function(zone) {
-            vm.availability.zone_id = zone.option;
+            vm.availability.zone_id = zone.id;
             vm.selectedZone = zone; 
         };
 
         vm.selectHour = function(hour, event) {
-            vm.availability.hour = hour;
-            vm.selectedHour = hour; 
-            if (event === null || event === undefined) {
-                if (hour.events.length) {
-                    vm.selectedEvent = hour.events[0];
+            if (hour === null || hour === undefined) {
+                vm.availability.hour = {};
+                vm.selectedHour = {}; 
+                vm.selectedEvent = {};
+            } else {
+                vm.availability.hour = hour;
+                vm.selectedHour = hour; 
+
+                if (event === null || event === undefined) {
+                    if (hour.events.length) {
+                        vm.selectedEvent = hour.events[0];
+                    } else {
+                        vm.selectedEvent = {};
+                    }
                 } else {
-                    vm.selectedEvent = {};
+                    vm.selectedEvent = event;
                 }
             }
-console.log(vm.selectedEvent);
         };
         /**
          * END Selects
@@ -101,8 +161,12 @@ console.log(vm.selectedEvent);
          };
 
          var defaultData = function(date) {
+            zoneColapse = true;
+
+            // Default Date
              vm.availability.date = date;
 
+             // Default num guests
              var find_people = findObject(vm.form.people, function(item) {
                 return item.value == vm.selectedPeople.value;
              });
@@ -115,22 +179,28 @@ console.log(vm.selectedEvent);
                 }
              }
 
-             var find_zone = findObject(vm.form.zones, function(item) {
-                return item.id == vm.selectedZone.id;
-             });
-
-             if (find_zone !== null) {
-                vm.selectZone(find_zone);
+             // Default zone
+             if (vm.form.zones.length === 1) {
+                vm.selectZone(vm.form.zones[0]);
+                zoneColapse = false;
              } else {
-                if (vm.form.zones.length) {
-                    vm.selectZone(vm.form.zones[0]);
+                var find_zone = findObject(vm.form.zones, function(item) {
+                   return item.id == vm.selectedZone.id;
+                });
+
+                if (find_zone !== null) {
+                   vm.selectZone(find_zone);
+                } else {
+                   if (vm.form.zones.length) {
+                       vm.selectZone(vm.form.zones[0]);
+                   }
                 }
              }
 
-             vm.selectHour(vm.form.hours[0]);
+            // Default hour
+            vm.selectHour(utiles.filterHour(vm.form.hours, vm.availability.hour));
 
-             // vm.availability.hour = utiles.filterHour(vm.form.hours, vm.availability.hour);
-
+            // Date detail
              vm.infoDate = moment(date).format("dddd, D [de] MMMM");
 
              // vm.searchAvailability();
@@ -148,7 +218,6 @@ console.log(vm.selectedEvent);
                 .then(function(response) {
                     vm.form = response.data.data;
                     vm.date = new Date(vm.form.date.split("-"));
-                    console.log(vm.form);
                     defaultData(vm.form.date);
 
                     vm.loadingData = false;
@@ -160,24 +229,15 @@ console.log(vm.selectedEvent);
                 });
         };
 
-        vm.$watch("date", function(newValue, oldValue){
-            console.log("changeHour");
+        vm.$watch("date", function(newValue, oldValue) {
             if (! moment(newValue).isSame(oldValue) && ! moment(vm.form.date).isSame(newValue)) {
                 var date = moment(vm.date).utc().format("YYYY-MM-DD");
                 InitModule(date);
             }
         });
 
-
-
-        (function() {
-            // searchTemporalReserve()
-            //     .then(function() {
-                    InitModule();
-                // })
-                // .catch(function() {
-                //     vm.showPrev = true;
-                // });
+        (function Init() {
+            InitModule();
         })();
 
     }]);
