@@ -59,6 +59,10 @@ angular.module('grid.controller', [])
 
         //Informacion general para el grid (reservaciones,bloqueos,disponibilidad,config,etc)
         vm.gridData = {};
+        //Listado de horas segun turno (se actualiza cuando cambias el turno)
+        vm.timesShift = [];
+        //Listado de disponibilidad segun mesa(contendra reservas,bloqueos,bloqueos de turnos,etc)
+        vm.tablesAvailabilityFinal = [];
 
         var init = function() {
             initCalendarSelectedShift();
@@ -126,7 +130,7 @@ angular.module('grid.controller', [])
 
         vm.selectedShift = function(shift) {
             vm.btnCalendarShift.turn_selected = shift;
-            gridFactory.getRangoHoursShift(shift);
+            //gridFactory.getRangoHoursShift(shift);
             _setUrlReload(vm.btnCalendarShift.turn_selected.name);
             console.log("selectedShift", shift);
         };
@@ -162,6 +166,28 @@ angular.module('grid.controller', [])
             );
         };
 
+        var constructTablesAvailability = function() {
+            var availabilityTables = [];
+
+            angular.forEach(vm.tablesAvailability, function(table, key) {
+                var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected, vm.gridData.reservations);
+                var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations);
+
+                availabilityTables.push({
+                    id: table.id,
+                    name: table.name,
+                    min_cover: table.min_cover,
+                    max_cover: table.max_cover,
+                    availability: availability,
+                    reservations: reservations
+                });
+            });
+
+            vm.tablesAvailabilityFinal = availabilityTables;
+
+            //console.log("constructTablesAvailability", angular.toJson(vm.tablesAvailabilityFinal, true));
+        };
+
         var initCalendarSelectedShift = function() {
             var date = ($stateParams.date === undefined) ? vm.fecha_actual : $stateParams.date;
             vm.fecha_selected.text = date;
@@ -176,6 +202,10 @@ angular.module('grid.controller', [])
             } else {
                 vm.btnCalendarShift.turn_selected = turnSelected;
             }
+
+            vm.timesShift = gridFactory.getRangoHoursShift(vm.btnCalendarShift.turn_selected);
+
+            constructTablesAvailability();
         };
 
         var _setUrlReload = function(shiftName) {

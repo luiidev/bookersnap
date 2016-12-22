@@ -6,47 +6,13 @@
                     <div class="grid-header">
                         <div class="grid-time-label-out">
                             <div class="grid-time-label-in">
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-text">
-                                        8 AM
+                                <div class="grid-time-label-cell" ng-repeat="hour in vm.timesShift">
+                                    <div class="grid-time-label-text" ng-if="hour.init">
+                                        {{ hour.hour12 }}
                                     </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    <div class="grid-time-label-divider grid-time-label-divider-quarter" ng-if="hour.quarter">
                                     </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-half">
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-text">
-                                        9 AM
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-half">
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-text">
-                                        10 AM
-                                    </div>
-                                </div>
-                                <div class="grid-time-label-cell">
-                                    <div class="grid-time-label-divider grid-time-label-divider-quarter">
+                                    <div class="grid-time-label-divider grid-time-label-divider-half" ng-if="hour.half">
                                     </div>
                                 </div>
                             </div>
@@ -71,26 +37,15 @@
                     <div class="grid-body">
                         <div class="grid-body-container">
                             <div class="grid-body-rows-container">
-                                <div class="grid-body-rows-table" ng-repeat="item in [1,2,3,4,5,6,7,8,9]">
+                                <div class="grid-body-rows-table" ng-repeat="item in vm.tablesAvailabilityFinal">
                                     <span>
+                                        <div class="grid-body-cell" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-repeat="available in item.availability">
+                                        </div>
+                                        <!--
                                         <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:00',$index,'0')" ng-mousemove="vm.selectTimeReservationCreate('move','8:00',$index,'0')" ng-mouseup="vm.selectTimeReservationCreate('end','8:00',$index,'0')">
                                         </div>
                                         <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate('init','8:15',$index,'62')" ng-mousemove="vm.selectTimeReservationCreate('move','8:15',$index,'62')" ng-mouseup="vm.selectTimeReservationCreate('end','8:15',$index,'62')">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:30',$index,'124')" ng-mousemove="vm.selectTimeReservationCreate('move','8:30',$index,'124')" ng-mouseup="vm.selectTimeReservationCreate('end','8:30',$index,'124')">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.initReservationCreate('init','8:45',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','8:45',$index)">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','9:00',$index)" ng-mouseup="vm.selectTimeReservationCreate('end','9:00',$index)">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate()">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-half">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-quarter">
-                                        </div>
-                                        <div class="grid-body-cell grid-time-divider-half">
-                                        </div>
+                                        </div>-->
                                         <!-- hover reservation-->
                                         <div class="grid-cell cell cell-item{{$index}}" style="z-index: 98;display: none">
                                             <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation" style="z-index: 1;float: left">
