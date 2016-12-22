@@ -56,8 +56,8 @@
                                     <small ng-bind="hour.events[0].description"></small>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="promo" ng-class="{active: selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-repeat="event in hour.events" ng-if="$index > 0" ng-click="selectHour(hour, event)">
+                            <tr ng-repeat="event in hour.events" ng-if="$index > 0">
+                                <td class="promo" ng-class="{active: selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
                                     <h4 ng-bind="event.name"></h4>
                                     <small ng-bind="event.description"></small>
                                 </td>
