@@ -183,6 +183,40 @@ body {
 	line-height: 160%;
 	font-size: 11px;
 }
+
+.promo-list .item .active {
+	background: #ccc;
+}
+
 .calendar table{
 	margin: 40px auto;
+}
+
+.hour-select table{
+	width: 100%;
+}
+
+.pull-left {
+	float: left;
+}
+
+.pull-right {
+	float: right;
+}
+
+#two {
+	display: none;
+}
+
+#two  div{
+	padding: 40px 10px 0 10px;
+}
+
+#two  div.title{
+	padding-top: 20px;
+}
+
+#two  div button {
+	width: 100%;
+	height: 35px;
 }
