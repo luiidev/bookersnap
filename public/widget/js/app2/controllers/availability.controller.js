@@ -1,6 +1,8 @@
 angular.module("App")
-    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles",function(vm, $q, availabilityService, utiles) {
+    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "_base_url", "$storage",
+        function(vm, $q, availabilityService, utiles, $window, _base_url, $storage) {
 
+        var storage = $storage.instance;
         vm.form = {};
         vm.result = [];
         vm.availability = {};
@@ -19,7 +21,7 @@ angular.module("App")
          * Variables de apollo
          */
          var zoneColapse = true;
-         vm.case = 1;
+         vm.case = 0;
 
         /**
          *  HTTP 
@@ -44,10 +46,29 @@ angular.module("App")
 
              return deferred.promise;
          };
+
+         vm.saveTemporalReserve = function(item) {
+             vm.loadingInfo = true;
+
+             availabilityService.saveTemporalReserve(item.form)
+                 .then(function(response) {
+                     storage._token  = response.data.data.token;
+                     redirect();
+                 }).catch(function(error) {
+                     alert("Ocurrio un problema al tratar de reservar, intentelo de nuevo.");
+                     console.log("Error en la reserva temporal", error);
+                 }).finally(function() {
+                     vm.loadingInfo = false;
+                 });
+         };
         /**
          * end HTTP
          */
         
+        var redirect = function(key) {
+            $window.location.href = _base_url + "/reserve?key=" + storage._token;
+        };
+
         var showResult = function() {
             $("#first").fadeOut(100, function() {
                 $("#two").fadeIn(100);
@@ -210,6 +231,8 @@ angular.module("App")
           */
 
         var InitModule = function(date) {
+            date = "2016-12-23";
+            vm.case = 1;
             vm.loadingInfo = true;
             vm.loadingData = true;
             vm.message = "Cargando ...";
@@ -236,8 +259,56 @@ angular.module("App")
             }
         });
 
-        (function Init() {
+        var searchTemporalReserve = function() {
+            var deferred = $q.defer();
+
+            if (!$storage.existToken()) {
+                deferred.reject();
+                return deferred.promise;
+            }
+
+            availabilityService.searchTemporalReserve()
+                .then(function(response) {
+                    vm.prevReserve = response.data.data;
+                    if (vm.prevReserve !== null) {
+                        deferred.resolve();
+                    } else {
+                        deferred.reject();
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                    deferred.reject();
+                });
+
+            return deferred.promise;
+        };
+
+        var cancelTemporalReservation = function() {
+            availabilityService.cancelTemporalReservation();
+        };
+
+        vm.closePrev = function() {
+            vm.showPrev = false;
+            cancelTemporalReservation();
             InitModule();
+        };
+
+        vm.openPrev = function() {
+            if ($storage.existToken()) {
+                $window.location.href = _base_url + "/reserve?key=" + storage._token;
+            } else {
+                InitModule();
+            }
+        };
+
+        (function Init() {
+            searchTemporalReserve()
+                .then(function() {
+                    vm.showPrev = true;
+                })
+                .catch(function() {
+                    InitModule();
+                });
         })();
 
     }]);

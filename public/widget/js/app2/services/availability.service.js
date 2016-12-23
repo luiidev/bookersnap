@@ -1,6 +1,7 @@
 angular.module("App")
-    .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", function($http, $q, ApiUrlMesas) {
-        var token = "abcdefghijklmnopqrstuvwyz";
+    .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", "$storage",function($http, $q, ApiUrlMesas, $storage) {
+        var storage = $storage.instance;
+
         return {
             getFormatAvailability: function(date) {
                 return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
@@ -17,19 +18,19 @@ angular.module("App")
                 });
             },
             saveTemporalReserve: function(data) {
-                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": token}});
+                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": storage._token }});
             },
             saveReservation: function(data) {
                 return $http.post(ApiUrlMesas + "/table/reservation/w", data);
             },
-            cancelReservation: function(token) {
-                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + token);
+            cancelReservation: function(reserveToken) {
+                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + reserveToken);
             },
-            cancelTemporalReservation: function(token) {
-                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + token);
+            cancelTemporalReservation: function() {
+                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + storage._token);
             },
             searchTemporalReserve: function() {
-                return $http.get(ApiUrlMesas + "/reservationtemporal/" + token);
+                return $http.get(ApiUrlMesas + "/reservationtemporal/" + storage._token);
             }
         };
     }])
@@ -68,7 +69,17 @@ angular.module("App")
     }])
     .factory("_base_url", ["$location", function($location) {
 
-        var _base_url = $location.protocol() + "://" + $location.host() + "/w/" + microsite;
+        var _base_url = $location.protocol() + "://" + $location.host() + "/v2/w/" + microsite;
 
         return _base_url;
+    }])
+    .factory("$storage", ["$localStorage", function($localStorage) {
+            var instance = $localStorage.$default({ _token: "abcdefghijklmnopqrstuvwxyz" });
+
+            return {
+                existToken: function() {
+                    return Object.prototype.toString.call(instance._token)  == "[object String]";
+                }, 
+                instance: instance
+            };
     }]);
