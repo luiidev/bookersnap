@@ -2722,7 +2722,10 @@ li.divider
 		& .grid-cell-underlay-creation 
 			& .grid-cell-quarter-hour
 				background #2c3e50
-				
+		& .grid-cell-reservation
+			color #333
+			z-index 1
+			float left
 		& .grid-cell-layer
 			width 100%
 			height 100%
@@ -2755,7 +2758,27 @@ li.divider
 					padding-top 6px
 		& .grid-cell-info-creation
 			color #fff
-			border-color #2c3e50		
+			border-color #2c3e50
+		& .grid-cell-info-reserva
+			color #333
+			z-index -1
+			background #f5f7f9
+			border 1px solid #d7d7d7
+			border-left-width 6px
+			& .cell-item-info-subtitle
+				color #333!important
+			& .cell-item-res-status
+				position absolute
+				width 45px
+				right 0
+				top 20%
+				& .icon
+					background-repeat no-repeat
+					width 36px
+					height 36px
+					background-size 36px
+					position absolute
+					
 	& .cell
 		-moz-user-select -moz-none
 		-ms-user-select none
@@ -2792,3 +2815,7 @@ li.divider
 			&.active
 				background-color #01567f
 				color #fff
+
+/*----------------ICONOS ESTADOS DE RESERVACION------------*/
+.item-status-4
+	background-image url('../../../img/status/seated.svg')

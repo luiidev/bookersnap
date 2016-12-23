@@ -72,7 +72,7 @@ angular.module('grid.controller', [])
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
 
-            //console.log("selectTimeReservationCreate ", type, hourIni, index);
+            //console.log("selectTimeReservationCreate ", type, hour, index, posIni);
             if (type == "init") {
                 vm.reservationCreate.hourIni = hour;
                 vm.reservationCreate.index = index;
@@ -112,8 +112,10 @@ angular.module('grid.controller', [])
         vm.moveQuarterHour = function(value) {
 
             if (vm.tempData.hourIni !== value.hour && vm.tempData.index === value.index) {
-                console.log("moveQuarterHour", value);
+
                 calculateQuarterHour(value.posIni);
+
+                console.log("moveQuarterHour", value, angular.toJson(vm.reservationCreate.timeTotal, true));
             }
             //calculateQuarterHour(posIni);
         };
@@ -124,7 +126,6 @@ angular.module('grid.controller', [])
 
         vm.selectedDate = function() {
             vm.fecha_selected.text = moment(vm.fecha_selected.date).format('YYYY-MM-DD');
-
             _setUrlReload(vm.btnCalendarShift.turn_selected.name);
         };
 
@@ -170,8 +171,8 @@ angular.module('grid.controller', [])
             var availabilityTables = [];
 
             angular.forEach(vm.tablesAvailability, function(table, key) {
-                var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected, vm.gridData.reservations);
-                var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations);
+                var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected);
+                var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations, availability, key);
 
                 availabilityTables.push({
                     id: table.id,
@@ -224,8 +225,8 @@ angular.module('grid.controller', [])
         var calculateQuarterHour = function(posIni) {
             posIni = parseInt(posIni);
 
-            var total = (posIni === 0) ? 0 : posIni / 62;
-            total = (total === 0) ? 1 : total;
+            /*var total = (posIni === 0) ? 0 : posIni / 62;
+            total = (total === 0) ? 1 : total;*/
 
             var indexPos = getPosIni(posIni);
             if (indexPos === -1) {
@@ -235,7 +236,7 @@ angular.module('grid.controller', [])
                     index: vm.tempData.index
                 });
             } else {
-                vm.reservationCreate.timeTotal.splice(indexPos, 1);
+                vm.reservationCreate.timeTotal.splice(indexPos + 1, 1);
             }
         };
 

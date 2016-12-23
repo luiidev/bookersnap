@@ -64,38 +64,76 @@ angular.module('grid.service', [])
                 return hours;
             },
             //Devuelve la disponibilidad segun las reglas y el horario)
-            constructAvailability: function(availabilityTables, shift, reservations) {
+            constructAvailability: function(availabilityTables, shift) {
                 var availability = [];
                 var indexHourIni = getIndexHour(shift.turn.hours_ini, null);
                 var nextDay = getHourNextDay(shift.turn.hours_ini, shift.turn.hours_end);
                 var indexHourEnd = getIndexHour(shift.turn.hours_end, nextDay);
-
+                var pos = 0;
                 for (var i = indexHourIni; i <= indexHourEnd; i++) {
                     if (availabilityTables[i].rule_id > 0) {
                         availabilityTables[i].availability = true;
                     }
+                    availabilityTables[i].position_grid = pos;
+                    pos += 62;
                     availability.push(availabilityTables[i]);
                 }
 
                 return availability;
             },
             //Devuelve las reservaciones para la mesa
-            getReservationsByTable: function(table, reservations) {
+            getReservationsByTable: function(table, reservations, availability, indexTable) {
                 var self = this;
+                var reservationsData = [];
                 angular.forEach(reservations, function(reservation, key) {
                     var existsTable = self.searchTableInReservation(table, reservation);
-                    console.log("existsTable", table.name, existsTable);
+                    if (existsTable === true) {
+                        reservation = self.calculatePositionGrid(reservation, availability, indexTable);
+                        //reservation.position_grid = position;
+                        reservationsData.push(reservation);
+                    }
+
                 });
+                return reservationsData;
             },
             //Devuelve true , si la mesa ha sido reservada
             searchTableInReservation: function(table, reservation) {
+                var response = false;
                 angular.forEach(reservation.tables, function(tableRes, key) {
                     if (tableRes.id === table.id) {
-                        return true;
+                        response = true;
                     }
                 });
 
-                return false;
+                return response;
+            },
+            //Devuelve la reservacion con el campo position_grid
+            calculatePositionGrid: function(reservation, availability, indexTable) {
+
+                angular.forEach(availability, function(value, key) {
+                    if (value.time == reservation.hours_reservation) {
+                        reservation.position_grid = value.position_grid;
+                    }
+                });
+
+                var total_grid = calculateMinutesTime(reservation.date_reservation + " " + reservation.hours_duration) / 15;
+
+                reservation.total_grid = [];
+
+                var posIni = reservation.position_grid;
+                var hour = reservation.hours_reservation;
+
+                for (var i = 1; i <= total_grid; i++) {
+                    reservation.total_grid.push({
+                        posIni: posIni,
+                        hour: hour,
+                        index: indexTable
+                    });
+                    posIni += 62;
+                    hour = moment(reservation.date_reservation + " " + hour).add("minutes", 15).format("HH:mm:ss");
+                }
+
+                return reservation;
             }
 
         };
