@@ -50,15 +50,18 @@
                                         <div class="grid-cell cell" ng-repeat="reserva in item.reservations" style="z-index: 98;transform: translateX({{ reserva.position_grid }}px);">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva">
                                                 <div class="cell-item-info">
-                                                    <div class="cell-item-info-title">
-                                                        New Reservation
+                                                    <div class="cell-item-info-title" ng-if="reserva.guest === null">
+                                                        Reservacion sin nombre
+                                                    </div>
+                                                    <div class="cell-item-info-title" ng-if="reserva.guest !== null">
+                                                        {{ reserva.guest.first_name }} -  {{ reserva.guest.last_name }}
                                                     </div>
                                                     <div class="cell-item-info-subtitle">
                                                         {{ reserva.num_guest }} Invitados
                                                     </div>
                                                 </div>
                                                 <div class="cell-item-res-status">
-                                                    <span class="icon item-status-4">
+                                                    <span class="icon item-status-{{ reserva.res_reservation_status_id }}">
                                                     </span>
                                                 </div>
                                             </div>
@@ -69,7 +72,7 @@
                                         </div>
                                         <div class="grid-cell cell cell-item{{$index}}" style="z-index: 98;display: none">
                                             <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation" style="z-index: 1;float: left">
-                                                <div class="grid-cell-quarter-hour" ng-mousemove="vm.moveQuarterHour(item)" ng-mouseup="vm.moveQuarterUp()" ng-repeat="item in vm.reservationCreate.timeTotal" style="background: none;">
+                                                <div class="grid-cell-quarter-hour" ng-mousemove="vm.moveQuarterHour(timeTotal)" ng-mouseup="vm.moveQuarterUp(item)" ng-repeat="timeTotal in vm.reservationCreate.timeTotal" style="background: none;">
                                                 </div>
                                             </div>
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-creation" style="background: #2c3e50;z-index: -1">
@@ -97,3 +100,116 @@
         </footer>
     </section>
 </section>
+<script id="ModalCreateBookReservation.html" type="text/ng-template">
+    <div class="reservation-short-edit">
+        <div class="modal-header" style="line-height: 30px;">
+            <h4 style="display: inline;">RESERVAR MESA</h4>
+            <button class="btn btn-danger pull-right" ng-click="br.cancel()"><i class="zmdi zmdi-close"></i></button>
+        </div>
+        <div class="modal-body">
+            
+            <form class="form-horizontal m-b-10" role="form"  ng-show="br.addGuest" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="name">
+                        <strong>NOMBRES</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
+                        </div>
+                    </div>
+                </div>
+                <div class="guest-search-list">
+                    <div class="card m-0">
+                        <div class="card-header" ng-repeat="guest in br.guestList" ng-click="br.selectGuest(guest)">
+                            <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
+                            <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                            <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="last_name">
+                        <strong>APELLIDOS</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="last_name" ng-model="br.newGuest.last_name"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="phone">
+                        <strong>TELÉFONO</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="phone" ng-model="br.newGuest.phone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 control-label" for="email">
+                        <strong>E-MAIL</strong>
+                    </label>
+                    <div class="col-xs-10 p-r-30">
+                        <div class="fg-line">
+                                <input type="text" class="form-control input" id="email" ng-model="br.newGuest.email"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
+                 <div class="card-header" ng-click="br.removeGuest()">
+                     <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
+                     <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
+                     <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                     <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
+                 </div>
+            </div> 
+
+            <form class="form-horizontal" role="form">
+                     <div class="resum-reservation"  ng-click="br.redirectReservation()">
+                         <div class="row">
+                             <div class="col-xs-4" >{{ br.info.date }}</div>
+                             <div class="col-xs-4 text-center">{{ br.info.time }}</div>
+                             <div class="col-xs-4 "><span class="pull-right">{{ br.info.tableName }}</span></div>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-xs-2 control-label" for="covers">
+                             <strong>INVITADOS</strong>
+                         </label>
+                         <div class="col-xs-10 p-r-30">
+                             <div class="fg-line">
+                                 <div class="select">
+                                     <select class="form-control" id="covers" ng-model="br.reservation.covers" ng-options="cover.id as cover.name for cover in br.covers" ng-change="br.suggestTables()"></select>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <div class="form-group">
+                         <label class="col-xs-2 control-label" for="note">
+                             <strong>NOTA</strong>
+                         </label>
+                         <div class="col-xs-10 p-r-30">
+                             <div class="fg-line">
+                                 <textarea class="form-control input-sm" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="br.reservation.note"></textarea>
+                             </div>
+                         </div>
+                     </div>
+            </form>
+
+       </div>
+
+        <div class="modal-footer" >
+            <div class="text-center" >
+                <button class="btn btn-primary btn-block btn-lg" ng-click="br.save()" ng-disabled="br.waitingResponse">
+                        Crear Reservacion
+                </button>
+            </div>
+        </div>
+    </div>
+</script>

@@ -123,7 +123,7 @@ angular.module('grid.service', [])
                 var posIni = reservation.position_grid;
                 var hour = reservation.hours_reservation;
 
-                for (var i = 1; i <= total_grid; i++) {
+                for (var i = 0; i <= total_grid; i++) {
                     reservation.total_grid.push({
                         posIni: posIni,
                         hour: hour,
@@ -134,6 +134,37 @@ angular.module('grid.service', [])
                 }
 
                 return reservation;
+            },
+            //Agrega reservacion a la mesa - grid
+            addReservationTableGrid: function(tablesAvailabilityFinal, reservation, action) {
+                var self = this;
+
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
+                    angular.forEach(reservation.tables, function(table, key) {
+                        if (tableAvailability.id === table.id) {
+                            reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
+                            if (action === "create") {
+                                tableAvailability.reservations.push(reservation);
+                            } else {
+                                var indexReserva = self.getIndexReservationsInTable(tableAvailability.reservations, reservation);
+                                tableAvailability.reservations[indexReserva] = reservation;
+                                console.log("addReservationTableGrid12", angular.toJson(reservation, true));
+                            }
+                        }
+                    });
+                });
+
+                // console.log("addReservationTableGrid", angular.toJson(tablesAvailabilityFinal, true));
+            },
+            //Busca el indice de la reservacion para actualizarlo
+            getIndexReservationsInTable: function(tableReservations, reservation) {
+                var index = null;
+                angular.forEach(tableReservations, function(reserva, key) {
+                    if (reserva.id === reservation.id) {
+                        index = key;
+                    }
+                });
+                return index;
             }
 
         };

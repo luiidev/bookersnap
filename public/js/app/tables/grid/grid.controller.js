@@ -27,7 +27,7 @@ angular.module('grid.controller', [])
 
 
     })
-    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, gridDataFactory, gridFactory) {
+    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, gridDataFactory, gridFactory) {
 
         var vm = this;
 
@@ -67,7 +67,6 @@ angular.module('grid.controller', [])
         var init = function() {
             initCalendarSelectedShift();
             getDataGrid();
-            //history.pushState("", "page 2", "bar.html");
         };
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
@@ -90,38 +89,34 @@ angular.module('grid.controller', [])
                 if ((vm.tempData.hourIni !== hour)) {
                     console.log("move", hour, posIni);
                     vm.tempData.hourIni = hour;
+                    vm.tempData.hourEnd = hour;
                     vm.tempData.index = index;
                     calculateQuarterHour(posIni);
 
                 }
             }
-            //console.log("end", angular.toJson(vm.reservationCreate, true));
+            //EVALUANDO ESTE CODIGO (POSIBLEMENTE BORRAR)
             if (type === "end") {
                 vm.reservationCreate.hourEnd = hour;
                 calculateQuarterHour(posIni);
 
-                //console.log("end", angular.toJson(vm.reservationCreate, true));
-
                 vm.reservationCreate.hourIni = '';
                 vm.reservationCreate.index = null;
-                //vm.reservationCreate.timeTotal = [];
-                // angular.element(".cell-item" + index).css("display", "none");
             }
         };
 
         vm.moveQuarterHour = function(value) {
-
             if (vm.tempData.hourIni !== value.hour && vm.tempData.index === value.index) {
-
+                vm.reservationCreate.hourEnd = vm.tempData.hourEnd;
                 calculateQuarterHour(value.posIni);
-
-                console.log("moveQuarterHour", value, angular.toJson(vm.reservationCreate.timeTotal, true));
             }
-            //calculateQuarterHour(posIni);
         };
 
-        vm.moveQuarterUp = function() {
-            alert("moveQuarterUp");
+        vm.moveQuarterUp = function(table) {
+            var timeTotal = vm.reservationCreate.timeTotal.length;
+            vm.reservationCreate.hourEnd = vm.reservationCreate.timeTotal[timeTotal - 1].hour;
+
+            openModalCreateReserva(table);
         };
 
         vm.selectedDate = function() {
@@ -146,6 +141,45 @@ angular.module('grid.controller', [])
             var date = moment(vm.fecha_selected.text).add(1, 'days').format('YYYY-MM-DD');
             vm.fecha_selected.text = date;
             _setUrlReload(null);
+        };
+
+        vm.closeModal = function() {
+            angular.element(".cell-item" + vm.reservationCreate.index).css("display", "none");
+            vm.reservationCreate.index = null;
+            vm.reservationCreate.hourIni = "";
+            vm.reservationCreate.hourEnd = "";
+            vm.reservationCreate.timeTotal = [];
+
+            console.log("closeModal", angular.toJson(vm.reservationCreate, true));
+        };
+
+        var openModalCreateReserva = function(table) {
+            $uibModal.open({
+                templateUrl: 'ModalCreateBookReservation.html',
+                controller: 'ModalGridReservationCtrl',
+                controllerAs: 'br',
+                keyboard: false,
+                size: '',
+                resolve: {
+                    data: function() {
+                        return "";
+                    },
+                    date: function() {
+                        return "";
+                    },
+                    table: function() {
+                        return table;
+                    },
+                    hourReservation: function() {
+                        return vm.reservationCreate;
+                    },
+                    ctrlMain: function() {
+                        return vm;
+                    }
+                }
+            }).result.catch(function() {
+                vm.closeModal();
+            });
         };
 
         var getDataGrid = function() {
@@ -185,8 +219,6 @@ angular.module('grid.controller', [])
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
-
-            //console.log("constructTablesAvailability", angular.toJson(vm.tablesAvailabilityFinal, true));
         };
 
         var initCalendarSelectedShift = function() {
@@ -251,6 +283,153 @@ angular.module('grid.controller', [])
             }
             return index;
         };
+
+        $scope.$on("NotifyNewReservation", function(evt, data) {
+
+            $scope.$apply(function() {
+                var reservation = (data.action === "create") ? data.data : data.data[0];
+                gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
+            });
+
+            /*  var response = addNewReservation(data.data, data.action);
+              if (response === true) {
+                  if (!reservationService.blackList.contains(data.key)) {
+                      alertMultiple("Notificación", data.user_msg, "info", null);
+                      generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
+                  }
+              }*/
+        });
+
+        init();
+
+    })
+    .controller("ModalGridReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService,
+        reservationHelper, $timeout, data, date, ctrlMain, table, hourReservation, FloorFactory, global, $table) {
+
+        var vm = this;
+        var auxiliar;
+
+        vm.reservation = {};
+        vm.reservation.status_id = 1;
+        vm.reservation.tables = [];
+        vm.addGuest = true;
+        vm.buttonText = 'Agregar a lista de espera';
+        vm.title = "Nueva entrada";
+        vm.covers = [];
+        vm.guestList = [];
+        vm.waitingResponse = false;
+
+        var tables, blocks;
+
+        var listGuest = function() {
+            var covers = [];
+            for (var i = table.min_cover; i <= table.max_cover; i++) {
+                var text = (i == 1) ? "Invitado" : "Invitados";
+                covers.push({
+                    id: i,
+                    name: i + " " + text
+                });
+            }
+
+            vm.covers = covers;
+            vm.reservation.covers = vm.covers[0].id;
+        };
+
+        var parseInfoReservation = function() {
+            date = date ? moment(date).format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
+            vm.info = {
+                date: moment(date).format("dddd, MM/DD"),
+                dateFinal: date,
+                time: hourReservation.hourIni,
+                tableName: table.name
+            };
+            addTableReservation(table);
+            vm.reservation.duration = calculateDuration(hourReservation.hourIni, hourReservation.hourEnd);
+        };
+
+        var addTableReservation = function(table) {
+            vm.reservation.tables.push(table.id);
+        };
+
+        var prepareDataSave = function() {
+            vm.reservation.date = vm.info.dateFinal;
+            vm.reservation.hour = vm.info.time;
+
+            if (!vm.reservation.guest_id) {
+                if (vm.newGuest) {
+                    delete vm.reservation.guest_id;
+                    vm.reservation.guest = vm.newGuest;
+                }
+            } else {
+                delete vm.reservation.guest;
+            }
+
+            vm.reservation.guest = vm.newGuest;
+        };
+
+        var init = function() {
+            parseInfoReservation();
+            listGuest();
+        };
+
+        vm.save = function() {
+            prepareDataSave();
+
+            vm.waitingResponse = true;
+            reservationService.blackList.key(vm.reservation);
+            console.log("save", angular.toJson(vm.reservation, true));
+            reservationService.save(vm.reservation).then(
+                function success(response) {
+                    //$rootScope.$broadcast("addReservationList", response.data.data);
+                    vm.waitingResponse = false;
+                    message.success(response.data.msg);
+                    $uibModalInstance.dismiss('cancel');
+                },
+                function error(error) {
+                    vm.waitingResponse = false;
+                    message.apiError(error);
+                });
+
+        };
+
+        vm.cancel = function() {
+            //ctrlMain.closeModal();
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        //Search guest list
+        vm.searchGuest = function(name) {
+            if (auxiliar) $timeout.cancel(auxiliar);
+            if (!name) {
+                vm.guestList.length = 0;
+                return;
+            }
+            var search = function() {
+                reservationService.getGuestList(name)
+                    .then(function(response) {
+                        vm.guestList = response.data.data.data;
+                    }).catch(function(error) {
+                        message.apiError(error);
+                    });
+            };
+
+            auxiliar = $timeout(search, 500);
+        };
+
+        vm.selectGuest = function(guest) {
+            vm.reservation.guest_id = guest.id;
+            vm.guest = guest;
+            vm.addGuest = false;
+        };
+
+        vm.removeGuest = function() {
+            vm.reservation.guest_id = null;
+            vm.newGuest = null;
+            vm.guestList = [];
+            vm.addGuest = true;
+        };
+        //End Search
+
 
         init();
 

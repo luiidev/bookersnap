@@ -5,13 +5,9 @@ angular.module('grid.app', ['grid.controller', 'grid.service', 'grid.directive']
                 url: '/grid',
                 views: {
                     "@": {
-                        templateUrl: '/js/app/tables/grid/view/parent.html',
-                        controller: 'GridNotificationCtrl'
-                    },
-                    'index@mesas.grid': {
                         controller: 'GridCtrl',
-                        controllerAs: 'vm'
-                    },
+                        controllerAs: 'vm',
+                    }
                 },
                 resolve: {
                     $title: function() {
@@ -21,13 +17,16 @@ angular.module('grid.app', ['grid.controller', 'grid.service', 'grid.directive']
             })
             .state('mesas.grid.index', {
                 url: '/:date/:shift',
-                //reloadOnSearch: false,
                 views: {
                     "@": {
+                        templateUrl: '/js/app/tables/grid/view/parent.html',
+                        controller: 'GridNotificationCtrl'
+                    },
+                    'index@mesas.grid.index': {
                         templateUrl: '/js/app/tables/grid/view/index.html',
                         controller: 'GridMainCtrl',
                         controllerAs: 'vm'
-                    }
+                    },
                 }
             });
 
