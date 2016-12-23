@@ -67,11 +67,36 @@ angular.module("App")
             }
         };
     }])
-    .factory("_base_url", ["$location", function($location) {
+    .factory("base_url", ["$location", function($location) {
+        var _base_url = $location.protocol() + "://" + $location.host() + "/w/" + microsite;
 
-        var _base_url = $location.protocol() + "://" + $location.host() + "/v2/w/" + microsite;
+        var params = "";
+        var c = 0;
+        angular.forEach($location.search(), function(value, i) {
+            if (i !== "edit") {
+                params += (c === 0 ? "" : "&") + i + "=" + value;
+                c++;
+            }
+        });
 
-        return _base_url;
+        params = params === "" ? "" : "#/?" + params;
+
+        return {
+            get: function(path) {
+                return _base_url + path + params;
+            },
+            getWithParam: function(obj_params) {
+                var other_params = "";
+                angular.forEach(obj_params, function(value, i) {
+                    other_params += "&" + i + "=" + value;
+                });
+
+                return _base_url + (params === "" ?  "#/?" + other_params : params + other_params);
+            },
+            has: function(search) {
+                return $location.search()[search] !== undefined;
+            }
+        };
     }])
     .factory("$storage", ["$localStorage", function($localStorage) {
             var instance = $localStorage.$default({ _token: "abcdefghijklmnopqrstuvwxyz" });

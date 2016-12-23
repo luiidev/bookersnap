@@ -1,5 +1,5 @@
 angular.module("App")
-    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", "_base_url", function(vm, $window, $location, service, utiles, _base_url) {
+    .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", "base_url", function(vm, $window, $location, service, utiles, base_url) {
 
         vm.reservation= {};
         vm.reservation.token = token;
@@ -31,11 +31,11 @@ angular.module("App")
         };
 
         var redirect = function(key) {
-            $window.location.href = _base_url  +"/confirmed?key=" + key;
+            $window.location.href = base_url.get("/confirmed?key=" + key);
         };
 
         vm.redirectBase = function() {
-            $window.location.href = _base_url;
+            $window.location.href = base_url.getWithParam({edit: 1});
         };
 
         vm.save = function() {
@@ -44,11 +44,9 @@ angular.module("App")
             vm.errors = {};
             service.saveReservation(vm.reservation)
                 .then(function(response) {
-                    console.log(response.data.data);
                     redirect(response.data.data);
                 }).catch(function(error) {
                     vm.errors = error.data.data;
-                }).finally(function() {
                     vm.loading = false;
                 });
         };

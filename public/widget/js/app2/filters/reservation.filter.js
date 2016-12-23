@@ -13,4 +13,9 @@ angular.module("App")
         return function(date_time) {
             return moment(date_time).format("dddd, MMM D YYYY [a las] h:mm A");
         };
+    })
+    .filter('HtmlToText', function() {
+      return function(text) {
+        return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+      };
     });

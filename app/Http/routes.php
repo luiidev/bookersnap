@@ -20,9 +20,9 @@ Route::post("/w/{site}/reserve", "WidgetController@store");
 Route::get("/w/{site}/confirmed", "WidgetController@confirmed");
 
 //  Widget v2
-Route::get("/v2/w/{site}/", "WidgetController@v2")->name("widget2");
-Route::get("/v2/w/{site}/reserve", "WidgetController@confirm2");
-Route::get("/v2/w/{site}/confirmed", "WidgetController@confirmed2");
+// Route::get("/v2/w/{site}/", "WidgetController@v2")->name("widget2");
+// Route::get("/v2/w/{site}/reserve", "WidgetController@confirm2");
+// Route::get("/v2/w/{site}/confirmed", "WidgetController@confirmed2");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

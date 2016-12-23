@@ -1,6 +1,6 @@
 angular.module("App")
-    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "_base_url", "$storage",
-        function(vm, $q, availabilityService, utiles, $window, _base_url, $storage) {
+    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "base_url", "$storage",
+        function(vm, $q, availabilityService, utiles, $window, base_url, $storage) {
 
         var storage = $storage.instance;
         vm.form = {};
@@ -66,7 +66,7 @@ angular.module("App")
          */
         
         var redirect = function(key) {
-            $window.location.href = _base_url + "/reserve?key=" + storage._token;
+            $window.location.href = base_url.get("/reserve?key=" + storage._token);
         };
 
         var showResult = function() {
@@ -139,8 +139,12 @@ angular.module("App")
                 vm.selectedHour = hour; 
 
                 if (event === null || event === undefined) {
-                    if (hour.events.length) {
-                        vm.selectedEvent = hour.events[0];
+                    if (hour.events) {
+                        if (hour.events.length) {
+                            vm.selectedEvent = hour.events[0];
+                        } else {
+                            vm.selectedEvent = {};
+                        }
                     } else {
                         vm.selectedEvent = {};
                     }
@@ -231,7 +235,6 @@ angular.module("App")
           */
 
         var InitModule = function(date) {
-            date = "2016-12-23";
             vm.case = 1;
             vm.loadingInfo = true;
             vm.loadingData = true;
@@ -262,7 +265,7 @@ angular.module("App")
         var searchTemporalReserve = function() {
             var deferred = $q.defer();
 
-            if (!$storage.existToken()) {
+            if (!$storage.existToken() || base_url.has("edit") ) {
                 deferred.reject();
                 return deferred.promise;
             }
@@ -295,7 +298,7 @@ angular.module("App")
 
         vm.openPrev = function() {
             if ($storage.existToken()) {
-                $window.location.href = _base_url + "/reserve?key=" + storage._token;
+                $window.location.href = base_url.get("/reserve?key=" + storage._token);
             } else {
                 InitModule();
             }

@@ -14,7 +14,7 @@ class WidgetController extends Controller
 
     public function index($site)
     {
-        return view("widget.paso_1", ["microsite" => $site]);
+        return view("widget.v2_1", ["microsite" => $site]);
     }
 
     public function confirm(Request $request, $site)
@@ -44,7 +44,7 @@ class WidgetController extends Controller
                 "token" =>  $request->key
             );
 
-            return view("widget.paso_2", $data);
+            return view("widget.v2_2", $data);
         }
     }
 
@@ -54,67 +54,6 @@ class WidgetController extends Controller
 
         if ($validate->fails()) {
             return redirect()->route("widget", ["site" => $site]);
-        }
-
-        $url = self::_domain."/v1/es/microsites/".$site."/table/reservation/confirmed/".$request->key;
-
-        $response = ApiRequestsHelper::SendRequest("GET", $url, []);
-
-        if (@$response["data"] === null) {
-            return redirect()->route("widget", ["site" => $site]);
-        } else {
-            $data = array(
-                "reservation" =>(object) $response["data"],
-                "microsite" => $site,
-                "token" =>  $request->key
-            );
-
-            return view("widget.confirmed",  $data);
-        }
-    }
-
-    public function v2($site)
-    {
-        return view("widget.v2_1", ["microsite" => $site]);
-    }
-
-    public function confirm2(Request $request, $site)
-    {
-        $validate = Validator::make($request->all(), ["key" => "required|string|max:124"]);
-
-        if ($validate->fails()) {
-            return redirect()->route("widget2", array("site" => $site));
-        }
-
-        $url = self::_domain."/v1/es/microsites/".$site."/reservationtemporal/".$request->key;
-        $response = ApiRequestsHelper::SendRequest("GET", $url, []);
-
-        if (@$response["data"] === null) {
-            $data = array(
-                "message" => "La reservacion que busca no existe o ya expiro....",
-                "microsite" => $site
-            );
-
-            return view("widget.error_reservation", $data);
-        } else {
-            $data = array(
-                "reservation" => (object) $response["data"]["reservation"],
-                "forms" =>  $response["data"]["forms"],
-                "time" =>  $response["data"]["time"],
-                "microsite" => $site,
-                "token" =>  $request->key
-            );
-
-            return view("widget.v2_2", $data);
-        }
-    }
-
-    public function confirmed2(Request $request, $site)
-    {
-        $validate = Validator::make($request->all(), ["key" => "required"]);
-
-        if ($validate->fails()) {
-            return redirect()->route("widget2", ["site" => $site]);
         }
 
         $url = self::_domain."/v1/es/microsites/".$site."/table/reservation/confirmed/".$request->key;
