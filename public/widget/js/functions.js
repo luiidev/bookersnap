@@ -14,12 +14,11 @@ $(document).ready(function() {
     });
 
     // $(".select").resize(function() {
-        // console.log(this);
-        $(".select").each(function(){
-            var height = $(this).height();
-            if (height < 271) {
-                $(this).css("width", "100%");
-            }
-        });
+    //     $(".select").each(function(){
+    //         var height = $(this).height();
+    //         if (height < 271) {
+    //             $(this).css("width", "100%");
+    //         }
+    //     });
     // });
 });
