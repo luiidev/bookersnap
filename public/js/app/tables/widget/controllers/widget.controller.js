@@ -1,5 +1,5 @@
 angular.module("widget.app")
-    .controller("widgetCtrl", ["$scope", "$sce", function($scope, $sce) {
+    .controller("widgetCtrl", ["$scope", "$sce", "MenuConfigFactory", function($scope, $sce, menu) {
         var vm = this;
 
         vm.url="//localhost/w/1";
@@ -26,5 +26,9 @@ angular.module("widget.app")
             return '<iframe id="bookersnap-widget" frameborder="0" width="260" height="535" src="' +src + '"></iframe>';
         }
 
-        jsc.register();
+        (function() {
+            jsc.register();
+            menu.menuActive(3);
+        })();
+
     }]);
