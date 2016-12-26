@@ -1,7 +1,7 @@
 angular.module("App")
     .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", "$storage",function($http, $q, ApiUrlMesas, $storage) {
         var storage = $storage.instance;
-
+        
         return {
             getFormatAvailability: function(date) {
                 return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
