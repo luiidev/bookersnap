@@ -85,16 +85,48 @@ angular.module('grid.service', [])
             getReservationsByTable: function(table, reservations, availability, indexTable) {
                 var self = this;
                 var reservationsData = [];
+
                 angular.forEach(reservations, function(reservation, key) {
                     var existsTable = self.searchTableInReservation(table, reservation);
                     if (existsTable === true) {
                         reservation = self.calculatePositionGrid(reservation, availability, indexTable);
-                        //reservation.position_grid = position;
+                        reservation.styles = {
+                            conflicts: false,
+                            zIndex: 98
+                        };
+
                         reservationsData.push(reservation);
                     }
-
                 });
+
+                angular.forEach(reservationsData, function(reservation, key) {
+                    self.setConflictsReservations(reservationsData, reservation);
+                });
+
                 return reservationsData;
+            },
+            //Identifica y asigna los conflictos entre reservaciones para la mesa
+            setConflictsReservations: function(reservations, reservation) {
+                var hours = reservation.hours_duration.split(":");
+                var hour_ini = reservation.hours_reservation;
+                var hour_end = moment(reservation.date_reservation + " " + hour_ini).add(hours[0], 'hours').add(hours[1], 'minutes').format("HH:mm:ss");
+
+                angular.forEach(reservations, function(reserva, key) {
+                    if (reservation.id !== reserva.id) {
+                        var rt_hours = reserva.hours_duration.split(":");
+                        var rt_hour_ini = reserva.hours_reservation;
+                        var rt_hour_end = moment(reserva.date_reservation + " " + rt_hour_ini).add(rt_hours[0], 'hours').add(rt_hours[1], 'minutes').format("HH:mm:ss");
+
+                        if ((moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)))) {
+                            //console.log("getConflictsReservations", rt_hour_ini, hour_ini, hour_end, reservation.id, reserva.id);
+                            reservation.styles.conflicts = true;
+                            reservation.styles.zIndex -= 1;
+                            reserva.styles.conflicts = true;
+                        }
+                    }
+                });
+
+                return reservations;
             },
             //Devuelve true , si la mesa ha sido reservada
             searchTableInReservation: function(table, reservation) {
@@ -143,6 +175,10 @@ angular.module('grid.service', [])
                     angular.forEach(reservation.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
+                            reservation.styles = {
+                                conflicts: false,
+                                zIndex: 98
+                            };
                             if (action === "create") {
                                 tableAvailability.reservations.push(reservation);
                             } else {
@@ -152,9 +188,11 @@ angular.module('grid.service', [])
                             }
                         }
                     });
-                });
 
-                // console.log("addReservationTableGrid", angular.toJson(tablesAvailabilityFinal, true));
+                    angular.forEach(tableAvailability.reservations, function(reserva, key) {
+                        self.setConflictsReservations(tableAvailability.reservations, reserva);
+                    });
+                });
             },
             //Busca el indice de la reservacion para actualizarlo
             getIndexReservationsInTable: function(tableReservations, reservation) {

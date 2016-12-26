@@ -149,8 +149,6 @@ angular.module('grid.controller', [])
             vm.reservationCreate.hourIni = "";
             vm.reservationCreate.hourEnd = "";
             vm.reservationCreate.timeTotal = [];
-
-            console.log("closeModal", angular.toJson(vm.reservationCreate, true));
         };
 
         var openModalCreateReserva = function(table) {
@@ -214,11 +212,12 @@ angular.module('grid.controller', [])
                     min_cover: table.min_cover,
                     max_cover: table.max_cover,
                     availability: availability,
-                    reservations: reservations
+                    reservations: reservations,
                 });
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
+            //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
         var initCalendarSelectedShift = function() {
@@ -377,10 +376,8 @@ angular.module('grid.controller', [])
 
             vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
-            console.log("save", angular.toJson(vm.reservation, true));
             reservationService.save(vm.reservation).then(
                 function success(response) {
-                    //$rootScope.$broadcast("addReservationList", response.data.data);
                     vm.waitingResponse = false;
                     message.success(response.data.msg);
                     $uibModalInstance.dismiss('cancel');
@@ -389,7 +386,6 @@ angular.module('grid.controller', [])
                     vm.waitingResponse = false;
                     message.apiError(error);
                 });
-
         };
 
         vm.cancel = function() {
