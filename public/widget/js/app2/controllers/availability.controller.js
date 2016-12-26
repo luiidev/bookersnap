@@ -14,6 +14,8 @@ angular.module("App")
         vm.selectedHour = {};
         vm.selectedEvent= {};
 
+        vm.promotion = {};
+
         vm.minDate = new Date();
         vm.date = new Date();
 
@@ -302,6 +304,18 @@ angular.module("App")
             } else {
                 InitModule();
             }
+        };
+
+        vm.promotionDisplay = function(item, evt) {
+            // console.log(evt);
+            vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
+            vm.promotion.description = item.description || null;
+            vm.promotion.display = true;
+            angular.element(document.querySelector("#event")).css({top: evt.pageY - 180});
+        };
+
+        vm.promotionHide = function() {
+            vm.promotion.display = false;
         };
 
         (function Init() {

@@ -51,7 +51,7 @@
                         <table ng-if="hour.events.length">
                             <tr>
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
-                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)">
+                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
                                     <span>Evento</span>
                                     <small ng-bind="hour.events[0].description | HtmlToText"></small>
                                 </td>
@@ -118,5 +118,22 @@
             <div  ng-show="case == 2" class="ng-hide"><button type="submit" class="bsb bsb-block bsb-bookersnap bs-bgm" ng-click="returnSearch()">Regresar</button></div>
         </div>
     </div>
+
+    <div id="event" style="width: 210px; position:absolute; background: #fff; margin-left: 10px;
+    -webkit-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+        " ng-show="promotion.display">
+        <div class="bg-image" style="height: 70px;
+             background-repeat: no-repeat;
+             background-size: 100%;
+             " ng-style="{background: promotion.imageUrl}" ng-show="promotion.imageUrl">
+        </div>
+        <div class="description" style="min-height: 50px;">
+                <p style="padding: 10px;
+    font-size: 12px;" ng-bind="promotion.description | HtmlToText">promocion 2x1 hasta las 11 p.m, chicas entran gratis hasta las 12 p.m</p>
+        </div>
+    </div>
+
 </div>
 @endsection
