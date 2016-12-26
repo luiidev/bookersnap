@@ -49,7 +49,7 @@ body {
 
 .params {
 	height: 526px;
-	width: 250px;
+	/*width: 250px;*/
 	padding: 0;
 	margin: 0 auto;
 	border: 1px solid #bbb;
@@ -113,14 +113,6 @@ body {
 	overflow: auto;
 }
 
-.select {
-	/*width: 221px;*/
-}
-
-.select div.active {
-	background: #ccc;
-}
-
 .select div {
 	height: 30px;
 	line-height: 30px;
@@ -132,16 +124,18 @@ body {
 	background: #ddd;
 }
 
+.select div.active {
+	background: #337ab7;
+	color: #fff;
+}
+
 .promo-list .item table {
+	width: 100%;
 	border-bottom: 1px solid #bbb;
 }
 
 .promo-list .item table tr{
 	border-bottom: 1px solid #bbb;
-}
-
-.promo-list .item table {
-	width: 100%;
 }
 
 .promo-list .item table tr td {
@@ -183,18 +177,30 @@ body {
 	font-size: 11px;
 }
 
-.promo-list .item .active {
-	background: #ccc;
+.promo-list .item table tr td.active {
+	background: #337ab7;
+	color: #FFF;
 }
 
-.promo-list .item .active small{
+.promo-list .item table tr td.active small {
 	color: #fff;
 }
 
-.promo-list .item .active span{
+.promo-list .item table tr td.active span {
 	font-weight: 700;
 }
 
+.promo-list .item table tr td.active:hover {
+	background: #337ab7;
+}
+
+.promo-list .item table tr td.active:hover small {
+	color: #fff;
+}
+
+.promo-list .item table tr td.active:hover span {
+	color: #fff;
+}
 
 .calendar table{
 	margin: 40px auto;

@@ -14,7 +14,8 @@
             'customtag.app',
             'configuration.app',
             'availability.app',
-            'grid.app'
+            'grid.app',
+            'widget.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
         .constant("UrlServerNotify", "http://localhost:1337")

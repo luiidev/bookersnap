@@ -116,6 +116,7 @@
                         @endif
 
                         <div class="terms">
+                            <p  class="help-block"> * Los campos son obligatorios.</p>
                             <p>Al hacer click en el siguiente boton "Confimar Reservación" acepta los siguientes <a href="javascript:void(0)">Terminos y Condiciones</a>.</p>
                         </div>
                     </div>

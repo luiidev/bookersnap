@@ -12,13 +12,4 @@ $(document).ready(function() {
                 active.removeClass("active", 200);
         }
     });
-
-    // $(".select").resize(function() {
-    //     $(".select").each(function(){
-    //         var height = $(this).height();
-    //         if (height < 271) {
-    //             $(this).css("width", "100%");
-    //         }
-    //     });
-    // });
 });
