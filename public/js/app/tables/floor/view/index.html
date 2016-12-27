@@ -620,12 +620,13 @@
             <button class="btn btn-danger pull-right" ng-click="gl.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
+            <div class="text-center">Escribir nobre y presionar enter para añadir invitados a la lista</div>
             <table class="table">
                 <thead>
                     <tr>
                         <th>
                             <form class="fg-line">
-                                <input type="text" class="form-control input" placeholder="Nombre del invitado" ng-model="gl.newGuest"/>
+                                <input type="text" class="form-control input" placeholder="Escribe nombre aquí" ng-model="gl.newGuest"/>
                                 <button class="btn btn-primary btn-block hidden" ng-click="gl.addGuest()" ng-disabled="!gl.newGuest">Agregar</button>
                            </form>
                             

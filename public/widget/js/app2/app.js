@@ -19,7 +19,7 @@
 	var idMicrositio = obtenerIdMicrositio();
 
 	angular.module("App", ["ngLocale", "ui.bootstrap", "ngStorage"])
-	    .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/'+idMicrositio)
+	    .constant("ApiUrlMesas", 'http://apimesas.studework.vm/v1/es/microsites/'+idMicrositio)
 	    .run(["$location" , function($location) {
 	        var color = $location.search().color;
 	        if (color) {
