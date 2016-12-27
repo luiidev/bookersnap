@@ -7,6 +7,10 @@ angular.module("App")
         vm.reservation.guest_list = [];
         vm.newGuest = "";
 
+        vm.years = [];
+        vm.months = [];
+        vm.days = [];
+
         vm.errors = {};
 
         vm.loading = false;
@@ -50,5 +54,57 @@ angular.module("App")
                     vm.loading = false;
                 });
         };
+
+        var runYear = function() {
+            y = 2000;
+            while (y-- > 1940) {
+                vm.years.push(y);
+            }
+        };
+
+        var runMonth = function() {
+            vm.months["01"] = "Enero";
+            vm.months["02"] = "Febrero";
+            vm.months["03"] = "Marzo";
+            vm.months["04"] = "Abril";
+            vm.months["05"] = "Mayo";
+            vm.months["06"] = "Junio";
+            vm.months["07"] = "Julio";
+            vm.months["08"] = "Agosto";
+            vm.months["09"] = "Septiembre";
+            vm.months["10"] = "Octubre";
+            vm.months["11"] = "Noviembre";
+            vm.months["12"] = "Diciembre";
+        };
+
+        vm.changeMonth = function(mes) {
+            vm.days.length = 0;
+
+            var j = 0;
+
+            if (mes === ""){
+                k = 0;
+            } else if (mes == 2){
+                k = 28;
+            } else if (mes == 4 || mes== 6 || mes == 9 || mes == 11) {
+                k = 30;
+            } else {
+                k = 31;
+            }
+
+            while (j++ < k) {
+                if (j.toString().length === 1) {
+                    vm.days.push("0" + j.toString());
+                } else {
+                    vm.days.push(j.toString());
+                }
+
+            }
+        };
+
+        (function Init() {
+            runYear();
+            runMonth();
+        })();
 
     }]);

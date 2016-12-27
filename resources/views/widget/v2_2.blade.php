@@ -35,47 +35,56 @@
                 <form name="resForm" novalidate>
                     <div class="row">
 
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.first_name'].length}">
-                                <label class="hidden-xs">* Nombres</label>
-                                <input type="text" name="first_name" class="form-control input-sm" placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" ng-focus="clearErrors('guest.first_name')" required>
-                                <p class="help-block" ng-repeat="error in errors['guest.first_name']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.first_name'].length}">
+                            <label>* Nombres</label>
+                            <input type="text" name="first_name" class="form-control input-sm" placeholder="Ingrese su nombre" ng-model="reservation.guest.first_name" ng-focus="clearErrors('guest.first_name')" required>
+                            <p class="help-block" ng-repeat="error in errors['guest.first_name']" ng-bind="error"></p>
                         </div>
 
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.last_name'].length}">
-                                <label class="hidden-xs">* Apellidos</label>
-                                <input type="text" name="last_name" class="form-control input-sm" placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name" ng-focus="clearErrors('guest.last_name')" required>
-                                <p class="help-block" ng-repeat="error in errors['guest.last_name']" ng-bind="error"></p>
-                            </div>
+
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.last_name'].length}">
+                            <label>* Apellidos</label>
+                            <input type="text" name="last_name" class="form-control input-sm" placeholder="Ingrese sus apellidos" ng-model="reservation.guest.last_name" ng-focus="clearErrors('guest.last_name')" required>
+                            <p class="help-block" ng-repeat="error in errors['guest.last_name']" ng-bind="error"></p>
                         </div>
 
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.email'].length}">
-                                <label class="hidden-xs">* Correo</label>
-                                <input type="email" name="email" class="form-control input-sm" placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email" ng-focus="clearErrors('guest.email')" required>
-                                <p class="help-block" ng-repeat="error in errors['guest.email']"  ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.birthdate'].length}">
+                            <label>* Cumpleaños</label>
+                            <input type="text" name="birthdate" class="form-control input-sm" placeholder="Seleccione fecha" ng-model="reservation.guest.birthdate" ng-focus="clearErrors('guest.birthdate')" ng-value="year + '-' + month +'-' +day" required>
+                            <p class="help-block" ng-repeat="error in errors['guest.birthdate']" ng-bind="error"></p>
+                        </div>
+
+                        <div class="form-group text-center">
+                                <select class="pull-left" name="year" ng-options="year for year in years" ng-model="year">
+                                    <option value="" disabled="disabled" selected="true">Año</option>
+                                </select>
+                                <select name="month" ng-options="$index as month for ($index, month) in months" ng-model="month" ng-change="changeMonth(month)">
+                                    <option value="" disabled="disabled" selected="true">Mes</option>
+                                </select>
+                                <select class="pull-right" name="day" id="day" ng-options="day for day in days" ng-model="day">
+                                    <option value="" disabled="disabled" selected="true">Día</option>
+                                </select>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.email'].length}">
+                            <label>* Correo</label>
+                            <input type="email" name="email" class="form-control input-sm" placeholder="usuario@bookersnap.com" ng-model="reservation.guest.email" ng-focus="clearErrors('guest.email')" required>
+                            <p class="help-block" ng-repeat="error in errors['guest.email']"  ng-bind="error"></p>
                         </div>
 
                         @if ($forms[0]['status'] == 1)
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.phone'].length}">
-                                <label class="hidden-xs">Telefono mobil</label>
-                                <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.guest.phone" ng-focus="clearErrors('guest.phone')">
-                                <p class="help-block" ng-repeat="error in errors['guest.phone']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.phone'].length}">
+                            <label>Telefono mobil</label>
+                            <input type="text" class="form-control input-sm"  placeholder="55 555 555 555" ng-model="reservation.guest.phone" ng-focus="clearErrors('guest.phone')">
+                            <p class="help-block" ng-repeat="error in errors['guest.phone']" ng-bind="error"></p>
                         </div>
                         @endif
 
                         @if ($forms[2]['status'] == 1)
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['note'].length}">
-                                <label class="hidden-xs">Nota de reservación</label>
-                                <input type="text" class="form-control input-sm"  placeholder="Alguna observacion" ng-model="reservation.note" ng-focus="clearErrors('note')">
-                                <p class="help-block" ng-repeat="error in errors['note']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['note'].length}">
+                            <label>Nota de reservación</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Alguna observacion" ng-model="reservation.note" ng-focus="clearErrors('note')">
+                            <p class="help-block" ng-repeat="error in errors['note']" ng-bind="error"></p>
                         </div>
                         @endif
 
@@ -86,32 +95,26 @@
                             </div>
                         </div>
 
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest_list'].length}">
-                                <label class="hidden-xs">Invitados</label>
-                                <input type="text" class="form-control input-sm"  placeholder="Añadir tecleando enter o espacio" ng-model="newGuest" ng-focus="clearErrors('guest_list')" ng-keyup="addGuest($event)">
-                                <p class="help-block" ng-repeat="error in errors['guest_list']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest_list'].length}">
+                            <label>Invitados</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Añadir tecleando enter o espacio" ng-model="newGuest" ng-focus="clearErrors('guest_list')" ng-keyup="addGuest($event)">
+                            <p class="help-block" ng-repeat="error in errors['guest_list']" ng-bind="error"></p>
                         </div>
                         @endif
 
                         @if ($forms[3]['status'] == 1)
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.profession'].length}">
-                                <label class="hidden-xs">Profesión</label>
-                                <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.guest.profession" ng-focus="clearErrors('guest.profession')">
-                                <p class="help-block" ng-repeat="error in errors['guest.profession']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.profession'].length}">
+                            <label>Profesión</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Profesión u ocupación" ng-model="reservation.guest.profession" ng-focus="clearErrors('guest.profession')">
+                            <p class="help-block" ng-repeat="error in errors['guest.profession']" ng-bind="error"></p>
                         </div>
                         @endif
 
                         @if ($forms[4]['status'] == 1)
-                        <div>
-                            <div class="form-group" ng-class="{ 'has-error': errors['guest.find_out'].length}">
-                                <label class="hidden-xs">Como te enteraste</label>
-                                <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.guest.find_out" ng-focus="clearErrors('guest.find_out')">
-                                <p class="help-block" ng-repeat="error in errors['guest.find_out']" ng-bind="error"></p>
-                            </div>
+                        <div class="form-group" ng-class="{ 'has-error': errors['guest.find_out'].length}">
+                            <label>Como te enteraste</label>
+                            <input type="text" class="form-control input-sm"  placeholder="Como te enteraste, tv, radio, anuncios, periodico, etc." ng-model="reservation.guest.find_out" ng-focus="clearErrors('guest.find_out')">
+                            <p class="help-block" ng-repeat="error in errors['guest.find_out']" ng-bind="error"></p>
                         </div>
                         @endif
 

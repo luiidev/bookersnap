@@ -41,6 +41,10 @@ table {
 	border-spacing: 0;
 }
 
+button, input {
+	outline: none;
+}
+
 body {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
@@ -202,10 +206,6 @@ body {
 	color: #fff;
 }
 
-.calendar table{
-	margin: 40px auto;
-}
-
 .hour-select table{
 	width: 100%;
 }
@@ -305,6 +305,103 @@ button {
 
 .terms p {
 	font-size: 13px;
+}
+
+.calendar .btn {
+	border: 0;
+	padding: 6px 8px;
+}
+
+.calendar .btn.active {
+	background: #337ab7;
+	color: #fff;
+}
+
+.calendar .btn-default {
+	background: #fff;
+	color: #222;
+}
+
+.calendar .btn-default[disabled] {
+	background: #ccc;
+	color: #555;
+}
+
+.calendar  table {
+	margin: 20px auto 0;
+	border: 1px solid #999;
+}
+
+.calendar  table thead tr.nav {
+	background: #eee;
+	border-bottom: 1px solid #999;
+}
+
+.calendar  table thead tr.nav th button {
+	text-transform: capitalize;
+	background: transparent;
+}
+
+.calendar  table thead tr.nav th button.date-label {
+	height: 30px;
+	background: transparent;
+}
+
+.calendar  table thead tr.nav th button {
+	padding: 0 5px;
+}
+
+.calendar  table thead tr.nav th button i{
+	font-size: 11px;
+	top: 4px;
+}
+
+.calendar  table thead tr.days th {
+	padding: 5px 0px;
+	background: #eee;
+}
+
+.calendar  table thead tr th small {
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.calendar  table tbody tr {
+	border-right: 1px solid #bbb;
+}
+
+.calendar  table tbody tr td.cell-btn {
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
+}
+
+#event {
+	width: 210px;
+	position:absolute;
+	background: #fff;
+	margin-left: 10px;
+	-webkit-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+	box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+}
+
+#event .bg-image {
+	height: 70px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+#event .description {
+	min-height: 50px;
+}
+
+#event .description p {
+	padding: 10px;
+	font-size: 12px;
+}
+
+.text-center {
+	text-align: center;
 }
 
 /**

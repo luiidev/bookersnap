@@ -89,10 +89,10 @@ angular.module("App")
         * Date picker filter
         */
         vm.disabled = function(date, mode){
-            if(! vm.form.daysDisabled ) return;
+            if(! vm.daysDisabled ) return;
             var isHoliday = false;
-            for(var i = 0; i < vm.form.daysDisabled.length ; i++) {
-              if(areDatesEqual(toDate(vm.form.daysDisabled[i]), date)){
+            for(var i = 0; i < vm.daysDisabled.length ; i++) {
+              if(areDatesEqual(toDate(vm.daysDisabled[i]), date)){
                 isHoliday = true;
               }
             }
@@ -101,7 +101,11 @@ angular.module("App")
         };
 
         function areDatesEqual(date1, date2) {
+            // console.log(moment(date1).format("YYYY-MM-DD") , moment(date2).format("YYYY-MM-DD"));
+            // if (moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD") )
+            // console.log(date1, date2, date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0));
           return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0);
+          // return moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD");
         }
 
         function toDate(date) {
@@ -202,7 +206,11 @@ angular.module("App")
                 vm.selectPeople(find_people);
              } else {
                 if (vm.form.people.length) {
-                    vm.selectPeople(vm.form.people[0]);
+                    if (vm.form.people[1]) {
+                        vm.selectPeople(vm.form.people[1]);
+                    } else {
+                        vm.selectPeople(vm.form.people[0]);
+                    }
                 }
              }
 
@@ -245,6 +253,7 @@ angular.module("App")
             availabilityService.getFormatAvailability(date)
                 .then(function(response) {
                     vm.form = response.data.data;
+                    vm.daysDisabled = vm.form.daysDisabled;
                     vm.date = new Date(vm.form.date.split("-"));
                     defaultData(vm.form.date);
 
@@ -307,15 +316,23 @@ angular.module("App")
         };
 
         vm.promotionDisplay = function(item, evt) {
-            // console.log(evt);
             vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
             vm.promotion.description = item.description || null;
             vm.promotion.display = true;
-            angular.element(document.querySelector("#event")).css({top: evt.pageY - 180});
+            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 170 : 120) });
         };
 
         vm.promotionHide = function() {
             vm.promotion.display = false;
+        };
+
+        vm.changeMonth = function(date, month, year, instance) {
+            availabilityService.getFormatAvailability(date)
+                .then(function(response) {
+                    vm.daysDisabled = response.data.data.daysDisabled;
+                }).finally(function(){
+                    instance.refreshView();
+                });
         };
 
         (function Init() {

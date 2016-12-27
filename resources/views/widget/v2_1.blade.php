@@ -10,7 +10,7 @@
                 <div ng-bind="infoDate"></div>
             </div>
             <div class="body active">
-                <uib-datepicker class="calendar" ng-model="date" min-date="minDate"  show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)"/></uib-datepicker>
+                <uib-datepicker class="calendar" ng-model="date" min-date="minDate" max-mode="day" show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)" mchange="monthChange()" month-changed="changeMonth($date, $month, $year, $instance)"></uib-datepicker>
             </div>
         </div>
         <div class="row">
@@ -119,19 +119,11 @@
         </div>
     </div>
 
-    <div id="event" style="width: 210px; position:absolute; background: #fff; margin-left: 10px;
-    -webkit-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
-    -moz-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
-    box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
-        " ng-show="promotion.display">
-        <div class="bg-image" style="height: 70px;
-             background-repeat: no-repeat;
-             background-size: 100%;
-             " ng-style="{background: promotion.imageUrl}" ng-show="promotion.imageUrl">
+    <div id="event" class="ng-hide" ng-show="promotion.display">
+        <div class="bg-image" ng-style="{background: promotion.imageUrl}" ng-show="promotion.imageUrl">
         </div>
-        <div class="description" style="min-height: 50px;">
-                <p style="padding: 10px;
-    font-size: 12px;" ng-bind="promotion.description | HtmlToText">promocion 2x1 hasta las 11 p.m, chicas entran gratis hasta las 12 p.m</p>
+        <div class="description">
+                <p style="" ng-bind="promotion.description | HtmlToText">promocion 2x1 hasta las 11 p.m, chicas entran gratis hasta las 12 p.m</p>
         </div>
     </div>
 
