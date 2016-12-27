@@ -7,8 +7,12 @@
 	    var id = url.substr(pos + 3);
 	    var last_pos = id.indexOf("#/");
 
+	    var last_pos2 = id.indexOf("/");
+
 	    if(last_pos >= 0){
 	    	id = id.substr(0, last_pos);
+	    }else if(last_pos2 >= 0){
+	    	id = id.substr(0, last_pos2);
 	    }else{
 	    	id = url.substr(pos +3 , url.length);
 	    }
