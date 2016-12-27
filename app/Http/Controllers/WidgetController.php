@@ -10,7 +10,7 @@ use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://localhost:3004";
+    const _domain = "http://apimesas.studework.com";
 
     public function index($site)
     {
@@ -20,7 +20,7 @@ class WidgetController extends Controller
     public function confirm(Request $request, $site)
     {
         $validate = Validator::make($request->all(), ["key" => "required|string|max:124"]);
-
+        
         if ($validate->fails()) {
             return redirect()->route("widget", array("site" => $site));
         }
