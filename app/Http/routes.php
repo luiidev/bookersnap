@@ -23,9 +23,9 @@ Route::get('/admin', function () {
     return view('dashboard.admin.index');
 });
 
-Route::get('/admin/auth', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
+Route::get('/admin/auth/{id}', [/*'uses' => 'Admin\MainController@mesas' ,*/ 'middleware' => 'authTemp']);
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'authTemp'*/]);
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' => 'authTempPage']);
 
 
 Route::get('/admin/ms/{id}/reservation', function () {

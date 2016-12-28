@@ -19,6 +19,8 @@ return array(
 return [
     'API_AUTH_URL'  => 'http://apiauth.studework.vm/v1',
     'API_ADMIN_URL' => 'http://apiadmin.studework.vm/v1',
-    'API_PROMO_URL' => 'http://apipromotion.studework.vm/v1',
+    'API_PROMO_URL' => 'http://api-promotion.vh/v1',
     'MAIN_DOMAIN'   => 'weblaravel.studework.vm',
+    'SYS_BOOKERSNAP'=> 'http://reservantro.com',
+    'STATUS_SESSION'=> '1', //1 activar, 0 desactivar, session del sistema de mesas
 ];

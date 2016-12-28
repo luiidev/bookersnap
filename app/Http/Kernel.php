@@ -45,14 +45,15 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'auth'               => \App\Http\Middleware\Authenticate::class,
+        'auth.basic'         => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'can'                => \Illuminate\Foundation\Http\Middleware\Authorize::class,
+        'guest'              => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle'           => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'social-login-token' => \App\Http\Middleware\CheckSocialLoginToken::class,
-        'route' => \App\Http\Middleware\RouteMiddleware::class,
-        'checkCountry' => \App\Http\Middleware\CheckCountry::class,
-        'authTemp' => \App\Http\Middleware\AuthTemp::class
+        'route'              => \App\Http\Middleware\RouteMiddleware::class,
+        'checkCountry'       => \App\Http\Middleware\CheckCountry::class,
+        'authTemp'           => \App\Http\Middleware\AuthTemp::class,
+        'authTempPage'       => \App\Http\Middleware\AuthTemp::class
     ];
 }
