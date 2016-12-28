@@ -135,11 +135,15 @@ body {
 
 .promo-list .item table {
 	width: 100%;
-	border-bottom: 1px solid #bbb;
+	/*border-bottom: 1px solid #bbb;*/
 }
 
 .promo-list .item table tr{
 	border-bottom: 1px solid #bbb;
+}
+
+.b-b-0 {
+	border-bottom: 0 !important;
 }
 
 .promo-list .item table tr td {

@@ -46,13 +46,11 @@ angular.module("App", ["ngLocale", "ui.bootstrap"])
 
             directive.compile = function() {
                 return function(scope, element, attrs, ctrls) {
-                    console.log(scope);
                     link.apply(this, arguments);
-                    console.log(scope);
+
                     scope.$watch(function() {
                        return ctrls[0].activeDate;
                     }, function(newVal, oldVal) {
-                        console.log(scope);
                         if (scope.datepickerMode == 'day') {
                             if (oldVal.getMonth() !== newVal.getMonth() || oldVal.getYear() !== newVal.getYear()) {
                                 var mDate = moment(newVal);
