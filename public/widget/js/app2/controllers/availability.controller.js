@@ -101,11 +101,7 @@ angular.module("App")
         };
 
         function areDatesEqual(date1, date2) {
-            // console.log(moment(date1).format("YYYY-MM-DD") , moment(date2).format("YYYY-MM-DD"));
-            // if (moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD") )
-            // console.log(date1, date2, date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0));
           return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0);
-          // return moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD");
         }
 
         function toDate(date) {
@@ -326,12 +322,24 @@ angular.module("App")
             vm.promotion.display = false;
         };
 
-        vm.changeMonth = function(date, month, year, instance) {
-            availabilityService.getFormatAvailability(date)
+        vm.changeMonth = function(date_ini, month, year, instance, select) {
+            date_fin = moment(date_ini).endOf('months').format("YYYY-MM-DD");
+            console.log(instance);
+            var search = {
+                date_ini: date_ini,
+                date_fin: date_fin
+            };
+
+            availabilityService.getDaysDisabled(search)
                 .then(function(response) {
-                    vm.daysDisabled = response.data.data.daysDisabled;
+                    vm.daysDisabled = response.data.data;
                 }).finally(function(){
                     instance.refreshView();
+                    if ( moment(date_ini).month() == moment(vm.date).month() ) {
+                        select(moment(vm.date).toDate());
+                    }
+                    console.log(vm.date);
+                    // instance.render();
                 });
         };
 

@@ -31,7 +31,10 @@ angular.module("App")
             },
             searchTemporalReserve: function() {
                 return $http.get(ApiUrlMesas + "/reservationtemporal/" + storage._token);
-            }
+            },
+            getDaysDisabled: function(data) {
+                return $http.get(ApiUrlMesas + "/availability/daysdisabled", { params: data});
+            },
         };
     }])
     .factory("utiles", [function() {
@@ -98,13 +101,16 @@ angular.module("App")
             }
         };
     }])
-    .factory("$storage", ["$localStorage", function($localStorage) {
-            var instance = $localStorage.$default({ _token: "abcdefghijklmnopqrstuvwxyz" });
+    .factory("$storage", [function() {
+            var storage = localStorage;
+            if (storage._token === undefined) {
+                storage.setItem("_token", "abcdefghijklmnopqrstuvwxyz");
+            }
 
             return {
                 existToken: function() {
-                    return Object.prototype.toString.call(instance._token)  == "[object String]";
+                    return Object.prototype.toString.call(storage._token)  == "[object String]";
                 }, 
-                instance: instance
+                instance: storage
             };
     }]);

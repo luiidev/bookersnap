@@ -10,7 +10,7 @@ use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://apimesas.studework.com";
+    const _domain = "http://localhost:3004";
 
     public function index($site)
     {

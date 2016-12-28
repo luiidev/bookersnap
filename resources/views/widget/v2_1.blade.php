@@ -10,7 +10,7 @@
                 <div ng-bind="infoDate"></div>
             </div>
             <div class="body active">
-                <uib-datepicker class="calendar" ng-model="date" min-date="minDate" max-mode="day" show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)" mchange="monthChange()" month-changed="changeMonth($date, $month, $year, $instance)"></uib-datepicker>
+                <uib-datepicker class="calendar" ng-model="date" min-date="minDate" max-mode="day" show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)" mchange="monthChange()" month-changed="changeMonth($date, $month, $year, $instance, $select)"></uib-datepicker>
             </div>
         </div>
         <div class="row">
