@@ -92,7 +92,8 @@ angular.module('grid.service', [])
                         reservation = self.calculatePositionGrid(reservation, availability, indexTable);
                         reservation.styles = {
                             conflicts: false,
-                            zIndex: 98
+                            zIndex: 98,
+                            conflictsData: []
                         };
 
                         reservationsData.push(reservation);
@@ -107,6 +108,7 @@ angular.module('grid.service', [])
             },
             //Identifica y asigna los conflictos entre reservaciones para la mesa
             setConflictsReservations: function(reservations, reservation) {
+                var self = this;
                 var hours = reservation.hours_duration.split(":");
                 var hour_ini = reservation.hours_reservation;
                 var hour_end = moment(reservation.date_reservation + " " + hour_ini).add(hours[0], 'hours').add(hours[1], 'minutes').format("HH:mm:ss");
@@ -118,15 +120,25 @@ angular.module('grid.service', [])
                         var rt_hour_end = moment(reserva.date_reservation + " " + rt_hour_ini).add(rt_hours[0], 'hours').add(rt_hours[1], 'minutes').format("HH:mm:ss");
 
                         if ((moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)))) {
-                            //console.log("getConflictsReservations", rt_hour_ini, hour_ini, hour_end, reservation.id, reserva.id);
                             reservation.styles.conflicts = true;
                             reservation.styles.zIndex -= 1;
                             reserva.styles.conflicts = true;
+                            reservation.styles.conflictIni = true;
+
+                            self.addReservaConflict(reserva.id, reserva);
+                            self.addReservaConflict(reservation.id, reserva);
+                            console.log("hay un conflicto", reserva.id, reservation.id, hour_ini, hour_end);
                         }
                     }
                 });
 
-                return reservations;
+                return reservation;
+            },
+            //Agrega el id de la reserva con la que hay conflicto
+            addReservaConflict: function(idReserva, reserva) {
+                if (reserva.styles.conflictsData.indexOf(idReserva) === -1) {
+                    reserva.styles.conflictsData.push(idReserva);
+                }
             },
             //Devuelve true , si la mesa ha sido reservada
             searchTableInReservation: function(table, reservation) {
@@ -184,7 +196,6 @@ angular.module('grid.service', [])
                             } else {
                                 var indexReserva = self.getIndexReservationsInTable(tableAvailability.reservations, reservation);
                                 tableAvailability.reservations[indexReserva] = reservation;
-                                console.log("addReservationTableGrid12", angular.toJson(reservation, true));
                             }
                         }
                     });
@@ -192,6 +203,10 @@ angular.module('grid.service', [])
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
+
+                    if (tableAvailability.reservations.length > 0) {
+                        tableAvailability.reservations[tableAvailability.reservations.length - 1].styles.conflictIni = true;
+                    }
                 });
             },
             //Busca el indice de la reservacion para actualizarlo

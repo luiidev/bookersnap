@@ -50,23 +50,26 @@
                                         <div class="grid-cell cell" ng-repeat="reserva in item.reservations" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}">
                                                 <div class="cell-item-info">
-                                                    <div class="cell-item-info-title" ng-if="reserva.guest === null">
+                                                    <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">
                                                         Reservacion sin nombre
+                                                    </div>
+                                                    <div class="cell-item-info-title" ng-if="!reserva.styles.conflictIni &&reserva.styles.conflicts === true">
+                                                        Conflicto reserva
                                                     </div>
                                                     <div class="cell-item-info-title" ng-if="reserva.guest !== null">
                                                         {{ reserva.guest.first_name }} -  {{ reserva.guest.last_name }}
                                                     </div>
-                                                    <div class="cell-item-info-subtitle">
+                                                    <div class="cell-item-info-subtitle" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">
                                                         {{ reserva.num_guest }} Invitados
                                                     </div>
                                                 </div>
-                                                <div class="cell-item-res-status">
+                                                <div class="cell-item-res-status" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">
                                                     <span class="icon item-status-{{ reserva.res_reservation_status_id }}">
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="grid-cell-layer grid-cell-reservation">
-                                                <div class="grid-cell-quarter-hour" hover-reservation-grid="" ng-if="reserva.styles.conflicts === true" ng-mousemove="vm.moveQuarterHour(cell)" ng-repeat="cell in reserva.total_grid" style="background: none;" z-index="{{reserva.styles.zIndex}}">
+                                                <div class="grid-cell-quarter-hour" hover-reservation-grid="" ng-click="vm.conflictPopup(reserva.styles.conflictIni,reserva,item.reservations)" ng-if="reserva.styles.conflicts === true" ng-mousemove="vm.moveQuarterHour(cell)" ng-repeat="cell in reserva.total_grid" style="background: none;" z-index="{{reserva.styles.zIndex}}">
                                                 </div>
                                                 <div class="grid-cell-quarter-hour" ng-if="reserva.styles.conflicts === false" ng-mousemove="vm.moveQuarterHour(cell)" ng-repeat="cell in reserva.total_grid" style="background: none;" z-index="{{reserva.styles.zIndex}}">
                                                 </div>
@@ -102,7 +105,7 @@
         </footer>
     </section>
 </section>
-<script id="ModalCreateBookReservation.html" type="text/ng-template">
+<script id="ModalCreateGridReservation.html" type="text/ng-template">
     <div class="reservation-short-edit">
         <div class="modal-header" style="line-height: 30px;">
             <h4 style="display: inline;">RESERVAR MESA</h4>
@@ -209,6 +212,47 @@
         <div class="modal-footer" >
             <div class="text-center" >
                 <button class="btn btn-primary btn-block btn-lg" ng-click="br.save()" ng-disabled="br.waitingResponse">
+                        Crear Reservacion
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="ModalConflictReservation.html" type="text/ng-template">
+    <div class="reservation-short-edit">
+        <div class="modal-header" style="line-height: 30px;">
+            <h4 style="display: inline;">CONFLICTOS EN RESERVAS</h4>
+            <button class="btn btn-danger pull-right" ng-click="vm.cancel()"><i class="zmdi zmdi-close"></i></button>
+        </div>
+        <div class="modal-body">
+            
+          <ul class="reservation-list">
+              <li ng-repeat="reserva in vm.reservations" class="reservation-list-item">
+                  <a href="" title="" class="reservation has-conflicts">
+                      <div class="reservation-info">
+                          <div class="layout-flex layout-vertical-centered reservation-tittle">
+                              <div class="reservation-guest-name u-ellipsis" title="">Reservación sin nombre</div>
+                          </div>
+                          <div class="reservation-sub-info">
+                              <span class="reservation-info-item reservation-time">{{ reserva.hours_reservation }}</span>
+                              <span class="reservation-info-item reservation-covers">{{ reserva.num_guest }} Invitados</span>
+                          </div>
+                      </div>
+                      <div class="reservation-status reservation-centered-square">
+                          <i class="status-icon item-status-{{ reserva.res_reservation_status_id }}"></i>
+                      </div>
+                      <div class="reservation-table reservation-centered-square">
+                          <div class="u-ellipsis">{{ reserva.tables[0].name }}</div>
+                      </div>
+                  </a>
+              </li>
+
+          </ul>
+       </div>
+
+        <div class="modal-footer" >
+            <div class="text-center" >
+                <button class="btn btn-primary btn-block btn-lg" ng-click="vm.save()" ng-disabled="br.waitingResponse">
                         Crear Reservacion
                 </button>
             </div>

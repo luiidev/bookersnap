@@ -151,20 +151,44 @@ angular.module('grid.controller', [])
             vm.reservationCreate.timeTotal = [];
         };
 
+        vm.conflictPopup = function(conflictIni, reserva, reservations) {
+            //console.log("conflictPopup", conflictIni);
+            if (conflictIni === undefined) {
+                openModalConflictReserva(reserva, reservations);
+            }
+        };
+
+        var openModalConflictReserva = function(reservaSelected, reservations) {
+            $uibModal.open({
+                templateUrl: 'ModalConflictReservation.html',
+                controller: 'ModalGridReservationConflictCtrl',
+                controllerAs: 'vm',
+                keyboard: false,
+                size: '',
+                resolve: {
+                    ctrlMain: function() {
+                        return vm;
+                    },
+                    reservaSelected: function() {
+                        return reservaSelected;
+                    },
+                    reservations: function() {
+                        return reservations;
+                    }
+                }
+            }).result.catch(function() {
+
+            });
+        };
+
         var openModalCreateReserva = function(table) {
             $uibModal.open({
-                templateUrl: 'ModalCreateBookReservation.html',
+                templateUrl: 'ModalCreateGridReservation.html',
                 controller: 'ModalGridReservationCtrl',
                 controllerAs: 'br',
                 keyboard: false,
                 size: '',
                 resolve: {
-                    data: function() {
-                        return "";
-                    },
-                    date: function() {
-                        return "";
-                    },
                     table: function() {
                         return table;
                     },
@@ -255,10 +279,8 @@ angular.module('grid.controller', [])
 
         var calculateQuarterHour = function(posIni) {
             posIni = parseInt(posIni);
-
             /*var total = (posIni === 0) ? 0 : posIni / 62;
             total = (total === 0) ? 1 : total;*/
-
             var indexPos = getPosIni(posIni);
             if (indexPos === -1) {
                 vm.reservationCreate.timeTotal.push({
@@ -289,7 +311,6 @@ angular.module('grid.controller', [])
                 var reservation = (data.action === "create") ? data.data : data.data[0];
                 gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
             });
-
             /*  var response = addNewReservation(data.data, data.action);
               if (response === true) {
                   if (!reservationService.blackList.contains(data.key)) {
@@ -303,10 +324,11 @@ angular.module('grid.controller', [])
 
     })
     .controller("ModalGridReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService,
-        reservationHelper, $timeout, data, date, ctrlMain, table, hourReservation, FloorFactory, global, $table) {
+        reservationHelper, $timeout, ctrlMain, table, hourReservation, FloorFactory, global, $table) {
 
         var vm = this;
         var auxiliar;
+        var date = "";
 
         vm.reservation = {};
         vm.reservation.status_id = 1;
@@ -329,7 +351,6 @@ angular.module('grid.controller', [])
                     name: i + " " + text
                 });
             }
-
             vm.covers = covers;
             vm.reservation.covers = vm.covers[0].id;
         };
@@ -426,7 +447,34 @@ angular.module('grid.controller', [])
         };
         //End Search
 
+        init();
+    })
+    .controller("ModalGridReservationConflictCtrl", function($state, $uibModalInstance, $q, reservations, reservaSelected) {
+        var vm = this;
+
+        vm.reservations = [];
+
+        vm.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+        var init = function() {
+            //console.log("initModal", angular.toJson(reservaSelected, true));
+            vm.reservations = getReservationsConflict(reservaSelected.styles.conflictsData, reservations);
+        };
+
+        var getReservationsConflict = function(conflictsData, reservations) {
+            var reservationsConflict = [];
+
+            angular.forEach(reservations, function(reserva, key) {
+                if (conflictsData.indexOf(reserva.id) !== -1) {
+                    reservationsConflict.push(reserva);
+                }
+            });
+
+            return reservationsConflict;
+
+        };
 
         init();
-
     });
