@@ -64,14 +64,26 @@ angular.module('grid.controller', [])
         //Listado de disponibilidad segun mesa(contendra reservas,bloqueos,bloqueos de turnos,etc)
         vm.tablesAvailabilityFinal = [];
 
+        //Drag de la reservacion
+        vm.reservaDrag = {
+            position: {},
+            id: '',
+            table: '',
+            newTime: ''
+        };
+
         var init = function() {
             initCalendarSelectedShift();
             getDataGrid();
         };
 
+        vm.onDragEnReservation = function() {
+            vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
+            console.log("onDragEnReservation", angular.toJson(vm.reservaDrag, true));
+        };
+
         vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
 
-            //console.log("selectTimeReservationCreate ", type, hour, index, posIni);
             if (type == "init") {
                 vm.reservationCreate.hourIni = hour;
                 vm.reservationCreate.index = index;
@@ -158,6 +170,17 @@ angular.module('grid.controller', [])
             }
         };
 
+        var getTimeByPosicionGrid = function(positionGrid) {
+            var time = "";
+            angular.forEach(vm.tablesAvailabilityFinal[0].availability, function(availability, key) {
+                if (positionGrid === availability.position_grid) {
+                    time = availability.time;
+                }
+            });
+            return time;
+            /*    console.log("getTimeByPosicionGrid", angular.toJson(vm.tablesAvailabilityFinal[0], true));*/
+        };
+
         var openModalConflictReserva = function(reservaSelected, reservations) {
             $uibModal.open({
                 templateUrl: 'ModalConflictReservation.html',
@@ -229,6 +252,7 @@ angular.module('grid.controller', [])
             angular.forEach(vm.tablesAvailability, function(table, key) {
                 var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected);
                 var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations, availability, key);
+                var blocks = gridFactory.getBlocksByTable(table, vm.gridData.blocks, availability, key);
 
                 availabilityTables.push({
                     id: table.id,
@@ -237,11 +261,12 @@ angular.module('grid.controller', [])
                     max_cover: table.max_cover,
                     availability: availability,
                     reservations: reservations,
+                    blocks: blocks
                 });
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
-            //console.log("constructAvailability", angular.toJson(availabilityTables, true));
+            console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
         var initCalendarSelectedShift = function() {

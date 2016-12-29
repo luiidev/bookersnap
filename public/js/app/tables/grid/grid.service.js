@@ -81,6 +81,21 @@ angular.module('grid.service', [])
 
                 return availability;
             },
+            //Devuelve los bloqueos de la mesa
+            getBlocksByTable: function(table, blocks, availability, indexTable) {
+                var self = this;
+                var blocksData = [];
+
+                angular.forEach(blocks, function(block, key) {
+                    var existsTable = self.searchTableInReservation(table, block);
+                    if (existsTable === true) {
+                        block = self.calculatePositionGridBlock(block, availability, indexTable);
+                        blocksData.push(block);
+                    }
+                });
+
+                return blocksData;
+            },
             //Devuelve las reservaciones para la mesa
             getReservationsByTable: function(table, reservations, availability, indexTable) {
                 var self = this;
@@ -150,6 +165,38 @@ angular.module('grid.service', [])
                 });
 
                 return response;
+            },
+            //Devuelve el bloqueo con el campo position_grid
+            calculatePositionGridBlock: function(block, availability, indexTable) {
+
+                angular.forEach(availability, function(value, key) {
+                    if (value.time == block.start_time) {
+                        block.position_grid = value.position_grid;
+                    }
+                });
+
+                var duration = calculateDuration(block.start_time, block.end_time);
+
+                console.log("duration", duration);
+
+                var total_grid = calculateMinutesTime(block.start_date + " " + duration) / 15;
+
+                block.total_grid = [];
+
+                var posIni = block.position_grid;
+                var hour = block.start_time;
+
+                for (var i = 0; i <= total_grid; i++) {
+                    block.total_grid.push({
+                        posIni: posIni,
+                        hour: hour,
+                        index: indexTable
+                    });
+                    posIni += 62;
+                    hour = moment(block.start_date + " " + hour).add("minutes", 15).format("HH:mm:ss");
+                }
+
+                return block;
             },
             //Devuelve la reservacion con el campo position_grid
             calculatePositionGrid: function(reservation, availability, indexTable) {

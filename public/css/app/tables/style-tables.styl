@@ -2567,6 +2567,17 @@ li.divider
 	background-color: rgb(76, 175, 80) !important
 	
 /*--------------GRID--------------*/
+
+.layout-flex 
+	display flex
+	display -webkit-flex
+.layout-vertical-centered 
+	align-items center
+.u-ellipsis
+	overflow hidden
+	text-overflow ellipsis
+	white-space nowrap
+	
 .grid-layout
 	height 100%
 	margin 0
@@ -2759,6 +2770,11 @@ li.divider
 		& .grid-cell-info-creation
 			color #fff
 			border-color #2c3e50
+		& .grid-cell-info-block
+			color #fff
+			z-index -1
+			background #84868d
+			border 1px solid #64666b
 		& .grid-cell-info-reserva
 			color #333
 			z-index -1
@@ -2819,6 +2835,68 @@ li.divider
 			&.active
 				background-color #01567f
 				color #fff
+
+.reservation-list
+	border-top 1px solid #c9c7c7
+	overflow-y auto
+	list-style none
+	padding 0
+	& .reservation-list-item
+		border-bottom 1px solid #c9c7c7
+		& .reservation
+			padding-left 10px
+			border-left 6px solid #d7d7d7
+			border-right 1px solid #c9c7c7
+			background #fff
+			color #555
+			display flex
+			display -webkit-flex
+			align-items center
+			padding-left 16px
+			line-height 1.4
+			height 60px
+			& .reservation-info
+				width auto 
+				flex 1
+				overflow hidden
+				& .reservation-tittle
+					font-weight 600
+				& .reservation-guest-name
+				& .reservation-sub-info
+					font-size 16px
+					& .reservation-covers
+						margin-left 16px
+			& .reservation-status
+				padding 0 10px
+			&.has-conflicts 
+				& .reservation-table
+					background #ffedd3
+					color #e19523
+					
+		& .reservation-centered-square
+			-moz-box-sizing border-box
+			-webkit-box-sizing border-box
+			box-sizing border-box
+			display -webkit-flex
+			display flex
+			align-items center
+			justify-content center
+			height 100%
+			width 60px
+			flex-shrink 0
+			vertical-align middle
+		& .status-icon
+			border-radius 50%
+			background-color #fff
+			display inline-block!important
+			width 32px!important
+			height 32px!important	
+		& .reservation-table
+			padding 0 5px
+			background #eaeaea
+			font-weight bold
+			text-align center		
+	
 
 /*----------------ICONOS ESTADOS DE RESERVACION------------*/
 .item-status-4

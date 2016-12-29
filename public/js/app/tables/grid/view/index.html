@@ -39,15 +39,32 @@
                             <div class="grid-body-rows-container">
                                 <div class="grid-body-rows-table" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal">
                                     <span>
-                                        <div class="grid-body-cell" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid)" ng-repeat="available in item.availability">
+                                        <div class="grid-body-cell" drop-reserva-grid="" grid="available" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid)" ng-repeat="available in item.availability">
                                         </div>
                                         <!--
                                         <div class="grid-body-cell grid-time-divider-half" ng-mousedown="vm.selectTimeReservationCreate('init','8:00',$index,'0')" ng-mousemove="vm.selectTimeReservationCreate('move','8:00',$index,'0')" ng-mouseup="vm.selectTimeReservationCreate('end','8:00',$index,'0')">
                                         </div>
                                         <div class="grid-body-cell grid-time-divider-quarter" ng-mousedown="vm.selectTimeReservationCreate('init','8:15',$index,'62')" ng-mousemove="vm.selectTimeReservationCreate('move','8:15',$index,'62')" ng-mouseup="vm.selectTimeReservationCreate('end','8:15',$index,'62')">
                                         </div>-->
-                                        <!-- hover reservation-->
-                                        <div class="grid-cell cell" ng-repeat="reserva in item.reservations" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);">
+                                        <!-- bloqueos-->
+                                        <div block="block" class="grid-cell cell" drag-block-grid="" ng-repeat="block in item.blocks" style="transform:translateX({{ block.position_grid }}px);z-index: 98">
+                                            <div class="grid-cell-inner grid-cell-info grid-cell-info-block">
+                                                <div class="cell-item-info">
+                                                    <div class="cell-item-info-title">
+                                                        Bloqueo de Mesa
+                                                    </div>
+                                                    <div class="cell-item-info-title">
+                                                        {{ block.start_time }} -  {{ block.end_time }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid-cell-layer grid-cell-reservation">
+                                                <div class="grid-cell-quarter-hour" ng-repeat="cell in block.total_grid" style="background: none;" z-index="{{block.styles.zIndex}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- reservation-->
+                                        <div class="grid-cell cell" drag-position="vm.reservaDrag.position" drag-reserva-grid="" item-selected="item" ng-repeat="reserva in item.reservations" on-drag-end="vm.onDragEnReservation()" reservation="reserva" reservation-id="vm.reservaDrag.id" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);" table-selected="vm.reservaDrag.table">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">
@@ -75,6 +92,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- hover reservation-->
                                         <div class="grid-cell cell cell-item{{$index}}" style="z-index: 98;display: none">
                                             <div class="grid-cell-layer grid-cell-underlay grid-cell-underlay-creation" style="z-index: 1;float: left">
                                                 <div class="grid-cell-quarter-hour" ng-mousemove="vm.moveQuarterHour(timeTotal)" ng-mouseup="vm.moveQuarterUp(item)" ng-repeat="timeTotal in vm.reservationCreate.timeTotal" style="background: none;">

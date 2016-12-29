@@ -659,6 +659,12 @@ var calculateDuration = function(hourIni, hourEnd) {
         horas = "00";
     }
 
+    horas = (horas.length == 1) ? "0" + horas : horas;
+
+    if (minutos == "0") {
+        minutos = "00";
+    }
+
     var duration = horas + ":" + minutos + ":00";
     duration = (inicio === fin) ? "01:30:00" : duration;
 
