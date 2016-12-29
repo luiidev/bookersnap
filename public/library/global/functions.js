@@ -333,18 +333,17 @@ message.show = function(title, text, type, options, action) {
     var config = {
         title: title,
         text: text,
-        type: type,
+        type: type
     };
 
-    action = (typeof action == "function") ? action : function() {};
-
-    if (options !== undefined && options !== null) {
-        if (typeof options == "object") {
+    if (Object.prototype.toString.call(options) == "[object Object]") {
             config = Object.assign(config, options);
-        }
     }
+    
     swal(config, function() {
-        action();
+        if (typeof action == "function") {
+            action();
+        }
     });
 };
 

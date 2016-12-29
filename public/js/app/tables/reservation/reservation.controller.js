@@ -165,6 +165,7 @@ angular.module('reservation.controller', [])
                     result.push(parseInt(value));
                     return result;
                 }, []);
+
                 // Se retira autoenvio de mesa sugerida, se puede reservar sin mesas.
                 // if (vm.reservation.tables.length === 0) {
                 //     if (vm.tableSuggested) {
@@ -173,6 +174,18 @@ angular.module('reservation.controller', [])
                 //         return message.alert("Debe elegir mesas para la reservacion");
                 //     }
                 // }
+                
+                if ( (vm.configuration.status_people_1 || vm.configuration.status_people_2 || vm.configuration.status_people_3)  && 
+                        (vm.reservation.status_id == 4 | vm.reservation.status_id == 5)) {
+                    var suma = vm.reservation.guests.men + vm.reservation.guests.women + vm.reservation.guests.children;
+                    if (suma === 0 ) {
+                        return message.alert("Es obligatorio indicar cantidad de invitados por tipo", "Este campo se encuentra en la parte inferior izquierda de la pantalla.");
+                    }
+                } else {
+                    vm.reservation.guests.men  = 0;
+                    vm.reservation.guests.women = 0;
+                    vm.reservation.guests.children = 0;
+                }
 
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tags

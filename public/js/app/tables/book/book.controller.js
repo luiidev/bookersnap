@@ -734,12 +734,12 @@ angular.module('book.controller', [])
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
             var response = addNewReservation(data.data, data.action);
-            if (response === true) {
-                if (!reservationService.blackList.contains(data.key)) {
-                    alertMultiple("Notificación", data.user_msg, "info", null);
-                    generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
-                }
-            }
+            // if (response === true) {
+            //     if (!reservationService.blackList.contains(data.key)) {
+            //         // alertMultiple("Notificación", data.user_msg, "info", null);
+            //         // generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
+            //     }
+            // }
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
