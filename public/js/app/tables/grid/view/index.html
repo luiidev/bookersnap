@@ -37,7 +37,7 @@
                     <div class="grid-body">
                         <div class="grid-body-container">
                             <div class="grid-body-rows-container">
-                                <div class="grid-body-rows-table" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal">
+                                <div class="grid-body-rows-table" drop-reserva-grid-master="" grid="item" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal" table="vm.reservaDrag.table_update">
                                     <span>
                                         <div class="grid-body-cell" drop-reserva-grid="" grid="available" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid)" ng-repeat="available in item.availability">
                                         </div>
@@ -64,7 +64,7 @@
                                             </div>
                                         </div>
                                         <!-- reservation-->
-                                        <div class="grid-cell cell" drag-position="vm.reservaDrag.position" drag-reserva-grid="" item-selected="item" ng-repeat="reserva in item.reservations" on-drag-end="vm.onDragEnReservation()" reservation="reserva" reservation-id="vm.reservaDrag.id" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);" table-selected="vm.reservaDrag.table">
+                                        <div class="grid-cell cell" drag-position="vm.reservaDrag.position" drag-reserva-grid="" item-selected="item" ng-repeat="reserva in item.reservations" on-drag-end="vm.onDragEndReservation()" reserva-selected="vm.reservaDrag.reserva" reservation="reserva" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);" table-selected="vm.reservaDrag.table">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">

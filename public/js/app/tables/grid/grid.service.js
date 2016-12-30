@@ -9,6 +9,9 @@ angular.module('grid.service', [])
             },
             getTurnsActives: function(date, reload) {
                 return FloorFactory.listTurnosActivos(date, reload);
+            },
+            updateReservation: function(data, idReserva) {
+                return $http.post(ApiUrlMesas + "/reservations/" + idReserva + "/grid", data);
             }
         };
     })

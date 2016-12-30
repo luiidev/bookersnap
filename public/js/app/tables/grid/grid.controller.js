@@ -67,9 +67,10 @@ angular.module('grid.controller', [])
         //Drag de la reservacion
         vm.reservaDrag = {
             position: {},
-            id: '',
             table: '',
-            newTime: ''
+            table_update: '',
+            newTime: '',
+            reserva: {}
         };
 
         var init = function() {
@@ -77,8 +78,10 @@ angular.module('grid.controller', [])
             getDataGrid();
         };
 
-        vm.onDragEnReservation = function() {
+        vm.onDragEndReservation = function() {
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
+            var dataReservation = constructDataReservaUpdate();
+            updateReservationGrid(dataReservation);
             console.log("onDragEnReservation", angular.toJson(vm.reservaDrag, true));
         };
 
@@ -164,21 +167,56 @@ angular.module('grid.controller', [])
         };
 
         vm.conflictPopup = function(conflictIni, reserva, reservations) {
-            //console.log("conflictPopup", conflictIni);
             if (conflictIni === undefined) {
                 openModalConflictReserva(reserva, reservations);
             }
         };
 
+        var updateReservationGrid = function(data) {
+            gridDataFactory.updateReservation(data, data.reservation.id).then(
+                function success(response) {
+                    vm.reservaDrag.table_update = "";
+                    vm.reservaDrag.table = "";
+                    //console.log("updateReservationGrid", response);
+                },
+                function error(response) {
+                    console.error("updateReservationGrid", response);
+                }
+            );
+        };
+
+        var constructDataReservaUpdate = function() {
+            var data = {
+                reservation: {},
+                tables_add: [],
+                tables_deleted: []
+            };
+
+            data.reservation = {
+                id: vm.reservaDrag.reserva.id,
+                hours_reservation: vm.reservaDrag.newTime
+            };
+
+            if (vm.reservaDrag.table !== vm.reservaDrag.table_update) {
+                data.tables_add.push(vm.reservaDrag.table_update);
+                data.tables_deleted.push(vm.reservaDrag.table);
+            }
+
+            console.log("constructDataReservaUpdate", angular.toJson(data, true));
+
+            return data;
+        };
+
         var getTimeByPosicionGrid = function(positionGrid) {
             var time = "";
+
             angular.forEach(vm.tablesAvailabilityFinal[0].availability, function(availability, key) {
                 if (positionGrid === availability.position_grid) {
                     time = availability.time;
                 }
             });
+
             return time;
-            /*    console.log("getTimeByPosicionGrid", angular.toJson(vm.tablesAvailabilityFinal[0], true));*/
         };
 
         var openModalConflictReserva = function(reservaSelected, reservations) {

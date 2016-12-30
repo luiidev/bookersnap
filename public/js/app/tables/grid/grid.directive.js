@@ -22,12 +22,12 @@ angular.module('grid.directive', [])
         return {
             restrict: 'A',
             scope: {
-                reservationId: "=",
+                reservaSelected: "=",
                 reservation: "=",
                 dragPosition: "=",
                 onDragEnd: "&",
                 itemSelected: "=",
-                tableSelected: "="
+                tableSelected: "=",
             },
             link: function(scope, element, attr) {
 
@@ -44,8 +44,8 @@ angular.module('grid.directive', [])
                         element.css("z-index", "1");
 
                         scope.$apply(function() {
-                            scope.reservationId = scope.reservation.id;
-                            scope.tableSelected = scope.itemSelected.name;
+                            scope.reservaSelected = scope.reservation;
+                            scope.tableSelected = scope.itemSelected.id;
                         });
 
                         console.log("start drag");
@@ -101,6 +101,26 @@ angular.module('grid.directive', [])
                     stop: function(event, ui) {
                         element.css("opacity", "1");
                         console.log("stop drag", scope.block.id);
+                    }
+                });
+            }
+        };
+    })
+    .directive('dropReservaGridMaster', function() {
+        return {
+            restrict: 'A',
+            scope: {
+                grid: "=",
+                table: "="
+            },
+            link: function(scope, element, attr) {
+
+                element.droppable({
+                    drop: function(event, ui) {
+                        scope.$apply(function() {
+                            scope.table = scope.grid.id;
+                        });
+                        //console.log("drop", angular.toJson(scope.grid.name, true));
                     }
                 });
             }
