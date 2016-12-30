@@ -1,5 +1,5 @@
 angular.module("App")
-    .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", "$storage",function($http, $q, ApiUrlMesas, $storage) {
+    .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", "$storage", "base_url",function($http, $q, ApiUrlMesas, $storage, base_url) {
         var storage = $storage.instance;
         
         return {
@@ -18,22 +18,22 @@ angular.module("App")
                 });
             },
             saveTemporalReserve: function(data) {
-                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": storage._token }});
+                return $http.post(base_url.getUrl() + "/api/reservationtemporal", data , {headers: { "token": storage._token }});
             },
             saveReservation: function(data) {
-                return $http.post(ApiUrlMesas + "/table/reservation/w", data);
+                return $http.post(base_url.getUrl() + "/api/table/reservation/w", data);
             },
             cancelReservation: function(reserveToken) {
-                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + reserveToken);
+                return $http.post(base_url.getUrl() + "/api/table/reservation/cancel/" + reserveToken);
             },
             cancelTemporalReservation: function() {
-                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + storage._token);
+                return $http.delete(base_url.getUrl() + "/api/reservationtemporal/" + storage._token);
             },
             searchTemporalReserve: function() {
-                return $http.get(ApiUrlMesas + "/reservationtemporal/" + storage._token);
+                return $http.get(base_url.getUrl() + "/api/reservationtemporal/" + storage._token);
             },
             getDaysDisabled: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/daysdisabled", { params: data});
+                return $http.get(base_url.getUrl() + "/api/availability/daysdisabled", { params: data});
             },
         };
     }])
@@ -85,6 +85,9 @@ angular.module("App")
         params = params === "" ? "" : "#/?" + params;
 
         return {
+            getUrl: function() {
+                return _base_url;
+            },
             get: function(path) {
                 return _base_url + path + params;
             },
