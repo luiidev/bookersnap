@@ -294,7 +294,12 @@ angular.module('floor.filter', [])
     }).filter('customStatus', function() {
         return function(list, arrayFilter, element) {
             if (arrayFilter.length === 0) {
-                return list;
+                var salida = list.filter(function(item) {
+                    var waitlist = !(item.wait_list == 1 && (item.res_reservation_status_id != 4 || item.res_reservation_status_id != 5)); // Si es waitlist, solo se muestra si esta sentado
+                    return waitlist;
+                });
+                return salida;
+                //return list;
             }
 
             var salida = list.filter(function(item) {

@@ -14,7 +14,8 @@
             'customtag.app',
             'configuration.app',
             'availability.app',
-            'grid.app'
+            'grid.app',
+            'widget.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
         /*.constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
@@ -23,7 +24,8 @@
         .constant("UrlServerNotify", "http://localhost:1337")
         .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
         .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
-        .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
+    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
                     url: '/mesas',

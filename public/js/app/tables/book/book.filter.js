@@ -26,7 +26,7 @@ angular.module('book.filter', [])
             if (turns.length > 0 && bookView === false) {
 
                 angular.forEach(books, function(book, key) {
-                    console.log(book);
+                    //console.log(book);
                     if (turns.indexOf(book.turn_id) != -1) {
                         listBook.push(book);
                     }
@@ -79,7 +79,7 @@ angular.module('book.filter', [])
                         if ((noStatus.indexOf(book.reservation.status.id) == -1)) {
                             listBook.push(book);
                         }
-                    }else{
+                    } else {
                         listBook.push(book);
                     }
                 });

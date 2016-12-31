@@ -1,5 +1,5 @@
 angular.module('floor.controller')
-    .controller('reservationController', function($scope, $rootScope, $uibModal, $timeout, FloorFactory, ServerDataFactory,
+    .controller('reservationController', function($scope, $rootScope, $uibModal, $interval, $timeout, FloorFactory, ServerDataFactory,
         TypeFilterDataFactory, FloorDataFactory, global, reservationService) {
         var rm = this;
 
@@ -13,6 +13,7 @@ angular.module('floor.controller')
         rm.status = [];
         rm.servers = [];
         rm.tags = [];
+        rm.schedule = {};
 
         var blocks = [];
 
@@ -50,6 +51,29 @@ angular.module('floor.controller')
             checked: false,
         }];
 
+
+        var inspectToleranceReservation = function(reservation) {
+            if (rm.configuracion && reservation.status.id < 4) {
+                var nowdate = moment();
+                var horareservacion = moment(reservation.datetime_input);
+                var diferece = horareservacion.diff(nowdate) / 60000; // DIFERENCIA EN MINUTOS
+
+                var time_tolerance = rm.configuracion.time_tolerance;
+
+                //console.log('reservation: ', reservation.id, ' reservation.datetime_input: ', reservation.datetime_input, ' diferece: ', diferece);
+
+                if (diferece >= 0) {
+                    reservation.class = 'success';
+                } else {
+                    if (-diferece < time_tolerance) {
+                        reservation.class = 'warning';
+                    } else {
+                        reservation.class = 'danger';
+                    }
+                }
+            }
+        };
+
         var statistics = function(action) {
             var total = 0;
             var men = 0;
@@ -57,7 +81,17 @@ angular.module('floor.controller')
             var children = 0;
             rm.typeRes = [];
 
-            angular.forEach(rm.reservations.data, function(reservation, index) {
+
+            var reservations = rm.reservations.data;
+            angular.forEach(reservations, function(reservation, index) {
+
+                reservation.class = 'success';
+                inspectToleranceReservation(reservation);
+
+                $interval(function() {
+                    inspectToleranceReservation(reservation);
+                }, 60000);
+
                 men += reservation.num_people_1;
                 women += reservation.num_people_2;
                 children += reservation.num_people_3;
@@ -85,7 +119,7 @@ angular.module('floor.controller')
 
             rm.total_reservas = rm.typeRes.total_reservas;
 
-            rm.res_listado = Array.prototype.concat.call(angular.copy(rm.reservations.data), angular.copy(rm.blocks.data));
+            rm.res_listado = Array.prototype.concat.call(reservations, angular.copy(rm.blocks.data));
             rm.getZone();
         };
 
@@ -340,6 +374,7 @@ angular.module('floor.controller')
             rm.status = global.status.data;
             rm.servers = global.servers.data;
             rm.tags = global.tags.data;
+            rm.schedule = global.schedule;
 
             /**
              * Variables de apollo para escuchar los cambios
@@ -374,7 +409,7 @@ angular.module('floor.controller')
             er.selectTags = {};
             er.existTagsReservations = false;
 
-            er.countKeys = function(obj){
+            er.countKeys = function(obj) {
                 return Object.keys(obj).length;
             };
 
@@ -583,6 +618,18 @@ angular.module('floor.controller')
 
             er.save = function() {
                 var id = er.reservation.id;
+
+                if ( (er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3) &&
+                    (er.reservation.status_id == 4 | er.reservation.status_id == 5)) {
+                    var suma = er.reservation.guests.men + er.reservation.guests.women + er.reservation.guests.children;
+                    if (suma === 0 ) {
+                        return message.alert("Es obligatorio indicar cantidad de invitados por tipo", "Este campo se encuentra en la parte inferior del formulario.");
+                    }
+                } else {
+                    er.reservation.guests.men  = 0;
+                    er.reservation.guests.women = 0;
+                    er.reservation.guests.children = 0;
+                }
 
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tags

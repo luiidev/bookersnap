@@ -69,7 +69,8 @@ gulp.task('library-bower-js', function() {
             'public/library/bower_components/flot/jquery.flot.pie.min.js', //--
             'public/library/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js',
             'public/library/bower_components/angular-nouislider/src/nouislider.min.js',
-            'public/library/bower_components/angular-ui-router-title/angular-ui-router-title.js'
+            'public/library/bower_components/angular-ui-router-title/angular-ui-router-title.js',
+            'public/library/bower_components/jscolor/jscolor.js'
         ])
         .pipe(concat('library.bower.min.js'))
         // .pipe(jsmin())

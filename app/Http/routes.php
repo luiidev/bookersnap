@@ -13,11 +13,21 @@
 
 //Route principal : Lista de micrositios
 
-Route::get("/w/{site}/", "WidgetController@index")->name("widget");
+Route::get("/w/{site}", "WidgetController@index")->name("widget");
 
-Route::get("/w/{site}/reserve/", "WidgetController@confirm");
-Route::post("/w/{site}/reserve/", "WidgetController@store");
-Route::get("/w/{site}/confirmed/", "WidgetController@confirmed");
+Route::get("/w/{site}/reserve", "WidgetController@confirm");
+Route::post("/w/{site}/reserve", "WidgetController@store");
+Route::get("/w/{site}/confirmed", "WidgetController@confirmed");
+
+/**
+ *  Rutas de conexion con api
+ */
+Route::post("/w/{site}/api/reservationtemporal", "WidgetController@Reservationtemporal");
+Route::post("/w/{site}/api/table/reservation/w", "WidgetController@StoreReservation");
+Route::post("/w/{site}/api/table/reservation/cancel/{token}", "WidgetController@DeleteReservation");
+Route::delete("/w/{site}/api/reservationtemporal/{token}", "WidgetController@DeleteReservationtemporal");
+Route::get("/w/{site}/api/reservationtemporal/{token}", "WidgetController@ShowReservationtemporal");
+Route::get("/w/{site}/api/availability/daysdisabled", "WidgetController@ShowDaysdisabled");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

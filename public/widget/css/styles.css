@@ -196,3 +196,55 @@ body {
 .bs-detail span {
 	display: block;
 }
+
+@media (max-width: 768px) {
+	.bs-container {
+		margin-top: 0;
+	}
+
+	.content-info {
+		border-right: 0;
+	}
+
+	.content-info .reservation-info .site-info {
+		border-bottom: 1px solid #cbcbcb;
+	}
+	.content-info .reservation-info .info {
+		border-top: 0;
+	}
+
+	.content-info .reservation-info .info.reserve {
+		width: 30%;
+		padding: 5px;
+		display: inline-table;
+		text-align: center;
+	}
+
+	.content-info .reservation-info .info.watch {
+		display: inline-block;
+	}
+
+	.content-info .reservation-info .info.watch .c-text{
+		vertical-align: super;
+	}
+
+	.content-info .reservation-info .info .timer {
+		display: inline-block;
+		margin-top: 0 !important;
+		width: 90px !important;
+		height: 35px !important;
+	}
+
+	.content-info .reservation-info .info .timer span{
+		font-size: 25px !important;
+		line-height: 35px !important;
+	}
+
+	.content-info .reservation-info .site-info p {
+		padding-bottom: 10px;
+	}
+
+	.form {
+		padding: 0;
+	}
+}

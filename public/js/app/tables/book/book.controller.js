@@ -266,7 +266,22 @@ angular.module('book.controller', [])
                 lastMonth: false, //mes pasado
                 range: false //rango de fechas
             },
-            url: null
+            url: null,
+            filters: {
+                turns: [],
+                status: [],
+                sources: [],
+                zones: [],
+            },
+            order: 'time.asc',
+            page_size: 30,
+            page: 1,
+            fields: {
+                consume: true,
+                messages: true,
+                listguests: true,
+                source: true
+            }
         };
 
         //Fechas formato string (2016-11-24) , para los filtros
@@ -296,27 +311,99 @@ angular.module('book.controller', [])
             total_pages: 0,
             page_size: 10,
             selected: 1,
-            max_size: 5
+            max_size: 5,
+            options: []
         };
 
         /*Filtros de ajustes en footer */
         vm.filterAjustes = function(option) {
             switch (option) {
-                case 'free':
-                    vm.filterBook('noStatus', 5);
+                case 'show.released':
+                    vm.filterBook('released', {
+                        "id": 5
+                    });
                     break;
-                case 'cancel':
-                    vm.filterBook('noStatus', 6);
+                case 'show.canceled':
+                    vm.filterBook('canceled', {
+                        "id": 6
+                    });
                     break;
-                case 'blocks':
+                case 'show.blocks':
                     vm.filterBook('blocks', null);
                     break;
+                case 'fields.consume':
+                    vm.changeShowFieldsReservations('consume');
+                    break;
+                case 'fields.messages':
+                    vm.changeShowFieldsReservations('messages');
+                    break;
+                case 'fields.listguests':
+                    vm.changeShowFieldsReservations('listguests');
+                    break;
+                case 'fields.source':
+                    vm.changeShowFieldsReservations('source');
+                    break;
             }
-        }
+        };
 
+        vm.showFieldReservation = function(option) {
+            var result = true;
+            switch (option) {
+                case 'consume':
+                    result = vm.configUserDefault.fields.consume;
+                    break;
+                case 'messages':
+                    result = vm.configUserDefault.fields.messages;
+                    break;
+                case 'listguests':
+                    result = vm.configUserDefault.fields.listguests;
+                    break;
+                case 'source':
+                    result = vm.configUserDefault.fields.source;
+                    break;
+                default:
+            }
+            return result;
+        };
+
+        /* Cambio de estados para Ocultar campos de reservacion */
+        vm.changeShowFieldsReservations = function(option) {
+            switch (option) {
+                case 'consume':
+                    vm.configUserDefault.fields.consume = !vm.configUserDefault.fields.consume;
+                    break;
+                case 'messages':
+                    vm.configUserDefault.fields.messages = !vm.configUserDefault.fields.messages;
+                    break;
+                case 'listguests':
+                    vm.configUserDefault.fields.listguests = !vm.configUserDefault.fields.listguests;
+                    break;
+                case 'source':
+                    vm.configUserDefault.fields.source = !vm.configUserDefault.fields.source;
+                    break;
+            }
+            BookConfigFactory.save();
+        };
+
+        /* Modificar opciones de filtro de Book reservations */
         vm.filterBook = function(option, value) {
 
             switch (option) {
+
+                case 'released':
+                    vm.configUserDefault.show.released = !vm.configUserDefault.show.released;
+                    BookFactory.addNoStatusByFilter(value, vm.bookFilter.noStatus, vm.status, vm.configUserDefault.show.released);
+                    vm.configUserDefault.filters.status = vm.bookFilter.noStatus;
+                    break;
+                case 'canceled':
+                    vm.configUserDefault.show.canceled = !vm.configUserDefault.show.canceled;
+                    BookFactory.addNoStatusByFilter(value, vm.bookFilter.noStatus, vm.status, vm.configUserDefault.show.canceled);
+                    vm.configUserDefault.filters.status = vm.bookFilter.noStatus;
+                    break;
+                case 'blocks':
+                    vm.configUserDefault.show.blocks = !vm.configUserDefault.show.blocks;
+                    vm.bookFilter.blocks = vm.configUserDefault.show.blocks;
+                    break;
                 case 'turn':
                     if (value !== "all") {
                         if (value.turn === null) {
@@ -325,34 +412,17 @@ angular.module('book.controller', [])
                     }
                     vm.bookFilter.options.turnAll = (value == "all") ? !vm.bookFilter.options.turnAll : vm.bookFilter.options.turnAll;
                     BookFactory.addTurnsByFilter(value, vm.bookFilter.typeTurn, vm.turns, vm.bookFilter.options.turnAll);
-                    break;
-                case 'noStatus':
-                    var status = [];
-                    if (value == 5) {
-                        vm.bookFilter.options.noStatusFree = !vm.bookFilter.options.noStatusFree;
-                    }
-                    if (value == 6) {
-                        vm.bookFilter.options.noStatusCancel = !vm.bookFilter.options.noStatusCancel;
-                    }
-                    if (!vm.bookFilter.options.noStatusFree) {
-                        status.push(5);
-                    }
-                    if (!vm.bookFilter.options.noStatusCancel) {
-                        status.push(6);
-                    }
-                    vm.bookFilter.noStatus = status;
-                    break;
-                case 'blocks':
-                    vm.bookFilter.options.blocks = !vm.bookFilter.options.blocks;
-                    vm.bookFilter.blocks = vm.bookFilter.options.blocks;
+                    vm.configUserDefault.filters.turns = vm.bookFilter.typeTurn;
                     break;
                 case 'source':
                     vm.bookFilter.options.sourcesAll = (value == "all") ? !vm.bookFilter.options.sourcesAll : vm.bookFilter.options.sourcesAll;
                     BookFactory.addSourcesByFilter(value, vm.bookFilter.sources, vm.sources, vm.bookFilter.options.sourcesAll);
+                    vm.configUserDefault.filters.sources = vm.bookFilter.sources;
                     break;
                 case 'zones':
                     vm.bookFilter.options.zonesAll = (value == "all") ? !vm.bookFilter.options.zonesAll : vm.bookFilter.options.zonesAll;
                     BookFactory.addZonesByFilter(value, vm.bookFilter.zones, vm.zones, vm.bookFilter.options.zonesAll);
+                    vm.configUserDefault.filters.zones = vm.bookFilter.zones;
                     break;
                 case 'reservations':
                     vm.orderBook(value);
@@ -361,6 +431,8 @@ angular.module('book.controller', [])
                     vm.orderBook('time');
                     break;
             }
+
+            BookConfigFactory.save();
 
             if (option !== "reservations" && option !== "time") {
                 vm.searchReservations();
@@ -452,8 +524,8 @@ angular.module('book.controller', [])
             }
 
             vm.configUserDefault.reservationView = vm.bookView;
-            BookConfigFactory.setConfig(vm.configUserDefault);
-
+            BookConfigFactory.save();
+            //BookConfigFactory.setConfig(vm.configUserDefault);
             if (reloadUrl === true) {
                 updateUrl(date_ini, $stateParams.date_end, false);
             }
@@ -628,23 +700,29 @@ angular.module('book.controller', [])
             });
         };
 
+        vm.changeResultPagination = function() {
+            vm.paginate_reservation.page_size = vm.paginate_reservation.selectedPageSize.id;
+            vm.configUserDefault.page_size = vm.paginate_reservation.page_size;
+            vm.changePagination();
+        };
+
         vm.changePagination = function() {
             vm.paginate_reservation.page = vm.paginate_reservation.selected;
-
+            vm.configUserDefault.page = vm.paginate_reservation.page;
             setDatesText(vm.startDate, vm.endDate);
-
             var params_url = paramsFilterReservation(true);
             pushParamsUrl(params_url);
-
             setUrlNavigationConfig(null);
-
+            BookConfigFactory.save();
             generatedListBookPagination(vm.datesText.start_date, vm.datesText.end_date);
         };
 
         vm.searchReservations = function() {
             if (vm.bookView === true) {
-                vm.paginate_reservation.selected = 1;
+                //vm.paginate_reservation.selected = 1;
                 vm.changePagination();
+            } else {
+                setUrlNavigationConfig(null);
             }
         };
 
@@ -656,12 +734,12 @@ angular.module('book.controller', [])
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
             var response = addNewReservation(data.data, data.action);
-            if (response === true) {
-                if (!reservationService.blackList.contains(data.key)) {
-                    alertMultiple("Notificación", data.user_msg, "info", null);
-                    generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
-                }
-            }
+            // if (response === true) {
+            //     if (!reservationService.blackList.contains(data.key)) {
+            //         // alertMultiple("Notificación", data.user_msg, "info", null);
+            //         // generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
+            //     }
+            // }
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
@@ -700,10 +778,10 @@ angular.module('book.controller', [])
             BookFactory.init($scope);
             loadConfigViewReservation();
             listNumGuest();
+            listResultsPagination();
         };
 
         var setUrlNavigationConfig = function(url) {
-
             url = paramsFilterReservation(true);
             vm.configUserDefault.url = url;
             BookConfigFactory.setConfig(vm.configUserDefault);
@@ -722,8 +800,26 @@ angular.module('book.controller', [])
                     text: i + text
                 });
             }
-
             vm.bookFilter.numGuest.selected = vm.bookFilter.numGuest.data[0];
+        };
+
+        var listResultsPagination = function() {
+            vm.paginate_reservation.optionsPageSise = [];
+            var index = 0;
+            var value = 0;
+            for (var i = 0; i <= 10; i++) {
+                value = value + 10;
+                vm.paginate_reservation.optionsPageSise.push({
+                    id: value,
+                    text: value + ' Reservaciones por página'
+                });
+                if (value == vm.configUserDefault.page_size) {
+                    index = i;
+                }
+            }
+            vm.paginate_reservation.selected = vm.configUserDefault.page;
+            vm.paginate_reservation.page_size = vm.configUserDefault.page_size;
+            vm.paginate_reservation.selectedPageSize = vm.paginate_reservation.optionsPageSise[index];
         };
 
         var getSortByFilterReservation = function() {
@@ -917,12 +1013,16 @@ angular.module('book.controller', [])
 
         var loadConfigViewReservation = function() {
 
-            var config = BookConfigFactory.getConfig();
+            vm.configUserDefault = BookConfigFactory.getConfig();
+            vm.bookFilter.noStatus = vm.configUserDefault.filters.status;
+            vm.bookFilter.blocks = vm.configUserDefault.show.blocks;
 
-            vm.configUserDefault = (config === null) ? vm.configUserDefault : config;
             vm.fecha_actual = ($stateParams.date === undefined || $stateParams.date === "") ? vm.fecha_actual : $stateParams.date;
 
             vm.bookView = vm.configUserDefault.reservationView;
+            vm.paginate_reservation.page_size = vm.configUserDefault.page_size;
+            vm.paginate_reservation.selected = vm.configUserDefault.page;
+            vm.paginate_reservation.page = vm.configUserDefault.page;
 
             if (vm.bookView === false) {
                 listTurnAvailable(vm.fecha_actual, null, true);
@@ -1065,6 +1165,7 @@ angular.module('book.controller', [])
                 function success(response) {
                     response = response.data;
 
+                    vm.status = response.data.status;
                     vm.turns = response.data.shifts;
                     vm.sources = response.data.sourceTypes;
                     vm.zones = response.data.zones;
@@ -1087,6 +1188,7 @@ angular.module('book.controller', [])
             params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
             params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
             params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
+            params.nstatus = (vm.bookFilter.noStatus === undefined) ? "" : vm.bookFilter.noStatus;
             params.sort = (params_url.sort === undefined) ? "time" : params_url.sort;
 
             if (params_url.search_text !== undefined) {
@@ -1098,10 +1200,10 @@ angular.module('book.controller', [])
             BookDataFactory.getBookHistory(params_final).then(
                 function success(response) {
                     response = response.data;
-
                     vm.turns = response.data.shifts;
                     vm.sources = response.data.sourceTypes;
                     vm.zones = response.data.zones;
+                    vm.status = response.data.status;
 
                     listHoursTurns(vm.turns, response.data);
                     action();
@@ -1126,6 +1228,7 @@ angular.module('book.controller', [])
             params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
             params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
             params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
+            params.nstatus = (vm.bookFilter.noStatus === undefined) ? "" : vm.bookFilter.noStatus.toString();
             params.sort = (params_url.sort === undefined) ? "time" : params_url.sort;
 
             if (params_url.search_text !== undefined) {

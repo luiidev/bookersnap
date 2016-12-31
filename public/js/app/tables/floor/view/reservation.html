@@ -28,11 +28,11 @@
             </span>
         </div>
         <tabset justified="true">
-            <tab active="tab.active" heading="Por llegar" ng-click="rm.filter_status = [1,2,3]">
+            <tab active="tab.active"  heading="Por llegar" ng-click="rm.filter_status = [1,2,3]">
             </tab>
-            <tab heading="Sentados" ng-click="rm.filter_status = [4]">
+            <tab heading="Sentados"  ng-click="rm.filter_status = [4]">
             </tab>
-            <tab heading="Todos" ng-click="rm.filter_status.length = 0">
+            <tab heading="Todos"  ng-click="rm.filter_status.length = 0">
             </tab>
         </tabset>
         <div class="floor-reservations">
@@ -67,11 +67,11 @@
                     <div class="scrollbar-inner">
                         <table cellpadding="0" cellspacing="0" class="table-listado">
                             <tbody>
-                                <tr class="listado-column" data-quantity="{{ value.num_people }}" ng-drag-up-coming="" ng-mousedown="vm.eventEstablish('sitReservation', value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
-                                    <td ng-click="rm.editReservation(value)" ng-if="!value.start_time">
-                                        <table class="table-listado sub-table">
+                                <tr class="listado-column " data-quantity="{{ value.num_people }}" ng-drag-up-coming="" ng-mousedown="vm.eventEstablish('sitReservation', value)" ng-repeat="value in rm.res_listado | filter:rm.busqueda | orderBy: 'hours_reservation || start_time' | customStatus:rm.filter_status:'res_reservation_status_id' | gender: rm.filter_people | typeRes: rm.filter_reserva | typeTurn: rm.filter_type | blocks" on-start-fn="rm.selectReservation(value)" on-stop-fn="rm.clearSelected()">
+                                    <td ng-click="rm.editReservation(value)" ng-if="!value.start_time" class="{{value.class}}">
+                                        <table class="table-listado sub-table" >
                                             <tr>
-                                                <td class="child-hour">
+                                                <td class="child-hour" >
                                                     {{value.hours_reservation | limitTo : 5:0  }}
                                                 </td>
                                                 <td class="child-pax">
@@ -111,17 +111,17 @@
                                                             <ul class="dropdown-menu dropdown-menu-left">
                                                                 <li ng-if="value.guest.emails.length > 0">
                                                                     <a href="">
-                                                                        {{ value.guest.emails[0].email }}
+                                                                        <i class="zmdi zmdi-email zmdi-hc-fw"></i> {{ value.guest.emails[0].email }}
                                                                     </a>
                                                                 </li>
                                                                 <li ng-if="value.guest.phones.length > 0">
                                                                     <a href="">
-                                                                        {{ value.guest.phones[0].number }}
+                                                                        <i class="zmdi zmdi-phone zmdi-hc-fw"></i> {{ value.guest.phones[0].number }}
                                                                     </a>
                                                                 </li>
                                                                 <li>
                                                                     <a href="">
-                                                                        {{ value.date_reservation }}
+                                                                        <i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ value.date_add }}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -283,4 +283,13 @@
             </li>
         </ul>
     </li>
+    <!-- <li class="dropdown">
+        <button class="item-action btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.floor.block({date : '{{vm.fecha_actual}}'})">
+            <span class="icon zmdi zmdi-widgets zmdi-hc-2x">
+            </span>
+            <div class="title">
+                Mesas
+            </div>
+        </button>
+    </li> -->
 </ul>

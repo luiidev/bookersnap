@@ -99,21 +99,33 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
-                                </span>
-                                <span ng-bind="item.reservation.guest.last_name">
-                                </span>
+                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
+                                    <span ng-bind="item.reservation.guest.last_name"></span>
+                                    
+
+                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
+                                        <div class="arrow"></div>
+                                        <div ng-show="item.reservation.event" >
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                            <div class="popover-content">
+                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}"></div>
+                                                <p ng-bind="item.reservation.event.description"></p>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </span>                               
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
-                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)">
+                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)" ng-show="vm.showFieldReservation('messages')">
                                     <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
                                     <span class="count">{{item.reservation.emails.length}}</span>
                                     <span ng-if="item.reservation.note != null"></span>
                                 </a>
-                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
+                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)" ng-show="vm.showFieldReservation('listguests')">
                                     <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
                                     <span class="count">{{item.reservation.guest_list.length}}</span>
                                 </a>
@@ -126,7 +138,7 @@
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ item.date_text }}
+                                {{ item.reservation.date_reservation | date:"dd/MM/yyyy"}}
                             </div>
                         </div>
                         <div class="status">
@@ -200,12 +212,12 @@
                             </div>
                         </div>
                         <div class="source">
-                            <label class="label label-success">
+                            <label class="label label-success" ng-show="vm.showFieldReservation('source')">
                                 {{ item.reservation.source.name }}
                             </label>
                         </div>
                         <div class="consume">
-                            <div class="fg-line">
+                            <div class="fg-line" ng-show="vm.showFieldReservation('consume')">
                                 <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text"/>
                             </div>
                         </div>
@@ -307,26 +319,37 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
-                                </span>
-                                <span ng-bind="item.reservation.guest.last_name">
-                                </span>
+                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
+                                    <span ng-bind="item.reservation.guest.last_name"></span>
+                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
+                                        <div class="arrow"></div>
+                                        <div ng-show="item.reservation.event" >
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                            <div class="popover-content">
+                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}"></div>
+                                                <p ng-bind="item.reservation.event.description"></p>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </span>                               
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
-                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)">
+                                <a class="item emails" ng-click="vm.mailReservartion(item.reservation)" ng-show="vm.showFieldReservation('messages')">
                                     <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
                                     <span class="count">{{item.reservation.emails.length}}</span>
                                     <span ng-if="item.reservation.note != null"></span>
                                 </a>
-                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)">
+                                <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)" ng-show="vm.showFieldReservation('listguests')">
                                     <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
                                     <span class="count">{{item.reservation.guest_list.length}}</span>
                                 </a>
-                            </div>
+                            </div>                                                       
                         </div>
+
                     </div>
                     <div class="box-reservation">
                         <div class="datetime" ng-click="vm.editReservation(item)">
@@ -334,14 +357,11 @@
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ item.date_text }}
+                                {{ item.reservation.date_reservation | date:"yyyy/MM/dd"}}
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label" ng-if="item.reservation.status.color != 'white'" style="background-color : {{item.reservation.status.color}}">
-                                {{ item.reservation.status.name }}
-                            </label>
-                            <label class="label" ng-if="item.reservation.status.color == 'white'" style="background-color : white; color: #000; border: 1px solid #6b6b6b">
+                            <label class="label {{item.reservation.status.tag}}" >
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -411,12 +431,12 @@
                             </div>
                         </div>
                         <div class="source">
-                            <label class="label label-success">
+                            <label class="label label-success" ng-show="vm.showFieldReservation('source')">
                                 {{ item.reservation.source.name }}
                             </label>
                         </div>
                         <div class="consume">
-                            <div class="fg-line">
+                            <div class="fg-line" ng-show="vm.showFieldReservation('consume')">
                                 <input class="form-control" name="" ng-click="vm.blockClickBook()" ng-keyup="vm.updateConsumeReservation(item.reservation)" ng-model="item.reservation.consume" placeholder="0.00" type="text"/>
                             </div>
                         </div>
@@ -480,17 +500,17 @@
                             <span ng-if="item.reservation.tables.length > 0">
                                 {{ item.reservation.tables[0].name }}
                             </span>
-                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
-                        <div class="item movil" style="background-color : {{item.reservation.status.color}}; {{ (item.reservation.status.color == 'white') ? 'color: #000': ''; }} ">
+                        <div class="item movil {{item.reservation.status.tag}}">
                             <span class="table-name">
                                 <span ng-if="item.reservation.tables.length > 0">
                                     {{ item.reservation.tables[0].name }}
                                 </span>
-                                <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                                <stron ng-if="item.reservation.tables.length == 0" class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
@@ -498,7 +518,7 @@
                             <span class="status-name">
                                 {{ item.reservation.status.name || 'Desconocido' }}
                             </span>
-                            <span class="source-name" style="{{ (item.reservation.status.color == 'white') ? 'color: rgba(0, 0, 0, 0.61)': ''; }} ">
+                            <span class="source-name">
                                 {{ item.reservation.source.name || 'Desconocido' }}
                             </span>
                         </div>
@@ -588,15 +608,78 @@
             <button class="btn btn-danger pull-right" ng-click="br.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
+            <!-- <form class="form p-relative">
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
+                        <label class="fg-label">Nombres</label>
+                    </div>
+                </div>
+                <div class="guest-search-list">
+                    <div class="card m-0">
+                        <div class="card-header" ng-repeat="guest in br.guestList" ng-click="br.selectGuest(guest)">
+                            <h5>{{ guest.first_name + ", " + guest.last_name}}</h5>
+                            <span ng-repeat="phone in guest.phones">tel: {{ phone.number }}</span>
+                            <span ng-repeat="mail in guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="last_name" ng-model="br.newGuest.last_name"/>
+                        <label class="fg-label">Apellidos</label>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="phone" ng-model="br.newGuest.phone"/>
+                        <label class="fg-label">Teléfono</label>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <input type="text" class="form-control fg-input" id="email" ng-model="br.newGuest.email"/>
+                        <label class="fg-label">Email</label>
+                    </div>
+                </div>
+            </form>
+             
+            <form class="form p-relative">
+                <div class="form-group  m-b-25">
+                    <div class="fg-line">
+                        <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
+                            <div class="card-header" ng-click="br.removeGuest()">
+                                <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
+                                <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
+                                <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                                <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <div class="select">
+                            <select class="form-control" id="covers" ng-model="br.reservation.covers" ng-options="cover.id as cover.name for cover in br.covers" ng-change="br.suggestTables()"></select>
+                        </div>                    
+                    </div>
+                </div>
+                <div class="form-group fg-float m-b-25">
+                    <div class="fg-line">
+                        <textarea class="form-control fg-input" id="note" placeholder="Introducir notas acerca de esta reserva aquí" ng-model="br.reservation.note"></textarea>
+                        <label class="fg-label">Nota</label>
+                    </div>
+                </div>
+            </form> -->
             
             <form class="form-horizontal m-b-10" role="form"  ng-show="br.addGuest" autocomplete="off">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <label class="col-xs-2 control-label" for="name">
                         <strong>NOMBRES</strong>
                     </label>
                     <div class="col-xs-10 p-r-30">
                         <div class="fg-line">
-                                <input type="text" class="form-control input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
+                            <input type="text" class="form-control fg-input" id="name" ng-model="br.newGuest.first_name" ng-change="br.searchGuest(br.newGuest.first_name)" required="true" />
                         </div>
                     </div>
                 </div>
@@ -640,18 +723,16 @@
                     </div>
                 </div>
             </form>
-
             <div class="card reservation-guest-selected" ng-show="br.reservation.guest_id">
-                 <div class="card-header" ng-click="br.removeGuest()">
-                     <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
-                     <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
-                     <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
-                     <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
-                 </div>
-            </div> 
-
+                <div class="card-header" ng-click="br.removeGuest()">
+                    <h2>{{ br.guest.first_name + ", " + br.guest.last_name}}</h2>
+                    <span ng-repeat="phone in br.guest.phones">tel: {{ phone.number }}</span>
+                    <span ng-repeat="mail in br.guest.emails" ng-if="!guest.phones.length">email: {{ mail.email }}</span>
+                    <span class="remove-guest c-blue">click para elejir nuevo invitado</span>
+                </div>
+            </div>
             <form class="form-horizontal" role="form">
-                     <div class="resum-reservation"  ng-click="br.redirectReservation()">
+                     <div class="resum-reservation p-t-20 p-b-20"  ng-click="br.redirectReservation()">
                          <div class="row">
                              <div class="col-xs-4" >{{ br.info.date }}</div>
                              <div class="col-xs-4 text-center">{{ br.info.time }}</div>
@@ -701,12 +782,13 @@
             <button class="btn btn-danger pull-right" ng-click="gl.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
+            <div class="text-center">Escribir nobre y presionar enter para añadir invitados a la lista</div>
             <table class="table">
                 <thead>
                     <tr>
                         <th>
                             <form class="fg-line">
-                                <input type="text" class="form-control input" placeholder="Nombre del invitado" ng-model="gl.newGuest"/>
+                                <input type="text" class="form-control input" placeholder="Escribe nombre aquí" ng-model="gl.newGuest"/>
                                 <button class="btn btn-primary btn-block hidden" ng-click="gl.addGuest()" ng-disabled="!gl.newGuest">Agregar</button>
                            </form>
                             
