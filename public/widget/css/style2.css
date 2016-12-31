@@ -423,9 +423,9 @@ button {
 }
 
 #event .bg-image {
-	height: 70px;
+	height: 100px;
 	background-repeat: no-repeat;
-	background-size: 100%;
+	background-size: cover !important;
 }
 
 #event .description {
