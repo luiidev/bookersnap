@@ -48,6 +48,19 @@ angular.module('reservation.app', ['reservation.controller', 'reservation.servic
                     }
                 },
             })
+            .state('mesas.grid-reservation-add', {
+                url: '/grid/reservation/:date/add',
+                params: {
+                    tables: null,
+                },
+                views: {
+                    '@': {
+                        templateUrl: '/js/app/tables/reservation/view/index.html',
+                        controller: "reservationCtrl.StoreUpdate",
+                        controllerAs: 'rc',
+                    }
+                },
+            })            
             .state('mesas.floor.reservation.edit', {
                 url: '/:date/edit/:id',
                 views: {

@@ -63,13 +63,11 @@
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">
-                                                        Reservacion sin nombre
+                                                        <span ng-if="reserva.guest !== null" >{{ reserva.guest.first_name }} {{ reserva.guest.last_name }}</span>
+                                                        <span ng-if="reserva.guest == null" >Reservacion sin nombre</span>                                                        
                                                     </div>
                                                     <div class="cell-item-info-title" ng-if="!reserva.styles.conflictIni &&reserva.styles.conflicts === true">
                                                         Conflicto reserva
-                                                    </div>
-                                                    <div class="cell-item-info-title" ng-if="reserva.guest !== null">
-                                                        {{ reserva.guest.first_name }} -  {{ reserva.guest.last_name }}
                                                     </div>
                                                     <div class="cell-item-info-subtitle" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">
                                                         {{ reserva.num_guest }} Invitados

@@ -1555,10 +1555,11 @@ angular.module('book.controller', [])
             /*console.log(vm.reservation);
             console.log(data);*/
             $uibModalInstance.dismiss('cancel');
+
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
                 tables: [{
-                    id: vm.reservation.tables[0]
+                    id: (vm.reservation.tables != null)? vm.reservation.tables[0]: null
                 }],
                 hour: data.time,
                 guest: vm.reservation.covers

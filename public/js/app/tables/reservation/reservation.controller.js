@@ -751,7 +751,7 @@ angular.module('reservation.controller', [])
 
             var isEditSate = function() {
                 var state = $state.current.name;
-                editState = state == "mesas.floor.reservation.edit" || state == "mesas.book-reservation-edit" || state == "mesas.guest.view.reservation-edit";
+                editState = state == "mesas.floor.reservation.edit" || state == "mesas.book-reservation-edit" || state == "mesas.guest.view.reservation-edit" || state == "mesas.grid-reservation-edit";
                 vm.editState = editState;
             };
 
@@ -766,9 +766,9 @@ angular.module('reservation.controller', [])
                     $state.go("mesas.book", $stateParams);
                 } else if (state == "mesas.guest.view.reservation-edit") {
                     $state.go("mesas.guest.view");
-                } else if (state == "mesas.grid-reservation-edit") {
+                } else if (state == "mesas.grid-reservation-edit" || state == "mesas.grid-reservation-add") {
                     historyBack();
-                } else {
+                }  else {
                     $state.go("mesas.floor.reservation");
                 }
             };

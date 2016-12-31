@@ -151,7 +151,7 @@ angular.module('grid.controller', [])
             console.log("selectedShift", shift);
         };
 
-        vm.prevDateCalendarShift = function() {
+        vm.prevDateCalendarShift = function() {            
             var date = moment(vm.fecha_selected.text).subtract(1, 'days').format('YYYY-MM-DD');
             vm.fecha_selected.text = date;
             _setUrlReload(null);
