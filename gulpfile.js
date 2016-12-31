@@ -82,7 +82,8 @@ gulp.task('min-css-vendor', function() {
             'public/library/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css',
             'public/library/bower_components/bootstrap-sweetalert/lib/sweet-alert.css',
             'public/library/bower_components/angular-loading-bar/src/loading-bar.css',
-            'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
+            'public/library/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css',
+            'public/library/bower_components/jquery-ui/themes/smoothness/jquery-ui.css',
         ])
         .pipe(minifyCss())
         .pipe(concat('vendor.min.css'))

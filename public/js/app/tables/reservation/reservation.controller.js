@@ -735,6 +735,8 @@ angular.module('reservation.controller', [])
                     $state.go("mesas.book", $stateParams);
                 } else if (state == "mesas.guest.view.reservation-edit") {
                     $state.go("mesas.guest.view");
+                } else if (state == "mesas.grid-reservation-edit") {
+                    historyBack();
                 } else {
                     $state.go("mesas.floor.reservation");
                 }

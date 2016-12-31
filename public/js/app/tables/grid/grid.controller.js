@@ -27,15 +27,18 @@ angular.module('grid.controller', [])
 
 
     })
-    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, gridDataFactory, gridFactory) {
+    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, gridDataFactory, gridFactory) {
 
         var vm = this;
+
+        var openModalReserva = null;
 
         vm.reservationCreate = {
             hourIni: '',
             hourEnd: '',
             index: null,
-            timeTotal: []
+            timeTotal: [],
+            table: null
         };
 
         vm.tempData = {
@@ -85,9 +88,10 @@ angular.module('grid.controller', [])
             console.log("onDragEnReservation", angular.toJson(vm.reservaDrag, true));
         };
 
-        vm.selectTimeReservationCreate = function(type, hour, index, posIni) {
+        vm.selectTimeReservationCreate = function(type, hour, index, posIni, table) {
 
             if (type == "init") {
+                vm.reservationCreate.table = table;
                 vm.reservationCreate.hourIni = hour;
                 vm.reservationCreate.index = index;
                 vm.tempData.hourIni = hour;
@@ -107,31 +111,32 @@ angular.module('grid.controller', [])
                     vm.tempData.hourEnd = hour;
                     vm.tempData.index = index;
                     calculateQuarterHour(posIni);
-
                 }
             }
             //EVALUANDO ESTE CODIGO (POSIBLEMENTE BORRAR)
-            if (type === "end") {
-                vm.reservationCreate.hourEnd = hour;
-                calculateQuarterHour(posIni);
+            /*   if (type === "end") {
+                   vm.reservationCreate.hourEnd = hour;
+                   calculateQuarterHour(posIni);
 
-                vm.reservationCreate.hourIni = '';
-                vm.reservationCreate.index = null;
-            }
+                   vm.reservationCreate.hourIni = '';
+                   vm.reservationCreate.index = null;
+               }*/
         };
 
         vm.moveQuarterHour = function(value) {
             if (vm.tempData.hourIni !== value.hour && vm.tempData.index === value.index) {
                 vm.reservationCreate.hourEnd = vm.tempData.hourEnd;
+                console.log("moveQuarterHour");
                 calculateQuarterHour(value.posIni);
             }
         };
 
         vm.moveQuarterUp = function(table) {
+            console.log("moveQuarterHour");
             var timeTotal = vm.reservationCreate.timeTotal.length;
             vm.reservationCreate.hourEnd = vm.reservationCreate.timeTotal[timeTotal - 1].hour;
-
-            openModalCreateReserva(table);
+            vm.reservationCreate.table = table;
+            //openModalCreateReserva(table);
         };
 
         vm.selectedDate = function() {
@@ -160,10 +165,12 @@ angular.module('grid.controller', [])
 
         vm.closeModal = function() {
             angular.element(".cell-item" + vm.reservationCreate.index).css("display", "none");
+            openModalReserva = null;
             vm.reservationCreate.index = null;
             vm.reservationCreate.hourIni = "";
             vm.reservationCreate.hourEnd = "";
             vm.reservationCreate.timeTotal = [];
+            vm.reservationCreate.table = null;
         };
 
         vm.conflictPopup = function(conflictIni, reserva, reservations) {
@@ -172,11 +179,21 @@ angular.module('grid.controller', [])
             }
         };
 
+        vm.redirectReservation = function(reserva) {
+            if (vm.reservaDrag.table === '') {
+                $state.go("mesas.grid-reservation-edit", {
+                    date: vm.fecha_selected.text,
+                    id: reserva.id
+                });
+            }
+        };
+
         var updateReservationGrid = function(data) {
             gridDataFactory.updateReservation(data, data.reservation.id).then(
                 function success(response) {
                     vm.reservaDrag.table_update = "";
                     vm.reservaDrag.table = "";
+                    $state.reload();
                     //console.log("updateReservationGrid", response);
                 },
                 function error(response) {
@@ -243,7 +260,7 @@ angular.module('grid.controller', [])
         };
 
         var openModalCreateReserva = function(table) {
-            $uibModal.open({
+            openModalReserva = $uibModal.open({
                 templateUrl: 'ModalCreateGridReservation.html',
                 controller: 'ModalGridReservationCtrl',
                 controllerAs: 'br',
@@ -304,7 +321,7 @@ angular.module('grid.controller', [])
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
-            console.log("constructAvailability", angular.toJson(availabilityTables, true));
+            //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
         var initCalendarSelectedShift = function() {
@@ -381,6 +398,15 @@ angular.module('grid.controller', [])
                       generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
                   }
               }*/
+        });
+
+        $document.on('mouseup', function() {
+            if (vm.reservationCreate.hourIni !== '' && openModalReserva === null) {
+                console.log("end", vm.reservationCreate.hourEnd, vm.tempData.hourEnd, vm.reservationCreate.timeTotal);
+                vm.reservationCreate.hourEnd = (vm.reservationCreate.hourEnd === '') ? vm.tempData.hourEnd : vm.reservationCreate.hourEnd;
+                //  console.log("mouseup", angular.toJson(vm.reservationCreate, true));
+                openModalCreateReserva(vm.reservationCreate.table);
+            }
         });
 
         init();
@@ -512,13 +538,18 @@ angular.module('grid.controller', [])
 
         init();
     })
-    .controller("ModalGridReservationConflictCtrl", function($state, $uibModalInstance, $q, reservations, reservaSelected) {
+    .controller("ModalGridReservationConflictCtrl", function($state, $uibModalInstance, $q, reservations, reservaSelected, ctrlMain) {
         var vm = this;
 
         vm.reservations = [];
 
         vm.cancel = function() {
             $uibModalInstance.dismiss('cancel');
+        };
+
+        vm.redirectReservation = function(reserva) {
+            vm.cancel();
+            ctrlMain.redirectReservation(reserva);
         };
 
         var init = function() {
