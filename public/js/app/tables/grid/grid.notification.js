@@ -4,5 +4,9 @@ angular.module("grid.controller")
 
     var serverSocket = ServerNotification.getConnection();
 
+    serverSocket.on("b-mesas-floor-res", function(data) {
+        $scope.$broadcast("NotifyNewReservation", data);
+    });
+
 
 });

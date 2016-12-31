@@ -1399,6 +1399,7 @@ angular.module('book.controller', [])
         var save = function() {
             vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
+            console.log("save", angular.toJson(vm.reservation, true));
             reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
