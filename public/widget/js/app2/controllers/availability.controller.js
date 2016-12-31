@@ -315,7 +315,7 @@ angular.module("App")
             vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
             vm.promotion.description = item.description || null;
             vm.promotion.display = true;
-            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 270 : 120) });
+            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 190 : 120) });
         };
 
         vm.promotionHide = function() {

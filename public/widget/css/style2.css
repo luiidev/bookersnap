@@ -423,7 +423,7 @@ button {
 }
 
 #event .bg-image {
-	height: 100px;
+	height: 120px;
 	background-repeat: no-repeat;
 	background-size: cover !important;
 	background-position: center !important;
