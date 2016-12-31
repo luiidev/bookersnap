@@ -14,6 +14,8 @@ angular.module("App")
         vm.selectedHour = {};
         vm.selectedEvent= {};
 
+        vm.promotion = {};
+
         vm.minDate = new Date();
         vm.date = new Date();
 
@@ -87,10 +89,10 @@ angular.module("App")
         * Date picker filter
         */
         vm.disabled = function(date, mode){
-            if(! vm.form.daysDisabled ) return;
+            if(! vm.daysDisabled ) return;
             var isHoliday = false;
-            for(var i = 0; i < vm.form.daysDisabled.length ; i++) {
-              if(areDatesEqual(toDate(vm.form.daysDisabled[i]), date)){
+            for(var i = 0; i < vm.daysDisabled.length ; i++) {
+              if(areDatesEqual(toDate(vm.daysDisabled[i]), date)){
                 isHoliday = true;
               }
             }
@@ -200,7 +202,11 @@ angular.module("App")
                 vm.selectPeople(find_people);
              } else {
                 if (vm.form.people.length) {
-                    vm.selectPeople(vm.form.people[0]);
+                    if (vm.form.people[1]) {
+                        vm.selectPeople(vm.form.people[1]);
+                    } else {
+                        vm.selectPeople(vm.form.people[0]);
+                    }
                 }
              }
 
@@ -243,6 +249,7 @@ angular.module("App")
             availabilityService.getFormatAvailability(date)
                 .then(function(response) {
                     vm.form = response.data.data;
+                    vm.daysDisabled = vm.form.daysDisabled;
                     vm.date = new Date(vm.form.date.split("-"));
                     defaultData(vm.form.date);
 
@@ -302,6 +309,38 @@ angular.module("App")
             } else {
                 InitModule();
             }
+        };
+
+        vm.promotionDisplay = function(item, evt) {
+            vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
+            vm.promotion.description = item.description || null;
+            vm.promotion.display = true;
+            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 170 : 120) });
+        };
+
+        vm.promotionHide = function() {
+            vm.promotion.display = false;
+        };
+
+        vm.changeMonth = function(date_ini, month, year, instance, select) {
+            date_fin = moment(date_ini).endOf('months').format("YYYY-MM-DD");
+            console.log(instance);
+            var search = {
+                date_ini: date_ini,
+                date_fin: date_fin
+            };
+
+            availabilityService.getDaysDisabled(search)
+                .then(function(response) {
+                    vm.daysDisabled = response.data.data;
+                }).finally(function(){
+                    instance.refreshView();
+                    if ( moment(date_ini).month() == moment(vm.date).month() ) {
+                        select(moment(vm.date).toDate());
+                    }
+                    console.log(vm.date);
+                    // instance.render();
+                });
         };
 
         (function Init() {

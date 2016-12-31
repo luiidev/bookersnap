@@ -18,7 +18,6 @@
     <script type="text/javascript" src="{{ asset('widget/library/angular/angular.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('widget/library/angular-locale/angular-locale_es-mx.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('widget/library/angular-bootstrap/ui-bootstrap-tpls.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('widget/library/ng-storage/ngStorage.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('widget/library/moment/min/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('widget/library/moment/locale/es.js') }}"></script>
     <!-- Library Content  End-->

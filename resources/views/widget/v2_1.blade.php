@@ -10,7 +10,7 @@
                 <div ng-bind="infoDate"></div>
             </div>
             <div class="body active">
-                <uib-datepicker class="calendar" ng-model="date" min-date="minDate"  show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)"/></uib-datepicker>
+                <uib-datepicker class="calendar" ng-model="date" min-date="minDate" max-mode="day" show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)" mchange="monthChange()" month-changed="changeMonth($date, $month, $year, $instance, $select)"></uib-datepicker>
             </div>
         </div>
         <div class="row">
@@ -44,19 +44,19 @@
 
                     <div class="item" ng-repeat="hour in form.hours">
                         <table ng-if="!hour.events || hour.events.length == 0">
-                            <tr>
+                            <tr ng-class="{'b-b-0': $index ==  form.hours.length -1}">
                                 <td class="hour-only"  ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-click="selectHour(hour)" ng-bind="hour.option_user"></td>
                             </tr>
                         </table>
                         <table ng-if="hour.events.length">
-                            <tr>
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) &&  hour.events.length == 1}">
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
-                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)">
+                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
                                     <span>Evento</span>
                                     <small ng-bind="hour.events[0].description | HtmlToText"></small>
                                 </td>
                             </tr>
-                            <tr ng-repeat="event in hour.events" ng-if="$index > 0">
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
                                 <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
                                     <span>Evento</span>
                                     <small ng-bind="event.description | HtmlToText"></small>
@@ -118,5 +118,14 @@
             <div  ng-show="case == 2" class="ng-hide"><button type="submit" class="bsb bsb-block bsb-bookersnap bs-bgm" ng-click="returnSearch()">Regresar</button></div>
         </div>
     </div>
+
+    <div id="event" class="ng-hide" ng-show="promotion.display">
+        <div class="bg-image" ng-style="{background: promotion.imageUrl}" ng-show="promotion.imageUrl">
+        </div>
+        <div class="description">
+                <p style="" ng-bind="promotion.description | HtmlToText">promocion 2x1 hasta las 11 p.m, chicas entran gratis hasta las 12 p.m</p>
+        </div>
+    </div>
+
 </div>
 @endsection

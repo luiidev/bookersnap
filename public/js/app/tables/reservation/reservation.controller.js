@@ -16,6 +16,17 @@ angular.module('reservation.controller', [])
              * @type {Object}
              */
             vm.reservation = {};
+            vm.reservation.guests = {
+                men: 0,
+                women: 0,
+                children: 0
+            };
+
+            /**
+             * Entidad de configuration
+             * @type {Object}
+             */
+            vm.configuration = {};
 
             /**
              * Mesas seleccionadas en el lienzo
@@ -548,6 +559,12 @@ angular.module('reservation.controller', [])
                     server_id: reservation.res_server_id
                 };
 
+                vm.reservation.guests = {
+                    men: reservation.num_people_1,
+                    women: reservation.num_people_2,
+                    children: reservation.num_people_3
+                };
+
                 vm.hour = filterHour(vm.hours, reservation.hours_reservation);
 
                 if (reservation.res_guest_id) {
@@ -632,6 +649,7 @@ angular.module('reservation.controller', [])
                         vm.servers = response.data.data.servers;
                         vm.statuses = response.data.data.status;
                         vm.tags = response.data.data.tags;
+                        vm.configuration = response.data.data.config;
                         var turns = response.data.data.shifts;
 
                         listHours(turns)
@@ -748,6 +766,29 @@ angular.module('reservation.controller', [])
                     $stateParams.sort = config.url.sort;
                 }
             };
+
+            /**
+             * Select guest: men woman children
+             */
+            vm.sumar = function(guest) {
+                vm.reservation.guests[guest]++;
+                totalGuests();
+            };
+
+            vm.restar = function(guest) {
+                var quantity = vm.reservation.guests[guest];
+                if (quantity - 1 >= 0) {
+                    vm.reservation.guests[guest]--;
+                    totalGuests();
+                }
+            };
+
+            var totalGuests = function() {
+                vm.reservation.guests.total = vm.reservation.guests.men + vm.reservation.guests.women + vm.reservation.guests.children;
+            };
+            /**
+             * END Select guest: men woman children
+             */
 
             (function Init() {
                 isEditSate();
