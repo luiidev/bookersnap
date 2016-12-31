@@ -57,7 +57,7 @@
                                 </td>
                             </tr>
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
-                                <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
+                                <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)" ng-mouseover="promotionDisplay(event, $event)">
                                     <span ng-bind="event.name_type"></span>
                                     <small ng-bind="event.description | HtmlToText"></small>
                                 </td>
