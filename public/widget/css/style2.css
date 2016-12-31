@@ -60,6 +60,7 @@ body {
 	border-radius: 5px;
 	position: relative;
 	top: 5px;
+	background-color: #fff;
 }
 
 .params .header {
@@ -109,6 +110,7 @@ body {
 	height: 0;
 	border: 0;
 	overflow: hidden;
+	background-color: #fff;
 }
 
 .params .body.active {
@@ -223,7 +225,9 @@ body {
 }
 
 #two {
-	display: none;
+	display: none;	
+	background-color: #fff;
+	height: 100%;
 }
 
 #two  div{
