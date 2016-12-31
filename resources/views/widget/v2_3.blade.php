@@ -14,8 +14,8 @@
             </div>
             <div class="bs-reserve">
                 <div class="bs-detail">
-                    <span><strong>{{ $reservation->microsite->name }}</strong></span>
-                    <span>{{ $reservation->microsite->address }}</span>
+                    <span><strong>{{ $reservation->microsite['name'] }}</strong></span>
+                    <span>{{ $reservation->microsite['address'] }}</span>
                 </div>
 
                 <div class="bs-detail">
