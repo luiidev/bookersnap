@@ -43,7 +43,6 @@ angular.module("App")
         };
 
         vm.save = function() {
-            console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};
             service.saveReservation(vm.reservation)

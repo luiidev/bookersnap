@@ -2593,6 +2593,17 @@ li.divider
 	background-color: rgb(76, 175, 80) !important
 	
 /*--------------GRID--------------*/
+
+.layout-flex 
+	display flex
+	display -webkit-flex
+.layout-vertical-centered 
+	align-items center
+.u-ellipsis
+	overflow hidden
+	text-overflow ellipsis
+	white-space nowrap
+	
 .grid-layout
 	height 100%
 	margin 0
@@ -2689,7 +2700,7 @@ li.divider
 														
 		& .grid-body
 			bottom 0
-			//overflow auto
+			overflow-y auto
 			top 35px
 			left 61px
 			right 0
@@ -2726,13 +2737,10 @@ li.divider
 							float left
 							&:hover
 								background-color #eee
-				
-							
-						
-				
-			
-			
-			
+			& .grid-block-time
+				background-color #ebebeb!important
+				cursor no-drop!important
+					
 	& .grid-cell 
 		height 62px
 		top 0
@@ -2751,7 +2759,10 @@ li.divider
 		& .grid-cell-underlay-creation 
 			& .grid-cell-quarter-hour
 				background #2c3e50
-				
+		& .grid-cell-reservation
+			color #333
+			z-index 1
+			float left
 		& .grid-cell-layer
 			width 100%
 			height 100%
@@ -2784,7 +2795,36 @@ li.divider
 					padding-top 6px
 		& .grid-cell-info-creation
 			color #fff
-			border-color #2c3e50		
+			border-color #2c3e50
+		& .grid-cell-info-block
+			color #fff
+			z-index -1
+			background #84868d
+			border 1px solid #64666b
+		& .grid-cell-info-reserva
+			color #333
+			z-index -1
+			background #f5f7f9
+			border 1px solid #d7d7d7
+			border-left-width 6px
+			&.conflicts 
+				background #fffbe5
+				&:hover
+					z-index 99999
+			& .cell-item-info-subtitle
+				color #333!important
+			& .cell-item-res-status
+				position absolute
+				width 45px
+				right 0
+				top 20%
+				& .icon
+					background-repeat no-repeat
+					width 36px
+					height 36px
+					background-size 36px
+					position absolute
+					
 	& .cell
 		-moz-user-select -moz-none
 		-ms-user-select none
@@ -2795,7 +2835,102 @@ li.divider
 		font-size 17px
 		height 63px
 		line-height normal
+
+.box-layout-center-grid
+	width 500px!important
+	& .popover 
+		max-width 360px
+		& .popover-content 
+			padding 0 0 15px 0
+	& .nav-date 
+		cursor pointer
+		display inline-block
+		&:hover,&:focus,&:active,&:visited
+			background-color transparent
+			
+	& .btn-date-selected-shift
+		height 60px
+		width 200px!important
+		display inline-block
+	& .box-shift-options 
+		text-align center
+		& .shift-option 
+			padding 10px
+			margin-bottom 5px
+			cursor pointer
+			&.active
+				background-color #01567f
+				color #fff
+
+.reservation-list
+	border-top 1px solid #c9c7c7
+	overflow-y auto
+	list-style none
+	padding 0
+	& .reservation-list-item
+		border-bottom 1px solid #c9c7c7
+		& .reservation
+			padding-left 10px
+			border-left 6px solid #d7d7d7
+			border-right 1px solid #c9c7c7
+			background #fff
+			color #555
+			display flex
+			display -webkit-flex
+			align-items center
+			padding-left 16px
+			line-height 1.4
+			height 60px
+			& .reservation-info
+				width auto 
+				flex 1
+				overflow hidden
+				& .reservation-tittle
+					font-weight 600
+				& .reservation-guest-name
+				& .reservation-sub-info
+					font-size 16px
+					& .reservation-covers
+						margin-left 16px
+			& .reservation-status
+				padding 0 10px
+			&.has-conflicts 
+				& .reservation-table
+					background #ffedd3
+					color #e19523
+					
+		& .reservation-centered-square
+			-moz-box-sizing border-box
+			-webkit-box-sizing border-box
+			box-sizing border-box
+			display -webkit-flex
+			display flex
+			align-items center
+			justify-content center
+			height 100%
+			width 60px
+			flex-shrink 0
+			vertical-align middle
+		& .status-icon
+			border-radius 50%
+			background-color #fff
+			display inline-block!important
+			width 32px!important
+			height 32px!important	
+		& .reservation-table
+			padding 0 5px
+			background #eaeaea
+			font-weight bold
+			text-align center		
+	
+
+/*----------------ICONOS ESTADOS DE RESERVACION------------*/
+.item-status-4
+	background-image url('../../../img/status/seated.svg')
+.item-status-1
+	background-image url('../../../img/status/not-confirmed.svg')
 .widget
 	.text
 		width 300px
 		height 80px
+
