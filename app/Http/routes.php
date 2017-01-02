@@ -22,11 +22,13 @@ Route::get("/w/{site}/confirmed", "WidgetController@confirmed");
 /**
  *  Rutas de conexion con api
  */
-Route::post("/w/{site}/api/reservationtemporal", "WidgetController@Reservationtemporal");
+Route::get("/w/{site}/api/availability/formatAvailability", "WidgetController@FormatAvailability");
+Route::get("/w/{site}/api/availability/basic", "WidgetController@Basic");
+Route::post("/w/{site}/api/reservationtemporal", "WidgetController@StoreReservationtemporal");
 Route::post("/w/{site}/api/table/reservation/w", "WidgetController@StoreReservation");
 Route::post("/w/{site}/api/table/reservation/cancel/{token}", "WidgetController@DeleteReservation");
-Route::delete("/w/{site}/api/reservationtemporal/{token}", "WidgetController@DeleteReservationtemporal");
-Route::get("/w/{site}/api/reservationtemporal/{token}", "WidgetController@ShowReservationtemporal");
+Route::delete("/w/{site}/api/reservationtemporal", "WidgetController@DeleteReservationtemporal");
+Route::get("/w/{site}/api/reservationtemporal", "WidgetController@ShowReservationtemporal");
 Route::get("/w/{site}/api/availability/daysdisabled", "WidgetController@ShowDaysdisabled");
 
 Route::get('/admin', function () {

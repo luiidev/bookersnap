@@ -49,14 +49,14 @@
                             </tr>
                         </table>
                         <table ng-if="hour.events.length">
-                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) &&  hour.events.length == 1}">
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length == 1}">
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
                                 <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
                                     <span>Evento</span>
                                     <small ng-bind="hour.events[0].description | HtmlToText"></small>
                                 </td>
                             </tr>
-                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
                                 <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
                                     <span>Evento</span>
                                     <small ng-bind="event.description | HtmlToText"></small>

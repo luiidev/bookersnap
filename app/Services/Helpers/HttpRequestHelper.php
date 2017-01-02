@@ -29,6 +29,11 @@ class HttpRequestHelper
         $this->setData($data);
     }
 
+    public static function make(string $method = null, string $url = null, $data = null, array $headers = null)
+    {
+        return new static($method, $url, $data, $headers);
+    }
+
     public function send()
     {
         try {
@@ -55,16 +60,20 @@ class HttpRequestHelper
             $this->isResponseOk = false;
             $this->error = $e->getMessage();
         }
+
+        return $this;
     }
 
     public function setMethod(string $method = null)
     {
         $this->method = $method;
+        return $this;
     }
 
     public function setUrl(string $url = null)
     {
         $this->url = filter_var($url, FILTER_VALIDATE_URL) ? $url : null;
+        return $this;
     }
 
     public function setHeader(array $headers = null)
@@ -86,16 +95,19 @@ class HttpRequestHelper
         if (!is_null($api_token)) {
             $this->header['Authorization'] = 'Bearer ' . $api_token;
         }
+
+        return $this;
     }
 
     public function setData($data = null)
     {
         $this->data = is_null($data) ? null : json_encode($data);
+        return $this;
     }
 
     public function getResponse()
     {
-        return $this->response;
+        return (String) $this->response;
     }
 
     public function getArrayResponse()

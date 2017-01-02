@@ -41,7 +41,7 @@ table {
 	border-spacing: 0;
 }
 
-button, input {
+button, input, table {
 	outline: none;
 }
 

@@ -49,7 +49,8 @@ angular.module("App")
                 .then(function(response) {
                     redirect(response.data.data);
                 }).catch(function(error) {
-                    if (error.data === null) {
+                    console.log(error);
+                    if (error.data === null || error.status == 500) {
                         vm.loading = false;
                         return alert("Ocurrio un problema vuelva a intentarlo.");
                     }
