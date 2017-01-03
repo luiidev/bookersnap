@@ -52,7 +52,7 @@
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length == 1}">
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
                                 <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
-                                    <span>Evento</span>
+                                    <span ng-bind="hour.events[0].name_type"></span>
                                     <small ng-bind="hour.events[0].description | HtmlToText"></small>
                                 </td>
                             </tr>
@@ -123,7 +123,7 @@
         <div class="bg-image" ng-style="{background: promotion.imageUrl}" ng-show="promotion.imageUrl">
         </div>
         <div class="description">
-                <p style="" ng-bind="promotion.description | HtmlToText">promocion 2x1 hasta las 11 p.m, chicas entran gratis hasta las 12 p.m</p>
+            <p style="" ng-bind="promotion.description | HtmlToText"></p>
         </div>
     </div>
 

@@ -1,0 +1,72 @@
+<ul class="nav">
+    <li class="item-logo">
+        <img class="img-responsive" src="/images/icon-bookersnap.png">
+        </img>
+    </li>
+    <li class="item-nav">
+        <button class="item-action btn btn-default-red btn-sm" type="button" ui-sref="mesas.grid-reservation-add({date : '{{vm.fecha_actual}}'})">
+            <div class="icon tm-icon zmdi zmdi-notifications zmdi-hc-2x">
+            </div>
+            <div class="title">
+                Reservación
+            </div>
+        </button>
+    </li>
+    <li class="item-nav f-btn-notas">
+        <button aria-expanded="false" aria-haspopup="true" bs-close="vm.listenNotes()" bs-open="vm.readNotes()" bs-toggle-click="" class="item-action btn btn-default-blue btn-sm text-center dropdown-toggle waves-effect">
+            <span class="icon zmdi zmdi-book zmdi-hc-2x" ng-style="{'color' : vm.notesNotification ? '#ffc107':'#fff'}">
+            </span>
+            <div class="title">
+                Notas turnos
+            </div>
+        </button>
+        <div bs-toggle-show="" class="box-tab-notas">
+            <tabset active="activeJustified">
+                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.turns">
+                    <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
+                    </textarea>
+                </tab>
+            </tabset>
+        </div>
+    </li>
+    <li class="item-nav">
+        <button class="item-action btn btn-default-blue btn-sm text-center" type="button" ui-sref="mesas.book.block({date : '{{vm.fecha_actual}}'})">
+            <span class="icon zmdi zmdi-lock-open zmdi-hc-2x">
+            </span>
+            <div class="title">
+                Bloqueos  mesas
+            </div>
+        </button>
+    </li>
+    <li class="item-nav box-layout-center-grid">
+        <a class="nav-date prev-date" href="" ng-click="vm.prevDateCalendarShift();">
+            <img src="/images/left-arrow.svg" width="30">
+            </img>
+        </a>
+        <button class="item-action btn btn-default-blue btn-sm btn-date-selected-shift" popover-template="'myCalendarShiftTemplate.html'" popover-title="" type="button">
+            <div class="text-date-selected">
+                {{ vm.fecha_selected.text | date : 'EEEE d' : 'America/Lima'}}
+            </div>
+            <div class="title">
+                {{ vm.btnCalendarShift.turn_selected.name }} 0 Covers
+            </div>
+        </button>
+        <a class="nav-date next-date" href="" ng-click="vm.nextDateCalendarShift()">
+            <img src="/images/right-arrow.svg" width="30">
+            </img>
+        </a>
+    </li>
+</ul>
+<script id="myCalendarShiftTemplate.html" type="text/ng-template">
+    <div class="date-picker">
+        <uib-datepicker ng-model="vm.fecha_selected.date" show-weeks="false" starting-day="1" ng-change="vm.selectedDate()">
+        </uib-datepicker>
+    </div>
+    <div class="form-group fg-line m-b-0 m-t-5">
+        <div class="box-shift-options">
+            <div class="shift-option" ng-repeat="shifts in vm.btnCalendarShift.turns" ng-class="{'active':shifts.active}" ng-click="vm.selectedShift(shifts)">
+            {{ shifts.name }}
+            </div>
+        </div>
+    </div>
+</script>

@@ -1,5 +1,5 @@
 angular.module("App", ["ngLocale", "ui.bootstrap"])
-    .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/'+microsite)
+    .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/'+microsite)
     .run(["$location" , function($location) {
         var color = $location.search().color;
         if (color) {
