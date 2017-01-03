@@ -267,17 +267,36 @@ angular.module('grid.service', [])
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(block.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
+
                             block = self.calculatePositionGridBlock(block, tableAvailability.availability, indexTable);
                             block.durations = calculateDuration(block.start_time, block.end_time);
+
+                            var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
+                            console.log("action", action);
                             if (action === "create") {
+                                console.log("create block", table.name);
+                                tableAvailability.blocks.push(block);
+                            } else if (action == "patch") {
+                                console.log("addBlockTableGrid", indexBlock, table.name);
+                                self.deleteBlockInTableAvailablity(tablesAvailabilityFinal, block);
                                 tableAvailability.blocks.push(block);
                             } else {
-                                var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
                                 tableAvailability.blocks[indexBlock] = block;
                             }
                         }
                     });
 
+                });
+            },
+            //Elimina el bloqueo (actualizacion de realtime,cuando se cambia de mesa)
+            deleteBlockInTableAvailablity: function(tablesAvailabilityFinal, block) {
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
+                    angular.forEach(tableAvailability.blocks, function(blockData, key) {
+                        if (blockData.id === block.id) {
+                            tableAvailability.blocks.splice(key, 1);
+                            console.log("deleteBlockInTableAvailablity", block.id, tableAvailability.name);
+                        }
+                    });
                 });
             },
             //Busca la reservacion en la lista de reservaciones, devuelve posicion (Indice)

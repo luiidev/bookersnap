@@ -95,7 +95,7 @@ angular.module('grid.controller', [])
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
-            console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
+            //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
         };
 
         vm.onDragEndBlock = function() {
@@ -208,7 +208,7 @@ angular.module('grid.controller', [])
 
         vm.redirectBlock = function(block) {
             if (vm.blockDrag.table === '') {
-                $state.go("mesas.grid.blockEdit", {
+                $state.go("mesas.grid.block.edit", {
                     date: vm.fecha_selected.text,
                     block_id: block.id
                 });
@@ -220,7 +220,6 @@ angular.module('grid.controller', [])
                 function success(response) {
                     vm.reservaDrag.table_update = "";
                     vm.reservaDrag.table = "";
-                    $state.reload();
                     //console.log("updateReservationGrid", response);
                 },
                 function error(response) {
@@ -367,7 +366,7 @@ angular.module('grid.controller', [])
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
-            //console.log("constructAvailability", angular.toJson(availabilityTables, true));
+            console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
         var initCalendarSelectedShift = function() {
@@ -430,6 +429,8 @@ angular.module('grid.controller', [])
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
+            console.log("NotifyNewReservation", angular.toJson(data, true));
+
             $scope.$apply(function() {
                 var reservation = (data.action === "create") ? data.data : data.data[0];
                 gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
@@ -444,13 +445,11 @@ angular.module('grid.controller', [])
         });
 
         $scope.$on("NotifyNewBlock", function(evt, data) {
-            console.log("NotifyNewBlock", angular.toJson(data, true));
-
             $scope.$apply(function() {
-                var block = (data.action === "create") ? data.data : data.data[0];
+                var block = data.data[0];
                 gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
+                // console.log("NotifyNewBlock", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
-
         });
 
         $document.on('mouseup', function() {
