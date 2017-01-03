@@ -19,7 +19,6 @@ gulp.task('app-level-js', function() {
             'public/js/theme/services.js',
             'public/js/theme/controllers/ui-bootstrap.js',
             'public/js/theme/controllers/table.js',
-            'public/js/theme/controllers/notification.controller.js',
             'public/js/theme/templates.js'
         ])
         .pipe(concat('app.level.min.js'))
@@ -122,7 +121,6 @@ gulp.task('css-main-app', function() {
 gulp.task('watch', function() {
     gulp.watch(['public/css/app/main.styl'], ['css-main-app']);
     gulp.watch(['public/css/app/main.min.css'], ['min-css-theme']);
-    gulp.watch(['public/js/theme/controllers/notification.controller.js'], ['app-level-js']);
 });
 
 //ejecutamos el servidor y todos los archivos

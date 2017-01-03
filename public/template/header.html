@@ -17,42 +17,34 @@
     <li class="pull-right" data-ng-controller="notificationCtrl as nctrl">
         <ul class="top-menu">
 
-            <li class="dropdown" uib-dropdown="">
+            <li class="dropdown" uib-dropdown="" ng-click="nctrl.clearNotifications()">
                 <a href="" uib-dropdown-toggle="">
                     <i class="tm-icon zmdi zmdi-notifications"></i>
-                    <i class="tmn-counts">9</i>
+                    <i class="tmn-counts">{{ nctrl.notification_count }}</i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg stop-propagate pull-right">
                     <div class="listview" id="notifications">
                         <div class="lv-header">
-                            Notification {{ nctrl.title }}
-                            <ul class="actions">
-                                <li>
-                                    <a data-ng-click="hctrl.clearNotification($event)" href="">
-                                        <i class="zmdi zmdi-check-all"></i>
-                                    </a>
-                                </li>
-                            </ul>
+                            Notificaciones
                         </div>
-                        <div class="lv-body">
-                            <a class="lv-item" ng-href="" ng-repeat="w in hctrl.messageResult.list">
+                        <div class="notif-body">
+                            <a class="lv-item" ng-href="" ng-repeat="re in nctrl.reservations">
                                 <div class="media">
-                                    <div class="pull-left">
-                                        <img alt="" class="lv-img-sm" ng-src="/img/profile-pics/{{ w.img }}"/>
-                                    </div>
                                     <div class="media-body">
-                                        <div class="lv-title">
-                                            {{ w.user }}
+                                        <div class="lv-title c-red"><strong>{{ re.guest.first_name+ ' '+ re.guest.last_name }}</strong>
                                         </div>
-                                        <small class="lv-small">
-                                            {{ w.text }}
+                                        <div class="f-12">
+                                            Hizo una reserva para día <spam class="c-green">{{ re.date_reservation+' '+re.hours_duration | latamDate }}</spam> para <spam class="c-red">{{ re.num_guest }}</spam> personas
+                                        </div>
+                                        <small class="lv-small text-right">
+                                            {{ re.date_add }}
                                         </small>
                                     </div>
                                 </div>
                             </a>
                         </div>
                         <div class="clearfix"></div>
-                        <a class="lv-footer" href="">
+                        <a class="lv-footer" href="javascipt:void(0)" ng-click="nctrl.prevReserves()">
                             Ver Notificaciones Previas
                         </a>
                     </div>
