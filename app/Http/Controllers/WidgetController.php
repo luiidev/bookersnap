@@ -6,14 +6,16 @@ use App\Http\Requests;
 use App\Http\Requests\WidgetConfirmRequest;
 use App\Services\Helpers\ApiRequestsHelper;
 use App\Services\Helpers\HttpRequestHelper;
+use App\TempMicrosite;
 use Illuminate\Http\Request;
 use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://apimesas.studework.com/v1/es/microsites";
+    const _domain = "http://localhost:3004/v1/es/microsites";
+    protected $site;
 
-    public function index($site)
+    public function index(Request $request, $site)
     {
         return view("widget.v2_1", ["microsite" => $site]);
     }
@@ -26,11 +28,10 @@ class WidgetController extends Controller
             return redirect()->route("widget", array("site" => $site));
         }
 
-        $http = new HttpRequestHelper();
-
-        $http->setMethod("GET");
-        $http->setUrl(self::_domain."/".$site."/reservationtemporal/".$request->key);
-        $http->send();
+        $http = HttpRequestHelper::make("GET")
+            ->setUrl($this->url("/reservationtemporal/".$request->key))
+            ->setHeader($this->AppID())
+            ->send();
 
         if ($http->isOk()) {
             $response = $http->getArrayResponse();
@@ -62,11 +63,10 @@ class WidgetController extends Controller
             return redirect()->route("widget", ["site" => $site]);
         }
 
-        $http = new HttpRequestHelper();
-
-        $http->setMethod("GET");
-        $http->setUrl(self::_domain."/".$site."/table/reservation/confirmed/".$request->key);
-        $http->send();
+        $http = HttpRequestHelper::make("GET")
+            ->setUrl($this->url("/table/reservation/confirmed/".$request->key))
+            ->setHeader($this->AppID())
+            ->send();
 
         if ($http->isOk()) {
             $response = $http->getArrayResponse();
@@ -83,88 +83,138 @@ class WidgetController extends Controller
         }
     }
 
-    public function Reservationtemporal(Request $request, $site)
+    public function StoreReservationtemporal()
     {
-        $http = new HttpRequestHelper("POST");
-        $http->setUrl(self::_domain."/".$site."/reservationtemporal");
-        $http->setHeader(["token" => $request->header("token")]);
-        $http->setData($request->all());
-        $http->send();
+        $http = HttpRequestHelper::make("POST")
+            ->setUrl($this->url("/reservationtemporal"))
+            ->setHeader( [
+                    "token" => $this->session(),
+                    "app_id" => $this->AppID(true)
+            ])
+            ->setData(request()->all())
+            ->send();
 
-        if (!$http->isOk()) {
-            return response( $http->getErrorResponse(), $http->getStatusCode());
-        } else {
-            return response( $http->getArrayResponse(), $http->getStatusCode());
-        }
+        return $this->apiResponse($http);
+    }
+
+    public function FormatAvailability(Request $request, $site)
+    {
+        $url = $this->url("/availability/formatAvailability");
+        $data = $request->all();
+
+        $http = HttpRequestHelper::make("GET", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
+
+        return $this->apiResponse($http);
+    }
+
+    public function Basic(Request $request, $site)
+    {
+        $url = $this->url("/availability/basic");
+        $data = $request->all();
+
+        $http = HttpRequestHelper::make("GET", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
+
+        return $this->apiResponse($http);
     }
 
     public function StoreReservation(Request $request, $site)
     {
-        $url = self::_domain."/".$site."/table/reservation/w";
+        $url = $this->url("/table/reservation/w");
+        $data = $request->all();
 
-        $http = new HttpRequestHelper("POST", $url , $request->all());
-        $http->send();
+        $http = HttpRequestHelper::make("POST", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
 
-        if (!$http->isOk()) {
-            return response( $http->getErrorResponse(), $http->getStatusCode());
-        } else {
-            return response( $http->getArrayResponse(), $http->getStatusCode());
-        }
+        return $this->apiResponse($http);
     }
 
     public function DeleteReservation(Request $request, $site, $token)
     {
-        $url = self::_domain."/".$site."/table/reservation/cancel/".$token;
+        $url = $this->url("/table/reservation/cancel/".$token);
 
-        $http = new HttpRequestHelper("POST", $url);
-        $http->send();
+        $http = HttpRequestHelper::make("POST", $url)
+            ->setHeader($this->AppID())
+            ->send();
 
-        if (!$http->isOk()) {
-            return response( $http->getErrorResponse(), $http->getStatusCode());
-        } else {
-            return response( $http->getArrayResponse(), $http->getStatusCode());
-        }
+        return $this->apiResponse($http);
     }
 
-    public function DeleteReservationtemporal(Request $request, $site, $token)
+    public function DeleteReservationtemporal()
     {
-        $url = self::_domain."/".$site."/reservationtemporal/".$token;
+        $url = $this->url("/reservationtemporal/".$this->session());
         
-        $http = new HttpRequestHelper("DELETE", $url);
-        $http->send();
+        $http = HttpRequestHelper::make("DELETE", $url)
+            ->setHeader($this->AppID())
+            ->send();
 
-        if (!$http->isOk()) {
-            return response( $http->getErrorResponse(), $http->getStatusCode());
-        } else {
-            return response( $http->getArrayResponse(), $http->getStatusCode());
-        }
+        return $this->apiResponse($http);
     }
 
-    public function ShowReservationtemporal(Request $request, $site, $token)
+    public function ShowReservationtemporal()
     {
-        $url = self::_domain."/".$site."/reservationtemporal/".$token;
-        
-        $http = new HttpRequestHelper("GET", $url);
-        $http->send();
+        $url = $this->url("/reservationtemporal/".$this->session());
 
-        if (!$http->isOk()) {
-            return response( $http->getErrorResponse(), $http->getStatusCode());
-        } else {
-            return response( $http->getArrayResponse(), $http->getStatusCode());
-        }
+        $http = HttpRequestHelper::make("GET", $url)
+            ->setHeader($this->AppID())
+            ->send();
+
+        return $this->apiResponse($http);
     }
 
     public function ShowDaysdisabled(Request $request, $site)
     {
-        $url = self::_domain."/".$site."/availability/daysdisabled";
+        $url = $this->url("/availability/daysdisabled");
+        $data = $request->all();
         
-        $http = new HttpRequestHelper("GET", $url, $request->all());
-        $http->send();
+        $http = HttpRequestHelper::make("GET", $url, $data)
+            ->setHeader($this->AppID())
+            ->send();
 
+        return $this->apiResponse($http);
+    }
+
+    public function url(String $path)
+    {
+        // $site = TempMicrosite::find(request()->route("site"));
+        // if ($site === null) {
+        //     return self::_domain."/0".$path;
+        // } else {
+        //     return self::_domain."/".$site->app_id.$path;
+        // }
+        return self::_domain."/".request()->route("site").$path;
+    }
+
+    public function AppID(Bool $idOnly = false)
+    {
+        $this->site = $this->site ? $this->site : TempMicrosite::find(request()->route("site"));
+        if ($this->site) {
+            if ($idOnly) {
+                return $this->site->app_id;
+            } else {
+                return array("app_id" => $this->site->app_id);
+            }
+        } else {
+            return [];
+        }
+
+    }
+
+    public function apiResponse(HttpRequestHelper $http)
+    {
         if (!$http->isOk()) {
             return response( $http->getErrorResponse(), $http->getStatusCode());
         } else {
             return response( $http->getArrayResponse(), $http->getStatusCode());
         }
+    }
+
+    public function session()
+    {
+        return request()->session()->get("_token");
     }
 }

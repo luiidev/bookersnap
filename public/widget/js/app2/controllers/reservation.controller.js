@@ -39,6 +39,7 @@ angular.module("App")
         };
 
         vm.redirectBase = function() {
+            alert("El tiempo para completar la reservacion a terminado.");
             $window.location.href = base_url.getWithParam({edit: 1});
         };
 
@@ -49,7 +50,8 @@ angular.module("App")
                 .then(function(response) {
                     redirect(response.data.data);
                 }).catch(function(error) {
-                    if (error.data === null) {
+                    console.log(error);
+                    if (error.data === null || error.status == 500) {
                         vm.loading = false;
                         return alert("Ocurrio un problema vuelva a intentarlo.");
                     }
