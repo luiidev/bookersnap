@@ -31,10 +31,13 @@
                             <div class="table-label top" ng-bind="obj.name" ng-click="$event.stopPropagation()">
                             </div>
                         </div>
-                        <div ng-if="itemTables.length == 0" class="empty-tables">
+                        <div class="empty-tables" ng-if="itemTables.length == 0">
                             <div>
-                                <strong ng-bind="zone.name"></strong>
-                                <p>sin mesas</p>
+                                <strong ng-bind="zone.name">
+                                </strong>
+                                <p>
+                                    sin mesas
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -45,11 +48,13 @@
 </section>
 <section class="section-left-reservation">
     <div class="card form-drag" style="height: 100%; overflow-y:auto; overflow-x: hidden;">
-        <div class="card-header p-l-10 p-r-10 text-center c-white" >
-            <button class="btn btn-default pull-left"  ng-click="cancel()">
+        <div class="card-header p-l-10 p-r-10 text-center c-white">
+            <button class="btn btn-default pull-left" ng-click="cancel()">
                 Cancelar
             </button>
-            <strong class="f-16" style="line-height: 2">EDITAR BLOQUEO</strong>
+            <strong class="f-16" style="line-height: 2">
+                EDITAR BLOQUEO
+            </strong>
             <button class="btn btn-primary pull-right" ng-click="saveZone('edit')">
                 Guardar
             </button>
@@ -91,7 +96,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-model="startTime" ng-options="startTime.hour12 for startTime in startTimes track by startTime.index">
+                                        <select class="form-control" ng-model="startTime" ng-options="startTime.hour24 for startTime in startTimes track by startTime.hour24">
                                             <option disabled="disabled" selected="true" value="">
                                                 Seleccione
                                             </option>
@@ -107,7 +112,7 @@
                             <div class="col-xs-10">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-change="loadBlockTables()" ng-model="endTime" ng-options="endTime.hour12 for endTime in endTimes track by endTime.index">
+                                        <select class="form-control" ng-change="loadBlockTables()" ng-model="endTime" ng-options="endTime.hour24 for endTime in endTimes track by endTime.hour24">
                                             <option disabled="disabled" selected="true" value="">
                                                 Seleccione
                                             </option>

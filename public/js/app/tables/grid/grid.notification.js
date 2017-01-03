@@ -8,5 +8,9 @@ angular.module("grid.controller")
         $scope.$broadcast("NotifyNewReservation", data);
     });
 
+    serverSocket.on("b-mesas-floor-upd-block", function(data) {
+        $scope.$broadcast("NotifyNewBlock", data);
+    });
+
 
 });

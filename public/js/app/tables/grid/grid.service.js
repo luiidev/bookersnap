@@ -12,6 +12,9 @@ angular.module('grid.service', [])
             },
             updateReservation: function(data, idReserva) {
                 return $http.post(ApiUrlMesas + "/reservations/" + idReserva + "/grid", data);
+            },
+            updateBlock: function(data, idBlock) {
+                return $http.patch(ApiUrlMesas + "/blocks/" + idBlock + "/grid", data);
             }
         };
     })
@@ -93,6 +96,7 @@ angular.module('grid.service', [])
                     var existsTable = self.searchTableInReservation(table, block);
                     if (existsTable === true) {
                         block = self.calculatePositionGridBlock(block, availability, indexTable);
+                        block.durations = calculateDuration(block.start_time, block.end_time);
                         blocksData.push(block);
                     }
                 });
@@ -179,9 +183,6 @@ angular.module('grid.service', [])
                 });
 
                 var duration = calculateDuration(block.start_time, block.end_time);
-
-                console.log("duration", duration);
-
                 var total_grid = calculateMinutesTime(block.start_date + " " + duration) / 15;
 
                 block.total_grid = [];
@@ -229,7 +230,7 @@ angular.module('grid.service', [])
 
                 return reservation;
             },
-            //Agrega reservacion a la mesa - grid
+            //Agrega || Actualiza reservacion a la mesa : Grid
             addReservationTableGrid: function(tablesAvailabilityFinal, reservation, action) {
                 var self = this;
 
@@ -244,7 +245,7 @@ angular.module('grid.service', [])
                             if (action === "create") {
                                 tableAvailability.reservations.push(reservation);
                             } else {
-                                var indexReserva = self.getIndexReservationsInTable(tableAvailability.reservations, reservation);
+                                var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
                                 tableAvailability.reservations[indexReserva] = reservation;
                             }
                         }
@@ -259,11 +260,41 @@ angular.module('grid.service', [])
                     }
                 });
             },
-            //Busca el indice de la reservacion para actualizarlo
-            getIndexReservationsInTable: function(tableReservations, reservation) {
+            //Agrega || Actualiza bloqueo : Grid 
+            addBlockTableGrid: function(tablesAvailabilityFinal, block, action) {
+                var self = this;
+
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
+                    angular.forEach(block.tables, function(table, key) {
+                        if (tableAvailability.id === table.id) {
+                            block = self.calculatePositionGridBlock(block, tableAvailability.availability, indexTable);
+                            block.durations = calculateDuration(block.start_time, block.end_time);
+                            if (action === "create") {
+                                tableAvailability.blocks.push(block);
+                            } else {
+                                var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
+                                tableAvailability.blocks[indexBlock] = block;
+                            }
+                        }
+                    });
+
+                });
+            },
+            //Busca la reservacion en la lista de reservaciones, devuelve posicion (Indice)
+            getIndexReservationsInTableGrid: function(tableReservations, reservation) {
                 var index = null;
                 angular.forEach(tableReservations, function(reserva, key) {
                     if (reserva.id === reservation.id) {
+                        index = key;
+                    }
+                });
+                return index;
+            },
+            //Busca el bloqueo en la lista de bloqueos, devuelve posicion (Indice)
+            getIndexBlockInTableGrid: function(tableBlocks, block) {
+                var index = null;
+                angular.forEach(tableBlocks, function(value, key) {
+                    if (value.id === block.id) {
                         index = key;
                     }
                 });
