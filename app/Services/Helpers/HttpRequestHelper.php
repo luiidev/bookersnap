@@ -23,6 +23,7 @@ class HttpRequestHelper
 
     function __construct (string $method = null, string $url = null, $data = null, array $headers = null)
     {
+        $this->setDefaultHeaders();
         $this->setMethod($method);
         $this->setUrl($url);
         $this->setHeader($headers);
@@ -78,13 +79,17 @@ class HttpRequestHelper
 
     public function setHeader(array $headers = null)
     {
-        $this->header = ['content-type' => 'application/json'];
-
         if (is_array($headers)) {
             foreach ($headers as $key => $value) {
                 $this->header[$key] = $value;
             }
         }
+        return $this;
+    }
+
+    private function setDefaultHeaders()
+    {
+        $this->header = ['content-type' => 'application/json'];
 
         $request = request();
 
@@ -95,8 +100,6 @@ class HttpRequestHelper
         if (!is_null($api_token)) {
             $this->header['Authorization'] = 'Bearer ' . $api_token;
         }
-
-        return $this;
     }
 
     public function setData($data = null)

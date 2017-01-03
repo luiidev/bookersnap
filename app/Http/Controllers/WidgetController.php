@@ -13,6 +13,7 @@ use Validator;
 class WidgetController extends Controller
 {
     const _domain = "http://localhost:3004/v1/es/microsites";
+    protected $site;
 
     public function index(Request $request, $site)
     {
@@ -29,6 +30,7 @@ class WidgetController extends Controller
 
         $http = HttpRequestHelper::make("GET")
             ->setUrl($this->url("/reservationtemporal/".$request->key))
+            ->setHeader($this->AppID())
             ->send();
 
         if ($http->isOk()) {
@@ -63,6 +65,7 @@ class WidgetController extends Controller
 
         $http = HttpRequestHelper::make("GET")
             ->setUrl($this->url("/table/reservation/confirmed/".$request->key))
+            ->setHeader($this->AppID())
             ->send();
 
         if ($http->isOk()) {
@@ -84,9 +87,10 @@ class WidgetController extends Controller
     {
         $http = HttpRequestHelper::make("POST")
             ->setUrl($this->url("/reservationtemporal"))
-            ->setHeader(
-                ["token" => $this->session()]
-            )
+            ->setHeader( [
+                    "token" => $this->session(),
+                    "app_id" => $this->AppID(true)
+            ])
             ->setData(request()->all())
             ->send();
 
@@ -98,7 +102,9 @@ class WidgetController extends Controller
         $url = $this->url("/availability/formatAvailability");
         $data = $request->all();
 
-        $http = HttpRequestHelper::make("GET", $url , $data)->send();
+        $http = HttpRequestHelper::make("GET", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -108,7 +114,9 @@ class WidgetController extends Controller
         $url = $this->url("/availability/basic");
         $data = $request->all();
 
-        $http = HttpRequestHelper::make("GET", $url , $data)->send();
+        $http = HttpRequestHelper::make("GET", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -118,7 +126,9 @@ class WidgetController extends Controller
         $url = $this->url("/table/reservation/w");
         $data = $request->all();
 
-        $http = HttpRequestHelper::make("POST", $url , $data)->send();
+        $http = HttpRequestHelper::make("POST", $url , $data)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -127,7 +137,9 @@ class WidgetController extends Controller
     {
         $url = $this->url("/table/reservation/cancel/".$token);
 
-        $http = HttpRequestHelper::make("POST", $url)->send();
+        $http = HttpRequestHelper::make("POST", $url)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -136,7 +148,9 @@ class WidgetController extends Controller
     {
         $url = $this->url("/reservationtemporal/".$this->session());
         
-        $http = HttpRequestHelper::make("DELETE", $url)->send();
+        $http = HttpRequestHelper::make("DELETE", $url)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -145,7 +159,9 @@ class WidgetController extends Controller
     {
         $url = $this->url("/reservationtemporal/".$this->session());
 
-        $http = HttpRequestHelper::make("GET", $url)->send();
+        $http = HttpRequestHelper::make("GET", $url)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
@@ -155,19 +171,37 @@ class WidgetController extends Controller
         $url = $this->url("/availability/daysdisabled");
         $data = $request->all();
         
-        $http = HttpRequestHelper::make("GET", $url, $data)->send();
+        $http = HttpRequestHelper::make("GET", $url, $data)
+            ->setHeader($this->AppID())
+            ->send();
 
         return $this->apiResponse($http);
     }
 
     public function url(String $path)
     {
-        $site = TempMicrosite::find(request()->route("site"));
-        if ($site === null) {
-            return self::_domain."/0".$path;
+        // $site = TempMicrosite::find(request()->route("site"));
+        // if ($site === null) {
+        //     return self::_domain."/0".$path;
+        // } else {
+        //     return self::_domain."/".$site->app_id.$path;
+        // }
+        return self::_domain."/".request()->route("site").$path;
+    }
+
+    public function AppID(Bool $idOnly = false)
+    {
+        $this->site = $this->site ? $this->site : TempMicrosite::find(request()->route("site"));
+        if ($this->site) {
+            if ($idOnly) {
+                return $this->site->app_id;
+            } else {
+                return array("app_id" => $this->site->app_id);
+            }
         } else {
-            return self::_domain."/".$site->app_id.$path;
+            return [];
         }
+
     }
 
     public function apiResponse(HttpRequestHelper $http)
