@@ -4,10 +4,22 @@ elixir.config.assetsPath = './';
 
 elixir(function(mix) {
     mix.styles([
-        'style2.css',
-    ], 'build/v1/styles2.min.css');
+        "library/jquery-ui-1.12.1/jquery-ui.min.css",
+        'css/style2.css'
+    ], 'build/v2/css/styles2.min.css', './');
 
-    mix.browserify([
-        'app2/'
-    ], 'build/v1/app.min.js');
+    mix.scripts([
+        'app2/**',
+        'functions.js'
+    ], 'build/v2/js/app.min.js');
+
+    mix.scripts([
+        "library/jquery/jquery-1.12.4.min.js",
+        "library/jquery-ui-1.12.1/jquery-ui.min.js",
+        "library/angular/angular.min.js",
+        "library/angular-locale/angular-locale_es-mx.min.js",
+        "library/angular-bootstrap/ui-bootstrap-tpls.min.js",
+        "library/moment/min/moment.min.js",
+        "library/moment/locale/es.js"
+    ], 'build/library.min.js', 'library');
 });
