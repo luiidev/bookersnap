@@ -24,8 +24,6 @@ angular.module('grid.controller', [])
             getTurnsActives();
         };
         init();
-
-
     })
     .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, gridDataFactory, gridFactory) {
 
@@ -97,6 +95,7 @@ angular.module('grid.controller', [])
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
             //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
+            //console.log("onDragEndReservation", angular.toJson(dataReservation, true));
         };
 
         vm.onDragEndBlock = function() {
@@ -269,7 +268,10 @@ angular.module('grid.controller', [])
             }
 
             if (params.table !== params.table_update) {
-                data.tables_add.push(params.table_update);
+                var existsTable = gridFactory.existsDataInArray(params.table_update, params.reserva.tables);
+                if (existsTable === false) {
+                    data.tables_add.push(params.table_update);
+                }
                 data.tables_deleted.push(params.table);
             }
 
@@ -444,10 +446,13 @@ angular.module('grid.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
+            console.log("NotifyNewReservation", angular.toJson(data, true));
             $scope.$apply(function() {
                 var reservation = (data.action === "create") ? data.data : data.data[0];
                 gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
                 vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
+
+                //console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
         });
 

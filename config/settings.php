@@ -21,5 +21,5 @@ return [
     'API_ADMIN_URL' => 'http://apiadmin.studework.vm/v1',
     'API_PROMO_URL' => 'http://apipromotion.studework.vm/v1',
     'MAIN_DOMAIN'   => 'weblaravel.studework.vm',
-    'API_URL' =>  'http://localhost:3004/v1/es/microsites'
+    'API_URL' =>  'http://apimesas.studework.com/v1/es/microsites'
 ];
