@@ -85,6 +85,7 @@ angular.module('book.service', [])
 
                     var dataBook = {
                         time: hour.time,
+                        index: hour.index,
                         time_text: hour.name,
                         turn_id: hour.turn_id,
                         block: null,
@@ -100,6 +101,7 @@ angular.module('book.service', [])
                         angular.forEach(existsBlocks.data, function(block, key) {
                             book.push({
                                 time: hour.time,
+                                index: hour.index,
                                 time_text: hour.name,
                                 turn_id: hour.turn_id,
                                 block: block,
@@ -117,6 +119,7 @@ angular.module('book.service', [])
                             var hoursTest = moment(reservation.date_reservation + ' ' + reservation.hours_reservation);
                             book.push({
                                 time: hour.time,
+                                index: hour.index,
                                 time_text: hoursTest.format("hh:mm A"),
                                 date_text: hoursTest.format("L"),
                                 turn_id: hour.turn_id,
@@ -148,7 +151,6 @@ angular.module('book.service', [])
 
                 reservations = self.parseReservations(reservations, true);
                 angular.forEach(reservations, function(reserva, key) {
-
                     var hoursTest = moment(reserva.date_reservation + ' ' + reserva.hours_reservation);
                     book.push({
                         time: reserva.hours_reservation,
@@ -238,13 +240,11 @@ angular.module('book.service', [])
             //Asignamos las mesas con disponibilidad
             assignTablesAvailabilityBook: function(book, tables, reservations, bookView) {
                 var self = this;
-                var indexHour = getIndexHour(book.time, 0);
-
                 angular.forEach(tables, function(table, key) {
 
-                    if (table.availability[indexHour].time == book.time) {
+                    if (table.availability[book.index].time == book.time) {
 
-                        if (table.availability[indexHour].rule_id > 0 && table.availability[indexHour].reserva === false) {
+                        if (table.availability[book.index].rule_id > 0 && table.availability[book.index].reserva === false) {
 
                             book.tables.push({
                                 id: table.id,
@@ -622,6 +622,7 @@ angular.module('book.service', [])
                 angular.forEach(hours, function(hour, key) {
                     hoursBook.push({
                         turn: "",
+                        index: key,
                         time: hour.hour24,
                         name: hour.hour12,
                         turn_id: 0

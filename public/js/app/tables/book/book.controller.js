@@ -1253,6 +1253,7 @@ angular.module('book.controller', [])
             reservationService.getHours(turns).then(
                 function success(response) {
                     vm.hoursTurns = response.hours;
+                    console.log(vm.hoursTurns);
                     vm.configReservation = data.config;
 
                     var listBook = [];
@@ -1559,7 +1560,7 @@ angular.module('book.controller', [])
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
                 tables: [{
-                    id: (vm.reservation.tables != null)? vm.reservation.tables[0]: null
+                    id: (vm.reservation.tables != null) ? vm.reservation.tables[0] : null
                 }],
                 hour: data.time,
                 guest: vm.reservation.covers
