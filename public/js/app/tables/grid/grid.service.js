@@ -295,7 +295,7 @@ angular.module('grid.service', [])
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(block.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
-
+                            
                             block = self.calculatePositionGridBlock(block, tableAvailability.availability, indexTable);
                             block.durations = calculateDuration(block.start_time, block.end_time);
 

@@ -404,13 +404,11 @@ angular.module('grid.controller', [])
         };
 
         var _setUrlReload = function(shiftName) {
-
             if (vm.gridData.turns.length > 0) {
                 shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
             } else {
                 shiftName = $stateParams.shift;
             }
-
             $state.go("mesas.grid.index", {
                 date: vm.fecha_selected.text,
                 shift: shiftName
@@ -464,6 +462,16 @@ angular.module('grid.controller', [])
                 gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
                 // console.log("NotifyNewBlock", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
+        });
+
+        $scope.$on("NotifyNewBlock", function(evt, data) {
+            console.log("NotifyNewBlock", angular.toJson(data, true));
+
+            $scope.$apply(function() {
+                var block = (data.action === "create") ? data.data : data.data[0];
+                gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
+            });
+
         });
 
         $document.on('mouseup', function() {
