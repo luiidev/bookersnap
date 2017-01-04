@@ -23,10 +23,16 @@ class HttpRequestHelper
 
     function __construct (string $method = null, string $url = null, $data = null, array $headers = null)
     {
+        $this->setDefaultHeaders();
         $this->setMethod($method);
         $this->setUrl($url);
         $this->setHeader($headers);
         $this->setData($data);
+    }
+
+    public static function make(string $method = null, string $url = null, $data = null, array $headers = null)
+    {
+        return new static($method, $url, $data, $headers);
     }
 
     public function send()
@@ -55,27 +61,35 @@ class HttpRequestHelper
             $this->isResponseOk = false;
             $this->error = $e->getMessage();
         }
+
+        return $this;
     }
 
     public function setMethod(string $method = null)
     {
         $this->method = $method;
+        return $this;
     }
 
     public function setUrl(string $url = null)
     {
         $this->url = filter_var($url, FILTER_VALIDATE_URL) ? $url : null;
+        return $this;
     }
 
     public function setHeader(array $headers = null)
     {
-        $this->header = ['content-type' => 'application/json'];
-
         if (is_array($headers)) {
             foreach ($headers as $key => $value) {
                 $this->header[$key] = $value;
             }
         }
+        return $this;
+    }
+
+    private function setDefaultHeaders()
+    {
+        $this->header = ['content-type' => 'application/json'];
 
         $request = request();
 
@@ -91,11 +105,12 @@ class HttpRequestHelper
     public function setData($data = null)
     {
         $this->data = is_null($data) ? null : json_encode($data);
+        return $this;
     }
 
     public function getResponse()
     {
-        return $this->response;
+        return (String) $this->response;
     }
 
     public function getArrayResponse()

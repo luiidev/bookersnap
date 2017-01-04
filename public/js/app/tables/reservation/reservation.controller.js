@@ -328,6 +328,7 @@ angular.module('reservation.controller', [])
             };
 
             vm.tablesSuggested = function(cant, a) {
+                if (vm.editState) return;
                 var count = Object.keys(vm.tablesSelected).length;
                 if (count <= 1) {
                     vm.zones.clearSelected();

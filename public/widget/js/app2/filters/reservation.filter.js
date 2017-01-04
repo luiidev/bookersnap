@@ -11,7 +11,7 @@ angular.module("App")
     })
     .filter("fullDateBS", function() {
         return function(date_time) {
-            return moment(date_time).format("dddd, MMM D YYYY [a las] h:mm A");
+            return moment(date_time).format("dddd, D [de] MMM YYYY [a las] h:mm A");
         };
     })
     .filter('HtmlToText', function() {

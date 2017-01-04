@@ -76,6 +76,16 @@ angular.module('grid.controller', [])
             reserva: {}
         };
 
+        //Drag del bloqueo
+        vm.blockDrag = {
+            position: {},
+            block: {},
+            newTime: '',
+            table: '',
+            table_update: '',
+            duration: ''
+        };
+
         var init = function() {
             initCalendarSelectedShift();
             getDataGrid();
@@ -83,9 +93,17 @@ angular.module('grid.controller', [])
 
         vm.onDragEndReservation = function() {
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
-            var dataReservation = constructDataReservaUpdate();
+            var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
-            console.log("onDragEnReservation", angular.toJson(vm.reservaDrag, true));
+            console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
+        };
+
+        vm.onDragEndBlock = function() {
+            vm.blockDrag.newTime = getTimeByPosicionGrid(vm.blockDrag.position.left);
+            var dataBlock = constructDataUpdate(vm.blockDrag, "block");
+            updateBlockGrid(dataBlock);
+            // console.log("onDragEndBlock", vm.blockDrag.block.durations);
+            console.log("onDragEndBlock", angular.toJson(dataBlock, true));
         };
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni, table) {
@@ -151,7 +169,7 @@ angular.module('grid.controller', [])
             console.log("selectedShift", shift);
         };
 
-        vm.prevDateCalendarShift = function() {            
+        vm.prevDateCalendarShift = function() {
             var date = moment(vm.fecha_selected.text).subtract(1, 'days').format('YYYY-MM-DD');
             vm.fecha_selected.text = date;
             _setUrlReload(null);
@@ -188,6 +206,15 @@ angular.module('grid.controller', [])
             }
         };
 
+        vm.redirectBlock = function(block) {
+            if (vm.blockDrag.table === '') {
+                $state.go("mesas.grid.blockEdit", {
+                    date: vm.fecha_selected.text,
+                    block_id: block.id
+                });
+            }
+        };
+
         var updateReservationGrid = function(data) {
             gridDataFactory.updateReservation(data, data.reservation.id).then(
                 function success(response) {
@@ -202,24 +229,43 @@ angular.module('grid.controller', [])
             );
         };
 
-        var constructDataReservaUpdate = function() {
+        var updateBlockGrid = function(data) {
+            gridDataFactory.updateBlock(data, data.block.id).then(
+                function success(response) {
+                    vm.blockDrag.table_update = "";
+                    vm.blockDrag.table = "";
+                },
+                function error(response) {
+                    console.error("updateBlockGrid", response);
+                }
+            );
+        };
+
+        var constructDataUpdate = function(params, option) {
             var data = {
-                reservation: {},
                 tables_add: [],
                 tables_deleted: []
             };
 
-            data.reservation = {
-                id: vm.reservaDrag.reserva.id,
-                hours_reservation: vm.reservaDrag.newTime
-            };
+            if (option === "reserva") {
+                data.reservation = {
+                    id: params.reserva.id,
+                    hours_reservation: params.newTime
+                };
+            } else {
+                var blockDurations = vm.blockDrag.block.durations.split(":");
 
-            if (vm.reservaDrag.table !== vm.reservaDrag.table_update) {
-                data.tables_add.push(vm.reservaDrag.table_update);
-                data.tables_deleted.push(vm.reservaDrag.table);
+                data.block = {
+                    id: params.block.id,
+                    start_time: params.newTime,
+                    end_time: moment(vm.blockDrag.block.start_date + " " + vm.blockDrag.newTime).add("hours", blockDurations[0]).add("minutes", blockDurations[1]).format("HH:mm:ss")
+                };
             }
 
-            console.log("constructDataReservaUpdate", angular.toJson(data, true));
+            if (params.table !== params.table_update) {
+                data.tables_add.push(params.table_update);
+                data.tables_deleted.push(params.table);
+            }
 
             return data;
         };
@@ -345,10 +391,7 @@ angular.module('grid.controller', [])
         };
 
         var _setUrlReload = function(shiftName) {
-            console.log("_setUrlReload", shiftName);
             shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
-            //$location.url('mesas/grid/2016-12-22/Desayuno');
-            // history.pushState("", "page 2", "http://web.aplication.bookersnap/admin/ms/1/mesas#/mesas/grid/2016-12-22/Desayuno");
             $state.go("mesas.grid.index", {
                 date: vm.fecha_selected.text,
                 shift: shiftName
@@ -398,6 +441,16 @@ angular.module('grid.controller', [])
                       generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
                   }
               }*/
+        });
+
+        $scope.$on("NotifyNewBlock", function(evt, data) {
+            console.log("NotifyNewBlock", angular.toJson(data, true));
+
+            $scope.$apply(function() {
+                var block = (data.action === "create") ? data.data : data.data[0];
+                gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
+            });
+
         });
 
         $document.on('mouseup', function() {

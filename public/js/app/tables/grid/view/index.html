@@ -37,12 +37,12 @@
                     <div class="grid-body">
                         <div class="grid-body-container">
                             <div class="grid-body-rows-container">
-                                <div class="grid-body-rows-table" drop-reserva-grid-master="" grid="item" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal" table="vm.reservaDrag.table_update">
+                                <div class="grid-body-rows-table" drop-reserva-grid-master="" grid="item" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal" table="vm.reservaDrag.table_update" table-block="vm.blockDrag.table_update">
                                     <span>
                                         <div class="grid-body-cell" drop-reserva-grid="" grid="available" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid,item)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid,item)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid,item)" ng-repeat="available in item.availability">
                                         </div>
                                         <!-- bloqueos-->
-                                        <div block="block" class="grid-cell cell" drag-block-grid="" ng-repeat="block in item.blocks" style="transform:translateX({{ block.position_grid }}px);z-index: 98">
+                                        <div block="block" block-selected="vm.blockDrag.block" class="grid-cell cell" drag-block-grid="" drag-position="vm.blockDrag.position" end-block-drag="vm.onDragEndBlock()" item-selected="item" ng-repeat="block in item.blocks" style="transform:translateX({{ block.position_grid }}px);z-index: 98" table-selected="vm.blockDrag.table">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-block">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title">
@@ -54,7 +54,7 @@
                                                 </div>
                                             </div>
                                             <div class="grid-cell-layer grid-cell-reservation">
-                                                <div class="grid-cell-quarter-hour" ng-repeat="cell in block.total_grid" style="background: none;" z-index="{{block.styles.zIndex}}">
+                                                <div class="grid-cell-quarter-hour" ng-click="vm.redirectBlock(block)" ng-repeat="cell in block.total_grid" style="background: none;" z-index="{{block.styles.zIndex}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -63,8 +63,12 @@
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">
-                                                        <span ng-if="reserva.guest !== null" >{{ reserva.guest.first_name }} {{ reserva.guest.last_name }}</span>
-                                                        <span ng-if="reserva.guest == null" >Reservacion sin nombre</span>                                                        
+                                                        <span ng-if="reserva.guest !== null">
+                                                            {{ reserva.guest.first_name }} {{ reserva.guest.last_name }}
+                                                        </span>
+                                                        <span ng-if="reserva.guest == null">
+                                                            Reservacion sin nombre
+                                                        </span>
                                                     </div>
                                                     <div class="cell-item-info-title" ng-if="!reserva.styles.conflictIni &&reserva.styles.conflicts === true">
                                                         Conflicto reserva

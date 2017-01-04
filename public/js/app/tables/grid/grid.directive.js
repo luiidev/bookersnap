@@ -90,6 +90,11 @@ angular.module('grid.directive', [])
             restrict: 'A',
             scope: {
                 block: "=",
+                blockSelected: "=",
+                itemSelected: "=",
+                tableSelected: "=",
+                endBlockDrag: "&",
+                dragPosition: "="
             },
             link: function(scope, element, attr) {
 
@@ -103,11 +108,19 @@ angular.module('grid.directive', [])
                     start: function(event, ui) {
                         element.css("transform", "none");
                         element.css("opacity", "0.6");
-                        console.log("start drag");
+
+                        scope.$apply(function() {
+                            scope.blockSelected = scope.block;
+                            scope.tableSelected = scope.itemSelected.id;
+                            console.log("start drag");
+                        });
                     },
                     stop: function(event, ui) {
                         element.css("opacity", "1");
-                        console.log("stop drag", scope.block.id);
+                        scope.$apply(function() {
+                            scope.dragPosition = ui.position;
+                        });
+                        scope.endBlockDrag();
                     }
                 });
             }
@@ -118,7 +131,8 @@ angular.module('grid.directive', [])
             restrict: 'A',
             scope: {
                 grid: "=",
-                table: "="
+                table: "=",
+                tableBlock: "="
             },
             link: function(scope, element, attr) {
 
@@ -126,6 +140,7 @@ angular.module('grid.directive', [])
                     drop: function(event, ui) {
                         scope.$apply(function() {
                             scope.table = scope.grid.id;
+                            scope.tableBlock = scope.grid.id;
                         });
                         //console.log("drop", angular.toJson(scope.grid.name, true));
                     }
