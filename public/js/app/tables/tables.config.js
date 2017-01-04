@@ -15,7 +15,8 @@
             'configuration.app',
             'availability.app',
             'grid.app',
-            'widget.app'
+            'widget.app',
+            'notification.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
         /*.constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
@@ -23,6 +24,7 @@
         .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')*/
 
     .constant("UrlServerNotify", "http://localhost:1337")
+    .constant("DomainBookersnapAdmin", "http://localhost")
         .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + idMicrositio)
         .constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {

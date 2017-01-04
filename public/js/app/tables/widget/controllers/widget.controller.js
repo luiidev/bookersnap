@@ -1,8 +1,8 @@
 angular.module("widget.app")
-    .controller("widgetCtrl", ["$scope", "$sce", "MenuConfigFactory", "IdMicroSitio", function($scope, $sce, menu, IdMicroSitio) {
+    .controller("widgetCtrl", ["$scope", "$sce", "MenuConfigFactory", "IdMicroSitio", "DomainBookersnapAdmin", function($scope, $sce, menu, IdMicroSitio, DomainBookersnapAdmin) {
         var vm = this;
 
-        vm.url="http://weblaravel.studework.com/w/"+ IdMicroSitio;
+        vm.url= DomainBookersnapAdmin+"/w/"+ IdMicroSitio;
         vm.params = "#/?orientation=vertical";
         vm.iframe = templateIframe(vm.url + vm.params);
         vm.iframesrc = vm.url + vm.params;

@@ -20,7 +20,7 @@
                     <i class="glyphicon glyphicon-user"></i><span>{{ $reservation->num_guest }} Invitados</span>
                 </div>
                 <div class="info edit">
-                    <i class="glyphicon glyphicon-arrow-left"></i><a href="javascript:void(0)" ng-click="redirectBase()">Editar Reservación</a>
+                    <i class="glyphicon glyphicon-arrow-left"></i><a href="javascript:void(0)" ng-click="redirectBaseEdit()">Editar Reservación</a>
                 </div>
                 <div class="info watch">
                     <span class="c-text">Tiempo para completar</span>

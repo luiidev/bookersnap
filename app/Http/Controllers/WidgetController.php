@@ -12,8 +12,13 @@ use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://localhost:3004/v1/es/microsites";
+    private $_domain;
     protected $site;
+
+    function __construct()
+    {
+        $this->_domain = config("settings.API_URL");
+    }
 
     public function index(Request $request, $site)
     {
@@ -180,13 +185,7 @@ class WidgetController extends Controller
 
     public function url(String $path)
     {
-        // $site = TempMicrosite::find(request()->route("site"));
-        // if ($site === null) {
-        //     return self::_domain."/0".$path;
-        // } else {
-        //     return self::_domain."/".$site->app_id.$path;
-        // }
-        return self::_domain."/".request()->route("site").$path;
+        return $this->_domain."/".request()->route("site").$path;
     }
 
     public function AppID(Bool $idOnly = false)

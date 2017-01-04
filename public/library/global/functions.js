@@ -670,3 +670,26 @@ var calculateDuration = function(hourIni, hourEnd) {
     return duration;
 
 };
+
+function notify(title, body, icon, a) {
+  if (!("Notification" in window)) {
+    console.log("El navegador no soporta notificaciones de escritorio");
+  } else if (Notification.permission === "granted") {
+    spawnNotification(title, body, icon);
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+        if (permission === "granted") {
+            spawnNotification(title, body, icon);
+        }
+    });
+  }
+}
+
+function spawnNotification(title, body, icon) {
+  var options = {
+      body: body,
+      icon: icon || "/images/icon-bookersnap.png"
+  };
+
+  var n = new Notification(title, options);
+}
