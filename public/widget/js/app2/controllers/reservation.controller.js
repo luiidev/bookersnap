@@ -40,6 +40,10 @@ angular.module("App")
 
         vm.redirectBase = function() {
             alert("El tiempo para completar la reservacion a terminado.");
+            $window.location.href = base_url.url();
+        };
+
+        vm.redirectBaseEdit = function() {
             $window.location.href = base_url.getWithParam({edit: 1});
         };
 
