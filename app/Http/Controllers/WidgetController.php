@@ -12,8 +12,14 @@ use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://localhost:3004/v1/es/microsites";
+    private $_domain;
+
     protected $site;
+
+    function __construct()
+    {
+        $this->_domain = config("settings.API_URL");
+    }
 
     public function index(Request $request, $site)
     {
@@ -89,7 +95,7 @@ class WidgetController extends Controller
             ->setUrl($this->url("/reservationtemporal"))
             ->setHeader( [
                     "token" => $this->session(),
-                    "app_id" => $this->AppID(true)
+                    "appid" => $this->AppID(true)
             ])
             ->setData(request()->all())
             ->send();
@@ -127,7 +133,10 @@ class WidgetController extends Controller
         $data = $request->all();
 
         $http = HttpRequestHelper::make("POST", $url , $data)
-            ->setHeader($this->AppID())
+            ->setHeader([
+                    "token" => $this->session(),
+                    "appid" => $this->AppID(true)
+            ])
             ->send();
 
         return $this->apiResponse($http);
@@ -180,13 +189,7 @@ class WidgetController extends Controller
 
     public function url(String $path)
     {
-        // $site = TempMicrosite::find(request()->route("site"));
-        // if ($site === null) {
-        //     return self::_domain."/0".$path;
-        // } else {
-        //     return self::_domain."/".$site->app_id.$path;
-        // }
-        return self::_domain."/".request()->route("site").$path;
+        return $this->_domain."/".request()->route("site").$path;
     }
 
     public function AppID(Bool $idOnly = false)
@@ -196,7 +199,7 @@ class WidgetController extends Controller
             if ($idOnly) {
                 return $this->site->app_id;
             } else {
-                return array("app_id" => $this->site->app_id);
+                return array("appid" => $this->site->app_id);
             }
         } else {
             return [];

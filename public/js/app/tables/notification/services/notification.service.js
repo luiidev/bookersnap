@@ -1,4 +1,4 @@
-angular.module("materialAdmin")
+angular.module("notification.app")
     .factory('notificationService', ["$http", "ApiUrlMesas", function($http, ApiUrlMesas) {
         return {
             getNotifications: function(page) {

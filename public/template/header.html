@@ -20,14 +20,14 @@
             <li class="dropdown" uib-dropdown="" ng-click="nctrl.clearNotifications()">
                 <a href="" uib-dropdown-toggle="">
                     <i class="tm-icon zmdi zmdi-notifications"></i>
-                    <i class="tmn-counts">{{ nctrl.notification_count }}</i>
+                    <i class="tmn-counts" ng-bind="nctrl.notification_count"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg stop-propagate pull-right">
                     <div class="listview" id="notifications">
                         <div class="lv-header">
                             Notificaciones
                         </div>
-                        <div class="notif-body">
+                        <div id="notif-body">
                             <a class="lv-item" ng-href="" ng-repeat="re in nctrl.reservations">
                                 <div class="media">
                                     <div class="media-body">
@@ -53,3 +53,7 @@
         </ul>
     </li>
 </ul>
+
+<audio id="audio_notipromocion">
+    <source src="/media/Arpeggio.ogg" type="audio/ogg">
+</audio>
