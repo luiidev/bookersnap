@@ -187,19 +187,19 @@ angular.module('book.service', [])
                         var indexHourIni = getIndexHour(hour_ini, 0);
                         var indexHourEnd = getIndexHour(hour_end, 0);
 
-                        var date_ini = moment(reservation.datetime_input).format("YYYY-mm-dd");
-                        var date_end = moment(reservation.datetime_output).format("YYYY-mm-dd");
+                        var date_ini = moment(reservation.datetime_input).format("YYYY-MM-DD");
+                        var date_end = moment(reservation.datetime_output).format("YYYY-MM-DD");
 
-                        if (moment(reservation.date_reservation).isSameOrBefore(date_ini)) {
+                        if (moment(reservation.date_reservation).isBefore(date_ini)) {
                             indexHourIni += 96;
                         }
-                        if (moment(reservation.date_reservation).isSameOrBefore(date_end)) {
+                        if (moment(reservation.date_reservation).isBefore(date_end)) {
                             indexHourEnd += 96;
                         }
 
                         var indexHour = getIndexHour(reservation.hours_reservation, 0);
-
                         for (var i = indexHourIni; i <= indexHourEnd; i++) {
+
                             table.availability[i].reserva = true;
                         }
                     }

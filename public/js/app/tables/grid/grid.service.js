@@ -243,18 +243,25 @@ angular.module('grid.service', [])
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(reservation.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
+
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
                             reservation.styles = {
                                 conflicts: false,
                                 zIndex: 98
                             };
+
+                            var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
+
                             if (action === "create") {
                                 tableAvailability.reservations.push(reservation);
                             } else if (action === "patch") {
                                 self.deleteReservaInTableAvailablity(tablesAvailabilityFinal, reservation);
-                                tableAvailability.reservations.push(reservation);
+
+                                var existsReserva = self.existsDataInArray(reservation.id, tableAvailability.reservations);
+                                if (existsReserva === false) {
+                                    tableAvailability.reservations.push(reservation);
+                                }
                             } else {
-                                var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
                                 tableAvailability.reservations[indexReserva] = reservation;
                             }
                         }
@@ -268,6 +275,18 @@ angular.module('grid.service', [])
                         tableAvailability.reservations[tableAvailability.reservations.length - 1].styles.conflictIni = true;
                     }
                 });
+            },
+            //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
+            existsDataInArray: function(id, data) {
+                var exists = false;
+
+                angular.forEach(data, function(value, key) {
+                    if (id === value.id) {
+                        exists = true;
+                    }
+                });
+
+                return exists;
             },
             //Agrega || Actualiza bloqueo : Grid 
             addBlockTableGrid: function(tablesAvailabilityFinal, block, action) {
@@ -296,13 +315,25 @@ angular.module('grid.service', [])
             },
             //Elimina la reservacion (actualizacion de realtime,cuando se cambia de mesa)
             deleteReservaInTableAvailablity: function(tablesAvailabilityFinal, reserva) {
+                var self = this;
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
                     angular.forEach(tableAvailability.reservations, function(reservaData, key) {
-                        if (reservaData.id === reserva.id) {
+                        var existsTable = self.existsTableInReserva(tableAvailability.id, reserva);
+                        if (reservaData.id === reserva.id && existsTable === false) {
                             tableAvailability.reservations.splice(key, 1);
                         }
                     });
                 });
+            },
+            //Evalua si existe la mesa en la reserva , devuelve true || false
+            existsTableInReserva: function(tableId, reserva) {
+                var exists = false;
+                angular.forEach(reserva.tables, function(reservaTables, key) {
+                    if (reservaTables.id === tableId) {
+                        exists = true;
+                    }
+                });
+                return exists;
             },
             //Elimina el bloqueo (actualizacion de realtime,cuando se cambia de mesa)
             deleteBlockInTableAvailablity: function(tablesAvailabilityFinal, block) {
@@ -345,7 +376,8 @@ angular.module('grid.service', [])
                 });
 
                 return totalCovers;
-            }
+            },
+
 
         };
     });
