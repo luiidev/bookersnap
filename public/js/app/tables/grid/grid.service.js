@@ -104,20 +104,21 @@ angular.module('grid.service', [])
                 return blocksData;
             },
             //Devuelve las reservaciones para la mesa
-            getReservationsByTable: function(table, reservations, availability, indexTable) {
+            getReservationsByTable: function(table, reservations, availability, indexTable, turn) {
                 var self = this;
                 var reservationsData = [];
 
                 angular.forEach(reservations, function(reservation, key) {
                     var existsTable = self.searchTableInReservation(table, reservation);
-                    if (existsTable === true) {
+                    var validaTurn = self.reservaInTimeValidate(reservation, turn);
+
+                    if (existsTable === true && validaTurn) {
                         reservation = self.calculatePositionGrid(reservation, availability, indexTable);
                         reservation.styles = {
                             conflicts: false,
                             zIndex: 98,
                             conflictsData: []
                         };
-
                         reservationsData.push(reservation);
                     }
                 });
@@ -127,6 +128,11 @@ angular.module('grid.service', [])
                 });
 
                 return reservationsData;
+            },
+            //REVISAR ESTA FUNCION (IMPORTANTE)
+            reservaInTimeValidate: function(reservation, turn) {
+                var valida = true;
+                return true;
             },
             //Identifica y asigna los conflictos entre reservaciones para la mesa
             setConflictsReservations: function(reservations, reservation) {
@@ -149,7 +155,7 @@ angular.module('grid.service', [])
 
                             self.addReservaConflict(reserva.id, reserva);
                             self.addReservaConflict(reservation.id, reserva);
-                            console.log("hay un conflicto", reserva.id, reservation.id, hour_ini, hour_end);
+                            //console.log("hay un conflicto", reserva.id, reservation.id, hour_ini, hour_end);
                         }
                     }
                 });
@@ -244,6 +250,9 @@ angular.module('grid.service', [])
                             };
                             if (action === "create") {
                                 tableAvailability.reservations.push(reservation);
+                            } else if (action === "patch") {
+                                self.deleteReservaInTableAvailablity(tablesAvailabilityFinal, reservation);
+                                tableAvailability.reservations.push(reservation);
                             } else {
                                 var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
                                 tableAvailability.reservations[indexReserva] = reservation;
@@ -267,17 +276,42 @@ angular.module('grid.service', [])
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(block.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
+                            
                             block = self.calculatePositionGridBlock(block, tableAvailability.availability, indexTable);
                             block.durations = calculateDuration(block.start_time, block.end_time);
+
+                            var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
                             if (action === "create") {
                                 tableAvailability.blocks.push(block);
+                            } else if (action == "patch") {
+                                self.deleteBlockInTableAvailablity(tablesAvailabilityFinal, block);
+                                tableAvailability.blocks.push(block);
                             } else {
-                                var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
                                 tableAvailability.blocks[indexBlock] = block;
                             }
                         }
                     });
 
+                });
+            },
+            //Elimina la reservacion (actualizacion de realtime,cuando se cambia de mesa)
+            deleteReservaInTableAvailablity: function(tablesAvailabilityFinal, reserva) {
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
+                    angular.forEach(tableAvailability.reservations, function(reservaData, key) {
+                        if (reservaData.id === reserva.id) {
+                            tableAvailability.reservations.splice(key, 1);
+                        }
+                    });
+                });
+            },
+            //Elimina el bloqueo (actualizacion de realtime,cuando se cambia de mesa)
+            deleteBlockInTableAvailablity: function(tablesAvailabilityFinal, block) {
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
+                    angular.forEach(tableAvailability.blocks, function(blockData, key) {
+                        if (blockData.id === block.id) {
+                            tableAvailability.blocks.splice(key, 1);
+                        }
+                    });
                 });
             },
             //Busca la reservacion en la lista de reservaciones, devuelve posicion (Indice)
@@ -299,6 +333,18 @@ angular.module('grid.service', [])
                     }
                 });
                 return index;
+            },
+            //Devuelve total de covers de todas las reservaciones del turno
+            totalCoversReservations: function(tablesAvailability) {
+                var totalCovers = 0;
+
+                angular.forEach(tablesAvailability, function(tables, key) {
+                    angular.forEach(tables.reservations, function(reserva, key) {
+                        totalCovers += reserva.num_guest;
+                    });
+                });
+
+                return totalCovers;
             }
 
         };

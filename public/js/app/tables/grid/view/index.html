@@ -18,7 +18,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-column-tables">
+                    <div class="grid-column-tables" ng-if="vm.gridData.turns.length > 0">
                         <div class="grid-column-tables-inner">
                             <div class="grid-column-tables-column">
                                 <div class="grid-column-tables-cell" ng-repeat="table in vm.tablesAvailability">
@@ -107,6 +107,27 @@
                                             </div>
                                         </div>
                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-turns-none" ng-if="vm.gridData.turns.length === 0">
+                        <div class="row grid-turns-none-inner">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <div class="grid-turns-none-tittle">
+                                        <h1>
+                                            No hay turnos asignados para esta fecha.
+                                        </h1>
+                                    </div>
+                                    <div class="grid-turns-none-subtittle">
+                                        <p>
+                                            You must add a sheet to see this page. Your sheet editor is in the Configure tab.
+                                        </p>
+                                    </div>
+                                    <button class="btn btn-default" ui-sref="mesas.turn">
+                                        Crear turnos
+                                    </button>
                                 </div>
                             </div>
                         </div>

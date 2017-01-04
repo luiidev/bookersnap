@@ -503,7 +503,7 @@ angular.module('block.controller', [])
         var redirect = function() {
             if ($state.is("mesas.book.block") || $state.is("mesas.book.blockEdit")) {
                 $state.go("mesas.book", $stateParams);
-            } else if ($state.is("mesas.grid.blockEdit")) {
+            } else if ($state.is("mesas.grid.block.edit") || $state.is("mesas.grid.block")) {
                 historyBack();
             } else {
                 $state.go("mesas.floor.reservation");
