@@ -13,6 +13,7 @@ use Validator;
 class WidgetController extends Controller
 {
     private $_domain;
+
     protected $site;
 
     function __construct()
@@ -94,7 +95,7 @@ class WidgetController extends Controller
             ->setUrl($this->url("/reservationtemporal"))
             ->setHeader( [
                     "token" => $this->session(),
-                    "app_id" => $this->AppID(true)
+                    "appid" => $this->AppID(true)
             ])
             ->setData(request()->all())
             ->send();
@@ -132,7 +133,10 @@ class WidgetController extends Controller
         $data = $request->all();
 
         $http = HttpRequestHelper::make("POST", $url , $data)
-            ->setHeader($this->AppID())
+            ->setHeader([
+                    "token" => $this->session(),
+                    "appid" => $this->AppID(true)
+            ])
             ->send();
 
         return $this->apiResponse($http);
@@ -195,7 +199,7 @@ class WidgetController extends Controller
             if ($idOnly) {
                 return $this->site->app_id;
             } else {
-                return array("app_id" => $this->site->app_id);
+                return array("appid" => $this->site->app_id);
             }
         } else {
             return [];
