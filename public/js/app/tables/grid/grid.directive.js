@@ -32,7 +32,6 @@ angular.module('grid.directive', [])
                 conflictsIni: "="
             },
             link: function(scope, element, attr) {
-                console.log(scope.conflicts);
 
                 if (scope.conflicts === false || scope.conflictsIni === true) {
                     element.draggable({

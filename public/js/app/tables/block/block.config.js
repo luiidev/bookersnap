@@ -67,7 +67,7 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                 }
             })
             .state('mesas.grid.block', {
-                url: '/grid',
+                url: '/:date/block',
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/block/view/create.old.html',
@@ -81,8 +81,8 @@ angular.module('block.app', ['block.controller', 'block.service', 'block.directi
                     },
                 }
             })
-            .state('mesas.grid.blockEdit', {
-                url: '/:date/block/:block_id',
+            .state('mesas.grid.block.edit', {
+                url: '/:block_id/edit',
                 views: {
                     '@': {
                         templateUrl: '/js/app/tables/block/view/edit.new.html',

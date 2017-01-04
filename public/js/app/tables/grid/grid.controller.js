@@ -57,7 +57,8 @@ angular.module('grid.controller', [])
         vm.btnCalendarShift = {
             turns: [],
             turn_selected: {},
-            date_text: ''
+            date_text: '',
+            coversReserva: 0
         };
 
         //Informacion general para el grid (reservaciones,bloqueos,disponibilidad,config,etc)
@@ -95,7 +96,7 @@ angular.module('grid.controller', [])
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
-            console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
+            //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
         };
 
         vm.onDragEndBlock = function() {
@@ -170,15 +171,21 @@ angular.module('grid.controller', [])
         };
 
         vm.prevDateCalendarShift = function() {
-            var date = moment(vm.fecha_selected.text).subtract(1, 'days').format('YYYY-MM-DD');
-            vm.fecha_selected.text = date;
-            _setUrlReload(null);
+            var validaJson = angular.toJson(vm.gridData);
+            if (validaJson.indexOf("shifts") !== -1) {
+                var date = moment(vm.fecha_selected.text).subtract(1, 'days').format('YYYY-MM-DD');
+                vm.fecha_selected.text = date;
+                _setUrlReload(null);
+            }
         };
 
         vm.nextDateCalendarShift = function() {
-            var date = moment(vm.fecha_selected.text).add(1, 'days').format('YYYY-MM-DD');
-            vm.fecha_selected.text = date;
-            _setUrlReload(null);
+            var validaJson = angular.toJson(vm.gridData);
+            if (validaJson.indexOf("shifts") !== -1) {
+                var date = moment(vm.fecha_selected.text).add(1, 'days').format('YYYY-MM-DD');
+                vm.fecha_selected.text = date;
+                _setUrlReload(null);
+            }
         };
 
         vm.closeModal = function() {
@@ -208,7 +215,7 @@ angular.module('grid.controller', [])
 
         vm.redirectBlock = function(block) {
             if (vm.blockDrag.table === '') {
-                $state.go("mesas.grid.blockEdit", {
+                $state.go("mesas.grid.block.edit", {
                     date: vm.fecha_selected.text,
                     block_id: block.id
                 });
@@ -220,7 +227,6 @@ angular.module('grid.controller', [])
                 function success(response) {
                     vm.reservaDrag.table_update = "";
                     vm.reservaDrag.table = "";
-                    $state.reload();
                     //console.log("updateReservationGrid", response);
                 },
                 function error(response) {
@@ -339,7 +345,9 @@ angular.module('grid.controller', [])
 
                     vm.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
                     vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
-                    setSelectedShift($stateParams.shift);
+                    if (vm.gridData.turns.length > 0) {
+                        setSelectedShift($stateParams.shift);
+                    }
                 },
                 function error(response) {
                     console.error("getDataGrid", angular.toJson(response.data, true));
@@ -349,10 +357,10 @@ angular.module('grid.controller', [])
 
         var constructTablesAvailability = function() {
             var availabilityTables = [];
-
+            console.log(vm.btnCalendarShift.turn_selected.turn);
             angular.forEach(vm.tablesAvailability, function(table, key) {
                 var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected);
-                var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations, availability, key);
+                var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations, availability, key, vm.btnCalendarShift.turn_selected.turn);
                 var blocks = gridFactory.getBlocksByTable(table, vm.gridData.blocks, availability, key);
 
                 availabilityTables.push({
@@ -367,6 +375,7 @@ angular.module('grid.controller', [])
             });
 
             vm.tablesAvailabilityFinal = availabilityTables;
+            vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
             //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
@@ -385,18 +394,24 @@ angular.module('grid.controller', [])
                 vm.btnCalendarShift.turn_selected = turnSelected;
             }
 
+            //console.log("setSelectedShift", angular.toJson(vm.btnCalendarShift, true));
+
             vm.timesShift = gridFactory.getRangoHoursShift(vm.btnCalendarShift.turn_selected);
 
             constructTablesAvailability();
         };
 
         var _setUrlReload = function(shiftName) {
-            shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
+            if (vm.gridData.turns.length > 0) {
+                shiftName = (shiftName === null) ? vm.btnCalendarShift.turns[0].name : shiftName;
+            } else {
+                shiftName = $stateParams.shift;
+            }
             $state.go("mesas.grid.index", {
                 date: vm.fecha_selected.text,
                 shift: shiftName
             }, {
-                reload: false
+                reload: true
             });
         };
 
@@ -429,18 +444,19 @@ angular.module('grid.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
-
             $scope.$apply(function() {
                 var reservation = (data.action === "create") ? data.data : data.data[0];
                 gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
+                vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
             });
-            /*  var response = addNewReservation(data.data, data.action);
-              if (response === true) {
-                  if (!reservationService.blackList.contains(data.key)) {
-                      alertMultiple("Notificación", data.user_msg, "info", null);
-                      generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
-                  }
-              }*/
+        });
+
+        $scope.$on("NotifyNewBlock", function(evt, data) {
+            $scope.$apply(function() {
+                var block = data.data[0];
+                gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
+                // console.log("NotifyNewBlock", angular.toJson(vm.tablesAvailabilityFinal, true));
+            });
         });
 
         $scope.$on("NotifyNewBlock", function(evt, data) {
