@@ -11,8 +11,6 @@ elixir(function(mix) {
 
     .scripts([
         'app2/**',
-        // "app2/app.js",
-        // "app2/controllers/availability.controller.js"
         'functions.js'
     ], 'build/v2/js/app.min.js')
 

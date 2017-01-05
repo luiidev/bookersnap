@@ -1,5 +1,6 @@
 angular.module("notification.app")
-    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", function($scope, $rootScope, $q, service, reservationService, $filter) {
+    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", "ServerNotification",
+         function($scope, $rootScope, $q, service, reservationService, $filter, ServerNotification) {
         vm = this;
 
         vm.notification_count = 0;
@@ -69,6 +70,12 @@ angular.module("notification.app")
             var description = "Hizo una reserva para día " + date + " para " + reservation.num_guest  + " personas.";
             notify(title, description);
         };
+
+        var serverSocket = ServerNotification.getConnection();
+
+        serverSocket.on("b-mesas-floor-res", function(data) {
+            $rootScope.$broadcast("NotifyWebReservation", data);
+        });
 
         (function Init() {
             getNotifications();
