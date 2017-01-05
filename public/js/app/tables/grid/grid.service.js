@@ -132,7 +132,7 @@ angular.module('grid.service', [])
             //REVISAR ESTA FUNCION (IMPORTANTE)
             reservaInTimeValidate: function(reservation, turn) {
                 var valida = true;
-                return true;
+                return valida;
             },
             //Identifica y asigna los conflictos entre reservaciones para la mesa
             setConflictsReservations: function(reservations, reservation) {
@@ -254,15 +254,15 @@ angular.module('grid.service', [])
 
                             if (action === "create") {
                                 tableAvailability.reservations.push(reservation);
-                            } else if (action === "patch") {
+                            } else if (action === "update") {
                                 self.deleteReservaInTableAvailablity(tablesAvailabilityFinal, reservation);
 
                                 var existsReserva = self.existsDataInArray(reservation.id, tableAvailability.reservations);
                                 if (existsReserva === false) {
                                     tableAvailability.reservations.push(reservation);
+                                } else {
+                                    tableAvailability.reservations[indexReserva] = reservation;
                                 }
-                            } else {
-                                tableAvailability.reservations[indexReserva] = reservation;
                             }
                         }
                     });
@@ -295,18 +295,22 @@ angular.module('grid.service', [])
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(block.tables, function(table, key) {
                         if (tableAvailability.id === table.id) {
-                            
+
                             block = self.calculatePositionGridBlock(block, tableAvailability.availability, indexTable);
                             block.durations = calculateDuration(block.start_time, block.end_time);
 
                             var indexBlock = self.getIndexBlockInTableGrid(tableAvailability.blocks, block);
                             if (action === "create") {
                                 tableAvailability.blocks.push(block);
-                            } else if (action == "patch") {
+                            } else if (action == "update") {
                                 self.deleteBlockInTableAvailablity(tablesAvailabilityFinal, block);
-                                tableAvailability.blocks.push(block);
-                            } else {
-                                tableAvailability.blocks[indexBlock] = block;
+
+                                var existsBlock = self.existsDataInArray(block.id, tableAvailability.blocks);
+                                if (existsBlock === false) {
+                                    tableAvailability.blocks.push(block);
+                                } else {
+                                    tableAvailability.blocks[indexBlock] = block;
+                                }
                             }
                         }
                     });
@@ -318,28 +322,20 @@ angular.module('grid.service', [])
                 var self = this;
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
                     angular.forEach(tableAvailability.reservations, function(reservaData, key) {
-                        var existsTable = self.existsTableInReserva(tableAvailability.id, reserva);
+                        var existsTable = self.existsDataInArray(tableAvailability.id, reserva.tables);
                         if (reservaData.id === reserva.id && existsTable === false) {
                             tableAvailability.reservations.splice(key, 1);
                         }
                     });
                 });
             },
-            //Evalua si existe la mesa en la reserva , devuelve true || false
-            existsTableInReserva: function(tableId, reserva) {
-                var exists = false;
-                angular.forEach(reserva.tables, function(reservaTables, key) {
-                    if (reservaTables.id === tableId) {
-                        exists = true;
-                    }
-                });
-                return exists;
-            },
             //Elimina el bloqueo (actualizacion de realtime,cuando se cambia de mesa)
             deleteBlockInTableAvailablity: function(tablesAvailabilityFinal, block) {
+                var self = this;
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, key) {
                     angular.forEach(tableAvailability.blocks, function(blockData, key) {
-                        if (blockData.id === block.id) {
+                        var existsTable = self.existsDataInArray(tableAvailability.id, block.tables);
+                        if (blockData.id === block.id && existsTable === false) {
                             tableAvailability.blocks.splice(key, 1);
                         }
                     });

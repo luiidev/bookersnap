@@ -95,7 +95,7 @@ angular.module('grid.controller', [])
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
             //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
-            //console.log("onDragEndReservation", angular.toJson(dataReservation, true));
+            console.log("onDragEndReservation", angular.toJson(dataReservation, true));
         };
 
         vm.onDragEndBlock = function() {
@@ -252,11 +252,14 @@ angular.module('grid.controller', [])
                 tables_deleted: []
             };
 
+            var tables = null;
+
             if (option === "reserva") {
                 data.reservation = {
                     id: params.reserva.id,
                     hours_reservation: params.newTime
                 };
+                tables = params.reserva.tables;
             } else {
                 var blockDurations = vm.blockDrag.block.durations.split(":");
 
@@ -265,10 +268,11 @@ angular.module('grid.controller', [])
                     start_time: params.newTime,
                     end_time: moment(vm.blockDrag.block.start_date + " " + vm.blockDrag.newTime).add("hours", blockDurations[0]).add("minutes", blockDurations[1]).format("HH:mm:ss")
                 };
+                tables = params.block.tables;
             }
 
             if (params.table !== params.table_update) {
-                var existsTable = gridFactory.existsDataInArray(params.table_update, params.reserva.tables);
+                var existsTable = gridFactory.existsDataInArray(params.table_update, tables);
                 if (existsTable === false) {
                     data.tables_add.push(params.table_update);
                 }
@@ -321,6 +325,9 @@ angular.module('grid.controller', [])
                 keyboard: false,
                 size: '',
                 resolve: {
+                    date: function() {
+                        return vm.fecha_selected.text;
+                    },
                     table: function() {
                         return table;
                     },
@@ -359,7 +366,6 @@ angular.module('grid.controller', [])
 
         var constructTablesAvailability = function() {
             var availabilityTables = [];
-            console.log(vm.btnCalendarShift.turn_selected.turn);
             angular.forEach(vm.tablesAvailability, function(table, key) {
                 var availability = gridFactory.constructAvailability(table.availability, vm.btnCalendarShift.turn_selected);
                 var reservations = gridFactory.getReservationsByTable(table, vm.gridData.reservations, availability, key, vm.btnCalendarShift.turn_selected.turn);
@@ -446,39 +452,30 @@ angular.module('grid.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
-            console.log("NotifyNewReservation", angular.toJson(data, true));
             $scope.$apply(function() {
                 var reservation = (data.action === "create") ? data.data : data.data[0];
-                gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
-                vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
 
-                //console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
+                if (reservation.date_reservation === vm.fecha_selected.text) {
+                    gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
+                    vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
+                }
             });
         });
 
         $scope.$on("NotifyNewBlock", function(evt, data) {
             $scope.$apply(function() {
                 var block = data.data[0];
-                gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
-                // console.log("NotifyNewBlock", angular.toJson(vm.tablesAvailabilityFinal, true));
+
+                if (block.start_date === vm.fecha_selected.text) {
+                    gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
+                }
+
             });
-        });
-
-        $scope.$on("NotifyNewBlock", function(evt, data) {
-            console.log("NotifyNewBlock", angular.toJson(data, true));
-
-            $scope.$apply(function() {
-                var block = (data.action === "create") ? data.data : data.data[0];
-                gridFactory.addBlockTableGrid(vm.tablesAvailabilityFinal, block, data.action);
-            });
-
         });
 
         $document.on('mouseup', function() {
             if (vm.reservationCreate.hourIni !== '' && openModalReserva === null) {
-                console.log("end", vm.reservationCreate.hourEnd, vm.tempData.hourEnd, vm.reservationCreate.timeTotal);
                 vm.reservationCreate.hourEnd = (vm.reservationCreate.hourEnd === '') ? vm.tempData.hourEnd : vm.reservationCreate.hourEnd;
-                //  console.log("mouseup", angular.toJson(vm.reservationCreate, true));
                 openModalCreateReserva(vm.reservationCreate.table);
             }
         });
@@ -487,11 +484,10 @@ angular.module('grid.controller', [])
 
     })
     .controller("ModalGridReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService,
-        reservationHelper, $timeout, ctrlMain, table, hourReservation, FloorFactory, global, $table) {
+        reservationHelper, $timeout, ctrlMain, table, hourReservation, date, FloorFactory, global, $table) {
 
         var vm = this;
         var auxiliar;
-        var date = "";
 
         vm.reservation = {};
         vm.reservation.status_id = 1;

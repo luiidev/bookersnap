@@ -35,9 +35,15 @@ Route::get('/admin', function () {
     return view('dashboard.admin.index');
 });
 
-Route::get('/admin/auth', ['uses' => 'Admin\MainController@mesas' , 'middleware' => 'authTemp']);
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' /*, 'middleware' => 'authTemp'*/]);
+Route::group(['prefix' => '/admin/auth'], function () {
+
+    Route::get('/{id}', ['uses' => 'Admin\SessionController@mesas' ,'middleware' => 'authTemp:login'])->where('id', '[0-9]+');
+    Route::get('/{id}/logout', ['uses' => 'Admin\SessionController@mesas' ,'middleware' => 'authTemp:logout'])->where('id', '[0-9]+');
+
+});
+
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' => 'authTempPage']);
 
 
 Route::get('/admin/ms/{id}/reservation', function () {
