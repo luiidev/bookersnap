@@ -19,14 +19,14 @@
             'notification.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
-    .constant("DomainBookersnapAdmin", "http://weblaravel.studework.com")
-        .constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
-        .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')
-    /*    .constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
+        /*.constant("DomainBookersnapAdmin", "http://weblaravel.studework.com")
+            .constant("UrlServerNotify", "http://weblaravel.studework.com:1337")
+            .constant("ApiUrlMesas", 'http://apimesas.studework.com/v1/es/microsites/' + idMicrositio)
+            .constant("ApiUrlRoot", 'http://apimesas.studework.com/v1/es')*/
+        .constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
         .constant("UrlServerNotify", "http://localhost:1337")
         .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')*/
+        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
