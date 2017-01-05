@@ -174,7 +174,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-if="vmd.configuration.status_people_1 || vmd.configuration.status_people_2 || vmd.configuration.status_people_3" >
+                    <div class="form-group" ng-if="(vmd.configuration.status_people_1 || vmd.configuration.status_people_2 || vmd.configuration.status_people_3) && (vmd.reservation.status_id == 4 || vmd.reservation.status_id == 5)" >
                         <div class="col-xs-12 m-b-10" ng-if="vmd.configuration.status_people_1">
                             <button class="col-xs-4 btn bgm-gray btn-lg pull-left" ng-click="vmd.restar('men')" >
                                 <i class="zmdi zmdi-minus" ></i>
@@ -322,7 +322,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-if="er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3" >
+                    <div class="form-group" ng-if="(er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3) && (er.reservation.status_id == 4 || er.reservation.status_id == 5)" >
                         <div class="col-xs-12 m-b-10" ng-if="er.configuration.status_people_1">
                             <button class="col-xs-4 btn bgm-gray btn-lg pull-left" ng-click="er.restar('men')" >
                                 <i class="zmdi zmdi-minus" ></i>

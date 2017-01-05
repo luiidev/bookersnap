@@ -41,7 +41,7 @@ table {
 	border-spacing: 0;
 }
 
-button, input {
+button, input, table {
 	outline: none;
 }
 
@@ -60,6 +60,7 @@ body {
 	border-radius: 5px;
 	position: relative;
 	top: 5px;
+	background-color: #fff;
 }
 
 .params .header {
@@ -109,6 +110,7 @@ body {
 	height: 0;
 	border: 0;
 	overflow: hidden;
+	background-color: #fff;
 }
 
 .params .body.active {
@@ -135,11 +137,15 @@ body {
 
 .promo-list .item table {
 	width: 100%;
-	border-bottom: 1px solid #bbb;
+	/*border-bottom: 1px solid #bbb;*/
 }
 
 .promo-list .item table tr{
 	border-bottom: 1px solid #bbb;
+}
+
+.b-b-0 {
+	border-bottom: 0 !important;
 }
 
 .promo-list .item table tr td {
@@ -219,7 +225,9 @@ body {
 }
 
 #two {
-	display: none;
+	display: none;	
+	background-color: #fff;
+	height: 100%;
 }
 
 #two  div{
@@ -284,6 +292,29 @@ button {
 	border-radius: 3px;
 }
 
+.select-sm {
+	/*display: block;*/
+	/* width: 100%; */
+	font-size: 12px;
+	height: 34px;
+	padding: 6px 5px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.month-w {
+	width: calc(100% - 115px);
+}
+
 .form h4 {
 	padding: 20px 0;
 }
@@ -312,11 +343,17 @@ button {
 	padding: 6px 8px;
 }
 
-.calendar .btn.active {
+.calendar .btn.btn-info {
 	background: #337ab7;
 	color: #fff;
 }
 
+
+/*.calendar .btn.active {
+	background: #337ab7;
+	color: #fff;
+}
+*/
 .calendar .btn-default {
 	background: #fff;
 	color: #222;
@@ -386,9 +423,10 @@ button {
 }
 
 #event .bg-image {
-	height: 70px;
+	height: 120px;
 	background-repeat: no-repeat;
-	background-size: 100%;
+	background-size: cover !important;
+	background-position: center !important;
 }
 
 #event .description {
@@ -618,6 +656,13 @@ button {
 	border-radius: 4px;
  }
 
+ .bsb-xs {
+ 	height: 21px;
+ 	line-height: 20px;
+ 	font-size: 12px;
+ 	padding: 0 10px;
+ }
+
  .bsb-block {
 	display: block;
 	width: 100%;
@@ -635,9 +680,24 @@ button {
 	 /*border-color: #d43f3a;*/
   }
 
+  .bsb-m-5 {
+  	margin-left: 5px;
+  	margin-bottom: 5px;
+  }
+
  .form-group {
 	/*padding: 0 20px;*/
 	margin-bottom: 15px;
+ } 
+
+ .form-group p {
+	text-align: left;
+ }
+
+ .form-group label{
+ 	display: block;
+ 	margin-bottom: 5px;
+ 	text-align: left;
  }
 
  .has-error .help-block,
@@ -670,11 +730,11 @@ button {
 
  @font-face {   
                 font-family: "Glyphicons Halflings";    
-                src:    url("../../fonts/glyphicons-halflings-regular.eot");   
-                src:    url("../../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), 
-                        url("../../fonts/glyphicons-halflings-regular.woff") format("woff"), 
-                        url("../../fonts/glyphicons-halflings-regular.ttf") format("truetype"), 
-                        url("../../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); 
+                src:    url("../../../../fonts/glyphicons-halflings-regular.eot");   
+                src:    url("../../../../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), 
+                        url("../../../../fonts/glyphicons-halflings-regular.woff") format("woff"), 
+                        url("../../../../fonts/glyphicons-halflings-regular.ttf") format("truetype"), 
+                        url("../../../../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); 
             }
 
  /*.glyphicon { font-family: "Glyphicons Halflings";}*/

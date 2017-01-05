@@ -1,13 +1,11 @@
 angular.module("App")
-    .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", "$storage",function($http, $q, ApiUrlMesas, $storage) {
-        var storage = $storage.instance;
-        
+    .factory("availabilityService", ["$http", "base_url",function($http, base_url) {     
         return {
             getFormatAvailability: function(date) {
-                return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
+                return $http.get(base_url.url( "/api/availability/formatAvailability"), { params: {date: date}});
             },
             getAvailability: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/basic", {
+                return $http.get(base_url.url() + "/api/availability/basic", {
                     params: {
                         date: data.date,
                         hour: data.hour.option,
@@ -18,20 +16,23 @@ angular.module("App")
                 });
             },
             saveTemporalReserve: function(data) {
-                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": storage._token }});
+                return $http.post(base_url.url("/api/reservationtemporal"), data);
             },
             saveReservation: function(data) {
-                return $http.post(ApiUrlMesas + "/table/reservation/w", data);
+                return $http.post(base_url.url("/api/table/reservation/w"), data);
             },
             cancelReservation: function(reserveToken) {
-                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + reserveToken);
+                return $http.post(base_url.url("/api/table/reservation/cancel/" + reserveToken));
             },
             cancelTemporalReservation: function() {
-                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + storage._token);
+                return $http.delete(base_url.url("/api/reservationtemporal"));
             },
             searchTemporalReserve: function() {
-                return $http.get(ApiUrlMesas + "/reservationtemporal/" + storage._token);
-            }
+                return $http.get(base_url.url("/api/reservationtemporal"));
+            },
+            getDaysDisabled: function(data) {
+                return $http.get(base_url.url("/api/availability/daysdisabled"), { params: data});
+            },
         };
     }])
     .factory("utiles", [function() {
@@ -82,6 +83,9 @@ angular.module("App")
         params = params === "" ? "" : "#/?" + params;
 
         return {
+            url: function(path) {
+                return _base_url + (path ? path : "");
+            },
             get: function(path) {
                 return _base_url + path + params;
             },
@@ -97,14 +101,4 @@ angular.module("App")
                 return $location.search()[search] !== undefined;
             }
         };
-    }])
-    .factory("$storage", ["$localStorage", function($localStorage) {
-            var instance = $localStorage.$default({ _token: "abcdefghijklmnopqrstuvwxyz" });
-
-            return {
-                existToken: function() {
-                    return Object.prototype.toString.call(instance._token)  == "[object String]";
-                }, 
-                instance: instance
-            };
     }]);

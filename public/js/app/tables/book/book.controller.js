@@ -734,12 +734,12 @@ angular.module('book.controller', [])
         $scope.$on("NotifyNewReservation", function(evt, data) {
 
             var response = addNewReservation(data.data, data.action);
-            if (response === true) {
-                if (!reservationService.blackList.contains(data.key)) {
-                    alertMultiple("Notificación", data.user_msg, "info", null);
-                    generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
-                }
-            }
+            // if (response === true) {
+            //     if (!reservationService.blackList.contains(data.key)) {
+            //         // alertMultiple("Notificación", data.user_msg, "info", null);
+            //         // generatedHeaderInfoBook(vm.datesText.start_date, vm.datesText.end_date);
+            //     }
+            // }
         });
 
         $scope.$watch('vm.bookFilter.date', function(newDate, oldDate) {
@@ -1253,6 +1253,7 @@ angular.module('book.controller', [])
             reservationService.getHours(turns).then(
                 function success(response) {
                     vm.hoursTurns = response.hours;
+                    console.log(vm.hoursTurns);
                     vm.configReservation = data.config;
 
                     var listBook = [];
@@ -1502,6 +1503,7 @@ angular.module('book.controller', [])
         var save = function() {
             vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
+            console.log("save", angular.toJson(vm.reservation, true));
             reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
@@ -1554,10 +1556,11 @@ angular.module('book.controller', [])
             /*console.log(vm.reservation);
             console.log(data);*/
             $uibModalInstance.dismiss('cancel');
+
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
                 tables: [{
-                    id: vm.reservation.tables[0]
+                    id: (vm.reservation.tables != null) ? vm.reservation.tables[0] : null
                 }],
                 hour: data.time,
                 guest: vm.reservation.covers

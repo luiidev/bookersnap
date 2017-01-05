@@ -619,6 +619,18 @@ angular.module('floor.controller')
             er.save = function() {
                 var id = er.reservation.id;
 
+                if ( (er.configuration.status_people_1 || er.configuration.status_people_2 || er.configuration.status_people_3) &&
+                    (er.reservation.status_id == 4 | er.reservation.status_id == 5)) {
+                    var suma = er.reservation.guests.men + er.reservation.guests.women + er.reservation.guests.children;
+                    if (suma === 0 ) {
+                        return message.alert("Es obligatorio indicar cantidad de invitados por tipo", "Este campo se encuentra en la parte inferior del formulario.");
+                    }
+                } else {
+                    er.reservation.guests.men  = 0;
+                    er.reservation.guests.women = 0;
+                    er.reservation.guests.children = 0;
+                }
+
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tags
                 ///////////////////////////////////////////////////////////////

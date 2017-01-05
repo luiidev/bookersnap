@@ -19,10 +19,17 @@ Route::get("/w/{site}/reserve", "WidgetController@confirm");
 Route::post("/w/{site}/reserve", "WidgetController@store");
 Route::get("/w/{site}/confirmed", "WidgetController@confirmed");
 
-//  Widget v2
-// Route::get("/v2/w/{site}/", "WidgetController@v2")->name("widget2");
-// Route::get("/v2/w/{site}/reserve", "WidgetController@confirm2");
-// Route::get("/v2/w/{site}/confirmed", "WidgetController@confirmed2");
+/**
+ *  Rutas de conexion con api
+ */
+Route::get("/w/{site}/api/availability/formatAvailability", "WidgetController@FormatAvailability");
+Route::get("/w/{site}/api/availability/basic", "WidgetController@Basic");
+Route::post("/w/{site}/api/reservationtemporal", "WidgetController@StoreReservationtemporal");
+Route::post("/w/{site}/api/table/reservation/w", "WidgetController@StoreReservation");
+Route::post("/w/{site}/api/table/reservation/cancel/{token}", "WidgetController@DeleteReservation");
+Route::delete("/w/{site}/api/reservationtemporal", "WidgetController@DeleteReservationtemporal");
+Route::get("/w/{site}/api/reservationtemporal", "WidgetController@ShowReservationtemporal");
+Route::get("/w/{site}/api/availability/daysdisabled", "WidgetController@ShowDaysdisabled");
 
 Route::get('/admin', function () {
     return view('dashboard.admin.index');

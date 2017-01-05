@@ -20,7 +20,7 @@
                     <i class="glyphicon glyphicon-user"></i><span>{{ $reservation->num_guest }} Invitados</span>
                 </div>
                 <div class="info edit">
-                    <i class="glyphicon glyphicon-arrow-left"></i><a href="javascript:void(0)" ng-click="redirectBase()">Editar Reservación</a>
+                    <i class="glyphicon glyphicon-arrow-left"></i><a href="javascript:void(0)" ng-click="redirectBaseEdit()">Editar Reservación</a>
                 </div>
                 <div class="info watch">
                     <span class="c-text">Tiempo para completar</span>
@@ -48,22 +48,19 @@
                             <p class="help-block" ng-repeat="error in errors['guest.last_name']" ng-bind="error"></p>
                         </div>
 
-                        <div class="form-group" ng-class="{ 'has-error': errors['guest.birthdate'].length}">
-                            <label>* Cumpleaños</label>
-                            <input type="text" name="birthdate" class="form-control input-sm" placeholder="Seleccione fecha" ng-model="reservation.guest.birthdate" ng-focus="clearErrors('guest.birthdate')" ng-value="year + '-' + month +'-' +day" required>
-                            <p class="help-block" ng-repeat="error in errors['guest.birthdate']" ng-bind="error"></p>
-                        </div>
-
-                        <div class="form-group text-center">
-                                <select class="pull-left" name="year" ng-options="year for year in years" ng-model="year">
+                        <div class="form-group text-center" ng-class="{ 'has-error': errors['guest.birthdate'].length}" ng-click="clearErrors('guest.birthdate')">
+                                <input type="hidden" name="birthdate" ng-model="reservation.guest.birthdate" required>
+                                <label class="">* Cumpleaños</label>
+                                <select class="select-sm pull-left" name="year" ng-options="year for year in years" ng-model="year" ng-change="changeYear(year)">
                                     <option value="" disabled="disabled" selected="true">Año</option>
                                 </select>
-                                <select name="month" ng-options="$index as month for ($index, month) in months" ng-model="month" ng-change="changeMonth(month)">
+                                <select class="select-sm month-w" name="month" ng-options="month.id as month.label for month in months" ng-model="month" ng-change="changeMonth(month)">
                                     <option value="" disabled="disabled" selected="true">Mes</option>
                                 </select>
-                                <select class="pull-right" name="day" id="day" ng-options="day for day in days" ng-model="day">
+                                <select class="select-sm pull-right" name="day" id="day" ng-options="day for day in days" ng-model="day" ng-change="changeDay(day)">
                                     <option value="" disabled="disabled" selected="true">Día</option>
                                 </select>
+                                <p class="help-block" ng-repeat="error in errors['guest.birthdate']" ng-bind="error"></p>
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-error': errors['guest.email'].length}">
@@ -91,7 +88,7 @@
                         @if ($forms[1]['status'] == 1)
                         <div class=" ng-hide"  ng-show="reservation.guest_list.length">
                             <div class="form-group guest-list">
-                            <button class="btn btn-primary btn-xs" ng-repeat="guest in reservation.guest_list track by $index">  <span ng-bind="guest"></span> <i class="glyphicon glyphicon-remove" ng-click="removeGuest($index)"></i></button>
+                            <button class="bsb bsb-bookersnap bsb-xs bsb-m-5 " ng-repeat="guest in reservation.guest_list track by $index">  <span ng-bind="guest"></span> <i class="glyphicon glyphicon-remove" ng-click="removeGuest($index)"></i></button>
                             </div>
                         </div>
 

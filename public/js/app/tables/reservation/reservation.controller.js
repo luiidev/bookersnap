@@ -16,6 +16,17 @@ angular.module('reservation.controller', [])
              * @type {Object}
              */
             vm.reservation = {};
+            vm.reservation.guests = {
+                men: 0,
+                women: 0,
+                children: 0
+            };
+
+            /**
+             * Entidad de configuration
+             * @type {Object}
+             */
+            vm.configuration = {};
 
             /**
              * Mesas seleccionadas en el lienzo
@@ -154,6 +165,7 @@ angular.module('reservation.controller', [])
                     result.push(parseInt(value));
                     return result;
                 }, []);
+
                 // Se retira autoenvio de mesa sugerida, se puede reservar sin mesas.
                 // if (vm.reservation.tables.length === 0) {
                 //     if (vm.tableSuggested) {
@@ -162,6 +174,18 @@ angular.module('reservation.controller', [])
                 //         return message.alert("Debe elegir mesas para la reservacion");
                 //     }
                 // }
+                
+                if ( (vm.configuration.status_people_1 || vm.configuration.status_people_2 || vm.configuration.status_people_3)  && 
+                        (vm.reservation.status_id == 4 | vm.reservation.status_id == 5)) {
+                    var suma = vm.reservation.guests.men + vm.reservation.guests.women + vm.reservation.guests.children;
+                    if (suma === 0 ) {
+                        return message.alert("Es obligatorio indicar cantidad de invitados por tipo", "Este campo se encuentra en la parte inferior izquierda de la pantalla.");
+                    }
+                } else {
+                    vm.reservation.guests.men  = 0;
+                    vm.reservation.guests.women = 0;
+                    vm.reservation.guests.children = 0;
+                }
 
                 ///////////////////////////////////////////////////////////////
                 // parse reservation.tags
@@ -304,6 +328,7 @@ angular.module('reservation.controller', [])
             };
 
             vm.tablesSuggested = function(cant, a) {
+                if (vm.editState) return;
                 var count = Object.keys(vm.tablesSelected).length;
                 if (count <= 1) {
                     vm.zones.clearSelected();
@@ -548,6 +573,12 @@ angular.module('reservation.controller', [])
                     server_id: reservation.res_server_id
                 };
 
+                vm.reservation.guests = {
+                    men: reservation.num_people_1,
+                    women: reservation.num_people_2,
+                    children: reservation.num_people_3
+                };
+
                 vm.hour = filterHour(vm.hours, reservation.hours_reservation);
 
                 if (reservation.res_guest_id) {
@@ -632,6 +663,7 @@ angular.module('reservation.controller', [])
                         vm.servers = response.data.data.servers;
                         vm.statuses = response.data.data.status;
                         vm.tags = response.data.data.tags;
+                        vm.configuration = response.data.data.config;
                         var turns = response.data.data.shifts;
 
                         listHours(turns)
@@ -720,7 +752,7 @@ angular.module('reservation.controller', [])
 
             var isEditSate = function() {
                 var state = $state.current.name;
-                editState = state == "mesas.floor.reservation.edit" || state == "mesas.book-reservation-edit" || state == "mesas.guest.view.reservation-edit";
+                editState = state == "mesas.floor.reservation.edit" || state == "mesas.book-reservation-edit" || state == "mesas.guest.view.reservation-edit" || state == "mesas.grid-reservation-edit";
                 vm.editState = editState;
             };
 
@@ -735,7 +767,9 @@ angular.module('reservation.controller', [])
                     $state.go("mesas.book", $stateParams);
                 } else if (state == "mesas.guest.view.reservation-edit") {
                     $state.go("mesas.guest.view");
-                } else {
+                } else if (state == "mesas.grid-reservation-edit" || state == "mesas.grid-reservation-add") {
+                    historyBack();
+                }  else {
                     $state.go("mesas.floor.reservation");
                 }
             };
@@ -748,6 +782,29 @@ angular.module('reservation.controller', [])
                     $stateParams.sort = config.url.sort;
                 }
             };
+
+            /**
+             * Select guest: men woman children
+             */
+            vm.sumar = function(guest) {
+                vm.reservation.guests[guest]++;
+                totalGuests();
+            };
+
+            vm.restar = function(guest) {
+                var quantity = vm.reservation.guests[guest];
+                if (quantity - 1 >= 0) {
+                    vm.reservation.guests[guest]--;
+                    totalGuests();
+                }
+            };
+
+            var totalGuests = function() {
+                vm.reservation.guests.total = vm.reservation.guests.men + vm.reservation.guests.women + vm.reservation.guests.children;
+            };
+            /**
+             * END Select guest: men woman children
+             */
 
             (function Init() {
                 isEditSate();

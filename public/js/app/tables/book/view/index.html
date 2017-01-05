@@ -99,35 +99,46 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
-                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
-                                    <span ng-bind="item.reservation.guest.last_name"></span>
-                                    
-
-                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
-                                        <div class="arrow"></div>
-                                        <div ng-show="item.reservation.event" >
-                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                <span ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                    </span>
+                                    <span ng-bind="item.reservation.guest.last_name">
+                                    </span>
+                                    <div class="popover bottom event {{item.reservation.showEvent}}">
+                                        <div class="arrow">
+                                        </div>
+                                        <div ng-show="item.reservation.event">
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name">
+                                            </h3>
                                             <div class="popover-content">
-                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}"></div>
-                                                <p ng-bind="item.reservation.event.description"></p>
+                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}">
+                                                </div>
+                                                <p ng-bind="item.reservation.event.description">
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>                                   
-                                </span>                               
+                                    </div>
+                                </span>
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item emails" ng-click="vm.mailReservartion(item.reservation)" ng-show="vm.showFieldReservation('messages')">
-                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
-                                    <span class="count">{{item.reservation.emails.length}}</span>
-                                    <span ng-if="item.reservation.note != null"></span>
+                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg">
+                                    </i>
+                                    <span class="count">
+                                        {{item.reservation.emails.length}}
+                                    </span>
+                                    <span ng-if="item.reservation.note != null">
+                                    </span>
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)" ng-show="vm.showFieldReservation('listguests')">
-                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
-                                    <span class="count">{{item.reservation.guest_list.length}}</span>
+                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg">
+                                    </i>
+                                    <span class="count">
+                                        {{item.reservation.guest_list.length}}
+                                    </span>
                                 </a>
                             </div>
                         </div>
@@ -138,11 +149,11 @@
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ item.date_text }}
+                                {{ item.reservation.date_reservation | date:"dd/MM/yyyy"}}
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label {{ item.reservation.status.tag }}" >
+                            <label class="label {{ item.reservation.status.tag }}">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -288,17 +299,22 @@
                             <span ng-if="item.reservation.tables.length > 0">
                                 {{ item.reservation.tables[0].name }}
                             </span>
-                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red" ></stron>
+                            <stron class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" ng-if="item.reservation.tables.length == 0" style="color:red">
+                            </stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
                         </div>
-                        <div class="item movil {{item.reservation.status.tag}}" >
+                        <div class="item movil {{item.reservation.status.tag}}">
                             <span class="table-name">
                                 <span ng-if="item.reservation.tables.length > 0">
-                                    {{ item.reservation.tables[0].name }} <span ng-if="item.reservation.tables.length >1">+</span>
+                                    {{ item.reservation.tables[0].name }}
+                                    <span ng-if="item.reservation.tables.length >1">
+                                        +
+                                    </span>
                                 </span>
-                                <stron ng-if="item.reservation.tables.length == 0" class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
+                                <stron class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" ng-if="item.reservation.tables.length == 0">
+                                </stron>
                             </span>
                             <span class="status-name">
                                 {{ item.reservation.status.name || 'Desconocido' }}
@@ -313,43 +329,55 @@
         </div>
         <div class="content-book" ng-if="vm.bookView">
             <div class="item-book" item="item" ng-repeat="item in vm.listBookReserva">
-                <div class="item reservation" >
+                <div class="item reservation">
                     <div class="box-guest">
                         <div class="picture" ng-style="{'background-image': 'url(/images/avatar.jpg)'}">
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-mouseover="item.reservation.showEvent = 'show'" ng-mouseleave="item.reservation.showEvent = ''"  ng-init="item.reservation.showEvent = ''" >
-                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'" ></span>
-                                    <span ng-bind="item.reservation.guest.last_name"></span>
-                                    <div class="popover bottom event {{item.reservation.showEvent}}" >
-                                        <div class="arrow"></div>
-                                        <div ng-show="item.reservation.event" >
-                                            <h3 class="popover-title" ng-bind="item.reservation.event.name"></h3>
+                                <span ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                    </span>
+                                    <span ng-bind="item.reservation.guest.last_name">
+                                    </span>
+                                    <div class="popover bottom event {{item.reservation.showEvent}}">
+                                        <div class="arrow">
+                                        </div>
+                                        <div ng-show="item.reservation.event">
+                                            <h3 class="popover-title" ng-bind="item.reservation.event.name">
+                                            </h3>
                                             <div class="popover-content">
-                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}"></div>
-                                                <p ng-bind="item.reservation.event.description"></p>
+                                                <div class="event-image" ng-style="{'background-image': 'url({{item.reservation.event.url_image_thumb}})'}">
+                                                </div>
+                                                <p ng-bind="item.reservation.event.description">
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>                                   
-                                </span>                               
+                                    </div>
+                                </span>
                             </div>
                             <div class="list">
                                 <a class="item num-guest">
                                     {{ item.reservation.num_guest }} invitados
                                 </a>
                                 <a class="item emails" ng-click="vm.mailReservartion(item.reservation)" ng-show="vm.showFieldReservation('messages')">
-                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg"></i>
-                                    <span class="count">{{item.reservation.emails.length}}</span>
-                                    <span ng-if="item.reservation.note != null"></span>
+                                    <i class="icon tm-icon zmdi zmdi-email zmdi-hc-lg">
+                                    </i>
+                                    <span class="count">
+                                        {{item.reservation.emails.length}}
+                                    </span>
+                                    <span ng-if="item.reservation.note != null">
+                                    </span>
                                 </a>
                                 <a class="item list-guest" ng-click="vm.checkGuestList(item.reservation)" ng-show="vm.showFieldReservation('listguests')">
-                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg"></i>
-                                    <span class="count">{{item.reservation.guest_list.length}}</span>
+                                    <i class="icon zmdi zmdi-file-text zmdi-hc-lg">
+                                    </i>
+                                    <span class="count">
+                                        {{item.reservation.guest_list.length}}
+                                    </span>
                                 </a>
-                            </div>                                                       
+                            </div>
                         </div>
-
                     </div>
                     <div class="box-reservation">
                         <div class="datetime" ng-click="vm.editReservation(item)">
@@ -357,11 +385,11 @@
                                 {{ item.time_text }}
                             </div>
                             <div class="date">
-                                {{ item.date_text }}
+                                {{ item.reservation.date_reservation | date:"yyyy/MM/dd"}}
                             </div>
                         </div>
                         <div class="status">
-                            <label class="label {{item.reservation.status.tag}}" >
+                            <label class="label {{item.reservation.status.tag}}">
                                 {{ item.reservation.status.name }}
                             </label>
                         </div>
@@ -500,7 +528,8 @@
                             <span ng-if="item.reservation.tables.length > 0">
                                 {{ item.reservation.tables[0].name }}
                             </span>
-                            <stron ng-if="item.reservation.tables.length == 0" class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
+                            <stron class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" ng-if="item.reservation.tables.length == 0">
+                            </stron>
                             <span ng-if="item.reservation.tables.length >1">
                                 +
                             </span>
@@ -510,7 +539,8 @@
                                 <span ng-if="item.reservation.tables.length > 0">
                                     {{ item.reservation.tables[0].name }}
                                 </span>
-                                <stron ng-if="item.reservation.tables.length == 0" class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg"></stron>
+                                <stron class="standing-people zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" ng-if="item.reservation.tables.length == 0">
+                                </stron>
                                 <span ng-if="item.reservation.tables.length >1">
                                     +
                                 </span>
@@ -782,7 +812,7 @@
             <button class="btn btn-danger pull-right" ng-click="gl.cancel()"><i class="zmdi zmdi-close"></i></button>
         </div>
         <div class="modal-body">
-            <div class="text-center">Escribir nobre y presionar enter para añadir invitados a la lista</div>
+            <div class="text-center c-orange"  >Escribir nombre y presionar enter para añadir invitados a la lista</div>
             <table class="table">
                 <thead>
                     <tr>

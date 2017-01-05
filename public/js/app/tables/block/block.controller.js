@@ -36,7 +36,7 @@ angular.module('block.controller', [])
             var fechaOld = convertFechaYYMMDD(oldValue, "es-ES", {});
 
             if (fecha !== fechaOld) {
-                    InitModule(fecha);
+                InitModule(fecha);
                 // listFormData(fecha);
                 // listZones(fecha);
             }
@@ -263,7 +263,7 @@ angular.module('block.controller', [])
         };
 
         var setZoneName = function(i) {
-            if ($scope.zones.length){
+            if ($scope.zones.length) {
                 $scope.zoneName = $scope.zones[i].name;
             }
         };
@@ -413,7 +413,6 @@ angular.module('block.controller', [])
             $scope.startTimes = item.startTimes;
             $scope.endTimes = item.endTimes;
 
-
             if ($scope.startTimes.length > 0) {
                 $scope.startTime = $scope.startTimes[0];
             }
@@ -504,6 +503,8 @@ angular.module('block.controller', [])
         var redirect = function() {
             if ($state.is("mesas.book.block") || $state.is("mesas.book.blockEdit")) {
                 $state.go("mesas.book", $stateParams);
+            } else if ($state.is("mesas.grid.block.edit") || $state.is("mesas.grid.block")) {
+                historyBack();
             } else {
                 $state.go("mesas.floor.reservation");
             }
@@ -646,6 +647,4 @@ angular.module('block.controller', [])
             // listZones($stateParams.date);
             // listFormData($stateParams.date);
         })();
-
-
     });

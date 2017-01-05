@@ -1,8 +1,7 @@
 angular.module("App")
-    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "base_url", "$storage",
-        function(vm, $q, availabilityService, utiles, $window, base_url, $storage) {
+    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "base_url",
+        function(vm, $q, availabilityService, utiles, $window, base_url) {
 
-        var storage = $storage.instance;
         vm.form = {};
         vm.result = [];
         vm.availability = {};
@@ -54,8 +53,8 @@ angular.module("App")
 
              availabilityService.saveTemporalReserve(item.form)
                  .then(function(response) {
-                     storage._token  = response.data.data.token;
-                     redirect();
+                     var temp_token  = response.data.data.token;
+                     redirect(temp_token);
                  }).catch(function(error) {
                      alert("Ocurrio un problema al tratar de reservar, intentelo de nuevo.");
                      console.log("Error en la reserva temporal", error);
@@ -68,7 +67,7 @@ angular.module("App")
          */
         
         var redirect = function(key) {
-            $window.location.href = base_url.get("/reserve?key=" + storage._token);
+            $window.location.href = base_url.get("/reserve?key=" + key);
         };
 
         var showResult = function() {
@@ -101,11 +100,7 @@ angular.module("App")
         };
 
         function areDatesEqual(date1, date2) {
-            // console.log(moment(date1).format("YYYY-MM-DD") , moment(date2).format("YYYY-MM-DD"));
-            // if (moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD") )
-            // console.log(date1, date2, date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0));
           return date1.setHours(0,0,0,0) === date2.setHours(0,0,0,0);
-          // return moment(date1).format("YYYY-MM-DD") == moment(date2).format("YYYY-MM-DD");
         }
 
         function toDate(date) {
@@ -276,7 +271,7 @@ angular.module("App")
         var searchTemporalReserve = function() {
             var deferred = $q.defer();
 
-            if (!$storage.existToken() || base_url.has("edit") ) {
+            if (base_url.has("edit") ) {
                 deferred.reject();
                 return deferred.promise;
             }
@@ -285,12 +280,13 @@ angular.module("App")
                 .then(function(response) {
                     vm.prevReserve = response.data.data;
                     if (vm.prevReserve !== null) {
+                        vm.showPrev = true;
+                        vm.prevResToken = vm.prevReserve.reservation.token;
                         deferred.resolve();
                     } else {
                         deferred.reject();
                     }
                 }).catch(function(error) {
-                    console.log(error);
                     deferred.reject();
                 });
 
@@ -302,44 +298,47 @@ angular.module("App")
         };
 
         vm.closePrev = function() {
+            InitModule();
             vm.showPrev = false;
             cancelTemporalReservation();
-            InitModule();
         };
 
         vm.openPrev = function() {
-            if ($storage.existToken()) {
-                $window.location.href = base_url.get("/reserve?key=" + storage._token);
-            } else {
-                InitModule();
-            }
+            redirect(vm.prevResToken);
         };
 
         vm.promotionDisplay = function(item, evt) {
             vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
             vm.promotion.description = item.description || null;
             vm.promotion.display = true;
-            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 170 : 120) });
+            angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 190 : 120) });
         };
 
         vm.promotionHide = function() {
             vm.promotion.display = false;
         };
 
-        vm.changeMonth = function(date, month, year, instance) {
-            availabilityService.getFormatAvailability(date)
+        vm.changeMonth = function(date_ini, month, year, instance, select) {
+            date_fin = moment(date_ini).endOf('months').format("YYYY-MM-DD");
+
+            var search = {
+                date_ini: date_ini,
+                date_fin: date_fin
+            };
+
+            availabilityService.getDaysDisabled(search)
                 .then(function(response) {
-                    vm.daysDisabled = response.data.data.daysDisabled;
+                    vm.daysDisabled = response.data.data;
                 }).finally(function(){
                     instance.refreshView();
+                    if ( moment(date_ini).month() == moment(vm.date).month() ) {
+                        select(moment(vm.date).toDate());
+                    }
                 });
         };
 
         (function Init() {
             searchTemporalReserve()
-                .then(function() {
-                    vm.showPrev = true;
-                })
                 .catch(function() {
                     InitModule();
                 });

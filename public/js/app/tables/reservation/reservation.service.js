@@ -37,10 +37,18 @@ angular.module('reservation.service', [])
             return {
                 blackList: blackListMethods,
                 reservationMaster: function(date, reservation) {
-                    return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/" + reservation : ""), { params : {date: date}});
+                    return http.get(ApiUrlMesas + "/web-app/reservation" + (reservation ? "/" + reservation : ""), {
+                        params: {
+                            date: date
+                        }
+                    });
                 },
                 blockMaster: function(date, block) {
-                    return http.get(ApiUrlMesas + "/web-app/block" + (block ? "/" + block : ""), { params : {date: date}});
+                    return http.get(ApiUrlMesas + "/web-app/block" + (block ? "/" + block : ""), {
+                        params: {
+                            date: date
+                        }
+                    });
                 },
                 save: function(data) {
                     return http.post(ApiUrlMesas + "/table/reservation", data);
@@ -195,7 +203,7 @@ angular.module('reservation.service', [])
                     var now = moment().add(-(minutes % 15), "minutes").second(0).millisecond(0);
                     var timeDefaultIsEstablished = false;
 
-                    var addHour = function(date_ini, item, minutes) {
+                    var addHour = function(date_ini, item, minutes, index) {
                         var hour = {};
 
                         hour.turn = item.name;
@@ -203,6 +211,7 @@ angular.module('reservation.service', [])
                         hour.name = date_ini.format("H:mm A");
                         hour.turn_id = item.turn.id;
                         hour.zones = item.turn.zones;
+                        hour.index = index;
                         hours.push(hour);
 
                         if (!timeDefaultIsEstablished) {
@@ -220,12 +229,20 @@ angular.module('reservation.service', [])
                         if (item.turn !== null) {
                             var date_ini = moment(item.turn.hours_ini, "HH:mm:ss");
                             var date_end = moment(item.turn.hours_end, "HH:mm:ss");
+                            var nextDay = getHourNextDay(item.turn.hours_ini, item.turn.hours_end);
+
+                            var indexini = getIndexHour(date_ini.format("HH:mm:ss"), 0);
+                            var indexend = getIndexHour(date_end.format("HH:mm:ss"), nextDay);
+                            if (indexini > indexend) {
+                                indexend += 96;
+                            }
+
                             var date_end_hour = date_end.format("HH:mm:ss");
-                            for (var i = 0; i < 96; i++) {
-                                if (date_ini.format("HH:mm:ss") == date_end_hour) {
+                            for (var i = indexini; i < indexend; i++) {
+                                /*if (date_ini.format("HH:mm:ss") == date_end_hour) {
                                     break;
-                                }
-                                addHour(date_ini, item, 15);
+                                }*/
+                                addHour(date_ini, item, 15, i);
                             }
                         }
                     });

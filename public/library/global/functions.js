@@ -333,18 +333,17 @@ message.show = function(title, text, type, options, action) {
     var config = {
         title: title,
         text: text,
-        type: type,
+        type: type
     };
 
-    action = (typeof action == "function") ? action : function() {};
-
-    if (options !== undefined && options !== null) {
-        if (typeof options == "object") {
+    if (Object.prototype.toString.call(options) == "[object Object]") {
             config = Object.assign(config, options);
-        }
     }
+    
     swal(config, function() {
-        action();
+        if (typeof action == "function") {
+            action();
+        }
     });
 };
 
@@ -633,3 +632,64 @@ var subtractParamsUrl = function(url) {
 
     return url;
 };
+//Calcula el tiempo entre dos horas 08:00:00 - 09:00:00 = 01:00:00 (evaluando trabajar con moment js)
+var calculateDuration = function(hourIni, hourEnd) {
+    var inicio = hourIni;
+    var fin = hourEnd;
+
+    var inicioMinutos = parseInt(inicio.substr(3, 2));
+    var inicioHoras = parseInt(inicio.substr(0, 2));
+
+    var finMinutos = parseInt(fin.substr(3, 2));
+    var finHoras = parseInt(fin.substr(0, 2));
+
+    var transcurridoMinutos = finMinutos - inicioMinutos;
+    var transcurridoHoras = finHoras - inicioHoras;
+
+    if (transcurridoMinutos < 0) {
+        transcurridoHoras--;
+        transcurridoMinutos = 60 + transcurridoMinutos;
+    }
+
+    var horas = transcurridoHoras.toString();
+    var minutos = transcurridoMinutos.toString();
+
+    if (horas == "0") {
+        horas = "00";
+    }
+
+    horas = (horas.length == 1) ? "0" + horas : horas;
+
+    if (minutos == "0") {
+        minutos = "00";
+    }
+
+    var duration = horas + ":" + minutos + ":00";
+    duration = (inicio === fin) ? "01:30:00" : duration;
+
+    return duration;
+
+};
+
+function notify(title, body, icon, a) {
+  if (!("Notification" in window)) {
+    console.log("El navegador no soporta notificaciones de escritorio");
+  } else if (Notification.permission === "granted") {
+    spawnNotification(title, body, icon);
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+        if (permission === "granted") {
+            spawnNotification(title, body, icon);
+        }
+    });
+  }
+}
+
+function spawnNotification(title, body, icon) {
+  var options = {
+      body: body,
+      icon: icon || "/images/icon-bookersnap.png"
+  };
+
+  var n = new Notification(title, options);
+}

@@ -244,6 +244,41 @@
                                 <button type="button" class="btn bgm-lightblue btn-xs m-r-5 disabled" ng-repeat="tag in rc.selectTags">{{ tag.name }}</button>
                             </div>
                         </div>
+                        <div class="form-group" style="display: table; width: 100%;" ng-if="(rc.configuration.status_people_1 || rc.configuration.status_people_2 || rc.configuration.status_people_3) && (rc.reservation.status_id == 4 || rc.reservation.status_id == 5)">
+                            <div class="col-xs-12 m-t-10" ng-if="rc.configuration.status_people_1">
+                                <button class="col-xs-4 btn bgm-gray btn-lg pull-left" ng-click="rc.restar('men')" >
+                                    <i class="zmdi zmdi-minus" ></i>
+                                </button>
+                                <button class="col-xs-4 btn btn-default btn-lg pull-left" ng-click="rc.sumar('men')" >
+                                    <i class="zmdi zmdi-male-alt" ></i> {{rc.reservation.guests.men}}
+                                </button>
+                                <button  class="col-xs-4 btn bgm-gray btn-lg pull-right" ng-click="rc.sumar('men')" >
+                                    <i class="zmdi zmdi-plus" ></i>
+                                </button>
+                            </div>
+                            <div class="col-xs-12 m-t-10" ng-if="rc.configuration.status_people_2">
+                                <button class="col-xs-4 btn bgm-gray btn-lg pull-left" ng-click="rc.restar('women')" >
+                                    <i class="zmdi zmdi-minus" ></i>
+                                </button>
+                                <button class="col-xs-4 btn btn-default btn-lg pull-left" ng-click="rc.sumar('women')" >
+                                    <i class="zmdi zmdi-female" ></i> {{rc.reservation.guests.women}}
+                                </button>
+                                <button  class="col-xs-4 btn bgm-gray btn-lg pull-right" ng-click="rc.sumar('women')" >
+                                    <i class="zmdi zmdi-plus" ></i>
+                                </button>
+                            </div>
+                            <div class="col-xs-12 m-t-10" ng-if="rc.configuration.status_people_3">
+                                <button class="col-xs-4 btn bgm-gray btn-lg pull-left" ng-click="rc.restar('children')" >
+                                    <i class="zmdi zmdi-minus" ></i>
+                                </button>
+                                <button class="col-xs-4 btn btn-default btn-lg pull-left" ng-click="rc.sumar('children')" >
+                                    <i class="zmdi zmdi-face" ></i> {{rc.reservation.guests.children}}
+                                </button>
+                                <button  class="col-xs-4 btn bgm-gray btn-lg pull-right" ng-click="rc.sumar('children')" >
+                                    <i class="zmdi zmdi-plus" ></i>
+                                </button>
+                            </div>                            
+                        </div>
                     </div>
                 </form>
             </div>

@@ -39,17 +39,26 @@ angular.module("App")
         };
 
         vm.redirectBase = function() {
+            alert("El tiempo para completar la reservacion a terminado.");
+            $window.location.href = base_url.url();
+        };
+
+        vm.redirectBaseEdit = function() {
             $window.location.href = base_url.getWithParam({edit: 1});
         };
 
         vm.save = function() {
-            console.log(vm.reservation);
             vm.loading = true;
             vm.errors = {};
             service.saveReservation(vm.reservation)
                 .then(function(response) {
                     redirect(response.data.data);
                 }).catch(function(error) {
+                    console.log(error);
+                    if (error.data === null || error.status == 500) {
+                        vm.loading = false;
+                        return alert("Ocurrio un problema vuelva a intentarlo.");
+                    }
                     vm.errors = error.data.data;
                     vm.loading = false;
                 });
@@ -63,18 +72,20 @@ angular.module("App")
         };
 
         var runMonth = function() {
-            vm.months["01"] = "Enero";
-            vm.months["02"] = "Febrero";
-            vm.months["03"] = "Marzo";
-            vm.months["04"] = "Abril";
-            vm.months["05"] = "Mayo";
-            vm.months["06"] = "Junio";
-            vm.months["07"] = "Julio";
-            vm.months["08"] = "Agosto";
-            vm.months["09"] = "Septiembre";
-            vm.months["10"] = "Octubre";
-            vm.months["11"] = "Noviembre";
-            vm.months["12"] = "Diciembre";
+            vm.months = [
+                { id: "01", label: "Enero" },
+                { id: "02", label: "Febrero" },
+                { id: "03", label: "Marzo" },
+                { id: "04", label: "Abril" },
+                { id: "05", label: "Mayo" },
+                { id: "06", label: "Junio" },
+                { id: "07", label: "Julio" },
+                { id: "08", label: "Agosto" },
+                { id: "09", label: "Septiembre" },
+                { id: "10", label: "Octubre" },
+                { id: "11", label: "Noviembre" },
+                { id: "12", label: "Diciembre" }
+            ];
         };
 
         vm.changeMonth = function(mes) {
@@ -98,7 +109,34 @@ angular.module("App")
                 } else {
                     vm.days.push(j.toString());
                 }
+            }
 
+            if (vm.days.indexOf(vm.day) === -1) {
+                vm.day = undefined;
+            }
+
+            validDate();
+        };
+
+        vm.changeDay = function(mes) {
+            validDate();
+        };
+
+        vm.changeYear = function(mes) {
+            validDate();
+        };
+
+        var validDate = function () {
+            if (vm.year ===undefined || vm.month ===undefined || vm.day === undefined) {
+                vm.reservation.guest.birthdate = null;
+            } else {
+                var date = new Date(vm.year + "/" + vm.month + "/" + vm.day);
+
+                if ( isNaN(date.getTime()) ) {
+                    vm.reservation.guest.birthdate = null;
+                } else {
+                    vm.reservation.guest.birthdate = moment(date).format("YYYY-MM-DD");
+                }
             }
         };
 

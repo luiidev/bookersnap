@@ -10,12 +10,12 @@
     <div class="card" ng-controller="confirmedCtrl">
         <div class="card-body card-padding">
             <div class="card-header">
-                <h2 class="confirmed bs-color">Su mesa ha sido reservada!</h2>
+                <h2 class="confirmed bs-color">Su reservacion ha sido completada!</h2>
             </div>
             <div class="bs-reserve">
                 <div class="bs-detail">
-                    <span><strong>Paramontino</strong></span>
-                    <span>100 Queen St W, Toronto, ON M5H 2N2</span>
+                    <span><strong>{{ $reservation->microsite['name'] }}</strong></span>
+                    <span>{{ $reservation->microsite['address'] }}</span>
                 </div>
 
                 <div class="bs-detail">
