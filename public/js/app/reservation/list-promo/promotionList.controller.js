@@ -1,6 +1,6 @@
 angular.module('promotionList.controller', ['ui.sortable', 'sortable'])
     .controller('PromotionListCtrl', function($state,Promotion, $rootScope,$scope, $http, $window, $document, ApiUrlReservation) {
-
+        
         var sm = this;
         sm.promociones = [];
         $rootScope.flag = false;

@@ -3,7 +3,7 @@
 // Base controller for common functions
 // =========================================================================
 
-.controller('materialadminCtrl', function($timeout, $state, $scope, growlService) {
+.controller('materialadminCtrl', function($timeout, $state, $scope, growlService, $window) {
     //Welcome Message
     //growlService.growl('Welcome back Mallinda!', 'inverse')
 
@@ -66,6 +66,12 @@
 
     this.skinSwitch = function(color) {
         this.currentSkin = color;
+    }
+
+    //Redireccionamiento y cerrar session
+    this.redirectlogoutadmin = function(){
+        var microsite_id = obtenerIdMicrositio();
+        $window.location.href = "/admin/auth/"+microsite_id+"/logout"
     }
 
 })

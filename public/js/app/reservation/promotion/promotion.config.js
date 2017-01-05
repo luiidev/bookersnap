@@ -1,6 +1,6 @@
 angular.module('promotion.app', ['promotion.controller', 'promotionList.controller', 'promotion.service', 'promotion.directive', 'promotion.filter'])
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
-
+        
         $stateProvider
             .state('reservation.promotion', {
                 url: '/promotion',
