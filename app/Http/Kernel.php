@@ -54,6 +54,6 @@ class Kernel extends HttpKernel
         'route'              => \App\Http\Middleware\RouteMiddleware::class,
         'checkCountry'       => \App\Http\Middleware\CheckCountry::class,
         'authTemp'           => \App\Http\Middleware\AuthTemp::class,
-        'authTempPage'       => \App\Http\Middleware\AuthTemp::class
+        'authTempPage'       => \App\Http\Middleware\AuthTempPage::class
     ];
 }

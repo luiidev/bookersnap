@@ -1,7 +1,8 @@
 angular.module('reservation.controller', [])
     .controller("reservationCtrl.StoreUpdate", ["$scope", "ZoneLienzoFactory", "$window", "$stateParams", "$timeout",
-        "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state", "$table", "$q",
-        function($scope, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize, $state, $table, $q) {
+        "screenHelper", "reservationService", "reservationHelper", "screenSize", "$state", "$table", "$q", "BookConfigFactory",
+        function($scope, ZoneLienzoFactory, $window, $stateParams, $timeout, screenHelper, service, helper, screenSize,
+            $state, $table, $q, BookConfigFactory) {
             var vm = this;
 
             /**
@@ -304,7 +305,7 @@ angular.module('reservation.controller', [])
 
             vm.tablesSuggested = function(cant, a) {
                 var count = Object.keys(vm.tablesSelected).length;
-                if (count  <= 1) {
+                if (count <= 1) {
                     vm.zones.clearSelected();
                     vm.tableSuggested = $table.tablesSuggested(vm.zones, cant, vm.zoneIndex);
                     if (vm.tableSuggested) vm.zones.tablesSelected([vm.tableSuggested]);
@@ -625,7 +626,7 @@ angular.module('reservation.controller', [])
                 listGuest();
                 service.reservationMaster(date, $stateParams.id)
                     .then(function(response) {
-                        var zones =  response.data.data.zones;
+                        var zones = response.data.data.zones;
                         blocks = response.data.data.blockTables;
                         reservations = response.data.data.reservations;
                         vm.servers = response.data.data.servers;
@@ -643,7 +644,7 @@ angular.module('reservation.controller', [])
                         listDurations();
 
                         var reserveEdit = response.data.data.reservation;
-                        
+
                         loadTablesEdit(zones, reservations)
                             .then(function() {
                                 if (vm.editState) loadReservation(reserveEdit);
@@ -725,19 +726,32 @@ angular.module('reservation.controller', [])
 
             var redirect = function() {
                 var state = $state.current.name;
+
                 if (state == "mesas.book-reservation-add" || state == "mesas.book-reservation-add-params" || state == "mesas.book-reservation-edit") {
+                    var config = BookConfigFactory.getConfig();
+                    if (config !== undefined) {
+                        updateParamsBook(config);
+                    }
                     $state.go("mesas.book", $stateParams);
-                } else if (state == "mesas.guest.view.reservation-edit"){
+                } else if (state == "mesas.guest.view.reservation-edit") {
                     $state.go("mesas.guest.view");
                 } else {
                     $state.go("mesas.floor.reservation");
                 }
             };
 
+            var updateParamsBook = function(config) {
+                if (config.url !== null && config.url !== "" && config.reservationView === true) {
+                    $stateParams.turns = config.url.turns;
+                    $stateParams.sources = config.url.sources;
+                    $stateParams.zones = config.url.zones;
+                    $stateParams.sort = config.url.sort;
+                }
+            };
+
             (function Init() {
                 isEditSate();
                 sizeLienzo();
-
                 initialDate();
             })();
         }

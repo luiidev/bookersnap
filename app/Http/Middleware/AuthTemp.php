@@ -16,40 +16,52 @@ class AuthTemp
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $typeauth)
     {
-        /*var_dump(request()->server('HTTP_REFERER')); 
-        var_dump(parse_url(request()->server('HTTP_REFERER'), PHP_URL_HOST));
-        exit;*/
-        # code...
-        try{
-            $session  = $request->session();
-            //$request->input('token');
-            if (!$session->has('token_session')) {
-                if ($this->isHttpReferer(request()->server('HTTP_REFERER'))) {      
-                    $OldTokenSession = OldTokenSession::where('token', $request->input('token'))//verificar token
-                                                      ->where('microsite_id', $request->route('id'))
-                                                      ->where('status', 1)->first();
-                    
-                    if($OldTokenSession){
-                        $token = $request->input('token');
-                        $request->session()->set('token_session', $token);
-                        return redirect($this->urlRedirect());
-                    }else
+        $session  = $request->session();
+        //var_dump($typeauth); exit;
+        /*var_dump($request->input('token')); echo "</br>";
+        var_dump($request->route('id')); exit;*/
+     
+        if ($typeauth == "login") {
+            try{
+                $session  = $request->session();
+                //$request->input('token');
+                if (!$session->has('user_session')) {
+                    if ($this->isHttpReferer(request()->server('HTTP_REFERER'))) {      
+                        
+                        $OldTokenSession = OldTokenSession::where('token', $request->input('token'))//verificar token
+                                                          ->where('microsite_id', $request->route('id'))
+                                                          ->where('status', 1)->first();
+
+                        if($OldTokenSession){
+                            $token = $request->input('token');
+                            $session->set('user_session', $OldTokenSession->usermicrosite_id);
+                            return redirect($this->urlRedirect());
+                        }else
+                            return redirect($this->urlRedirectBookersnap());
+                    }else{
                         return redirect($this->urlRedirectBookersnap());
+                    }
                 }else{
-                    return redirect($this->urlRedirectBookersnap());
+                    return redirect()->away($this->urlRedirect());
                 }
-            }else{
-                return redirect($this->urlRedirect());
+            }catch(HttpException $e){
+                //            var_dump($e->getMessage());
+            }catch(\Exception $e){
+                //            var_dump($e->getMessage());
             }
-        }catch(HttpException $e){
-            //            var_dump($e->getMessage());
-        }catch(\Exception $e){
-            //            var_dump($e->getMessage());
+            return redirect($this->urlRedirectBookersnap());
+        }else{
+
+            if ($session->has('user_session')) {
+                $session->forget('user_session');
+            }
+            return redirect($this->urlRedirectBookersnap());
         }
-        return redirect($this->urlRedirectBookersnap());
+
     }
+
     
     public function isRequestUri($uri) {
         return (strpos(request()->server('REQUEST_URI'), $uri) === 0);

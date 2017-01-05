@@ -114,9 +114,11 @@ angular.module('book.service', [])
                         }
 
                         angular.forEach(existsReservation.data, function(reservation, key) {
+                            var hoursTest = moment(reservation.date_reservation + ' ' + reservation.hours_reservation);
                             book.push({
                                 time: hour.time,
-                                time_text: hour.name,
+                                time_text: hoursTest.format("hh:mm A"),
+                                date_text: hoursTest.format("L"),
                                 turn_id: hour.turn_id,
                                 block: null,
                                 reservation: reservation,
@@ -146,9 +148,12 @@ angular.module('book.service', [])
 
                 reservations = self.parseReservations(reservations, true);
                 angular.forEach(reservations, function(reserva, key) {
+
+                    var hoursTest = moment(reserva.date_reservation + ' ' + reserva.hours_reservation);
                     book.push({
                         time: reserva.hours_reservation,
-                        time_text: reserva.hours_reservation,
+                        time_text: hoursTest.format("hh:mm A"),
+                        date_text: hoursTest.format("L"),
                         turn_id: 0,
                         block: null,
                         reservation: reserva,
@@ -392,6 +397,17 @@ angular.module('book.service', [])
                             }
                         }
                     });
+                }
+            },
+            addNoStatusByFilter: function(state, filterStatus, statusList, showStatus) {
+                var self = this;
+                if (statusList.length > 0) {
+                    var index = filterStatus.indexOf(state.id);
+                    if (index == -1 && showStatus == false) {
+                        filterStatus.push(state.id);
+                    } else if (showStatus == true) {
+                        filterStatus.splice(index, 1);
+                    }
                 }
             },
             //Agrega los sources (id) a la lista de marcados
@@ -657,17 +673,215 @@ angular.module('book.service', [])
             }
         };
     })
-    .factory('BookConfigFactory', function() {
+    .factory('BookConfigFactory', function($stateParams, $location) {
+
+        var _BCONF = self;
+
+        _BCONF.localStorageName = 'mesas.book.config';
+        _BCONF.configBook = {
+            reservationView: false,
+            rangeDate: {
+                hoy: true,
+                week: false, //esta semana
+                lastSevenDays: false, //ultimos 7 dias
+                lastThirtyDays: false, //ultimos 30 dias
+                thisMonth: false, //este mes
+                lastMonth: false, //mes pasado
+                range: false //rango de fechas
+            },
+            url: null,
+            filters: {
+                turns: [],
+                status: [],
+                sources: [],
+                zones: [],
+                date: moment().format('YYYY-MM-DD'),
+                date_end: moment().format('YYYY-MM-DD'),
+            },
+            sort: 'time.asc',
+            page_size: 30,
+            page: 1,
+            show: {
+                released: true,
+                canceled: true,
+                blocks: true,
+            },
+            fields: {
+                consume: true,
+                messages: true,
+                listguests: true,
+                source: true
+            }
+        };
+
+        _BCONF.setConfigBook = function(config) {
+
+            if (config != undefined) {
+                _BCONF.configBook.reservationView = (_BCONF.configBook.reservationView != undefined) ? config.reservationView : false;
+                if (config.rangeDate != undefined) {
+                    _BCONF.configBook.rangeDate.hoy = (_BCONF.configBook.rangeDate.hoy != undefined) ? config.rangeDate.hoy : false;
+                    _BCONF.configBook.rangeDate.week = (_BCONF.configBook.rangeDate.week != undefined) ? config.rangeDate.week : false;
+                    _BCONF.configBook.rangeDate.lastSevenDays = (_BCONF.configBook.rangeDate.lastSevenDays != undefined) ? config.rangeDate.lastSevenDays : false;
+                    _BCONF.configBook.rangeDate.lastThirtyDays = (_BCONF.configBook.rangeDate.lastThirtyDays != undefined) ? config.rangeDate.lastThirtyDays : false;
+                    _BCONF.configBook.rangeDate.thisMonth = (_BCONF.configBook.rangeDate.thisMonth != undefined) ? config.rangeDate.thisMonth : false;
+                    _BCONF.configBook.rangeDate.lastMonth = (_BCONF.configBook.rangeDate.lastMonth != undefined) ? config.rangeDate.lastMonth : false;
+                    _BCONF.configBook.rangeDate.range = (_BCONF.configBook.rangeDate.range != undefined) ? config.rangeDate.range : false;
+                }
+                if (config.show != undefined) {
+                    _BCONF.configBook.show.released = (_BCONF.configBook.show.released != undefined) ? config.show.released : true;
+                    _BCONF.configBook.show.canceled = (_BCONF.configBook.show.canceled != undefined) ? config.show.canceled : true;
+                    _BCONF.configBook.show.blocks = (_BCONF.configBook.show.blocks != undefined) ? config.show.blocks : true;
+                }
+
+                if (config.fields != undefined) {
+                    _BCONF.configBook.fields.consume = (_BCONF.configBook.fields.consume != undefined) ? config.fields.consume : true;
+                    _BCONF.configBook.fields.messages = (_BCONF.configBook.fields.messages != undefined) ? config.fields.messages : true;
+                    _BCONF.configBook.fields.listguests = (_BCONF.configBook.fields.listguests != undefined) ? config.fields.listguests : true;
+                    _BCONF.configBook.fields.source = (_BCONF.configBook.fields.source != undefined) ? config.fields.source : true;
+                }
+                if (config.filters != undefined) {
+                    _BCONF.configBook.filters.turns = (_BCONF.configBook.filters.turns != undefined) ? config.filters.turns : [];
+                    _BCONF.configBook.filters.status = (_BCONF.configBook.filters.status != undefined) ? config.filters.status : [];
+                    _BCONF.configBook.filters.sources = (_BCONF.configBook.filters.sources != undefined) ? config.filters.sources : [];
+                    _BCONF.configBook.filters.zones = (_BCONF.configBook.filters.zones != undefined) ? config.filters.zones : [];
+                    _BCONF.configBook.filters.date = (_BCONF.configBook.filters.date != undefined) ? config.filters.date : moment().format('YYYY-MM-DD');
+                    _BCONF.configBook.filters.date_end = (_BCONF.configBook.filters.date_end != undefined) ? config.filters.date_end : moment().format('YYYY-MM-DD');
+                }
+
+                _BCONF.configBook.url = (_BCONF.configBook.url != undefined) ? config.url : null;
+                _BCONF.configBook.order = (_BCONF.configBook.order != undefined) ? config.order : 'time.asc';
+                _BCONF.configBook.page_size = (_BCONF.configBook.page_size != undefined) ? config.page_size : 30;
+                _BCONF.configBook.page = (_BCONF.configBook.page != undefined) ? config.page : 30;
+            }
+            return _BCONF.configBook;
+        };
+
+        _BCONF.initUrlParamsByStorage = function() {
+
+            _BCONF.configBook.url = {};
+            _BCONF.configBook.url.date = moment().format("YYYY-MM-DD");
+            if (_BCONF.configBook.filters.date != "") {
+                _BCONF.configBook.url.date = _BCONF.configBook.filters.date;
+            }
+            if (_BCONF.configBook.filters.date_end != "" && _BCONF.configBook.reservationView) {
+                _BCONF.configBook.url.date_end = _BCONF.configBook.filters.date_end;
+            }
+            if (_BCONF.configBook.filters.status.length > 0) {
+                _BCONF.configBook.url.status = _BCONF.configBook.filters.status.toString();
+            }
+            if (_BCONF.configBook.filters.turns.length > 0) {
+                _BCONF.configBook.url.turns = _BCONF.configBook.filters.turns.toString();
+            }
+            if (_BCONF.configBook.filters.sources.length > 0) {
+                _BCONF.configBook.url.sources = _BCONF.configBook.filters.sources.toString();
+            }
+            if (_BCONF.configBook.page_size != 30) {
+                _BCONF.configBook.url.page_size = _BCONF.configBook.page_size;
+            }
+            if (_BCONF.configBook.page > 1) {
+                _BCONF.configBook.url.page = _BCONF.configBook.page;
+            }
+            if (_BCONF.configBook.sort != "") {
+                _BCONF.configBook.url.sort = _BCONF.configBook.sort;
+            }
+        };
+
+        _BCONF.saveUrlParams = function() {
+            _BCONF.configBook.url = {};
+            _BCONF.configBook.url.date = moment().format("YYYY-MM-DD");
+            //console.log('_BCONF.configBook: ', _BCONF.configBook);
+            if ($stateParams.date != undefined && $stateParams.date != "") {
+                _BCONF.configBook.url.date = $stateParams.date;
+                _BCONF.configBook.filters.date = $stateParams.date;
+            }
+            if ($stateParams.date_end != undefined && $stateParams.date_end != "" && _BCONF.configBook.reservationView) {
+                _BCONF.configBook.url.date_end = $stateParams.date_end;
+                _BCONF.configBook.filters.date_end = $stateParams.date_end;
+            }
+            if ($stateParams.status != undefined && $stateParams.status != "") {
+                _BCONF.configBook.url.status = $stateParams.status;
+                _BCONF.configBook.filters.status = $stateParams.status.split(',');
+            }
+            if ($stateParams.blocks != undefined && $stateParams.blocks != "") {
+                _BCONF.configBook.url.blocks = $stateParams.blocks;
+                _BCONF.configBook.filters.blocks = $stateParams.blocks.split(',');
+            }
+            if ($stateParams.sources != undefined && $stateParams.sources != "") {
+                _BCONF.configBook.url.sources = $stateParams.sources;
+                _BCONF.configBook.filters.blocks = $stateParams.sources.split(',');
+            }
+            if ($stateParams.page_size != undefined && $stateParams.page_size != "") {
+                _BCONF.configBook.url.page_size = $stateParams.page_size;
+            }
+            if ($stateParams.page != undefined && $stateParams.page != "") {
+                _BCONF.configBook.url.page = $stateParams.page;
+            }
+            if ($stateParams.sort != undefined && $stateParams.sort != "") {
+                _BCONF.configBook.url.sort = $stateParams.sort;
+            }
+        };
+
+        _BCONF.replaceStateParams = function() {
+            var url = $location.absUrl();
+            var index = url.indexOf("?");
+            url = url.substring(0, index);
+            params = getAsUriParameters(_BCONF.configBook.url);
+            console.log(url + "?" + params);
+            history.replaceState('', 'Pagina', url + "?" + params);
+        };
+
+        /* Obtener configuracion de localstorage */
+        _BCONF.get = function() {
+            var config = (localStorage.getItem(_BCONF.localStorageName) !== null) ? JSON.parse(localStorage.getItem(_BCONF.localStorageName)) : null;
+            _BCONF.setConfigBook(config);
+        };
+        /* Guardar configuracion en localstorage */
+        _BCONF.save = function() {
+            localStorage.setItem(_BCONF.localStorageName, angular.toJson(_BCONF.configBook));
+        };
+        /* Remover data de locastorage localstorage */
+        _BCONF.remove = function() {
+            localStorage.removeItem(_BCONF.localStorageName);
+        };
+
         return {
+            setFilter: function(option, values) {
+                console.log(option, values);
+                switch (option) {
+                    case 'turns':
+                        _BCONF.configBook.filters.turns = (values != undefined) ? values : [];
+                    case 'status':
+                        _BCONF.configBook.filters.status = (values != undefined) ? values : [];
+                        break;
+                    case 'sources':
+                        _BCONF.configBook.filters.sources = (values != undefined) ? values : [];
+                        break;
+                    case 'zones':
+                        _BCONF.configBook.filters.zones = (values != undefined) ? values : [];
+                        break;
+                    case 'date':
+                        _BCONF.configBook.filters.date = (values != undefined) ? values : moment().format('YYYY-MM-DD');
+                        break;
+                    case 'date_end':
+                        _BCONF.configBook.filters.date_end = (values != undefined) ? values : moment().format('YYYY-MM-DD');
+                        break;
+                }
+            },
+            save: function() {
+                _BCONF.save();
+            },
             setConfig: function(config) {
-                localStorage.setItem("reservationConfig", angular.toJson(config));
+                _BCONF.setConfigBook(config);
+                _BCONF.save();
             },
             getConfig: function() {
-                var config = (localStorage.getItem("reservationConfig") !== null) ? JSON.parse(localStorage.getItem("reservationConfig")) : null;
-                return config;
+                _BCONF.get();
+                //_BCONF.initUrlParamsByStorage();
+                //_BCONF.replaceStateParams();
+                return _BCONF.configBook;
             },
             clearConfig: function() {
-                localStorage.removeItem("reservationConfig");
+                _BCONF.remove();
             }
         };
     })

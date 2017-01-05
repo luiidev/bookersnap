@@ -1,5 +1,6 @@
 angular.module("App")
     .factory("availabilityService", ["$http", "$q", "ApiUrlMesas", function($http, $q, ApiUrlMesas) {
+        var token = "abcdefghijklmnopqrstuvwyz";
         return {
             getFormatAvailability: function(date) {
                 return $http.get(ApiUrlMesas + "/availability/formatAvailability", { params: {date: date}});
@@ -15,16 +16,20 @@ angular.module("App")
                     }
                 });
             },
-            getEvents: function(data) {
-                return $http.get(ApiUrlMesas + "/availability/events", {
-                    params: data
-                });
+            saveTemporalReserve: function(data) {
+                return $http.post(ApiUrlMesas + "/reservationtemporal", data , {headers: { "token": token}});
             },
             saveReservation: function(data) {
                 return $http.post(ApiUrlMesas + "/table/reservation/w", data);
             },
-            cancelReservation: function(data) {
-                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + data);
+            cancelReservation: function(token) {
+                return $http.post(ApiUrlMesas + "/table/reservation/cancel/" + token);
+            },
+            cancelTemporalReservation: function(token) {
+                return $http.delete(ApiUrlMesas + "/reservationtemporal/" + token);
+            },
+            searchTemporalReserve: function() {
+                return $http.get(ApiUrlMesas + "/reservationtemporal/" + token);
             }
         };
     }])
@@ -60,4 +65,10 @@ angular.module("App")
                 return timeDefault;
             }
         };
+    }])
+    .factory("_base_url", ["$location", function($location) {
+
+        var _base_url = $location.protocol() + "://" + $location.host() + "/w/" + microsite;
+
+        return _base_url;
     }]);

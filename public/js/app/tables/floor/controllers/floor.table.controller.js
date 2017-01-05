@@ -290,9 +290,8 @@ angular.module('floor.controller')
                 sourceTypes.data = response.sourceTypes;
                 tags.data = response.tags;
                 status.data = response.status;
-                config = response.config;
+                Object.assign(config, response.config);
                 schedule = response.schedule;
-
                 loadTablesEdit(response.zones, response.blocks, response.reservations, response.servers);
                 showTimeCustom();
 
@@ -947,7 +946,7 @@ angular.module('floor.controller')
 
         init();
     })
-    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q) {
+    .controller('DetailInstanceCtrl', function($scope, $rootScope, $uibModalInstance, $uibModal, content, FloorFactory, reservationService, $state, $table, $q, global) {
         var vmd = this;
 
         /**
@@ -971,12 +970,20 @@ angular.module('floor.controller')
         vmd.reservations = content.table.reservations;
         vmd.blocks = content.table.blocks;
         vmd.reservation = {};
-        vmd.status = content.status;
-        vmd.servers = content.servers;
-        vmd.config = content.config;
-        vmd.schedule = content.schedule;
 
-        vmd.countKeys = function(obj){
+        //  revisar
+        // vmd.status = content.status;
+        // vmd.servers = content.servers;
+        // vmd.config = content.config;
+        // vmd.schedule = content.schedule;
+        // 
+
+        vmd.statuses = global.status.data;
+        vmd.servers = global.servers.data;
+        vmd.tags = global.tags.data;
+        vmd.configuration = global.config;
+
+        vmd.countKeys = function(obj) {
             return Object.keys(obj).length;
         };
 
@@ -994,10 +1001,10 @@ angular.module('floor.controller')
             reservationService.getGuest().then(function(guests) {
                 vmd.covers = guests;
             });
-            vmd.statuses = content.status;
-            vmd.servers = content.servers;
-            vmd.tags = content.tags;
-            vmd.configuration = content.config;
+            // vmd.statuses = content.status;
+            // vmd.servers = content.servers;
+            // vmd.tags = content.tags;
+            // vmd.configuration = content.config;
             resetTags();
             originalReservation = reservation;
             parseData(reservation);

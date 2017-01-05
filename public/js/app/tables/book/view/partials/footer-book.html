@@ -48,33 +48,134 @@
         </button>
     </li>
     <li class="item-date">
-        <div class="m-l-15" ng-class="{'pull-left' : vm.bookView}">
-            <div class="day">
+        <div class="m-l-15" ng-class="{'pull-left' : vm.bookView}" ng-hide="vm.bookView">
+            <div class="day text-uppercase">
                 {{ vm.datesText.start_date | date : 'EEEE d' : 'America/Lima'}}
             </div>
-            <div class="month">
+            <div class="month text-uppercase">
                 {{ vm.datesText.start_date | date : ' MMMM y' : 'America/Lima'}}
             </div>
         </div>
-        <div class="pull-right m-r-15" ng-if="vm.bookView">
+        <!-- <div class="pull-right m-r-15" ng-if="vm.bookView">
             <div class="day">
                 {{ vm.datesText.end_date | date : 'EEEE d' : 'America/Lima'}}
             </div>
             <div class="month">
                 {{ vm.datesText.end_date | date : ' MMMM y' : 'America/Lima'}}
             </div>
-        </div>
+        </div> -->
     </li>
-    <li class="item-nav pull-right">
-        <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
+    <li class="item-nav pull-right dropdown dropup" uib-dropdown="">
+        <button  class="item-action btn btn-default-blue btn-sm text-center" aria-expanded="false" aria-haspopup="true" type="button" uib-dropdown-toggle="">
             <span class="icon zmdi zmdi-settings zmdi-hc-2x">
             </span>
             <div class="title">
                 Ajustes
             </div>
-        </button>
+        </button>        
+        <ul class="dropdown-menu drag">
+            <li>
+                <a ng-click="$event.stopPropagation()" class="" ><strong>ESTADOS DE RESERVAS</strong></a>
+            </li>
+            <li ng-show="vm.bookView">
+                <a ng-click="$event.stopPropagation()">
+                    <div class="fg-line">
+                        <div class="select">
+                            <select class="form-control text p-l-10" ng-change="vm.changeResultPagination(item)" ng-model="vm.paginate_reservation.selectedPageSize" ng-options="item as item.text  for item in vm.paginate_reservation.optionsPageSise track by item.id">
+                            </select>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a ng-click="$event.stopPropagation()">
+                    <div class="toggle-switch toggle-switch-demo">
+                        <input hidden="hidden" id="ts100"  ng-model="vm.configUserDefault.show.released" type="checkbox" >
+                            <label class="ts-helper m-r-10" for="ts100" ng-click="vm.filterAjustes('show.released')" ></label>
+                        </input>
+                        <label class="ts-label reservation" for="ts100">
+                            Liberadas
+                        </label>                    
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts101" ng-model="vm.configUserDefault.show.canceled" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts101" ng-click="vm.filterAjustes('show.canceled')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts101">
+                         Cancelada
+                    </label>                    
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts102" ng-model="vm.configUserDefault.show.blocks" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts102" ng-click="vm.filterAjustes('show.blocks')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts102">
+                        Bloqueos
+                    </label>
+                    
+                </a>
+            </li>
+            <li>
+                <a ng-click="$event.stopPropagation()" class="" ><strong>AJUSTE DE CAMPOS</strong></a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts103" ng-model="vm.configUserDefault.fields.source" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts103" ng-click="vm.filterAjustes('fields.source')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts103" >
+                        Origen de reservación
+                    </label>
+                    
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts104"  ng-model="vm.configUserDefault.fields.consume" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts104" ng-click="vm.filterAjustes('fields.consume')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts104" >
+                        Consumo de reservación
+                    </label>
+                    
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts105" ng-model="vm.configUserDefault.fields.messages" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts105" ng-click="vm.filterAjustes('fields.messages')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts105" >
+                        Mensajes Enviados
+                    </label>
+                    
+                </a>
+            </li>
+            <li>
+                <a class="toggle-switch toggle-switch-demo" ng-click="$event.stopPropagation()" >
+                    <input hidden="hidden" id="ts100" ng-model="vm.configUserDefault.fields.listguests" type="checkbox">
+                        <label class="ts-helper m-r-10" for="ts100" ng-click="vm.filterAjustes('fields.listguests')">
+                        </label>
+                    </input>
+                    <label class="ts-label reservation" for="ts100" >
+                        Lista de invitados
+                    </label>
+                    
+                </a>
+            </li>
+        </ul>
     </li>
-    <li class="item-nav pull-right">
+    <li class="item-nav pull-right" >
         <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
             <span class="icon zmdi zmdi-local-printshop zmdi-hc-2x">
             </span>
@@ -83,13 +184,54 @@
             </div>
         </button>
     </li>
-    <li class="item-nav pull-right">
-        <button class="item-action btn btn-default-blue btn-sm text-center" type="button">
+    <li class="item-nav pull-right dropdown dropup" uib-dropdown="">
+        <button class="item-action btn btn-default-blue btn-sm text-center" aria-expanded="false" aria-haspopup="true" type="button" uib-dropdown-toggle="">
             <span class="icon zmdi zmdi-alert-circle-o zmdi-hc-2x">
             </span>
             <div class="title">
                 Leyenda
             </div>
         </button>
+        <ul class="dropdown-menu drag">
+            <li>
+                <a ng-click="$event.stopPropagation()">
+                    <strong>ESTADOS  DE RESERVACIONES</strong>
+                </a>
+            </li>
+            <li>
+                <a ng-click="$event.stopPropagation()">
+                    <i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="zmdi zmdi-male-alt zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Hombres
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="zmdi zmdi-female zmdi-hc-fw  zmdi-hc-lg" style="color:#ffa829"></i> Mujeres
+                </a>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="zmdi zmdi-face zmdi-hc-fw zmdi-hc-lg" style="color:#ffa829"></i> Niños
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                    <i class="tm-icon zmdi zmdi-email zmdi-hc-fw  zmdi-hc-lg"></i> Mensajes enviados
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                   <i class="zmdi zmdi-file-text zmdi-hc-fw  zmdi-hc-lg"></i> Lista de invitados
+                </a>
+            </li>
+            <li>
+                <a class="items-ws-normal" ng-click="$event.stopPropagation()" >
+                   <i class="zmdi zmdi-local-parking zmdi-hc-fw zmdi-hc-lg" style="color:red"></i> Reservas de PIE
+                </a>
+            </li>
+        </ul>
     </li>
 </ul>

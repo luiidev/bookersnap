@@ -10,17 +10,17 @@ use Validator;
 
 class WidgetController extends Controller
 {
-    const _domain = "http://localhost:3004";
+    const _domain = "http://apimesas.studework.com";
 
     public function index($site)
     {
-        return view("widget.paso_1", ["microsite" => $site]);
+        return view("widget.v2_1", ["microsite" => $site]);
     }
 
     public function confirm(Request $request, $site)
     {
         $validate = Validator::make($request->all(), ["key" => "required|string|max:124"]);
-
+        
         if ($validate->fails()) {
             return redirect()->route("widget", array("site" => $site));
         }
@@ -44,7 +44,7 @@ class WidgetController extends Controller
                 "token" =>  $request->key
             );
 
-            return view("widget.paso_2", $data);
+            return view("widget.v2_2", $data);
         }
     }
 
@@ -69,7 +69,7 @@ class WidgetController extends Controller
                 "token" =>  $request->key
             );
 
-            return view("widget.confirmed",  $data);
+            return view("widget.v2_3",  $data);
         }
     }
 }

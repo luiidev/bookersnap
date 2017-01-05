@@ -3,7 +3,10 @@
 @section("title", "Paramontino | Confirmación")
 
 @section("content")
-<div class="card" ng-controller="confirmedCtrl" ng-model="token = '{{ $token or '' }}'">
+<script type="text/javascript">
+    var token = "{{ $token or '' }}";
+</script>
+<div class="card" ng-controller="confirmedCtrl">
     <div class="card-header confirmed c-blue">
         <h2>Su mesa ha sido reservada!</h2>
     </div>

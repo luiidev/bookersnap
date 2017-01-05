@@ -1,5 +1,6 @@
 angular.module("App")
-    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", function(vm, $q, availabilityService, utiles) {
+    .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "$location", "_base_url",
+         function(vm, $q, availabilityService, utiles, $window, $location, _base_url) {
 
         vm.form = {};
         vm.result = [];
@@ -10,6 +11,8 @@ angular.module("App")
             showWeeks: false,
             startingDay: 1
         };
+
+        vm.showPrev = false;
 
         /**
          * HTTP
@@ -23,7 +26,6 @@ angular.module("App")
                 .then(function(response) {
                     vm.result = resultFormat(response.data.data);
                     deferred.resolve(vm.result);
-                    console.log(vm.result);
                 }).catch(function(error) {
                     deferred.reject("Error en la busqueda de disponibilidad");
                     console.log("Error en la busqueda de disponibilidad", error);
@@ -34,22 +36,27 @@ angular.module("App")
             return deferred.promise;
         };
 
-        vm.saveReservation = function(item) {
-            // vm.loadingInfo = true;
+        vm.saveTemporalReserve = function(item) {
+            vm.loadingInfo = true;
 
-            // availabilityService.getAvailability(vm.availability)
-            //     .then(function(response) {
-            //         console.log(response.data.data);
-            //     }).catch(function(error) {
-            //         console.log("Error en la busqueda de disponibilidad", error);
-            //     }).finally(function() {
-            //         vm.loadingInfo = false;
-            //     });
+            availabilityService.saveTemporalReserve(item.form)
+                .then(function(response) {
+                    redirect(response.data.data.token);
+                }).catch(function(error) {
+                    alert("Ocurrio un problema al tratar de reservar, intentelo de nuevo.");
+                    console.log("Error en la reserva temporal", error);
+                }).finally(function() {
+                    vm.loadingInfo = false;
+                });
         };
         /**
          * HTTP
          */
         
+         var redirect = function(key) {
+             $window.location.href = _base_url + "/reserve?key=" + key;
+         };
+
         /**
          * Date picker filter
          */
@@ -140,10 +147,51 @@ angular.module("App")
                 });
         };
 
+        var searchTemporalReserve = function() {
+            var deferred = $q.defer();
+
+            availabilityService.searchTemporalReserve()
+                .then(function(response) {
+                    vm.prevReserve = response.data.data;
+                    if (vm.prevReserve === null) {
+                        deferred.resolve();
+                    } else {
+                        deferred.reject();
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                    deferred.reject();
+                });
+
+            return deferred.promise;
+        };
+
+        var cancelTemporalReservation = function() {
+            token = "abcdefghijklmnopqrstuvwyz";
+            availabilityService.cancelTemporalReservation(token);
+        };
+
+        vm.closePrev = function() {
+            vm.showPrev = false;
+            cancelTemporalReservation();
+            InitModule();
+        };
+
+        vm.openPrev = function() {
+            token = "abcdefghijklmnopqrstuvwyz";
+            $window.location.href = _base_url + "/reserve?key=" + token;
+        };
+
         /**
          * Init
          */
         (function() {
-            InitModule();
+            searchTemporalReserve()
+                .then(function() {
+                    InitModule();
+                })
+                .catch(function() {
+                    vm.showPrev = true;
+                });
         })();
     }]);

@@ -5,9 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use App\OldTokenSession;
 use App\OldMicrosite;
+use App\OldPrivilegemicrosite;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AuthTemp
+class AuthTempPage
 {
     /**
      * Handle an incoming request.
@@ -17,23 +18,41 @@ class AuthTemp
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
-        /*var_dump(request()->server('HTTP_REFERER')); 
-        var_dump(parse_url(request()->server('HTTP_REFERER'), PHP_URL_HOST));
-        exit;*/
-        # code...
-        try{
+    {   
+
+        if (@config("settings.STATUS_SESSION") == "1") {
+
             $session  = $request->session();
-            //$request->input('token');
-            if ($session->has('token_session')) {
-                return $next($request);
+
+            //si es cualquier otro usuario
+            if ($session->has('user_session')) {
+
+                //si es usuario MASTER
+                if(@$session->get('user_session') == "1"){return $next($request);}
+
+                //buscar si este usuario tiene privilegios para acceder
+                $OldPrivilegemicrosite = OldPrivilegemicrosite::leftJoin("privilege", "privilege.role_id", "=", "privilegemicrosite.role_id")
+                                                              ->where('user_id', $session->get('user_session'))
+                                                              ->where('microsite_id', $request->route('id'))
+                                                              ->where(function($query){
+                                                                        return $query->where("privilege.menu_id", "50060000") //sistema de mesas
+                                                                                     ->orWhere("privilege.menu_id", "50030000"); //libro de reservaciones
+                                                                    })->get();
+                //var_dump($OldPrivilegemicrosite->count()); exit;
+                if ($OldPrivilegemicrosite->count() > 0) {
+                    return $next($request);
+                }else{
+                    //pagina de no acceso
+                    return redirect($this->urlRedirectBookersnap());
+                }
+                
             }else{
+
                 return redirect($this->urlRedirectBookersnap());
             }
-        }catch(HttpException $e){
-            //            var_dump($e->getMessage());
-        }catch(\Exception $e){
-            //            var_dump($e->getMessage());
+    
+        }else{
+            return $next($request);
         }
     }
     
@@ -49,5 +68,10 @@ class AuthTemp
         }else{
             return config("settings.SYS_BOOKERSNAP");
         }
+    }
+
+    //rediccionar a una pagina de error
+    public function urlRedirectoPageError(){
+        return config("settings.SYS_BOOKERSNAP");
     }
 }
