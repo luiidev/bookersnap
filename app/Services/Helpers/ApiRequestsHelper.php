@@ -48,7 +48,7 @@ class ApiRequestsHelper
             }
             $response = (string)$e->getResponse()->getBody();
         } catch (\Exception $e) {
-            abort(500, 'Ocurrió un error interno.');
+            abort(500, 'Ocurrió un error interno :).');
         }
         return json_decode($response, true);
     }
