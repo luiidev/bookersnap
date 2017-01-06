@@ -25,12 +25,12 @@ angular.module("App")
 
                 function watch() {
                    vm.time = time.subtract(1, "seconds").format("mm:ss");
-                   if (time.minute() === 0 && time.second() === 0) close();
+                   if (time.minute() === 0 && time.second() === 0) close(true);
                    $timeout(watch, 1000);
                 }
 
-                function close() {
-                    vm.finally();
+                function close(exeEvent) {
+                    if (exeEvent) vm.finally();
                 }
             }
         };

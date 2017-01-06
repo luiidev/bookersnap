@@ -1,19 +1,20 @@
 var elixir = require('laravel-elixir');
 
 elixir.config.assetsPath = './';
+elixir.config.sourcemaps = false;
 
 elixir(function(mix) {
     mix.styles([
         "library/jquery-ui-1.12.1/jquery-ui.min.css",
         'css/style2.css'
-    ], 'build/v2/css/styles2.min.css', './');
+    ], 'build/v2/css/styles2.min.css', './')
 
-    mix.scripts([
+    .scripts([
         'app2/**',
         'functions.js'
-    ], 'build/v2/js/app.min.js');
+    ], 'build/v2/js/app.min.js')
 
-    mix.scripts([
+    .scripts([
         "library/jquery/jquery-1.12.4.min.js",
         "library/jquery-ui-1.12.1/jquery-ui.min.js",
         "library/angular/angular.min.js",

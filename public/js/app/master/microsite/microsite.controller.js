@@ -41,6 +41,10 @@ angular.module('microsite.controller', ['bsLoadingOverlay', 'daterangepicker', '
 
         vm.listarMicrositios = function () {
             var data = buildData();
+            console.log(data);
+            data.dateRange.startDate = moment(data.dateRange.startDate).format("YYYY-MM-DD");
+            data.dateRange.endDate = moment(data.dateRange.endDate).format("YYYY-MM-DD");
+            console.log(data);
             MicrositeService.GetPage(data, {
                 BeforeSend: function () {
                     vm.flags.isLoading = true;
