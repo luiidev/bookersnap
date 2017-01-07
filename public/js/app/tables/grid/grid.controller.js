@@ -95,7 +95,7 @@ angular.module('grid.controller', [])
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
             //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
-            console.log("onDragEndReservation", angular.toJson(dataReservation, true));
+            //console.log("onDragEndReservation", angular.toJson(dataReservation, true));
         };
 
         vm.onDragEndBlock = function() {
@@ -198,8 +198,10 @@ angular.module('grid.controller', [])
         };
 
         vm.conflictPopup = function(conflictIni, reserva, reservations) {
-            if (conflictIni === undefined) {
+            if (conflictIni === undefined || conflictIni === false) {
                 openModalConflictReserva(reserva, reservations);
+            } else {
+                vm.redirectReservation(reserva);
             }
         };
 
@@ -405,7 +407,6 @@ angular.module('grid.controller', [])
             //console.log("setSelectedShift", angular.toJson(vm.btnCalendarShift, true));
 
             vm.timesShift = gridFactory.getRangoHoursShift(vm.btnCalendarShift.turn_selected);
-
             constructTablesAvailability();
         };
 
@@ -452,6 +453,7 @@ angular.module('grid.controller', [])
         };
 
         $scope.$on("NotifyNewReservation", function(evt, data) {
+
             $scope.$apply(function() {
                 var reservation = (data.action === "create") ? data.data : data.data[0];
 
@@ -459,6 +461,8 @@ angular.module('grid.controller', [])
                     gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
                     vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
                 }
+
+                //console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
         });
 
@@ -549,6 +553,7 @@ angular.module('grid.controller', [])
         var init = function() {
             parseInfoReservation();
             listGuest();
+            //console.log("init", angular.toJson(hourReservation, true));
         };
 
         vm.save = function() {

@@ -71,10 +71,10 @@
                                                         </span>
                                                     </div>
                                                     <div class="cell-item-info-title" ng-if="!reserva.styles.conflictIni &&reserva.styles.conflicts === true">
-                                                        Conflicto reserva
+                                                        Conflicto reserva {{ reserva.id }}
                                                     </div>
                                                     <div class="cell-item-info-subtitle" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">
-                                                        {{ reserva.num_guest }} Invitados
+                                                        {{ reserva.num_guest }} Invitados {{ reserva.id }}
                                                     </div>
                                                 </div>
                                                 <div class="cell-item-res-status" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">

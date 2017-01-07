@@ -1,6 +1,6 @@
 angular.module("floor.notify.controller", [])
 
-.controller('FloorMainCtrl', function($scope, $rootScope, ServerNotification) {
+.controller('FloorMainCtrl', function($scope, ServerNotification) {
 
     var serverSocket = ServerNotification.getConnection();
 
@@ -10,7 +10,6 @@ angular.module("floor.notify.controller", [])
 
     serverSocket.on("b-mesas-floor-res", function(data) {
         $scope.$broadcast("NotifyFloorTableReservationReload", data);
-        $rootScope.$broadcast("NotifyWebReservation", data);
     });
 
     serverSocket.on("b-mesas-config-update", function(data) {

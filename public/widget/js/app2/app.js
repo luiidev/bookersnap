@@ -31,7 +31,7 @@ angular.module("App", ["ngLocale", "ui.bootstrap"])
         "</table>\n" +
         "");
     }])
-    .config(function($provide) {
+    .config(["$provide", function($provide) {
         $provide.decorator('uibDatepickerDirective', ['$delegate',function($delegate) {
             var directive = $delegate[0];
 
@@ -67,4 +67,4 @@ angular.module("App", ["ngLocale", "ui.bootstrap"])
             };
             return $delegate;
         }]);
-    });
+    }]);

@@ -131,7 +131,21 @@ angular.module('grid.service', [])
             },
             //REVISAR ESTA FUNCION (IMPORTANTE)
             reservaInTimeValidate: function(reservation, turn) {
-                var valida = true;
+                var valida = false;
+
+                var indexHourIni = getIndexHour(turn.hours_ini, 0);
+                var indexHourEnd = getIndexHour(turn.hours_end, 0);
+
+                indexHourEnd = (indexHourEnd < indexHourIni) ? indexHourEnd + 96 : indexHourEnd;
+
+                var indexHourReservaIni = getIndexHour(reservation.hours_reservation, 0);
+
+                var dateIni = moment(reservation.datetime_input).format("YYYY-MM-DD");
+                indexHourReservaIni = (reservation.date_reservation !== dateIni) ? indexHourReservaIni + 96 : indexHourReservaIni;
+
+                if (indexHourReservaIni >= indexHourIni && indexHourReservaIni <= indexHourEnd) {
+                    valida = true;
+                }
                 return valida;
             },
             //Identifica y asigna los conflictos entre reservaciones para la mesa
@@ -141,24 +155,85 @@ angular.module('grid.service', [])
                 var hour_ini = reservation.hours_reservation;
                 var hour_end = moment(reservation.date_reservation + " " + hour_ini).add(hours[0], 'hours').add(hours[1], 'minutes').format("HH:mm:ss");
 
+                var indexHourEnd = getIndexHour(hour_end, 0);
+                var indexHourIni = getIndexHour(hour_ini, 0);
+
+                var dateIni = moment(reservation.datetime_input).format("YYYY-MM-DD");
+                indexHourIni = (reservation.date_reservation !== dateIni) ? indexHourIni + 96 : indexHourIni;
+                indexHourEnd = (indexHourEnd < indexHourIni) ? indexHourEnd + 96 : indexHourEnd;
+
+                var conflicts = false;
+
+                var totalConflicts = 0;
+
                 angular.forEach(reservations, function(reserva, key) {
                     if (reservation.id !== reserva.id) {
                         var rt_hours = reserva.hours_duration.split(":");
                         var rt_hour_ini = reserva.hours_reservation;
                         var rt_hour_end = moment(reserva.date_reservation + " " + rt_hour_ini).add(rt_hours[0], 'hours').add(rt_hours[1], 'minutes').format("HH:mm:ss");
 
-                        if ((moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)))) {
+                        /*  var validateRange = (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)));
+                        var validateRange2 = (moment(reservation.date_reservation + " " + hour_ini).isSameOrAfter(reserva.date_reservation + " " + rt_hour_ini) && (moment(reservation.date_reservation + " " + hour_ini).isSameOrBefore(reserva.date_reservation + " " + rt_hour_end)));
+*/
+                        var rt_indexHourEnd = getIndexHour(rt_hour_end, 0);
+                        var rt_indexHourIni = getIndexHour(rt_hour_ini, 0);
+
+                        var dateIni = moment(reserva.datetime_input).format("YYYY-MM-DD");
+                        rt_indexHourIni = (reserva.date_reservation !== dateIni) ? rt_indexHourIni + 96 : rt_indexHourIni;
+                        rt_indexHourEnd = (rt_indexHourEnd < rt_indexHourIni) ? rt_indexHourEnd + 96 : rt_indexHourEnd;
+
+                        var validateRange = ((rt_indexHourIni >= indexHourIni) && (rt_indexHourIni <= indexHourEnd));
+                        var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd));
+
+                        //console.log("validate", rt_indexHourIni, rt_indexHourEnd, reserva.id, validateRange, validateRange2);
+
+                        if (validateRange || validateRange2) {
+                            console.log("hay conflicto", reservation.id);
+                            totalConflicts += 1;
                             reservation.styles.conflicts = true;
-                            reservation.styles.zIndex -= 1;
+                            //reservation.styles.zIndex -= 1;
                             reserva.styles.conflicts = true;
-                            reservation.styles.conflictIni = true;
+                            //reserva.styles.conflictIni = true;
+
+                            //var validatePopup = indexHourIni >= rt_indexHourIni && indexHourIni <= rt_indexHourEnd && indexHourEnd >= rt_indexHourIni && indexHourEnd <= rt_indexHourEnd;
+                            var validatePopup1 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd && indexHourEnd <= rt_indexHourEnd));
+
+                            if (validatePopup1) {
+                                // console.log("conflicts ini", reservation.id + " " + hour_end, "/", reserva.id + " " + rt_hour_end, validatePopup1, indexHourIni, rt_indexHourEnd);
+
+                                reservation.styles.conflictIni = false;
+                                reservation.styles.zIndex += 1;
+                                // console.log("styles ", angular.toJson(reservation.styles), reservation.id);
+                            } else {
+                                //if (reservation.styles.conflictIni === true || reservation.styles.conflictIni === undefined) {
+                                reservation.styles.conflictIni = true;
+                                reservation.styles.zIndex -= 1;
+                                //}
+
+                                //console.error("entre aqui", angular.toJson(reservation.styles), reservation.id);
+                            }
+
+                            if (totalConflicts >= 2) {
+                                reservation.styles.conflictIni = false;
+                                reservation.styles.zIndex += 1;
+                            }
 
                             self.addReservaConflict(reserva.id, reserva);
                             self.addReservaConflict(reservation.id, reserva);
-                            //console.log("hay un conflicto", reserva.id, reservation.id, hour_ini, hour_end);
+                            conflicts = true;
+                            //console.log("styles f", angular.toJson(reservation.styles), reservation.id);
                         }
                     }
                 });
+
+                if (reservation.styles.conflicts === true && conflicts === false) {
+                    reservation.styles.conflicts = false;
+                    reservation.styles.zIndex += 1;
+                    reservation.styles.conflictIni = false;
+                    console.log("reserva", reservation.id, reservation.styles.conflictIni);
+                }
+
+                //console.log("hay conflicts", conflicts, reservation.id);
 
                 return reservation;
             },
@@ -247,7 +322,8 @@ angular.module('grid.service', [])
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
                             reservation.styles = {
                                 conflicts: false,
-                                zIndex: 98
+                                zIndex: 98,
+                                conflictsData: []
                             };
 
                             var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
@@ -267,14 +343,14 @@ angular.module('grid.service', [])
                         }
                     });
 
+                });
+
+                angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
-
-                    if (tableAvailability.reservations.length > 0) {
-                        tableAvailability.reservations[tableAvailability.reservations.length - 1].styles.conflictIni = true;
-                    }
                 });
+
             },
             //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
             existsDataInArray: function(id, data) {
