@@ -198,7 +198,7 @@ angular.module('grid.controller', [])
         };
 
         vm.conflictPopup = function(conflictIni, reserva, reservations) {
-            if (conflictIni === undefined) {
+            if (conflictIni === undefined || conflictIni === false) {
                 openModalConflictReserva(reserva, reservations);
             } else {
                 vm.redirectReservation(reserva);
@@ -407,7 +407,6 @@ angular.module('grid.controller', [])
             //console.log("setSelectedShift", angular.toJson(vm.btnCalendarShift, true));
 
             vm.timesShift = gridFactory.getRangoHoursShift(vm.btnCalendarShift.turn_selected);
-
             constructTablesAvailability();
         };
 
@@ -554,6 +553,7 @@ angular.module('grid.controller', [])
         var init = function() {
             parseInfoReservation();
             listGuest();
+            //console.log("init", angular.toJson(hourReservation, true));
         };
 
         vm.save = function() {
