@@ -179,6 +179,13 @@ body {
 	background: #ddd;
 }
 
+.bg-image{
+	height: 120px;
+	background-repeat: no-repeat;
+	background-size: cover !important;
+	background-position: center !important;
+	margin-bottom: 5px;
+}
 .promo-list .item small {
 	display: block;
 	margin-top: 5px;

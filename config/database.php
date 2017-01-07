@@ -69,11 +69,11 @@ return [
         # Our secondary database connection
         'mysql_old' => [
             'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port' => env('DB_PORT', '3306'),
-            'database'  => 'bookersn_database',
-            'username'  => 'root',
-            'password'  => '',
+            'host' => env('DB_BS_HOST', 'localhost'),
+            'port' => env('DB_BS_PORT', '3306'),
+            'database' => env('DB_BS_DATABASE', 'bookersnap'),
+            'username' => env('DB_BS_USERNAME', 'root'),
+            'password' => env('DB_BS_PASSWORD', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

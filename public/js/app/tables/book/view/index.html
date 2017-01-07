@@ -99,7 +99,13 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
+                                <span ng-hide="item.reservation.event">
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                    </span>
+                                    <span ng-bind="item.reservation.guest.last_name">
+                                    </span>
+                                </span>
+                                <span ng-show="item.reservation.event" ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
                                     <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
                                     </span>
                                     <span ng-bind="item.reservation.guest.last_name">
@@ -107,7 +113,7 @@
                                     <div class="popover bottom event {{item.reservation.showEvent}}">
                                         <div class="arrow">
                                         </div>
-                                        <div ng-show="item.reservation.event">
+                                        <div>
                                             <h3 class="popover-title" ng-bind="item.reservation.event.name">
                                             </h3>
                                             <div class="popover-content">
@@ -335,7 +341,13 @@
                         </div>
                         <div class="info">
                             <div class="name">
-                                <span ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
+                                <span ng-hide="item.reservation.event">
+                                    <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
+                                    </span>
+                                    <span ng-bind="item.reservation.guest.last_name">
+                                    </span>
+                                </span>
+                                <span ng-show="item.reservation.event" ng-init="item.reservation.showEvent = ''" ng-mouseleave="item.reservation.showEvent = ''" ng-mouseover="item.reservation.showEvent = 'show'">
                                     <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'">
                                     </span>
                                     <span ng-bind="item.reservation.guest.last_name">
@@ -343,7 +355,7 @@
                                     <div class="popover bottom event {{item.reservation.showEvent}}">
                                         <div class="arrow">
                                         </div>
-                                        <div ng-show="item.reservation.event">
+                                        <div>
                                             <h3 class="popover-title" ng-bind="item.reservation.event.name">
                                             </h3>
                                             <div class="popover-content">

@@ -32,7 +32,7 @@
                             <tr>
                                 <td class="hour pull-left" ng-bind="selectedHour.option_user"></td>
                                 <td class="promo pull-right">
-                                    <span ng-bind="selectedEvent.name"></span>
+                                    <span ng-bind="(selectedEvent.name).substring(0,18)"></span>
                                 </td>
                             </tr>
                         </table>
@@ -49,17 +49,30 @@
                             </tr>
                         </table>
                         <table ng-if="hour.events.length">
+                            <!-- ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()" -->
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length == 1}">
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
-                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
-                                    <span ng-bind="hour.events[0].name_type"></span>
-                                    <small ng-bind="hour.events[0].description | HtmlToText"></small>
+                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" >
+                                    <span  ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option" ng-bind="hour.events[0].name_type"></span>
+                                    <small ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option" ng-bind="(hour.events[0].description | HtmlToText).substring(0,24)"></small>
+                                    <div ng-show="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option">
+                                        <div class="bg-image" ng-style="{'background-image': 'url('+ hour.events[0].image_thumb + ')'}"></div>
+                                        <div class="description">
+                                            <p style="" ng-bind="hour.events[0].description | HtmlToText"></p>
+                                        </div>
+                                    </div> 
                                 </td>
                             </tr>
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
-                                <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
-                                    <span>Evento</span>
-                                    <small ng-bind="event.description | HtmlToText"></small>
+                                <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)" >
+                                    <span ng-hide="selectedEvent.id == event.id  && selectedHour.option == hour.option" ng-bind="event.name_type"></span>
+                                    <small ng-hide="selectedEvent.id == event.id  && selectedHour.option == hour.option" ng-bind="(event.description | HtmlToText).substring(0,24)"></small>
+                                    <div ng-show="selectedEvent.id == event.id  && selectedHour.option == hour.option">                                    
+                                        <div class="bg-image" ng-style="{'background-image': 'url('+ event.image_thumb + ')'}"></div>
+                                        <div class="description">
+                                            <p style="" ng-bind="event.description | HtmlToText"></p>
+                                        </div>
+                                    </div> 
                                 </td>
                             </tr>
                         </table>
