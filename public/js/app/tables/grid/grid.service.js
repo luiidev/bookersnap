@@ -163,8 +163,8 @@ angular.module('grid.service', [])
                 indexHourEnd = (indexHourEnd < indexHourIni) ? indexHourEnd + 96 : indexHourEnd;
 
                 var conflicts = false;
-
                 var totalConflicts = 0;
+                var reservationsConflicts = [];
 
                 angular.forEach(reservations, function(reserva, key) {
                     if (reservation.id !== reserva.id) {
@@ -174,7 +174,7 @@ angular.module('grid.service', [])
 
                         /*  var validateRange = (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)));
                         var validateRange2 = (moment(reservation.date_reservation + " " + hour_ini).isSameOrAfter(reserva.date_reservation + " " + rt_hour_ini) && (moment(reservation.date_reservation + " " + hour_ini).isSameOrBefore(reserva.date_reservation + " " + rt_hour_end)));
-*/
+                            */
                         var rt_indexHourEnd = getIndexHour(rt_hour_end, 0);
                         var rt_indexHourIni = getIndexHour(rt_hour_ini, 0);
 
@@ -190,6 +190,10 @@ angular.module('grid.service', [])
                         if (validateRange || validateRange2) {
                             console.log("hay conflicto", reservation.id);
                             totalConflicts += 1;
+
+                            reserva.hour_end = rt_hour_end;
+                            reservationsConflicts.push(reserva);
+
                             reservation.styles.conflicts = true;
                             //reservation.styles.zIndex -= 1;
                             reserva.styles.conflicts = true;
@@ -213,14 +217,18 @@ angular.module('grid.service', [])
                                 //console.error("entre aqui", angular.toJson(reservation.styles), reservation.id);
                             }
 
-                            if (totalConflicts >= 2) {
-                                reservation.styles.conflictIni = false;
-                                reservation.styles.zIndex += 1;
-                            }
-
                             self.addReservaConflict(reserva.id, reserva);
                             self.addReservaConflict(reservation.id, reserva);
                             conflicts = true;
+
+                            if (totalConflicts >= 2) {
+                                var evalua = self.evaluaReservationsHourEnd(reservationsConflicts, reservation.id);
+                                if (evalua === true) {
+                                    reservation.styles.conflictIni = false;
+                                    reservation.styles.zIndex += 1;
+                                }
+                            }
+
                             //console.log("styles f", angular.toJson(reservation.styles), reservation.id);
                         }
                     }
@@ -236,6 +244,29 @@ angular.module('grid.service', [])
                 //console.log("hay conflicts", conflicts, reservation.id);
 
                 return reservation;
+            },
+            //Evalua si las reservaciones estan pegadas (continua una tras otra) return =>true
+            evaluaReservationsHourEnd: function(reservations, reservaId) {
+                var response = false;
+                var hourEnd = "";
+                var hourIni = "";
+                angular.forEach(reservations, function(reserva, key) {
+                    if (reserva.id !== reservaId) {
+                        if (hourEnd !== "") {
+                            hourEnd = moment(reserva.date_reservation + " " + hourEnd).add('minutes', 15).format("HH:mm:ss");
+                            // hourIn = moment(reserva.date_reservation + " " + hourIni).add('minutes', 15).format("HH:mm:ss");
+                            console.log(hourEnd, reserva.id, key);
+                            if ((hourEnd === reserva.hours_reservation) || (reserva.hour_end === hourEnd)) {
+
+                                response = true;
+                            }
+                        }
+                        hourEnd = reserva.hour_end;
+                        // hourIni = reserva.hours_end;
+                        // console.log(hourEnd, reserva.id, key);
+                    }
+                });
+                return response;
             },
             //Agrega el id de la reserva con la que hay conflicto
             addReservaConflict: function(idReserva, reserva) {
