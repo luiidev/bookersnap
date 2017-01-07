@@ -17,8 +17,8 @@ return array(
 
 // para usar la constante usar: config('settings.NOMBRE_CONSTANTE')
 return [
-	'API_AUTH_URL'  => 'http://apiauth.studework.vm/v1',
-	'API_ADMIN_URL' => 'http://apiadmin.studework.vm/v1',
+	'API_AUTH_URL'  => 'http://localhost:100/v1',
+	'API_ADMIN_URL' => 'http://localhost:90/v1',
 	'API_PROMO_URL' => 'http://api-promotion.vh/v1',
 	'MAIN_DOMAIN'   => 'weblaravel.studework.vm',
 	

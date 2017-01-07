@@ -233,8 +233,8 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         vm.role = {};
 
         vm.checkAllPrivilegesChildren = function (item, parent) {
-            if (parent != null) {
-                if (parent.checkeable && parent.checked == 0 && item.checked == 1) {
+            if (parent !== null) {
+                if (parent.checkeable && parent.checked === 0 && item.checked == 1) {
                     parent.checked = 1;
                 } else {
                     var count = 0;
@@ -242,14 +242,29 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                         count += child.checked;
                     });
 
-                    if (count == 0) {
+                    if (count === 0) {
                         parent.checked = 0;
                     }
                 }
             }
             angular.forEach(item.children, function (child) {
                 child.checked = item.checked;
+                if (child.children) {
+                    angular.forEach(child.children, function (child2) {
+                        child2.checked = item.checked;
+                    });
+                }
             });
+        };
+
+        vm.checklPrivilegesParent = function(parent) {
+            var c = 0;
+            angular.forEach(parent.children, function (child) {
+                if (child.checked) {
+                    c++;
+                }
+            });
+            parent.checked = Object.keys(parent.children).length == c ? 1 : 0;
         };
 
         vm.saveChanges = function () {
@@ -290,6 +305,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                 OnSuccess: function (Response) {
                     bsLoadingOverlayService.stop();
                     vm.privileges = Response.data.data.privileges;
+                    console.log(vm.privileges);
                     vm.role = Response.data.data.role;
                 },
                 OnError: function (Response) {
