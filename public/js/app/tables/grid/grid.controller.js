@@ -25,11 +25,16 @@ angular.module('grid.controller', [])
         };
         init();
     })
-    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, gridDataFactory, gridFactory) {
+    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, $compile, gridDataFactory, gridFactory) {
 
         var vm = this;
 
         var openModalReserva = null;
+
+        vm.currentTime = {
+            text: '',
+            left: ''
+        };
 
         vm.reservationCreate = {
             hourIni: '',
@@ -356,14 +361,25 @@ angular.module('grid.controller', [])
 
                     vm.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
                     vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
+
                     if (vm.gridData.turns.length > 0) {
                         setSelectedShift($stateParams.shift);
                     }
+
+                    constructCurrentTime();
                 },
                 function error(response) {
                     console.error("getDataGrid", angular.toJson(response.data, true));
                 }
             );
+        };
+
+        var constructCurrentTime = function() {
+            var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected">' +
+                '</current-time>';
+
+            var content = $compile(directiveCurrentime)($scope);
+            angular.element(".grid-inner-container").append(content);
         };
 
         var constructTablesAvailability = function() {
@@ -461,8 +477,7 @@ angular.module('grid.controller', [])
                     gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
                     vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
                 }
-
-                //console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
+                // console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
         });
 

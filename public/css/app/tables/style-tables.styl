@@ -2746,6 +2746,38 @@ li.divider
 			height 100%
 			& .grid-turns-none-inner
 				margin-top 5%
+		& .grid-current-time-marker
+			background-color #e74c3c
+			bottom 0
+			position absolute
+			top 32px
+			width 1px
+			z-index 1445
+			pointer-events none
+			&::before
+				border-radius 3.5px
+				height 7px
+				margin-left -5px
+				width 7px;
+				background #e74c3c
+				content ""
+				margin-left -3px
+				position absolute
+			& .grid-current-time-label
+				transform translate(-50%,0)
+				-moz-user-select -moz-none
+				-ms-user-select none
+				-webkit-user-select none
+				user-select none
+				background #e74c3c
+				color #f7f7f7
+				font-size 13px
+				font-weight 600
+				position absolute
+				top -25px
+				white-space nowrap
+				padding 4px 6px
+				border-radius 4px				
 					
 	& .grid-cell 
 		height 62px

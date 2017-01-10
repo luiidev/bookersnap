@@ -185,10 +185,8 @@ angular.module('grid.service', [])
                         var validateRange = ((rt_indexHourIni >= indexHourIni) && (rt_indexHourIni <= indexHourEnd));
                         var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd));
 
-                        //console.log("validate", rt_indexHourIni, rt_indexHourEnd, reserva.id, validateRange, validateRange2);
-
                         if (validateRange || validateRange2) {
-                            console.log("hay conflicto", reservation.id);
+                            // console.log("hay conflicto", reservation.id, "=>", reserva.id);
                             totalConflicts += 1;
 
                             reserva.hour_end = rt_hour_end;
@@ -199,7 +197,6 @@ angular.module('grid.service', [])
                             reserva.styles.conflicts = true;
                             //reserva.styles.conflictIni = true;
 
-                            //var validatePopup = indexHourIni >= rt_indexHourIni && indexHourIni <= rt_indexHourEnd && indexHourEnd >= rt_indexHourIni && indexHourEnd <= rt_indexHourEnd;
                             var validatePopup1 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd && indexHourEnd <= rt_indexHourEnd));
 
                             if (validatePopup1) {
@@ -213,7 +210,6 @@ angular.module('grid.service', [])
                                 reservation.styles.conflictIni = true;
                                 reservation.styles.zIndex -= 1;
                                 //}
-
                                 //console.error("entre aqui", angular.toJson(reservation.styles), reservation.id);
                             }
 
@@ -225,10 +221,9 @@ angular.module('grid.service', [])
                                 var evalua = self.evaluaReservationsHourEnd(reservationsConflicts, reservation.id);
                                 if (evalua === true) {
                                     reservation.styles.conflictIni = false;
-                                    reservation.styles.zIndex += 1;
+                                    reservation.styles.zIndex = reserva.styles.zIndex + 1;
                                 }
                             }
-
                             //console.log("styles f", angular.toJson(reservation.styles), reservation.id);
                         }
                     }
@@ -241,8 +236,6 @@ angular.module('grid.service', [])
                     console.log("reserva", reservation.id, reservation.styles.conflictIni);
                 }
 
-                //console.log("hay conflicts", conflicts, reservation.id);
-
                 return reservation;
             },
             //Evalua si las reservaciones estan pegadas (continua una tras otra) return =>true
@@ -254,16 +247,14 @@ angular.module('grid.service', [])
                     if (reserva.id !== reservaId) {
                         if (hourEnd !== "") {
                             hourEnd = moment(reserva.date_reservation + " " + hourEnd).add('minutes', 15).format("HH:mm:ss");
-                            // hourIn = moment(reserva.date_reservation + " " + hourIni).add('minutes', 15).format("HH:mm:ss");
-                            console.log(hourEnd, reserva.id, key);
-                            if ((hourEnd === reserva.hours_reservation) || (reserva.hour_end === hourEnd)) {
+                            hourIni = moment(reserva.date_reservation + " " + hourIni).subtract('minutes', 15).format("HH:mm:ss");
 
+                            if ((hourEnd === reserva.hours_reservation) || (hourIni === reserva.hour_end)) {
                                 response = true;
                             }
                         }
                         hourEnd = reserva.hour_end;
-                        // hourIni = reserva.hours_end;
-                        // console.log(hourEnd, reserva.id, key);
+                        hourIni = reserva.hours_reservation;
                     }
                 });
                 return response;

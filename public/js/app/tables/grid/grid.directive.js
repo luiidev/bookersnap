@@ -7,8 +7,7 @@ angular.module('grid.directive', [])
                 element.on('mouseover', function(event) {
                     event.preventDefault();
                     zIndex = element.attr('z-index');
-                    angular.element(this).parent().parent().css('z-index', 99);
-                    //console.log("mouseover", zIndex);
+                    angular.element(this).parent().parent().css('z-index', 120);
                 });
                 element.on('mouseout', function(event) {
                     event.preventDefault();
@@ -78,7 +77,7 @@ angular.module('grid.directive', [])
 
                 element.droppable({
                     drop: function(event, ui) {
-                        console.log("drop", angular.toJson(scope.grid, true));
+                        //console.log("drop", angular.toJson(scope.grid, true));
                     }
                 });
             }
@@ -160,4 +159,79 @@ angular.module('grid.directive', [])
                 });
             }
         };
+    })
+    // 4.14 px
+    .directive('currentTime', function() {
+        return {
+            restrict: 'E',
+            scope: {
+                leftTime: "=",
+                time: "=",
+                turn: "="
+            },
+            template: '<div class="grid-current-time-marker" ng-style="{left:leftTime}">' +
+                '<div class="grid-current-time-label">' +
+                '{{time}}</div></div>',
+            link: function(scope, element, attr) {
+                console.log("currentTime", angular.toJson(scope.turn, true), scope.leftTime);
+                var minutesData = calculateMinutesIni(scope.turn);
+                var hourNow = moment().format("HH:mm A");
+
+                scope.leftTime = minutesData.leftTime + "px";
+                scope.time = hourNow;
+
+
+
+                setTimeout(function() {
+
+                    scope.$apply(function() {
+                        scope.leftTime = intervalTime(scope.leftTime);
+                        hourNow = moment().format("HH:mm A");
+                        scope.time = hourNow;
+                    });
+                    setInterval(function() {
+
+                        scope.$apply(function() {
+                            scope.leftTime = intervalTime(scope.leftTime);
+                            hourNow = moment().format("HH:mm A");
+                            scope.time = hourNow;
+                        });
+
+                    }, 60000);
+                }, minutesData.miliseconds);
+
+
+                //minutesData.miliseconds = 60000;
+
+            }
+        };
+
+        function calculateMinutesIni(turn) {
+            var hourIni = moment().format("HH:mm:ss");
+            var dateNow = moment().format("YYYY-MM-DD");
+            var hourEnd = turn.turn.hours_ini;
+            var minutes = moment(dateNow + " " + hourEnd).format("mm");
+            var hours = moment(dateNow + " " + hourEnd).format("HH");
+            var duration = moment(dateNow + " " + hourIni).subtract('minutes', minutes).subtract('hours', hours).format("HH:mm:ss");
+
+            var minutesTotal = calculateMinutesTime(dateNow + " " + duration);
+            var miliseconds = (60 - moment().format("ss")) * 1000;
+            var leftTime = minutesTotal * 4.14 + (62);
+            var data = {
+                leftTime: leftTime,
+                minutes: minutesTotal,
+                miliseconds: miliseconds,
+                seconds: moment().format("ss")
+            };
+            console.log("calculateMinutesIni", angular.toJson(data, true));
+            return data;
+
+        }
+
+        function intervalTime(leftTime) {
+            var onlyNumber = parseInt(leftTime.replace("px", ""));
+            onlyNumber += 4.14;
+            leftTime = onlyNumber + "px";
+            return leftTime;
+        }
     });
