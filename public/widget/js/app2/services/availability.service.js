@@ -8,10 +8,10 @@ angular.module("App")
                 return $http.get(base_url.url() + "/api/availability/basic", {
                     params: {
                         date: data.date,
-                        hour: data.hour.option,
-                        next_day: data.hour.next_day,
+                        hour: data.hour,
                         num_guests: data.num_guests,
-                        zone_id: data.zone_id
+                        zone_id: data.zone_id,
+                        event_id: data.event_id
                     }
                 });
             },

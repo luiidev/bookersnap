@@ -132,17 +132,18 @@ angular.module("App")
 
         vm.selectHour = function(hour, event) {
             if (hour === null || hour === undefined) {
-                vm.availability.hour = {};
+                vm.availability.hour = null;
                 vm.selectedHour = {}; 
                 vm.selectedEvent = {};
             } else {
-                vm.availability.hour = hour;
+                vm.availability.hour = hour.option;
                 vm.selectedHour = hour; 
 
                 if (event === null || event === undefined) {
                     if (hour.events) {
                         if (hour.events.length) {
                             vm.selectedEvent = hour.events[0];
+                            vm.availability.event_id = hour.events[0].id;
                         } else {
                             vm.selectedEvent = {};
                         }
@@ -151,6 +152,7 @@ angular.module("App")
                     }
                 } else {
                     vm.selectedEvent = event;
+                    vm.availability.event_id = event.id;
                 }
             }
         };

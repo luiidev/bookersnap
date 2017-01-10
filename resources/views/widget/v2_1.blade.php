@@ -98,7 +98,7 @@
         <div class="title" ng-bind="infoAvailability"></div>
 
         <div  ng-repeat="item in result">
-            <button type="submit" class="bsb bsb-block" ng-class="{'bsb-bookersnap bs-bgm': item.hour == availability.hour.option}" ng-disabled="!item.availability" ng-bind="item.hour_format" ng-click="saveTemporalReserve(item)"></button>
+            <button type="submit" class="bsb bsb-block" ng-class="{'bsb-bookersnap bs-bgm': item.hour == availability.hour}" ng-disabled="!item.availability" ng-bind="item.hour_format" ng-click="saveTemporalReserve(item)"></button>
         </div>
 
     </div>

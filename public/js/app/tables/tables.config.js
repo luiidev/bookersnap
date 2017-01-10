@@ -19,14 +19,14 @@
             'notification.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
-        .constant("DomainBookersnapAdmin", "http://web.aplication.bookersnap")
-        .constant("UrlServerNotify", "http://localhost:1337")
-        .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
-        /*        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
-                .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
-                .constant("ApiUrlMesas", 'http://apimesas.studework.info/v1/es/microsites/' + idMicrositio)
-                .constant("ApiUrlRoot", 'http://apimesas.studework.info/v1/es')*/
+        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
+        .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
+        .constant("ApiUrlMesas", 'http://apimesas.bookersnap.com/v1/es/microsites/' + idMicrositio)
+        .constant("ApiUrlRoot", 'http://apimesas.bookersnap.com/v1/es')
+//        .constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
+//        .constant("UrlServerNotify", "http://apimesas.studework.vm:1337")
+//        .constant("ApiUrlMesas", 'http://apimesas.studework.vm/v1/es/microsites/' + idMicrositio)
+//        .constant("ApiUrlRoot", 'http://apimesas.studework.vm/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
