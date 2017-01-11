@@ -228,6 +228,17 @@ angular.module('grid.controller', [])
             }
         };
 
+        vm.updateCurrentTime = function() {
+
+            angular.forEach(vm.tablesAvailabilityFinal, function(tables, key) {
+                angular.forEach(tables.reservations, function(reservation, key) {
+                    reservation = gridFactory.currentTimeReservaSit(reservation);
+                });
+
+            });
+            console.log("updateCurrentTime");
+        };
+
         var updateReservationGrid = function(data) {
             gridDataFactory.updateReservation(data, data.reservation.id).then(
                 function success(response) {
@@ -375,7 +386,7 @@ angular.module('grid.controller', [])
         };
 
         var constructCurrentTime = function() {
-            var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected">' +
+            var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected" update-time="vm.updateCurrentTime()">' +
                 '</current-time>';
 
             var content = $compile(directiveCurrentime)($scope);
