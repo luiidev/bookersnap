@@ -457,7 +457,7 @@ angular.module('book.controller', [])
                 case 'time':
                     vm.bookOrderBy.general.reverse = (vm.bookOrderBy.general.value == value) ? !vm.bookOrderBy.general.reverse : false;
                     vm.bookOrderBy.general.value = 'time';
-                    vm.listBook = orderByFilter(vm.listBook, 'time', vm.bookOrderBy.general.reverse);
+                    vm.listBook = orderByFilter(vm.listBook, 'index', vm.bookOrderBy.general.reverse);
                     break;
                 case 'status':
                     vm.bookOrderBy.resBlock.value = 'status';
@@ -1169,7 +1169,6 @@ angular.module('book.controller', [])
                     vm.turns = response.data.shifts;
                     vm.sources = response.data.sourceTypes;
                     vm.zones = response.data.zones;
-
                     listHoursTurns(vm.turns, response.data);
                     action();
                 },
@@ -1252,8 +1251,7 @@ angular.module('book.controller', [])
         var listHoursTurns = function(turns, data) {
             reservationService.getHours(turns).then(
                 function success(response) {
-                    vm.hoursTurns = response.hours;
-                    console.log(vm.hoursTurns);
+                    vm.hoursTurns = orderByFilter(response.hours, 'index');
                     vm.configReservation = data.config;
 
                     var listBook = [];

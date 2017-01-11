@@ -187,12 +187,12 @@ class WidgetController extends Controller
         return $this->apiResponse($http);
     }
 
-    public function url(String $path)
+    public function url($path)
     {
         return $this->_domain."/".request()->route("site").$path;
     }
 
-    public function AppID(Bool $idOnly = false)
+    public function AppID($idOnly = false)
     {
         $this->site = $this->site ? $this->site : TempMicrosite::find(request()->route("site"));
         if ($this->site) {

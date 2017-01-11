@@ -1,6 +1,6 @@
 angular.module("notification.app")
-    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", "ServerNotification",
-         function($scope, $rootScope, $q, service, reservationService, $filter, ServerNotification) {
+    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", "$timeout", "ServerNotification",
+         function($scope, $rootScope, $q, service, reservationService, $filter, $timeout, ServerNotification) {
         vm = this;
 
         vm.notification_count = 0;
@@ -57,13 +57,21 @@ angular.module("notification.app")
                             $('#audio_notipromocion')[0].play();
                             vm.reservations.unshift(reservation);
                             vm.notification_count ++;
-                            notifyMessage(reservation);
+                            
+                            NotifyWindow = localStorage.getItem("NotifyWindow");
+                            if(NotifyWindow == null || NotifyWindow != req.key){
+                                localStorage.setItem("NotifyWindow", req.key);
+                                console.log(req);
+                                notifyMessage(reservation);
+                            }
+                            
                         });
                     }
                 }
             }
         });
-
+        
+        
         var notifyMessage = function(reservation) {
             var title =  reservation.guest.first_name +" "+ reservation.guest.last_name;
             var date = $filter("latamDate")(reservation.date_reservation+' '+reservation.hours_duration);

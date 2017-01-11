@@ -21,7 +21,7 @@ class HttpRequestHelper
 
     private $response;
 
-    function __construct (string $method = null, string $url = null, $data = null, array $headers = null)
+    function __construct ($method = null, $url = null, $data = null, array $headers = null)
     {
         $this->setDefaultHeaders();
         $this->setMethod($method);
@@ -30,7 +30,7 @@ class HttpRequestHelper
         $this->setData($data);
     }
 
-    public static function make(string $method = null, string $url = null, $data = null, array $headers = null)
+    public static function make($method = null, $url = null, $data = null, array $headers = null)
     {
         return new static($method, $url, $data, $headers);
     }
@@ -65,13 +65,13 @@ class HttpRequestHelper
         return $this;
     }
 
-    public function setMethod(string $method = null)
+    public function setMethod($method = null)
     {
         $this->method = $method;
         return $this;
     }
 
-    public function setUrl(string $url = null)
+    public function setUrl($url = null)
     {
         $this->url = filter_var($url, FILTER_VALIDATE_URL) ? $url : null;
         return $this;
