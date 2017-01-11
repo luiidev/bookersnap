@@ -167,42 +167,35 @@ angular.module('grid.directive', [])
             scope: {
                 leftTime: "=",
                 time: "=",
-                turn: "="
+                turn: "=",
+                updateTime: "&"
             },
             template: '<div class="grid-current-time-marker" ng-style="{left:leftTime}">' +
                 '<div class="grid-current-time-label">' +
                 '{{time}}</div></div>',
             link: function(scope, element, attr) {
-                console.log("currentTime", angular.toJson(scope.turn, true), scope.leftTime);
+                //console.log("currentTime", angular.toJson(scope.turn, true), scope.leftTime);
                 var minutesData = calculateMinutesIni(scope.turn);
                 var hourNow = moment().format("HH:mm A");
 
                 scope.leftTime = minutesData.leftTime + "px";
                 scope.time = hourNow;
 
-
-
-                setTimeout(function() {
-
+                var updateTime = function() {
                     scope.$apply(function() {
                         scope.leftTime = intervalTime(scope.leftTime);
                         hourNow = moment().format("HH:mm A");
                         scope.time = hourNow;
+                        scope.updateTime();
                     });
+                };
+
+                setTimeout(function() {
+                    updateTime();
                     setInterval(function() {
-
-                        scope.$apply(function() {
-                            scope.leftTime = intervalTime(scope.leftTime);
-                            hourNow = moment().format("HH:mm A");
-                            scope.time = hourNow;
-                        });
-
+                        updateTime();
                     }, 60000);
                 }, minutesData.miliseconds);
-
-
-                //minutesData.miliseconds = 60000;
-
             }
         };
 
@@ -216,21 +209,20 @@ angular.module('grid.directive', [])
 
             var minutesTotal = calculateMinutesTime(dateNow + " " + duration);
             var miliseconds = (60 - moment().format("ss")) * 1000;
-            var leftTime = minutesTotal * 4.14 + (62);
+            var leftTime = minutesTotal * 4.1333 + (62);
             var data = {
                 leftTime: leftTime,
                 minutes: minutesTotal,
                 miliseconds: miliseconds,
                 seconds: moment().format("ss")
             };
-            console.log("calculateMinutesIni", angular.toJson(data, true));
+            //console.log("calculateMinutesIni", angular.toJson(data, true));
             return data;
-
         }
 
         function intervalTime(leftTime) {
             var onlyNumber = parseInt(leftTime.replace("px", ""));
-            onlyNumber += 4.14;
+            onlyNumber += 4.1333;
             leftTime = onlyNumber + "px";
             return leftTime;
         }

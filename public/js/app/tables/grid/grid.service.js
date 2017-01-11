@@ -114,11 +114,14 @@ angular.module('grid.service', [])
 
                     if (existsTable === true && validaTurn) {
                         reservation = self.calculatePositionGrid(reservation, availability, indexTable);
+                        reservation = self.currentTimeReservaSit(reservation);
+
                         reservation.styles = {
                             conflicts: false,
                             zIndex: 98,
                             conflictsData: []
                         };
+
                         reservationsData.push(reservation);
                     }
                 });
@@ -129,7 +132,48 @@ angular.module('grid.service', [])
 
                 return reservationsData;
             },
-            //REVISAR ESTA FUNCION (IMPORTANTE)
+            //evalua el tiempo de espera en el grid (solo para reservaciones sentadas)
+            currentTimeReservaSit: function(reservation) {
+                var timeNow = moment().format("HH:mm:ss");
+                var hourEnd = reservation.total_grid[reservation.total_grid.length - 1].hour;
+                // console.log("HOUR_END", "=>", reservation.total_grid.length, hourEnd);
+                var validate = moment(reservation.date_reservation + " " + hourEnd).isBefore(reservation.date_reservation + " " + timeNow);
+
+                reservation.current_hour_extension = {
+                    active: false,
+                    total_time_extension: [],
+                    partial_block: 0
+                };
+
+                if (validate && reservation.res_reservation_status_id === 4) {
+
+                    reservation.current_hour_extension.active = true;
+
+                    var timeReservation = hourEnd.split(":");
+                    var timeDiff = moment(reservation.date_reservation + " " + timeNow).subtract("hours", timeReservation[0]).subtract("minutes", timeReservation[1]).format("HH:mm:ss");
+                    var totalMinutes = calculateMinutesTime(reservation.date_reservation + " " + timeDiff);
+                    console.log("validate1 minutes", totalMinutes);
+
+                    var totalCellHourExt = totalMinutes / 15;
+                    totalCellHourExt = parseInt(totalCellHourExt);
+
+                    var residuoMinutes = totalMinutes - (totalCellHourExt * 15);
+
+                    for (var i = 1; i < totalCellHourExt; i++) {
+                        reservation.current_hour_extension.total_time_extension.push({
+                            item: i
+                        });
+                    }
+
+                    console.log("validate", totalCellHourExt, totalMinutes);
+
+                    reservation.current_hour_extension.partial_block = (residuoMinutes * 4.1333) + "px";
+                    //console.log("currentTimeReservaSit", angular.toJson(reservation, true));
+                }
+
+                return reservation;
+            },
+            //Revisa si la reserva esta dentro del turno return => true 
             reservaInTimeValidate: function(reservation, turn) {
                 var valida = false;
 
@@ -331,6 +375,8 @@ angular.module('grid.service', [])
                     hour = moment(reservation.date_reservation + " " + hour).add("minutes", 15).format("HH:mm:ss");
                 }
 
+                reservation.grid_width = ((total_grid + 1) * 62) + "px";
+
                 return reservation;
             },
             //Agrega || Actualiza reservacion a la mesa : Grid
@@ -342,6 +388,8 @@ angular.module('grid.service', [])
                         if (tableAvailability.id === table.id) {
 
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
+                            reservation = self.currentTimeReservaSit(reservation);
+
                             reservation.styles = {
                                 conflicts: false,
                                 zIndex: 98,
@@ -372,7 +420,6 @@ angular.module('grid.service', [])
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
                 });
-
             },
             //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
             existsDataInArray: function(id, data) {
