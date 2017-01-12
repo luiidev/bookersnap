@@ -118,6 +118,7 @@ angular.module('grid.service', [])
 
                         reservation.styles = {
                             conflicts: false,
+                            conflictSit: false,
                             zIndex: 98,
                             conflictsData: []
                         };
@@ -152,7 +153,7 @@ angular.module('grid.service', [])
                     var timeReservation = hourEnd.split(":");
                     var timeDiff = moment(reservation.date_reservation + " " + timeNow).subtract("hours", timeReservation[0]).subtract("minutes", timeReservation[1]).format("HH:mm:ss");
                     var totalMinutes = calculateMinutesTime(reservation.date_reservation + " " + timeDiff);
-                    console.log("validate1 minutes", totalMinutes);
+                    // console.log("validate1 minutes", totalMinutes);
 
                     var totalCellHourExt = totalMinutes / 15;
                     totalCellHourExt = parseInt(totalCellHourExt);
@@ -164,9 +165,7 @@ angular.module('grid.service', [])
                             item: i
                         });
                     }
-
-                    console.log("validate", totalCellHourExt, totalMinutes);
-
+                    //console.log("validate", totalCellHourExt, totalMinutes);
                     reservation.current_hour_extension.partial_block = (residuoMinutes * 4.1333) + "px";
                     //console.log("currentTimeReservaSit", angular.toJson(reservation, true));
                 }
@@ -207,6 +206,7 @@ angular.module('grid.service', [])
                 indexHourEnd = (indexHourEnd < indexHourIni) ? indexHourEnd + 96 : indexHourEnd;
 
                 var conflicts = false;
+                var conflictsSit = false;
                 var totalConflicts = 0;
                 var reservationsConflicts = [];
 
@@ -230,31 +230,25 @@ angular.module('grid.service', [])
                         var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd));
 
                         if (validateRange || validateRange2) {
-                            // console.log("hay conflicto", reservation.id, "=>", reserva.id);
                             totalConflicts += 1;
 
                             reserva.hour_end = rt_hour_end;
                             reservationsConflicts.push(reserva);
 
                             reservation.styles.conflicts = true;
-                            //reservation.styles.zIndex -= 1;
                             reserva.styles.conflicts = true;
                             //reserva.styles.conflictIni = true;
 
                             var validatePopup1 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd && indexHourEnd <= rt_indexHourEnd));
 
                             if (validatePopup1) {
-                                // console.log("conflicts ini", reservation.id + " " + hour_end, "/", reserva.id + " " + rt_hour_end, validatePopup1, indexHourIni, rt_indexHourEnd);
-
                                 reservation.styles.conflictIni = false;
                                 reservation.styles.zIndex += 1;
-                                // console.log("styles ", angular.toJson(reservation.styles), reservation.id);
                             } else {
                                 //if (reservation.styles.conflictIni === true || reservation.styles.conflictIni === undefined) {
                                 reservation.styles.conflictIni = true;
                                 reservation.styles.zIndex -= 1;
                                 //}
-                                //console.error("entre aqui", angular.toJson(reservation.styles), reservation.id);
                             }
 
                             self.addReservaConflict(reserva.id, reserva);
@@ -268,19 +262,76 @@ angular.module('grid.service', [])
                                     reservation.styles.zIndex = reserva.styles.zIndex + 1;
                                 }
                             }
-                            //console.log("styles f", angular.toJson(reservation.styles), reservation.id);
+                        } else {
+
+                            conflictsSit = self.setConflictsReservationsInSit(reservation, reserva);
+                            console.log("no hay conflictos", reservation.id, conflictsSit, reservation.styles.conflictSit);
+                        /*     if (conflictsSit === false) {
+                                   reservation.styles.conflicts = false;
+                                   reservation.styles.conflictSit = false;
+                                   reservation.styles.zIndex = 98;
+                                   reservation.styles.conflictsData = [];
+                                   // console.log("reservations no hay conflictos", reservation.id, conflictsSit);
+                               }*/
+
                         }
                     }
                 });
 
-                if (reservation.styles.conflicts === true && conflicts === false) {
+                if (reservation.styles.conflicts === true && conflicts === false && (conflictsSit === false && reservation.styles.conflictSit === false)) {
+
                     reservation.styles.conflicts = false;
                     reservation.styles.zIndex += 1;
                     reservation.styles.conflictIni = false;
-                    console.log("reserva", reservation.id, reservation.styles.conflictIni);
+
+                    console.log("entre aqui", reservation.id, conflictsSit);
                 }
 
+                //Evaluamos si solo hay una reservacion (no hay conflictos con nada)
+                if (reservations.length === 1) {
+                    reservation.styles.conflicts = false;
+                    reservation.styles.conflictSit = false;
+                    reservation.styles.zIndex = 98;
+                    reservation.styles.conflictsData = [];
+                }
+                //console.log("total reservations ", reservations.length, reservation.id);
+
                 return reservation;
+            },
+            setConflictsReservationsInSit: function(reservaEvaluate, reservation) {
+                var response = false;
+                var self = this;
+
+                if (reservation.res_reservation_status_id === 4) {
+
+                    reservation.styles.conflicts = true;
+
+                    reservaEvaluate.styles.conflicts = true;
+                    //reservaEvaluate.styles.zIndex = reservation.styles.zIndex - 2;
+                    reservaEvaluate.styles.conflictSit = true;
+
+                    var validate1 = (moment(reservaEvaluate.date_reservation + " " + reservaEvaluate.hours_reservation).isBefore(reservation.date_reservation + " " + reservation.hours_reservation));
+
+                    if (validate1 === true) {
+                        console.log("es principal sit", reservaEvaluate.id);
+                        //reservation.styles.conflictIni = true;
+                        reservaEvaluate.styles.conflictIni = true;
+                    } else {
+                        console.log("no principal sit", reservaEvaluate.id);
+                        reservation.styles.conflictIni = true;
+                        reservaEvaluate.styles.zIndex = reservation.styles.zIndex + 1;
+                    }
+
+                    response = true;
+
+                    self.addReservaConflict(reservation.id, reservaEvaluate);
+                    self.addReservaConflict(reservaEvaluate.id, reservaEvaluate);
+                    // console.log("sentado", reservation.id);
+                }
+
+                //console.log("setConflictsReservationsInSit", reservaEvaluate.id, reservation.id, "=>", response);
+
+                return response;
             },
             //Evalua si las reservaciones estan pegadas (continua una tras otra) return =>true
             evaluaReservationsHourEnd: function(reservations, reservaId) {
@@ -392,6 +443,7 @@ angular.module('grid.service', [])
 
                             reservation.styles = {
                                 conflicts: false,
+                                conflictsSit: false,
                                 zIndex: 98,
                                 conflictsData: []
                             };
@@ -416,9 +468,13 @@ angular.module('grid.service', [])
                 });
 
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
+                    //angular.forEach(reservation.tables, function(table, key) {
+                    //if (table.id === tableAvailability.id) {
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
+                    // }
+                    //});
                 });
             },
             //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
@@ -518,7 +574,5 @@ angular.module('grid.service', [])
 
                 return totalCovers;
             },
-
-
         };
     });
