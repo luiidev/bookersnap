@@ -211,6 +211,7 @@ angular.module('grid.service', [])
                 var reservationsConflicts = [];
 
                 angular.forEach(reservations, function(reserva, key) {
+
                     if (reservation.id !== reserva.id) {
                         var rt_hours = reserva.hours_duration.split(":");
                         var rt_hour_ini = reserva.hours_reservation;
@@ -256,6 +257,7 @@ angular.module('grid.service', [])
                             conflicts = true;
 
                             if (totalConflicts >= 2) {
+
                                 var evalua = self.evaluaReservationsHourEnd(reservationsConflicts, reservation.id);
                                 if (evalua === true) {
                                     reservation.styles.conflictIni = false;
@@ -263,17 +265,7 @@ angular.module('grid.service', [])
                                 }
                             }
                         } else {
-
                             conflictsSit = self.setConflictsReservationsInSit(reservation, reserva);
-                            console.log("no hay conflictos", reservation.id, conflictsSit, reservation.styles.conflictSit);
-                        /*     if (conflictsSit === false) {
-                                   reservation.styles.conflicts = false;
-                                   reservation.styles.conflictSit = false;
-                                   reservation.styles.zIndex = 98;
-                                   reservation.styles.conflictsData = [];
-                                   // console.log("reservations no hay conflictos", reservation.id, conflictsSit);
-                               }*/
-
                         }
                     }
                 });
@@ -289,35 +281,57 @@ angular.module('grid.service', [])
 
                 //Evaluamos si solo hay una reservacion (no hay conflictos con nada)
                 if (reservations.length === 1) {
-                    reservation.styles.conflicts = false;
-                    reservation.styles.conflictSit = false;
-                    reservation.styles.zIndex = 98;
-                    reservation.styles.conflictsData = [];
+                    self.setReservationStylesDefault(reservation);
+                    //reservation.styles.conflictIni = true;
+                    console.log("solo 1", "=>", reservation.id, angular.toJson(reservation.styles, true));
+                }
+
+                var existsConflictSit = self.evaluaConflictsSit(reservations, reservation);
+
+                if (existsConflictSit && reservation.res_reservation_status_id === 4) {
+                    console.log("ES TRUE");
+                    reservation.styles.conflicts = true;
+                    reservation.styles.conflictIni = true;
                 }
                 //console.log("total reservations ", reservations.length, reservation.id);
 
                 return reservation;
             },
+            evaluaConflictsSit: function(reservations, reservation) {
+                var response = false;
+
+                angular.forEach(reservations, function(reserva, key) {
+                    if (reserva.id !== reservation.id) {
+                        if (reserva.styles.conflictSit === true) {
+                            response = true;
+                        }
+                    }
+                });
+
+                return response;
+            },
+            //Revisa y asigna conflictos para reservaciones sentadas
             setConflictsReservationsInSit: function(reservaEvaluate, reservation) {
                 var response = false;
                 var self = this;
 
-                if (reservation.res_reservation_status_id === 4) {
+                var validate = (moment(reservaEvaluate.date_reservation + " " + reservaEvaluate.hours_reservation).isSameOrAfter(reservation.date_reservation + " " + reservation.hours_reservation));
+
+                if (reservation.res_reservation_status_id === 4 && validate) {
+
+                    //console.log("reservacion status 4", reservation.id);
 
                     reservation.styles.conflicts = true;
+                    reservation.styles.conflictSit = true;
 
                     reservaEvaluate.styles.conflicts = true;
-                    //reservaEvaluate.styles.zIndex = reservation.styles.zIndex - 2;
                     reservaEvaluate.styles.conflictSit = true;
 
                     var validate1 = (moment(reservaEvaluate.date_reservation + " " + reservaEvaluate.hours_reservation).isBefore(reservation.date_reservation + " " + reservation.hours_reservation));
 
                     if (validate1 === true) {
-                        console.log("es principal sit", reservaEvaluate.id);
-                        //reservation.styles.conflictIni = true;
                         reservaEvaluate.styles.conflictIni = true;
                     } else {
-                        console.log("no principal sit", reservaEvaluate.id);
                         reservation.styles.conflictIni = true;
                         reservaEvaluate.styles.zIndex = reservation.styles.zIndex + 1;
                     }
@@ -326,7 +340,18 @@ angular.module('grid.service', [])
 
                     self.addReservaConflict(reservation.id, reservaEvaluate);
                     self.addReservaConflict(reservaEvaluate.id, reservaEvaluate);
-                    // console.log("sentado", reservation.id);
+                    console.log("sentado", reservation.id);
+                } else {
+
+                    /*      if (reservation.styles.conflictSit === true && (reservation.styles.conflictsData.length === 0 || reservaEvaluate.styles.conflictsData.length === 0)) {
+                              reservation.styles.conflictSit = false;
+                              reservation.styles.conflictIni = true;
+                              reservation.styles.conflicts = false;
+
+                              console.log("entre aqui =>", reservation.id);
+                          }*/
+                    console.log("=> no es sit", reservation.id, "=>", reservaEvaluate.id);
+
                 }
 
                 //console.log("setConflictsReservationsInSit", reservaEvaluate.id, reservation.id, "=>", response);
@@ -441,12 +466,7 @@ angular.module('grid.service', [])
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
                             reservation = self.currentTimeReservaSit(reservation);
 
-                            reservation.styles = {
-                                conflicts: false,
-                                conflictsSit: false,
-                                zIndex: 98,
-                                conflictsData: []
-                            };
+                            reservation = self.setReservationStylesDefault(reservation);
 
                             var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
 
@@ -468,14 +488,24 @@ angular.module('grid.service', [])
                 });
 
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
-                    //angular.forEach(reservation.tables, function(table, key) {
-                    //if (table.id === tableAvailability.id) {
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
+                        reserva = self.setReservationStylesDefault(reserva);
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
-                    // }
-                    //});
                 });
+            },
+            //Actualiza el valor styles por defecto de la reservacion
+            setReservationStylesDefault: function(reservation) {
+
+                reservation.styles = {
+                    conflicts: false,
+                    conflictSit: false,
+                    conflictIni: false,
+                    zIndex: 98,
+                    conflictsData: []
+                };
+
+                return reservation;
             },
             //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
             existsDataInArray: function(id, data) {

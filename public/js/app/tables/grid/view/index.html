@@ -59,7 +59,7 @@
                                             </div>
                                         </div>
                                         <!-- reservation-->
-                                        <div class="grid-cell cell" conflicts="reserva.styles.conflicts" conflicts-ini="reserva.styles.conflictIni" drag-position="vm.reservaDrag.position" drag-reserva-grid="" item-selected="item" ng-repeat="reserva in item.reservations" on-drag-end="vm.onDragEndReservation()" reserva-selected="vm.reservaDrag.reserva" reservation="reserva" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);" table-selected="vm.reservaDrag.table">
+                                        <div class="grid-cell cell" conflicts="reserva.styles.conflicts" conflicts-ini="reserva.styles.conflictIni" drag-position="vm.reservaDrag.position" drag-reserva-grid="false" item-selected="item" ng-repeat="reserva in item.reservations" on-drag-end="vm.onDragEndReservation()" reserva-selected="vm.reservaDrag.reserva" reservation="reserva" style="z-index:{{reserva.styles.zIndex}};transform: translateX({{ reserva.position_grid }}px);" table-selected="vm.reservaDrag.table">
                                             <div class="grid-cell-inner grid-cell-info grid-cell-info-reserva" ng-class="{'conflicts':reserva.styles.conflicts === true}" ng-style="{width : reserva.grid_width}">
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">

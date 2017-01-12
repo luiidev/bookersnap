@@ -32,37 +32,43 @@ angular.module('grid.directive', [])
             },
             link: function(scope, element, attr) {
 
+                console.log("dragReservaGrid", scope.conflictsIni, scope.conflicts, scope.reservation.id, (scope.conflicts === false || scope.conflictsIni === true));
+
+
+                element.draggable({
+                    //containment: ".grid-body",
+                    grid: [62, 63],
+                    cursor: "move",
+                    drag: function(event, ui) {
+                        //console.log("dragReservaGrid");
+                    },
+                    start: function(event, ui) {
+                        element.css("transform", "none");
+                        element.css("opacity", "0.6");
+                        element.css("z-index", "1");
+
+                        scope.$apply(function() {
+                            scope.reservaSelected = scope.reservation;
+                            scope.tableSelected = scope.itemSelected.id;
+                        });
+
+                        console.log("start drag");
+                    },
+                    stop: function(event, ui) {
+                        element.css("opacity", "1");
+                        scope.$apply(function() {
+                            scope.dragPosition = ui.position;
+                        });
+
+                        scope.onDragEnd();
+                    }
+                });
+
                 if (scope.conflicts === false || scope.conflictsIni === true) {
-                    element.draggable({
-                        //containment: ".grid-body",
-                        grid: [62, 63],
-                        cursor: "move",
-                        drag: function(event, ui) {
-                            //console.log("dragReservaGrid");
-                        },
-                        start: function(event, ui) {
-                            element.css("transform", "none");
-                            element.css("opacity", "0.6");
-                            element.css("z-index", "1");
-
-                            scope.$apply(function() {
-                                scope.reservaSelected = scope.reservation;
-                                scope.tableSelected = scope.itemSelected.id;
-                            });
-
-                            console.log("start drag");
-                        },
-                        stop: function(event, ui) {
-                            element.css("opacity", "1");
-                            scope.$apply(function() {
-                                scope.dragPosition = ui.position;
-                            });
-
-                            scope.onDragEnd();
-                        }
-                    });
+                    element.draggable('enable');
+                } else {
+                    element.draggable('disable');
                 }
-
 
             }
         };
@@ -160,7 +166,6 @@ angular.module('grid.directive', [])
             }
         };
     })
-    // 4.14 px
     .directive('currentTime', function() {
         return {
             restrict: 'E',
