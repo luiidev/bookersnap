@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="grid-column-tables" ng-if="vm.gridData.turns.length > 0">
-                        <div class="grid-column-tables-inner">
+                        <div class="grid-column-tables-inner" id="grid-column-tables-inner">
                             <div class="grid-column-tables-column">
                                 <div class="grid-column-tables-cell" ng-repeat="table in vm.tablesAvailability">
                                     <div class="grid-column-tables-cell-text">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-body" scroll-grid-body>
+                    <div class="grid-body" scroll-grid-body ng-if="vm.gridData.turns.length > 0">
                         <div class="grid-body-container" ng-style="{'width':vm.gridLienzo.width }">
 
                             <div class="grid-body-rows-container">

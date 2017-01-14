@@ -223,9 +223,6 @@ angular.module('grid.service', [])
                         var rt_hour_ini = reserva.hours_reservation;
                         var rt_hour_end = moment(reserva.date_reservation + " " + rt_hour_ini).add(rt_hours[0], 'hours').add(rt_hours[1], 'minutes').format("HH:mm:ss");
 
-                        /*  var validateRange = (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)));
-                        var validateRange2 = (moment(reservation.date_reservation + " " + hour_ini).isSameOrAfter(reserva.date_reservation + " " + rt_hour_ini) && (moment(reservation.date_reservation + " " + hour_ini).isSameOrBefore(reserva.date_reservation + " " + rt_hour_end)));
-                            */
                         var rt_indexHourEnd = getIndexHour(rt_hour_end, 0);
                         var rt_indexHourIni = getIndexHour(rt_hour_ini, 0);
 
@@ -244,7 +241,6 @@ angular.module('grid.service', [])
 
                             reservation.styles.conflicts = true;
                             reserva.styles.conflicts = true;
-                            //reserva.styles.conflictIni = true;
 
                             var validatePopup1 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd && indexHourEnd <= rt_indexHourEnd));
 
@@ -252,10 +248,8 @@ angular.module('grid.service', [])
                                 reservation.styles.conflictIni = false;
                                 reservation.styles.zIndex += 1;
                             } else {
-                                //if (reservation.styles.conflictIni === true || reservation.styles.conflictIni === undefined) {
                                 reservation.styles.conflictIni = true;
                                 reservation.styles.zIndex -= 1;
-                                //}
                             }
 
                             self.addReservaConflict(reserva.id, reserva);
@@ -285,7 +279,6 @@ angular.module('grid.service', [])
                 //Evaluamos si solo hay una reservacion (no hay conflictos con nada)
                 if (reservations.length === 1) {
                     self.setReservationStylesDefault(reservation);
-                    //reservation.styles.conflictIni = true;
                 }
 
                 var existsConflictSit = self.evaluaConflictsSit(reservations, reservation);
@@ -451,7 +444,7 @@ angular.module('grid.service', [])
                         if (tableAvailability.id === table.id) {
 
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
-                            reservation = self.currentTimeReservaSit(reservation, turn);
+                            reservation = self.currentTimeReservaSit(reservation, turn.turn);
 
                             reservation = self.setReservationStylesDefault(reservation);
 

@@ -170,7 +170,7 @@ angular.module('grid.directive', [])
                 updateTime: "&",
                 visibility: "@"
             },
-            template: '<div class="grid-current-time-marker" ng-style="{left:leftTime,visibility :visibility}">' +
+            template: '<div class="grid-current-time-marker" id="grid-current-time-marker" ng-style="{left:leftTime,visibility :visibility}">' +
                 '<div class="grid-current-time-label">' +
                 '{{time}}</div></div>',
             link: function(scope, element, attr) {
@@ -213,6 +213,8 @@ angular.module('grid.directive', [])
         };
 
         function calculateMinutesIni(turn) {
+            var data = {};
+
             var hourIni = moment().format("HH:mm:ss");
             var dateNow = moment().format("YYYY-MM-DD");
             var hourEnd = turn.turn.hours_ini;
@@ -223,12 +225,13 @@ angular.module('grid.directive', [])
             var minutesTotal = calculateMinutesTime(dateNow + " " + duration);
             var miliseconds = (60 - moment().format("ss")) * 1000;
             var leftTime = minutesTotal * 4.1333 + (62);
-            var data = {
+            data = {
                 leftTime: leftTime,
                 minutes: minutesTotal,
                 miliseconds: miliseconds,
                 seconds: moment().format("ss")
             };
+
             //console.log("calculateMinutesIni", angular.toJson(data, true));
             return data;
         }
@@ -247,27 +250,27 @@ angular.module('grid.directive', [])
                 var oldScrollTop = $(element).scrollTop();
                 var oldScrollLeft = $(element).scrollLeft();
                 var marginLeft = null;
+                var typeScroll = "";
+
+                angular.element("body").css("overflow-y", "hidden");
 
                 element.scroll(function() {
-
+                    typeScroll = ($(this).scrollTop() === 0) ? "horizontal" : "vertical";
                     if (oldScrollTop == $(this).scrollTop()) {
-
-                        marginLeft = angular.element("#grid-time-label-out").css("margin-left");
-                        console.log("scroll horizontal 1", marginLeft);
-                        marginLeft = marginLeft.replace("px", "");
-                        marginLeft = marginLeft.replace("-", "");
-                        marginLeft = parseInt(marginLeft);
-                        marginLeft += 1;
-                        marginLeft = "-" + marginLeft + "px";
-                        angular.element("#grid-time-label-out").css("margin-left", marginLeft);
-                        console.log("scroll horizontal", marginLeft);
-                        scope.$apply();
+                        typeScroll = "horizontal";
                     } else {
-                        console.log("scroll vertical");
+                        typeScroll = "vertical";
                     }
 
                     oldScrollTop = $(element).scrollTop();
                     oldScrollLeft = $(element).scrollLeft();
+
+                    if (typeScroll === "horizontal") {
+                        angular.element("#grid-time-label-out").css("margin-left", -$(this).scrollLeft());
+                        angular.element("#grid-current-time-marker").css("margin-left", -$(this).scrollLeft());
+                    } else {
+                        angular.element("#grid-column-tables-inner").css("margin-top", -$(this).scrollTop());
+                    }
                 });
             }
         };

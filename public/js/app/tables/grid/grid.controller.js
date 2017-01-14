@@ -248,7 +248,7 @@ angular.module('grid.controller', [])
 
             angular.forEach(vm.tablesAvailabilityFinal, function(tables, key) {
                 angular.forEach(tables.reservations, function(reservation, key) {
-                    reservation = gridFactory.currentTimeReservaSit(reservation, vm.btnCalendarShift.turn_selected);
+                    reservation = gridFactory.currentTimeReservaSit(reservation, vm.btnCalendarShift.turn_selected.turn);
                 });
 
             });
@@ -436,11 +436,15 @@ angular.module('grid.controller', [])
         };
 
         var constructCurrentTime = function() {
-            var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected" update-time="vm.updateCurrentTime()">' +
-                '</current-time>';
+            console.log("constructAvailability", vm.gridData.turns);
+            if (vm.btnCalendarShift.turn_selected === "") {
+                var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected" update-time="vm.updateCurrentTime()">' +
+                    '</current-time>';
 
-            var content = $compile(directiveCurrentime)($scope);
-            angular.element(".grid-inner-container").append(content);
+                var content = $compile(directiveCurrentime)($scope);
+                angular.element(".grid-inner-container").append(content);
+            }
+
         };
 
         var constructTablesAvailability = function() {
@@ -465,7 +469,7 @@ angular.module('grid.controller', [])
             vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
             vm.gridLienzo.width = (vm.tablesAvailabilityFinal[0].availability.length * 62) + 2;
 
-            console.log("constructAvailability", vm.gridLienzo.width);
+            console.log("constructAvailability", vm.gridData.turns);
             //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
