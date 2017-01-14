@@ -25,11 +25,12 @@ angular.module('grid.controller', [])
         };
         init();
     })
-    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, $compile, gridDataFactory, gridFactory) {
+    .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, $compile, $timeout, gridDataFactory, gridFactory, FloorFactory, reservationService) {
 
         var vm = this;
 
         var openModalReserva = null;
+        var timeoutNotes;
 
         vm.currentTime = {
             text: '',
@@ -88,6 +89,21 @@ angular.module('grid.controller', [])
             table: '',
             table_update: '',
             duration: ''
+        };
+
+        //Notas del turno
+        vm.turnsNotes = [];
+        vm.notesData = {
+            texto: '',
+            res_type_turn_id: ''
+        };
+
+        vm.notesBox = false;
+        vm.notesBoxValida = false;
+
+        //Width Lienzo Body 
+        vm.gridLienzo = {
+            width: ''
         };
 
         var init = function() {
@@ -232,11 +248,44 @@ angular.module('grid.controller', [])
 
             angular.forEach(vm.tablesAvailabilityFinal, function(tables, key) {
                 angular.forEach(tables.reservations, function(reservation, key) {
-                    reservation = gridFactory.currentTimeReservaSit(reservation);
+                    reservation = gridFactory.currentTimeReservaSit(reservation, vm.btnCalendarShift.turn_selected);
                 });
 
             });
             console.log("updateCurrentTime");
+        };
+
+        vm.saveNotes = function(turn) {
+
+            if (timeoutNotes) $timeout.cancel(timeoutNotes);
+
+            vm.notesData.id = turn.notes.id;
+            vm.notesData.res_type_turn_id = turn.id;
+            vm.notesData.texto = turn.notes.texto;
+            vm.notesData.date_add = turn.notes.date_add;
+
+            timeoutNotes = $timeout(function() {
+                reservationService.blackList.key(vm.notesData);
+                FloorFactory.createNotes(vm.notesData).then(
+                    function success(response) {
+                        vm.notesSave = true;
+                    },
+                    function error(response) {
+                        message.apiError(response);
+                        console.error("saveNotes " + angular.toJson(response, true));
+                    }
+                );
+            }, 1000);
+        };
+
+        vm.readNotes = function(notification) {
+            vm.notesBoxValida = true;
+            vm.notesNotification = false;
+        };
+
+        vm.listenNotes = function(notification) {
+            vm.notesBoxValida = false;
+            vm.notesNotification = false;
         };
 
         var updateReservationGrid = function(data) {
@@ -371,6 +420,7 @@ angular.module('grid.controller', [])
                     vm.tablesAvailability = vm.gridData.availabilityTables;
 
                     vm.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
+                    vm.turnsNotes = vm.gridData.shifts;
                     vm.btnCalendarShift.turns = gridFactory.parseShiftsActives(vm.gridData.shifts);
 
                     if (vm.gridData.turns.length > 0) {
@@ -413,6 +463,9 @@ angular.module('grid.controller', [])
 
             vm.tablesAvailabilityFinal = availabilityTables;
             vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
+            vm.gridLienzo.width = (vm.tablesAvailabilityFinal[0].availability.length * 62) + 2;
+
+            console.log("constructAvailability", vm.gridLienzo.width);
             //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
@@ -485,7 +538,7 @@ angular.module('grid.controller', [])
                 var reservation = (data.action === "create") ? data.data : data.data[0];
 
                 if (reservation.date_reservation === vm.fecha_selected.text) {
-                    gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action);
+                    gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action, vm.btnCalendarShift.turn_selected);
                     vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
                 }
                 // console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
@@ -501,6 +554,25 @@ angular.module('grid.controller', [])
                 }
 
             });
+        });
+
+        $scope.$on("floorNotesReload", function(evt, note) {
+            if (!reservationService.blackList.contains(note.key)) {
+                angular.forEach(vm.turnsNotes, function(typeTurn) {
+                    if (typeTurn.turn) {
+                        if (note.data.res_type_turn_id == typeTurn.turn.res_type_turn_id) {
+                            typeTurn.notes = typeTurn.notes ? typeTurn.notes : {};
+                            typeTurn.notes.texto = note.data.texto;
+                        }
+                    }
+                });
+
+                if (!vm.notesBoxValida) {
+                    vm.notesNotification = true;
+                }
+
+                $scope.$apply();
+            }
         });
 
         $document.on('mouseup', function() {

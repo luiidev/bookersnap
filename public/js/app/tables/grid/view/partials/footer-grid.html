@@ -22,7 +22,7 @@
         </button>
         <div bs-toggle-show="" class="box-tab-notas">
             <tabset active="activeJustified">
-                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.turns">
+                <tab disable="turn.turn==null" heading="{{turn.name}}" index="$index" ng-repeat="turn in vm.turnsNotes">
                     <textarea class="form-control" ng-change="vm.saveNotes(turn)" ng-model="turn.notes.texto" placeholder="Notas" rows="8">
                     </textarea>
                 </tab>

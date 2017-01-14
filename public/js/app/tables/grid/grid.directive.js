@@ -32,9 +32,6 @@ angular.module('grid.directive', [])
             },
             link: function(scope, element, attr) {
 
-                console.log("dragReservaGrid", scope.conflictsIni, scope.conflicts, scope.reservation.id, (scope.conflicts === false || scope.conflictsIni === true));
-
-
                 element.draggable({
                     //containment: ".grid-body",
                     grid: [62, 63],
@@ -51,8 +48,6 @@ angular.module('grid.directive', [])
                             scope.reservaSelected = scope.reservation;
                             scope.tableSelected = scope.itemSelected.id;
                         });
-
-                        console.log("start drag");
                     },
                     stop: function(event, ui) {
                         element.css("opacity", "1");
@@ -69,7 +64,6 @@ angular.module('grid.directive', [])
                 } else {
                     element.draggable('disable');
                 }
-
             }
         };
     })
@@ -173,34 +167,48 @@ angular.module('grid.directive', [])
                 leftTime: "=",
                 time: "=",
                 turn: "=",
-                updateTime: "&"
+                updateTime: "&",
+                visibility: "@"
             },
-            template: '<div class="grid-current-time-marker" ng-style="{left:leftTime}">' +
+            template: '<div class="grid-current-time-marker" ng-style="{left:leftTime,visibility :visibility}">' +
                 '<div class="grid-current-time-label">' +
                 '{{time}}</div></div>',
             link: function(scope, element, attr) {
                 //console.log("currentTime", angular.toJson(scope.turn, true), scope.leftTime);
                 var minutesData = calculateMinutesIni(scope.turn);
                 var hourNow = moment().format("HH:mm A");
+                var dateNow = moment().format("YYYY-MM-DD");
 
                 scope.leftTime = minutesData.leftTime + "px";
                 scope.time = hourNow;
+
+                var intervalTimeDirective = null;
 
                 var updateTime = function() {
                     scope.$apply(function() {
                         scope.leftTime = intervalTime(scope.leftTime);
                         hourNow = moment().format("HH:mm A");
                         scope.time = hourNow;
+
+                        if (moment(dateNow + " " + hourNow).isSameOrAfter(dateNow + " " + scope.turn.turn.hours_end)) {
+                            scope.visibility = 'hidden';
+                            clearInterval(intervalTimeDirective);
+                        }
+
                         scope.updateTime();
                     });
                 };
 
-                setTimeout(function() {
-                    updateTime();
-                    setInterval(function() {
+                if (moment(dateNow + " " + scope.turn.turn.hours_end).isSameOrBefore(dateNow + " " + hourNow)) {
+                    scope.visibility = 'hidden';
+                } else {
+                    setTimeout(function() {
                         updateTime();
-                    }, 60000);
-                }, minutesData.miliseconds);
+                        intervalTimeDirective = setInterval(function() {
+                            updateTime();
+                        }, 60000);
+                    }, minutesData.miliseconds);
+                }
             }
         };
 
@@ -231,4 +239,36 @@ angular.module('grid.directive', [])
             leftTime = onlyNumber + "px";
             return leftTime;
         }
+    })
+    .directive('scrollGridBody', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                var oldScrollTop = $(element).scrollTop();
+                var oldScrollLeft = $(element).scrollLeft();
+                var marginLeft = null;
+
+                element.scroll(function() {
+
+                    if (oldScrollTop == $(this).scrollTop()) {
+
+                        marginLeft = angular.element("#grid-time-label-out").css("margin-left");
+                        console.log("scroll horizontal 1", marginLeft);
+                        marginLeft = marginLeft.replace("px", "");
+                        marginLeft = marginLeft.replace("-", "");
+                        marginLeft = parseInt(marginLeft);
+                        marginLeft += 1;
+                        marginLeft = "-" + marginLeft + "px";
+                        angular.element("#grid-time-label-out").css("margin-left", marginLeft);
+                        console.log("scroll horizontal", marginLeft);
+                        scope.$apply();
+                    } else {
+                        console.log("scroll vertical");
+                    }
+
+                    oldScrollTop = $(element).scrollTop();
+                    oldScrollLeft = $(element).scrollLeft();
+                });
+            }
+        };
     });
