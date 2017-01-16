@@ -127,6 +127,7 @@ angular.module('grid.service', [])
                     }
                 });
 
+                //Evaluamos los conflictos
                 angular.forEach(reservationsData, function(reservation, key) {
                     self.setConflictsReservations(reservationsData, reservation);
                 });
@@ -137,7 +138,6 @@ angular.module('grid.service', [])
             currentTimeReservaSit: function(reservation, turn) {
                 var timeNow = moment().format("HH:mm:ss");
                 var hourEnd = reservation.total_grid[reservation.total_grid.length - 1].hour;
-                // console.log("HOUR_END", "=>", reservation.total_grid.length, hourEnd);
                 var validate = moment(reservation.date_reservation + " " + hourEnd).isBefore(reservation.date_reservation + " " + timeNow);
 
                 reservation.current_hour_extension = {
@@ -469,7 +469,7 @@ angular.module('grid.service', [])
 
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
-                        reserva = self.setReservationStylesDefault(reserva);
+                        //reserva = self.setReservationStylesDefault(reserva);
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
                 });

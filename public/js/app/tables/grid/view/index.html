@@ -36,9 +36,7 @@
                     </div>
                     <div class="grid-body" scroll-grid-body ng-if="vm.gridData.turns.length > 0">
                         <div class="grid-body-container" ng-style="{'width':vm.gridLienzo.width }">
-
                             <div class="grid-body-rows-container">
-
                                 <div class="grid-body-rows-table" drop-reserva-grid-master="" grid="item" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal" table="vm.reservaDrag.table_update" table-block="vm.blockDrag.table_update">
                                     <span>
                                         <div class="grid-body-cell" drop-reserva-grid="" grid="available" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid,item)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid,item)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid,item)" ng-repeat="available in item.availability">

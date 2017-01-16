@@ -32,11 +32,13 @@ angular.module('grid.controller', [])
         var openModalReserva = null;
         var timeoutNotes;
 
+        //para la directiva currentTime Linea de tiempo 
         vm.currentTime = {
             text: '',
             left: ''
         };
 
+        //Datos para renderizar grid de creacion de reserva
         vm.reservationCreate = {
             hourIni: '',
             hourEnd: '',
@@ -50,6 +52,8 @@ angular.module('grid.controller', [])
             index: null
         };
 
+        //End Datos para renderizar grid de creacion de reserva
+
         vm.tablesAvailability = [];
         vm.turns = []; //Listado de turnos activos segun fecha
         vm.fecha_actual = moment().format('YYYY-MM-DD');
@@ -58,6 +62,7 @@ angular.module('grid.controller', [])
             text: ''
         };
 
+        //Calendario, footer grid
         vm.btnCalendarShift = {
             turns: [],
             turn_selected: {},
@@ -101,7 +106,7 @@ angular.module('grid.controller', [])
         vm.notesBox = false;
         vm.notesBoxValida = false;
 
-        //Width Lienzo Body 
+        //Width Lienzo Body para manejo del scroll
         vm.gridLienzo = {
             width: ''
         };
@@ -115,16 +120,12 @@ angular.module('grid.controller', [])
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
             var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
             updateReservationGrid(dataReservation);
-            //console.log("onDragEndReservation", angular.toJson(vm.reservaDrag, true));
-            //console.log("onDragEndReservation", angular.toJson(dataReservation, true));
         };
 
         vm.onDragEndBlock = function() {
             vm.blockDrag.newTime = getTimeByPosicionGrid(vm.blockDrag.position.left);
             var dataBlock = constructDataUpdate(vm.blockDrag, "block");
             updateBlockGrid(dataBlock);
-            // console.log("onDragEndBlock", vm.blockDrag.block.durations);
-            console.log("onDragEndBlock", angular.toJson(dataBlock, true));
         };
 
         vm.selectTimeReservationCreate = function(type, hour, index, posIni, table) {
@@ -162,14 +163,14 @@ angular.module('grid.controller', [])
                }*/
         };
 
+        //Grid de reservacion (creacion) incremantar tamaño
         vm.moveQuarterHour = function(value) {
             if (vm.tempData.hourIni !== value.hour && vm.tempData.index === value.index) {
                 vm.reservationCreate.hourEnd = vm.tempData.hourEnd;
-                console.log("moveQuarterHour");
                 calculateQuarterHour(value.posIni);
             }
         };
-
+        //Grid de reservacion (creacion) finalizar tamaño
         vm.moveQuarterUp = function(table) {
             console.log("moveQuarterHour");
             var timeTotal = vm.reservationCreate.timeTotal.length;
@@ -185,9 +186,7 @@ angular.module('grid.controller', [])
 
         vm.selectedShift = function(shift) {
             vm.btnCalendarShift.turn_selected = shift;
-            //gridFactory.getRangoHoursShift(shift);
             _setUrlReload(vm.btnCalendarShift.turn_selected.name);
-            console.log("selectedShift", shift);
         };
 
         vm.prevDateCalendarShift = function() {
@@ -217,7 +216,7 @@ angular.module('grid.controller', [])
             vm.reservationCreate.timeTotal = [];
             vm.reservationCreate.table = null;
         };
-
+        //Lista de reservaciones en conflicto
         vm.conflictPopup = function(conflictIni, reserva, reservations) {
             if (conflictIni === undefined || conflictIni === false) {
                 openModalConflictReserva(reserva, reservations);
@@ -244,15 +243,13 @@ angular.module('grid.controller', [])
             }
         };
 
+        //Tiempo transcurrido en reservaciones sentadas con la directiva currentTime
         vm.updateCurrentTime = function() {
-
             angular.forEach(vm.tablesAvailabilityFinal, function(tables, key) {
                 angular.forEach(tables.reservations, function(reservation, key) {
                     reservation = gridFactory.currentTimeReservaSit(reservation, vm.btnCalendarShift.turn_selected.turn);
                 });
-
             });
-            console.log("updateCurrentTime");
         };
 
         vm.saveNotes = function(turn) {
@@ -272,7 +269,6 @@ angular.module('grid.controller', [])
                     },
                     function error(response) {
                         message.apiError(response);
-                        console.error("saveNotes " + angular.toJson(response, true));
                     }
                 );
             }, 1000);
@@ -293,7 +289,6 @@ angular.module('grid.controller', [])
                 function success(response) {
                     vm.reservaDrag.table_update = "";
                     vm.reservaDrag.table = "";
-                    //console.log("updateReservationGrid", response);
                 },
                 function error(response) {
                     console.error("updateReservationGrid", response);
@@ -348,7 +343,7 @@ angular.module('grid.controller', [])
 
             return data;
         };
-
+        //Obtiene la hora segun la posicion en el grid
         var getTimeByPosicionGrid = function(positionGrid) {
             var time = "";
 
@@ -435,18 +430,22 @@ angular.module('grid.controller', [])
             );
         };
 
+        //Habilita la directiva currentTime , si existe turno para el dia
         var constructCurrentTime = function() {
-            console.log("constructAvailability", vm.gridData.turns);
-            if (vm.btnCalendarShift.turn_selected === "") {
+            var validate = angular.toJson(vm.btnCalendarShift.turn_selected);
+
+            if (validate.indexOf('turn') !== -1) {
+
                 var directiveCurrentime = '<current-time left-time="vm.currentTime.left" turn="vm.btnCalendarShift.turn_selected" update-time="vm.updateCurrentTime()">' +
                     '</current-time>';
 
                 var content = $compile(directiveCurrentime)($scope);
+
                 angular.element(".grid-inner-container").append(content);
             }
-
         };
 
+        //Construye el grid
         var constructTablesAvailability = function() {
             var availabilityTables = [];
             angular.forEach(vm.tablesAvailability, function(table, key) {
@@ -468,9 +467,6 @@ angular.module('grid.controller', [])
             vm.tablesAvailabilityFinal = availabilityTables;
             vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
             vm.gridLienzo.width = (vm.tablesAvailabilityFinal[0].availability.length * 62) + 2;
-
-            console.log("constructAvailability", vm.gridData.turns);
-            //console.log("constructAvailability", angular.toJson(availabilityTables, true));
         };
 
         var initCalendarSelectedShift = function() {
@@ -478,7 +474,7 @@ angular.module('grid.controller', [])
             vm.fecha_selected.text = date;
             vm.fecha_selected.date = moment(date);
         };
-
+        //Actualiza el grid al seleccionar un turno
         var setSelectedShift = function(shiftName) {
             var turnSelected = gridFactory.setActiveShiftSelected(shiftName, vm.btnCalendarShift.turns);
             if (turnSelected === null) {
@@ -487,9 +483,6 @@ angular.module('grid.controller', [])
             } else {
                 vm.btnCalendarShift.turn_selected = turnSelected;
             }
-
-            //console.log("setSelectedShift", angular.toJson(vm.btnCalendarShift, true));
-
             vm.timesShift = gridFactory.getRangoHoursShift(vm.btnCalendarShift.turn_selected);
             constructTablesAvailability();
         };
@@ -508,6 +501,7 @@ angular.module('grid.controller', [])
             });
         };
 
+        //Calcula la posicion donde se ubica la reserva en el grid y el total de tiempo
         var calculateQuarterHour = function(posIni) {
             posIni = parseInt(posIni);
             /*var total = (posIni === 0) ? 0 : posIni / 62;
@@ -515,15 +509,16 @@ angular.module('grid.controller', [])
             var indexPos = getPosIni(posIni);
             if (indexPos === -1) {
                 vm.reservationCreate.timeTotal.push({
-                    posIni: posIni,
+                    posIni: posIni, //posicion en la columna de la matriz del grid
                     hour: vm.tempData.hourIni,
-                    index: vm.tempData.index
+                    index: vm.tempData.index //posicion en la fila de la matriz del grid
                 });
             } else {
                 vm.reservationCreate.timeTotal.splice(indexPos + 1, 1);
             }
         };
 
+        //Comprueba que la reservacion ya ocupa la casilla en la columna -> posIni
         var getPosIni = function(posIni) {
             var total = vm.reservationCreate.timeTotal.length;
             var index = -1;
@@ -545,7 +540,6 @@ angular.module('grid.controller', [])
                     gridFactory.addReservationTableGrid(vm.tablesAvailabilityFinal, reservation, data.action, vm.btnCalendarShift.turn_selected);
                     vm.btnCalendarShift.coversReserva = gridFactory.totalCoversReservations(vm.tablesAvailabilityFinal);
                 }
-                // console.log("NotifyNewReservation", angular.toJson(vm.tablesAvailabilityFinal, true));
             });
         });
 
@@ -579,6 +573,7 @@ angular.module('grid.controller', [])
             }
         });
 
+        //Para disparar el popup de reservacion ->creación
         $document.on('mouseup', function() {
             if (vm.reservationCreate.hourIni !== '' && openModalReserva === null) {
                 vm.reservationCreate.hourEnd = (vm.reservationCreate.hourEnd === '') ? vm.tempData.hourEnd : vm.reservationCreate.hourEnd;
@@ -587,7 +582,6 @@ angular.module('grid.controller', [])
         });
 
         init();
-
     })
     .controller("ModalGridReservationCtrl", function($rootScope, $state, $uibModalInstance, $q, reservationService,
         reservationHelper, $timeout, ctrlMain, table, hourReservation, date, FloorFactory, global, $table) {
@@ -655,7 +649,6 @@ angular.module('grid.controller', [])
         var init = function() {
             parseInfoReservation();
             listGuest();
-            //console.log("init", angular.toJson(hourReservation, true));
         };
 
         vm.save = function() {
@@ -676,7 +669,6 @@ angular.module('grid.controller', [])
         };
 
         vm.cancel = function() {
-            //ctrlMain.closeModal();
             $uibModalInstance.dismiss('cancel');
         };
 
@@ -730,7 +722,6 @@ angular.module('grid.controller', [])
         };
 
         var init = function() {
-            //console.log("initModal", angular.toJson(reservaSelected, true));
             vm.reservations = getReservationsConflict(reservaSelected.styles.conflictsData, reservations);
         };
 
@@ -744,7 +735,6 @@ angular.module('grid.controller', [])
             });
 
             return reservationsConflict;
-
         };
 
         init();
