@@ -43,7 +43,7 @@ Route::group(['prefix' => '/admin/auth'], function () {
 
 });
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' => 'authTempPage']);
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' => 'authTempPage' /*'auth:web'*/]);
 
 
 Route::get('/admin/ms/{id}/reservation', function () {
@@ -64,7 +64,8 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('/social-callback', ['as' => 'social-callback','uses' => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
     });
 
-    Route::post('/auth/logout', ['middleware' => 'auth', 'as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
+    Route::post('/auth/logout', [/*'middleware' => 'auth','as' => 'microsite-logout', */ 'uses' => 'Test\AuthController@Logout']);
+    Route::get('/auth/logout', ['as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
     Route::get('/home', ['middleware' => 'auth', 'as' => 'microsite-home', 'uses' => 'Test\AuthController@Home']);
     Route::group(['prefix' => 'ajax'], function () {
         Route::post('/get-data', 'Test\AjaxController@GetData');

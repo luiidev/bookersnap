@@ -45,7 +45,7 @@
 
 
 {{--Agregamos los scripts que permiten el inicio de sesion en todos los dominios--}}
-@include('_shared.scripts_auth')
+ @include('_shared.scripts_auth') 
 
 </body>
 

@@ -21,9 +21,7 @@ class Authenticate
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             }
-
-            //return redirect()->guest('login');
-            return redirect()->route('microsite-login');
+            return redirect()->guest(route('microsite-login'));
         }
 
         return $next($request);
