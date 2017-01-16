@@ -1,5 +1,5 @@
 materialAdmin.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/mesas/floor/reservation");
     $stateProvider
     //------------------------------
     // HOME

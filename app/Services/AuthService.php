@@ -8,10 +8,11 @@
 
 namespace App\Services;
 
-use App\bs_user_session;
 use App\Services\Helpers\ApiRequestsHelper;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Services\Helpers\HttpRequestHelper;
+use App\bs_user_session;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService
 {
@@ -59,8 +60,9 @@ class AuthService
         return null;
     }
 
-    public function LoginBsUserData(string $email, string $password, $ip_address)
+    public function LoginBsUserData(string $email, string $password, int $expire= null, $client_ip = null, $user_agent = null)
     {
+        
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
         }
@@ -68,17 +70,19 @@ class AuthService
         $data = [
             'email' => $email,
             'password' => $password,
-            '_ip_address' => $ip_address
+            'expire' => $expire,
+            'client_ip' => $client_ip,
+            'user_agent' => $user_agent,            
         ];
-        $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
 
-        if ($response['success']) {
-            return $response['data'];
+        $response = HttpRequestHelper::make('POST', $url, $data)->send();
+
+        if ($response->isOk()) {
+            return $response->getArrayResponse();
         } else {
             abort($response['statuscode'], $response['msg']);
         }
         return null;
-
     }
 
     /**
@@ -162,6 +166,21 @@ class AuthService
             ->where('status', 1)
             ->update(['status' => 0]);
         return true;
+    }
+
+    public function logout($token)
+    {
+        $url = $this->_api_auth_url . '/es/auth/logout';
+        $response = HttpRequestHelper::make('POST', $url, ["token" => $token])->send();
+        // dd($response);
+        if ($response->isOk()) {
+            // echo "1";
+            return $response->getArrayResponse();
+        } else {
+            // echo "2";
+            return $response->getErrorResponse();
+            abort($response['statuscode'], $response['msg']);
+        }
     }
 
 }

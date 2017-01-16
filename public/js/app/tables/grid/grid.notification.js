@@ -12,5 +12,9 @@ angular.module("grid.controller")
         $scope.$broadcast("NotifyNewBlock", data);
     });
 
+    serverSocket.on("b-mesas-floor-notes", function(data) {
+        $scope.$broadcast("floorNotesReload", data);
+    });
+
 
 });
