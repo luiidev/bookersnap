@@ -17,11 +17,12 @@ return array(
 
 // para usar la constante usar: config('settings.NOMBRE_CONSTANTE')
 return [
-	'API_AUTH_URL'  => 'http://localhost:100/v1',
-	'API_ADMIN_URL' => 'http://localhost:90/v1',
-	'API_PROMO_URL' => 'http://api-promotion.vh/v1',
-	'MAIN_DOMAIN'   => env('MAIN_DOMAIN','admin.bookersnap.com'),	
-	'SYS_BOOKERSNAP'=> env('SYS_BOOKERSNAP','http://bookersnap.com'),
-	'STATUS_SESSION'=> env('STATUS_SESSION','0'), //1 activar, 0 desactivar, session del sistema de mesas	
-	'API_URL' =>  env('API_URL','http://apimesas.studework.com/v1/es/microsites')
+	'API_AUTH_URL'  => env("API_AUTH_URL",'http://apiauth.studework.vm/v1'),
+	'API_ADMIN_URL' => env("API_ADMIN_URL",'http://apiadmin.studework.vm/v1'),
+	'API_PROMO_URL' => env("API_PROMO_URL",'http://apipromociones.studework.vm/v1'),
+	'MAIN_DOMAIN'   => env("MAIN_DOMAIN", 'weblaravel.studework.vm'),
+
+	'SYS_BOOKERSNAP'=> env("SYS_BOOKERSNAP", 'http://reservantro.com'),
+	'STATUS_SESSION'=> env("STATUS_SESSION",'0'), //1 activar, 0 desactivar, session del sistema de mesas	
+	'API_URL' =>  env("API_URL", 'http://apimesas.studework.vm/v1/es/microsites')
 ];

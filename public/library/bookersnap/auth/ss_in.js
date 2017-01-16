@@ -1,6 +1,6 @@
 //Inicia el local storage de la url indicada
 xdLocalStorage.init({
-    iframeUrl: 'http://weblaravel.studework.vm/web/ls',
+    iframeUrl: 'http://localhost/web/ls',
     initCallback: function () {
         //se sejecuta al cargarse el iframe
         console.log("iframe init.");

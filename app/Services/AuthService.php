@@ -8,10 +8,11 @@
 
 namespace App\Services;
 
-use App\bs_user_session;
 use App\Services\Helpers\ApiRequestsHelper;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Services\Helpers\HttpRequestHelper;
+use App\bs_user_session;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService
 {
@@ -70,15 +71,14 @@ class AuthService
             'password' => $password,
             '_ip_address' => $ip_address
         ];
-        $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
+        $response = HttpRequestHelper::make('POST', $url, $data)->send();
 
-        if ($response['success']) {
-            return $response['data'];
+        if ($response->isOk()) {
+            return $response->getArrayResponse();
         } else {
             abort($response['statuscode'], $response['msg']);
         }
         return null;
-
     }
 
     /**
@@ -162,6 +162,21 @@ class AuthService
             ->where('status', 1)
             ->update(['status' => 0]);
         return true;
+    }
+
+    public function logout($token)
+    {
+        $url = $this->_api_auth_url . '/es/auth/logout';
+        $response = HttpRequestHelper::make('POST', $url, ["token" => $token])->send();
+        // dd($response);
+        if ($response->isOk()) {
+            // echo "1";
+            return $response->getArrayResponse();
+        } else {
+            // echo "2";
+            return $response->getErrorResponse();
+            abort($response['statuscode'], $response['msg']);
+        }
     }
 
 }
