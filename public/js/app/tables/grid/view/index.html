@@ -1,10 +1,10 @@
 <section id="main">
-    <section class="w-100 p-0">
+    <section class="w-100 p-0 " style="height: 100vh;padding-bottom: 120px!important;">
         <div class="grid-layout">
             <div class="grid-container">
                 <div class="grid-inner-container">
                     <div class="grid-header">
-                        <div class="grid-time-label-out">
+                        <div class="grid-time-label-out" id="grid-time-label-out">
                             <div class="grid-time-label-in">
                                 <div class="grid-time-label-cell" ng-repeat="hour in vm.timesShift">
                                     <div class="grid-time-label-text" ng-if="hour.init">
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="grid-column-tables" ng-if="vm.gridData.turns.length > 0">
-                        <div class="grid-column-tables-inner">
+                        <div class="grid-column-tables-inner" id="grid-column-tables-inner">
                             <div class="grid-column-tables-column">
                                 <div class="grid-column-tables-cell" ng-repeat="table in vm.tablesAvailability">
                                     <div class="grid-column-tables-cell-text">
@@ -34,9 +34,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-body">
-                        <div class="grid-body-container">
+                    <div class="grid-body" scroll-grid-body ng-if="vm.gridData.turns.length > 0">
+                        <div class="grid-body-container" ng-style="{'width':vm.gridLienzo.width }">
+
                             <div class="grid-body-rows-container">
+
                                 <div class="grid-body-rows-table" drop-reserva-grid-master="" grid="item" ng-repeat="(keyTables , item) in vm.tablesAvailabilityFinal" table="vm.reservaDrag.table_update" table-block="vm.blockDrag.table_update">
                                     <span>
                                         <div class="grid-body-cell" drop-reserva-grid="" grid="available" ng-class="{'grid-time-divider-half': $even,'grid-time-divider-quarter':$odd,'grid-block-time':available.availability === false}" ng-mousedown="vm.selectTimeReservationCreate('init',available.time,keyTables,available.position_grid,item)" ng-mousemove="vm.selectTimeReservationCreate('move',available.time,keyTables,available.position_grid,item)" ng-mouseup="vm.selectTimeReservationCreate('end',available.time,keyTables,available.position_grid,item)" ng-repeat="available in item.availability">
