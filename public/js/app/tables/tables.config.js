@@ -19,10 +19,10 @@
             'notification.app'
         ])
         .constant("IdMicroSitio", idMicrositio)
-        .constant("DomainBookersnapAdmin", "http://web.aplication.bookersnap")
+        .constant("DomainBookersnapAdmin", "http://localhost")
         .constant("UrlServerNotify", "http://localhost:1337")
-        .constant("ApiUrlMesas", 'http://api-mesas.vh/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://api-mesas.vh/v1/es')
+        .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + idMicrositio)
+        .constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
         /*        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
                 .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
                 .constant("ApiUrlMesas", 'http://apimesas.studework.info/v1/es/microsites/' + idMicrositio)

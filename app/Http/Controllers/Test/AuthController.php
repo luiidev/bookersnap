@@ -14,6 +14,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
+    protected $redirectTo = '/auth/home';
+    protected $redirectAfterLogout = '/auth/auth';
+    // protected $guard = 'admin';
+
     protected $_authService;
 
     public function __construct(AuthService $authService)
@@ -32,35 +36,27 @@ class AuthController extends Controller
         return view('test.home');
     }
 
-    public function LoginBs()
+    public function LoginBs(Request $request)
     {
         try {
-            $request   = request();
-            $userData  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
-            $user      = $userData['user'];
-            $userlogin = $userData['userlogin'];
-            $extras    = [
-                'api-token'  => $userData['token'],
-                'user-login' => [
-                    $userlogin['bs_socialnetwork_id'] => $userlogin,
-                ],
-            ];
+            $response  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
 
-            if ($this->LoginUser($user['id'], $extras)) {
+            if ($response) {
+                $userData = $response["data"];
+                $request->session()->put("token_session", $userData["token_session"]);
 
-                $bsAuthToken = $this->generateBsAuthToken($user['id']);
-
-                return response()->redirectTo('/auth/home');
-                /* return response()->redirectTo(route('microsite-home'))
-            ->with('message', 'Bienvenido Usuario.')
-            ->with("bsAuthToken", $bsAuthToken);*/
+                Auth::loginUsingId($userData['user']["id"]);
+                return response()->redirectTo('/admin/ms/1/mesas');
             }
+
             $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
         } catch (HttpException $e) {
             $msg      = $e->getMessage();
+            return $msg;
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         } catch (\Exception $e) {
             $msg      = 'Ocurrió un error interno.';
+            return $e->getMessage();
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         }
 
@@ -130,15 +126,22 @@ class AuthController extends Controller
      * Cambiar $route a la que va a quedar como ruta de login.
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function Logout()
+    public function Logout(Request $request)
     {
-        $request = request();
-        $this->LogoutUser();
-        $route = route('microsite-login');
-        if ($request->ajax() || $request->wantsJson()) {
-            return $this->CreateJsonResponse(true, 200, null, null, true, $route);
-        }
-        return response()->redirectToRoute('microsite-home');
+        // return (string) $request->session()->get("token_session");
+        return $this->_authService->logout( $request->session()->get("token_session"));
+        $request->session()->forget(['token_session']);
+        Auth::logout();
+
+        return redirect()->route("microsite-login");
+
+        // $request = request();
+        // $this->LogoutUser();
+        // $route = route('microsite-login');
+        // if ($request->ajax() || $request->wantsJson()) {
+        //     return $this->CreateJsonResponse(true, 200, null, null, true, $route);
+        // }
+        // return response()->redirectToRoute('microsite-home');
     }
 
     public function loginBySharedToken(Request $req)

@@ -1,6 +1,6 @@
 angular.module("notification.app")
-    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", "ServerNotification",
-         function($scope, $rootScope, $q, service, reservationService, $filter, ServerNotification) {
+    .controller('notificationCtrl', ["$scope", "$rootScope", "$q","notificationService", "reservationService", "$filter", "ServerNotification","$window", "DomainBookersnapAdmin",
+         function($scope, $rootScope, $q, service, reservationService, $filter, ServerNotification, $window, bsDomain) {
         vm = this;
 
         vm.notification_count = 0;
@@ -76,6 +76,11 @@ angular.module("notification.app")
         serverSocket.on("b-mesas-floor-res", function(data) {
             $rootScope.$broadcast("NotifyWebReservation", data);
         });
+
+        vm.closeSession = function() {
+            delete localStorage.api_token;
+            $window.location.href = bsDomain + "/auth/auth/logout";
+        };
 
         (function Init() {
             getNotifications();
