@@ -233,9 +233,7 @@ angular.module('book.controller', [])
             }
         };
 
-        vm.hideFields = {
-
-        };
+        vm.hideFields = {};
 
         //Book View (Reservaciones)
         vm.bookView = false;

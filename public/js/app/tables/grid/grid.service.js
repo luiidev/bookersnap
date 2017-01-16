@@ -114,11 +114,15 @@ angular.module('grid.service', [])
 
                     if (existsTable === true && validaTurn) {
                         reservation = self.calculatePositionGrid(reservation, availability, indexTable);
+                        reservation = self.currentTimeReservaSit(reservation, turn);
+
                         reservation.styles = {
                             conflicts: false,
+                            conflictSit: false,
                             zIndex: 98,
                             conflictsData: []
                         };
+
                         reservationsData.push(reservation);
                     }
                 });
@@ -129,7 +133,52 @@ angular.module('grid.service', [])
 
                 return reservationsData;
             },
-            //REVISAR ESTA FUNCION (IMPORTANTE)
+            //evalua el tiempo de espera en el grid (solo para reservaciones sentadas)
+            currentTimeReservaSit: function(reservation, turn) {
+                var timeNow = moment().format("HH:mm:ss");
+                var hourEnd = reservation.total_grid[reservation.total_grid.length - 1].hour;
+                // console.log("HOUR_END", "=>", reservation.total_grid.length, hourEnd);
+                var validate = moment(reservation.date_reservation + " " + hourEnd).isBefore(reservation.date_reservation + " " + timeNow);
+
+                reservation.current_hour_extension = {
+                    active: false,
+                    total_time_extension: [],
+                    partial_block: 0
+                };
+
+                if (validate && reservation.res_reservation_status_id === 4) {
+
+                    reservation.current_hour_extension.active = true;
+
+                    var timeReservation = hourEnd.split(":");
+                    var timeTurn = turn.hours_end.split(":");
+                    var timeDiff = moment(reservation.date_reservation + " " + timeNow).subtract("hours", timeReservation[0]).subtract("minutes", timeReservation[1]).format("HH:mm:ss");
+
+                    var validateTurn = (moment(reservation.date_reservation + " " + timeNow).isSameOrBefore(reservation.date_reservation + " " + turn.hours_end));
+
+                    if (validateTurn === false) {
+                        timeDiff = moment(reservation.date_reservation + " " + turn.hours_end).subtract("hours", timeReservation[0]).subtract("minutes", timeReservation[1]).format("HH:mm:ss");
+                    }
+
+                    var totalMinutes = calculateMinutesTime(reservation.date_reservation + " " + timeDiff);
+
+                    var totalCellHourExt = totalMinutes / 15;
+                    totalCellHourExt = parseInt(totalCellHourExt);
+
+                    var residuoMinutes = totalMinutes - (totalCellHourExt * 15);
+
+                    for (var i = 1; i < totalCellHourExt; i++) {
+                        reservation.current_hour_extension.total_time_extension.push({
+                            item: i
+                        });
+                    }
+
+                    reservation.current_hour_extension.partial_block = (residuoMinutes * 4.1333) + "px";
+                }
+
+                return reservation;
+            },
+            //Revisa si la reserva esta dentro del turno return => true 
             reservaInTimeValidate: function(reservation, turn) {
                 var valida = false;
 
@@ -163,18 +212,17 @@ angular.module('grid.service', [])
                 indexHourEnd = (indexHourEnd < indexHourIni) ? indexHourEnd + 96 : indexHourEnd;
 
                 var conflicts = false;
+                var conflictsSit = false;
                 var totalConflicts = 0;
                 var reservationsConflicts = [];
 
                 angular.forEach(reservations, function(reserva, key) {
+
                     if (reservation.id !== reserva.id) {
                         var rt_hours = reserva.hours_duration.split(":");
                         var rt_hour_ini = reserva.hours_reservation;
                         var rt_hour_end = moment(reserva.date_reservation + " " + rt_hour_ini).add(rt_hours[0], 'hours').add(rt_hours[1], 'minutes').format("HH:mm:ss");
 
-                        /*  var validateRange = (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrAfter(reservation.date_reservation + " " + hour_ini) && (moment(reserva.date_reservation + " " + rt_hour_ini).isSameOrBefore(reservation.date_reservation + " " + hour_end)));
-                        var validateRange2 = (moment(reservation.date_reservation + " " + hour_ini).isSameOrAfter(reserva.date_reservation + " " + rt_hour_ini) && (moment(reservation.date_reservation + " " + hour_ini).isSameOrBefore(reserva.date_reservation + " " + rt_hour_end)));
-                            */
                         var rt_indexHourEnd = getIndexHour(rt_hour_end, 0);
                         var rt_indexHourIni = getIndexHour(rt_hour_ini, 0);
 
@@ -186,31 +234,22 @@ angular.module('grid.service', [])
                         var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd));
 
                         if (validateRange || validateRange2) {
-                            // console.log("hay conflicto", reservation.id, "=>", reserva.id);
                             totalConflicts += 1;
 
                             reserva.hour_end = rt_hour_end;
                             reservationsConflicts.push(reserva);
 
                             reservation.styles.conflicts = true;
-                            //reservation.styles.zIndex -= 1;
                             reserva.styles.conflicts = true;
-                            //reserva.styles.conflictIni = true;
 
                             var validatePopup1 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd && indexHourEnd <= rt_indexHourEnd));
 
                             if (validatePopup1) {
-                                // console.log("conflicts ini", reservation.id + " " + hour_end, "/", reserva.id + " " + rt_hour_end, validatePopup1, indexHourIni, rt_indexHourEnd);
-
                                 reservation.styles.conflictIni = false;
                                 reservation.styles.zIndex += 1;
-                                // console.log("styles ", angular.toJson(reservation.styles), reservation.id);
                             } else {
-                                //if (reservation.styles.conflictIni === true || reservation.styles.conflictIni === undefined) {
                                 reservation.styles.conflictIni = true;
                                 reservation.styles.zIndex -= 1;
-                                //}
-                                //console.error("entre aqui", angular.toJson(reservation.styles), reservation.id);
                             }
 
                             self.addReservaConflict(reserva.id, reserva);
@@ -218,25 +257,85 @@ angular.module('grid.service', [])
                             conflicts = true;
 
                             if (totalConflicts >= 2) {
+
                                 var evalua = self.evaluaReservationsHourEnd(reservationsConflicts, reservation.id);
                                 if (evalua === true) {
                                     reservation.styles.conflictIni = false;
                                     reservation.styles.zIndex = reserva.styles.zIndex + 1;
                                 }
                             }
-                            //console.log("styles f", angular.toJson(reservation.styles), reservation.id);
+                        } else {
+                            conflictsSit = self.setConflictsReservationsInSit(reservation, reserva);
                         }
                     }
                 });
 
-                if (reservation.styles.conflicts === true && conflicts === false) {
+                if (reservation.styles.conflicts === true && conflicts === false && (conflictsSit === false && reservation.styles.conflictSit === false)) {
                     reservation.styles.conflicts = false;
                     reservation.styles.zIndex += 1;
                     reservation.styles.conflictIni = false;
-                    console.log("reserva", reservation.id, reservation.styles.conflictIni);
                 }
 
+                //Evaluamos si solo hay una reservacion (no hay conflictos con nada)
+                if (reservations.length === 1) {
+                    self.setReservationStylesDefault(reservation);
+                }
+
+                var existsConflictSit = self.evaluaConflictsSit(reservations, reservation);
+
+                if (existsConflictSit && reservation.res_reservation_status_id === 4) {
+                    reservation.styles.conflicts = true;
+                    reservation.styles.conflictIni = true;
+                }
+                //console.log("total reservations ", reservations.length, reservation.id);
+
                 return reservation;
+            },
+            //Revisa si alguna reservacion tiene un conflicto del tipo sentado
+            evaluaConflictsSit: function(reservations, reservation) {
+                var response = false;
+
+                angular.forEach(reservations, function(reserva, key) {
+                    if (reserva.id !== reservation.id) {
+                        if (reserva.styles.conflictSit === true) {
+                            response = true;
+                        }
+                    }
+                });
+
+                return response;
+            },
+            //Revisa y asigna conflictos para reservaciones sentadas
+            setConflictsReservationsInSit: function(reservaEvaluate, reservation) {
+                var response = false;
+                var self = this;
+
+                var validate = (moment(reservaEvaluate.date_reservation + " " + reservaEvaluate.hours_reservation).isSameOrAfter(reservation.date_reservation + " " + reservation.hours_reservation));
+
+                if (reservation.res_reservation_status_id === 4 && validate) {
+
+                    reservation.styles.conflicts = true;
+                    reservation.styles.conflictSit = true;
+
+                    reservaEvaluate.styles.conflicts = true;
+                    reservaEvaluate.styles.conflictSit = true;
+
+                    var validate1 = (moment(reservaEvaluate.date_reservation + " " + reservaEvaluate.hours_reservation).isBefore(reservation.date_reservation + " " + reservation.hours_reservation));
+
+                    if (validate1 === true) {
+                        reservaEvaluate.styles.conflictIni = true;
+                    } else {
+                        reservation.styles.conflictIni = true;
+                        reservaEvaluate.styles.zIndex = reservation.styles.zIndex + 1;
+                    }
+
+                    response = true;
+
+                    self.addReservaConflict(reservation.id, reservaEvaluate);
+                    self.addReservaConflict(reservaEvaluate.id, reservaEvaluate);
+                }
+
+                return response;
             },
             //Evalua si las reservaciones estan pegadas (continua una tras otra) return =>true
             evaluaReservationsHourEnd: function(reservations, reservaId) {
@@ -331,22 +430,23 @@ angular.module('grid.service', [])
                     hour = moment(reservation.date_reservation + " " + hour).add("minutes", 15).format("HH:mm:ss");
                 }
 
+                reservation.grid_width = ((total_grid + 1) * 62) + "px";
+
                 return reservation;
             },
             //Agrega || Actualiza reservacion a la mesa : Grid
-            addReservationTableGrid: function(tablesAvailabilityFinal, reservation, action) {
+            addReservationTableGrid: function(tablesAvailabilityFinal, reservation, action, turn) {
                 var self = this;
 
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(reservation.tables, function(table, key) {
+                        self.reloadReservationsTable(tableAvailability);
                         if (tableAvailability.id === table.id) {
 
                             reservation = self.calculatePositionGrid(reservation, tableAvailability.availability, indexTable);
-                            reservation.styles = {
-                                conflicts: false,
-                                zIndex: 98,
-                                conflictsData: []
-                            };
+                            reservation = self.currentTimeReservaSit(reservation, turn.turn);
+
+                            reservation = self.setReservationStylesDefault(reservation);
 
                             var indexReserva = self.getIndexReservationsInTableGrid(tableAvailability.reservations, reservation);
 
@@ -369,10 +469,34 @@ angular.module('grid.service', [])
 
                 angular.forEach(tablesAvailabilityFinal, function(tableAvailability, indexTable) {
                     angular.forEach(tableAvailability.reservations, function(reserva, key) {
+                        reserva = self.setReservationStylesDefault(reserva);
                         self.setConflictsReservations(tableAvailability.reservations, reserva);
                     });
                 });
+            },
+            //Volvemos a recorrer las reservaciones, para que se generen su directiva
+            reloadReservationsTable: function(tableAvailability) {
+                var reservationsTemp = angular.copy(tableAvailability.reservations);
+                tableAvailability.reservations.length = 0;
 
+                angular.forEach(reservationsTemp, function(reserva, key) {
+                    tableAvailability.reservations.push(reserva);
+                });
+
+                return tableAvailability;
+            },
+            //Actualiza el valor styles por defecto de la reservacion
+            setReservationStylesDefault: function(reservation) {
+
+                reservation.styles = {
+                    conflicts: false,
+                    conflictSit: false,
+                    conflictIni: false,
+                    zIndex: 98,
+                    conflictsData: []
+                };
+
+                return reservation;
             },
             //Evalua si el elemento existe en la coleccion , valido para,bloqueos,reservaciones
             existsDataInArray: function(id, data) {
@@ -471,7 +595,5 @@ angular.module('grid.service', [])
 
                 return totalCovers;
             },
-
-
         };
     });

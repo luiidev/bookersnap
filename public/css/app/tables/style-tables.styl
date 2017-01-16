@@ -2619,6 +2619,7 @@ li.divider
 		position relative 
 		flex 1 
 		z-index 1
+		height 100%
 	& .grid-inner-container
 		& .grid-header
 			background #efefef
@@ -2665,7 +2666,6 @@ li.divider
 						height 5px
 						margin-left -4px
 						width 5px
-
 		& .grid-column-tables
 			left 0
 			//overflow hidden
@@ -2696,11 +2696,10 @@ li.divider
 								font-weight bold
 							& .grid-table-size 
 								font-size 11px
-								margin-top 2px
-														
+								margin-top 2px										
 		& .grid-body
 			bottom 0
-			overflow-y auto
+			overflow auto
 			top 35px
 			left 61px
 			right 0
@@ -2774,7 +2773,7 @@ li.divider
 				font-size 13px
 				font-weight 600
 				position absolute
-				top -25px
+				top -30px
 				white-space nowrap
 				padding 4px 6px
 				border-radius 4px				
@@ -2794,6 +2793,21 @@ li.divider
 			height 100%
 			width 62px
 			float left
+		& .grid-cell-quarter-hour-extension
+			background-color #fff1f1
+			background-image url('../../../images/partial_block_grid.png')
+			background-size 62px
+			height 100%
+			width 62px
+			border-top 1px solid #f1cfcf
+			border-bottom 1px solid #f1cfcf
+			-moz-box-sizing border-box
+			-webkit-box-sizing border-box
+			box-sizing border-box
+			&.grid-cell-quarter-hour-extension-partial-block 
+				width 0
+				border-right 1px solid #f1cfcf
+			
 		& .grid-cell-underlay-creation 
 			& .grid-cell-quarter-hour
 				background #2c3e50
@@ -2963,10 +2977,24 @@ li.divider
 	
 
 /*----------------ICONOS ESTADOS DE RESERVACION------------*/
-.item-status-4
-	background-image url('../../../img/status/seated.svg')
+.item-suggested
+	background-image url('../../../img/table-suggested.svg')
+.item-occupied
+	background-image url('../../../img/alert.svg')
 .item-status-1
 	background-image url('../../../img/status/not-confirmed.svg')
+.item-status-2
+	background-image url('../../../img/status/confirmed.svg')
+.item-status-3
+	background-image url('../../../img/status/running-late.svg')
+.item-status-4
+	background-image url('../../../img/status/seated.svg')
+.item-status-5
+	background-image url('../../../img/status/table-cleared.svg')
+.item-status-6
+	background-image url('../../../img/status/canceled-restaurant.svg')
+.item-status-7
+	background-image url('../../../img/status/no-show.svg')
 .widget
 	.text
 		width 300px
