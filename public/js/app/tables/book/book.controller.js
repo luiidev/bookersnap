@@ -1504,6 +1504,7 @@ angular.module('book.controller', [])
             vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
             console.log("save", angular.toJson(vm.reservation, true));
+            vm.error = {};
             reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
@@ -1513,6 +1514,8 @@ angular.module('book.controller', [])
                 },
                 function error(error) {
                     vm.waitingResponse = false;
+                    vm.error = error.data;
+                    console.log("vm.error : ",vm.error);
                     message.apiError(error);
                 });
         };

@@ -59,8 +59,9 @@ class AuthService
         return null;
     }
 
-    public function LoginBsUserData(string $email, string $password, $ip_address)
+    public function LoginBsUserData(string $email, string $password, $expire= null, $client_ip = null, $user_agent = null)
     {
+        
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
         }
@@ -68,10 +69,12 @@ class AuthService
         $data = [
             'email' => $email,
             'password' => $password,
-            '_ip_address' => $ip_address
+            'expire' => $expire,
+            'client_ip' => $client_ip,
+            'user_agent' => $user_agent,            
         ];
         $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data);
-
+        
         if ($response['success']) {
             return $response['data'];
         } else {

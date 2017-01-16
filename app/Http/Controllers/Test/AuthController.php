@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -36,25 +37,27 @@ class AuthController extends Controller
     {
         try {
             $request   = request();
-            $userData  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
+            $expire = Carbon::now()->addMonth();
+            $userData  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $expire->toDateTimeString(),$request->ip(), $request->server('HTTP_USER_AGENT'));
+            
             $user      = $userData['user'];
             $userlogin = $userData['userlogin'];
             $extras    = [
-                'api-token'  => $userData['token'],
+                'api-token'  => $userData['token_session'],
                 'user-login' => [
                     $userlogin['bs_socialnetwork_id'] => $userlogin,
                 ],
             ];
-
+           
             if ($this->LoginUser($user['id'], $extras)) {
 
                 $bsAuthToken = $this->generateBsAuthToken($user['id']);
-
                 return response()->redirectTo('/auth/home');
                 /* return response()->redirectTo(route('microsite-home'))
             ->with('message', 'Bienvenido Usuario.')
             ->with("bsAuthToken", $bsAuthToken);*/
             }
+            
             $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
         } catch (HttpException $e) {
             $msg      = $e->getMessage();
@@ -147,6 +150,7 @@ class AuthController extends Controller
         $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
         try {
             $result = $this->_authService->CheckBsAuthToken($decodedToken['id'], $decodedToken['key']);
+            
             if ($result) {
                 $req->session()->set('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $decodedToken['id']);
                 $req->session()->set('user-login', $decodedToken['user-login']);
