@@ -230,8 +230,8 @@ angular.module('grid.service', [])
                         rt_indexHourIni = (reserva.date_reservation !== dateIni) ? rt_indexHourIni + 96 : rt_indexHourIni;
                         rt_indexHourEnd = (rt_indexHourEnd < rt_indexHourIni) ? rt_indexHourEnd + 96 : rt_indexHourEnd;
 
-                        var validateRange = ((rt_indexHourIni >= indexHourIni) && (rt_indexHourIni <= indexHourEnd));
-                        var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni <= rt_indexHourEnd));
+                        var validateRange = ((rt_indexHourIni >= indexHourIni) && (rt_indexHourIni < indexHourEnd));
+                        var validateRange2 = ((indexHourIni >= rt_indexHourIni) && (indexHourIni < rt_indexHourEnd));
 
                         if (validateRange || validateRange2) {
                             totalConflicts += 1;
@@ -414,6 +414,7 @@ angular.module('grid.service', [])
                 });
 
                 var total_grid = calculateMinutesTime(reservation.date_reservation + " " + reservation.hours_duration) / 15;
+                total_grid -= 1;
 
                 reservation.total_grid = [];
 

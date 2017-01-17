@@ -43,7 +43,7 @@ Route::group(['prefix' => '/admin/auth'], function () {
 
 });
 
-Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' => 'auth:web']);
+Route::get('/admin/ms/{id}/mesas', ['uses' => 'Admin\MainController@mesas' ,/*'middleware' => 'auth:web'*/]);
 
 
 Route::get('/admin/ms/{id}/reservation', function () {

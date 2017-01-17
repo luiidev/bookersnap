@@ -8,10 +8,11 @@ angular.module('grid.controller', [])
             gridDataFactory.getTurnsActives(vm.fecha_actual, true).then(
                 function success(response) {
                     vm.turns = gridFactory.parseShiftsActives(response);
+                    var turnSelected = detectedTurnNow(vm.turns);
 
                     $state.go("mesas.grid.index", {
                         date: vm.fecha_actual,
-                        shift: vm.turns[0].name,
+                        shift: turnSelected.name,
                     });
                 },
                 function error(response) {
@@ -20,9 +21,29 @@ angular.module('grid.controller', [])
             );
         };
 
+        //Detecta el turno en el que se encuentra actualmente
+        var detectedTurnNow = function(turns) {
+            var turnSelected = {};
+            var timeNow = moment().format("HH:mm:ss");
+            var dateNow = moment().format("YYYY-MM-DD");
+
+            angular.forEach(turns, function(turn, key) {
+
+                var nextDay = getHourNextDay(turn.turn.hours_ini, turn.turn.hours_end);
+                var dateNowEnd = (nextDay === 1) ? moment(dateNow).add('days', 1).format('YYYY-MM-DD') : dateNow;
+
+                if (moment(dateNow + " " + timeNow).isSameOrAfter(dateNow + " " + turn.turn.hours_ini) && moment(dateNow + " " + timeNow).isSameOrBefore(dateNowEnd + " " + turn.turn.hours_end)) {
+                    turnSelected = turn;
+                }
+            });
+
+            return turnSelected;
+        };
+
         var init = function() {
             getTurnsActives();
         };
+
         init();
     })
     .controller('GridMainCtrl', function($scope, $stateParams, $location, $state, $uibModal, $document, $compile, $timeout, gridDataFactory, gridFactory, FloorFactory, reservationService) {
@@ -40,6 +61,7 @@ angular.module('grid.controller', [])
 
         //Datos para renderizar grid de creacion de reserva
         vm.reservationCreate = {
+            hourText: '',
             hourIni: '',
             hourEnd: '',
             index: null,
@@ -118,8 +140,13 @@ angular.module('grid.controller', [])
 
         vm.onDragEndReservation = function() {
             vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
-            var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
-            updateReservationGrid(dataReservation);
+
+            if (vm.reservaDrag.table !== "") {
+                var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
+                updateReservationGrid(dataReservation);
+                console.log("onDragEndReservation", angular.toJson(dataReservation, true));
+            }
+
         };
 
         vm.onDragEndBlock = function() {
@@ -133,6 +160,7 @@ angular.module('grid.controller', [])
             if (type == "init") {
                 vm.reservationCreate.table = table;
                 vm.reservationCreate.hourIni = hour;
+                vm.reservationCreate.hourText = moment("2016-01-01 " + hour).format("H:mm A");
                 vm.reservationCreate.index = index;
                 vm.tempData.hourIni = hour;
                 vm.tempData.index = index;
@@ -172,7 +200,6 @@ angular.module('grid.controller', [])
         };
         //Grid de reservacion (creacion) finalizar tamaño
         vm.moveQuarterUp = function(table) {
-            console.log("moveQuarterHour");
             var timeTotal = vm.reservationCreate.timeTotal.length;
             vm.reservationCreate.hourEnd = vm.reservationCreate.timeTotal[timeTotal - 1].hour;
             vm.reservationCreate.table = table;
@@ -503,6 +530,7 @@ angular.module('grid.controller', [])
 
         //Calcula la posicion donde se ubica la reserva en el grid y el total de tiempo
         var calculateQuarterHour = function(posIni) {
+            console.log("calculateQuarterHour", posIni);
             posIni = parseInt(posIni);
             /*var total = (posIni === 0) ? 0 : posIni / 62;
             total = (total === 0) ? 1 : total;*/
@@ -577,6 +605,7 @@ angular.module('grid.controller', [])
         $document.on('mouseup', function() {
             if (vm.reservationCreate.hourIni !== '' && openModalReserva === null) {
                 vm.reservationCreate.hourEnd = (vm.reservationCreate.hourEnd === '') ? vm.tempData.hourEnd : vm.reservationCreate.hourEnd;
+                console.log("onDragEndReservation", angular.toJson(vm.reservationCreate.timeTotal, true));
                 openModalCreateReserva(vm.reservationCreate.table);
             }
         });
@@ -623,6 +652,8 @@ angular.module('grid.controller', [])
                 tableName: table.name
             };
             addTableReservation(table);
+            // hourReservation.hourIni = moment(date + " " + hourReservation.hourIni).add("minutes", 15).format("HH:mm:ss");
+            hourReservation.hourEnd = moment(date + " " + hourReservation.hourEnd).add("minutes", 15).format("HH:mm:ss");
             vm.reservation.duration = calculateDuration(hourReservation.hourIni, hourReservation.hourEnd);
         };
 
