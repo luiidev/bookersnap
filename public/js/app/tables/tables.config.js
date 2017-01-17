@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    var idMicrositio = obtenerIdMicrositio();
+    // var idMicrositio = obtenerIdMicrositio();
     angular.module('tables.app', [
             //'auth.app',//proximanente
             'turn.app',
@@ -18,10 +18,10 @@
             'widget.app',
             'notification.app'
         ])
-        .constant("IdMicroSitio", idMicrositio)
+        .constant("IdMicroSitio", _MICROSITE_ID)
         .constant("DomainBookersnapAdmin", "http://localhost")
         .constant("UrlServerNotify", "http://localhost:1337")
-        .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + idMicrositio)
+        .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + _MICROSITE_ID)
         .constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
         /*        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
                 .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
@@ -35,7 +35,7 @@
                 });
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
-            //setAuthHeaders($http);
+            $http.defaults.headers.common.Authorization = "Bearer " + _TOKEN_SESSION;
             ServerNotification.createConnection();
             ServerNotification.createRoom("microsites" + IdMicroSitio);
         });

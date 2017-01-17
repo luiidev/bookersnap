@@ -24,5 +24,6 @@ return [
 
 	'SYS_BOOKERSNAP'=> env("SYS_BOOKERSNAP", 'http://reservantro.com'),
 	'STATUS_SESSION'=> env("STATUS_SESSION",'0'), //1 activar, 0 desactivar, session del sistema de mesas	
-	'API_URL' =>  env("API_URL", 'http://apimesas.studework.vm/v1/es/microsites')
+	'API_URL' =>  env("API_URL", 'http://apimesas.studework.vm/v1/es/microsites'),
+	'TIME_EXPIRE_SESSION' => 604800
 ];

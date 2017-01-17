@@ -95,7 +95,7 @@ class HttpRequestHelper
 
         $this->header['user-agent'] = $request->server('HTTP_USER_AGENT');
 
-        $api_token = $request->session()->get('api-token');
+        $api_token = $request->session()->get("token_session");
 
         if (!is_null($api_token)) {
             $this->header['Authorization'] = 'Bearer ' . $api_token;
