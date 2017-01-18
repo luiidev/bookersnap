@@ -86,6 +86,7 @@ angular.module('zone.controller', ['ngDraggable'])
             });
             return active;
         };
+
         var getTablesCount = function(zones) {
             var vTables = 0;
             var vMinCovers = 0;
@@ -107,18 +108,16 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.getZones = function(reload) {
-
             ZoneFactory.getZones("with=turns", reload).then(
                 function success(data) {
                     data = data.data.data;
                     var zonesData = [];
 
                     angular.forEach(data, function(zones) {
-
                         var zonesTables = getTablesCount(zones);
-
                         zonesData.push(zonesTables);
                     });
+
                     return zonesData;
                 }
             ).then(function(zones) {
@@ -143,7 +142,6 @@ angular.module('zone.controller', ['ngDraggable'])
                     messageErrorApi(data, "Error", "warning");
                 });
             });
-
         };
 
         init();

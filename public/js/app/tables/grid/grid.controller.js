@@ -139,12 +139,11 @@ angular.module('grid.controller', [])
         };
 
         vm.onDragEndReservation = function() {
-            vm.reservaDrag.newTime = getTimeByPosicionGrid(vm.reservaDrag.position.left);
+            vm.reservaDrag.newTime = getTimeByPosicionGrid(parseInt(vm.reservaDrag.position.left));
 
             if (vm.reservaDrag.table !== "") {
                 var dataReservation = constructDataUpdate(vm.reservaDrag, "reserva");
                 updateReservationGrid(dataReservation);
-                console.log("onDragEndReservation", angular.toJson(dataReservation, true));
             }
         };
 
