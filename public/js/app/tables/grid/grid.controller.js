@@ -146,7 +146,6 @@ angular.module('grid.controller', [])
                 updateReservationGrid(dataReservation);
                 console.log("onDragEndReservation", angular.toJson(dataReservation, true));
             }
-
         };
 
         vm.onDragEndBlock = function() {
