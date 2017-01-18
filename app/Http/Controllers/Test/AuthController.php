@@ -14,10 +14,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
-    protected $redirectTo = '/auth/home';
-    protected $redirectAfterLogout = '/auth/auth';
-    // protected $guard = 'admin';
-
     protected $_authService;
 
     public function __construct(AuthService $authService)
@@ -39,24 +35,29 @@ class AuthController extends Controller
     public function LoginBs(Request $request)
     {
         try {
-            $response  = $this->_authService->LoginBsUserData($request->input('email'), $request->input('password'), $request->ip());
+            $exp = 604800;
+
+            $response  = $this->_authService->LoginBsUserData(
+                $request->input('email'), 
+                $request->input('password'),
+                $request->server("HTTP_USER_AGENT"),
+                $request->ip(),
+                config("settings.TIME_EXPIRE_SESSION")
+            );
 
             if ($response) {
                 $userData = $response["data"];
                 $request->session()->put("token_session", $userData["token_session"]);
 
-                Auth::loginUsingId($userData['user']["id"]);
                 return response()->redirectTo('/admin/ms/1/mesas');
             }
 
-            $response = redirect()->route('microsite-login')->with('error-message', 'Hubo un error al iniciar la sesión.')->withInput();
+            $response = redirect()->route('microsite-login')->with('error-message', 'Usuario y/o contraseña incorrecta.')->withInput();
         } catch (HttpException $e) {
             $msg      = $e->getMessage();
-            return $msg;
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         } catch (\Exception $e) {
             $msg      = 'Ocurrió un error interno.';
-            return $e->getMessage();
             $response = redirect()->route('microsite-login')->with('error-message', $msg);
         }
 
@@ -128,20 +129,11 @@ class AuthController extends Controller
      */
     public function Logout(Request $request)
     {
-        // return (string) $request->session()->get("token_session");
-        return $this->_authService->logout( $request->session()->get("token_session"));
+        $this->_authService->logout();
         $request->session()->forget(['token_session']);
         Auth::logout();
 
         return redirect()->route("microsite-login");
-
-        // $request = request();
-        // $this->LogoutUser();
-        // $route = route('microsite-login');
-        // if ($request->ajax() || $request->wantsJson()) {
-        //     return $this->CreateJsonResponse(true, 200, null, null, true, $route);
-        // }
-        // return response()->redirectToRoute('microsite-home');
     }
 
     public function loginBySharedToken(Request $req)

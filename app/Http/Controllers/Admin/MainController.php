@@ -14,21 +14,11 @@ class MainController extends Controller
     
     public function mesas(Request $request)
     {
-        return view('dashboard.admin.mesas', ['acl' => 's', 'apitoken' => 'dsdsd', 'ms_id' => '1']);
-        $user_id      = $this->GetUserId();
-        $checkService = new CheckAdminService();
-        try {
-            //Verifica que el usuario que esta en sesion tiene permisos para entrar a la aplicacion
-            //Si no, redirige.
-            $id = $request->route('id');
-            $response = $checkService->checkIfMsAdmin($user_id, $id);
-
-            $token = Session::get('api-token');
-            $data  = ['acl' => json_encode($response), 'apitoken' => $token, 'ms_id' => $id];
-            return view('dashboard.admin.mesas', $data);
-        } catch (\Exception $e) {
-            return response()->redirectTo('/auth/auth');
-        }
+        return view('dashboard.admin.mesas', [
+            'acl' =>json_encode($request->_privileges),
+            'token_session' => $request->_token_session,
+            'microsite_id' => $request->route("microsite_id")
+        ]);
     }
     
     public function loginMesas() {

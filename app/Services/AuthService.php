@@ -60,7 +60,7 @@ class AuthService
         return null;
     }
 
-    public function LoginBsUserData(string $email, string $password, $ip_address)
+    public function LoginBsUserData($email, $password, $user_agent = null, $client_ip = null, $expire = null)
     {
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
@@ -69,16 +69,17 @@ class AuthService
         $data = [
             'email' => $email,
             'password' => $password,
-            '_ip_address' => $ip_address
+            'user_agent' => $user_agent,
+            'client_ip' => $client_ip,
+            'expire' => $expire
         ];
         $response = HttpRequestHelper::make('POST', $url, $data)->send();
 
         if ($response->isOk()) {
             return $response->getArrayResponse();
-        } else {
-            abort($response['statuscode'], $response['msg']);
         }
-        return null;
+
+        return false;
     }
 
     /**
@@ -164,19 +165,10 @@ class AuthService
         return true;
     }
 
-    public function logout($token)
+    public function logout()
     {
         $url = $this->_api_auth_url . '/es/auth/logout';
-        $response = HttpRequestHelper::make('POST', $url, ["token" => $token])->send();
-        // dd($response);
-        if ($response->isOk()) {
-            // echo "1";
-            return $response->getArrayResponse();
-        } else {
-            // echo "2";
-            return $response->getErrorResponse();
-            abort($response['statuscode'], $response['msg']);
-        }
+        $http = HttpRequestHelper::make('POST', $url)->send();
     }
 
 }
