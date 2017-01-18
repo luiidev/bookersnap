@@ -233,7 +233,7 @@ angular.module('book.controller', [])
             }
         };
 
-        vm.hideFields = {};
+        //vm.hideFields = {};
 
         //Book View (Reservaciones)
         vm.bookView = false;
@@ -512,6 +512,7 @@ angular.module('book.controller', [])
             vm.calendar = true;
         };
 
+        //Habilita modo reserva
         vm.changeBookView = function(reloadUrl) {
             var date_ini = $stateParams.date;
 
@@ -523,12 +524,12 @@ angular.module('book.controller', [])
 
             vm.configUserDefault.reservationView = vm.bookView;
             BookConfigFactory.save();
-            //BookConfigFactory.setConfig(vm.configUserDefault);
             if (reloadUrl === true) {
                 updateUrl(date_ini, $stateParams.date_end, false);
             }
         };
 
+        //Actualiza la reservacion cuando clickeamos
         vm.numGuestChange = function(type, option, value) {
 
             vm.blockClickBook();
@@ -549,7 +550,6 @@ angular.module('book.controller', [])
                     break;
             }
 
-            //BookFactory.getResumenBook(vm.listBook);
             vm.resumenBook.ingresos = (type == "-") ? vm.resumenBook.ingresos - 1 : vm.resumenBook.ingresos + 1;
 
             validaUpdateBookRes = $timeout(function() {
@@ -640,7 +640,6 @@ angular.module('book.controller', [])
         };
 
         vm.createReservation = function(data) {
-
             if (data.block === null) {
                 var modalInstance = $uibModal.open({
                     templateUrl: 'ModalCreateBookReservation.html',
@@ -717,7 +716,6 @@ angular.module('book.controller', [])
 
         vm.searchReservations = function() {
             if (vm.bookView === true) {
-                //vm.paginate_reservation.selected = 1;
                 vm.changePagination();
             } else {
                 setUrlNavigationConfig(null);
@@ -1251,7 +1249,6 @@ angular.module('book.controller', [])
             reservationService.getHours(turns).then(
                 function success(response) {
                     vm.hoursTurns = response.hours;
-                    console.log(vm.hoursTurns);
                     vm.configReservation = data.config;
 
                     var listBook = [];
@@ -1278,59 +1275,6 @@ angular.module('book.controller', [])
                 },
                 function error(response) {
                     console.error("getHours " + angular.toJson(response, true));
-                }
-            );
-        };
-
-        var generatedListBookP = function(params) {
-
-            if (vm.bookView === true) {
-                params.page_size = vm.paginate_reservation.page_size;
-
-                //var params_url = paramsFilterReservation(false);
-                var params_url = (vm.bookFilter.params_url === null) ? paramsFilterReservation(false) : vm.bookFilter.params_url;
-
-                params.page = vm.paginate_reservation.page;
-                params.turns = (params_url.turns === undefined) ? "" : params_url.turns;
-                params.sources = (params_url.sources === undefined) ? "" : params_url.sources;
-                params.zones = (params_url.zones === undefined) ? "" : params_url.zones;
-                params.sort = (params_url.sort === undefined) ? "time" : params_url.sort;
-
-                if (params_url.search_text !== undefined) {
-                    params.search_text = params_url.search_text;
-                }
-            }
-
-            params = getAsUriParameters(params);
-
-            BookFactory.listReservationAndBlocks(true, params).then(
-                function success(response) {
-                    var listBook = [];
-
-                    vm.configReservation = response[2];
-
-                    if (vm.bookView === true) {
-                        listBook = BookFactory.listBookReservation(response[0]);
-                        vm.listBookReserva = listBook;
-                    } else {
-                        listBook = BookFactory.listBook(vm.hoursTurns, vm.bookView, response[0], response[1], response[3]);
-
-                        vm.listBook = listBook;
-                        vm.listBookMaster = listBook;
-                    }
-
-                    vm.paginate_reservation.total_pages = response[0].last_page * vm.paginate_reservation.page_size;
-
-                    BookFactory.setConfigReservation(vm.configReservation);
-                    vm.fecha_actual = moment().format('YYYY-MM-DD');
-
-                    if (date == vm.fecha_actual) {
-                        vm.mds = BookFactory.calculateMDS(vm.listBook, vm.zones);
-                    }
-
-                },
-                function error(response) {
-                    console.error("listReservationAndBlocks " + angular.toJson(response, true));
                 }
             );
         };
@@ -1412,7 +1356,6 @@ angular.module('book.controller', [])
 
         var loadZones = function() {
             var deferred = $q.defer();
-            console.log(date);
             reservationService.getZones(date, true)
                 .then(function(response) {
                     deferred.resolve(response.data.data);
@@ -1439,7 +1382,6 @@ angular.module('book.controller', [])
 
         //Search guest list
         vm.searchGuest = function(name) {
-            console.log(name);
             if (auxiliar) $timeout.cancel(auxiliar);
             if (!name) {
                 vm.guestList.length = 0;
@@ -1501,8 +1443,10 @@ angular.module('book.controller', [])
         var save = function() {
             vm.waitingResponse = true;
             reservationService.blackList.key(vm.reservation);
+
             console.log("save", angular.toJson(vm.reservation, true));
             vm.error = {};
+            
             reservationService.save(vm.reservation).then(
                 function success(response) {
                     $rootScope.$broadcast("addReservationList", response.data.data);
@@ -1549,19 +1493,15 @@ angular.module('book.controller', [])
             }
 
             vm.info.tableName = table ? "MESA " + table.name : "No hay mesas para " + vm.reservation.covers;
-
-            console.log("suggestTables " + angular.toJson(tables, true));
         };
 
         vm.redirectReservation = function() {
-            /*console.log(vm.reservation);
-            console.log(data);*/
             $uibModalInstance.dismiss('cancel');
 
             $state.go("mesas.book-reservation-add-params", {
                 date: date,
                 tables: [{
-                    id: (vm.reservation.tables != null) ? vm.reservation.tables[0] : null
+                    id: (vm.reservation.tables !== null) ? vm.reservation.tables[0] : null
                 }],
                 hour: data.time,
                 guest: vm.reservation.covers

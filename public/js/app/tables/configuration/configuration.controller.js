@@ -155,7 +155,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
         };
 
         vm.createPrivilegeUser = function(id) {
-            if (id != null) {
+            if (id !== null) {
                 vm.loadingCreatePrivilegeUser = true;
                 ConfigurationService.storePrivilegeUser(id).then(function success(response) {
                     data = response;
@@ -204,7 +204,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
                     // console.log(vm.listUserAll);
                     return response.map(function(item) {
                         // console.log(item);
-                        return item
+                        return item;
                     }, function error(response) {
 
                     });
