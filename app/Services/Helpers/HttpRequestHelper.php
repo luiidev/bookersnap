@@ -49,12 +49,12 @@ class HttpRequestHelper
 
             $this->isResponseOk =$response->getReasonPhrase();
             $this->statusCode = $response->getStatusCode();
-            $this->response =$response->getBody();
+            $this->response =(string) $response->getBody();
         } catch (RequestException $e) {
             $this->isResponseOk = false;
             if ($e->hasResponse()) {
                 $this->statusCode = $e->getResponse()->getStatusCode();
-                $this->errorResponse = $e->getResponse()->getBody();
+                $this->errorResponse = (string) $e->getResponse()->getBody();
             }
             $this->error = strtok($e->getMessage(), "\n");
         } catch (Exception $e) {
@@ -110,7 +110,7 @@ class HttpRequestHelper
 
     public function getResponse()
     {
-        return (String) $this->response;
+        return $this->response;
     }
 
     public function getArrayResponse()

@@ -17,8 +17,7 @@ class ManagerMicrosite
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $checkProvilege = new PrivilegeHelper();
-        $privileges =  $checkProvilege->getPrivileges($request->_bs_user_id, $request->route("microsite_id"), 2);
+        $privileges =  PrivilegeHelper::getPrivileges($request->_bs_user_id, $request->route("microsite_id"), 2);
 
         if (count($privileges) > 0) {
             $request->_privileges = $privileges;
