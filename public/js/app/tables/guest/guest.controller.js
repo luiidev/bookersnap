@@ -20,9 +20,6 @@ angular.module('guest.controller', [])
             GuestFactory.guestList(params).then(function success(response) {
 
                 vm.guestList = response;
-
-                console.log("guestAll", angular.toJson(vm.guestList, true));
-
                 vm.showGuest(vm.guestList);
 
             }, function error(response) {
@@ -37,11 +34,9 @@ angular.module('guest.controller', [])
         };
 
         vm.searchGuest = function() {
-
             var params = {
                 name: vm.name
             };
-
             vm.guestAll(params);
         };
 
@@ -103,7 +98,6 @@ angular.module('guest.controller', [])
         vm.getReservations = function(options, type) {
 
             options = getAsUriParameters(options);
-
             angular.element("#item-reserva").addClass("hide");
 
             GuestFactory.reservationsList(vm.guestId, options).then(function success(response) {
@@ -133,7 +127,6 @@ angular.module('guest.controller', [])
 
         vm.getResumenReservation = function() {
             GuestFactory.getResumenReservation(vm.guestId).then(function success(response) {
-                console.log(angular.toJson(response, true));
                 vm.guestData.reservations.resumen = response;
             }, function error(response) {
                 messageErrorApi(response.data, "Error", "warning", 0, true, response.status);
@@ -226,7 +219,6 @@ angular.module('guest.controller', [])
 
         vm.saveGuest = function() {
             vm.prepareCustomTagSave();
-            console.log("saveGuest " + angular.toJson(vm.guestData, true));
 
             vm.guestData.birthdate = convertFechaYYMMDD(vm.guestFormData.birthdate, "es-ES", {});
             vm.guestData.gender = vm.guestFormData.gender.id;
@@ -270,9 +262,7 @@ angular.module('guest.controller', [])
 
             angular.forEach(vm.guestData.tags, function(tag, key) {
                 var json = angular.toJson(tag);
-
                 if (json.indexOf("custom_tag") > -1) {
-
                     if (tag.custom_tag === true) {
                         vm.guestData.tags.splice(key);
                     }
@@ -281,7 +271,6 @@ angular.module('guest.controller', [])
         };
 
         vm.addTag = function(tag, category, event) {
-
             //evitamos que se cierre el dropdown-menu 
             event.stopPropagation();
 
@@ -317,14 +306,11 @@ angular.module('guest.controller', [])
 
                 GuestFactory.getGuest($stateParams.guest).then(function success(response) {
                     vm.guestData = response.guest;
-
                     vm.guestFormData.birthdate = convertFechaToDate(vm.guestData.birthdate);
                     vm.guestFormData.gender = vm.guestData.gender;
 
                     GuestFactory.showTags(response.guest.tags, vm.tagsListAdd);
-
                     GuestFactory.showTags(response.guest.custom_tags, vm.tagsListAdd);
-
                     GuestFactory.checkActiveTags(vm.tagsList, vm.tagsListAdd);
 
                 }, function error(response) {

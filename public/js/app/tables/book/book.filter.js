@@ -2,9 +2,9 @@ angular.module('book.filter', [])
     .filter('blocksFilter', function(BookFactory) {
         return function(books, blocksView, bookView) {
             var listBook = [];
-            if (blocksView == false && bookView === false) {
+            if (blocksView === false && bookView === false) {
                 angular.forEach(books, function(book, key) {
-                    if (book.block == null) {
+                    if (book.block === null) {
                         listBook.push(book);
                     }
                 });

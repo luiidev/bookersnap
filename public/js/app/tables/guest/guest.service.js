@@ -31,13 +31,10 @@ angular.module('guest.service', [])
             var me = this;
 
             GuestDataFactory.getAllGuest(params).success(function(data) {
-
                 data = data.data.data;
 
                 angular.forEach(data, function(value, key) {
-
                     value.contact = me.parserContactData(value);
-
                     guestAll.push(value);
                 });
 
@@ -179,9 +176,7 @@ angular.module('guest.service', [])
 
             angular.forEach(guestTags, function(value, key) {
                 angular.forEach(tagsListGuest, function(data, key) {
-
                     if (data.id == value.res_guest_tag_gategory_id) {
-
                         tagsListGuest[key].data.push({
                             id: value.id,
                             name: value.name,
@@ -191,6 +186,7 @@ angular.module('guest.service', [])
                 });
 
             });
+
             return tagsListGuest;
         },
         getTags: function() {

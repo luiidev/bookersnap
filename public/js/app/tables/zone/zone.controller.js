@@ -1,6 +1,5 @@
 angular.module('zone.controller', ['ngDraggable'])
-
-.controller('ZoneCtrl', function($scope, ZoneFactory, MenuConfigFactory, TurnDataFactory, $uibModal) {
+    .controller('ZoneCtrl', function($scope, ZoneFactory, MenuConfigFactory, TurnDataFactory, $uibModal) {
 
         $scope.zonesActive = {};
         $scope.zonesInactive = {};
@@ -196,15 +195,12 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.selectedTable = false; //validar al hacer click en el lienzo
 
         $scope.typeForm = "create"; // or edit
-
         $scope.saveClick = false; //valida click en guardar - no doble click
 
         var init = function() {
             detectedForm();
-
             listCovers("min");
             listCovers("max");
-
             MenuConfigFactory.menuActive(0);
         };
 
@@ -228,12 +224,9 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.onLienzo = function() {
-
             if ($scope.indexTable !== null && $scope.selectedTable === false) {
-                console.log("onLienzo");
                 $scope.activarTablesItems();
             }
-
             $scope.selectedTable = false;
         };
 
@@ -249,9 +242,6 @@ angular.module('zone.controller', ['ngDraggable'])
             if (shape == "square" && (rotateTable == 90 || rotateTable == 135)) {
                 $scope.itemTables[$scope.indexTable].rotate = 0;
             }
-
-            /*angular.element(".text-rotate .btn-group .shape").removeClass("active");
-            angular.element(".shape." + shape + "s").addClass("active");*/
         };
 
         $scope.changeSizeTable = function() {
@@ -268,7 +258,6 @@ angular.module('zone.controller', ['ngDraggable'])
             if (option == "min") {
                 $scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMin.id;
             } else {
-
                 $scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
             }
 
@@ -284,11 +273,6 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.rotateShapeTable = function() {
-
-            console.log("rotateShapeTable ", $scope.itemTables[$scope.indexTable].rotate);
-
-            console.log(angular.toJson($scope.itemTables[$scope.indexTable], true));
-
             var rotateTable = $scope.itemTables[$scope.indexTable].rotate;
             var shapeTable = $scope.itemTables[$scope.indexTable].shape;
 
@@ -302,7 +286,6 @@ angular.module('zone.controller', ['ngDraggable'])
                 } else {
                     $scope.itemTables[$scope.indexTable].rotate = "0";
                 }
-
             }
         };
 
@@ -311,7 +294,6 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         $scope.activarTableOptions = function(index, vthis) {
-
             $scope.selectedTable = true;
             getDataTableSelected(index);
 
@@ -319,17 +301,13 @@ angular.module('zone.controller', ['ngDraggable'])
                 $scope.$apply(function() {
 
                     if ($scope.boxTables.item === false || ($scope.boxTables.item === true && $scope.selectedTable === true && angular.element('.item-drag-table').hasClass('selected-table') === false)) {
-
                         $scope.boxTables.item = true;
                         $scope.boxTables.items = false;
                     } else {
-
                         if (angular.element('.item-drag-table').hasClass('selected-table') === false) {
-
                             $scope.boxTables.item = false;
                             $scope.boxTables.items = true;
                         }
-
                     }
                 });
             }, 100);
@@ -337,57 +315,6 @@ angular.module('zone.controller', ['ngDraggable'])
 
         $scope.doneTableSelected = function() {
             $scope.activarTablesItems();
-        };
-
-        var listCovers = function(option) {
-
-            var coverList = "";
-
-            if (option == "min") {
-                coverList = $scope.coversList.dataMin;
-            } else {
-                coverList = $scope.coversList.dataMax;
-            }
-
-            for (var i = 1; i <= 30; i++) {
-                var data = {
-                    label: i + " covers",
-                    id: i
-                };
-
-                coverList.push(data);
-            }
-
-            if (option == "min") {
-                $scope.coversList.selectedMin = coverList[0];
-            } else {
-                $scope.coversList.selectedMax = coverList[0];
-            }
-        };
-
-        var getDataTableSelected = function(index) {
-            $scope.indexTable = index;
-
-            angular.element("#name-table").val($scope.itemTables[index].name);
-            $scope.changeShapeTable($scope.itemTables[index].shape);
-
-            $scope.itemTables[index].top = angular.element("#tb-item" + index).css("top").replace("px", "");
-            $scope.itemTables[index].left = angular.element("#tb-item" + index).css("left").replace("px", "");
-
-            $scope.coversList.selectedMin = {
-                id: $scope.itemTables[$scope.indexTable].minCover,
-                label: $scope.itemTables[$scope.indexTable].minCover + " covers"
-            };
-
-            $scope.coversList.selectedMax = {
-                id: $scope.itemTables[$scope.indexTable].maxCover,
-                label: $scope.itemTables[$scope.indexTable].maxCover + " covers"
-            };
-
-            $scope.sizeTableList.selectedOption = {
-                id: TableFactory.getIdSize($scope.itemTables[index].size),
-                label: $scope.itemTables[index].size
-            };
         };
 
         $scope.activarTablesItems = function() {
@@ -425,6 +352,86 @@ angular.module('zone.controller', ['ngDraggable'])
             });
         };
 
+        $scope.saveZone = function(option) {
+            var dataZone = {
+                name: angular.element("#zone_name").val(),
+                ms_microsite_id: IdMicroSitio,
+                tables: prepareDataTablesSave()
+            };
+
+            $scope.saveClick = true;
+
+            if (option == "create") {
+                ZoneFactory.createZone(dataZone).success(function(response) {
+                    messageAlert("Success", "Zona creada correctamente", "success", 0, true);
+                    $state.reload();
+                }).error(function(data, status, headers) {
+                    $scope.saveClick = false;
+                    messageErrorApi(data, "Error", "warning", 0, true);
+                });
+
+            } else {
+                dataZone.id = $stateParams.id;
+                ZoneFactory.editZone(dataZone).success(function(response) {
+                    messageAlert("Success", "Zona actualizada correctamente", "success", 0, true);
+                    $state.go('mesas.zone.active');
+                }).error(function(data, status, headers) {
+                    $scope.saveClick = false;
+                    messageErrorApi(data, "Error", "warning", 0, true);
+                });
+            }
+        };
+
+        var listCovers = function(option) {
+
+            var coverList = "";
+
+            if (option == "min") {
+                coverList = $scope.coversList.dataMin;
+            } else {
+                coverList = $scope.coversList.dataMax;
+            }
+
+            for (var i = 1; i <= 30; i++) {
+                var data = {
+                    label: i + " covers",
+                    id: i
+                };
+                coverList.push(data);
+            }
+
+            if (option == "min") {
+                $scope.coversList.selectedMin = coverList[0];
+            } else {
+                $scope.coversList.selectedMax = coverList[0];
+            }
+        };
+
+        var getDataTableSelected = function(index) {
+            $scope.indexTable = index;
+
+            angular.element("#name-table").val($scope.itemTables[index].name);
+            $scope.changeShapeTable($scope.itemTables[index].shape);
+
+            $scope.itemTables[index].top = angular.element("#tb-item" + index).css("top").replace("px", "");
+            $scope.itemTables[index].left = angular.element("#tb-item" + index).css("left").replace("px", "");
+
+            $scope.coversList.selectedMin = {
+                id: $scope.itemTables[$scope.indexTable].minCover,
+                label: $scope.itemTables[$scope.indexTable].minCover + " covers"
+            };
+
+            $scope.coversList.selectedMax = {
+                id: $scope.itemTables[$scope.indexTable].maxCover,
+                label: $scope.itemTables[$scope.indexTable].maxCover + " covers"
+            };
+
+            $scope.sizeTableList.selectedOption = {
+                id: TableFactory.getIdSize($scope.itemTables[index].size),
+                label: $scope.itemTables[index].size
+            };
+        };
+
         var selectTableTypeDrag = function(data) {
             var index = $scope.itemTables.indexOf(data);
             if (index > -1) {
@@ -447,7 +454,6 @@ angular.module('zone.controller', ['ngDraggable'])
         };
 
         var getDataTables = function(table) {
-
             var tableItem = {
                 name: table.name,
                 min_cover: table.minCover,
@@ -468,81 +474,32 @@ angular.module('zone.controller', ['ngDraggable'])
             var tables = [];
 
             angular.forEach($scope.itemTables, function(table) {
-
                 var tableItem = getDataTables(table);
-
                 tables.push(tableItem);
-
             });
 
             if ($scope.typeForm == "edit") {
-
                 angular.forEach($scope.itemTablesDeleted, function(table) {
-
                     var tableItem = getDataTables(table);
-
                     tables.push(tableItem);
-
                 });
-
             }
-
-            console.log("prepareDataTablesSave " + angular.toJson(tables, true));
-
             return tables;
-        };
-
-        $scope.saveZone = function(option) {
-            var dataZone = {
-                name: angular.element("#zone_name").val(),
-                ms_microsite_id: IdMicroSitio,
-                tables: prepareDataTablesSave()
-            };
-
-            $scope.saveClick = true;
-
-            if (option == "create") {
-
-                ZoneFactory.createZone(dataZone).success(function(response) {
-                    messageAlert("Success", "Zona creada correctamente", "success", 0, true);
-                    $state.reload();
-                }).error(function(data, status, headers) {
-                    $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning", 0, true);
-                });
-
-            } else {
-                dataZone.id = $stateParams.id;
-                ZoneFactory.editZone(dataZone).success(function(response) {
-                    messageAlert("Success", "Zona actualizada correctamente", "success", 0, true);
-                    $state.go('mesas.zone.active');
-                }).error(function(data, status, headers) {
-                    $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning", 0, true);
-                });
-            }
-
-            console.log("saveZone " + angular.toJson(dataZone, true));
         };
 
         var detectedForm = function() {
             if ($stateParams.id !== undefined) {
-
                 $scope.typeForm = "edit";
 
                 ZoneFactory.getZone($stateParams.id).success(function(zone) {
-
                     angular.element("#zone_name").val(zone.data.name);
-
                     loadTablesEdit(zone.data.tables);
                 });
             }
         };
 
         var loadTablesEdit = function(tables) {
-
             angular.forEach(tables, function(data) {
-
                 var position = data.config_position.split(",");
                 var dataTable = {
                     name: data.name,
@@ -563,10 +520,7 @@ angular.module('zone.controller', ['ngDraggable'])
                 } else {
                     $scope.itemTablesDeleted.push(dataTable);
                 }
-
             });
-
-            console.log("loadTablesEdit " + angular.toJson($scope.itemTables, true));
 
             updateHeaderZone();
         };
@@ -578,101 +532,23 @@ angular.module('zone.controller', ['ngDraggable'])
         $scope.ok = function() {
             //show tables items
             ZoneLienzoFactory.activarTablesItems(boxTables);
-
             removeTableItem();
-
             ZoneLienzoFactory.updateHeaderZone(headerZone, itemTables);
-
             $uibModalInstance.close();
-        };
-
-        var removeTableItem = function() {
-
-            //add table in tables removes
-
-            if (typeForm == "edit") {
-
-                itemTables[indexTable].status = 2;
-
-                itemTablesDeleted.push(itemTables[indexTable]);
-            }
-
-            //delete item table selected
-            itemTables.splice(indexTable, 1);
-            angular.element('.item-drag-table').removeClass('selected-table');
-
         };
 
         $scope.cancel = function() {
             $uibModalInstance.dismiss('cancel');
         };
-    })
-    .controller('ZoneAssignTurnCtrl', function($scope, TypeTurnFactory, TurnFactory, $uibModal, $filter) {
 
-        $scope.typeTurns = {};
-
-        $scope.days = getDaysWeek();
-
-        $scope.turns = [];
-
-        $scope.turnDay = {
-            id: 0,
-            name: 'Selected turn'
+        var removeTableItem = function() {
+            //add table in tables removes
+            if (typeForm == "edit") {
+                itemTables[indexTable].status = 2;
+                itemTablesDeleted.push(itemTables[indexTable]);
+            }
+            //delete item table selected
+            itemTables.splice(indexTable, 1);
+            angular.element('.item-drag-table').removeClass('selected-table');
         };
-
-        $scope.getTurnsByType = function(typeTurn) {
-
-            var vTurns = [$scope.turnDay];
-
-            angular.forEach($scope.turns, function(data) {
-                if (data.type.id == typeTurn) {
-                    //data.name = data.name +" ("+data.hours_ini +" "+ data.hours_end +")";
-                    vTurns.push(data);
-                }
-            });
-
-            return vTurns;
-        };
-
-        $scope.selectTurno = function(typeTurn, turn, day) {
-
-            var vData = {
-                day: day,
-                res_turn_id: turn.id,
-                res_type_turn: typeTurn.id
-            };
-
-            console.log("selectTurno " + angular.toJson(vData, true));
-        };
-
-        var getTypeTurns = function() {
-
-            TypeTurnFactory.getTypeTurns().success(function(data) {
-
-                $scope.typeTurns = data;
-
-            }).error(function(data, status, headers) {
-
-                messageErrorApi(data, "Error", "warning");
-
-            });
-        };
-
-        var getTurns = function() {
-
-            TurnFactory.getTurns().success(function(data) {
-
-                console.log("getTurnss " + angular.toJson(data.data, true));
-
-                $scope.turns = data.data;
-
-            }).error(function(data, status, headers) {
-
-                messageErrorApi(data, "Error", "warning");
-
-            });
-        };
-
-        getTurns();
-        getTypeTurns();
     });
