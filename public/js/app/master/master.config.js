@@ -7,7 +7,8 @@ angular.module('master.app', [
         'microsite.app',
         'microportal.app',
         'role.app',
-        'auth.app'
+        'auth.app',
+        'api.admin'
     ])
     .constant("ApiAdminROOT", 'http://localhost:90/v1/es')
     .constant("UrlApiAdmin", 'http://localhost:90/v1/es');

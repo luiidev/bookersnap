@@ -144,7 +144,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::put('flyer/{id_flyer}', "Admin\Reservation\Promotion\FlyerController@updateFlyer");
 });
 
-Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'master', 'namespace' => 'Master'], function () {
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {
