@@ -1,6 +1,5 @@
 angular.module('turn.controller', ['form.directive', 'localytics.directives'])
     .controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
-
         $scope.turns = {
             active: [],
             inactive: []

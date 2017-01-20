@@ -345,7 +345,6 @@ angular.module('zone.controller', ['ngDraggable'])
                     typeForm: function() {
                         return $scope.typeForm;
                     }
-
                 }
             });
         };
