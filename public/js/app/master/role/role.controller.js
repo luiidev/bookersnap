@@ -17,7 +17,8 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         vm.rolesList = [];
 
         vm.role = {
-            name: ""
+            name: "",
+            type_admin_id: null
         };
 
         vm.listarRoles = function () {
@@ -26,9 +27,11 @@ angular.module('role.controller', ['bsLoadingOverlay'])
 
             RoleService.GetRoles()
                 .then(function(response) {
-                    vm.rolesList = response.data.data;
-                }).finally(function() {
+                    vm.rolesList = response.data.data.roles;
+                    vm.typesRoleList = response.data.data.types_role;
                     initTableRoles();
+                }).finally(function() {
+                    if (vm.typesRoleList.length) vm.filterRole(vm.typesRoleList[0].id);
                     bsLoadingOverlayService.stop();
                     vm.flags.isLoading = false;
                 });
@@ -44,6 +47,8 @@ angular.module('role.controller', ['bsLoadingOverlay'])
             RoleService.CreateRole(vm.role)
                 .then(function(response) {
                         vm.rolesList.push(response.data.data);
+                        // initTableRoles();
+                        console.log(vm.rolesList);
                         vm.role.name = "";
                         message.success(response.data.msg);
                 })
@@ -51,6 +56,7 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                     message.apiError(error);
                 })
                 .finally(function() {
+                    refreshTable();
                     bsLoadingOverlayService.stop();
                 });
         };
@@ -113,21 +119,37 @@ angular.module('role.controller', ['bsLoadingOverlay'])
 
         function initTableRoles() {
             vm.tableRoles = new ngTableParams({
-                page: 1,// show first page
-                count: 10// count per page
+                // page: 1,// show first page
+                count: 100// count per page
             }, {
-                total: vm.rolesList.length, // length of data
-                getData: function ($defer, params) {
-                    var orderedData = params.filter() ? $filter('filter')(vm.rolesList, params.filter()) : vm.rolesList;
+                // filterOptions: { filterFn: custonFilter },
+                // total: vm.rolesList.length, // length of data
+                data: vm.rolesList
+                // getData: function ($defer, params) {
+                //     var orderedData = params.filter() ? $filter('filter')(vm.rolesList, params.filter()) : vm.rolesList;
 
-                    this.name = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                //     this.name = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
 
-                    params.total(orderedData.length); // set total for recalc pagination
-                    $defer.resolve(this.name);
-                    //$defer.resolve(vm.rolesList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
+                //     params.total(orderedData.length); // set total for recalc pagination
+                //     $defer.resolve(this.name);
+
+                //     console.log(this);
+                //     console.log(params);
+
+                //     return $defer.promise;
+
+                //     //$defer.resolve(vm.rolesList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                // }
             });
         }
+
+        function refreshTable() {
+            vm.tableRoles.reload();
+        }
+
+        vm.filterRole = function(id) {
+            vm.role.type_admin_id = id;
+        };
 
         /**
          * Init Module
