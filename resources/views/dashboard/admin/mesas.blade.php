@@ -35,6 +35,12 @@
 <!--<footer data-ng-include="'/template/footer.html'" id="footer">
 </footer>-->
 
+<script type="text/javascript">
+    var _TOKEN_SESSION = "{{ $token_session }}";
+    var _PRIVILEGES = JSON.parse('{!! $acl !!}');
+    var _MICROSITE_ID = parseInt("{{ $microsite_id }}");
+</script>
+
 <!-- Vendor Bookersnap-->
 <script src="/js/theme/dist/library.bower.min.js"></script>
 <script src="/js/theme/dist/app.level.min.js"></script>
@@ -64,15 +70,6 @@
             </div>
         </div>
     </div>
-</script>
-
-<script type="text/javascript">
-
-/*var setAuthHeaders = function ($http) {
-//        $http.defaults.headers.common['type-admin'] = 2;
-        $http.defaults.headers.common['Authorization'] = 'Bearer {{$apitoken}}';
-    };
-*/
 </script>
 </body>
 </html>

@@ -1,22 +1,25 @@
 angular.module('grid.directive', [])
+    //Cuando pasamos el mouse sobre reservaciones con conflictos
     .directive('hoverReservationGrid', function() {
         return {
             restrict: 'A',
             link: function(scope, element, attr) {
                 var zIndex = 0;
+
                 element.on('mouseover', function(event) {
                     event.preventDefault();
                     zIndex = element.attr('z-index');
                     angular.element(this).parent().parent().css('z-index', 120);
                 });
+
                 element.on('mouseout', function(event) {
                     event.preventDefault();
                     angular.element(this).parent().parent().css('z-index', zIndex);
-                    //console.log("mouseout", zIndex);
                 });
             }
         };
     })
+    //Mover reservas
     .directive('dragReservaGrid', function() {
         return {
             restrict: 'A',
@@ -33,12 +36,9 @@ angular.module('grid.directive', [])
             link: function(scope, element, attr) {
 
                 element.draggable({
-                    //containment: ".grid-body",
                     grid: [62, 63],
                     cursor: "move",
-                    drag: function(event, ui) {
-                        //console.log("dragReservaGrid");
-                    },
+                    drag: function(event, ui) {},
                     start: function(event, ui) {
                         element.css("transform", "none");
                         element.css("opacity", "0.6");
@@ -54,7 +54,6 @@ angular.module('grid.directive', [])
                         scope.$apply(function() {
                             scope.dragPosition = ui.position;
                         });
-
                         scope.onDragEnd();
                     }
                 });
@@ -67,6 +66,7 @@ angular.module('grid.directive', [])
             }
         };
     })
+    //Evaluando funcionalidad (en deshuso)
     .directive('dropReservaGrid', function() {
         return {
             restrict: 'A',
@@ -83,6 +83,7 @@ angular.module('grid.directive', [])
             }
         };
     })
+    //Mover bloqueos
     .directive('dragBlockGrid', function() {
         return {
             restrict: 'A',
@@ -97,12 +98,9 @@ angular.module('grid.directive', [])
             link: function(scope, element, attr) {
 
                 element.draggable({
-                    //containment: ".grid-body",
                     grid: [62, 63],
                     cursor: "move",
-                    drag: function(event, ui) {
-                        //console.log("dragReservaGrid");
-                    },
+                    drag: function(event, ui) {},
                     start: function(event, ui) {
                         element.css("transform", "none");
                         element.css("opacity", "0.6");
@@ -124,6 +122,7 @@ angular.module('grid.directive', [])
             }
         };
     })
+    //Finalizamos el drag de bloqueos o reservaciones
     .directive('dropReservaGridMaster', function() {
         return {
             restrict: 'A',
@@ -140,12 +139,12 @@ angular.module('grid.directive', [])
                             scope.table = scope.grid.id;
                             scope.tableBlock = scope.grid.id;
                         });
-                        //console.log("drop", angular.toJson(scope.grid.name, true));
                     }
                 });
             }
         };
     })
+    //Evaluando directiva (sobreado , para crear reservaciones)
     .directive('resizeGridReservation', function() {
         return {
             restrict: 'A',
@@ -160,6 +159,7 @@ angular.module('grid.directive', [])
             }
         };
     })
+    //Funcionalidad linea de tiempo del grid
     .directive('currentTime', function() {
         return {
             restrict: 'E',
@@ -174,7 +174,6 @@ angular.module('grid.directive', [])
                 '<div class="grid-current-time-label">' +
                 '{{time}}</div></div>',
             link: function(scope, element, attr) {
-                //console.log("currentTime", angular.toJson(scope.turn, true), scope.leftTime);
                 var minutesData = calculateMinutesIni(scope.turn);
                 var hourNow = moment().format("HH:mm A");
                 var dateNow = moment().format("YYYY-MM-DD");
@@ -232,7 +231,6 @@ angular.module('grid.directive', [])
                 seconds: moment().format("ss")
             };
 
-            //console.log("calculateMinutesIni", angular.toJson(data, true));
             return data;
         }
 
@@ -243,6 +241,7 @@ angular.module('grid.directive', [])
             return leftTime;
         }
     })
+    //Funcionalidad del scroll del grid
     .directive('scrollGridBody', function() {
         return {
             restrict: 'A',
@@ -256,6 +255,7 @@ angular.module('grid.directive', [])
 
                 element.scroll(function() {
                     typeScroll = ($(this).scrollTop() === 0) ? "horizontal" : "vertical";
+
                     if (oldScrollTop == $(this).scrollTop()) {
                         typeScroll = "horizontal";
                     } else {

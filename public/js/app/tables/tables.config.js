@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    var idMicrositio = obtenerIdMicrositio();
+    // var idMicrositio = obtenerIdMicrositio();
     angular.module('tables.app', [
             //'auth.app',//proximanente
             'turn.app',
@@ -18,15 +18,16 @@
             'widget.app',
             'notification.app'
         ])
-        .constant("IdMicroSitio", idMicrositio)
-//        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
-//        .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
-//        .constant("ApiUrlMesas", 'http://apimesas.bookersnap.com/v1/es/microsites/' + idMicrositio)
-//        .constant("ApiUrlRoot", 'http://apimesas.bookersnap.com/v1/es')
-        .constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
+        .constant("IdMicroSitio", _MICROSITE_ID)
+       .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
+       .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
+       .constant("ApiUrlMesas", 'http://apimesas.bookersnap.com/v1/es/microsites/' + _MICROSITE_ID)
+       .constant("ApiUrlRoot", 'http://apimesas.bookersnap.com/v1/es')
+        /*.constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
         .constant("UrlServerNotify", "http://apimesas.studework.vm:1337")
-        .constant("ApiUrlMesas", 'http://apimesas.studework.vm/v1/es/microsites/' + idMicrositio)
-        .constant("ApiUrlRoot", 'http://apimesas.studework.vm/v1/es')
+        .constant("ApiUrlMesas", 'http://apimesas.studework.vm/v1/es/microsites/' + _MICROSITE_ID)
+        .constant("ApiUrlRoot", 'http://apimesas.studework.vm/v1/es')*/
+
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
@@ -35,8 +36,8 @@
                 });
         })
         .run(function($http, ServerNotification, IdMicroSitio) {
-            //setAuthHeaders($http);
+            $http.defaults.headers.common.Authorization = "Bearer " + _TOKEN_SESSION;
             ServerNotification.createConnection();
-            ServerNotification.createRoom("microsites" + IdMicroSitio);
+            ServerNotification.createRoom("microsites" + _MICROSITE_ID);
         });
 })();

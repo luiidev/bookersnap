@@ -37,34 +37,6 @@ angular.module('book.service', [])
         var scopeMain = null;
         var configReservation = null;
         return {
-            getReservations: function(reload, params) {
-                var defered = $q.defer();
-
-                reservationService.getReservationsSearch(reload, params).then(
-                    function success(response) {
-                        response = response.data.data;
-                        defered.resolve(response);
-                    },
-                    function error(response) {
-                        defered.reject(response);
-                    }
-                );
-                return defered.promise;
-            },
-            getAllBlocks: function(reload, params) {
-                var defered = $q.defer();
-
-                BlockFactory.getBlocks(reload, params).then(
-                    function success(response) {
-                        defered.resolve(response.data.data);
-                    },
-                    function error(response) {
-                        defered.reject(response.data);
-                    }
-                );
-
-                return defered.promise;
-            },
             //Genera el book en base a las horas (disponibles de los turnos)
             listBook: function(hours, bookView, reservations, blocks, tablesAvailability) {
                 var self = this;
@@ -207,12 +179,14 @@ angular.module('book.service', [])
                     }
                 });
             },
+            //Devuelve las reservaciones, modo reserva tiene otra esctructura de datos (solo contenedor)
             parseReservations: function(reservations, bookView) {
                 var existPaginator = angular.toJson(reservations, true);
                 reservations = (bookView === true && existPaginator.indexOf('last_page') > -1) ? reservations.data : reservations;
 
                 return reservations;
             },
+            //Evalua si la mesa existe en la reserva del book
             existsTableReservaInBook: function(reservations, table, bookView) {
                 var self = this;
                 var exists = {
@@ -223,16 +197,12 @@ angular.module('book.service', [])
                 reservations = self.parseReservations(reservations, bookView);
 
                 angular.forEach(reservations, function(reservation, key) {
-
                     angular.forEach(reservation.tables, function(value, key) {
                         if (table === value.id) {
                             exists.exists = true;
                             exists.data.push(reservation);
-                            //return exists;
                         }
                     });
-
-
                 });
 
                 return exists;
@@ -328,16 +298,6 @@ angular.module('book.service', [])
 
                 return exists;
             },
-            //Obtenemos la reservaciones,bloqueos y mesas con su disponibilidad
-            listReservationAndBlocks: function(reload, params) {
-                var self = this;
-                return $q.all([
-                    self.getReservations(reload, params),
-                    self.getAllBlocks(reload, params),
-                    self.getConfigurationReservation(),
-                    self.getTablesAvailability(params)
-                ]);
-            },
             //Habilita en la vista los types turns que hallamos marcados
             setCheckedTypeTurn: function(turns, turnId, checked) {
                 angular.forEach(turns, function(turn, key) {
@@ -403,9 +363,9 @@ angular.module('book.service', [])
                 var self = this;
                 if (statusList.length > 0) {
                     var index = filterStatus.indexOf(state.id);
-                    if (index == -1 && showStatus == false) {
+                    if (index == -1 && showStatus === false) {
                         filterStatus.push(state.id);
-                    } else if (showStatus == true) {
+                    } else if (showStatus === true) {
                         filterStatus.splice(index, 1);
                     }
                 }
@@ -495,20 +455,6 @@ angular.module('book.service', [])
                 configReservation = config;
                 return configReservation;
             },
-            getConfigurationReservation: function() {
-                var defered = $q.defer();
-
-                ConfigurationDataService.getConfiguration().then(
-                    function success(response) {
-                        defered.resolve(response.data.data);
-                    },
-                    function error(response) {
-                        defered.reject(response.data);
-                    }
-                );
-
-                return defered.promise;
-            },
             //Calcula total de mesas disponibles sobre las mesas ocupadas
             calculateMDS: function(listBook, zones) {
 
@@ -539,11 +485,10 @@ angular.module('book.service', [])
 
                     angular.forEach(hours, function(hour, key) {
                         if (reservation.hours_reservation == hour.time) {
-                            scopeMain.$apply(function() {
 
+                            scopeMain.$apply(function() {
                                 self.addReservationBook(listBook, hour, reservation);
                                 self.addReservationBook(listBookMaster, hour, reservation);
-
                                 add = true;
                             });
                         }
@@ -552,6 +497,7 @@ angular.module('book.service', [])
 
                 return add;
             },
+            //Agrega la reservacion al book
             addReservationBook: function(listBook, hour, reservation) {
                 var valida = false;
                 var self = this;
@@ -598,21 +544,6 @@ angular.module('book.service', [])
                         }
                     }
                 });
-            },
-            //Obtiene las mesas y su disponibilidad segun la fecha indicada (no rango)
-            getTablesAvailability: function(params) {
-                var defered = $q.defer();
-
-                TablesDataFactory.getAvailability(params).then(
-                    function success(response) {
-                        defered.resolve(response.data.data);
-                    },
-                    function error(response) {
-                        defered.reject(response.data);
-                    }
-                );
-
-                return defered.promise;
             },
             //Genera la horas desde 00:00:00 hasta las 24:00:00 (solo para reservaciones)
             generatedHoursAll: function() {
@@ -717,42 +648,42 @@ angular.module('book.service', [])
 
         _BCONF.setConfigBook = function(config) {
 
-            if (config != undefined) {
-                _BCONF.configBook.reservationView = (_BCONF.configBook.reservationView != undefined) ? config.reservationView : false;
-                if (config.rangeDate != undefined) {
-                    _BCONF.configBook.rangeDate.hoy = (_BCONF.configBook.rangeDate.hoy != undefined) ? config.rangeDate.hoy : false;
-                    _BCONF.configBook.rangeDate.week = (_BCONF.configBook.rangeDate.week != undefined) ? config.rangeDate.week : false;
-                    _BCONF.configBook.rangeDate.lastSevenDays = (_BCONF.configBook.rangeDate.lastSevenDays != undefined) ? config.rangeDate.lastSevenDays : false;
-                    _BCONF.configBook.rangeDate.lastThirtyDays = (_BCONF.configBook.rangeDate.lastThirtyDays != undefined) ? config.rangeDate.lastThirtyDays : false;
-                    _BCONF.configBook.rangeDate.thisMonth = (_BCONF.configBook.rangeDate.thisMonth != undefined) ? config.rangeDate.thisMonth : false;
-                    _BCONF.configBook.rangeDate.lastMonth = (_BCONF.configBook.rangeDate.lastMonth != undefined) ? config.rangeDate.lastMonth : false;
-                    _BCONF.configBook.rangeDate.range = (_BCONF.configBook.rangeDate.range != undefined) ? config.rangeDate.range : false;
+            if (config !== undefined) {
+                _BCONF.configBook.reservationView = (_BCONF.configBook.reservationView !== undefined) ? config.reservationView : false;
+                if (config.rangeDate !== undefined) {
+                    _BCONF.configBook.rangeDate.hoy = (_BCONF.configBook.rangeDate.hoy !== undefined) ? config.rangeDate.hoy : false;
+                    _BCONF.configBook.rangeDate.week = (_BCONF.configBook.rangeDate.week !== undefined) ? config.rangeDate.week : false;
+                    _BCONF.configBook.rangeDate.lastSevenDays = (_BCONF.configBook.rangeDate.lastSevenDays !== undefined) ? config.rangeDate.lastSevenDays : false;
+                    _BCONF.configBook.rangeDate.lastThirtyDays = (_BCONF.configBook.rangeDate.lastThirtyDays !== undefined) ? config.rangeDate.lastThirtyDays : false;
+                    _BCONF.configBook.rangeDate.thisMonth = (_BCONF.configBook.rangeDate.thisMonth !== undefined) ? config.rangeDate.thisMonth : false;
+                    _BCONF.configBook.rangeDate.lastMonth = (_BCONF.configBook.rangeDate.lastMonth !== undefined) ? config.rangeDate.lastMonth : false;
+                    _BCONF.configBook.rangeDate.range = (_BCONF.configBook.rangeDate.range !== undefined) ? config.rangeDate.range : false;
                 }
-                if (config.show != undefined) {
-                    _BCONF.configBook.show.released = (_BCONF.configBook.show.released != undefined) ? config.show.released : true;
-                    _BCONF.configBook.show.canceled = (_BCONF.configBook.show.canceled != undefined) ? config.show.canceled : true;
-                    _BCONF.configBook.show.blocks = (_BCONF.configBook.show.blocks != undefined) ? config.show.blocks : true;
-                }
-
-                if (config.fields != undefined) {
-                    _BCONF.configBook.fields.consume = (_BCONF.configBook.fields.consume != undefined) ? config.fields.consume : true;
-                    _BCONF.configBook.fields.messages = (_BCONF.configBook.fields.messages != undefined) ? config.fields.messages : true;
-                    _BCONF.configBook.fields.listguests = (_BCONF.configBook.fields.listguests != undefined) ? config.fields.listguests : true;
-                    _BCONF.configBook.fields.source = (_BCONF.configBook.fields.source != undefined) ? config.fields.source : true;
-                }
-                if (config.filters != undefined) {
-                    _BCONF.configBook.filters.turns = (_BCONF.configBook.filters.turns != undefined) ? config.filters.turns : [];
-                    _BCONF.configBook.filters.status = (_BCONF.configBook.filters.status != undefined) ? config.filters.status : [];
-                    _BCONF.configBook.filters.sources = (_BCONF.configBook.filters.sources != undefined) ? config.filters.sources : [];
-                    _BCONF.configBook.filters.zones = (_BCONF.configBook.filters.zones != undefined) ? config.filters.zones : [];
-                    _BCONF.configBook.filters.date = (_BCONF.configBook.filters.date != undefined) ? config.filters.date : moment().format('YYYY-MM-DD');
-                    _BCONF.configBook.filters.date_end = (_BCONF.configBook.filters.date_end != undefined) ? config.filters.date_end : moment().format('YYYY-MM-DD');
+                if (config.show !== undefined) {
+                    _BCONF.configBook.show.released = (_BCONF.configBook.show.released !== undefined) ? config.show.released : true;
+                    _BCONF.configBook.show.canceled = (_BCONF.configBook.show.canceled !== undefined) ? config.show.canceled : true;
+                    _BCONF.configBook.show.blocks = (_BCONF.configBook.show.blocks !== undefined) ? config.show.blocks : true;
                 }
 
-                _BCONF.configBook.url = (_BCONF.configBook.url != undefined) ? config.url : null;
-                _BCONF.configBook.order = (_BCONF.configBook.order != undefined) ? config.order : 'time.asc';
-                _BCONF.configBook.page_size = (_BCONF.configBook.page_size != undefined) ? config.page_size : 30;
-                _BCONF.configBook.page = (_BCONF.configBook.page != undefined) ? config.page : 30;
+                if (config.fields !== undefined) {
+                    _BCONF.configBook.fields.consume = (_BCONF.configBook.fields.consume !== undefined) ? config.fields.consume : true;
+                    _BCONF.configBook.fields.messages = (_BCONF.configBook.fields.messages !== undefined) ? config.fields.messages : true;
+                    _BCONF.configBook.fields.listguests = (_BCONF.configBook.fields.listguests !== undefined) ? config.fields.listguests : true;
+                    _BCONF.configBook.fields.source = (_BCONF.configBook.fields.source !== undefined) ? config.fields.source : true;
+                }
+                if (config.filters !== undefined) {
+                    _BCONF.configBook.filters.turns = (_BCONF.configBook.filters.turns !== undefined) ? config.filters.turns : [];
+                    _BCONF.configBook.filters.status = (_BCONF.configBook.filters.status !== undefined) ? config.filters.status : [];
+                    _BCONF.configBook.filters.sources = (_BCONF.configBook.filters.sources !== undefined) ? config.filters.sources : [];
+                    _BCONF.configBook.filters.zones = (_BCONF.configBook.filters.zones !== undefined) ? config.filters.zones : [];
+                    _BCONF.configBook.filters.date = (_BCONF.configBook.filters.date !== undefined) ? config.filters.date : moment().format('YYYY-MM-DD');
+                    _BCONF.configBook.filters.date_end = (_BCONF.configBook.filters.date_end !== undefined) ? config.filters.date_end : moment().format('YYYY-MM-DD');
+                }
+
+                _BCONF.configBook.url = (_BCONF.configBook.url !== undefined) ? config.url : null;
+                _BCONF.configBook.order = (_BCONF.configBook.order !== undefined) ? config.order : 'time.asc';
+                _BCONF.configBook.page_size = (_BCONF.configBook.page_size !== undefined) ? config.page_size : 30;
+                _BCONF.configBook.page = (_BCONF.configBook.page !== undefined) ? config.page : 30;
             }
             return _BCONF.configBook;
         };
@@ -761,10 +692,10 @@ angular.module('book.service', [])
 
             _BCONF.configBook.url = {};
             _BCONF.configBook.url.date = moment().format("YYYY-MM-DD");
-            if (_BCONF.configBook.filters.date != "") {
+            if (_BCONF.configBook.filters.date !== "") {
                 _BCONF.configBook.url.date = _BCONF.configBook.filters.date;
             }
-            if (_BCONF.configBook.filters.date_end != "" && _BCONF.configBook.reservationView) {
+            if (_BCONF.configBook.filters.date_end !== "" && _BCONF.configBook.reservationView) {
                 _BCONF.configBook.url.date_end = _BCONF.configBook.filters.date_end;
             }
             if (_BCONF.configBook.filters.status.length > 0) {
@@ -782,7 +713,7 @@ angular.module('book.service', [])
             if (_BCONF.configBook.page > 1) {
                 _BCONF.configBook.url.page = _BCONF.configBook.page;
             }
-            if (_BCONF.configBook.sort != "") {
+            if (_BCONF.configBook.sort !== "") {
                 _BCONF.configBook.url.sort = _BCONF.configBook.sort;
             }
         };
@@ -791,33 +722,33 @@ angular.module('book.service', [])
             _BCONF.configBook.url = {};
             _BCONF.configBook.url.date = moment().format("YYYY-MM-DD");
             //console.log('_BCONF.configBook: ', _BCONF.configBook);
-            if ($stateParams.date != undefined && $stateParams.date != "") {
+            if ($stateParams.date !== undefined && $stateParams.date !== "") {
                 _BCONF.configBook.url.date = $stateParams.date;
                 _BCONF.configBook.filters.date = $stateParams.date;
             }
-            if ($stateParams.date_end != undefined && $stateParams.date_end != "" && _BCONF.configBook.reservationView) {
+            if ($stateParams.date_end !== undefined && $stateParams.date_end !== "" && _BCONF.configBook.reservationView) {
                 _BCONF.configBook.url.date_end = $stateParams.date_end;
                 _BCONF.configBook.filters.date_end = $stateParams.date_end;
             }
-            if ($stateParams.status != undefined && $stateParams.status != "") {
+            if ($stateParams.status !== undefined && $stateParams.status !== "") {
                 _BCONF.configBook.url.status = $stateParams.status;
                 _BCONF.configBook.filters.status = $stateParams.status.split(',');
             }
-            if ($stateParams.blocks != undefined && $stateParams.blocks != "") {
+            if ($stateParams.blocks !== undefined && $stateParams.blocks !== "") {
                 _BCONF.configBook.url.blocks = $stateParams.blocks;
                 _BCONF.configBook.filters.blocks = $stateParams.blocks.split(',');
             }
-            if ($stateParams.sources != undefined && $stateParams.sources != "") {
+            if ($stateParams.sources !== undefined && $stateParams.sources !== "") {
                 _BCONF.configBook.url.sources = $stateParams.sources;
                 _BCONF.configBook.filters.blocks = $stateParams.sources.split(',');
             }
-            if ($stateParams.page_size != undefined && $stateParams.page_size != "") {
+            if ($stateParams.page_size !== undefined && $stateParams.page_size !== "") {
                 _BCONF.configBook.url.page_size = $stateParams.page_size;
             }
-            if ($stateParams.page != undefined && $stateParams.page != "") {
+            if ($stateParams.page !== undefined && $stateParams.page !== "") {
                 _BCONF.configBook.url.page = $stateParams.page;
             }
-            if ($stateParams.sort != undefined && $stateParams.sort != "") {
+            if ($stateParams.sort !== undefined && $stateParams.sort !== "") {
                 _BCONF.configBook.url.sort = $stateParams.sort;
             }
         };
@@ -850,7 +781,7 @@ angular.module('book.service', [])
                 console.log(option, values);
                 switch (option) {
                     case 'turns':
-                        _BCONF.configBook.filters.turns = (values != undefined) ? values : [];
+                        _BCONF.configBook.filters.turns = (values !== undefined) ? values : [];
                     case 'status':
                         _BCONF.configBook.filters.status = (values != undefined) ? values : [];
                         break;

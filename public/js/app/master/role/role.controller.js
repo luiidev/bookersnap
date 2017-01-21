@@ -1,89 +1,64 @@
-/**
- * Created by BS on 12/08/2016.
- */
 angular.module('role.controller', ['bsLoadingOverlay'])
-    .run(function (bsLoadingOverlayService) {
-        bsLoadingOverlayService.setGlobalConfig({
-            delay: 0, // Minimal delay to hide loading overlay in ms.
-            activeClass: undefined, // Class that is added to the element where bs-loading-overlay is applied when the overlay is active.
-            templateUrl: 'overlay-template.html', // Template url for overlay element. If not specified - no overlay element is created.
-            templateOptions: undefined // Options that are passed to overlay template (specified by templateUrl option above).
-        });
-    })
-    //----------------------------------------------
-    // LISTAR ROLES
-    //----------------------------------------------
-    .controller('RolesListController', function (RoleService, ngTableParams, bsLoadingOverlayService, $filter) {
+    .controller('RolesListController', ["RoleServiceApiAdmin", "ngTableParams", "bsLoadingOverlayService", "$filter",
+         function (RoleService, ngTableParams, bsLoadingOverlayService, $filter) {
+
         var vm = this;
+
         vm.can = {
-            editRole: true,
+            editRole: true, 
             createRole: true
         };
+
         vm.flags = {
             isUpdating: false,
             isLoading: false
         };
+
         vm.rolesList = [];
 
+        vm.role = {
+            name: "",
+            type_admin_id: null
+        };
+
         vm.listarRoles = function () {
-            RoleService.GetRoles({
-                BeforeSend: function () {
-                    vm.flags.isLoading = true;
-                    bsLoadingOverlayService.start();
-                },
-                OnSuccess: function (Response) {
-                    vm.flags.isLoading = false;
-                    bsLoadingOverlayService.stop();
-                    vm.rolesList = Response.data.data;
+            vm.flags.isLoading = true;
+            bsLoadingOverlayService.start();
+
+            RoleService.GetRoles()
+                .then(function(response) {
+                    vm.rolesList = response.data.data.roles;
+                    vm.typesRoleList = response.data.data.types_role;
                     initTableRoles();
-                },
-                OnError: function (Response) {
-                    vm.flags.isLoading = false;
-                    initTableRoles();
+                }).finally(function() {
+                    if (vm.typesRoleList.length) vm.filterRole(vm.typesRoleList[0].id);
                     bsLoadingOverlayService.stop();
-                }
-            });
+                    vm.flags.isLoading = false;
+                });
         };
 
         vm.registerRole = function () {
-            if (vm.role.name.trim() == "") {
-                swal('Ingrese el nombre del rol', '', 'warning');
-                return;
+            if (vm.role.name.trim() === "") {
+                return message.alert('Ingrese el nombre del rol');
             }
-            RoleService.CreateRole(vm.role, {
-                OnSuccess: function (Response) {
+
+            bsLoadingOverlayService.start();
+
+            RoleService.CreateRole(vm.role)
+                .then(function(response) {
+                        vm.rolesList.push(response.data.data);
+                        // initTableRoles();
+                        console.log(vm.rolesList);
+                        vm.role.name = "";
+                        message.success(response.data.msg);
+                })
+                .catch(function(error) {
+                    message.apiError(error);
+                })
+                .finally(function() {
+                    refreshTable();
                     bsLoadingOverlayService.stop();
-                    if (Response.status == 201) {
-                        initNewRole();
-                        vm.listarRoles();
-                        messageAlert('Rol creado', '', 'success');
-                    } else {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                },
-                OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
-                    try {
-                        var data = Response.data;
-                        if (Response.status == 422) {
-                            var errors = '';
-                            angular.forEach(Response.data.error.errors, function (error, key) {
-                                errors += '\n- ' + error + '\n';
-                            });
-                            swal(Response.data.error.user_msg, errors, "error")
-                        } else if (Response.status == 403) {
-                            swal('Acceso denegado', null, "error")
-                        } else {
-                            swal("Error", data.error.user_msg, "error")
-                        }
-                    } catch ($e) {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                },
-                BeforeSend: function () {
-                    bsLoadingOverlayService.start();
-                }
-            });
+                });
         };
 
         vm.editRole = function (item) {
@@ -99,54 +74,27 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         };
 
         vm.updateRole = function (item) {
-            if (item.name.trim() == "") {
-                return;
+            if (item.name.trim() === "") {
+                return message.alert('El nombre de rol no puede quedar vacio.');
             }
-            //para el acl
-            //if (bsAcl.getRole().id == item.id) {
-            //    Popup.$Alert('Advertencia', 'No se puede editar este rol ya que ' +
-            //        'está siendo usado actualmente por su usuario.', null, 'warning');
-            //    return;
-            //}
-            //
-            //item.$changeStatus = false;
-            RoleService.UpdateRole(item.id, item, {
-                OnSuccess: function (Response) {
-                    vm.flags.isUpdating = false;
-                    bsLoadingOverlayService.stop();
-                    try {
-                        if (Response.data.statuscode == 200) {
-                            item.$edit = false;
-                            messageAlert('Rol actualizado', '', 'success');
-                        }
-                    } catch ($e) {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                },
-                OnError: function (Response) {
-                    vm.flags.isUpdating = false;
-                    bsLoadingOverlayService.stop();
-                    var data = Response.data;
-                    if (Response.status == 401 || Response.status == 403) {
-                        swal("Error", "No tiene permisos para realizar esta acción", "error");
-                    } else if (angular.isUndefined(data.error)) {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    } else if (Response.status == 406 || Response.status == 422) {
-                        var errors = '';
-                        angular.forEach(Response.data.error.errors, function (error, key) {
-                            errors += '\n- ' + error + '\n';
-                        });
-                        swal(Response.data.error.user_msg, errors, "error")
-                    } else {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                },
-                BeforeSend: function () {
-                    vm.flags.isUpdating = true;
-                    bsLoadingOverlayService.stop();
-                }
-            });
+            
+            item.$changeStatus = false;
 
+            vm.flags.isUpdating = true;
+            bsLoadingOverlayService.stop();
+
+            RoleService.UpdateRole(item.id, item)
+                .then(function(response) {
+                    item.$edit = false;
+                    message.success('Rol actualizado');
+                })
+                .catch(function(error) {
+                    message.apiError(error);
+                })
+                .finally(function() {
+                    vm.flags.isUpdating = false;
+                    bsLoadingOverlayService.stop();
+                });
         };
 
         vm.changeRoleStatus = function (item) {
@@ -154,79 +102,70 @@ angular.module('role.controller', ['bsLoadingOverlay'])
                 return;
             }
             var previousStatus = (item.status == 1 ? 0 : 1);
-            //item.$changeStatus = true;
 
-            RoleService.ChangeStatus(item.id, item, {
-                OnSuccess: function (Response) {
-                    vm.flags.isUpdating = false;
-                    bsLoadingOverlayService.stop();
-                },
-                OnError: function (Response) {
-                    vm.flags.isUpdating = false;
-                    bsLoadingOverlayService.stop();
-                    var data = Response.data;
+            vm.flags.isUpdating = true;
+            bsLoadingOverlayService.start();
+
+            RoleService.ChangeStatus(item.id, item)
+                .catch(function(error) {
                     item.status = previousStatus;
-                    if (Response.status == 401 || Response.status == 403) {
-                        swal("Error", "No tiene permisos para realizar esta acción", "error");
-                    } else if (angular.isUndefined(data.error)) {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    } else if (Response.status == 406 || Response.status == 422) {
-                        var errors = '';
-                        angular.forEach(Response.data.error.errors, function (error, key) {
-                            errors += '\n- ' + error + '\n';
-                        });
-                        swal(Response.data.error.user_msg, errors, "error")
-                    } else {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                },
-                BeforeSend: function () {
-                    vm.flags.isUpdating = true;
-                    bsLoadingOverlayService.start();
-                }
-            });
+                    message.apiError(error);
+                })
+                .finally(function() {
+                    vm.flags.isUpdating = false;
+                    bsLoadingOverlayService.stop();
+                });
         };
-
-        //inicia un nuevo rol para poder crear
-        function initNewRole() {
-            vm.role = {status: 1, name: ""};
-            vm.roleError = null;
-        }
 
         function initTableRoles() {
             vm.tableRoles = new ngTableParams({
-                page: 1,// show first page
-                count: 10// count per page
+                // page: 1,// show first page
+                count: 100// count per page
             }, {
-                total: vm.rolesList.length, // length of data
-                getData: function ($defer, params) {
-                    var orderedData = params.filter() ? $filter('filter')(vm.rolesList, params.filter()) : vm.rolesList;
+                // filterOptions: { filterFn: custonFilter },
+                // total: vm.rolesList.length, // length of data
+                data: vm.rolesList
+                // getData: function ($defer, params) {
+                //     var orderedData = params.filter() ? $filter('filter')(vm.rolesList, params.filter()) : vm.rolesList;
 
-                    this.name = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                //     this.name = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
 
-                    params.total(orderedData.length); // set total for recalc pagination
-                    $defer.resolve(this.name);
-                    //$defer.resolve(vm.rolesList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
+                //     params.total(orderedData.length); // set total for recalc pagination
+                //     $defer.resolve(this.name);
+
+                //     console.log(this);
+                //     console.log(params);
+
+                //     return $defer.promise;
+
+                //     //$defer.resolve(vm.rolesList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                // }
             });
         }
 
-        //------------------------------------
-        // INIT
-        //------------------------------------
+        function refreshTable() {
+            vm.tableRoles.reload();
+        }
 
+        vm.filterRole = function(id) {
+            vm.role.type_admin_id = id;
+        };
+
+        /**
+         * Init Module
+         */
         function init() {
-            initNewRole();
             vm.listarRoles();
         }
 
         init();
 
-    })
+    }])
     //----------------------------------------------
     // PRIVILEGIOS POR ROLES
     //----------------------------------------------
-    .controller('RolesPrivilegesController', function (RoleService, bsLoadingOverlayService, $stateParams) {
+    .controller('RolesPrivilegesController', ["RoleServiceApiAdmin", "bsLoadingOverlayService", "$stateParams",
+        function (RoleService, bsLoadingOverlayService, $stateParams) {
 
         var vm = this;
         vm.role_id = $stateParams.id;
@@ -268,59 +207,41 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         };
 
         vm.saveChanges = function () {
-            RoleService.SavePrivileges(vm.role_id, vm.privileges, {
-                BeforeSend: function () {
-                    bsLoadingOverlayService.start();
-                },
-                OnSuccess: function (Response) {
-                    bsLoadingOverlayService.stop();
+
+            bsLoadingOverlayService.start();
+
+            RoleService.SavePrivileges(vm.role_id, vm.privileges)
+                .then(function(response) {
+                    console.log(response);
                     //AclService.setAbilities(Response.data.data.acl);
-                    messageAlert("Se actualizaron los privilegios.", '', 'success');
-                },
-                OnError: function (Response) {
+                    message.success("Se actualizaron los privilegios.");
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
                     bsLoadingOverlayService.stop();
-                    var data = Response.data;
-                    if (Response.status == 401 || Response.status == 403) {
-                        swal("Error", "No tiene permisos para realizar esta acción", "error");
-                    } else if (angular.isUndefined(data.error)) {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    } else if (Response.status == 406 || Response.status == 422) {
-                        var errors = '';
-                        angular.forEach(Response.data.error.errors, function (error, key) {
-                            errors += '\n- ' + error + '\n';
-                        });
-                        swal(Response.data.error.user_msg, errors, "error")
-                    } else {
-                        swal("Error", "Ocurrió un error en el servidor", "error");
-                    }
-                }
-            });
+                });
         };
 
         function loadPrivileges() {
-            RoleService.GetPrivileges(vm.role_id, {
-                BeforeSend: function () {
-                    bsLoadingOverlayService.start();
-                },
-                OnSuccess: function (Response) {
+            bsLoadingOverlayService.start();
+
+            RoleService.GetPrivileges(vm.role_id)
+                .then(function(response) {
+                    vm.privileges = response.data.data.privileges;
+                    vm.role = response.data.data.role;
+                }).catch(function(error) {
+                    message.error("Ocurrio un error");
+                }).finally(function() {
                     bsLoadingOverlayService.stop();
-                    vm.privileges = Response.data.data.privileges;
-                    console.log(vm.privileges);
-                    vm.role = Response.data.data.role;
-                },
-                OnError: function (Response) {
-                    bsLoadingOverlayService.stop();
-                }
-            });
+                });
         }
 
-        //------------------------------------
-        // INIT
-        //------------------------------------
-
+        /**
+         * Init Module
+         */
         function init() {
             loadPrivileges();
         }
 
         init();
-    });
+    }]);

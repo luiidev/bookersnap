@@ -48,19 +48,14 @@
                                 <td class="hour-only"  ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-click="selectHour(hour)" ng-bind="hour.option_user"></td>
                             </tr>
                         </table>
-                        <table ng-if="hour.events.length">
-                            <!-- ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()" -->
+
+                       <!--  <table ng-if="hour.events.length">
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length == 1}">
                                 <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
-                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" >
-                                    <span  ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option" ng-bind="hour.events[0].name_type"></span>
-                                    <small ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option" ng-bind="(hour.events[0].description | HtmlToText).substring(0,24)"></small>
-                                    <div ng-show="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option">
-                                        <div class="bg-image" ng-style="{'background-image': 'url('+ hour.events[0].image_thumb + ')'}"></div>
-                                        <div class="description">
-                                            <p style="" ng-bind="hour.events[0].description | HtmlToText"></p>
-                                        </div>
-                                    </div> 
+                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" ng-mouseover="promotionDisplay(hour.events[0], $event)" ng-mouseout="promotionHide()">
+
+                                    <span ng-bind="hour.events[0].name_type"></span>
+                                    <small ng-bind="hour.events[0].description | HtmlToText"></small>
                                 </td>
                             </tr>
                             <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
@@ -73,6 +68,35 @@
                                             <p style="" ng-bind="event.description | HtmlToText"></p>
                                         </div>
                                     </div> 
+                                </td>
+                            </tr>
+                        </table> -->
+
+                        <table ng-if="hour.events.length">
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length == 1}">
+                                <td class="hour" rowspan="10" ng-class="{'active  bs-bgm': selectedHour.option == hour.option}" ng-bind="hour.option_user"></td>
+                                <td class="promo"  ng-class="{'active  bs-bgm': selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option}" ng-click="selectHour(hour, hour.events[0], 5)" >
+
+                                    <div class="image" style="background-image: url(@{{hour.events[0].image_thumb}})" ng-show="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option">
+                                    </div>
+                                    <small ng-bind="hour.events[0].description | HtmlToText" ng-show="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option"></small>
+
+                                    <span ng-bind="hour.events[0].name_type" ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option"></span>
+                                    <small ng-bind="hour.events[0].description.substring(0, 48) | HtmlToText" ng-hide="selectedEvent.id == hour.events[0].id && selectedHour.option == hour.option"></small>
+
+                                    
+                                </td>
+                            </tr>
+                            <tr ng-class="{'b-b-0': ($index ==  form.hours.length -1) && $index > 5 &&  hour.events.length > 1}" ng-repeat="event in hour.events" ng-if="$index > 0">
+                                <td class="promo" ng-class="{'active  bs-bgm': selectedEvent.id == event.id && selectedHour.option == hour.option}" ng-click="selectHour(hour, event)">
+
+                                    <div class="image" style="background-image: url(@{{event.image_thumb}})" ng-show="selectedEvent.id == event.id && selectedHour.option == hour.option">
+                                    </div>
+                                    <small ng-bind="event.description | HtmlToText" ng-show="selectedEvent.id == event.id && selectedHour.option == hour.option"></small>
+
+                                    <span ng-bind="event.name_type" ng-hide="selectedEvent.id == event.id && selectedHour.option == hour.option"></span>
+                                    <small ng-bind="event.description.substring(0, 48) | HtmlToText" ng-hide="selectedEvent.id == event.id && selectedHour.option == hour.option"></small>
+
                                 </td>
                             </tr>
                         </table>

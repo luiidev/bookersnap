@@ -19,6 +19,7 @@ gulp.task('app-bookersnap-master-js', function() {
             '**/*.js',
             '../app.master.js',
             '../app.directive.js',
+            '../../services/build/api_admin.min.js',
             '!gulpfile.js'
         ])
         .pipe(concat('app.bookersnap.master.min.js'))
@@ -79,7 +80,7 @@ gulp.task('app-library-master-css', function() {
 
 //Automatizamos esta tarea
 gulp.task('watch', function() {
-    gulp.watch(['**/*.js', '../app.config.js'], ['app-bookersnap-master-js']);
+    gulp.watch(['**/*.js', '../app.config.js', '../../services/build/api_admin.min.js'], ['app-bookersnap-master-js']);
     gulp.watch([
         '../../../library/ngImgCropFullExtended-master/compile/minified/ng-img-crop.js',
         '../../../library/angucomplete-alt/angucomplete-alt.js',

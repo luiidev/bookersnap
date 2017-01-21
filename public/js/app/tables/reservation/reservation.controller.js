@@ -245,9 +245,9 @@ angular.module('reservation.controller', [])
                     }else{
 
                         var subval =  key.substring(index +1);
-                        
+
                         console.log("subval: ", subval);
-                        
+
                     }
                      
                 });
@@ -305,7 +305,10 @@ angular.module('reservation.controller', [])
                     }).catch(function(error) {
                         parseResponseErrorApi(error.data.data);
                         vm.error = error.data.data;
+
                         console.log("vm.error ", vm.error);
+                        console.log("vm.error ", vm.error.guest.firstname);
+
                         message.apiError(error);
                         vm.waitingResponse = false;
                     });
