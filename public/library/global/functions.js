@@ -7,6 +7,11 @@ http://web.aplication.bookersnap/admin/ms/1/mesas#/book
 ms/1/ 
 id = 1
 -----------*/
+/*Funcion para aceder a variables globales*/
+var env = function(variable){
+    return window[variable];
+};
+
 var obtenerIdMicrositio = function() {
     var url = location.href;
     var pos = url.indexOf("ms");
