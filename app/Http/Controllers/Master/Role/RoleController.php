@@ -22,8 +22,11 @@ class RoleController extends Controller
 
     public function StoreRole(Request $request)
     {
-        $response = $this->_roleService->SaveRole($request->all(), $this->GetUserId(), $this->_credentiales);
-        return response()->json($response, $response['statuscode']);
+        return $this->TryCatchDB(function () use ($request) {
+            $response = $this->_roleService->SaveRole($request->all(), $this->GetUserId(), $this->_credentiales);
+            
+            return $this->CreateJsonResponse(true, $response['statuscode'], "El rol fue registrado", $response);
+        });
     }
 
     public function UpdateRole(string $lang, int $id, Request $request)
