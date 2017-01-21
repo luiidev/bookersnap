@@ -23,7 +23,7 @@
        .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
        .constant("ApiUrlMesas", 'http://apimesas.bookersnap.com/v1/es/microsites/' + _MICROSITE_ID)
        .constant("ApiUrlRoot", 'http://apimesas.bookersnap.com/v1/es')
-        /*.constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
+       /* .constant("DomainBookersnapAdmin", "http://weblaravel.studework.vm")
         .constant("UrlServerNotify", "http://apimesas.studework.vm:1337")
         .constant("ApiUrlMesas", 'http://apimesas.studework.vm/v1/es/microsites/' + _MICROSITE_ID)
         .constant("ApiUrlRoot", 'http://apimesas.studework.vm/v1/es')*/
