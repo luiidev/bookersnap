@@ -303,12 +303,8 @@ angular.module('reservation.controller', [])
                         vm.waitingResponse = false;
                         vm.cancel();
                     }).catch(function(error) {
-                        parseResponseErrorApi(error.data.data);
-                        vm.error = error.data.data;
-
-                        console.log("vm.error ", vm.error);
-                        console.log("vm.error ", vm.error.guest.firstname);
-
+                        /*parseResponseErrorApi(error.data.data);
+                        vm.error = error.data.data;*/
                         message.apiError(error);
                         vm.waitingResponse = false;
                     });

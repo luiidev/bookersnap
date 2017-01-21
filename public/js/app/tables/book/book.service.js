@@ -648,42 +648,43 @@ angular.module('book.service', [])
 
         _BCONF.setConfigBook = function(config) {
 
-            if (config !== undefined) {
-                _BCONF.configBook.reservationView = (_BCONF.configBook.reservationView !== undefined) ? config.reservationView : false;
+        
+            if (config !== undefined && config !== null) {
+                _BCONF.configBook.reservationView = (config.reservationView  !== undefined) ? config.reservationView : false;
                 if (config.rangeDate !== undefined) {
-                    _BCONF.configBook.rangeDate.hoy = (_BCONF.configBook.rangeDate.hoy !== undefined) ? config.rangeDate.hoy : false;
-                    _BCONF.configBook.rangeDate.week = (_BCONF.configBook.rangeDate.week !== undefined) ? config.rangeDate.week : false;
-                    _BCONF.configBook.rangeDate.lastSevenDays = (_BCONF.configBook.rangeDate.lastSevenDays !== undefined) ? config.rangeDate.lastSevenDays : false;
-                    _BCONF.configBook.rangeDate.lastThirtyDays = (_BCONF.configBook.rangeDate.lastThirtyDays !== undefined) ? config.rangeDate.lastThirtyDays : false;
-                    _BCONF.configBook.rangeDate.thisMonth = (_BCONF.configBook.rangeDate.thisMonth !== undefined) ? config.rangeDate.thisMonth : false;
-                    _BCONF.configBook.rangeDate.lastMonth = (_BCONF.configBook.rangeDate.lastMonth !== undefined) ? config.rangeDate.lastMonth : false;
-                    _BCONF.configBook.rangeDate.range = (_BCONF.configBook.rangeDate.range !== undefined) ? config.rangeDate.range : false;
+                    _BCONF.configBook.rangeDate.hoy = (config.rangeDate.hoy !== undefined) ? config.rangeDate.hoy : false;
+                    _BCONF.configBook.rangeDate.week = (config.rangeDate.week !== undefined) ? config.rangeDate.week : false;
+                    _BCONF.configBook.rangeDate.lastSevenDays = (config.rangeDate.lastSevenDays !== undefined) ? config.rangeDate.lastSevenDays : false;
+                    _BCONF.configBook.rangeDate.lastThirtyDays = (config.rangeDate.lastThirtyDays !== undefined) ? config.rangeDate.lastThirtyDays : false;
+                    _BCONF.configBook.rangeDate.thisMonth = (config.rangeDate.thisMonth !== undefined) ? config.rangeDate.thisMonth : false;
+                    _BCONF.configBook.rangeDate.lastMonth = (config.rangeDate.lastMonth !== undefined) ? config.rangeDate.lastMonth : false;
+                    _BCONF.configBook.rangeDate.range = (config.rangeDate.range !== undefined) ? config.rangeDate.range : false;
                 }
                 if (config.show !== undefined) {
-                    _BCONF.configBook.show.released = (_BCONF.configBook.show.released !== undefined) ? config.show.released : true;
-                    _BCONF.configBook.show.canceled = (_BCONF.configBook.show.canceled !== undefined) ? config.show.canceled : true;
-                    _BCONF.configBook.show.blocks = (_BCONF.configBook.show.blocks !== undefined) ? config.show.blocks : true;
+                    _BCONF.configBook.show.released = (config.show.released !== undefined) ? config.show.released : true;
+                    _BCONF.configBook.show.canceled = (config.show.canceled !== undefined) ? config.show.canceled : true;
+                    _BCONF.configBook.show.blocks = (config.show.blocks !== undefined) ? config.show.blocks : true;
                 }
 
                 if (config.fields !== undefined) {
-                    _BCONF.configBook.fields.consume = (_BCONF.configBook.fields.consume !== undefined) ? config.fields.consume : true;
-                    _BCONF.configBook.fields.messages = (_BCONF.configBook.fields.messages !== undefined) ? config.fields.messages : true;
-                    _BCONF.configBook.fields.listguests = (_BCONF.configBook.fields.listguests !== undefined) ? config.fields.listguests : true;
-                    _BCONF.configBook.fields.source = (_BCONF.configBook.fields.source !== undefined) ? config.fields.source : true;
+                    _BCONF.configBook.fields.consume = (config.fields.consume !== undefined) ? config.fields.consume : true;
+                    _BCONF.configBook.fields.messages = (config.fields.messages !== undefined) ? config.fields.messages : true;
+                    _BCONF.configBook.fields.listguests = (config.fields.listguests !== undefined) ? config.fields.listguests : true;
+                    _BCONF.configBook.fields.source = (config.fields.source !== undefined) ? config.fields.source : true;
                 }
                 if (config.filters !== undefined) {
-                    _BCONF.configBook.filters.turns = (_BCONF.configBook.filters.turns !== undefined) ? config.filters.turns : [];
-                    _BCONF.configBook.filters.status = (_BCONF.configBook.filters.status !== undefined) ? config.filters.status : [];
-                    _BCONF.configBook.filters.sources = (_BCONF.configBook.filters.sources !== undefined) ? config.filters.sources : [];
-                    _BCONF.configBook.filters.zones = (_BCONF.configBook.filters.zones !== undefined) ? config.filters.zones : [];
-                    _BCONF.configBook.filters.date = (_BCONF.configBook.filters.date !== undefined) ? config.filters.date : moment().format('YYYY-MM-DD');
-                    _BCONF.configBook.filters.date_end = (_BCONF.configBook.filters.date_end !== undefined) ? config.filters.date_end : moment().format('YYYY-MM-DD');
+                    _BCONF.configBook.filters.turns = (config.filters.turns !== undefined) ? config.filters.turns : [];
+                    _BCONF.configBook.filters.status = (config.filters.status !== undefined) ? config.filters.status : [];
+                    _BCONF.configBook.filters.sources = (config.filters.sources !== undefined) ? config.filters.sources : [];
+                    _BCONF.configBook.filters.zones = (config.filters.zones !== undefined) ? config.filters.zones : [];
+                    _BCONF.configBook.filters.date = (config.filters.date !== undefined) ? config.filters.date : moment().format('YYYY-MM-DD');
+                    _BCONF.configBook.filters.date_end = (config.filters.date_end !== undefined) ? config.filters.date_end : moment().format('YYYY-MM-DD');
                 }
 
-                _BCONF.configBook.url = (_BCONF.configBook.url !== undefined) ? config.url : null;
-                _BCONF.configBook.order = (_BCONF.configBook.order !== undefined) ? config.order : 'time.asc';
-                _BCONF.configBook.page_size = (_BCONF.configBook.page_size !== undefined) ? config.page_size : 30;
-                _BCONF.configBook.page = (_BCONF.configBook.page !== undefined) ? config.page : 30;
+                _BCONF.configBook.url = (config.url !== undefined) ? config.url : null;
+                _BCONF.configBook.order = (config.order !== undefined) ? config.order : 'time.asc';
+                _BCONF.configBook.page_size = (config.page_size !== undefined) ? config.page_size : 30;
+                _BCONF.configBook.page = (config.page !== undefined) ? config.page : 30;
             }
             return _BCONF.configBook;
         };
