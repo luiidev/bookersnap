@@ -1,1 +1,1 @@
-angular.module('bookersnap', ['bookersnap.directives', 'master.app'])
+angular.module('bookersnap', ['bookersnap.directives', 'master.app']);

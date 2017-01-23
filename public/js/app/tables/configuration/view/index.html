@@ -4,31 +4,31 @@
         </div>
         <div class="container">
             <div class="card">
-	            <div class="pm-body clearfix list-table">
-	                <ul class="tab-nav">
-	                    <li class="btn-wave" data-ui-sref-active="active">
-	                        <a data-ui-sref="mesas.configuration.basic">
-	                            Reservación
-	                        </a>
-	                    </li>
-                        <li class="btn-wave" data-ui-sref-active="active">
+                <div class="pm-body clearfix list-table">
+                    <ul class="tab-nav">
+                        <li class="btn-wave" data-ui-sref-active="active" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-show')}">
+                            <a data-ui-sref="mesas.configuration.basic">
+                                Reservación
+                            </a>
+                        </li>
+                        <li class="btn-wave" data-ui-sref-active="active" ng-class="{disabled: !prvctrl.ms.exists('configurationForm-update')}">
                             <a data-ui-sref="mesas.configuration.form">
                                 Gestionar Campos
                             </a>
                         </li>
-	                    <li class="btn-wave" data-ui-sref-active="active">
-	                        <a data-ui-sref="mesas.configuration.reserve">
-	                            Códigos para reservar
-	                        </a>
-	                    </li>
-	                    <li class="btn-wave" data-ui-sref-active="active">
-	                        <a data-ui-sref="mesas.configuration.user">
-	                            Privilegios para usuarios
-	                        </a>
-	                    </li>
-	                </ul>
-	                <data ui-view=""></data>
-	            </div>
+                        <li class="btn-wave" data-ui-sref-active="active" ng-class="{disabled: !prvctrl.ms.exists('configurationCodes-show')}">
+                            <a data-ui-sref="mesas.configuration.reserve">
+                                Códigos para reservar
+                            </a>
+                        </li>
+                        <li class="btn-wave" data-ui-sref-active="active" ng-class="{disabled: !prvctrl.ms.exists('configurationUser-show')}">
+                            <a data-ui-sref="mesas.configuration.user">
+                                Privilegios para usuarios
+                            </a>
+                        </li>
+                    </ul>
+                    <data ui-view=""></data>
+                </div>
             </div>
         </div>
     </section>

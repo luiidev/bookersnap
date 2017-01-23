@@ -38,7 +38,8 @@ angular.module('role.controller', ['bsLoadingOverlay'])
         };
 
         vm.registerRole = function () {
-            if (vm.role.name.trim() === "") {
+            if (vm.role.name.trim() === "" && vm.role.name.length <= 3) {
+                vm.role.name = null;
                 return message.alert('Ingrese el nombre del rol');
             }
 
@@ -47,8 +48,6 @@ angular.module('role.controller', ['bsLoadingOverlay'])
             RoleService.CreateRole(vm.role)
                 .then(function(response) {
                         vm.rolesList.push(response.data.data);
-                        // initTableRoles();
-                        console.log(vm.rolesList);
                         vm.role.name = "";
                         message.success(response.data.msg);
                 })
@@ -119,27 +118,11 @@ angular.module('role.controller', ['bsLoadingOverlay'])
 
         function initTableRoles() {
             vm.tableRoles = new ngTableParams({
-                // page: 1,// show first page
-                count: 100// count per page
+                page: 1,// show first page
+                count: 1000, // count per page
             }, {
-                // filterOptions: { filterFn: custonFilter },
-                // total: vm.rolesList.length, // length of data
-                data: vm.rolesList
-                // getData: function ($defer, params) {
-                //     var orderedData = params.filter() ? $filter('filter')(vm.rolesList, params.filter()) : vm.rolesList;
-
-                //     this.name = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
-                //     params.total(orderedData.length); // set total for recalc pagination
-                //     $defer.resolve(this.name);
-
-                //     console.log(this);
-                //     console.log(params);
-
-                //     return $defer.promise;
-
-                //     //$defer.resolve(vm.rolesList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                // }
+                counts: [],
+                data: vm.rolesList,
             });
         }
 

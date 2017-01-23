@@ -2,12 +2,9 @@
     <div class="input-group header-actions">
         <div class="fg-line">
             <input class="form-control" ng-model="wm.busqueda" ng-show="!wm.search.show" placeholder="Buscar por nombre u horario" type="text">
-                <button class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait('create')" ng-show="wm.search.show" type="button">
-                    <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg">
-                    </i>
-                    <span>
-                        AGREGAR ESPERA
-                    </span>
+                <button class="btn btn-default-blue btn-block text-center waves-effect animated" ng-click="wm.createWait('create')" ng-show="wm.search.show" type="button" ng-class="{disabled: !prvctrl.ms.exists('waitlist-store')}">
+                    <i class="zmdi zmdi-time-countdown zmdi-hc-fw zmdi-hc-lg"></i>
+                    <span>AGREGAR ESPERA</span>
                 </button>
             </input>
         </div>

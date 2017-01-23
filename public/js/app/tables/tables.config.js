@@ -18,6 +18,7 @@
             'widget.app',
             'notification.app'
         ])
+        .constant("privileges", _PRIVILEGES)
         .constant("IdMicroSitio", _MICROSITE_ID)
         .constant("DomainBookersnapAdmin", "http://localhost")
         .constant("UrlServerNotify", "http://localhost:1337")

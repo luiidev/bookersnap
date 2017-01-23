@@ -21,7 +21,7 @@
 
 </head>
 
-<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}" class="scroll-x-hidden">
+<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}" class="scroll-x-hidden" data-ng-controller="privilegeCtrl as prvctrl">
 
 <header data-current-skin="@{{mactrl.currentSkin}}" data-ng-controller="headerCtrl as hctrl" data-ng-include="'/template/header.html'" id="header">
 </header>

@@ -1,90 +1,89 @@
 <div class="configuration-reservation-form">
-	<div class="card-body p-t-20 p-l-100 p-r-50">
-		<div class="row">
-			<div class="col-sm-3 col-sm-offset-3 p-b-20">
-				<div class="form-group fg-line">
-					<div class="radio m-b-15">
-	                    <label>
-	                        <input type="radio" " ng-model="vm.configuration.res_code_status" value="1" ng-change="vm.updateCodeStatus(vm.configuration.res_code_status)">
-	                        <i class="input-helper"></i>
-	                        Activar
-	                    </label>
-	                </div>	
-				</div>
-			</div>
-			<div class="col-sm-3 p-b-20">
-				<div class="form-group fg-line">
-					<div class="radio m-b-15">
-	                    <label>
-	                        <input type="radio" ng-model="vm.configuration.res_code_status" value="0" ng-change="vm.updateCodeStatus(vm.configuration.res_code_status)">
-	                        <i class="input-helper"></i>
-	                        Desactivar
-	                    </label>
-	                </div>
-				</div>
-			</div>
-		</div>
+    <div class="card-body p-t-20 p-l-100 p-r-50">
+        <div class="row"  ng-class="{disabled: !prvctrl.ms.exists('configurationCodes-update')}">
+            <div class="col-sm-3 col-sm-offset-3 p-b-20">
+                <div class="form-group fg-line">
+                    <div class="radio m-b-15">
+                        <label>
+                            <input type="radio" " ng-model="vm.configuration.res_code_status" value="1" ng-change="vm.updateCodeStatus(vm.configuration.res_code_status)">
+                            <i class="input-helper"></i>
+                            Activar
+                        </label>
+                    </div>  
+                </div>
+            </div>
+            <div class="col-sm-3 p-b-20">
+                <div class="form-group fg-line">
+                    <div class="radio m-b-15">
+                        <label>
+                            <input type="radio" ng-model="vm.configuration.res_code_status" value="0" ng-change="vm.updateCodeStatus(vm.configuration.res_code_status)">
+                            <i class="input-helper"></i>
+                            Desactivar
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form  class="min-h-200-px row" name="configurationCodeForm" ng-show="vm.configuration.res_code_status==1" novalidate>
-	        <div class="col-sm-12">      	
-				<div class="row">
-	        		<!-- <loading-box wait="vm.loadingCode || vm.loadingsetCode" time="8000" size="lg"></loading-box> -->
-	        		<loading-box wait="vm.loadingCode" time="8000" size="lg"></loading-box>
-					<div class="col-sm-4 col-sm-offset-3">
-						<div class="form-group fg-line">
-							<input class="form-control" ng-model="vm.code" placeholder="Ingresar código para reservar aqui" type="text" required>
-							</input>	
-						</div>										
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group fg-line">
-							<button class="btn btn-primary waves-effect" ng-click="vm.setCode(vm.configuration.ms_microsite_id,vm.code)" ng-disabled="vm.loadingsetCode || !configurationCodeForm.$valid"><i class="zmdi zmdi-plus m-r-5"></i>Agregar Código
-							<loading-box wait="vm.loadingsetCode" pls="white" bg="blue" size="xs" time="5000"></loading-box>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="card-body table-responsive ">
-						    <table class="table">
-						        <thead>
-						            <tr>
-						                <th>
-						                    Codigos de reserva
-						                </th>			                
-						            </tr>
-						        </thead>
-						        <tbody>						        
-						            <tr ng-repeat="code in vm.codList" ng-class="[code.classNewCode]">
-						                <td>
-						                    {{code.code}}
-						                </td>
-						                <td class="text-right">
-						                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deleteCode(code.code)" ng-disabled="code.delete">
-						                        <i class="zmdi zmdi-delete zmdi-hc-fw">
-						                        </i>
-						                        Eliminar
-						                        <loading-box wait="code.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
-						                    </button>
-						                </td>
-						            </tr>					            
-						        </tbody>
-						    </table>
-						</div>
-					</div>
-					<div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.codList.length > 0">
-					       <p class="lead">No existe codigos para reservar</p> 
-					</div>
-				</div>
-			</div>																	
+            <div class="col-sm-12">         
+                <div class="row"  ng-class="{disabled: !prvctrl.ms.exists('configurationCodes-store')}">
+                    <!-- <loading-box wait="vm.loadingCode || vm.loadingsetCode" time="8000" size="lg"></loading-box> -->
+                    <loading-box wait="vm.loadingCode" time="8000" size="lg"></loading-box>
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <div class="form-group fg-line">
+                            <input class="form-control" ng-model="vm.code" placeholder="Ingresar código para reservar aqui" type="text" required>
+                            </input>    
+                        </div>                                      
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group fg-line">
+                            <button class="btn btn-primary waves-effect" ng-click="vm.setCode(vm.configuration.ms_microsite_id,vm.code)" ng-disabled="vm.loadingsetCode || !configurationCodeForm.$valid"><i class="zmdi zmdi-plus m-r-5"></i>Agregar Código
+                            <loading-box wait="vm.loadingsetCode" pls="white" bg="blue" size="xs" time="5000"></loading-box>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body table-responsive ">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Codigos de reserva
+                                        </th>                           
+                                    </tr>
+                                </thead>
+                                <tbody>                             
+                                    <tr ng-repeat="code in vm.codList" ng-class="[code.classNewCode]">
+                                        <td>
+                                            {{code.code}}
+                                        </td>
+                                        <td class="text-right" ng-class="{disabled: !prvctrl.ms.exists('configurationCodes-delete')}">
+                                            <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deleteCode(code.code)" ng-disabled="code.delete">
+                                                <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                                Eliminar
+                                                <loading-box wait="code.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
+                                            </button>
+                                        </td>
+                                    </tr>                               
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.codList.length > 0">
+                           <p class="lead">No existe codigos para reservar</p> 
+                    </div>
+                </div>
+            </div>                                                                  
         </form>
         <div class="row" ng-show="vm.configuration.res_code_status==0" >
-        	<div class="col-sm-12 f-20 text-center min-h-200-px m-b-20 center-content">
-        		<loading-box wait="vm.loadingCode" time="5000" size="lg"></loading-box>
-        		<p class="lead">
-        			Uso de código para reservar desactivado
-        		</p>
-        	</div>
+            <div class="col-sm-12 f-20 text-center min-h-200-px m-b-20 center-content">
+                <loading-box wait="vm.loadingCode" time="5000" size="lg"></loading-box>
+                <p class="lead">
+                    Uso de código para reservar desactivado
+                </p>
+            </div>
         </div>
     </div>
 </div>
