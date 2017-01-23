@@ -1,6 +1,5 @@
 angular.module('turn.controller', ['form.directive', 'localytics.directives'])
     .controller('TurnCtrl', function($scope, $stateParams, TurnFactory, MenuConfigFactory) {
-
         $scope.turns = {
             active: [],
             inactive: []
@@ -235,8 +234,8 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
 
                         //Parse data time turn 
                         dataTurnTime.data_final = $scope.turnData.turn_time;
-
                         TurnFactory.parseTurnTimeDefault(dataTurnTime, $scope.formDataDefault.listAvailability, $scope.turnData.turn_time);
+
                         $scope.generatedTimeTable(true, "edit");
 
                         if ($scope.turnData.days.length <= 0) {

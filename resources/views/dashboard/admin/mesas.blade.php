@@ -11,13 +11,13 @@
     <title data-ng-bind="($title || 'Home') + ' - Bookersnap'"></title>
 
     <!-- Vendor CSS -->
-    <link href="/css/theme/dist/vendor.min.css" rel="stylesheet">
+    <link href="{{env('BASEPATH_ENV_APP_CSS')}}/theme/css/vendor.min.css" rel="stylesheet">
     <!-- Library min CSS -->
-    <link href="/css/app/tables/app.bookersnap.library.tables.min.css" rel="stylesheet">
+    <link href="{{env('BASEPATH_ENV_APP_CSS')}}/css/tables/app.bookersnap.library.tables.min.css" rel="stylesheet">
     <!-- CSS -->
-    <link href="/css/theme/dist/theme.min.css" rel="stylesheet" id="app-level">
+    <link href="{{env('BASEPATH_ENV_APP_CSS')}}/theme/css/theme.min.css" rel="stylesheet" id="app-level">
     <!-- App Css -->
-    <link href="/css/app/tables/style-tables.min.css" rel="stylesheet">
+    <link href="{{env('BASEPATH_ENV_APP_CSS')}}/css/tables/style-tables.min.css" rel="stylesheet">
 
 </head>
 
@@ -42,22 +42,23 @@
 </script>
 
 <!-- Vendor Bookersnap-->
-<script src="/js/theme/dist/library.bower.min.js"></script>
-<script src="/js/theme/dist/app.level.min.js"></script>
-<script src="/js/theme/dist/template.modules.min.js"></script>
+<script src="{{env('BASEPATH_ENV_APP_CSS')}}/theme/js/library.bower.min.js"></script>
+<script src="{{env('BASEPATH_ENV_APP_CSS')}}/theme/js/app.level.min.js"></script>
+<script src="{{env('BASEPATH_ENV_APP_CSS')}}/theme/js/template.modules.min.js"></script>
 
 
 <script type="text/javascript" src="/library/socket.io/socket.io.js" > </script>
 
 <!-- App Library Bookersnap (todos nuestras librerias para que funcione la app)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.library.tables.min.js"></script>
+<script type="text/javascript" src="{{env('BASEPATH_ENV_APP_JS')}}/js/tables/app.bookersnap.library.tables.min.js"></script>
 
 <!-- App Auth Bookersnap (modulo login)
+{{ env('APP_ENV') }}
 <script type="text/javascript" src="/js/dist.app/auth/app.bookersnap.auth.min.js"></script>
 -->
 
 <!-- App Bookersnap (todos nuestros componentes comprimidos)-->
-<script type="text/javascript" src="/js/dist.app/tables/app.bookersnap.tables.min.js"></script>
+<script type="text/javascript" src="{{env('BASEPATH_ENV_APP_JS')}}/js/tables/app.bookersnap.tables.min.js"></script>
 
 
 <script type="text/ng-template" id="overlay-template.html">

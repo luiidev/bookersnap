@@ -171,6 +171,15 @@ body {
 	cursor: pointer;
 }
 
+.promo-list .item table tr td.promo .image {
+	    width: 100%;
+	    height: 120px;
+	    background-repeat: no-repeat;
+	    background-position: center;
+	    background-size: 100%;
+	    margin-bottom: 5px;
+}
+
 .promo-list .item table tr td.hour-only {
 	text-align: center;
 	cursor: pointer;

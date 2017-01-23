@@ -219,17 +219,96 @@ angular.module('reservation.controller', [])
 
             };
 
+
+            var parseResponseErrorApi = function(errors) {
+
+                var dataError = [];
+                var arr = Object.keys(errors).map(function (key) {
+                    var value = errors[key];
+                    var index = key.indexOf(".");
+
+                    if(index < 0){
+
+                        var collectErrors = '';
+                        for (var j = 0; j < value.length; j++) {
+                            var coma = (j>0)?",":"";
+                            collectErrors = coma + '"'+ value[j] + '"';
+                        }
+
+                        var strJson = '{"' + key + '": [' + collectErrors +']}'; 
+                        
+                        if(eval("(" + strJson + ")")){
+                            var dataJson = JSON.parse(strJson);
+                            dataError.push(dataJson);
+                        }
+                        
+                    }else{
+
+                        var subval =  key.substring(index +1);
+
+                        console.log("subval: ", subval);
+
+                    }
+                     
+                });
+
+                
+                var size = errors;
+
+                console.log(dataError);
+                /*for (var i = 0; i < errors.length; i++) {
+                    var value = errors[i];
+                    var index = value.indexOf(".");
+                    console.log("parseResponseErrorApi -> value ", value);
+                    if(index < 0){
+
+                    }else{
+
+                    }
+                }*/
+
+            };
+
+            var initErrors = function(){
+                vm.error = {
+                    status_id: null,
+                    covers: null,
+                    date: null,
+                    hour: null,
+                    duration: null,
+                    server_id: null,
+                    note: null,
+                    guest: {
+                        first_name: null,
+                        last_name: null,
+                        email: null,
+                        phone: null
+                    },
+                    guests: null,
+                    tables: null,
+                    tags: null
+                };
+            };
+
             /**
              * Save. update and cancel reservation
              */
+
             var saveNewReservation = function() {
                 vm.waitingResponse = true;
+                vm.error = {};
                 service.save(vm.reservation)
                     .then(function(response) {
                         message.success(response.data.msg);
                         vm.waitingResponse = false;
                         vm.cancel();
                     }).catch(function(error) {
+                        parseResponseErrorApi(error.data.data);
+                        vm.error = error.data.data;
+
+                        console.log("vm.error ", vm.error);
+                        console.log("vm.error ", vm.error.guest.firstname);
+
                         message.apiError(error);
                         vm.waitingResponse = false;
                     });

@@ -60,8 +60,10 @@ class AuthService
         return null;
     }
 
+
     public function LoginBsUserData($email, $password, $user_agent = null, $client_ip = null, $expire = null)
     {
+        
         if (strlen($email) == 0 || strlen($password) == 0) {
             abort(400, trans('messages.empty_user_or_password'));
         }
@@ -73,6 +75,7 @@ class AuthService
             'client_ip' => $client_ip,
             'expire' => $expire
         ];
+
         $response = HttpRequestHelper::make('POST', $url, $data)->send();
 
         if ($response->isOk()) {

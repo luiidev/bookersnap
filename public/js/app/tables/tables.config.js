@@ -20,14 +20,10 @@
         ])
         .constant("privileges", _PRIVILEGES)
         .constant("IdMicroSitio", _MICROSITE_ID)
-        .constant("DomainBookersnapAdmin", "http://localhost")
-        .constant("UrlServerNotify", "http://localhost:1337")
-        .constant("ApiUrlMesas", 'http://localhost:3004/v1/es/microsites/' + _MICROSITE_ID)
-        .constant("ApiUrlRoot", 'http://localhost:3004/v1/es')
-        /*        .constant("DomainBookersnapAdmin", "http://admin.bookersnap.com")
-                .constant("UrlServerNotify", "http://admin.bookersnap.com:1337")
-                .constant("ApiUrlMesas", 'http://apimesas.studework.info/v1/es/microsites/' + idMicrositio)
-                .constant("ApiUrlRoot", 'http://apimesas.studework.info/v1/es')*/
+        .constant("DomainBookersnapAdmin", env("_WEBAPP_DOMAIN"))
+        .constant("UrlServerNotify", env("_SOCKET_DOMAIN") + ":1337")
+        .constant("ApiUrlMesas", env('_APIMESAS_DOMAIN') + '/v1/es/microsites/' + _MICROSITE_ID)
+        .constant("ApiUrlRoot", env('_APIMESAS_DOMAIN') + '/v1/es')
         .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
             $stateProvider
                 .state('mesas', {
@@ -38,6 +34,6 @@
         .run(function($http, ServerNotification, IdMicroSitio) {
             $http.defaults.headers.common.Authorization = "Bearer " + _TOKEN_SESSION;
             ServerNotification.createConnection();
-            ServerNotification.createRoom("microsites" + IdMicroSitio);
+            ServerNotification.createRoom("microsites" + _MICROSITE_ID);
         });
 })();

@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+
+    protected $redirectTo = '/auth/home';
+    protected $redirectAfterLogout = '/auth/auth';
+    
+    // protected $guard = 'admin';
+
     protected $_authService;
 
     public function __construct(AuthService $authService)
@@ -35,8 +42,6 @@ class AuthController extends Controller
     public function LoginBs(Request $request)
     {
         try {
-            $exp = 604800;
-
             $response  = $this->_authService->LoginBsUserData(
                 $request->input('email'), 
                 $request->input('password'),
@@ -142,6 +147,7 @@ class AuthController extends Controller
         $decodedToken = json_decode(\Crypt::decrypt($bsAuthToken), true);
         try {
             $result = $this->_authService->CheckBsAuthToken($decodedToken['id'], $decodedToken['key']);
+            
             if ($result) {
                 $req->session()->set('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d', $decodedToken['id']);
                 $req->session()->set('user-login', $decodedToken['user-login']);
