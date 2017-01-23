@@ -43,7 +43,9 @@ Route::group(['prefix' => '/admin/auth'], function () {
 
 });
 
-Route::get('/admin/ms/{microsite_id}/mesas', ['uses' => 'Admin\MainController@mesas' ,/*'middleware' =>[ 'auth:web', 'manager.microsite']*/]);
+Route::get('/admin/ms/{microsite_id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' =>['authTempPage',/* 'auth:web', 'manager.microsite'*/]]);
+
+
 
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('dashboard.admin.reservation');
@@ -144,7 +146,7 @@ Route::group(['prefix' => 'v1/{lang}/admin/ms/{micro}/reservation'], function ()
     Route::put('flyer/{id_flyer}', "Admin\Reservation\Promotion\FlyerController@updateFlyer");
 });
 
-Route::group(['prefix' => 'master', 'namespace' => 'Master', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'master', 'namespace' => 'Master'], function () {
 
     Route::get('/', 'MainController@index');
     Route::group(['prefix' => '/ajax'], function () {

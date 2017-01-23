@@ -1,5 +1,5 @@
 <div bs-loading-overlay>
-    <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header.html'"
+    <header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'/template/header_master.html'"
             data-ng-controller="headerCtrl as hctrl"></header>
 
     <section id="main">
@@ -15,40 +15,39 @@
                     <h3>Listado de Roles</h3>
                 </div>
                 <div class="card">
+                
+                    <div class="card-header">
+                        <tabset class="tabset-not-content">
+                            <tab heading="{{role.name}}" ng-repeat="role in vm.typesRoleList" ng-click="vm.filterRole(role.id)"></tab>
+                        </tabset>
+                    </div>
+
                     <div class="card-header">
                         <div class="row" ng-show="vm.can.createRole">
-                            <div class="col-md-5" ng-class="(vm.roleError.name.length>0?'has-error':'')">
-
-                                <div class="row">
-                                    <form ng-submit="vm.registerRole()">
-                                        <div class="col-md-8 form-group fg-float">
-                                            <div class="fg-line">
-                                                <input type="text" ng-model="vm.role.name"
-                                                       class="form-control input-sm">
-                                                <label class="control-label fg-label">
-                                                    Nuevo Rol
-                                                </label>
-                                            </div>
-                                            <small class="help-block"
-                                                   ng-show="vm.roleError.name.length>0">
-                                                <span ng-repeat="error in vm.roleError.name">{{error}}</span>
-                                            </small>
+                            <div class="col-xs-12" ng-class="(vm.roleError.name.length>0?'has-error':'')">
+                                <form ng-submit="vm.registerRole()">
+                                    <div class="form-group fg-float col-xs-12 col-sm-5">
+                                        <div class="fg-line">
+                                            <input type="text" ng-model="vm.role.name" class="form-control input-sm" />
+                                            <label class="control-label fg-label">Nuevo Rol</label>
                                         </div>
-                                        <div class="col-md-4">
-                                            <button class="btn btn-sm btn-primary">Registrar</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                        <small class="help-block" ng-show="vm.roleError.name.length>0">
+                                            <span ng-repeat="error in vm.roleError.name">{{error}}</span>
+                                        </small>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-7">
+                                        <button class="btn btn-sm btn-primary">Registrar</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
                     </div>
-                    <div class="card-body">
+
+                    <div class="card-body card-padding">
 
                         <div class="table-responsive">
-                            <table ng-table="vm.tableRoles" class="table table-striped table-vmiddle"
-                                   show-filter="true">
-                                <tr ng-repeat="item in $data" ng-class="{ 'active': item.$edit }">
+                            <table ng-table="vm.tableRoles" class="table table-striped table-vmiddle" show-filter="true">
+                                <tr ng-repeat="item in $data | roleFilter:vm.role.type_admin_id" ng-class="{ 'active': item.$edit }">
                                     <td data-title="'N°'">
                                         <span ng-if="!item.$edit">{{ item.id }}</span>
                                     </td>
@@ -59,27 +58,17 @@
                                             <input class="form-control input-sm" type="text" ng-model="item.name"/>
                                         </div>
 
-                                        <small class="help-block"
-                                               ng-show="item.$errors.name.length>0 && item.$edit == true">
+                                        <small class="help-block" ng-show="item.$errors.name.length>0 && item.$edit == true">
                                             <span ng-repeat="error in item.$errors.name">{{error}}</span>
                                         </small>
                                     </td>
                                     <td data-title="'Estado'">
-                                        <div class="btn-group" ng-if="!item.$edit" ng-show="vm.can.editRole">
-                                            <!--<label class="btn" ng-class="item.status==1?'btn-primary':''"-->
-                                            <!--ng-model="item.status" uib-btn-radio="1"-->
-                                            <!--ng-change="vm.changeRoleStatus(item)">ON</label>-->
-                                            <!--<label class="btn" ng-class="item.status==0?'btn-primary':''"-->
-                                            <!--ng-model="item.status" uib-btn-radio="0"-->
-                                            <!--ng-change="vm.changeRoleStatus(item)">OFF</label>-->
-
-
-                                        </div>
+                                        <div class="btn-group" ng-if="!item.$edit" ng-show="vm.can.editRole"></div>
                                         <div class="toggle-switch" data-ts-color="blue">
                                             <input id="ts{{item.id}}" ng-disabled="!vm.can.editRole"
                                                    ng-model="item.status" ng-true-value="1" ng-false-value="0"
                                                    type="checkbox" hidden="hidden"
-                                                   ng-change="vm.changeRoleStatus(item)">
+                                                   ng-change="vm.changeRoleStatus(item)"/>
                                             <label for="ts{{item.id}}" class="ts-helper"></label>
                                         </div>
                                     </td>

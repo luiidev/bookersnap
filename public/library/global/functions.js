@@ -7,6 +7,11 @@ http://web.aplication.bookersnap/admin/ms/1/mesas#/book
 ms/1/ 
 id = 1
 -----------*/
+/*Funcion para aceder a variables globales*/
+var env = function(variable){
+    return window[variable];
+};
+
 var obtenerIdMicrositio = function() {
     var url = location.href;
     var pos = url.indexOf("ms");
@@ -509,6 +514,7 @@ var alertMultiple = function(title, text, type, icon, from, align, timer, x, y) 
 Recibe los parametros de angular cuando devuelve un error de api, con esta funcion devolvemos en un objeto al controlador con la promesa
 usarlo para todas las funciones que devuelven : error api
  */
+
 var jsonErrorData = function(data, status, headers) {
     var response = {
         data: data,

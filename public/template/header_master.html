@@ -1,0 +1,28 @@
+<ul class="header-inner clearfix">
+    <li data-model-left="mactrl.sidebarToggle.left" data-ng-class="{ 'open': mactrl.sidebarToggle.left === true }" data-target="mainmenu" data-toggle-sidebar="" id="menu-trigger">
+        <div class="line-wrap">
+            <div class="line top">
+            </div>
+            <div class="line center">
+            </div>
+            <div class="line bottom">
+            </div>
+        </div>
+    </li>
+    <li class="logo hidden-xs">
+        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="home">
+            Bookersnap
+        </a>
+    </li>
+    <li class="pull-right">
+        <ul class="top-menu">
+            <li class="dropdown" uib-dropdown="">
+                <a href="" uib-dropdown-toggle="" ng-click="nctrl.closeSession()"><i class="tm-icon glyphicon glyphicon-off"></i></a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<audio id="audio_notipromocion">
+    <source src="/media/Arpeggio.ogg" type="audio/ogg">
+</audio>
