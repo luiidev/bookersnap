@@ -23,7 +23,7 @@ class Authenticate
     {
         try {
             $exp = 604800; // 1 semana en segundos
-
+            
             $token_session = $request->session()->get("token_session");
             $JWTAuth =  JWTAuth::setToken($token_session);
             $token = $JWTAuth->getToken();
@@ -37,13 +37,10 @@ class Authenticate
                     return $next($request);
                 }
             }
-        } catch (TokenExpiredException $e) {
-            // return redirect()->guest(route('microsite-login'));
-        } catch (TokenInvalidException $e) {
-            // return redirect()->guest(route('microsite-login'));
-        } catch (JWTException $e) {
-            // return redirect()->guest(route('microsite-login'));
         }
+        catch (TokenExpiredException $e) {}
+        catch (TokenInvalidException $e) {}
+        catch (JWTException $e) {}
 
         return redirect()->guest(route('microsite-login'));
     }

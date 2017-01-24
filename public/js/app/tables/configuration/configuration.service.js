@@ -94,7 +94,17 @@ angular.module('configuration.service', [])
             }
         };
     })
-    .service('ConfigurationService', function($q, ConfigurationDataService, ConfigurationDataUser) {
+    .service('ConfigurationDataForm', function($http, ApiUrlMesas) {
+        return {
+            getForm: function() {
+                return $http.get(ApiUrlMesas + "/configuration/form");
+            },
+            updateForm: function(data) {
+                return $http.put(ApiUrlMesas + "/configuration/form", data);
+            }
+        };
+    })
+    .service('ConfigurationService', function($q, ConfigurationDataService, ConfigurationDataUser, ConfigurationDataForm) {
         return {
             getConfig: function() {
                 var defered = $q.defer();
@@ -254,6 +264,12 @@ angular.module('configuration.service', [])
                 });
                 return promise;
 
+            },
+            getForm: function() {
+                return ConfigurationDataForm.getForm();
+            },
+            updateForm: function(data) {
+                return ConfigurationDataForm.updateForm(data);
             },
             initDataFakeList: function(cant, prefijo) {
                 //Max cant de usuarios 1 -> 1000

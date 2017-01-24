@@ -52,16 +52,16 @@
             </a>
             <ul>
                 <li>
-                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.calendar" data-ui-sref-active="active">
+                    <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.calendar" data-ui-sref-active="active" ng-show="prvctrl.ms.contains('zone-show', 'turn-show','calendar-update', 'reservationTag-show', 'guestTag-show', 'configurationRes-show','configurationGuest-update','configurationCodes-show','configurationUser-show')">
                         CONFIGURACIÓN
                     </a>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.guest" data-ui-sref-active="active">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.guest" data-ui-sref-active="active" ng-show="prvctrl.ms.exists('guest-show')">
                             CLIENTES
                         </a>
                     </li>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.book" data-ui-sref-active="active">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.book" data-ui-sref-active="active" ng-show="prvctrl.ms.exists('block-show')">
                             LIBRO DE RESERVACIONES
                         </a>
                     </li>
@@ -71,17 +71,17 @@
                         </a>
                     </li> -->
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.grid" data-ui-sref-active="active">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.grid" data-ui-sref-active="active" ng-show="prvctrl.ms.exists('reservation-show')">
                             GRID
                         </a>
                     </li>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation" data-ui-sref-active="active">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation" data-ui-sref-active="active" ng-show="prvctrl.ms.exists('reservation-show')">
                             ZONAS Y MESAS
                         </a>
                     </li>
                     <li>
-                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation.add({date : mactrl.fecha_actual})">
+                        <a data-ng-click="mactrl.sidebarStat($event)" data-ui-sref="mesas.floor.reservation.add({date : mactrl.fecha_actual})" ng-show="prvctrl.ms.exists('reservation-store')">
                             RESERVAR
                         </a>
                     </li>
