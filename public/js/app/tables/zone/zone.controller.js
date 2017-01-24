@@ -257,16 +257,21 @@ angular.module('zone.controller', ['ngDraggable'])
 
             if (option == "min") {
                 $scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMin.id;
+
+                if ($scope.coversList.selectedMax.id < $scope.coversList.selectedMin.id) {
+                    $scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMin.id;
+                    $scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMin.id;
+                    getDataTableSelected($scope.indexTable);
+                }
+
             } else {
                 $scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
-            }
 
-            if ($scope.coversList.selectedMax.id < $scope.coversList.selectedMin.id) {
-
-                $scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMax.id;
-                $scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
-
-                getDataTableSelected($scope.indexTable);
+                if ($scope.coversList.selectedMax.id < $scope.coversList.selectedMin.id) {
+                    $scope.itemTables[$scope.indexTable].minCover = $scope.coversList.selectedMax.id;
+                    $scope.itemTables[$scope.indexTable].maxCover = $scope.coversList.selectedMax.id;
+                    getDataTableSelected($scope.indexTable);
+                }
             }
 
             updateHeaderZone();
@@ -362,12 +367,12 @@ angular.module('zone.controller', ['ngDraggable'])
             $scope.saveClick = true;
 
             if (option == "create") {
-                ZoneFactory.createZone(dataZone).success(function(response) {
+                ZoneFactory.createZone(dataZone).then(function(response) {
                     messageAlert("Success", "Zona creada correctamente", "success", 0, true);
                     $state.reload();
-                }).error(function(data, status, headers) {
+                }).catch(function(error, status, headers) {
                     $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning", 0, true);
+                    messageErrorApi(error.data, "Error", "warning", 0, true);
                 });
 
             } else {
@@ -375,9 +380,9 @@ angular.module('zone.controller', ['ngDraggable'])
                 ZoneFactory.editZone(dataZone).success(function(response) {
                     messageAlert("Success", "Zona actualizada correctamente", "success", 0, true);
                     $state.go('mesas.zone.active');
-                }).error(function(data, status, headers) {
+                }).error(function(error, status, headers) {
                     $scope.saveClick = false;
-                    messageErrorApi(data, "Error", "warning", 0, true);
+                    messageErrorApi(error.data, "Error", "warning", 0, true);
                 });
             }
         };

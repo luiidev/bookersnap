@@ -64,17 +64,19 @@
                                                 <div class="cell-item-info">
                                                     <div class="cell-item-info-title" ng-if="reserva.guest === null && reserva.styles.conflictIni || reserva.styles.conflicts === false">
                                                         <span ng-if="reserva.guest !== null">
-                                                            {{ reserva.guest.first_name }} {{ reserva.guest.last_name }}
+                                                            <span ng-if="reserva.hours_duration != '00:15:00'">{{ reserva.guest.first_name }} {{ reserva.guest.last_name }}</span>
+                                                            <span ng-if="reserva.hours_duration == '00:15:00'">{{ (reserva.guest.first_name).substring(0,1) }}</span>
                                                         </span>
-                                                        <span ng-if="reserva.guest == null">
-                                                            Reservacion sin nombre
+                                                        <span ng-if="reserva.guest == null" >
+                                                            <span ng-if="reserva.hours_duration != '00:15:00'">Reservacion sin nombre</span>
+                                                            <span ng-if="reserva.hours_duration == '00:15:00'">R</span>
                                                         </span>
                                                     </div>
                                                     <div class="cell-item-info-title" ng-if="!reserva.styles.conflictIni &&reserva.styles.conflicts === true">
                                                         Conflicto reserva
                                                     </div>
                                                     <div class="cell-item-info-subtitle" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">
-                                                        {{ reserva.num_guest }} Invitados 
+                                                        {{ reserva.num_guest }} <span ng-if="reserva.hours_duration != '00:15:00'">Invitados </span>
                                                     </div>
                                                 </div>
                                                 <div class="cell-item-res-status" ng-if="reserva.styles.conflictIni || reserva.styles.conflicts === false">

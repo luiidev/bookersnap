@@ -92,5 +92,25 @@
                 </div>
             </div>
         </div>
+        
+        <div class="grid-turns-none" ng-if="vm.zones.data.length === 0">
+            <div class="col-md-12 grid-turns-none-inner">
+                <div class="text-center">
+                    <div class="grid-turns-none-tittle">
+                        <h1>
+                            No hay turnos asignados para esta fecha.
+                        </h1>
+                    </div>
+                    <div class="grid-turns-none-subtittle">
+                        <p>                                
+                            Debe habilitar un turno en esta fecha para ver esta página. Su editor de turnos se encuentra en la pestaña Configurar calendario.
+                        </p>
+                    </div>
+                    <button class="btn btn-default" ui-sref="mesas.calendar">
+                        Habilitar turnos
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

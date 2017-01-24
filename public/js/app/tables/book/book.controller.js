@@ -5,7 +5,14 @@ angular.module('book.controller', [])
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
         vm.btnRageCalendar = false;
-
+        vm.isPrinted = false;
+        
+        vm.onBeforePrint = function(){
+            vm.isPrinted = true;
+        };
+        vm.onLoadScreen = function(){
+            vm.isPrinted = false;
+        };
         /**
          * Manejo de rango de fechas
          */
@@ -180,6 +187,8 @@ angular.module('book.controller', [])
         vm.listBook = []; //Listado del book para los filtros
         vm.listBookReserva = []; //Listado del book,solo reservaciones
         vm.listBookMaster = []; //Listado del book original (no se afecta con los filtros)
+        
+        
         vm.sources = [];
         vm.zones = [];
         vm.statusReservation = []; //Listado de status para reservaciones       
@@ -234,7 +243,6 @@ angular.module('book.controller', [])
         };
 
         //vm.hideFields = {};
-
         //Book View (Reservaciones)
         vm.bookView = false;
 

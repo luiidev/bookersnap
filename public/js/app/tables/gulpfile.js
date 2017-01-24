@@ -12,8 +12,8 @@ var env = "dev"; // [dev || dist]
 //var distributionApp = '../../../assets/js/app/'+env+'/tables';
 //var distributionStyleApp = '../../../assets/css/app/'+env+'/tables';
 
-var distributionApp = '../../../app/js/tables';
-var distributionStyleApp = '../../../app/css/tables';
+var distributionApp = '../../../app/tables/js';
+var distributionStyleApp = '../../../app/tables/css';
 
 /* ------------- Tareas de aplicacion -------------*/
 //Escanea los modulos / componentes que agregamos a la aplicacion y los comprime en un solo archivo

@@ -1,4 +1,151 @@
-<section id="main">
+<style type="text/css" media="print" >    
+    @media print{
+        .content-media-screen{
+            display: none;
+        }
+        .content-media-print{
+            display: block;
+        }
+    }
+</style>
+<div class="hidden">
+{{
+    vm.numColumnTablePrint = 5;
+    vm.numColumnTablePrint = (vm.configReservation.status_people_1 == 1) ? vm.numColumnTablePrint +1 : vm.numColumnTablePrint;
+    vm.numColumnTablePrint = (vm.configReservation.status_people_2 == 1) ? vm.numColumnTablePrint +1 : vm.numColumnTablePrint;
+    vm.numColumnTablePrint = (vm.configReservation.status_people_3 == 1) ? vm.numColumnTablePrint +1 : vm.numColumnTablePrint;
+    vm.numColumnTablePrint = vm.showFieldReservation('consume') ? vm.numColumnTablePrint +1 : vm.numColumnTablePrint;
+    vm.numColumnTablePrint = vm.showFieldReservation('source') ? vm.numColumnTablePrint +1 : vm.numColumnTablePrint;
+}}
+</div>
+<section class="content-media-print book">
+       
+    <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="{{ vm.numColumnTablePrint }}">
+                            <h2>Lista de reservaciones</h2>
+                        </th>
+                    </tr>
+                        
+                    <tr>
+                        <th>
+                            CLIENTE
+                        </th>
+                        <th>
+                            INVITADOS
+                        </th>
+                        <th>
+                            HORA
+                        </th>
+                        <th>
+                            FECHA
+                        </th>
+                        <th ng-if="vm.configReservation.status_people_1 == 1">
+                            HOMBRES
+                        </th>
+                        <th ng-if="vm.configReservation.status_people_2 == 1">
+                            MUJERES
+                        </th>
+                        <th ng-if="vm.configReservation.status_people_3 == 1">
+                            NIÑOS
+                        </th>
+                        <th ng-if="vm.showFieldReservation('consume')">
+                            CONSUMO
+                        </th>
+                        <th ng-if="vm.showFieldReservation('source')">
+                            ORIGEN
+                        </th>
+                        <th>
+                            ESTADO
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-book" item="item" ng-if="!vm.bookView" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView | blocksFilter:vm.bookFilter.blocks:vm.bookView" ng-show="item.reservation != null">
+                        <td>
+                            <div>
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'"></span>
+                                <span ng-bind="item.reservation.guest.last_name"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span ng-bind="item.reservation.num_guest"></span>
+                        </td>
+                        <td>
+                            <span ng-bind="item.time_text"></span>
+                        </td>
+                        <td>
+                            <span ng-bind="item.reservation.date_reservation | date:'dd/MM/yyyy'"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_1 == 1">
+                            <span ng-bind="item.reservation.num_people_1  || 0"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_2 == 1">
+                            <span ng-bind="item.reservation.num_people_2  || 0"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_3 == 1">
+                            <span ng-bind="item.reservation.num_people_3  || 0"></span>
+                        </td>
+
+                        <td class="" ng-show="vm.showFieldReservation('consume')">
+                            <span ng-bind="item.reservation.consume || '00.00'"></span>
+                        </td>
+
+                        <td class="" ng-show="vm.showFieldReservation('source')">
+                            <span ng-bind="item.reservation.source.name"></span>
+                        </td>
+
+                        <td>
+                            <span class="{{ item.reservation.status.tag }}" ng-bind="item.reservation.status.name"></span>
+                        </td>
+                    </tr>
+                    
+                    <tr class="item-book" item="item" ng-if="vm.bookView" ng-repeat="item in vm.listBookReserva | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView | blocksFilter:vm.bookFilter.blocks:vm.bookView" >
+                        <td>
+                            <div>
+                                <span ng-bind="item.reservation.guest.first_name || ' Sin nombre'"></span>
+                                <span ng-bind="item.reservation.guest.last_name"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span ng-bind="item.reservation.num_guest"></span>
+                        </td>
+                        <td>
+                            <span ng-bind="item.time_text"></span>
+                        </td>
+                        <td>
+                            <span ng-bind="item.reservation.date_reservation | date:'dd/MM/yyyy'"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_1 == 1">
+                            <span ng-bind="item.reservation.num_people_1  || 0"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_2 == 1">
+                            <span ng-bind="item.reservation.num_people_2  || 0"></span>
+                        </td>
+                        <td ng-if="vm.configReservation.status_people_3 == 1">
+                            <span ng-bind="item.reservation.num_people_3  || 0"></span>
+                        </td>
+
+                        <td class="" ng-show="vm.showFieldReservation('consume')">
+                            <span ng-bind="item.reservation.consume || '00.00'"></span>
+                        </td>
+
+                        <td class="" ng-show="vm.showFieldReservation('source')">
+                            <span ng-bind="item.reservation.source.name"></span>
+                        </td>
+
+                        <td>
+                            <span class="{{ item.reservation.status.tag }}" ng-bind="item.reservation.status.name"></span>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+
+            </table>
+</section>
+
+<section id="main" class="content-media-screen">
     <section class="w-100 p-0">
         <div data-ng-include="'/js/app/tables/book/view/partials/menu-book.html'">
         </div>
@@ -70,7 +217,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-book" ng-if="!vm.bookView">
+        <div class="content-book" ng-if="!vm.bookView" >
             <div class="item-book" item="item" ng-repeat="item in vm.listBook | turnsFilter:vm.bookFilter.typeTurn:vm.bookView | sourcesFilter:vm.bookFilter.sources:vm.bookView | zonesFilter:vm.bookFilter.zones:vm.bookView | filter:vm.bookFilter.text | numGuestFilter:vm.bookFilter.numGuest.selected:vm.bookView | noStatusFilter:vm.bookFilter.noStatus:vm.bookView | blocksFilter:vm.bookFilter.blocks:vm.bookView">
                 <div class="item available" ng-click="vm.createReservation(item)" ng-show="item.reservation == null && item.block == null && item.available">
                     <span class="title">
@@ -327,7 +474,28 @@
                 </div>
             </div>
         </div>
-        <div class="content-book" ng-if="vm.bookView">
+        
+        <div class="grid-turns-none" ng-if="vm.listBook.length === 0 && !vm.bookView">
+            <div class="col-md-12 grid-turns-none-inner">
+                <div class="text-center">
+                    <div class="grid-turns-none-tittle">
+                        <h1>
+                            No hay turnos asignados para esta fecha.
+                        </h1>
+                    </div>
+                    <div class="grid-turns-none-subtittle">
+                        <p>                                
+                            Debe habilitar un turno en esta fecha para ver esta página. Su editor de turnos se encuentra en la pestaña Configurar calendario.
+                        </p>
+                    </div>
+                    <button class="btn btn-default" ui-sref="mesas.calendar">
+                        Habilitar turnos
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-book" ng-if="vm.bookView" ng-init="vm.dataListBookReserva = false">
             <div class="item-book" item="item" ng-repeat="item in vm.listBookReserva">
                 <div class="item reservation">
                     <div class="box-guest">
@@ -556,6 +724,19 @@
                 </div>
             </div>
         </div>
+        
+        <div class="grid-turns-none" ng-if="vm.listBookReserva.length === 0 && vm.bookView">
+            <div class="col-md-12 grid-turns-none-inner">
+                <div class="text-center">
+                    <div class="grid-turns-none-tittle">
+                        <h1>
+                            No se encontraron reservaciones.
+                        </h1>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        
         <div class="text-center" ng-hide="vm.bookView">
             <br>
             </br>
@@ -564,6 +745,9 @@
             <uib-pagination boundary-links="true" class="pagination-sm" items-per-page="vm.paginate_reservation.page_size" max-size="vm.paginate_reservation.max_size" ng-change="vm.changePagination()" ng-model="vm.paginate_reservation.selected" total-items="vm.paginate_reservation.total_pages">
             </uib-pagination>
         </div>
+        
+        
+        
         <footer class="container-footer-book" data-ng-include="'/js/app/tables/book/view/partials/footer-book.html'">
         </footer>
     </section>

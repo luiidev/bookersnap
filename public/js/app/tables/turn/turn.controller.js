@@ -215,7 +215,7 @@ angular.module('turn.controller', ['form.directive', 'localytics.directives'])
                 },
                 function error(response) {
                     $scope.turnForm.saveClick = false;
-                    messageErrorApi(response, "Error", "warning");
+                    messageErrorApi(response.data, "Error", "warning");
                 }
             );
         };
