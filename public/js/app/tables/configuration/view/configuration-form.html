@@ -7,23 +7,20 @@
         </h2>
     </div>
     <div class="card-body">
-        <form name="configurationBasicForm" novalidate="">
+        <form name="configurationBasicForm" novalidate="" ng-class="{disabled: !prvctrl.ms.exists('configurationForm-update')}">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group fg-line">
-                        <label>
-                            Campos de formularios
-                        </label>
+                        <label>Campos de formularios</label>
                         <div class="checkbox">
                             <label>
                                 <input ng-false-value="0" ng-model="vm.configuration.status_people_1" ng-true-value="1" type="checkbox">
-                                    <i class="input-helper">
-                                    </i>
+                                    <i class="input-helper"></i>
                                     Hombres
                                 </input>
                             </label>
                         </div>
-                        <!-- <div class="checkbox">
+                        <div class="checkbox">
                             <label>
                                 <input ng-false-value="0" ng-model="vm.configuration.status_people_2" ng-true-value="1" type="checkbox">
                                     <i class="input-helper">
@@ -40,18 +37,16 @@
                                     Niños
                                 </input>
                             </label>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 m-b-20 form-group">
                     <button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationBasicForm$valid || vm.flagSaveConfiguration || vm.loadingConfiguration">
-                        <i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5">
-                        </i>
+                        <i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5"></i>
                         Guardar Cambios
-                        <loading-box bg="blue" pls="white" size="xs" time="5000" wait="vm.flagSaveConfiguration">
-                        </loading-box>
+                        <loading-box bg="blue" pls="white" size="xs" time="5000" wait="vm.flagSaveConfiguration"></loading-box>
                     </button>
                 </div>
             </div>

@@ -1,40 +1,36 @@
 <div class="configuration-reservation-form">
-	<div class="card-header p-l-0 p-r-0">
-		<h2>
-			Usuarios provilegiados
-			<small> Aqui puedes agregar a los usuarios que tienen permitido hacer reservas online
-			</small>
-		</h2>
-	</div>
+    <div class="card-header p-l-0 p-r-0">
+        <h2>Usuarios provilegiados<small>Aqui puedes agregar a los usuarios que tienen permitido hacer reservas online</small></h2>
+    </div>
     <div class="card-body p-l-100 p-r-50">
-		<div class="row">
-			<div class="col-sm-3 col-sm-offset-3 p-b-20">
-				<div class="form-group fg-line">
-					<div class="radio m-b-15">
-						<label>
-							<input type="radio" value="1" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
-							<i class="input-helper"></i>
-							Activar
-						</label>
-					</div>		
-				</div>										
-			</div>
-			<div class="col-sm-3 p-b-20">
-				<div class="form-group fg-line">
-					<div class="radio m-b-15">
-						<label>
-							<input type="radio" value="0" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
-							<i class="input-helper"></i>
-							Desactivar
-						</label>
-					</div>
-				</div>										
-			</div>
-		</div>
+        <div class="row" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-update')}">
+            <div class="col-sm-3 col-sm-offset-3 p-b-20">
+                <div class="form-group fg-line">
+                    <div class="radio m-b-15">
+                        <label>
+                            <input type="radio" value="1" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
+                            <i class="input-helper"></i>
+                            Activar
+                        </label>
+                    </div>      
+                </div>                                      
+            </div>
+            <div class="col-sm-3 p-b-20">
+                <div class="form-group fg-line">
+                    <div class="radio m-b-15">
+                        <label>
+                            <input type="radio" value="0" ng-model="vm.configuration.res_privilege_status" ng-change="vm.updatePrivilegeStatus(vm.configuration.res_privilege_status)">
+                            <i class="input-helper"></i>
+                            Desactivar
+                        </label>
+                    </div>
+                </div>                                      
+            </div>
+        </div>
 
         <form  class="min-h-200-px row" name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
             <div class="col-sm-12">
-                <div class="row"> 
+                <div class="row" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-store')}"> 
                     <!-- <loading-box wait="vm.loadingPrivilege || vm.loadingGetUser" time="8000" size="lg"></loading-box> -->
                     <loading-box wait="vm.loadingPrivilege" time="8000" size="lg"></loading-box>
                     <div class="col-sm-4 col-sm-offset-3">
@@ -67,51 +63,42 @@
                 </div> 
                 <div class="row">
                     <div class="col-sm-12">
-            			<div class="card-body table-responsive">
-            				<table class="table">
-            					<thead>
-            						<tr>
-            							<th>
-            								Nombre de usuario
-            							</th>
-            							<th>
-            								Email
-            							</th>
-            							<th class="text-center">
-            								Tipo de cuenta
-            							</th>					                
-            						</tr>
-            					</thead>
-            					<tbody>
-            						<tr ng-repeat="user in vm.userList">
-            							<td>
-            								{{user.firstname+' '+user.lastname}}
-            							</td>
-            							<td>
-            								{{user.email | lowercase}}
-            							</td>
-            							<td>
-                                            <label class="social-network" ng-repeat="social in user.socials">{{social.name | uppercase}}</label>            								
-            							</td>
-            							<td class="text-right">
-        				                    <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
+                        <div class="card-body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de usuario</th>
+                                        <th>Email</th>
+                                        <th class="text-center">
+                                            Tipo de cuenta
+                                        </th>                                   
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="user in vm.userList">
+                                        <td>{{user.firstname+' '+user.lastname}}</td>
+                                        <td>{{user.email | lowercase}}</td>
+                                        <td>
+                                            <label class="social-network" ng-repeat="social in user.socials">{{social.name | uppercase}}</label>                                            
+                                        </td>
+                                        <td class="text-right" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-delete')}">
+                                            <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
                                                 <loading-box wait="user.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
-        				                    	<i class="zmdi zmdi-delete zmdi-hc-fw">
-        				                    	</i>
-        				                    	Eliminar
-        				                    </button>
-        					            </td>
-        					        </tr>					            
-        					    </tbody>
-        					</table>
-        				</div>
+                                                <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>                               
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="center-content col-sm-12 min-h-100-px" ng-hide="vm.userList.length > 0">
                            <p class="lead">No existe usuarios con privilegios</p> 
                     </div>               
                 </div>                                                                  
             </div>                         
-		</form>
+        </form>
         <div class="row" ng-show="vm.configuration.res_privilege_status==0" >
             <div class="col-sm-12 f-20 text-center min-h-200-px m-b-20 center-content">
                 <loading-box wait="vm.loadingPrivilege" time="5000" size="lg"></loading-box>
@@ -120,7 +107,7 @@
                 </p>
             </div>
         </div>      
-	</div>
+    </div>
 </div>
 
 <script type="text/ng-template" id="customPopupTemplate.html" >       

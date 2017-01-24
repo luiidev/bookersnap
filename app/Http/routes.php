@@ -46,6 +46,7 @@ Route::group(['prefix' => '/admin/auth'], function () {
 Route::get('/admin/ms/{microsite_id}/mesas', ['uses' => 'Admin\MainController@mesas' ,'middleware' =>['authTempPage',/* 'auth:web', 'manager.microsite'*/]]);
 
 
+
 Route::get('/admin/ms/{id}/reservation', function () {
     return view('dashboard.admin.reservation');
 });

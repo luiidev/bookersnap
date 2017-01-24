@@ -1,19 +1,13 @@
-<!--<nav class="ha-menu">
-    <ul>
-    	<li ng-repeat="item in vm.menuFloor" class="waves-effect {{vm.menuFloor==$index ? 'btn-primary-nav': 'btn-default-nav'}}" >
-        	<a data-ui-sref="{{item.url}}">
-            	{{item.name}}
-            </a>
-        </li>                
-	</ul>
-</nav>
--->
+<ul class="tab-nav tab-menu-floor">
+    <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active">
+        <a data-ui-sref="mesas.floor.reservation">Reservaciones</a>
+    </li>
+    <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active">
+        <a data-ui-sref="mesas.floor.walkin">Lista de espera</a>
+    </li>
+    <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active" ng-class="{disabled: !prvctrl.ms.exists('server-show')}">
+        <a data-ui-sref="mesas.floor.server">Servidores</a>
+    </li>
+</ul>
 
-        <ul class="tab-nav tab-menu-floor">
-            <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active">
-            <a data-ui-sref="mesas.floor.reservation">Reservaciones</a></li>
-            <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active"><a data-ui-sref="mesas.floor.walkin">Lista de espera</a></li>
-            <li class="btn-wave col-xs-4 p-0 text-center" data-ui-sref-active="active"><a data-ui-sref="mesas.floor.server">Servidores</a></li>
-        </ul>
-
-        <data ui-view></data>
+<data ui-view></data>
