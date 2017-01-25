@@ -9,7 +9,6 @@ angular.module('grid.controller', [])
                 function success(response) {
                     vm.turns = gridFactory.parseShiftsActives(response);
                     var turnSelected = detectedTurnNow(vm.turns);
-
                     $state.go("mesas.grid.index", {
                         date: vm.fecha_actual,
                         shift: turnSelected.name,
@@ -36,6 +35,10 @@ angular.module('grid.controller', [])
                     turnSelected = turn;
                 }
             });
+
+            if (turnSelected.name === undefined) {
+                turnSelected = turns[0];
+            }
 
             return turnSelected;
         };
