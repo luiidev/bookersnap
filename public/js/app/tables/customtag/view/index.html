@@ -6,7 +6,7 @@
             <div class="card p-t-20 p-b-20">
                 <div class="pm-body clearfix list-table">
                     <div class="row guest-tags-form">
-                        <form class="form-inline" name="customGuestTag" novalidate>
+                        <form class="form-inline" name="customGuestTag" novalidate ng-class="{disabled: !prvctrl.ms.exists('adminms-table-guestTag-store')}">
                                <div class="col-sm-12">
                                     <label for="code">Tags para invitados</label> 
                                 </div>
@@ -23,7 +23,7 @@
                                     </div>
                                 </div>
                         </form>
-                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" >
+                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" ng-class="{disabled: !prvctrl.ms.exists('adminms-table-guestTag-delete')}">
                             <loading-box wait="vm.initCT" size="lg" time="5000"></loading-box>
                             <div class="tag-item guest center-content" ng-repeat="tag in vm.guestTagList" ng-show="!vm.initCT && vm.guestTagList.length" >
                                     {{tag.name | uppercase}}
@@ -38,7 +38,7 @@
                     </div>
                     <hr>
                     <div class="row guest-tags-form">
-                        <form class="form-inline" name="customReservationTag" novalidate>
+                        <form class="form-inline" name="customReservationTag" novalidate ng-class="{disabled: !prvctrl.ms.exists('adminms-table-reservationTag-store')}">
                                <div class="col-sm-12">
                                     <label for="code">Tags de reservacion</label> 
                                 </div>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                         </form>
-                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" >
+                        <div class="col-sm-12 tags-list min-h-100-px m-t-20" ng-class="{disabled: !prvctrl.ms.exists('adminms-table-reservationTag-delete')}">
                             <loading-box wait="vm.initRT" size="lg" time="5000"></loading-box>
                             <div class="tag-item reservation" ng-repeat="tagR in vm.reservationTagList" ng-show="!vm.initRT && vm.reservationTagList.length">
                                 {{tagR.name | uppercase}}

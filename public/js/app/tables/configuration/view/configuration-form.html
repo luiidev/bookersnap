@@ -1,41 +1,16 @@
 <div class="configuration-reservation-form">
     <div class="card-header p-l-0 p-r-0">
-        <h2>
-            Configuración de campos de formulario
-            <small>
-            </small>
-        </h2>
+        <h2>Configuración de campos de formulario<small></small></h2>
     </div>
     <div class="card-body">
         <form name="configurationBasicForm" novalidate="" ng-class="{disabled: !prvctrl.ms.exists('configurationForm-update')}">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-xs-12">
                     <div class="form-group fg-line">
                         <label>Campos de formularios</label>
-                        <div class="checkbox">
+                        <div class="checkbox" ng-repeat="input in vm.form">
                             <label>
-                                <input ng-false-value="0" ng-model="vm.configuration.status_people_1" ng-true-value="1" type="checkbox">
-                                    <i class="input-helper"></i>
-                                    Hombres
-                                </input>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input ng-false-value="0" ng-model="vm.configuration.status_people_2" ng-true-value="1" type="checkbox">
-                                    <i class="input-helper">
-                                    </i>
-                                    Mujeres
-                                </input>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input ng-false-value="0" ng-model="vm.configuration.status_people_3" ng-true-value="1" type="checkbox">
-                                    <i class="input-helper">
-                                    </i>
-                                    Niños
-                                </input>
+                                <input type="checkbox" ng-false-value="0" ng-true-value="1" ng-model="input.status"><i class="input-helper"></i>{{ input.name }}</input>
                             </label>
                         </div>
                     </div>
@@ -43,10 +18,10 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 m-b-20 form-group">
-                    <button class="btn btn-primary btn-sm m-t-10 waves-effect" ng-click="vm.configurationUpdate(vm.configuration.ms_microsite_id,vm.configuration)" ng-disabled="configurationBasicForm$valid || vm.flagSaveConfiguration || vm.loadingConfiguration">
-                        <i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5"></i>
+                    <button class="btn btn-primary btn-sm m-t-10" ng-click="vm.updateForm(vm.form)" ng-disabled="vm.loadingForm">
+                        <i class="zmdi zmdi-floppy zmdi-hc-fw m-r-5"></i> 
                         Guardar Cambios
-                        <loading-box bg="blue" pls="white" size="xs" time="5000" wait="vm.flagSaveConfiguration"></loading-box>
+                        <loading-box bg="blue" pls="white" size="xs" time="5000" wait="vm.loadingForm"></loading-box>
                     </button>
                 </div>
             </div>

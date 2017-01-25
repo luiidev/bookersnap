@@ -20,6 +20,7 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
                 if (vm.configuration.res_privilege_status == 1) {
                     getUser();
                 }
+                getForm();
                 vm.loadingConfiguration = false;
             }, function error(response) {
                 messageErrorApi(response.data, "Error", "warning");
@@ -219,6 +220,30 @@ angular.module('configuration.controller', ['ngAnimate', 'ui.bootstrap'])
             vm.searchOld = vm.search;
             vm.userId = user.id;
             vm.listUserAll = [];
+        };
+
+        var getForm = function() {
+            vm.loadingForm = true;
+            ConfigurationService.getForm()
+                .then(function(response) {
+                    vm.form = response.data.data;
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    vm.loadingForm = false;
+                });
+        };
+
+        vm.updateForm = function(form) {
+            vm.loadingForm = true;
+            ConfigurationService.updateForm({form: form})
+                .then(function(response) {
+                    message.success(response.data.msg);
+                }).catch(function(error) {
+                    message.apiError(error);
+                }).finally(function() {
+                    vm.loadingForm = false;
+                });
         };
 
         //Carga Inicial

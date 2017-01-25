@@ -475,7 +475,7 @@
             </div>
         </div>
         
-        <div class="grid-turns-none" ng-if="vm.listBook.length === 0 && !vm.bookView">
+        <div class="grid-turns-none" ng-if="!vm.loadReservations && vm.listBook.length === 0 && !vm.bookView">
             <div class="col-md-12 grid-turns-none-inner">
                 <div class="text-center">
                     <div class="grid-turns-none-tittle">
@@ -725,12 +725,12 @@
             </div>
         </div>
         
-        <div class="grid-turns-none" ng-if="vm.listBookReserva.length === 0 && vm.bookView">
+        <div class="grid-turns-none" ng-if="!vm.loadReservations && vm.listBookReserva.length === 0 && vm.bookView">
             <div class="col-md-12 grid-turns-none-inner">
                 <div class="text-center">
                     <div class="grid-turns-none-tittle">
                         <h1>
-                            No se encontraron reservaciones.
+                            No se encontraron reservaciones. {{ vm.loadReservations }}
                         </h1>
                     </div>                    
                 </div>

@@ -35,6 +35,7 @@ angular.module('floor.controller')
         /**
          * END Variables de manejo general de informacion
          */
+        vm.loadZones = false;
 
         /**
          * Accion que debe realizarse al soltar un elemento en una tabla
@@ -279,7 +280,7 @@ angular.module('floor.controller')
         var InitModule = function() {
 
             var date = fecha_actual;
-
+            vm.loadZones = true;
             FloorFactory.getDataFloor(date).then(function(response) {
 
                 zones.data = response.zones;
@@ -301,6 +302,8 @@ angular.module('floor.controller')
 
             }).catch(function(error) {
                 message.apiError(error);
+            }).finally(function(){
+                vm.loadZones = false;
             });
 
 

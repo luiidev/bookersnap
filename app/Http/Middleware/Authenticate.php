@@ -23,7 +23,7 @@ class Authenticate
     {
         try {
             $exp = 604800; // 1 semana en segundos
-
+            
             $token_session = $request->session()->get("token_session");
             $JWTAuth =  JWTAuth::setToken($token_session);
             $token = $JWTAuth->getToken();
@@ -31,19 +31,16 @@ class Authenticate
             if ($jwt = JWTAuth::decode($token)->get()) {
                 $user_id = AuthHelper::getSession($jwt["aud"], $exp);
                 if (! is_null($user_id) ) {
-                    $request->_token_session = $token_session;
-                    $request->_bs_user_id = $user_id;
-                    $request->_session = $jwt["aud"];
+                    $request->request->set("_token_session", $token_session);
+                    $request->request->set("_bs_user_id", $user_id);
+                    $request->request->set("_bs_user_type_root", $jwt["type_root"]);
                     return $next($request);
                 }
             }
-        } catch (TokenExpiredException $e) {
-            // return redirect()->guest(route('microsite-login'));
-        } catch (TokenInvalidException $e) {
-            // return redirect()->guest(route('microsite-login'));
-        } catch (JWTException $e) {
-            // return redirect()->guest(route('microsite-login'));
         }
+        catch (TokenExpiredException $e) {}
+        catch (TokenInvalidException $e) {}
+        catch (JWTException $e) {}
 
         return redirect()->guest(route('microsite-login'));
     }

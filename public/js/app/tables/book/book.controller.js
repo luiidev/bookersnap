@@ -5,14 +5,8 @@ angular.module('book.controller', [])
         var vm = this;
         vm.fecha_actual = moment().format('YYYY-MM-DD');
         vm.btnRageCalendar = false;
-        vm.isPrinted = false;
-        
-        vm.onBeforePrint = function(){
-            vm.isPrinted = true;
-        };
-        vm.onLoadScreen = function(){
-            vm.isPrinted = false;
-        };
+        vm.loadReservations = false;
+
         /**
          * Manejo de rango de fechas
          */
@@ -778,7 +772,7 @@ angular.module('book.controller', [])
             }
         });
 
-        var init = function() {
+        var init = function() {            
             BookFactory.init($scope);
             loadConfigViewReservation();
             listNumGuest();
@@ -1165,6 +1159,8 @@ angular.module('book.controller', [])
         var generatedListBook = function(params, action) {
             var params_final = getAsUriParameters(params);
 
+            vm.loadReservations = true;
+
             BookDataFactory.getBook(params_final).then(
                 function success(response) {
                     response = response.data;
@@ -1180,11 +1176,13 @@ angular.module('book.controller', [])
                 function error(response) {
                     console.error("listTurnAvailable ", angular.toJson(response, true));
                 }
-            );
+            ).finally(function(){
+                vm.loadReservations = false;
+            });
         };
 
         var generatedListBookHistory = function(params, action) {
-
+            
             params.page_size = vm.paginate_reservation.page_size;
             var params_url = (vm.bookFilter.params_url === null) ? paramsFilterReservation(false) : vm.bookFilter.params_url;
 
@@ -1201,6 +1199,8 @@ angular.module('book.controller', [])
 
             var params_final = getAsUriParameters(params);
 
+            vm.loadReservations = true;
+
             BookDataFactory.getBookHistory(params_final).then(
                 function success(response) {
                     response = response.data;
@@ -1211,11 +1211,14 @@ angular.module('book.controller', [])
 
                     listHoursTurns(vm.turns, response.data);
                     action();
+                    
                 },
                 function error(response) {
                     console.error("listTurnAvailable ", angular.toJson(response, true));
                 }
-            );
+            ).finally(function(){
+                vm.loadReservations = false;
+            });
         };
 
         var generatedListBookPagination = function(date, date_end) {
@@ -1321,7 +1324,11 @@ angular.module('book.controller', [])
 
             reservation = (Array.isArray(reservation) === true) ? reservation[0] : reservation;
 
-            var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBook, vm.listBookMaster, reservation, action);
+            if(vm.bookView){
+                var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBookReserva, vm.listBookMaster, reservation, action);
+            }else{
+                var response = BookFactory.addNewReservation(dates, vm.hoursTurns, vm.listBook, vm.listBookMaster, reservation, action);
+            }
 
             return response;
         };
