@@ -35,7 +35,7 @@ angular.module("bookersnap.services", [])
                     console.log("error conexion realtime", err);
                 }
 
-                console.log(serverConnection);
+                // console.log(serverConnection);
 
                 return serverConnection;
             },

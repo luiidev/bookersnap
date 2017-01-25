@@ -31,9 +31,9 @@ class Authenticate
             if ($jwt = JWTAuth::decode($token)->get()) {
                 $user_id = AuthHelper::getSession($jwt["aud"], $exp);
                 if (! is_null($user_id) ) {
-                    $request->_token_session = $token_session;
-                    $request->_bs_user_id = $user_id;
-                    $request->_session = $jwt["aud"];
+                    $request->request->set("_token_session", $token_session);
+                    $request->request->set("_bs_user_id", $user_id);
+                    $request->request->set("_bs_user_type_root", $jwt["type_root"]);
                     return $next($request);
                 }
             }

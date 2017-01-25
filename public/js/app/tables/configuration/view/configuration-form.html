@@ -3,7 +3,7 @@
         <h2>Configuración de campos de formulario<small></small></h2>
     </div>
     <div class="card-body">
-        <form name="configurationBasicForm" novalidate="" ng-class="{disabled: prvctrl.ms.exists('configurationForm-update')}">
+        <form name="configurationBasicForm" novalidate="" ng-class="{disabled: !prvctrl.ms.exists('configurationForm-update')}">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group fg-line">

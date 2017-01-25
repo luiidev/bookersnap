@@ -30,7 +30,7 @@
 
         <form  class="min-h-200-px row" name="configurationUserForm" ng-show="vm.configuration.res_privilege_status==1" novalidate>
             <div class="col-sm-12">
-                <div class="row" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-store')}"> 
+                <div class="row" ng-class="{disabled: prvctrl.ms.exists('configurationUser-store')}">
                     <!-- <loading-box wait="vm.loadingPrivilege || vm.loadingGetUser" time="8000" size="lg"></loading-box> -->
                     <loading-box wait="vm.loadingPrivilege" time="8000" size="lg"></loading-box>
                     <div class="col-sm-4 col-sm-offset-3">
@@ -81,7 +81,7 @@
                                         <td>
                                             <label class="social-network" ng-repeat="social in user.socials">{{social.name | uppercase}}</label>                                            
                                         </td>
-                                        <td class="text-right" ng-class="{disabled: !prvctrl.ms.exists('configurationRes-delete')}">
+                                        <td class="text-right" ng-class="{disabled: prvctrl.ms.exists('configurationUser-delete')}">
                                             <button class="btn btn-danger btn-icon-text waves-effect m-r-5" ng-click="vm.deletePrivilegeUser(user.id)" ng-disabled="user.delete">
                                                 <loading-box wait="user.delete==true" pls="white" bg="red" size="xs" time="5000"></loading-box>
                                                 <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
