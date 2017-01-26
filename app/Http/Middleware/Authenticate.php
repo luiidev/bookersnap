@@ -23,7 +23,7 @@ class Authenticate
     {
         try {
             $exp = 604800; // 1 semana en segundos
-            
+
             $token_session = $request->session()->get("token_session");
             $JWTAuth =  JWTAuth::setToken($token_session);
             $token = $JWTAuth->getToken();

@@ -45,19 +45,26 @@ class AuthService
         return $response;
     }
 
-    public function LoginSocialUserData($data)
+    public function LoginSocialUserData($data, $user_agent = null, $client_ip = null, $expire = null)
     {
         $url = $this->_api_auth_url;
         $url .= '/es/auth/socialnetwork';
 
-        $response = ApiRequestsHelper::SendRequest('POST', $url, [], $data->user);
+        $data = [
+            "user_social" =>  $data->user,
+            'user_agent' => $user_agent,
+            'client_ip' => $client_ip,
+            'expire' => $expire
+        ];
 
-        if ($response['success']) {
-            return $response['data'];
+        $response = HttpRequestHelper::make('POST', $url, $data)->send();
+
+        if ($response->isOK()) {
+            return $response->getArrayResponse();
         } else {
-            abort($response['statuscode'], $response['msg']);
+            abort($response->getStatusCode(), $response->getErrorResponse());
         }
-        return null;
+        // return null;
     }
 
 

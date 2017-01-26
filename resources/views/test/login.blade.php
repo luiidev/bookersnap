@@ -46,15 +46,23 @@
 
                 <div class="clearfix"></div>
 
-                <div>
+<!--                 <div>
                     <button class="btn btn-primary btn-icon waves-circle"><i class="zmdi zmdi-facebook zmdi-hc-fw"></i></button>
                     <button class="btn btn-default btn-icon waves-circle"><i class="zmdi zmdi-google-plus zmdi-hc-fw"></i></button>
                     <button class="btn btn-info btn-icon waves-circle"><i class="zmdi zmdi-twitter zmdi-hc-fw"></i></button>
-                </div>
+                </div> -->
 
                 <button class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></button>
 
             </form>
+
+            <div>
+                <form action="/auth/auth/social" method='post'>
+                    <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
+                    <input type="hidden" name="_sn" value="1"/>
+                    <button class="btn btn-primary btn-icon waves-circle"><i class="zmdi zmdi-facebook zmdi-hc-fw"></i></button>
+                </form>
+            </div>
 
         </div>
     <!--

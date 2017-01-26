@@ -59,11 +59,9 @@ class AuthController extends Controller
 
             $response = redirect()->route('microsite-login')->with('error-message', 'Usuario y/o contraseña incorrecta.')->withInput();
         } catch (HttpException $e) {
-            $msg      = $e->getMessage();
-            $response = redirect()->route('microsite-login')->with('error-message', $msg);
+            $response = redirect()->route('microsite-login')->with('error-message', $e->getMessage());
         } catch (\Exception $e) {
-            $msg      = 'Ocurrió un error interno.';
-            $response = redirect()->route('microsite-login')->with('error-message', $msg);
+            $response = redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
         }
 
         return $response->withInput();
@@ -101,30 +99,20 @@ class AuthController extends Controller
     {
         try {
             $response  = $this->_authService->ValidateSocialResponse($request->input('response'));
-            $userData  = $this->_authService->LoginSocialUserData($response->data);
-            $user      = $userData['user'];
-            $userlogin = $userData['userlogin'];
-            $extras    = [
-                'api-token'  => $userData['token'],
-                'user-login' => [
-                    $userlogin['bs_socialnetwork_id'] => $userlogin,
-                ],
-            ];
 
-            if ($this->LoginUser($user['id'], $extras)) {
-                $bsAuthToken = $this->generateBsAuthToken($user['id']);
-                return response()->redirectTo($response->url)
-                    ->with('message', 'Bienvenido Usuario.')
-                    ->with("bsAuthToken", $bsAuthToken);
-            }
-            return redirect()->to($response->url)->with('error-message', 'Hubo un error al iniciar la sesión.');
+            $userAgent = $request->server("HTTP_USER_AGENT");
+            $client_ip = $request->ip();
+            $time_expire =  config("settings.TIME_EXPIRE_SESSION");
+
+            $userData  = $this->_authService->LoginSocialUserData($response->data, $userAgent, $client_ip, $time_expire);
+
+            $request->session()->put("token_session", $userData["data"]["token_session"]);
+            // dd($request->session(), $request->server());
+            return response()->redirectTo('/admin/ms/1/mesas');
         } catch (HttpException $e) {
-            $msg = $e->getMessage();
-            return redirect()->route('microsite-login')->with('error-message', $msg);
+            return redirect()->route('microsite-login')->with('error-message', $e->getMessage());
         } catch (\Exception $e) {
-            //echo $e->getMessage()." ".$e->getFile()." ".$e->getLine();exit;
-            $msg = 'Ocurrió un error interno.';
-            return redirect()->route('microsite-login')->with('error-message', $msg);
+            return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
         }
     }
 
