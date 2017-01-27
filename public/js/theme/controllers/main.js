@@ -74,6 +74,10 @@
         $window.location.href = "/admin/auth/"+microsite_id+"/logout"
     }
 
+    this.logout = function() {
+        $window.location.href = "/auth/auth/logout";
+    };
+
 })
 
 

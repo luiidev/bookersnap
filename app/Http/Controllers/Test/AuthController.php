@@ -39,6 +39,12 @@ class AuthController extends Controller
         return view('test.home');
     }
 
+    public function email(Request $request)
+    {
+        \Session::reflash();
+        return view("test.email_required");
+    }
+
     public function LoginBs(Request $request)
     {
         try {
@@ -98,7 +104,19 @@ class AuthController extends Controller
     public function CallbackSocialLogin(Request $request)
     {
         try {
-            $response  = $this->_authService->ValidateSocialResponse($request->input('response'));
+            $social_req = $request->input('response');
+            $social_req = $social_req ? $social_req :$request->old('response');
+            $response  = $this->_authService->ValidateSocialResponse($social_req);
+
+            if (is_null($response->data->user->email)) {
+
+                if (is_null($request->email)) {
+                    $request->flash();
+                    return redirect()->route("microsite-email");
+                } else {
+                    $response->data->user->email = $request->email;
+                }
+            }
 
             $userAgent = $request->server("HTTP_USER_AGENT");
             $client_ip = $request->ip();
@@ -107,13 +125,14 @@ class AuthController extends Controller
             $userData  = $this->_authService->LoginSocialUserData($response->data, $userAgent, $client_ip, $time_expire);
 
             $request->session()->put("token_session", $userData["data"]["token_session"]);
-            // dd($request->session(), $request->server());
+
             return response()->redirectTo('/admin/ms/1/mesas');
         } catch (HttpException $e) {
             return redirect()->route('microsite-login')->with('error-message', $e->getMessage());
-        } catch (\Exception $e) {
-            return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
-        }
+        } 
+        // catch (\Exception $e) {
+        //     return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
+        // }
     }
 
     /**

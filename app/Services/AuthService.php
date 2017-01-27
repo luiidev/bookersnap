@@ -64,7 +64,6 @@ class AuthService
         } else {
             abort($response->getStatusCode(), $response->getErrorResponse());
         }
-        // return null;
     }
 
 

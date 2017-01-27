@@ -57,6 +57,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'auth'], function () {
     Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
+        Route::get('/email', 'Test\AuthController@email')->name( 'microsite-email');
         Route::get('/', ['as' => 'microsite-login', 'uses' => 'Test\AuthController@Index']);
         Route::post('/', 'Test\AuthController@LoginBs');
         Route::post('/social', 'Test\AuthController@RedirectSocialLogin');

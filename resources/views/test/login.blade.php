@@ -64,6 +64,14 @@
                 </form>
             </div>
 
+            <div>
+                <form action="/auth/auth/social" method='post'>
+                    <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
+                    <input type="hidden" name="_sn" value="2"/>
+                    <button class="btn btn-info btn-icon waves-circle"><i class="zmdi zmdi-twitter zmdi-hc-fw"></i></button>
+                </form>
+            </div>
+
         </div>
     <!--
         <div>
