@@ -56,7 +56,7 @@
 
             </form>
 
-            <div>
+            <div style="display: inline-block;">
                 <form action="/auth/auth/social" method='post'>
                     <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
                     <input type="hidden" name="_sn" value="1"/>
@@ -64,11 +64,19 @@
                 </form>
             </div>
 
-            <div>
+            <div style="display: inline-block;">
                 <form action="/auth/auth/social" method='post'>
                     <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
                     <input type="hidden" name="_sn" value="2"/>
                     <button class="btn btn-info btn-icon waves-circle"><i class="zmdi zmdi-twitter zmdi-hc-fw"></i></button>
+                </form>
+            </div>
+
+            <div style="display: inline-block;">
+                <form action="/auth/auth/social" method='post'>
+                    <input type="hidden" name="_token" value="{{ csrf_token()}}"/>
+                    <input type="hidden" name="_sn" value="3"/>
+                    <button class="btn btn-default btn-icon waves-circle"><i class="zmdi zmdi-google-plus zmdi-hc-fw"></i></button>
                 </form>
             </div>
 

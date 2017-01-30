@@ -28,5 +28,6 @@
                 <button class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></button>
 
             </form>
+        </div>
 </body>
 </html>

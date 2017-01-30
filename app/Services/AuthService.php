@@ -29,7 +29,9 @@ class AuthService
         if ($data == null) {
             abort(400, "Solicitud Inválida");
         }
+
         $response = json_decode($data, false);
+
         if ($response == null) {
             abort(400, "Solicitud Inválida");
         }
@@ -59,11 +61,10 @@ class AuthService
 
         $response = HttpRequestHelper::make('POST', $url, $data)->send();
 
-        if ($response->isOK()) {
-            return $response->getArrayResponse();
-        } else {
-            abort($response->getStatusCode(), $response->getErrorResponse());
-        }
+        return (Object) array(
+            "status" => $response->getStatusCode(),
+             "response" => $response->getArrayResponse()
+        );
     }
 
 
@@ -180,4 +181,11 @@ class AuthService
         $http = HttpRequestHelper::make('POST', $url)->send();
     }
 
+    public function verify_email_token($uuid)
+    {
+        $url = $this->_api_auth_url . '/es/auth/verify_email';
+        $http = HttpRequestHelper::make('POST', $url, ["token" => $uuid])->send();
+
+        return $http->isOk();
+    }
 }

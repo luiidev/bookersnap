@@ -64,6 +64,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('/social-callback', ['as' => 'social-callback','uses' => 'Test\AuthController@CallbackSocialLogin'])->middleware(['social-login-token']);
     });
 
+    Route::get("/mail/confirmation", "Test\AuthController@verify_email");
     Route::post('/auth/logout', [/*'middleware' => 'auth','as' => 'microsite-logout', */ 'uses' => 'Test\AuthController@Logout']);
     Route::get('/auth/logout', ['as' => 'microsite-logout', 'uses' => 'Test\AuthController@Logout']);
     Route::get('/home', ['middleware' => 'auth', 'as' => 'microsite-home', 'uses' => 'Test\AuthController@Home']);

@@ -28,7 +28,7 @@ class ManagerMicrosite
             $request->request->set("_privileges",  $privileges);
             return $next($request);
         } else {
-            return response()->redirectTo("/auth/auth");
+            return redirect()->route('microsite-login')->with('error-message', 'Aun no cuenta con privilegios para ingresar.');
         }
     }
 }

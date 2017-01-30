@@ -109,30 +109,35 @@ class AuthController extends Controller
             $response  = $this->_authService->ValidateSocialResponse($social_req);
 
             if (is_null($response->data->user->email)) {
-
-                if (is_null($request->email)) {
-                    $request->flash();
-                    return redirect()->route("microsite-email");
-                } else {
-                    $response->data->user->email = $request->email;
-                }
+                $response->data->user->email = $request->email;
             }
 
-            $userAgent = $request->server("HTTP_USER_AGENT");
-            $client_ip = $request->ip();
-            $time_expire =  config("settings.TIME_EXPIRE_SESSION");
+            $Auth  = $this->_authService->LoginSocialUserData(
+                $response->data,
+                $request->server("HTTP_USER_AGENT"),
+                $request->ip(),
+                config("settings.TIME_EXPIRE_SESSION")
+            );
 
-            $userData  = $this->_authService->LoginSocialUserData($response->data, $userAgent, $client_ip, $time_expire);
+            if ($Auth->status === 200) {
+                $request->session()->put("token_session", $Auth->response["data"]["token_session"]);
+                return response()->redirectTo('/admin/ms/1/mesas');
+            } else if ($Auth->status === 409) {
+                $request->flash();
+                return redirect()->route("microsite-email");
+            }  else if ($Auth->status === 201) {
+                return redirect()->route('microsite-login')->with('error-message', 'Se a enviado un mensaje de confirmacion a sus correo.');
+            }  else if ($Auth->status === 422) {
+                return redirect()->route('microsite-login')->with('error-message', 'El email ya se encuentra registrado.');
+            }  else {
+                return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
+            }
 
-            $request->session()->put("token_session", $userData["data"]["token_session"]);
-
-            return response()->redirectTo('/admin/ms/1/mesas');
         } catch (HttpException $e) {
             return redirect()->route('microsite-login')->with('error-message', $e->getMessage());
-        } 
-        // catch (\Exception $e) {
-        //     return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
-        // }
+        } catch (\Exception $e) {
+            return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
+        }
     }
 
     /**
@@ -146,6 +151,18 @@ class AuthController extends Controller
         Auth::logout();
 
         return redirect()->route("microsite-login");
+    }
+
+    public function verify_email(Request $request)
+    {
+        if (!$request->has("token")) {
+            return redirect()->route("microsite-login");
+        }
+
+        $ok = $this->_authService->verify_email_token($request->token);
+        $message = $ok ? "La direccion de correo electronico a sido confirmado." : "Ops! El token es invalido o el correo ya a sido verificado.";
+
+        return view("test.mail_confirmation", ["message" => $message]);
     }
 
     public function loginBySharedToken(Request $req)
