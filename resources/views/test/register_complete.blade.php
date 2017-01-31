@@ -10,7 +10,7 @@
 <body class="login-content">
         <div class="lc-block toggled" id="l-login">
             <div class="card-header">
-                <h2>{{ $message }} Puede ingresar al sistema haciendo<a href="/auth/auth">&nbsp;click aquí</a></h2>
+                <h2>Bienvenido a Bookersnap! le hemos enviado un correo de verificacion para terminar con su registro. si ya lo verifico puede ingresar al sistema haciendo<a href="/auth/auth">&nbsp;click aquí</a></h2>
             </div>
         </div>
 </body>

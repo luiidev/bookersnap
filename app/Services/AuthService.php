@@ -47,7 +47,7 @@ class AuthService
         return $response;
     }
 
-    public function LoginSocialUserData($data, $user_agent = null, $client_ip = null, $expire = null)
+    public function LoginSocialUserData($data, $user_agent = null, $client_ip = null, $expire = null, bool $email_confirmation = true)
     {
         $url = $this->_api_auth_url;
         $url .= '/es/auth/socialnetwork';
@@ -56,10 +56,13 @@ class AuthService
             "user_social" =>  $data->user,
             'user_agent' => $user_agent,
             'client_ip' => $client_ip,
-            'expire' => $expire
+            'expire' => $expire,
+            'email_confirmation' => $email_confirmation
         ];
 
-        $response = HttpRequestHelper::make('POST', $url, $data)->send();
+        $header = ["Authorization" => config("setting.API_AUTH_TOKEN")];
+
+        $response = HttpRequestHelper::make('POST', $url, $data, $header)->send();
 
         return (Object) array(
             "status" => $response->getStatusCode(),

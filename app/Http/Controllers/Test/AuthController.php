@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Carbon\Carbon;
+use Session;
 
 class AuthController extends Controller
 {
@@ -41,8 +42,13 @@ class AuthController extends Controller
 
     public function email(Request $request)
     {
-        \Session::reflash();
+        Session::reflash();
         return view("test.email_required");
+    }
+
+    public function registerComplete()
+    {
+        return view("test.register_complete");
     }
 
     public function LoginBs(Request $request)
@@ -101,35 +107,48 @@ class AuthController extends Controller
         return response()->redirectTo($url);
     }
 
+    /**
+     * Login y registro por redes socialesd
+     * @param Request $request
+     */
     public function CallbackSocialLogin(Request $request)
     {
         try {
-            $social_req = $request->input('response');
-            $social_req = $social_req ? $social_req :$request->old('response');
+            $email_confirmation = false;
+
+            if ($request->has("response")) {
+                $social_req = $request->input('response');
+            } else {
+                // recupera el request anterior guardado en session con el metodo $request->flash()
+                $social_req = $request->old('response');
+            }
+
             $response  = $this->_authService->ValidateSocialResponse($social_req);
 
             if (is_null($response->data->user->email)) {
                 $response->data->user->email = $request->email;
+                $email_confirmation = true;
             }
 
             $Auth  = $this->_authService->LoginSocialUserData(
                 $response->data,
                 $request->server("HTTP_USER_AGENT"),
                 $request->ip(),
-                config("settings.TIME_EXPIRE_SESSION")
+                config("settings.TIME_EXPIRE_SESSION"),
+                $email_confirmation
             );
 
             if ($Auth->status === 200) {
                 $request->session()->put("token_session", $Auth->response["data"]["token_session"]);
                 return response()->redirectTo('/admin/ms/1/mesas');
-            } else if ($Auth->status === 409) {
-                $request->flash();
+            } else if ($Auth->status === 409) { // el email es requerido
+                $request->flash();  // guardando el request en session para que este disponible en la siguiente peticion
                 return redirect()->route("microsite-email");
-            }  else if ($Auth->status === 201) {
-                return redirect()->route('microsite-login')->with('error-message', 'Se a enviado un mensaje de confirmacion a sus correo.');
-            }  else if ($Auth->status === 422) {
+            }  else if ($Auth->status === 201) { // Se registro al usuario, pero se necesita confirmar el correo
+                return redirect()->route('register-complete');
+            }  else if ($Auth->status === 422) { // No se puede registrar, elusuariuo ya existe
                 return redirect()->route('microsite-login')->with('error-message', 'El email ya se encuentra registrado.');
-            }  else {
+            }  else { // otros no contemplados
                 return redirect()->route('microsite-login')->with('error-message', 'Ocurrió un error interno.');
             }
 

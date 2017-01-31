@@ -17,6 +17,7 @@ return array(
 
 // para usar la constante usar: config('settings.NOMBRE_CONSTANTE')
 return [
+	'API_AUTH_TOKEN'  => env("API_AUTH_TOKEN",'c8B6wbwadT3Bq6PmN8sURCDqEdzG6sEn'),
 	'API_AUTH_URL'  => env("API_AUTH_URL",'http://apiauth.studework.vm/v1'),
 	'API_ADMIN_URL' => env("API_ADMIN_URL",'http://apiadmin.studework.vm/v1'),
 	'API_PROMO_URL' => env("API_PROMO_URL",'http://apipromociones.studework.vm/v1'),
