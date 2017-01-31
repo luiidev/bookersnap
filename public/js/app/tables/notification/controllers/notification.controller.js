@@ -7,6 +7,9 @@ angular.module("notification.app")
         vm.reservations = [];
         vm.next_page_url = null;
 
+        /**
+         * Funcion para ver mas notificaciones de reservaciones
+         */
         vm.prevReserves = function(){
             if (vm.next_page_url) {
                 getNotifications(vm.next_page_url)
@@ -39,6 +42,9 @@ angular.module("notification.app")
             return deferred.promise;
         };
 
+        /**
+         * Marcar como revisado todas las notificaciones
+         */
         vm.clearNotifications = function() {
             if (vm.notification_count) {
                 service.clearNotifications()
@@ -64,6 +70,10 @@ angular.module("notification.app")
             }
         });
 
+        /**
+         * Notificaciones de escritorio (generado por el navegador)
+         * @param  object reservation
+         */
         var notifyMessage = function(reservation) {
             var title =  reservation.guest.first_name +" "+ reservation.guest.last_name;
             var date = $filter("latamDate")(reservation.date_reservation+' '+reservation.hours_duration);
@@ -77,6 +87,10 @@ angular.module("notification.app")
             $rootScope.$broadcast("NotifyWebReservation", data);
         });
 
+        /**
+         * cerrar sesion
+         * @return {[type]} [description]
+         */
         vm.closeSession = function() {
             delete localStorage.api_token;
             $window.location.href = bsDomain + "/auth/auth/logout";

@@ -1,19 +1,24 @@
+/**
+ * Primer paso del widget
+ * Buscar disponibilidad de horarios para reservar
+ */
+
 angular.module("App")
     .controller("availabilityCtrl", ["$scope", "$q", "availabilityService", "utiles", "$window", "base_url",
         function(vm, $q, availabilityService, utiles, $window, base_url) {
 
-        vm.form = {};
-        vm.result = [];
-        vm.availability = {};
+        vm.form = {};   //Formulario para reservar
+        vm.result = [];  // Resultado de horarios disponibles
+        vm.availability = {};  //Formulario para buscar disponibilidad
         vm.loadingInfo = false;
-        vm.message = "";
+        vm.message = ""; // mesaje de error
 
         vm.selectedPeople = {};
         vm.selectedZone = {};
         vm.selectedHour = {};
         vm.selectedEvent= {};
 
-        vm.promotion = {};
+        vm.promotion = {}; // ventana flotante al pasar sobre un evento -- en deshuso
 
         vm.minDate = new Date();
         vm.date = new Date();
@@ -22,7 +27,7 @@ angular.module("App")
          * Variables de apollo
          */
          var zoneColapse = true;
-         vm.case = 0;
+         vm.case = 0; // variable para mostrar y ocultar / zona formulario buscar disponibilidad y su resultado
 
         /**
          *  HTTP 
@@ -66,6 +71,11 @@ angular.module("App")
          * end HTTP
          */
         
+        /**
+         * redirecciona hacia el paso 2, de llenar datos para la reservacion
+         * @param  {[type]} key [description]
+         * @return {[type]}     [description]
+         */
         var redirect = function(key) {
             $window.location.href = base_url.get("/reserve?key=" + key);
         };
@@ -160,7 +170,7 @@ angular.module("App")
 
 
         /**
-         * Format data
+         * Formato de fecha en el resultado de la busqueda de disponibilidad
          */
          var resultFormat = function(items) {
              angular.forEach(items, function(item) {
@@ -186,6 +196,10 @@ angular.module("App")
             return object;
          };
 
+         /**
+          * Informacion o selecion por defecto para reservar
+          * @param  {[string]} date
+          */
          var defaultData = function(date) {
             zoneColapse = true;
 
@@ -268,6 +282,9 @@ angular.module("App")
             }
         });
 
+        /**
+         *  si existe una reservacion previa muestra ventana para contnuar reserva o cancelarla
+         */
         var searchTemporalReserve = function() {
             var deferred = $q.defer();
 
@@ -297,16 +314,27 @@ angular.module("App")
             availabilityService.cancelTemporalReservation();
         };
 
+        /**
+         * Cancelar reservacion previa
+         */
         vm.closePrev = function() {
             InitModule();
             vm.showPrev = false;
             cancelTemporalReservation();
         };
 
+        /**
+         * Continuar la reservacion previa
+         */
         vm.openPrev = function() {
             redirect(vm.prevResToken);
         };
 
+        /**
+         * ventana flotante de promocion
+         * @param  {[object]} item 
+         * @param  {[event]} evt  evento js
+         */
         vm.promotionDisplay = function(item, evt) {
             vm.promotion.imageUrl = item.image ? "url(" + item.image + ")" : null; 
             vm.promotion.description = item.description || null;
@@ -314,10 +342,17 @@ angular.module("App")
             angular.element(document.querySelector("#event")).css({top: evt.pageY - (vm.promotion.imageUrl ? 190 : 120) });
         };
 
+        /**
+         * ocultar promocion
+         * @return {[type]} [description]
+         */
         vm.promotionHide = function() {
             vm.promotion.display = false;
         };
 
+        /**
+         * Desactivar dias bloqueados de un mes
+         */
         vm.changeMonth = function(date_ini, month, year, instance, select) {
             date_fin = moment(date_ini).endOf('months').format("YYYY-MM-DD");
 

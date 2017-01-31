@@ -21,11 +21,17 @@ class WidgetController extends Controller
         $this->_domain = config("settings.API_URL");
     }
 
+    /**
+     * Paso 1 - vista de buscar disponibilidad
+     */
     public function index(Request $request, $site)
     {
         return view("widget.v2_1", ["microsite" => $site]);
     }
 
+    /**
+     * Paso 2 - vista de llenar datos personales de invitado para la reserva
+     */
     public function confirm(Request $request, $site)
     {
         $validate = Validator::make($request->all(), ["key" => "required|string|max:124"]);
@@ -61,6 +67,9 @@ class WidgetController extends Controller
         }
     }
 
+    /**
+     * Paso 3 - vista de confirmacion de reserva
+     */
     public function confirmed(Request $request, $site)
     {
         $validate = Validator::make($request->all(), ["key" => "required"]);
@@ -89,6 +98,9 @@ class WidgetController extends Controller
         }
     }
 
+    /**
+     * generar reservacion temporal
+     */
     public function StoreReservationtemporal()
     {
         $http = HttpRequestHelper::make("POST")

@@ -666,7 +666,13 @@ var calculateDuration = function(hourIni, hourEnd) {
 
 };
 
-function notify(title, body, icon, a) {
+/**
+ * Notificacion de escritorio
+ * @param  {string} title 
+ * @param  {string} body  mensaje de notification
+ * @param  {url} icon  url de imagen
+ */
+function notify(title, body, icon) {
     if (!("Notification" in window)) {
         console.log("El navegador no soporta notificaciones de escritorio");
     } else if (Notification.permission === "granted") {
@@ -680,6 +686,12 @@ function notify(title, body, icon, a) {
     }
 }
 
+/**
+ * generar notificacion
+ * @param  {string} title 
+ * @param  {string} body  mensaje de notification
+ * @param  {url} icon  url de imagen
+ */
 function spawnNotification(title, body, icon) {
     var options = {
         body: body,

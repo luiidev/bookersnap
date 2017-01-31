@@ -1,20 +1,31 @@
+/**
+ * Paso 2
+ * Llenar datos personales para completar la reservacion
+ */
+
 angular.module("App")
     .controller("reservationCtrl", ["$scope", "$window", "$location", "availabilityService", "utiles", "base_url", function(vm, $window, $location, service, utiles, base_url) {
-
+        /**
+         * Objeto de reservacion
+         */
         vm.reservation= {};
         vm.reservation.token = token;
         vm.reservation.guest= {};
         vm.reservation.guest_list = [];
-        vm.newGuest = "";
+
+        vm.newGuest = ""; // Input para agregar a lista de invitados
 
         vm.years = [];
         vm.months = [];
         vm.days = [];
 
-        vm.errors = {};
+        vm.errors = {}; // mensaje de error
 
         vm.loading = false;
 
+        /**
+         * Agregar a lista de invitados
+         */
         vm.addGuest =function(event) {
             if (event.keyCode == 13 || event.keyCode == 32) {
                 if (vm.newGuest .trim().length > 2) {
@@ -24,25 +35,40 @@ angular.module("App")
             }
         };
 
+        /**
+         * Remover de lista de invitados
+         */
         vm.removeGuest = function(i) {
             vm.reservation.guest_list.splice(i, 1);
         };
 
+        /**
+         * Limpiar errores de validacion
+         */
         vm.clearErrors = function(key) {
             if (Object.prototype.toString.call(vm.errors[key]) == "[object Array]") {
                 vm.errors[key].length = 0;
             }
         };
 
+        /**
+         * Redireccionar hacia pagina de confirmacion de reservacion
+         */
         var redirect = function(key) {
             $window.location.href = base_url.get("/confirmed?key=" + key);
         };
 
+        /**
+         * Redireccionar hacia el formulario de buscar disponiibilidad por que se agoto el tiempo para reservar
+         */
         vm.redirectBase = function() {
             alert("El tiempo para completar la reservacion a terminado.");
             $window.location.href = base_url.url();
         };
 
+        /**
+         * Redireccionar hacia el formulario de diponibilidad con opcion de edicion
+         */
         vm.redirectBaseEdit = function() {
             $window.location.href = base_url.getWithParam({edit: 1});
         };
@@ -64,6 +90,9 @@ angular.module("App")
                 });
         };
 
+        /**
+         * Llenar select de año
+         */
         var runYear = function() {
             y = 2000;
             while (y-- > 1940) {
@@ -71,6 +100,10 @@ angular.module("App")
             }
         };
 
+        /**
+         * Lennar select de mes
+         * @return {[type]} [description]
+         */
         var runMonth = function() {
             vm.months = [
                 { id: "01", label: "Enero" },
@@ -88,6 +121,9 @@ angular.module("App")
             ];
         };
 
+        /**
+         * Cambio de mes, resetea los dias disponibles en ese mes
+         */
         vm.changeMonth = function(mes) {
             vm.days.length = 0;
 
@@ -126,6 +162,9 @@ angular.module("App")
             validDate();
         };
 
+        /**
+         * Validar que la fecha seleccionada sea valida
+         */
         var validDate = function () {
             if (vm.year ===undefined || vm.month ===undefined || vm.day === undefined) {
                 vm.reservation.guest.birthdate = null;
