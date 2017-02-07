@@ -20,7 +20,7 @@ class AuthTempPage
     public function handle($request, Closure $next)
     {   
 
-        if (@config("settings.STATUS_SESSION") == "1") {
+        /*if (@config("settings.STATUS_SESSION") == "1") {
 
             $session  = $request->session();
 
@@ -51,9 +51,9 @@ class AuthTempPage
                 return redirect($this->urlRedirectBookersnap());
             }
     
-        }else{
+        }else{ */
             return $next($request);
-        }
+        //}
     }
     
     
@@ -64,7 +64,7 @@ class AuthTempPage
         $microsite_id = $request->route('id');
         if(@$microsite_id){
             $microsite = OldMicrosite::where('id', $microsite_id)->first();
-            return config("settings.SYS_BOOKERSNAP")."/".$microsite->site;
+            return config("settings.SYS_BOOKERSNAP")."/".$microsite->site_name;
         }else{
             return config("settings.SYS_BOOKERSNAP");
         }

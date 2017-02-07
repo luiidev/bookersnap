@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use App\Services\Helpers\PrivilegeHelper;
 use Closure;
 
+use App\MsMicrosite;
+
 class ManagerMicrosite
 {
     /**
@@ -17,6 +19,7 @@ class ManagerMicrosite
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        
         if ($request->_bs_user_type_root === 1) {
             $request->request->set("_privileges",  ["adminms-table-root"]);
             return $next($request);
@@ -28,7 +31,20 @@ class ManagerMicrosite
             $request->request->set("_privileges",  $privileges);
             return $next($request);
         } else {
-            return redirect()->route('microsite-login')->with('error-message', 'Aun no cuenta con privilegios para ingresar.');
+            //return redirect()->route('microsite-login')->with('error-message', 'Aun no cuenta con privilegios para ingresar.');
+            return redirect($this->urlRedirectBookersnap());
+        }
+    }
+
+    public function urlRedirectBookersnap() {
+        $request = request();
+        //$token = $request->input('token');
+        $microsite_id = $request->route('microsite_id');
+        if(@$microsite_id){
+            $microsite = MsMicrosite::where('id', $microsite_id)->first();
+            return config("settings.SYS_BOOKERSNAP")."/".$microsite->site_name;
+        }else{
+            return config("settings.SYS_BOOKERSNAP");
         }
     }
 }

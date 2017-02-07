@@ -9,6 +9,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
+use App\MsMicrosite;
+
 class Authenticate
 {
     /**
@@ -25,6 +27,7 @@ class Authenticate
             $exp = 604800; // 1 semana en segundos
 
             $token_session = $request->session()->get("token_session");
+            
             $JWTAuth =  JWTAuth::setToken($token_session);
             $token = $JWTAuth->getToken();
 
@@ -42,6 +45,22 @@ class Authenticate
         catch (TokenInvalidException $e) {}
         catch (JWTException $e) {}
 
-        return redirect()->guest(route('microsite-login'));
+
+        //return redirect()->guest(route('microsite-login'));
+        return redirect($this->urlRedirectBookersnap());
+    }
+
+
+    //Session fallo, redireccionar hacia bookersnap.com,
+    public function urlRedirectBookersnap() {
+        $request = request();
+        //$token = $request->input('token');
+        $microsite_id = $request->route('microsite_id');
+        if(@$microsite_id){
+            $microsite = MsMicrosite::where('id', $microsite_id)->first();
+            return config("settings.SYS_BOOKERSNAP")."/".$microsite->site;
+        }else{
+            return config("settings.SYS_BOOKERSNAP");
+        }
     }
 }

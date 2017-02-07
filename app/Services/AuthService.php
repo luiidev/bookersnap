@@ -61,7 +61,6 @@ class AuthService
         ];
 
         $header = ["Authorization" => config("setting.API_AUTH_TOKEN")];
-
         $response = HttpRequestHelper::make('POST', $url, $data, $header)->send();
 
         return (Object) array(
@@ -87,7 +86,7 @@ class AuthService
         ];
 
         $response = HttpRequestHelper::make('POST', $url, $data)->send();
-
+        
         if ($response->isOk()) {
             return $response->getArrayResponse();
         }

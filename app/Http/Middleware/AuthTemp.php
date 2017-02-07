@@ -26,25 +26,16 @@ class AuthTemp
         if ($typeauth == "login") {
             try{
                 $session  = $request->session();
-                //$request->input('token');
-                if (!$session->has('user_session')) {
+                if (!empty($request->input('token'))) {
                     if ($this->isHttpReferer(request()->server('HTTP_REFERER'))) {      
-                        
-                        $OldTokenSession = OldTokenSession::where('token', $request->input('token'))//verificar token
-                                                          ->where('microsite_id', $request->route('id'))
-                                                          ->where('status', 1)->first();
-
-                        if($OldTokenSession){
-                            $token = $request->input('token');
-                            $session->set('user_session', $OldTokenSession->usermicrosite_id);
-                            return redirect($this->urlRedirect());
-                        }else
-                            return redirect($this->urlRedirectBookersnap());
+                        $token = $request->input('token');
+                        $session->set('token_session', $token);
+                        return redirect($this->urlRedirect());
                     }else{
                         return redirect($this->urlRedirectBookersnap());
                     }
                 }else{
-                    return redirect()->away($this->urlRedirect());
+                    return redirect($this->urlRedirectBookersnap());
                 }
             }catch(HttpException $e){
                 //            var_dump($e->getMessage());
@@ -54,8 +45,8 @@ class AuthTemp
             return redirect($this->urlRedirectBookersnap());
         }else{
 
-            if ($session->has('user_session')) {
-                $session->forget('user_session');
+            if ($session->has('token_session')) {
+                $session->forget('token_session');
             }
             return redirect($this->urlRedirectBookersnap());
         }

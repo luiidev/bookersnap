@@ -54,6 +54,7 @@ class AuthController extends Controller
     public function LoginBs(Request $request)
     {
         try {
+            //var_dump($request); exit;
             $response  = $this->_authService->LoginBsUserData(
                 $request->input('email'), 
                 $request->input('password'),
@@ -61,7 +62,7 @@ class AuthController extends Controller
                 $request->ip(),
                 config("settings.TIME_EXPIRE_SESSION")
             );
-
+            
             if ($response) {
                 $userData = $response["data"];
                 $request->session()->put("token_session", $userData["token_session"]);
@@ -113,6 +114,7 @@ class AuthController extends Controller
      */
     public function CallbackSocialLogin(Request $request)
     {
+        exit;
         try {
             $email_confirmation = false;
 
