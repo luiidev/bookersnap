@@ -23,6 +23,7 @@ var filesApp = [
     '../app.config.js',
     '../app.directive.js',
     '../app.service.js',
+    //'../constant.local.js',
     '!gulpfile.js'
 ];
 var filenameApp = 'app.bookersnap.tables.min.js';
